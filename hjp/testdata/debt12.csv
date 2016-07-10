@@ -1,0 +1,5 @@
+Datum,Popis,Přednost,Pohyb,Předchozí zůstatek/jistina,Předchozí zůstatek/úrok,Předchozí zůstatek/celkem,Započteno/jistina,Započteno/úrok,Nový zůstatek/jistina,Nový zůstatek/úrok,Nový zůstatek/celkem
+2004-07-08,Půjčka,,43030.00,0.00,0.00,0.00,43030.00,0.00,43030.00,0.00,43030.00
+2004-10-07,Splátka,jistina,-4100.00,43030.00,9789.33,52819.32,-4100.00,-0.00,38930.00,9789.33,48719.32
+2005-07-14,Splátka,úrok,-2400.00,38930.00,37040.33,75970.33,-0.00,-2400.00,38930.00,34640.33,73570.33
+2006-01-06,Kontrola,,-0.00,0.00,0.00,0.00,0.00,0.00,38930.00,51769.52,90699.52

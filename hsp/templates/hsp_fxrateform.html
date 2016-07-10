@@ -1,0 +1,11 @@
+{% extends "hsp_form.html" %}
+
+{% block form_contents %}
+	    <tr id="id_fxrateform"><td></td><td colspan="2"><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+{% if err_message %}            <tr><td></td><td colspan="2" class="warning">
+              {% include "formwarning.html" %}            </td></tr>
+{% endif %}	    <tr><th>Měny:</th><td colspan="2" style="text-align: center;"><span class="{{ f.currency_from.css_classes }}">{{ f.currency_from }}</span> → <span class="{{ f.currency_to.css_classes }}">{{ f.currency_to }}</span></td></tr>
+	    <tr><th>Kurs:</th><td colspan="2" style="text-align: center;"><span class="{{ f.rate_from.css_classes }}">{{ f.rate_from }}</span> <span class="curr_from">{{ f.currency_from.value }}</span> = <span class="{{ f.rate_to.css_classes }}">{{ f.rate_to }}</span> <span class="curr_to">{{ f.currency_to.value }}</span></td></tr>
+	    <tr><th>Období platnosti:</th><td colspan="2" style="text-align: center;"><span class="{{ f.date_from.css_classes }}">{{ f.date_from }}</span> – <span class="{{ f.date_to.css_classes }}">{{ f.date_to }}</span></td></tr>
+{% endblock %}
+{% block note %}<p>Období platnosti je nepovinné; můžete zadat i samotné počáteční nebo koncové datum.</p>{% endblock %}

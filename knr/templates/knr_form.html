@@ -1,0 +1,9 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+	<form method="post" enctype="multipart/form-data">
+	  <table style="margin: auto auto 15px auto;">{% block form_contents %}{% endblock %}	    {% include "submit.html" %}	  </table>
+{% if type %}          <div class="hidden"><input type="hidden" name="idx" value="{{ idx }}" /><input type="hidden" name="type" id="id_type" value="{{ type }}" /></div>
+{% endif %}	  {% csrf_token %}
+	</form>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "hsp_form.html" %}
+
+{% block form_contents %}
+	    <tr id="id_creditform"><td></td><td colspan="2"><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+{% if err_message %}            <tr><td></td><td colspan="2" class="warning">
+              {% include "formwarning.html" %}            </td></tr>
+{% endif %}	    <tr class="{{ f.date.css_classes }}">
+              <th>{{ f.date.label_tag }}</th>
+	      <td colspan="2">{{ f.date }}</td>
+	    </tr>
+	    <tr class="{{ f.description.css_classes }}">
+	      <th>{{ f.description.label_tag }}</th>
+	      <td colspan="2">{{ f.description }}</td>
+	    </tr>
+	    <tr>
+	      <th><span class="{{ f.amount.css_classes }}">{{ f.amount.label_tag }}</span></th>
+	      <td><span class="{{ f.amount.css_classes }}">{{ f.amount }}</span></td>
+	      <td style="text-align: right"><span class="{{ f.currency.css_classes }}" style="padding-left: 10px;">{{ f.currency.label_tag }} {{ f.currency }}</span></td>
+	    </tr>
+{% if rows %}	    <tr>
+	      <th style="vertical-align: top; padding-top: 10px;" class="{{ deb_class }}">Pořadí:</th>
+	      <td colspan="2" style="vertical-align: top; padding-top: 8px; padding-bottom: 5px;">
+{% for row in rows %}		<div class="debord">
+		  <select name="r{{ row.n }}" id="id_r{{ row.n }}">
+{% for col in row.cols %}		    <option value="{{ col.n }}"{% if row.sel == col.n  %} selected="selected"{% endif %}>{{ col.id }} – {{ col.desc|default:'(bez názvu)' }}</option>
+{% endfor %}		  </select>
+		</div>
+{% endfor %}	      </td>
+	    </tr>
+{% endif %}{% endblock %}

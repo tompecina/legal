@@ -1,0 +1,42 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+        <form method="post" enctype="multipart/form-data">
+	  <table style="margin: auto auto 30px auto;">
+	    <tr><td><h1 style="text-align: center; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+	    <tr class="{{ f.beg.css_classes }}"><td>{{ f.beg.label_tag }} {{ f.beg }}</td></tr>
+	    <tr>
+	      <td>
+		<fieldset style="margin: 10px auto;">
+		  <legend>{{ f.preset.label }}</legend>
+{% for p in f.preset %}{% if not forloop.last %}		  <div class="opt">{{ p }}</div>
+{% endif %}{% endfor %}		  <div class="opt">
+		    <label><input type="radio" name="preset" value="none"{% if f.preset.value == "none" %} checked="checked"{% endif %} /> jiná</label>:
+		    <span class="{{ f.dur.css_classes }}">{{ f.dur }}</span>
+		    <select name="unit" id="id_unit">
+		      <option value="d" id="id_d"{% if f.unit.value == "d" %} selected="selected"{% endif %}>dnů</option>
+		      <option value="w" id="id_w"{% if f.unit.value == "w" %} selected="selected"{% endif %}>týdnů</option>
+		      <option value="m" id="id_m"{% if f.unit.value == "m" %} selected="selected"{% endif %}>měsíců</option>
+		      <option value="y" id="id_y"{% if f.unit.value == "y" %} selected="selected"{% endif %}>let</option>
+		      <option value="b" id="id_b"{% if f.unit.value == "b" %} selected="selected"{% endif %}>pracovních dnů</option>
+		    </select>
+		  </div>
+		  <div style="text-align: center; font-size: 80%;">(lze zadat i zápornou délku)</div>
+	        </fieldset>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td style="text-align: center;">
+		<input type="submit" name="submit" value="Vypočítat" />
+		{% csrf_token %}
+	      </td>
+	    </tr>
+{% if messages %}	    <tr>
+	      <td class="msg">
+		<hr style="margin-top: 35px;" />
+{% for message in messages %}		<div{% if message.1 %} style="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
+{% endfor %}                <hr />
+	      </td>
+	    </tr>
+{% endif %}	  </table>
+	</form>{% endblock %}

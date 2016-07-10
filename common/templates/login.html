@@ -1,0 +1,54 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+<form method="post" enctype="multipart/form-data">
+  <table style="margin: auto;">
+    <tr>
+      <td></td>
+      <td>
+	<h1 style="text-align: left; margin-bottom: 0;">
+	  Přihlášení
+	</h1>
+      </td>
+    </tr>
+    {% if error_message %}<tr>
+      <td></td>
+      <td class="warning">{{ error_message }}</td>
+    </tr>{% endif %}
+    <tr>
+      <td style="text-align: right;">
+	<label for="id_username">Uživatelské jméno</label>:
+      </td>
+      <td>
+	<input type="text" name="username" id="id_username" />
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align: right;">
+	<label for="id_password">Heslo</label>:
+      </td>
+      <td>
+	<input type="password" name="password" id="id_password" />
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+	<input type="submit" name="submit" value="Přihlásit se" />
+	<input type="hidden" name="this_is_the_login_form" />
+	{% csrf_token %}
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+	<p style="margin-top: 8px;">
+	  <a href="{% url 'useradd' %}">
+	    Registrace nového uživatele
+	  </a>
+	</p>
+      </td>
+    </tr>
+  </table>
+</form>
+{% endblock %}

@@ -1,0 +1,13 @@
+.svn/
+*~
+\#*
+/aux/
+*.pyc
+*.po
+/common/collect/
+/venv-*
+migrations/
+__pycache__/
+/repo/
+/common/secrets.py
+/common/wsgi.py

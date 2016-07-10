@@ -1,0 +1,125 @@
+# -*- coding: utf-8 -*-
+#
+# lht/views.py
+#
+# Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
+#
+# This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+#
+# This application is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This application is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.         
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+from django.shortcuts import render
+from django.views.decorators.http import require_http_methods
+from django.apps import apps
+from datetime import date, timedelta
+from calendar import monthrange
+from common.utils import wn, pd, tod, odp, getbutton
+from .forms import MainForm
+
+APP = __package__
+
+APPVERSION = apps.get_app_config(APP).version
+
+@require_http_methods(['GET', 'POST'])
+def mainpage(request):
+    today = date.today()
+    inerr = 'Chybné zadání'
+    messages = []
+
+    if request.method == 'GET':
+        f = MainForm()
+    else:
+        f = MainForm(request.POST)
+        b = getbutton(request)
+        if b == 'set_beg':
+            f.data['beg'] = today
+        elif f.is_valid():
+            cd = f.cleaned_data
+            beg = cd['beg']
+            if (beg.year < 1991):
+                messages = [['Počátek musí být ≥1.1.1991', None]]
+            else:
+                preset = cd['preset']
+                if preset == 'none':
+                    dur = cd['dur']
+                    unit = cd['unit']
+                else:
+                    dur = int(preset[1:])
+                    unit = preset[0]
+                if not dur:
+                    messages = [[inerr, None]]
+                else:
+                    if dur > 0:
+                        o = odp
+                    else:
+                        o = -odp
+                    if unit == 'd':
+                        t = beg + timedelta(days = dur)
+                    elif unit == 'w':
+                        t = beg + timedelta(weeks = dur)
+                    elif unit in ['m', 'y']:
+                        if unit == 'y':
+                            dur *= 12
+                        d = beg.day
+                        m = beg.month
+                        y = beg.year
+                        if dur > 0:
+                            for i in range(dur):
+                                m += 1
+                                if m > 12:
+                                    m = 1
+                                    y += 1
+                        else:
+                            for i in range(-dur):
+                                m -= 1
+                                if not m:
+                                    m = 12
+                                    y -= 1
+                        r = monthrange(y, m)[1]
+                        if d > r:
+                            d = r
+                        t = date(y, m, d)
+                    else:
+                        t = beg
+                        for i in range(abs(dur)):
+                            t += o
+                            while tod(t):
+                                t += o
+
+                    if tod(t):
+                        messages.append(
+                            [('%s není pracovní den' % pd(t)), None])
+
+                    while tod(t):
+                            t += o
+
+                    messages.append(
+                        [(wn[t.weekday()] + ' ' + pd(t)),
+                         'font-weight: bold; font-size: 120%;'])
+                    if t < date(1991, 1, 1):
+                        messages.append(
+                            ['(evidence pracovních dnů v tomto období ' \
+                             'není úplná)',
+                             'font-size: 80%;'])
+           
+        else:
+            messages = [[inerr, None]]
+
+    return render(request,
+                  'lht_main.html',
+                  {'app': APP,
+                   'page_title': 'Konec lhůty',
+                   'messages': messages,
+                   'f': f})

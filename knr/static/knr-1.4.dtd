@@ -1,0 +1,151 @@
+<!-- DTD for KNR V1.4 -->
+
+<!ELEMENT calculation (title, calculation_note, internal_note, vat_rate, items)>
+<!ATTLIST calculation
+  application CDATA #FIXED "knr"
+  version CDATA #REQUIRED
+  created CDATA #REQUIRED
+>
+
+<!ELEMENT title (#PCDATA)>
+
+<!ELEMENT calculation_note (#PCDATA)>
+
+<!ELEMENT internal_note (#PCDATA)>
+
+<!ELEMENT vat_rate (#PCDATA)>
+<!ATTLIST vat_rate
+  unit CDATA #FIXED "percentage"
+>
+
+<!ELEMENT items (item*)>
+
+<!ELEMENT item (description|amount|vat|item_note|major_number|rate|minor_number|multiple_number|off10_flag|off30_flag|off30limit5000_flag|multiple_flag|multiple50_flag|single_flag|halved_flag|halved_appeal_flag|collection_flag|number|time_number|time_rate|from_name|from_address|from_lat|from_lon|to_name|to_address|to_lat|to_lon|trip_number|trip_distance|car_name|fuel_name|cons1|cons2|cons3|formula_name|flat_rate|fuel_price)*>
+<!ATTLIST item
+  type (general|service|flat|administrative|time|travel) #REQUIRED
+>
+
+<!ELEMENT description (#PCDATA)>
+
+<!ELEMENT amount (#PCDATA)>
+<!ATTLIST amount
+  currency CDATA #FIXED "CZK"
+>
+
+<!ELEMENT vat (#PCDATA)>
+
+<!ELEMENT item_note (#PCDATA)>
+
+<!ELEMENT major_number (#PCDATA)>
+
+<!ELEMENT rate (#PCDATA)>
+<!ATTLIST rate
+  currency CDATA #FIXED "CZK"
+>
+
+<!ELEMENT minor_number (#PCDATA)>
+
+<!ELEMENT multiple_number (#PCDATA)>
+
+<!ELEMENT off10_flag (#PCDATA)>
+
+<!ELEMENT off30_flag (#PCDATA)>
+
+<!ELEMENT off30limit5000_flag (#PCDATA)>
+
+<!ELEMENT multiple_flag (#PCDATA)>
+
+<!ELEMENT multiple50_flag (#PCDATA)>
+
+<!ELEMENT single_flag (#PCDATA)>
+
+<!ELEMENT halved_flag (#PCDATA)>
+
+<!ELEMENT halved_appeal_flag (#PCDATA)>
+
+<!ELEMENT collection_flag (#PCDATA)>
+
+<!ELEMENT number (#PCDATA)>
+
+<!ELEMENT time_number (#PCDATA)>
+<!ATTLIST time_number
+  unit CDATA #FIXED "half-hour"
+>
+
+<!ELEMENT time_rate (#PCDATA)>
+<!ATTLIST time_rate
+  currency CDATA #FIXED "CZK"
+  unit CDATA #FIXED "per half-hour"
+>
+
+<!ELEMENT from_name (#PCDATA)>
+
+<!ELEMENT from_address (#PCDATA)>
+
+<!ELEMENT from_lat (#PCDATA)>
+<!ATTLIST from_lat
+  unit CDATA #FIXED "deg"
+  datum CDATA #FIXED "WGS84"
+>
+
+<!ELEMENT from_lon (#PCDATA)>
+<!ATTLIST from_lon
+  unit CDATA #FIXED "deg"
+  datum CDATA #FIXED "WGS84"
+>
+
+<!ELEMENT to_name (#PCDATA)>
+
+<!ELEMENT to_address (#PCDATA)>
+
+<!ELEMENT to_lat (#PCDATA)>
+<!ATTLIST to_lat
+  unit CDATA #FIXED "deg"
+  datum CDATA #FIXED "WGS84"
+>
+
+<!ELEMENT to_lon (#PCDATA)>
+<!ATTLIST to_lon
+  unit CDATA #FIXED "deg"
+  datum CDATA #FIXED "WGS84"
+>
+
+<!ELEMENT trip_number (#PCDATA)>
+
+<!ELEMENT trip_distance (#PCDATA)>
+<!ATTLIST trip_distance
+  unit CDATA #FIXED "km"
+>
+
+<!ELEMENT car_name (#PCDATA)>
+
+<!ELEMENT fuel_name (#PCDATA)>
+
+<!ELEMENT cons1 (#PCDATA)>
+<!ATTLIST cons1
+  unit CDATA #FIXED "l per 100 km"
+>
+
+<!ELEMENT cons2 (#PCDATA)>
+<!ATTLIST cons2
+  unit CDATA #FIXED "l per 100 km"
+>
+
+<!ELEMENT cons3 (#PCDATA)>
+<!ATTLIST cons3
+  unit CDATA #FIXED "l per 100 km"
+>
+
+<!ELEMENT formula_name (#PCDATA)>
+
+<!ELEMENT flat_rate (#PCDATA)>
+<!ATTLIST flat_rate
+  currency CDATA #FIXED "CZK"
+  unit CDATA #FIXED "per km"
+>
+
+<!ELEMENT fuel_price (#PCDATA)>
+<!ATTLIST fuel_price
+  currency CDATA #FIXED "CZK"
+  unit CDATA #FIXED "per l"
+>

@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+        <h1>{{ page_title }}</h1>{% if rows %}
+	<table style="border-collapse: collapse; margin: auto;">
+	  <thead><tr class="header">{% block table_header %}<td></td>{% endblock %}</tr></thead>{% if not suppress_table_footer %}
+          <tfoot><tr class="footer">{% block table_footer %}{% endblock %}</tr></tfoot>{% endif %}
+	  <tbody>{% for row in rows %}
+	    <tr class="{% cycle "odd" "even" %}">{% block table_row %}{% endblock %}</tr>{% endfor %}
+	  </tbody>
+	</table>{% else %}{% block empty %}{% endblock %}{% endif %}
+{% include "knr_back.html" %}{% endblock %}

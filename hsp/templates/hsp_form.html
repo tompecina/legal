@@ -1,0 +1,18 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+	<form method="post" enctype="multipart/form-data">
+	  <table style="margin: auto auto 15px auto;">{% block form_contents %}{% endblock %}	    {% include "submit.html" %}	  </table>
+{% if display_note %}	  <table class="nttbl">
+	    <tr>
+	      <td>
+		<fieldset>
+		  <legend>Poznámka</legend>
+		  {% block note %}{% endblock %}
+		</fieldset>
+	      </td>
+	    </tr>
+	  </table>
+{% endif %}	  {% csrf_token %}
+	</form>
+{% endblock %}

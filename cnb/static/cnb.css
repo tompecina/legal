@@ -1,0 +1,7 @@
+fieldset {
+    margin: 10px auto;
+}
+fieldset div {
+    padding: 3px 8px;
+    text-align: center;
+}

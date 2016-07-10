@@ -1,0 +1,28 @@
+[
+{
+    "model": "knr.vatrate",
+    "pk": 1,
+    "fields": {
+        "rate": 25.0,
+        "valid": "2016-01-01"
+    }
+},
+{
+    "model": "cache.cache",
+    "pk": 1,
+    "fields": {
+        "url": "https://maps.googleapis.com/maps/api/geocode/json?address=Melantrichova%20504/5%2C%20Praha%201&language=cs&sensor=false",
+        "text": "{\n   \"results\" : [\n      {\n         \"address_components\" : [\n            {\n               \"long_name\" : \"5\",\n               \"short_name\" : \"5\",\n               \"types\" : [ \"street_number\" ]\n            },\n            {\n               \"long_name\" : \"504\",\n               \"short_name\" : \"504\",\n               \"types\" : [ \"premise\" ]\n            },\n            {\n               \"long_name\" : \"Melantrichova\",\n               \"short_name\" : \"Melantrichova\",\n               \"types\" : [ \"route\" ]\n            },\n            {\n               \"long_name\" : \"Star\u00e9 M\u011bsto\",\n               \"short_name\" : \"Star\u00e9 M\u011bsto\",\n               \"types\" : [ \"neighborhood\", \"political\" ]\n            },\n            {\n               \"long_name\" : \"Praha 1\",\n               \"short_name\" : \"Praha 1\",\n               \"types\" : [ \"political\", \"sublocality\", \"sublocality_level_1\" ]\n            },\n            {\n               \"long_name\" : \"Praha\",\n               \"short_name\" : \"Praha\",\n               \"types\" : [ \"locality\", \"political\" ]\n            },\n            {\n               \"long_name\" : \"Praha 1\",\n               \"short_name\" : \"Praha 1\",\n               \"types\" : [ \"postal_town\" ]\n            },\n            {\n               \"long_name\" : \"Hlavn\u00ed m\u011bsto Praha\",\n               \"short_name\" : \"Hlavn\u00ed m\u011bsto Praha\",\n               \"types\" : [ \"administrative_area_level_2\", \"political\" ]\n            },\n            {\n               \"long_name\" : \"Hlavn\u00ed m\u011bsto Praha\",\n               \"short_name\" : \"Hlavn\u00ed m\u011bsto Praha\",\n               \"types\" : [ \"administrative_area_level_1\", \"political\" ]\n            },\n            {\n               \"long_name\" : \"\u010cesk\u00e1 republika\",\n               \"short_name\" : \"CZ\",\n               \"types\" : [ \"country\", \"political\" ]\n            },\n            {\n               \"long_name\" : \"110 00\",\n               \"short_name\" : \"110 00\",\n               \"types\" : [ \"postal_code\" ]\n            }\n         ],\n         \"formatted_address\" : \"Melantrichova 504/5, 110 00 Praha 1-Star\u00e9 M\u011bsto, \u010cesk\u00e1 republika\",\n         \"geometry\" : {\n            \"location\" : {\n               \"lat\" : 51.0852574,\n               \"lng\" : 13.4211651\n            },\n            \"location_type\" : \"ROOFTOP\",\n            \"viewport\" : {\n               \"northeast\" : {\n                  \"lat\" : 51.0866063802915,\n                  \"lng\" : 13.4225140802915\n               },\n               \"southwest\" : {\n                  \"lat\" : 51.0839084197085,\n                  \"lng\" : 13.4198161197085\n               }\n            }\n         },\n         \"place_id\" : \"ChIJ9UyNpO6UC0cRmsN-P_qgZag\",\n         \"types\" : [ \"street_address\" ]\n      }\n   ],\n   \"status\" : \"OK\"\n}\n",
+        "expire": "2199-07-14T16:11:37"
+    }
+},
+{
+    "model": "cache.cache",
+    "pk": 2,
+    "fields": {
+        "url": "https://maps.googleapis.com/maps/api/distancematrix/json?origins=50.000000,15.000000&destinations=51.000000,16.000000&mode=driving&units=metric&language=cs&sensor=false",
+        "text": "{\n   \"destination_addresses\" : [ \"Unnamed Road, Polsko\" ],\n   \"origin_addresses\" : [ \"33418, Kou\u0159im, \u010cesk\u00e1 republika\" ],\n   \"rows\" : [\n      {\n         \"elements\" : [\n            {\n               \"distance\" : {\n                  \"text\" : \"182 km\",\n                  \"value\" : 182046\n               },\n               \"duration\" : {\n                  \"text\" : \"3 hod, 51 min\",\n                  \"value\" : 20265\n               },\n               \"status\" : \"OK\"\n            }\n         ]\n      }\n   ],\n   \"status\" : \"OK\"\n}\n",
+        "expire": "2199-07-14T16:24:36"
+    }
+}
+]

@@ -1,0 +1,19 @@
+===============
+LEGAL.PECINA.CZ
+===============
+
+(C) 2011-16 Tomáš Pecina <tomas@pecina.cz>, GNU General Public License Version 3
+
+
+LEGAL.PECINA.CZ je webová aplikace v Pythonu/Djangu realisující soubor pomůcek
+pro právnické výpočty.
+
+Pro instalaci musíte vytvořit soubor common/secrets.py, obsahujcí tyto dva
+řádky:
+
+DBPASSWD = <heslo k vaší databasi>
+SECKEY = <tajný klíč pro aplikaci>
+
+Rovněž budete pravděpodobně muset vytvořit soubor wsgi.py, jehož obsah je
+závislý na konkrétních podmínkách instalace na vašem serveru, případně upravit
+nastavení v souboru common/settings.py.

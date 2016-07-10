@@ -1,0 +1,95 @@
+fieldset {
+    padding: 5px 10px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+.btbl table {
+    width: 100%;
+}
+.btbl th, .btbl tbody td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #c0c0ff;
+}
+.btbl th {
+    text-align: center;
+    font-size: 135%;
+    padding-left: 12px;
+}
+.btbl td.mc {
+    width: 100%;
+}
+.btbl td.act {
+    text-align: center;
+}
+.btbl div:first-child {
+    font-weight: bold;
+}
+td.cc {
+    white-space: nowrap;
+    font-weight: bold;
+}
+tr.header:first-child th {
+    padding-bottom: 0;
+}
+table.intbl {
+    margin: 5px auto;
+    width: 100%;
+}
+.intbl th, .intbl td {
+    text-align: left;
+    padding: 4px 10px 8px;
+}
+.intbl td.hr {
+    padding: 6px 0 8px;
+}
+.intbl hr {
+    margin: 0;
+}
+.intbl td span {
+    padding-left: 10px;
+}
+tr.curr th {
+    font-weight: normal;
+    padding-top: 1px;
+}
+tr.deb th {
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+td.taberr {
+    text-align: center;
+    background: white;
+    background-image: url('/static/cb1.png');
+    background-repeat: repeat;
+    border-top: 1px solid #c4e0ff;
+    padding: 5px 10px;
+}
+td.dat, td.dt, td.cus {
+    text-align: center;
+}
+td.am, td.ams {
+    text-align: right;
+    white-space: nowrap;
+}
+td.ams, td.cs, td.cus {
+    border-left: 1px solid #c4e0ff;
+}
+th.sum {
+    font-weight: bold;
+}
+td.act {
+    word-spacing: 5px;
+    white-space: nowrap;
+}
+span.cr {
+    color: #e00000;
+}
+.butbar td {
+    padding: 1px 12px;
+}
+table.nttbl {
+    margin: 25px auto 10px;
+}
+table.nttbl p {
+    margin: 5px 15px;
+}

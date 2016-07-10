@@ -1,0 +1,40 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+        <form method="post" enctype="multipart/form-data" id="id_maintform">
+	  <table style="margin: auto auto 30px auto;">
+	    <tr><td colspan="3"><h1 style="text-align: center; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+            <tr class="{{ f.beg.css_classes }}">
+	      <th>
+		{{ f.beg.label_tag }}
+	      </th>
+	      <td>
+		{{ f.beg }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <th class="{{ f.years.css_classes }} {{ f.months.css_classes }} {{ f.days.css_classes }}">
+		Délka trestu:
+	      </th>
+	      <td>
+		<span class="{{ f.years.css_classes }}">{{ f.years }}</span> {{ f.years.label }}
+		<span class="{{ f.months.css_classes }}" style="padding-left: 10px;">{{ f.months }}</span> {{ f.months.label }}
+		<span class="{{ f.days.css_classes }}" style="padding-left: 10px;">{{ f.days }}</span> {{ f.days.label }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <td colspan="2" style="text-align: center;">
+		<input type="submit" name="submit" value="Vypočítat" />
+		{% csrf_token %}
+	      </td>
+	    </tr>
+{% if messages %}	    <tr>
+	      <td colspan="2" class="msg">
+		<hr style="margin-top: 35px;" />
+{% for message in messages %}		<div{% if message.1 %} style="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
+{% endfor %}                <hr />
+	      </td>
+	    </tr>
+{% endif %}	  </table>
+	</form>
+{% endblock %}

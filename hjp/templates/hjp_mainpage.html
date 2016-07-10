@@ -1,0 +1,151 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+	<form method="post" enctype="multipart/form-data" id="id_mainform">
+	  <h1 style="margin-bottom: 8px;">{{ page_title }}</h1>
+	  <table style="margin: 15px auto 25px;">
+{% if err_message %}            <tr><td class="warning">
+              {% include "formwarning.html" %}            </td></tr>
+{% endif %}	    <tr>
+	      <td>
+		<fieldset class="infotbl">
+		  <legend>Údaje o pohledávce</legend>
+		  <table style="margin: 5px 15px;">
+                    <tr><th class="{{ f.title.css_classes }}">{{ f.title.label_tag }}</th><td>{{ f.title }}</td></tr>
+	            <tr><th class="{{ f.note.css_classes }}">{{ f.note.label_tag }}</th><td>{{ f.note }}</td></tr>
+                    <tr><th class="{{ f.internal_note.css_classes }}">{{ f.internal_note.label_tag }}</th><td>{{ f.internal_note }}</td></tr>
+                    <tr>
+		      <th class="{{ f.currency.css_classes }}" style="padding: 3px 8px;">{{ f.currency.label_tag }}</th>
+		      <td>
+			{{ f.currency }}
+		      </td>
+		    </tr>
+                    <tr>
+		      <th style="padding: 3px 8px;">{{ f.rounding.label_tag }}</th>
+		      <td>{{ rt }}
+			<select name="rounding" id="id_rounding">
+			  <option value="0" {% if f.rounding.value == '0' %} selected="selected"{% endif %}>na jednotky</option>
+			  <option value="2" {% if f.rounding.value == '2' %} selected="selected"{% endif %}>na 2 desetinná místa</option>
+			</select>
+		      </td>
+		    </tr>
+		  </table>
+		</fieldset>
+		<fieldset class="intbl">
+		  <legend>{{ f.model.label }}</legend>
+		  <table>
+		    <tr>
+		      <th colspan="3" class="immune">{{ f.model.0 }}</th>
+		    </tr>
+		    <tr id="id_fa">
+		      <th class="immune"><span class="{{ f.fixed_amount.css_classes }}">{{ f.model.1 }}:</span></th>
+		      <td colspan="2" class="{{ f.fixed_amount.css_classes }}">{{ f.fixed_amount }} <span class="curr">{{ currency }}</span></td>
+		    </tr>
+		    <tr id="id_pa">
+		      <th class="immune"><span class="{{ f.pa_rate.css_classes }}">{{ f.model.2 }}:</span></th>
+		      <td class="{{ f.pa_rate.css_classes }}">{{ f.pa_rate }} % <i>p. a.</i></td>
+		      <td>{{ f.ydconv.label_tag }}
+			<select name="ydconv" id="id_ydconv">
+{% for dconv in ydconvs %}			  <option value="{{ dconv }}"{% if f.ydconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
+{% endfor %}			</select>
+		      </td>
+		    </tr>
+		    <tr id="id_pm">
+		      <th class="immune"><span class="{{ f.pm_rate.css_classes }}">{{ f.model.3 }}:</span></th>
+		      <td class="{{ f.pm_rate.css_classes }}">{{ f.pm_rate }} % <i>p. m.</i></td>
+		      <td>{{ f.mdconv.label_tag }}
+			<select name="mdconv" id="id_mdconv">
+{% for dconv in mdconvs %}			  <option value="{{ dconv }}"{% if f.mdconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
+{% endfor %}			</select>
+		      </td>
+		    </tr>
+		    <tr id="id_pd">
+		      <th class="immune"><span class="{{ f.pd_rate.css_classes }}">{{ f.model.4 }}:</span></th>
+		      <td colspan="2" class="{{ f.pd_rate.css_classes }}">{{ f.pd_rate }} ‰ <i>p. d.</i></td>
+		    </tr>
+		    <tr>
+		      <th colspan="3" class="immune">{{ f.model.5 }}</th>
+		    </tr>
+		    <tr>
+		      <th colspan="3" class="immune">{{ f.model.6 }}</th>
+		    </tr>
+		    <tr>
+		      <th colspan="3" class="immune">{{ f.model.7 }}</th>
+		    </tr>
+		    <tr>
+		      <th colspan="3" class="immune">{{ f.model.8 }}</th>
+		    </tr>
+		    <tr>
+		      <th colspan="3" class="immune">{{ f.model.9 }}</th>
+		    </tr>
+		    <tr>
+		      <th colspan="3" class="immune">{{ f.model.10 }}</th>
+		    </tr>
+		  </table>
+	        </fieldset>
+	      </td>
+	    </tr>
+	  </table>
+          <table style="border-collapse: collapse; margin: 25px auto 0;" id="id_calc">
+	    <thead>
+	      <tr class="header">
+		<th rowspan="2">Datum</th>
+		<th rowspan="2">Popis</th>
+		<th rowspan="2">Přednost</th>
+		<th rowspan="2">Pohyb</th>
+		<th colspan="2">Předchozí zůstatek</th>
+		<th colspan="2">Započteno</th>
+		<th colspan="3">Nový zůstatek</th>
+		<th rowspan="2">Akce</th>
+	      </tr>
+	      <tr class="header">
+		<th>Jistina</th>
+		<th>Úrok</th>
+		<th>Jistina</th>
+		<th>Úrok</th>
+		<th>Jistina</th>
+		<th>Úrok</th>
+		<th>Celkem</th>
+	      </tr>
+	    </thead>
+{% if not suppress_table_footer %}	    <tfoot>
+	      <tr class="footer">
+		<td colspan="12"><a href="{% url 'hjp:transform' %}">Přidat transakci</a></td>
+	      </tr>
+	    </tfoot>
+{% endif %}	    <tbody>
+{% for row in rows %}              <tr class="{% cycle 'odd' 'even' %}">
+		<td class="trdt">{{ row.date|date:'d.m.Y' }}</td>
+		<td>{{ row.description }}</td>
+		<td class="dat">{{ row.rep }}</td>
+		{{ row.change|safe }}
+{% if row.err %}{% if row.msg %}		<td colspan="7" rowspan="{{ forloop.revcounter }}" class="taberr">{{ row.msg }}</td>
+{% endif %}{% else %}		{{ row.pre_principal|safe }}
+		{{ row.pre_interest|safe }}
+		{{ row.change_principal|safe }}
+		{{ row.change_interest|safe }}
+		{{ row.post_principal|safe }}
+		{{ row.post_interest|safe }}
+		{{ row.post_total|safe }}
+{% endif %}		<td class="act"><a href="{% url 'hjp:transform' row.id %}">upravit</a> <a href="{% url 'hjp:transdel' row.id %}">smazat</a></td>
+	      </tr>
+{% empty %}              <tr class="odd"><td colspan="12" class="taberr">(žádné transakce)</td></tr>
+{% endfor %}	    </tbody>
+	  </table>
+	  <table class="butbar" style="margin: 25px auto;">
+	    <tr>
+	      <td><input type="submit" name="submit_update" value="Aktualisovat" /></td>
+	      <td><input type="submit" name="submit_empty" value="Vyprázdnit" id="id_reset" /></td>
+	      <td><input type="submit" name="submit_load" value="Načíst" id="id_load_button" /></td>
+	      <td><input type="submit" name="submit_xml" value="Uložit" /></td>
+	      <td><input type="submit" name="submit_csv" value="Export do CSV" /></td>
+	      <td><input type="submit" name="submit_pdf" value="Export do PDF" /></td>
+	    </tr>
+	    <tr>
+	      <td colspan="2"></td><td colspan="4"><input type="file" name="load" accept="application/pdf,text/xml" id="id_load" /></td>
+	    </tr>
+	  </table>
+	  <div class="hidden">{{ f.next }}</div>
+	  {% csrf_token %}
+	</form>
+{% endblock %}

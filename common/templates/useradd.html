@@ -1,0 +1,90 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+	<form method="post" enctype="multipart/form-data">
+	  <table style="margin: auto auto 15px auto;">
+	    <tr id="id_transform">
+	      <td></td>
+	      <td>
+		<h1 style="text-align: left; margin-bottom: 8px; ">
+		  {{ page_title }}
+		</h1>
+	      </td>
+	    </tr>
+{% if err_message %}            <tr>
+	      <td></td>
+	      <td class="warning">
+              {% include "formwarning.html" %}            </td>
+	    </tr>
+{% endif %}	    <tr class="{{ f.username.css_classes }}">
+	      <th>
+		{{ f.username.label_tag }}
+	      </th>
+	      <td>
+		{{ f.username }} {{ f.username.help_text }}
+	      </td>
+	    </tr>
+	    <tr class="{{ f.first_name.css_classes }}">
+	      <th>
+		{{ f.first_name.label_tag }}
+	      </th>
+	      <td>
+		{{ f.first_name }}
+	      </td>
+	    </tr>
+	    <tr class="{{ f.last_name.css_classes }}">
+	      <th>
+		{{ f.last_name.label_tag }}
+	      </th>
+	      <td>
+		{{ f.last_name }}
+	      </td>
+	    </tr>
+	    <tr class="{{ f.email.css_classes }}">
+	      <th>
+		{{ f.email.label_tag }}
+	      </th>
+	      <td>
+		{{ f.email }} {{ f.email.help_text }}
+	      </td>
+	    </tr>
+	    <tr class="{{ f.password1.css_classes }}">
+	      <th>
+		{{ f.password1.label_tag }}
+	      </th>
+	      <td>
+		{{ f.password1 }}
+	      </td>
+	    </tr>
+	    <tr class="{{ f.password2.css_classes }}">
+	      <th>
+		{{ f.password2.label_tag }}
+	      </th>
+	      <td>
+		{{ f.password2 }} {{ f.password2.help_text }}
+	      </td>
+	    </tr>
+	    <tr class="{{ f.captcha.css_classes }}">
+	      <th style="padding-top: 8px; vertical-align: bottom;">
+		{{ f.captcha.label_tag }}
+	      </th>
+	      <td style="vertical-align: bottom;">
+		{{ f.captcha.help_text }}
+	      </td>
+	    </tr>
+	    <tr class="{{ f.captcha.css_classes }}">
+	      <th></th>
+	      <td>
+		{{ f.captcha }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <td></td>
+	      <td>
+		<input type="submit" name="submit" value="Registrovat" />
+		{% csrf_token %}
+	      </td>
+	    </tr>
+	  </table>
+	</form>
+{% endblock %}

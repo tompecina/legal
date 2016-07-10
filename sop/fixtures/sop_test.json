@@ -1,0 +1,10 @@
+[
+{
+    "model": "cnb.fxrate",
+    "pk": 1,
+    "fields": {
+        "date": "2016-07-01",
+        "text": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<kurzy banka=\"CNB\" datum=\"01.07.2016\" poradi=\"128\">\n<tabulka typ=\"XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU\">\n<radek kod=\"EUR\" mena=\"euro\" mnozstvi=\"1\" kurz=\"17,095\" zeme=\"EMU\"/>\n<radek kod=\"THB\" mena=\"baht\" mnozstvi=\"100\" kurz=\"99,430\" zeme=\"Thajsko\"/>\n<radek kod=\"USD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"34,335\" zeme=\"USA\"/>\n</tabulka>\n</kurzy>\n"
+    }
+}
+]

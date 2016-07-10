@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML Schema for HJP V1.6 <https://legal.pecina.cz/> -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://legal.pecina.cz" xmlns="https://legal.pecina.cz" elementFormDefault="qualified">
+  <xs:element name="debt">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="title" type="xs:token"/>
+	<xs:element name="note" type="xs:string"/>
+	<xs:element name="internal_note" type="xs:string"/>
+	<xs:element name="currency">
+	  <xs:complexType>
+	    <xs:simpleContent>
+	      <xs:extension base="currency">
+		<xs:attribute name="standard" use="required" type="xs:token" fixed="ISO 4217"/>
+	      </xs:extension>
+	    </xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element name="rounding">
+	  <xs:simpleType>
+	    <xs:restriction base="xs:integer">
+	      <xs:enumeration value="0"/>
+	      <xs:enumeration value="2"/>
+	    </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element ref="interest"/>
+	<xs:element ref="transactions"/>
+      </xs:sequence>
+      <xs:attribute name="version" use="required" type="xs:NMTOKEN" fixed="1.6"/>
+      <xs:attribute name="application" use="required" type="xs:NCName" fixed="hjp"/>
+      <xs:attribute name="created" use="required" type="xs:dateTime"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="interest">
+    <xs:complexType>
+      <xs:all>
+	<xs:element name="amount" minOccurs="0" type="xs:decimal"/>
+	<xs:element name="pa_rate" minOccurs="0">
+	  <xs:complexType>
+	    <xs:simpleContent>
+	      <xs:extension base="xs:decimal">
+		<xs:attribute name="unit" use="required" type="xs:token" fixed="percent per annum"/>
+	      </xs:extension>
+	    </xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element name="pm_rate" minOccurs="0">
+	  <xs:complexType>
+	    <xs:simpleContent>
+	      <xs:extension base="xs:decimal">
+		<xs:attribute name="unit" use="required" type="xs:token" fixed="percent per month"/>
+	      </xs:extension>
+	    </xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element name="pd_rate" minOccurs="0">
+	  <xs:complexType>
+	    <xs:simpleContent>
+	      <xs:extension base="xs:decimal">
+		<xs:attribute name="unit" use="required" type="xs:token" fixed="per mil per day"/>
+	      </xs:extension>
+	    </xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element name="day_count_convention" minOccurs="0" type="xs:token"/>
+      </xs:all>
+      <xs:attribute name="model" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="transactions">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+	<xs:choice>
+	  <xs:element ref="debit"/>
+	  <xs:element ref="credit"/>
+	  <xs:element ref="balance"/>
+	</xs:choice>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="debit">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="description"/>
+	<xs:element ref="date"/>
+	<xs:element ref="amount"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="credit">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="description"/>
+	<xs:element ref="date"/>
+	<xs:element ref="amount"/>
+	<xs:element ref="repayment_preference"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="balance">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="description"/>
+	<xs:element ref="date"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="description" type="xs:token"/>
+  <xs:element name="date" type="xs:date"/>
+  <xs:element name="amount" type="xs:decimal"/>
+  <xs:element name="repayment_preference">
+    <xs:simpleType>
+      <xs:restriction base="xs:NCName">
+	<xs:enumeration value="principal"/>
+	<xs:enumeration value="interest"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:simpleType name="currency">
+    <xs:restriction base="xs:NCName">
+      <xs:pattern value="[A-Z]{3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

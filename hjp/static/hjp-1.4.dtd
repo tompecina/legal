@@ -1,0 +1,63 @@
+<!-- DTD for HJP V1.4 -->
+
+<!ELEMENT debt (title, note, internal_note, currency, rounding, interest, transactions)>
+<!ATTLIST debt
+  application CDATA #FIXED "hjp"
+  version CDATA #REQUIRED
+  created CDATA #REQUIRED
+>
+
+<!ELEMENT title (#PCDATA)>
+
+<!ELEMENT note (#PCDATA)>
+
+<!ELEMENT internal_note (#PCDATA)>
+
+<!ELEMENT currency (#PCDATA)>
+<!ATTLIST currency
+  standard CDATA #FIXED "ISO 4217"
+>
+
+<!ELEMENT rounding (#PCDATA)>
+
+<!ELEMENT interest (amount|pa_rate|pm_rate|pd_rate|day_count_convention)*>
+<!ATTLIST interest
+  model CDATA #REQUIRED
+>
+
+<!ELEMENT amount (#PCDATA)>
+
+<!ELEMENT pa_rate (#PCDATA)>
+<!ATTLIST pa_rate
+  unit CDATA #FIXED "percent per annum"
+>
+
+<!ELEMENT pm_rate (#PCDATA)>
+<!ATTLIST pm_rate
+  unit CDATA #FIXED "percent per month"
+>
+
+<!ELEMENT pd_rate (#PCDATA)>
+<!ATTLIST pd_rate
+  unit CDATA #FIXED "per mil per day"
+>
+
+<!ELEMENT day_count_convention (#PCDATA)>
+
+<!ELEMENT transactions (transaction*)>
+
+<!ELEMENT transaction (description, date, amount?, repayment_preference?)>
+<!ATTLIST transaction
+  type CDATA #REQUIRED
+>
+
+<!ELEMENT description (#PCDATA)>
+
+<!ELEMENT date EMPTY>
+<!ATTLIST date
+  day CDATA #REQUIRED
+  month CDATA #REQUIRED
+  year CDATA #REQUIRED
+>
+
+<!ELEMENT repayment_preference (#PCDATA)>

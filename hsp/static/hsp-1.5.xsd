@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML Schema for HSP V1.5 <http://legal.pecina.cz/> -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://legal.pecina.cz" xmlns="http://legal.pecina.cz" elementFormDefault="qualified">
+  <xs:element name="debt">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="title" type="xs:token"/>
+	<xs:element name="note" type="xs:string"/>
+	<xs:element name="internal_note" type="xs:string"/>
+	<xs:element name="rounding">
+	  <xs:simpleType>
+	    <xs:restriction base="xs:integer">
+	      <xs:enumeration value="0"/>
+	      <xs:enumeration value="2"/>
+	    </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element ref="debits"/>
+	<xs:element ref="credits"/>
+	<xs:element ref="balances"/>
+	<xs:element ref="fxrates"/>
+      </xs:sequence>
+      <xs:attribute name="version" use="required" type="xs:NMTOKEN" fixed="1.5"/>
+      <xs:attribute name="application" use="required" type="xs:NCName" fixed="hsp"/>
+      <xs:attribute name="created" use="required" type="xs:dateTime"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="debits">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="debit" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="debit">
+    <xs:complexType>
+      <xs:all>
+	<xs:element name="description" minOccurs="0" type="xs:token"/>
+	<xs:element name="fixed_date" minOccurs="0" type="xs:date"/>
+	<xs:element name="fixed_amount" minOccurs="0" type="xs:decimal"/>
+	<xs:element name="fixed_currency" minOccurs="0" type="currency"/>
+	<xs:element name="pa_rate" minOccurs="0">
+	  <xs:complexType>
+	    <xs:simpleContent>
+	      <xs:extension base="xs:decimal">
+		<xs:attribute name="unit" use="required" type="xs:token" fixed="percent per annum"/>
+	      </xs:extension>
+	    </xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element name="pm_rate" minOccurs="0">
+	  <xs:complexType>
+	    <xs:simpleContent>
+	      <xs:extension base="xs:decimal">
+		<xs:attribute name="unit" use="required" type="xs:token" fixed="percent per month"/>
+	      </xs:extension>
+	    </xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element name="pd_rate" minOccurs="0">
+	  <xs:complexType>
+	    <xs:simpleContent>
+	      <xs:extension base="xs:decimal">
+		<xs:attribute name="unit" use="required" type="xs:token" fixed="per mil per day"/>
+	      </xs:extension>
+	    </xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element name="day_count_convention" minOccurs="0" type="xs:token"/>
+	<xs:element name="principal_debit" minOccurs="0">
+	  <xs:complexType>
+	    <xs:attribute name="id" use="required" type="xs:nonNegativeInteger"/>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element name="principal_amount" minOccurs="0" type="xs:decimal"/>
+	<xs:element name="principal_currency" minOccurs="0" type="currency"/>
+	<xs:element name="date_from" minOccurs="0" type="xs:date"/>
+	<xs:element name="date_to" minOccurs="0" type="xs:date"/>
+      </xs:all>
+      <xs:attribute name="model" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="credits">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="credit" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="credit">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="description" type="xs:token"/>
+	<xs:element name="date" type="xs:date"/>
+	<xs:element name="amount" type="xs:decimal"/>
+	<xs:element name="currency" type="currency"/>
+	<xs:element name="debits">
+	  <xs:complexType>
+	    <xs:sequence>
+	      <xs:element name="debit" minOccurs="0" maxOccurs="unbounded">
+		<xs:complexType>
+		  <xs:attribute name="id" use="required" type="xs:nonNegativeInteger"/>
+		</xs:complexType>
+	      </xs:element>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="balances">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="balance" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="balance">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="description" type="xs:token"/>
+	<xs:element name="date" type="xs:date"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fxrates">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="fxrates" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fxrate">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="currency_from" type="currency"/>
+	<xs:element name="currency_to" type="currency"/>
+	<xs:element name="rate_from" type="xs:decimal"/>
+	<xs:element name="rate_to" type="xs:decimal"/>
+	<xs:element name="date_from" minOccurs="0" type="xs:date"/>
+	<xs:element name="date_to" minOccurs="0" type="xs:date"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="currency_code">
+    <xs:restriction base="xs:NCName">
+      <xs:pattern value="[A-Z]{3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="currency">
+    <xs:simpleContent>
+      <xs:extension base="currency_code">
+	<xs:attribute name="standard" use="required" type="xs:token" fixed="ISO 4217"/> 
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

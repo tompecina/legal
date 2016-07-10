@@ -1,0 +1,26 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+        <form method="post" enctype="multipart/form-data">
+	  <table style="margin: auto auto 30px auto;">
+	    <tr><td></td><td><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+	    <tr class="{{ f.beg.css_classes }}"><td style="text-align: right;">{{ f.beg.label_tag }}</td><td>{{ f.beg }} (nezapočítává se)</td></tr>
+	    <tr class="{{ f.end.css_classes }}"><td style="text-align: right;">{{ f.end.label_tag }}</td><td>{{ f.end }} (započítává se)</td></tr>
+	    <tr>
+	      <td></td>
+	      <td style="padding-top: 5px">
+		<input type="submit" name="submit" value="Vypočítat" />
+		{% csrf_token %}
+	      </td>
+	    </tr>
+{% if messages %}	    <tr>
+	      <td></td>
+	      <td class="msg">
+		<hr style="margin-top: 35px;" />
+{% for message in messages %}		<div{% if message.1 %} style="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
+{% endfor %}                <hr />
+	      </td>
+	    </tr>
+{% endif %}	  </table>
+	</form>
+{% endblock %}

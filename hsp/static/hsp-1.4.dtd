@@ -1,0 +1,121 @@
+<!-- DTD for HSP V1.4 -->
+
+<!ELEMENT debt (title, note, internal_note, rounding, debits, credits, balances, fxrates)>
+<!ATTLIST debt
+  application CDATA #FIXED "hsp"
+  version CDATA #REQUIRED
+  created CDATA #REQUIRED
+>
+
+<!ELEMENT title (#PCDATA)>
+
+<!ELEMENT note (#PCDATA)>
+
+<!ELEMENT internal_note (#PCDATA)>
+
+<!ELEMENT rounding (#PCDATA)>
+
+<!ELEMENT debits (debit*)>
+
+<!ELEMENT debit (description|fixed_amount|fixed_currency|fixed_date|pa_rate|pm_rate|pd_rate|day_count_convention|principal_debit|principal_amount|principal_currency|date_from|date_to)*>
+<!ATTLIST debit
+  model CDATA #IMPLIED
+  id CDATA #IMPLIED
+>
+
+<!ELEMENT description (#PCDATA)>
+
+<!ELEMENT fixed_amount (#PCDATA)>
+
+<!ELEMENT fixed_currency (#PCDATA)>
+<!ATTLIST fixed_currency
+  standard CDATA #FIXED "ISO 4217"
+>
+
+<!ELEMENT fixed_date EMPTY>
+<!ATTLIST fixed_date
+  day CDATA #REQUIRED
+  month CDATA #REQUIRED
+  year CDATA #REQUIRED
+>
+
+<!ELEMENT pa_rate (#PCDATA)>
+<!ATTLIST pa_rate
+  unit CDATA #FIXED "percent per annum"
+>
+
+<!ELEMENT pm_rate (#PCDATA)>
+<!ATTLIST pm_rate
+  unit CDATA #FIXED "percent per month"
+>
+
+<!ELEMENT pd_rate (#PCDATA)>
+<!ATTLIST pd_rate
+  unit CDATA #FIXED "per mil per day"
+>
+
+<!ELEMENT principal_debit EMPTY>
+<!ATTLIST principal_debit
+  id CDATA #REQUIRED
+>
+
+<!ELEMENT principal_amount (#PCDATA)>
+
+<!ELEMENT principal_currency (#PCDATA)>
+<!ATTLIST principal_currency
+  standard CDATA #FIXED "ISO 4217"
+>
+
+<!ELEMENT date_from EMPTY>
+<!ATTLIST date_from
+  day CDATA #REQUIRED
+  month CDATA #REQUIRED
+  year CDATA #REQUIRED
+>
+
+<!ELEMENT date_to EMPTY>
+<!ATTLIST date_to
+  day CDATA #REQUIRED
+  month CDATA #REQUIRED
+  year CDATA #REQUIRED
+>
+
+<!ELEMENT credits (credit*)>
+
+<!ELEMENT credit (description, date, amount, currency, debits)>
+
+<!ELEMENT date EMPTY>
+<!ATTLIST date
+  day CDATA #REQUIRED
+  month CDATA #REQUIRED
+  year CDATA #REQUIRED
+>
+
+<!ELEMENT amount (#PCDATA)>
+
+<!ELEMENT currency (#PCDATA)>
+<!ATTLIST currency
+  standard CDATA #FIXED "ISO 4217"
+>
+
+<!ELEMENT balances (balance*)>
+
+<!ELEMENT balance (description, date)>
+
+<!ELEMENT fxrates (fxrate*)>
+
+<!ELEMENT fxrate (currency_from, currency_to, rate_from, rate_to, date_from?, date_to?)>
+
+<!ELEMENT currency_from (#PCDATA)>
+<!ATTLIST currency_from
+  standard CDATA #FIXED "ISO 4217"
+>
+
+<!ELEMENT currency_to (#PCDATA)>
+<!ATTLIST currency_to
+  standard CDATA #FIXED "ISO 4217"
+>
+
+<!ELEMENT rate_from (#PCDATA)>
+
+<!ELEMENT rate_to (#PCDATA)>

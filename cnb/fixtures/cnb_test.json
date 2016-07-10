@@ -1,0 +1,74 @@
+[
+{
+    "model": "cache.cache",
+    "pk": 1,
+    "fields": {
+        "url": "https://www.cnb.cz/cs/faq/vyvoj_diskontni_historie.txt",
+        "text": "PLATNA_OD|CNB_DISKONTNI_SAZBA_V_%\n19900101|4,00\n19900401|5,00\n19901001|7,00\n19901111|8,50\n19910101|10,00\n19910908|9,50\n19920325|9,00\n19920826|8,00\n19921230|9,50\n19930610|8,00\n19941024|8,50\n19950626|9,50\n19960621|10,50\n19970527|13,00\n19980814|11,50\n19981027|10,00\n19981223|7,50\n19990312|6,00\n19990903|5,50\n19991027|5,00\n20010223|4,00\n20010727|4,25\n20011130|3,75\n20020122|3,50\n20020201|3,25\n20020426|2,75\n20020726|2,00\n20021101|1,75\n20030131|1,50\n20030626|1,25\n20030801|1,00\n20040625|1,25\n20040827|1,50\n20050128|1,25\n20050401|1,00\n20050429|0,75\n20051031|1,00\n20060728|1,25\n20060929|1,50\n20070601|1,75\n20070727|2,00\n20070831|2,25\n20071130|2,50\n20080208|2,75\n20080808|2,50\n20081107|1,75\n20081218|1,25\n20090206|0,75\n20090511|0,50\n20090807|0,25\n20121001|0,10\n20121102|0,06",
+        "expire": "2199-07-06T12:37:19"
+    }
+},
+{
+    "model": "cache.cache",
+    "pk": 2,
+    "fields": {
+        "url": "https://www.cnb.cz/cs/faq/vyvoj_lombard_historie.txt",
+        "text": "PLATNA_OD|CNB_LOMBARDNI_SAZBA_V_%\n19930101|14,00\n19930809|12,50\n19931217|11,50\n19940408|10,50\n19941024|11,00\n19941202|11,50\n19950626|22,50\n19960621|4,00\n19970516|51,00\n19970627|23,00\n19980123|19,00\n19980814|16,00\n19981027|15,00\n19981223|12,50\n19990312|10,00\n19990903|8,00\n19991027|7,50\n20010223|6,00\n20010727|6,25\n20011130|5,75\n20020122|5,50\n20020201|5,25\n20020426|4,75\n20020726|4,00\n20021101|3,75\n20030131|3,50\n20030626|3,25\n20030801|3,00\n20040625|3,25\n20040827|3,50\n20050128|3,25\n20050401|3,00\n20050429|2,75\n20051031|3,00\n20060728|3,25\n20060929|3,50\n20070601|3,75\n20070727|4,00\n20070831|4,25\n20071130|4,50\n20080208|4,75\n20080808|4,50\n20081107|3,75\n20081218|3,25\n20090206|2,75\n20090511|2,50\n20090807|2,25\n20091217|2,00\n20100507|1,75\n20120629|1,50\n20121001|0,75\n20121102|0,25",
+        "expire": "2199-07-06T12:37:19"
+    }
+},
+{
+    "model": "cache.cache",
+    "pk": 3,
+    "fields": {
+        "url": "https://www.cnb.cz/cs/faq/vyvoj_repo_historie.txt",
+        "text": "PLATNA_OD|CNB_REPO_SAZBA_V_%\n19951208|11,30\n19960329|11,50\n19960429|11,60\n19960509|11,80\n19960621|12,40\n19970604|39,00\n19970611|29,00\n19970618|25,00\n19970620|22,00\n19970623|20,00\n19970624|18,50\n19970630|18,20\n19970701|17,90\n19970707|17,00\n19970708|16,50\n19970709|16,20\n19970716|16,00\n19970722|15,70\n19970723|15,40\n19970724|15,20\n19970728|14,90\n19970801|14,70\n19970804|14,50\n19971031|14,80\n19971201|18,50\n19971202|18,00\n19971203|17,50\n19971204|16,75\n19971209|15,50\n19971210|15,00\n19971217|14,75\n19980320|15,00\n19980717|14,50\n19980814|14,00\n19980925|13,50\n19981027|12,50\n19981113|11,50\n19981204|10,50\n19981223|9,50\n19990118|8,75\n19990129|8,00\n19990312|7,50\n19990409|7,20\n19990504|6,90\n19990625|6,50\n19990730|6,25\n19990903|6,00\n19991005|5,75\n19991027|5,50\n19991126|5,25\n20010223|5,00\n20010727|5,25\n20011130|4,75\n20020122|4,50\n20020201|4,25\n20020426|3,75\n20020726|3,00\n20021101|2,75\n20030131|2,50\n20030626|2,25\n20030801|2,00\n20040625|2,25\n20040827|2,50\n20050128|2,25\n20050401|2,00\n20050429|1,75\n20051031|2,00\n20060728|2,25\n20060929|2,50\n20070601|2,75\n20070727|3,00\n20070831|3,25\n20071130|3,50\n20080208|4,75\n20080808|3,50\n20081107|2,75\n20081218|2,25\n20090206|1,75\n20090511|1,50\n20090807|1,25\n20091217|1,00\n20100507|0,75\n20120629|0,50\n20121001|0,25\n20121102|0,05",
+        "expire": "2199-07-06T12:37:19"
+    }
+},
+{
+    "model": "cache.cache",
+    "pk": 5,
+    "fields": {
+        "url": "https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml?date=1.7.2016",
+        "text": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<kurzy banka=\"CNB\" datum=\"01.07.2016\" poradi=\"128\">\n<tabulka typ=\"XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU\">\n<radek kod=\"EUR\" mena=\"euro\" mnozstvi=\"1\" kurz=\"17,095\" zeme=\"EMU\"/>\n<radek kod=\"THB\" mena=\"baht\" mnozstvi=\"100\" kurz=\"99,430\" zeme=\"Thajsko\"/>\n<radek kod=\"USD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"34,335\" zeme=\"USA\"/>\n</tabulka>\n</kurzy>\n",
+        "expire": "2199-07-06T12:37:19"
+    }
+},
+{
+    "model": "cache.cache",
+    "pk": 6,
+    "fields": {
+        "url": "https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml?date=1.4.2016",
+        "text": "ERR\n",
+        "expire": "2199-07-06T12:37:19"
+    }
+},
+{
+    "model": "cache.cache",
+    "pk": 7,
+    "fields": {
+        "url": "https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml?date=1.1.1999",
+        "text": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<kurzy banka=\"CNB\" datum=\"01.01.1999\" poradi=\"128\">\n<tabulka typ=\"XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU\">\n<radek kod=\"EUR\" mena=\"euro\" mnozstvi=\"1\" kurz=\"11,095\" zeme=\"EMU\"/>\n<radek kod=\"THB\" mena=\"baht\" mnozstvi=\"100\" kurz=\"14,430\" zeme=\"Thajsko\"/>\n<radek kod=\"USD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"19,335\" zeme=\"USA\"/>\n</tabulka>\n</kurzy>\n",
+        "expire": "2199-07-06T12:37:19"
+    }
+},
+{
+    "model": "cache.cache",
+    "pk": 8,
+    "fields": {
+        "url": "https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml?date=13.5.2001",
+        "text": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<kurzy banka=\"CNB\" datum=\"11.05.2001\" poradi=\"91\">\n<tabulka typ=\"XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU\">\n<radek kod=\"AUD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"16,383\" zeme=\"Austr\u00e1lie\"/>\n</tabulka>\n<tabulka typ=\"XML_TYP_CNB_PREPOCITACI_POMERY\">\n<radek kod=\"BEF\" mena=\"frank\" mnozstvi=\"100\" pomer=\"55,275\" zeme=\"Belgie\"/>\n</tabulka>\n</kurzy>\n",
+        "expire": "2199-07-06T12:37:19"
+    }
+},
+{
+    "model": "cache.cache",
+    "pk": 9,
+    "fields": {
+        "url": "https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml?date=1.7.2015",
+        "text": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<kurzy banka=\"CNB\" datum=\"01.07.2015\" poradi=\"128\">\n<tabulka typ=\"XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU\">\n<radek kod=\"EUR\" mena=\"euro\" mnozstvi=\"1\" xxx=\"47,095\" zeme=\"EMU\"/>\n</tabulka>\n</kurzy>\n",
+        "expire": "2199-07-06T12:37:19"
+    }
+}
+]

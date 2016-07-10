@@ -1,0 +1,22 @@
+{% extends "hjp_form.html" %}
+
+{% block form_contents %}
+	    <tr id="id_transform"><td></td><td colspan="2"><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+{% if err_message %}            <tr><td></td><td colspan="2" class="warning">
+              {% include "formwarning.html" %}            </td></tr>
+{% endif %}	    <tr class="{{ f.date.css_classes }}"><th>{{ f.date.label_tag }}</th><td colspan="2">{{ f.date }}</td></tr>
+	    <tr class="{{ f.description.css_classes }}"><th>{{ f.description.label_tag }}</th><td colspan="2">{{ f.description }}</td></tr>
+	    <tr>
+	      <th>{{ f.transaction_type.label }}</th>
+	      <td colspan="2" class="inlop">
+{% for p in f.transaction_type %}                {{ p }}
+{% endfor %}	      </td>
+	    </tr>
+	    <tr id="id_amt" class="{{ f.amount.css_classes }}"><th>{{ f.amount.label_tag }}</th><td colspan="2">{{ f.amount }} {{ currency }}</td></tr>
+	    <tr id="id_rep">
+	      <th>{{ f.repayment_preference.label }}</th>
+	      <td colspan="2" class="inlop">
+{% for p in f.repayment_preference %}                {{ p }}
+{% endfor %}              </td>
+	    </tr>
+{% endblock %}

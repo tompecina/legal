@@ -1,0 +1,12 @@
+{% extends "knr_form.html" %}
+
+{% block form_contents %}
+	    <tr><td></td><td colspan="2"><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+{% if err_message %}            <tr><td></td><td colspan="2" class="warning">
+              {% include "formwarning.html" %}            </td></tr>
+{% endif %}	    <tr class="{{ f.abbr.css_classes }}"><th>{{ f.abbr.label_tag }}</th><td colspan="2">{{ f.abbr }}</td></tr>
+	    <tr class="{{ f.name.css_classes }}"><th>{{ f.name.label_tag }}</th><td colspan="2">{{ f.name }}</td></tr>
+	    <tr class="{{ f.flat.css_classes }}"><th>{{ f.flat.label_tag }}</th><td colspan="2" style="white-space: nowrap;">{{ f.flat }} Kč/km</td></tr>
+	    <tr><td></td><td style="padding-left: 6px;">Ceny:</td></tr>
+{% for rate in rates %}	    <tr class="{{ rate.css_classes }}"><th>{{ rate.label_tag }}</th><td colspan="2" style="white-space: nowrap;">{{ rate }} Kč/l</td></tr>
+{% endfor %}{% endblock %}

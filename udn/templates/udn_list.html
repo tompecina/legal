@@ -1,0 +1,41 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+        <h1 style="margin-bottom: 3px;">{{ page_title }}</h1>{% if rows %}
+	<div class="res">Počet výsledků: {{ total }}</div>
+	<table style="border-collapse: collapse; margin: auto;">
+	  <thead><tr class="header"><th>Datum</th><th>Jednací číslo</th><th>Oblast</th><th>Účastníci řízení</th><th>Rozhodnutí</th></tr></thead>{% if not suppress_table_footer %}
+          <tfoot>
+	    <tr class="footer">
+	      <td colspan="5" style="text-align: right;">
+		<form id="id_navform" method="post" enctype="multipart/form-data">
+		  {{ f.date_from.as_hidden }}
+		  {{ f.date_to.as_hidden }}
+		  {{ f.senate.as_hidden }}
+		  {{ f.register_to.as_hidden }}
+		  {{ f.number.as_hidden }}
+		  {{ f.year.as_hidden }}
+		  {{ f.page.as_hidden }}
+		  {{ f.agenda.as_hidden }}
+		  {{ f.party.as_hidden }}
+		  {{ f.party_opt.as_hidden }}
+		  {{ f.start.as_hidden }}
+		  {% csrf_token %}
+		</form>
+		{{ nav|safe }}
+	      </td>
+	    </tr>
+	  </tfoot>{% endif %}
+	  <tbody>{% for row in rows %}
+	    <tr class="{% cycle "odd" "even" %}">
+	      <td>{{ row.date|date:'d.m.Y' }}</td>
+	      <td style="white-space: nowrap;">{% if row.senate %}{{ row.senate }} {% else %}{% endif %}{{ row.register }} {{ row.number }}/{{row.year }}-{{ row.page }}</td>
+	      <td>{{ row.agenda }}</td>
+	      <td>{% for party in row.parties.all %}
+		<div>{{ party.name }}</div>{% endfor %}
+	      </td>
+	      <td style="text-align: center;"><a href="/repo/udn/{{ row.filename }}" target="_blank">[Z]</a>{% if row.anonfilename %}&nbsp;<a href="/repo/udn/{{ row.anonfilename }}" target="_blank">[A]</a>{% endif %}</td>
+	    </tr>{% endfor %}
+	  </tbody>
+	</table>{% else %}        <p style="text-align: center;">(žádné výsledky)</p>{% endif %}
+        <p style="text-align: center;"><a href="{% url 'udn:mainpage' %}">Zpět na vyhledávací formulář</a></p>{% endblock %}

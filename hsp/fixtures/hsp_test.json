@@ -1,0 +1,135 @@
+[
+{
+    "model": "cnb.mpirate",
+    "pk": 1,
+    "fields": {
+        "type": "DISC",
+        "rate": 19.0,
+        "valid": "2001-08-06"
+    }
+},
+{
+    "model": "cnb.mpirate",
+    "pk": 2,
+    "fields": {
+        "type": "REPO",
+        "rate": 2.5,
+        "valid": "2002-07-01"
+    }
+},
+{
+    "model": "cnb.mpirate",
+    "pk": 3,
+    "fields": {
+        "type": "REPO",
+        "rate": 4.5,
+        "valid": "2003-01-01"
+    }
+},
+{
+    "model": "cnb.mpirate",
+    "pk": 4,
+    "fields": {
+        "type": "REPO",
+        "rate": 4.75,
+        "valid": "2003-07-01"
+    }
+},
+{
+    "model": "cnb.mpirate",
+    "pk": 5,
+    "fields": {
+        "type": "REPO",
+        "rate": 5.8,
+        "valid": "2004-01-01"
+    }
+},
+{
+    "model": "cnb.mpirate",
+    "pk": 6,
+    "fields": {
+        "type": "REPO",
+        "rate": 9.65,
+        "valid": "2001-06-30"
+    }
+},
+{
+    "model": "cnb.mpirate",
+    "pk": 7,
+    "fields": {
+        "type": "REPO",
+        "rate": 8.1,
+        "valid": "2001-07-01"
+    }
+},
+{
+    "model": "cnb.mpirate",
+    "pk": 8,
+    "fields": {
+        "type": "DISC",
+        "rate": 0.05,
+        "valid": "2014-07-09"
+    }
+},
+{
+    "model": "cnb.mpirate",
+    "pk": 9,
+    "fields": {
+        "type": "REPO",
+        "rate": 2.25,
+        "valid": "2004-07-01"
+    }
+},
+{
+    "model": "cnb.mpirate",
+    "pk": 10,
+    "fields": {
+        "type": "REPO",
+        "rate": 2.50,
+        "valid": "2005-01-01"
+    }
+},
+{
+    "model": "cnb.mpirate",
+    "pk": 11,
+    "fields": {
+        "type": "REPO",
+        "rate": 1.75,
+        "valid": "2005-07-01"
+    }
+},
+{
+    "model": "cnb.mpirate",
+    "pk": 12,
+    "fields": {
+        "type": "REPO",
+        "rate": 2.00,
+        "valid": "2006-01-01"
+    }
+},
+{
+    "model": "cnb.mpirate",
+    "pk": 13,
+    "fields": {
+        "type": "REPO",
+        "rate": 2.25,
+        "valid": "2004-06-30"
+    }
+},
+{
+    "model": "cnb.mpistat",
+    "pk": 1,
+    "fields": {
+        "type": "DISC",
+        "timestamp": "2016-01-08T21:17:27"
+    }
+},
+{
+    "model": "cnb.mpistat",
+    "pk": 2,
+    "fields": {
+        "type": "REPO",
+        "timestamp": "2016-01-08T21:16:15"
+    }
+}
+]

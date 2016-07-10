@@ -1,0 +1,9 @@
+{% extends "hsp_form.html" %}
+
+{% block form_contents %}
+	    <tr id="id_balanceform"><td></td><td colspan="2"><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+{% if err_message %}            <tr><td></td><td colspan="2" class="warning">
+              {% include "formwarning.html" %}            </td></tr>
+{% endif %}	    <tr class="{{ f.date.css_classes }}"><th>{{ f.date.label_tag }}</th><td colspan="2">{{ f.date }}</td></tr>
+	    <tr class="{{ f.description.css_classes }}"><th>{{ f.description.label_tag }}</th><td colspan="2">{{ f.description }}</td></tr>
+{% endblock %}

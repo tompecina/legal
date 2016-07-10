@@ -1,0 +1,57 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+        <form method="post" enctype="multipart/form-data">
+	  <table style="margin: auto auto 30px auto;">
+	    <tr><td></td><td><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+	    <tr class="{{ f.basis.css_classes }}">
+	      <th>{{ f.basis.label_tag }}</th>
+	      <td>{{ f.basis }}</td>
+	    </tr>
+	    <tr>
+	      <th class="{{ f.curr.css_classes }}">
+		{{ f.curr.label_tag }}
+	      </th>
+	      <td>
+		{{ f.curr }}
+		<span class="{{ f.fx_date.css_classes }}" id="id_fx_date_span">{{ f.fx_date.label_tag }} {{ f.fx_date }}</span>
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>{{ f.model.label_tag }}</th>
+	      <td>
+		<select name="model" id="id_model">
+		  <option value="1"{% if f.model.value == '1' %} selected="selected"{% endif %}>Do 31.08.2011</option>
+		  <option value="2"{% if f.model.value == '2' %} selected="selected"{% endif %}>Od 01.09.2011 do 31.12.2012</option>
+		  <option value="3"{% if f.model.value == '3' %} selected="selected"{% endif %}>Od 01.01.2013 do 31.12.2013</option>
+		  <option value="4"{% if f.model.value == '4' %} selected="selected"{% endif %}>Od 01.01.2014</option>
+		</select>
+	      </td>
+	    </tr>
+	    <tr><td></td>
+	      <td>
+		<fieldset style="margin: 10px auto;">
+		  <legend>{{ f.opt.label }}</legend>
+{% for p in f.opt %}		  <div class="opt"{% if forloop.first %} style="font-style: italic;"{% endif %}>{{ p }}</div>
+{% endfor %}		</fieldset>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td></td>
+	      <td style="text-align: center;">
+		<input type="submit" name="submit" value="Vypočítat" />
+		{% csrf_token %}
+	      </td>
+	    </tr>
+{% if messages %}	    <tr>
+	      <td></td>
+	      <td class="msg">
+		<hr style="margin-top: 35px;" />
+{% for message in messages %}		<div{% if message.1 %} style="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
+{% endfor %}                <hr />
+	      </td>
+	    </tr>
+{% endif %}	  </table>
+	  
+	</form>
+{% endblock %}

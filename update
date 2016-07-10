@@ -1,0 +1,28 @@
+#!/bin/bash
+
+remote='legal.pecina.cz'
+
+./manage.py collectstatic --noinput
+rsync -avhHzx \
+      --exclude '.svn/' \
+      --exclude '.git/' \
+      --exclude '*.pyc' \
+      --exclude '.gitignore' \
+      --exclude '*.pyc' \
+      --exclude '*~' \
+      --exclude '/update' \
+      --exclude '/collect/admin/' \
+      --exclude '/aux/' \
+      --exclude '*.po' \
+      --exclude 'migrations/' \
+      --exclude '__pycache__/' \
+      --exclude '/venv*' \
+      --exclude '/repo/udn/*' \
+      --exclude 'test*' \
+      --exclude 'fixtures/*_test*.json' \
+      --exclude '#*' \
+      --exclude '.#*' \
+      --delete \
+      ./ $remote:/var/www/django/legal/
+
+ssh $remote 'touch /var/www/django/legal/common/wsgi.py'

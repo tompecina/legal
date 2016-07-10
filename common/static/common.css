@@ -1,0 +1,172 @@
+body, h1, h2, input[type="file"], legend, .immune {
+    color: #000040;
+    background-color: #e4ecff;
+    font-family: Verdana, "DejaVu Sans", sans-serif;
+}
+body {
+    margin: 0;
+    font-size: 15px;
+}
+h1, h2 {
+    text-align: center;
+}
+h1 {
+    font-size: 21px;
+    font-weight: bold;
+    margin-top: 30px;
+}
+h2 {
+    font-size: 17px;
+    font-weight: normal;
+}
+table {
+    border-collapse: collapse;
+}
+tr.header, tr.footer, tr.topline {
+    background-color: #c4e0ff;
+}
+th {
+    font-weight: normal;
+    text-align: right;
+    vertical-align: middle;
+    padding: 4px 3px 6px;
+}
+thead th {
+    font-weight: bold;
+    text-align: center;
+}
+td {
+    vertical-align: middle;
+    padding: 1px 3px;
+}
+div.warning {
+    border-style: solid;
+    border-width: 2px;
+    padding: 4px 8px;
+    text-align: center;
+    margin-bottom: 12px;
+    background-color: #c4e0ff;
+}
+a, span.pager {
+    color: #2551b7;
+    text-decoration: none;
+}
+span.pager {
+    font-weight: normal;
+}
+span.nav {
+    font-weight: normal;
+}
+a:hover {
+    color: #e00000;
+}
+.grayed {
+    color: #f2f6ff;
+}
+tr.even {
+    background-color: #f2f6ff;
+}
+tr.odd {
+    background-color: #ffffff;
+}
+tr.even td, tr.odd td, thead th, tr.footer td {
+    padding: 3px 13px;
+}
+th {
+    padding: 3px 5px;
+}
+.hidden {
+    display: none;
+}
+#detail td, #detail th {
+    padding: 3px 10px;
+}
+.topline * {
+    font-size: 12px;
+    white-space: nowrap;
+}
+.res {
+    font-style: italic;
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 15px;
+}
+p.foot {
+    font-size: 11px;
+    text-align: center;
+}
+fieldset, hr {
+    border-color: #c0c0ff;
+}
+fieldset {
+    padding: 2px 5px;
+}
+legend {
+    padding: 0 3px;
+}
+.err th, .err label, th.err, span.err {
+    color: #e00000;
+    font-weight: bold;
+}
+.err input[type="text"],
+.err input[type="password"],
+.err textarea, input[type="text"].err,
+input[type="password"].err {
+    background: #ffecec;
+}
+input {
+    margin: 3px 0 2px;
+    padding: 1px 2px;
+}
+input[type="submit"], input[type="reset"] {
+    padding: 1px 7px;
+}
+input[type="radio"] {
+    margin: 3px 3px 0 5px;
+}
+select {
+    padding: 1px 2px;
+}
+.bold, .bold * {
+    font-weight: bold;
+}
+td.msg div {
+    text-align: center;
+    padding: 0 1em;
+    white-space: nowrap;
+}
+.inlop {
+    white-space: nowrap;
+}
+.inlop input[type="radio"] {
+    margin-right: 1px;
+    margin-left: 1px;
+}
+.inlop label {
+    margin-left: 15px;
+}
+.inlop label:first-child {
+    margin-left: 0;
+}
+.disabled {
+    color: gray;
+}
+.toupper {
+    text-transform: uppercase;
+}
+.homeitem div {
+    text-align: center;
+    margin-bottom: 5px;
+}
+table.about {
+    margin: 20px auto 30px;
+}
+table.about th {
+    padding: 4px 5px 4px 15px;
+}
+table.about td {
+    padding: 4px 15px 4px 10px;
+}
+.hl {
+    color: #e00000;
+}
