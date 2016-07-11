@@ -6,7 +6,7 @@ LEGAL.PECINA.CZ
 
 
 LEGAL.PECINA.CZ je webová aplikace v Pythonu/Djangu realisující soubor pomůcek
-pro právnické výpočty.
+pro právnickou praxi.
 
 Pro instalaci musíte vytvořit soubor common/secrets.py, obsahujcí tyto dva
 řádky:
