@@ -22,7 +22,7 @@
 
 from django.db import models
 from django.core.validators import MinValueValidator, RegexValidator
-from szr.glob import registers_regex
+from szr.glob import register_regex
 from .glob import filename_regex
 from .utils import composeref
 
@@ -51,7 +51,7 @@ class Decision(models.Model):
         validators=[MinValueValidator(0)])
     register = models.CharField(
         max_length=30,
-        validators=[RegexValidator(regex=registers_regex)])
+        validators=[RegexValidator(regex=register_regex)])
     number = models.PositiveIntegerField()
     year = models.IntegerField(
         validators=[MinValueValidator(1990)])

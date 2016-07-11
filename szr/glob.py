@@ -29,6 +29,6 @@ registers = ['T', 'C', 'P a Nc', 'D', 'E', 'P', 'Nc', 'ERo', 'Ro', 'EC',
              'Konf', 'Kse', 'Kseo', 'Kss', 'Ksz', 'Na', 'Nad', 'Nao', 'Ncn',
              'Nk', 'Ntn', 'Obn', 'Plen', 'Plsn', 'Pst', 'Rozk', 'Rs', 'S',
              'Spr', 'Sst', 'Vol']
-registers_regex = '^(' + ('|'.join(registers)) + ')$'
+register_regex = '^(' + ('|'.join(registers)) + ')$'
 supreme_court = 'NSJIMBM'
 supreme_administrative_court = 'NSS'

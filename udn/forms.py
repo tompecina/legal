@@ -23,7 +23,7 @@
 from django.core.validators import RegexValidator
 from datetime import date
 from common import forms, fields, widgets
-from szr.glob import registers_regex
+from szr.glob import register_regex
 
 party_opts = (('icontains',  'kdekoliv'),
               ('istartswith',  'na začátku'),
@@ -38,7 +38,7 @@ class MainForm(forms.Form):
     register = fields.CharField(
         widget=widgets.saw(),
         max_length=30,
-        validators=[RegexValidator(regex=registers_regex)],
+        validators=[RegexValidator(regex=register_regex)],
         initial='',
         required=False)
     number = fields.IntegerField(

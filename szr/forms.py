@@ -22,7 +22,7 @@
 
 from django.core.validators import RegexValidator
 from common import forms, fields, widgets
-from .glob import registers_regex, supreme_court
+from .glob import register_regex, supreme_court
 
 class EmailForm(forms.Form):
     email = fields.EmailField(
@@ -45,7 +45,7 @@ class ProcForm(forms.Form):
         widget=widgets.saw(),
         max_length=30,
         initial='',
-        validators=[RegexValidator(regex=registers_regex)])
+        validators=[RegexValidator(regex=register_regex)])
     number = fields.IntegerField(
         widget=widgets.saw(),
         min_value=1,

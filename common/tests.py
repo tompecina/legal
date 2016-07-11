@@ -507,6 +507,8 @@ class TestViews(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
         res = self.client.get('/knr/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        res = self.client.get('/knr/', follow=True)
+        self.assertTemplateUsed(res, 'login.html')
         self.assertFalse(self.client.login(username='user', password='wrong'))
         self.assertFalse(self.client.login(username='nouser', password='none'))
         self.assertTrue(self.client.login(username='user', password='none'))
@@ -515,6 +517,8 @@ class TestViews(TransactionTestCase):
         self.client.logout()
         res = self.client.get('/knr/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        res = self.client.get('/knr/', follow=True)
+        self.assertTemplateUsed(res, 'login.html')
         res = self.client.get('/xxx/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
@@ -530,6 +534,8 @@ class TestViews(TransactionTestCase):
     def test_unauth(self):
         res = self.client.get('/knr/userdbreset/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        res = self.client.get('/knr/userdbreset/', follow=True)
+        self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
         res = self.client.get('/knr/userdbreset/')
         self.assertEqual(res.status_code, HTTPStatus.UNAUTHORIZED)
@@ -552,8 +558,12 @@ class TestViews(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         res = self.client.get('/accounts/logout/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        res = self.client.get('/accounts/logout/', follow=True)
+        self.assertTemplateUsed(res, 'home.html')
         res = self.client.get('/szr/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        res = self.client.get('/szr/', follow=True)
+        self.assertTemplateUsed(res, 'login.html')
 
     def test_pwchange(self):
         self.assertTrue(self.client.login(username='user', password='none'))
@@ -583,6 +593,8 @@ class TestViews(TransactionTestCase):
                          'Nové heslo je příliš krátké')
         res = self.client.post('/accounts/pwchange/', s)
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        res = self.client.post('/accounts/pwchange/', s, follow=True)
+        self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='newpass'))
         res = self.client.get('/hsp/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -657,5 +669,7 @@ class TestViews(TransactionTestCase):
         self.assertTrue('err_message' in res.context.keys())
         res = self.client.post('/accounts/useradd/', s)
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        res = self.client.post('/accounts/useradd/', s, follow=True)
+        self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue(self.client.login(username='tompecina',
                                           password='newpass'))

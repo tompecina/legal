@@ -24,14 +24,12 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.core.mail import send_mail
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from time import sleep
 from hashlib import md5
 from urllib.parse import quote
-from smtplib import SMTP
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from common.utils import get, post
 from .models import Court, Proceedings
 from .glob import supreme_court, supreme_administrative_court
@@ -76,6 +74,8 @@ def updateproc(p):
     try:
         if court == supreme_administrative_court:
             addauxid(p)
+            if not p.auxid:
+                return
             url = nss_get_proc % p.auxid
             res = get(url)
             soup = BeautifulSoup(res.text, 'html.parser')
@@ -186,14 +186,9 @@ def cron_notify(request):
                 p.notify = False
                 p.save()
             text += '\nServer legal.pecina.cz (https://legal.pecina.cz)\n'
-            smtp = SMTP('mail.pecina.cz')
-            msg = MIMEMultipart()
-            msg.attach(MIMEText(text, 'plain', 'utf-8'))
-            msg['Subject'] = 'Zmeny ve sledovanych rizenich'
-            fa = 'Server legal.pecina.cz <legal@pecina.cz>'
-            msg['From'] = fa
-            ta = u.email
-            msg['To'] = ta
-            smtp.sendmail(fa, [ta], msg.as_string())
-            smtp.quit()
+            send_mail('Zmeny ve sledovanych rizenich',
+                      text,
+                      'Server legal.pecina.cz <legal@pecina.cz>',
+                      [u.email],
+                      fail_silently=True)
     return HttpResponse()
