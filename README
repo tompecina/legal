@@ -14,7 +14,7 @@ Pro instalaci musíte vytvořit soubor common/secrets.py, obsahujcí tyto dva
 DBPASSWD = <heslo k vaší databasi>
 SECKEY = <tajný klíč pro aplikaci>
 
-Rovněž budete pravděpodobně muset upravit soubor wsgi.py, jehož obsah je
+Rovněž budete pravděpodobně muset upravit soubor common/wsgi.py, jehož obsah je
 závislý na konkrétních podmínkách instalace na vašem serveru, případně změnit
 nastavení v souboru common/settings.py.
 
