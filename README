@@ -18,4 +18,4 @@ Rovněž budete pravděpodobně muset upravit soubor common/wsgi.py, jehož obsa
 závislý na konkrétních podmínkách instalace na vašem serveru, případně změnit
 nastavení v souboru common/settings.py.
 
-Živá instalace aplikace je k disposici na adrese <https://legal.pecina.cz>.
+Živá instalace aplikace je k disposici na adrese <https://legal.pecina.cz/>.
