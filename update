@@ -20,6 +20,7 @@ rsync -avhHzx \
       --exclude '/repo/udn/*' \
       --exclude 'test*' \
       --exclude 'fixtures/*_test*.json' \
+      --exclude '/test/' \
       --exclude '#*' \
       --exclude '.#*' \
       --delete \

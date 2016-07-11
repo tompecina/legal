@@ -26,6 +26,9 @@ from http import HTTPStatus
 from datetime import date
 from bs4 import BeautifulSoup
 from re import compile
+from os.path import join
+from os import unlink
+from common.settings import BASE_DIR
 from .models import Decision
 from . import cron, forms, glob, utils, views
 
@@ -37,10 +40,43 @@ class TestCron(TransactionTestCase):
         self.req.method = 'GET'
         self.client = Client()
 
+    def checkpdf(self, ll):
+        for l in ll:
+            fn = join(BASE_DIR, 'test', l)
+            fl = []
+            try:
+                with open(fn) as fi:
+                    fc = fi.read()
+                unlink(fn)
+            except:
+                fl.append('E: ' + l)
+            if not fc[:-1].endswith('/' + l):
+                fl.append('C: ' + l)
+        self.assertFalse(fl, msg=fl)
+        
     def test_update(self):
         cron.cron_update(self.req)
         d = Decision.objects.all()
         self.assertEqual(len(d), 18)
+        self.checkpdf([
+            '0002_8As__1600055S.pdf',
+            '0022_4As__1600037S.pdf',
+            '0025_8As__1600041S.pdf',
+            '0037_4Afs_1600033S.pdf',
+            '003810Ads_1600040S.pdf',
+            '0065_4Afs_1600032S.pdf',
+            '0066_4Afs_1600033S.pdf',
+            '007410Ads_1600027S.pdf',
+            '007710As__1600038S.pdf',
+            '0079_8As__1600023S.pdf',
+            '008110As__1600026S.pdf',
+            '0095_4Afs_1600035S.pdf',
+            '0108_5As__1600008S.pdf',
+            '0152_4Ads_1500027S.pdf',
+            '019110As__1500030S.pdf',
+            '0208_4Ads_1500082S.pdf',
+            '0233_5As__1500046S.pdf',
+            ])
         
     def test_find(self):
         cron.cron_find(self.req)
@@ -51,6 +87,7 @@ class TestCron(TransactionTestCase):
                                     page='33')
         self.assertEqual(len(d), 1)
         self.assertTrue(d[0].anonfilename)
+        self.checkpdf(['0046_3As__1600114_20160622142215_prevedeno.pdf'])
 
 class TestForms(SimpleTestCase):
 

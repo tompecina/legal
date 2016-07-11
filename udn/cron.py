@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup
 from datetime import date, datetime
 from re import compile
 from os.path import join
-from common.settings import BASE_DIR
+from common.settings import BASE_DIR, TEST
 from common.utils import get, post
 from .glob import filename_regex
 from .utils import decomposeref
@@ -35,7 +35,10 @@ from .models import Decision, Party, Agenda
 root_url = 'http://www.nssoud.cz/'
 form_url = root_url + 'main2Col.aspx?cls=RozhodnutiList&menu=185'
 find_url = root_url + 'main0Col.aspx?cls=JudikaturaBasicSearch&pageSource=0'
-repo_pref = join(BASE_DIR, 'repo/udn')
+if TEST:
+    repo_pref = join(BASE_DIR, 'test')
+else:
+    repo_pref = join(BASE_DIR, 'repo/udn')
 fr = compile(filename_regex)
 
 @require_http_methods(['GET'])
