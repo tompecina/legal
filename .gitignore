@@ -11,4 +11,4 @@ __pycache__/
 /repo/
 /common/secrets.py
 /common/wsgi.py
-/test
+/test/
