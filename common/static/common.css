@@ -60,7 +60,7 @@ span.nav {
 a:hover {
     color: #e00000;
 }
-.grayed {
+.grayed, span.grayed {
     color: #f2f6ff;
 }
 tr.even {

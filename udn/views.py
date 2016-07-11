@@ -60,9 +60,10 @@ def gennav(start,
            g1='</span>',
            s0='',
            s1='&nbsp;&nbsp;',
-           s2='&nbsp;&nbsp;<span class="pager">',
-           s3='&nbsp;/&nbsp;',
-           s4='</span>&nbsp;&nbsp;',
+           s2='&nbsp;&nbsp;&nbsp;<span class="pager">',
+           s2g='&nbsp;&nbsp;&nbsp;<span class="pager grayed">',
+           s3='/',
+           s4='</span>&nbsp;&nbsp;&nbsp;',
            s5='&nbsp;&nbsp;',
            s6=''):
     i = [i0, i1, i2, i3]
@@ -81,6 +82,8 @@ def gennav(start,
             t[j] = g0 + i[j] + g1
         else:
             t[j] = a0 + prefix + str(n[j]) + suffix + a1 + i[j] + a2
+    if p2 == 1:
+        s2 = s2g
     return s0 + t[0] + s1 + t[1] + s2 + str(p1) + s3 + str(p2) + s4 + t[2] + \
         s5 + t[3] + s6
 
@@ -153,7 +156,7 @@ def declist(request):
     return render(request,
                   'udn_list.html',
                   {'app': APP,
-                   'page_title': 'Výsledky hledání',
+                   'page_title': 'Výsledky vyhledávání',
                    'rows': d[start:(start + BATCH)],
                    'f': f,
                    'nav': gennav(start, total, listurl(rd) + '&start=', ''),

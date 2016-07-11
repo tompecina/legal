@@ -8,20 +8,6 @@
           <tfoot>
 	    <tr class="footer">
 	      <td colspan="5" style="text-align: right;">
-		<form id="id_navform" method="post" enctype="multipart/form-data">
-		  {{ f.date_from.as_hidden }}
-		  {{ f.date_to.as_hidden }}
-		  {{ f.senate.as_hidden }}
-		  {{ f.register_to.as_hidden }}
-		  {{ f.number.as_hidden }}
-		  {{ f.year.as_hidden }}
-		  {{ f.page.as_hidden }}
-		  {{ f.agenda.as_hidden }}
-		  {{ f.party.as_hidden }}
-		  {{ f.party_opt.as_hidden }}
-		  {{ f.start.as_hidden }}
-		  {% csrf_token %}
-		</form>
 		{{ nav|safe }}
 	      </td>
 	    </tr>
