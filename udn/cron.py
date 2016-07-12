@@ -23,7 +23,7 @@
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from bs4 import BeautifulSoup
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from re import compile
 from os.path import join
 from common.settings import BASE_DIR, TEST
@@ -40,6 +40,8 @@ if TEST:
 else:
     repo_pref = join(BASE_DIR, 'repo/udn')
 fr = compile(filename_regex)
+
+OBS = timedelta(days=360)
 
 @require_http_methods(['GET'])
 def cron_update(request):
@@ -110,9 +112,12 @@ def cron_update(request):
 
 @require_http_methods(['GET'])
 def cron_find(request):
+    now = datetime.now()
     try:
-        dec = Decision.objects.filter(anonfilename='').earliest('updated')
-        dec.updated = datetime.now()
+        dec = Decision.objects.filter(
+            anonfilename='',
+            date__gte=(now - OBS)).earliest('updated')
+        dec.updated = now
         dec.save()
         res = get(find_url)
         soup = BeautifulSoup(res.text, 'html.parser')
