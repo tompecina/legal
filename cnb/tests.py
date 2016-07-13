@@ -20,13 +20,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import TransactionTestCase, Client
+from django.test import TestCase, Client
 from http import HTTPStatus
 from datetime import date, timedelta
 from bs4 import BeautifulSoup
 from . import main, views
 
-class TestMain(TransactionTestCase):
+class TestMain(TestCase):
     fixtures = ['cnb_test.json']
 
     def test_getFXrate(self):
@@ -204,7 +204,7 @@ pp = [
           ['Chybné zadání']],
      ]
 
-class TestViews(TransactionTestCase):
+class TestViews(TestCase):
     fixtures = ['cnb_test.json']
 
     def setUp(self):

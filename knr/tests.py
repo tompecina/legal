@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TransactionTestCase, Client
+from django.test import SimpleTestCase, TestCase, Client
 from django.contrib.auth.models import User
 from http import HTTPStatus
 from copy import copy
@@ -28,6 +28,7 @@ from bs4 import BeautifulSoup
 from io import BytesIO
 from common.settings import BASE_DIR
 from cache.tests import DummyRequest
+from common.tests import TEST_STRING, stripxml
 from . import forms, views, utils
 
 class TestForms(SimpleTestCase):
@@ -115,26 +116,16 @@ class TestForms(SimpleTestCase):
         f = forms.FlatForm(d)
         self.assertTrue(f.is_valid())
 
-ts = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské kódy'
-        
 class T(views.Calculation, views.Item):
     pass
 
-def stripxml(s):
-    try:
-        s = s.decode('utf-8')
-        s = s.split('<calculation', 1)
-        return s[0] + '<calculation>' + s[1].split('>', 1)[1]
-    except:
-        return ''
-
-class TestUtils(TransactionTestCase):
+class TestUtils(TestCase):
     fixtures = ['knr_test.json']
 
     def test_getVAT(self):
         self.assertAlmostEqual(utils.getVAT(), 25)
     
-class TestViews(TransactionTestCase):
+class TestViews(TestCase):
     fixtures = ['knr_test.json']
     
     def setUp(self):
@@ -268,7 +259,7 @@ class TestViews(TransactionTestCase):
                 self.fail()
             title = soup.select('#id_title')
             self.assertEqual(len(title), 1)
-            self.assertEqual(title[0]['value'], ts)
+            self.assertEqual(title[0]['value'], TEST_STRING)
             calculation_note = soup.select('#id_calculation_note')
             self.assertEqual(len(calculation_note), 1)
             self.assertEqual(calculation_note[0].text, 'Poznámka')
@@ -280,7 +271,7 @@ class TestViews(TransactionTestCase):
             self.assertEqual(vat_rate[0]['value'], '21,00')
             res = self.client.post('/knr/',
                                    {'vat_rate': '21,00',
-                                    'title': ts,
+                                    'title': TEST_STRING,
                                     'calculation_note': 'cn',
                                     'internal_note': 'in',
                                     'submit_' + suffix[0]: suffix[1]})
@@ -301,7 +292,7 @@ class TestViews(TransactionTestCase):
                 self.fail()
             title = soup.select('#id_title')
             self.assertEqual(len(title), 1)
-            self.assertEqual(title[0]['value'], ts)
+            self.assertEqual(title[0]['value'], TEST_STRING)
             calculation_note = soup.select('#id_calculation_note')
             self.assertEqual(len(calculation_note), 1)
             self.assertEqual(calculation_note[0].text, 'cn')
@@ -415,7 +406,7 @@ class TestViews(TransactionTestCase):
                 self.assertEqual(d1[n], d2[n])
 
     def test_conv(self):
-        d = {'title': ts,
+        d = {'title': TEST_STRING,
              'calculation_note': 'cn',
              'internal_note': 'in',
              'vat_rate': 26.50,
@@ -491,9 +482,9 @@ class TestViews(TransactionTestCase):
     def test_calc(self):
         req = DummyRequest('test-session')
         c = views.Calculation()
-        c.title = ts
+        c.title = TEST_STRING
         self.assertTrue(views.setcalc(req, c))
-        self.assertEqual(views.getcalc(req).title, ts)
+        self.assertEqual(views.getcalc(req).title, TEST_STRING)
 
     def test_xml(self):
         i = 1

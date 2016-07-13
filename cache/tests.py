@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import TransactionTestCase
+from django.test import TestCase
 from datetime import timedelta
 from . import main
 
@@ -28,7 +28,7 @@ class DummyRequest:
     def __init__(self, session_id):
         self.COOKIES = {'sessionid': session_id}
 
-class TestMain(TransactionTestCase):
+class TestMain(TestCase):
 
     def test_getcache(self):
         r = main.getcache('test1',

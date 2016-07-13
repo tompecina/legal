@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TransactionTestCase, Client
+from django.test import SimpleTestCase, TestCase, Client
 from django.contrib.auth.models import User
 from http import HTTPStatus
 from datetime import date
@@ -28,6 +28,7 @@ from bs4 import BeautifulSoup
 from io import BytesIO
 from common.settings import BASE_DIR
 from cache.tests import DummyRequest
+from common.tests import TEST_STRING, stripxml
 from . import forms, views
 
 class TestForms(SimpleTestCase):
@@ -99,17 +100,7 @@ class TestForms(SimpleTestCase):
                             'pd_rate': '0.125'})
         self.assertTrue(f.is_valid())
 
-ts = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské kódy'
-        
-def stripxml(s):
-    try:
-        s = s.decode('utf-8')
-        s = s.split('<debt', 1)
-        return s[0] + '<debt>' + s[1].split('>', 1)[1]
-    except:
-        return ''
-
-class TestViews(TransactionTestCase):
+class TestViews(TestCase):
     fixtures = ['hjp_test.json']
     
     def setUp(self):
@@ -186,7 +177,7 @@ class TestViews(TransactionTestCase):
                 self.fail()
             title = soup.select('#id_title')
             self.assertEqual(len(title), 1)
-            self.assertEqual(title[0]['value'], ts)
+            self.assertEqual(title[0]['value'], TEST_STRING)
             note = soup.select('#id_note')
             self.assertEqual(len(note), 1)
             self.assertEqual(note[0].text, 'Poznámka')
@@ -204,7 +195,7 @@ class TestViews(TransactionTestCase):
                                     'currency_1': 'AUD',
                                     'rounding': '2',
                                     'model': 'none',
-                                    'title': ts,
+                                    'title': TEST_STRING,
                                     'note': 'nn',
                                     'internal_note': 'in',
                                     'submit_' + suffix[0]: suffix[1]})
@@ -226,7 +217,7 @@ class TestViews(TransactionTestCase):
                 self.fail()
             title = soup.select('#id_title')
             self.assertEqual(len(title), 1)
-            self.assertEqual(title[0]['value'], ts)
+            self.assertEqual(title[0]['value'], TEST_STRING)
             note = soup.select('#id_note')
             self.assertEqual(len(note), 1)
             self.assertEqual(note[0].text, 'nn')
@@ -258,7 +249,7 @@ class TestViews(TransactionTestCase):
                                 'model': 'per_annum',
                                 'pa_rate': '12,6',
                                 'ydconv': 'ACT/ACT',
-                                'title': ts,
+                                'title': TEST_STRING,
                                 'note': 'nn',
                                 'internal_note': 'in',
                                 'submit_csv': 'Export do CSV'})
@@ -295,9 +286,9 @@ class TestViews(TransactionTestCase):
     def test_debt(self):
         req = DummyRequest('test-session')
         c = views.Debt()
-        c.title = ts
+        c.title = TEST_STRING
         self.assertTrue(views.setdebt(req, c))
-        self.assertEqual(views.getdebt(req).title, ts)
+        self.assertEqual(views.getdebt(req).title, TEST_STRING)
 
     def test_dispcurr(self):
         self.assertEqual(views.dispcurr('CZK'), 'Kč')
@@ -719,7 +710,7 @@ class TestViews(TransactionTestCase):
                 break
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hjp_mainpage.html')
-            d = {'title': ts,
+            d = {'title': TEST_STRING,
                  'note': 'nn',
                  'internal_note': 'in',
                  'submit_csv': 'Export do CSV'

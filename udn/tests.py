@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TransactionTestCase, Client
+from django.test import SimpleTestCase, TestCase, Client
 from django.http import HttpRequest
 from http import HTTPStatus
 from datetime import date
@@ -32,7 +32,7 @@ from common.settings import BASE_DIR
 from .models import Decision
 from . import cron, forms, glob, utils, views
 
-class TestCron(TransactionTestCase):
+class TestCron(TestCase):
     fixtures = ['udn_test.json']
     
     def setUp(self):
@@ -145,7 +145,7 @@ class TestUtils(SimpleTestCase):
             self.assertEqual(utils.composeref(*utils.decomposeref( \
                 p.replace('-', ' - '))), p)
 
-class TestViews(TransactionTestCase):
+class TestViews(TestCase):
     fixtures = ['udn_test.json']
     
     def setUp(self):

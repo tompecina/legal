@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TransactionTestCase, Client
+from django.test import SimpleTestCase, TestCase, Client
 from django.contrib.auth.models import User
 from http import HTTPStatus
 from datetime import date
@@ -28,6 +28,7 @@ from bs4 import BeautifulSoup
 from io import BytesIO
 from common.settings import BASE_DIR
 from cache.tests import DummyRequest
+from common.tests import TEST_STRING, stripxml
 from . import forms, views
 
 class TestForms(SimpleTestCase):
@@ -142,17 +143,7 @@ class TestForms(SimpleTestCase):
                           'date_to': '2.1.2000'})
         self.assertTrue(f.is_valid())
 
-ts = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské kódy'
-        
-def stripxml(s):
-    try:
-        s = s.decode('utf-8')
-        s = s.split('<debt', 1)
-        return s[0] + '<debt>' + s[1].split('>', 1)[1]
-    except:
-        return ''
-
-class TestViews(TransactionTestCase):
+class TestViews(TestCase):
     fixtures = ['hsp_test.json']
     
     def setUp(self):
@@ -224,7 +215,7 @@ class TestViews(TransactionTestCase):
                 self.fail()
             title = soup.select('#id_title')
             self.assertEqual(len(title), 1)
-            self.assertEqual(title[0]['value'], ts)
+            self.assertEqual(title[0]['value'], TEST_STRING)
             note = soup.select('#id_note')
             self.assertEqual(len(note), 1)
             self.assertEqual(note[0].text, 'Poznámka')
@@ -236,7 +227,7 @@ class TestViews(TransactionTestCase):
             self.assertTrue(rounding[0].has_attr('selected'))
             res = self.client.post('/hsp/',
                                    {'rounding': '2',
-                                    'title': ts,
+                                    'title': TEST_STRING,
                                     'note': 'nn',
                                     'internal_note': 'in',
                                     'submit_' + suffix[0]: suffix[1]})
@@ -258,7 +249,7 @@ class TestViews(TransactionTestCase):
                 self.fail()
             title = soup.select('#id_title')
             self.assertEqual(len(title), 1)
-            self.assertEqual(title[0]['value'], ts)
+            self.assertEqual(title[0]['value'], TEST_STRING)
             note = soup.select('#id_note')
             self.assertEqual(len(note), 1)
             self.assertEqual(note[0].text, 'nn')
@@ -278,7 +269,7 @@ class TestViews(TransactionTestCase):
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
         res = self.client.post('/hsp/',
                                {'rounding': '0',
-                                'title': ts,
+                                'title': TEST_STRING,
                                 'note': 'nn',
                                 'internal_note': 'in',
                                 'submit_csv': 'Export do CSV'})
@@ -319,9 +310,9 @@ class TestViews(TransactionTestCase):
     def test_debt(self):
         req = DummyRequest('test-session')
         c = views.Debt()
-        c.title = ts
+        c.title = TEST_STRING
         self.assertTrue(views.setdebt(req, c))
-        self.assertEqual(views.getdebt(req).title, ts)
+        self.assertEqual(views.getdebt(req).title, TEST_STRING)
 
     def test_n2l(self):
         self.assertEqual(views.n2l(0), 'A')
@@ -714,7 +705,7 @@ class TestViews(TransactionTestCase):
                 break
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
-            d = {'title': ts,
+            d = {'title': TEST_STRING,
                  'note': 'nn',
                  'internal_note': 'in',
                  'submit_csv': 'Export do CSV'
@@ -748,7 +739,7 @@ class TestViews(TransactionTestCase):
                                        follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
-            d = {'title': ts,
+            d = {'title': TEST_STRING,
                  'note': 'nn',
                  'internal_note': 'in',
                  'submit_csv': 'Export do CSV'

@@ -20,13 +20,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TransactionTestCase, Client
+from django.test import SimpleTestCase, TestCase, Client
 from django.contrib.auth.models import User
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from copy import copy
 from http import HTTPStatus
+from re import compile
 from . import fields, forms, utils
+
+TEST_STRING = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské kódy'
+
+xml_regex = compile(r'^(<[^<]+<\w+)[^>]*(.*)$')
+
+def stripxml(s):
+    try:
+        s = s.decode('utf-8')
+        m = xml_regex.match(s)
+        return m.group(1) + m.group(2)
+    except:
+        return ''
 
 class DummyResponse:
     def __init__(self, content):
@@ -102,7 +115,7 @@ class TestFields(SimpleTestCase):
         with self.assertRaises(forms.ValidationError):
             f.validate([])
 
-class TestForms(TransactionTestCase):
+class TestForms(TestCase):
 
     def setUp(self):
         User.objects.create_user('existing', 'existing@pecina.cz', 'none')
@@ -139,206 +152,74 @@ class TestForms(TransactionTestCase):
 class TestUtils(SimpleTestCase):
 
     def test_easter(self):
-        es = [date(1900, 4, 15),
-              date(1901, 4,  7),
-              date(1902, 3, 30),
-              date(1903, 4, 12),
-              date(1904, 4,  3),
-              date(1905, 4, 23),
-              date(1906, 4, 15),
-              date(1907, 3, 31),
-              date(1908, 4, 19),
-              date(1909, 4, 11),
-              date(1910, 3, 27),
-              date(1911, 4, 16),
-              date(1912, 4,  7),
-              date(1913, 3, 23),
-              date(1914, 4, 12),
-              date(1915, 4,  4),
-              date(1916, 4, 23),
-              date(1917, 4,  8),
-              date(1918, 3, 31),
-              date(1919, 4, 20),
-              date(1920, 4,  4),
-              date(1921, 3, 27),
-              date(1922, 4, 16),
-              date(1923, 4,  1),
-              date(1924, 4, 20),
-              date(1925, 4, 12),
-              date(1926, 4,  4),
-              date(1927, 4, 17),
-              date(1928, 4,  8),
-              date(1929, 3, 31),
-              date(1930, 4, 20),
-              date(1931, 4,  5),
-              date(1932, 3, 27),
-              date(1933, 4, 16),
-              date(1934, 4,  1),
-              date(1935, 4, 21),
-              date(1936, 4, 12),
-              date(1937, 3, 28),
-              date(1938, 4, 17),
-              date(1939, 4,  9),
-              date(1940, 3, 24),
-              date(1941, 4, 13),
-              date(1942, 4,  5),
-              date(1943, 4, 25),
-              date(1944, 4,  9),
-              date(1945, 4,  1),
-              date(1946, 4, 21),
-              date(1947, 4,  6),
-              date(1948, 3, 28),
-              date(1949, 4, 17),
-              date(1950, 4,  9),
-              date(1951, 3, 25),
-              date(1952, 4, 13),
-              date(1953, 4,  5),
-              date(1954, 4, 18),
-              date(1955, 4, 10),
-              date(1956, 4,  1),
-              date(1957, 4, 21),
-              date(1958, 4,  6),
-              date(1959, 3, 29),
-              date(1960, 4, 17),
-              date(1961, 4,  2),
-              date(1962, 4, 22),
-              date(1963, 4, 14),
-              date(1964, 3, 29),
-              date(1965, 4, 18),
-              date(1966, 4, 10),
-              date(1967, 3, 26),
-              date(1968, 4, 14),
-              date(1969, 4,  6),
-              date(1970, 3, 29),
-              date(1971, 4, 11),
-              date(1972, 4,  2),
-              date(1973, 4, 22),
-              date(1974, 4, 14),
-              date(1975, 3, 30),
-              date(1976, 4, 18),
-              date(1977, 4, 10),
-              date(1978, 3, 26),
-              date(1979, 4, 15),
-              date(1980, 4,  6),
-              date(1981, 4, 19),
-              date(1982, 4, 11),
-              date(1983, 4,  3),
-              date(1984, 4, 22),
-              date(1985, 4,  7),
-              date(1986, 3, 30),
-              date(1987, 4, 19),
-              date(1988, 4,  3),
-              date(1989, 3, 26),
-              date(1990, 4, 15),
-              date(1991, 3, 31),
-              date(1992, 4, 19),
-              date(1993, 4, 11),
-              date(1994, 4,  3),
-              date(1995, 4, 16),
-              date(1996, 4,  7),
-              date(1997, 3, 30),
-              date(1998, 4, 12),
-              date(1999, 4,  4),
-              date(2000, 4, 23),
-              date(2001, 4, 15),
-              date(2002, 3, 31),
-              date(2003, 4, 20),
-              date(2004, 4, 11),
-              date(2005, 3, 27),
-              date(2006, 4, 16),
-              date(2007, 4,  8),
-              date(2008, 3, 23),
-              date(2009, 4, 12),
-              date(2010, 4,  4),
-              date(2011, 4, 24),
-              date(2012, 4,  8),
-              date(2013, 3, 31),
-              date(2014, 4, 20),
-              date(2015, 4,  5),
-              date(2016, 3, 27),
-              date(2017, 4, 16),
-              date(2018, 4,  1),
-              date(2019, 4, 21),
-              date(2020, 4, 12),
-              date(2021, 4,  4),
-              date(2022, 4, 17),
-              date(2023, 4,  9),
-              date(2024, 3, 31),
-              date(2025, 4, 20),
-              date(2026, 4,  5),
-              date(2027, 3, 28),
-              date(2028, 4, 16),
-              date(2029, 4,  1),
-              date(2030, 4, 21),
-              date(2031, 4, 13),
-              date(2032, 3, 28),
-              date(2033, 4, 17),
-              date(2034, 4,  9),
-              date(2035, 3, 25),
-              date(2036, 4, 13),
-              date(2037, 4,  5),
-              date(2038, 4, 25),
-              date(2039, 4, 10),
-              date(2040, 4,  1),
-              date(2041, 4, 21),
-              date(2042, 4,  6),
-              date(2043, 3, 29),
-              date(2044, 4, 17),
-              date(2045, 4,  9),
-              date(2046, 3, 25),
-              date(2047, 4, 14),
-              date(2048, 4,  5),
-              date(2049, 4, 18),
-              date(2050, 4, 10),
-              date(2051, 4,  2),
-              date(2052, 4, 21),
-              date(2053, 4,  6),
-              date(2054, 3, 29),
-              date(2055, 4, 18),
-              date(2056, 4,  2),
-              date(2057, 4, 22),
-              date(2058, 4, 14),
-              date(2059, 3, 30),
-              date(2060, 4, 18),
-              date(2061, 4, 10),
-              date(2062, 3, 26),
-              date(2063, 4, 15),
-              date(2064, 4,  6),
-              date(2065, 3, 29),
-              date(2066, 4, 11),
-              date(2067, 4,  3),
-              date(2068, 4, 22),
-              date(2069, 4, 14),
-              date(2070, 3, 30),
-              date(2071, 4, 19),
-              date(2072, 4, 10),
-              date(2073, 3, 26),
-              date(2074, 4, 15),
-              date(2075, 4,  7),
-              date(2076, 4, 19),
-              date(2077, 4, 11),
-              date(2078, 4,  3),
-              date(2079, 4, 23),
-              date(2080, 4,  7),
-              date(2081, 3, 30),
-              date(2082, 4, 19),
-              date(2083, 4,  4),
-              date(2084, 3, 26),
-              date(2085, 4, 15),
-              date(2086, 3, 31),
-              date(2087, 4, 20),
-              date(2088, 4, 11),
-              date(2089, 4,  3),
-              date(2090, 4, 16),
-              date(2091, 4,  8),
-              date(2092, 3, 30),
-              date(2093, 4, 12),
-              date(2094, 4,  4),
-              date(2095, 4, 24),
-              date(2096, 4, 15),
-              date(2097, 3, 31),
-              date(2098, 4, 20),
-              date(2099, 4, 12),
+        es = [
+            date(1900, 4, 15), date(1901, 4,  7), date(1902, 3, 30),
+            date(1903, 4, 12), date(1904, 4,  3), date(1905, 4, 23),
+            date(1906, 4, 15), date(1907, 3, 31), date(1908, 4, 19),
+            date(1909, 4, 11), date(1910, 3, 27), date(1911, 4, 16),
+            date(1912, 4,  7), date(1913, 3, 23), date(1914, 4, 12),
+            date(1915, 4,  4), date(1916, 4, 23), date(1917, 4,  8),
+            date(1918, 3, 31), date(1919, 4, 20), date(1920, 4,  4),
+            date(1921, 3, 27), date(1922, 4, 16), date(1923, 4,  1),
+            date(1924, 4, 20), date(1925, 4, 12), date(1926, 4,  4),
+            date(1927, 4, 17), date(1928, 4,  8), date(1929, 3, 31),
+            date(1930, 4, 20), date(1931, 4,  5), date(1932, 3, 27),
+            date(1933, 4, 16), date(1934, 4,  1), date(1935, 4, 21),
+            date(1936, 4, 12), date(1937, 3, 28), date(1938, 4, 17),
+            date(1939, 4,  9), date(1940, 3, 24), date(1941, 4, 13),
+            date(1942, 4,  5), date(1943, 4, 25), date(1944, 4,  9),
+            date(1945, 4,  1), date(1946, 4, 21), date(1947, 4,  6),
+            date(1948, 3, 28), date(1949, 4, 17), date(1950, 4,  9),
+            date(1951, 3, 25), date(1952, 4, 13), date(1953, 4,  5),
+            date(1954, 4, 18), date(1955, 4, 10), date(1956, 4,  1),
+            date(1957, 4, 21), date(1958, 4,  6), date(1959, 3, 29),
+            date(1960, 4, 17), date(1961, 4,  2), date(1962, 4, 22),
+            date(1963, 4, 14), date(1964, 3, 29), date(1965, 4, 18),
+            date(1966, 4, 10), date(1967, 3, 26), date(1968, 4, 14),
+            date(1969, 4,  6), date(1970, 3, 29), date(1971, 4, 11),
+            date(1972, 4,  2), date(1973, 4, 22), date(1974, 4, 14),
+            date(1975, 3, 30), date(1976, 4, 18), date(1977, 4, 10),
+            date(1978, 3, 26), date(1979, 4, 15), date(1980, 4,  6),
+            date(1981, 4, 19), date(1982, 4, 11), date(1983, 4,  3),
+            date(1984, 4, 22), date(1985, 4,  7), date(1986, 3, 30),
+            date(1987, 4, 19), date(1988, 4,  3), date(1989, 3, 26),
+            date(1990, 4, 15), date(1991, 3, 31), date(1992, 4, 19),
+            date(1993, 4, 11), date(1994, 4,  3), date(1995, 4, 16),
+            date(1996, 4,  7), date(1997, 3, 30), date(1998, 4, 12),
+            date(1999, 4,  4), date(2000, 4, 23), date(2001, 4, 15),
+            date(2002, 3, 31), date(2003, 4, 20), date(2004, 4, 11),
+            date(2005, 3, 27), date(2006, 4, 16), date(2007, 4,  8),
+            date(2008, 3, 23), date(2009, 4, 12), date(2010, 4,  4),
+            date(2011, 4, 24), date(2012, 4,  8), date(2013, 3, 31),
+            date(2014, 4, 20), date(2015, 4,  5), date(2016, 3, 27),
+            date(2017, 4, 16), date(2018, 4,  1), date(2019, 4, 21),
+            date(2020, 4, 12), date(2021, 4,  4), date(2022, 4, 17),
+            date(2023, 4,  9), date(2024, 3, 31), date(2025, 4, 20),
+            date(2026, 4,  5), date(2027, 3, 28), date(2028, 4, 16),
+            date(2029, 4,  1), date(2030, 4, 21), date(2031, 4, 13),
+            date(2032, 3, 28), date(2033, 4, 17), date(2034, 4,  9),
+            date(2035, 3, 25), date(2036, 4, 13), date(2037, 4,  5),
+            date(2038, 4, 25), date(2039, 4, 10), date(2040, 4,  1),
+            date(2041, 4, 21), date(2042, 4,  6), date(2043, 3, 29),
+            date(2044, 4, 17), date(2045, 4,  9), date(2046, 3, 25),
+            date(2047, 4, 14), date(2048, 4,  5), date(2049, 4, 18),
+            date(2050, 4, 10), date(2051, 4,  2), date(2052, 4, 21),
+            date(2053, 4,  6), date(2054, 3, 29), date(2055, 4, 18),
+            date(2056, 4,  2), date(2057, 4, 22), date(2058, 4, 14),
+            date(2059, 3, 30), date(2060, 4, 18), date(2061, 4, 10),
+            date(2062, 3, 26), date(2063, 4, 15), date(2064, 4,  6),
+            date(2065, 3, 29), date(2066, 4, 11), date(2067, 4,  3),
+            date(2068, 4, 22), date(2069, 4, 14), date(2070, 3, 30),
+            date(2071, 4, 19), date(2072, 4, 10), date(2073, 3, 26),
+            date(2074, 4, 15), date(2075, 4,  7), date(2076, 4, 19),
+            date(2077, 4, 11), date(2078, 4,  3), date(2079, 4, 23),
+            date(2080, 4,  7), date(2081, 3, 30), date(2082, 4, 19),
+            date(2083, 4,  4), date(2084, 3, 26), date(2085, 4, 15),
+            date(2086, 3, 31), date(2087, 4, 20), date(2088, 4, 11),
+            date(2089, 4,  3), date(2090, 4, 16), date(2091, 4,  8),
+            date(2092, 3, 30), date(2093, 4, 12), date(2094, 4,  4),
+            date(2095, 4, 24), date(2096, 4, 15), date(2097, 3, 31),
+            date(2098, 4, 20), date(2099, 4, 12),
         ]
         for s in es:
             self.assertFalse(utils.easter(s))
@@ -363,7 +244,7 @@ class TestUtils(SimpleTestCase):
         self.assertTrue(utils.tod(date(1991, 5, 9)))
         self.assertTrue(utils.tod(date(1992, 5, 8)))
         self.assertTrue(utils.tod(date(1992, 5, 9)))
-            # not testable as 1992-05-09 was Sat
+            # not testable as 1992-05-09 was Saturday
                          
     def test_ply(self):
         self.assertEqual(utils.ply(date(2016, 7, 5), 1), date(2017, 7, 5))
@@ -381,7 +262,6 @@ class TestUtils(SimpleTestCase):
         self.assertIsNone(utils.yfactor(date(2011, 7, 12),
                                         date(2016, 7, 5),
                                         'XXX'))
-
         self.assertAlmostEqual(utils.yfactor(date(2011, 7, 12),
                                              date(2016, 7, 5),
                                              'ACT/ACT'),
@@ -482,16 +362,18 @@ class TestUtils(SimpleTestCase):
         self.assertEqual(utils.rmdsl([1, 2, 2, 3]), [1, 2, 3])
         self.assertEqual(utils.rmdsl([1, 2, 2, 3, 4, 4, 4]), [1, 2, 3, 4])
 
-class TestViews(TransactionTestCase):
+class TestViews(TestCase):
 
     def setUp(self):
-        User.objects.create_user('user',
-                                 'user@pecina.cz',
-                                 'none'
+        User.objects.create_user(
+            'user',
+            'user@pecina.cz',
+            'none'
         )
-        User.objects.create_superuser('superuser',
-                                      'superuser@pecina.cz',
-                                      'none'
+        User.objects.create_superuser(
+            'superuser',
+            'superuser@pecina.cz',
+            'none'
         )
         self.client = Client()
         

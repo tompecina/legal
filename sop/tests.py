@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TransactionTestCase, Client
+from django.test import SimpleTestCase, TestCase, Client
 from http import HTTPStatus
 from bs4 import BeautifulSoup
 from . import forms, views
@@ -237,7 +237,7 @@ ee = [
          ['1000000,01', 'CZK', '', '', '1', 'epr'],
      ]
        
-class TestViews(TransactionTestCase):
+class TestViews(TestCase):
     fixtures = ['sop_test.json']
     
     def setUp(self):

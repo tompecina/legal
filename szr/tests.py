@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TransactionTestCase, Client
+from django.test import SimpleTestCase, TestCase, Client
 from django.contrib.auth.models import User
 from django.http import HttpRequest
 from django.core import mail
@@ -31,7 +31,7 @@ from re import compile
 from .models import Court, Proceedings
 from . import cron, forms, glob, views
 
-class TestCron(TransactionTestCase):
+class TestCron(TestCase):
     fixtures = ['szr_test.json']
     
     def setUp(self):
@@ -120,7 +120,7 @@ class TestGlob(SimpleTestCase):
         for p in ['X', '']:
             self.assertIsNone(rr.match(p), msg=p)
 
-class TestViews(TransactionTestCase):
+class TestViews(TestCase):
     fixtures = ['szr_test.json']
     
     def setUp(self):
