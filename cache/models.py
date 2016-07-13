@@ -42,3 +42,6 @@ class Asset(models.Model):
 
     def __str__(self):
         return self.sessionid
+
+    class Meta:
+        unique_together = (('sessionid', 'assetid'),)

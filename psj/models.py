@@ -36,3 +36,6 @@ class Courtroom(models.Model):
 
     def __str__(self):
         return '%s, %s' % (self.court, self.name)
+
+    class Meta:
+        unique_together = (('court', 'name'),)

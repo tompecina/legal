@@ -26,10 +26,18 @@ from django.contrib.auth.models import User
 from .glob import register_regex
 
 class Court(models.Model):
-    id = models.CharField(max_length=30, primary_key=True)
-    name = models.CharField(max_length=255)
-    reports = models.ForeignKey('self', null=True, on_delete=models.SET_NULL)
-    timestamp = models.DateTimeField(auto_now=True)
+    id = models.CharField(
+        max_length=30,
+        primary_key=True)
+    name = models.CharField(
+        max_length=255,
+        unique=True)
+    reports = models.ForeignKey(
+        'self',
+        null=True,
+        on_delete=models.SET_NULL)
+    timestamp = models.DateTimeField(
+        auto_now=True)
 
     def __str__(self):
         return self.name

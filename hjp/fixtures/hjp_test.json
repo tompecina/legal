@@ -118,17 +118,15 @@
 },
 {
     "model": "cnb.mpistat",
-    "pk": 1,
+    "pk": "DISC",
     "fields": {
-        "type": "DISC",
         "timestamp": "2016-01-08T21:17:27"
     }
 },
 {
     "model": "cnb.mpistat",
-    "pk": 2,
+    "pk": "REPO",
     "fields": {
-        "type": "REPO",
         "timestamp": "2016-01-08T21:16:15"
     }
 }

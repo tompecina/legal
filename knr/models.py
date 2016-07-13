@@ -42,6 +42,9 @@ class Place(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = (('uid', 'abbr'),)
+    
 class Car(models.Model):
     uid = models.ForeignKey(
         User,
@@ -68,6 +71,9 @@ class Car(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = (('uid', 'abbr'),)
+    
 class Formula(models.Model):
     uid = models.ForeignKey(
         User,
@@ -84,6 +90,9 @@ class Formula(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = (('uid', 'abbr'),)
+    
 class Rate(models.Model):
     formula = models.ForeignKey(
         Formula,
@@ -98,6 +107,9 @@ class Rate(models.Model):
     def __str__(self):
         return '%d/%s' % (self.formula_id, self.fuel)
 
+    class Meta:
+        unique_together = (('formula', 'fuel'),)
+    
 class VATrate(models.Model):
     rate = models.FloatField()
     valid = models.DateField(
