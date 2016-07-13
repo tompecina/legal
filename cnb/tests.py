@@ -207,9 +207,6 @@ pp = [
 class TestViews(TestCase):
     fixtures = ['cnb_test.json']
 
-    def setUp(self):
-        self.client = Client()
-        
     def test_main(self):
         res = self.client.get('/cnb')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)

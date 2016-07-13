@@ -147,7 +147,6 @@ class TestViews(TestCase):
     fixtures = ['hsp_test.json']
     
     def setUp(self):
-        self.client = Client()
         User.objects.create_user('user', 'user@pecina.cz', 'none')
 
     def tearDown(self):

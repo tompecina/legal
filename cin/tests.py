@@ -151,9 +151,6 @@ pp = [
 
 class TestViews(SimpleTestCase):
 
-    def setUp(self):
-        self.client = Client()
-        
     def test_main(self):
         res = self.client.get('/cin')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)

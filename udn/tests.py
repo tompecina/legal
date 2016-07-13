@@ -38,7 +38,6 @@ class TestCron(TestCase):
     def setUp(self):
         self.req = HttpRequest()
         self.req.method = 'GET'
-        self.client = Client()
 
     def checkpdf(self, ll):
         for l in ll:
@@ -148,9 +147,6 @@ class TestUtils(SimpleTestCase):
 class TestViews(TestCase):
     fixtures = ['udn_test.json']
     
-    def setUp(self):
-        self.client = Client()
-
     def test_main(self):
         res = self.client.get('/udn')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)

@@ -129,7 +129,6 @@ class TestViews(TestCase):
     fixtures = ['knr_test.json']
     
     def setUp(self):
-        self.client = Client()
         User.objects.create_user('user', 'user@pecina.cz', 'none')
         User.objects.create_user('superuser', 'superuser@pecina.cz', 'none')
         

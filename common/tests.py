@@ -375,7 +375,6 @@ class TestViews(TestCase):
             'superuser@pecina.cz',
             'none'
         )
-        self.client = Client()
         
     def tearDown(self):
         User.objects.all().delete()

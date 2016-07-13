@@ -240,9 +240,6 @@ ee = [
 class TestViews(TestCase):
     fixtures = ['sop_test.json']
     
-    def setUp(self):
-        self.client = Client()
-        
     def test_main(self):
         res = self.client.get('/sop')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)

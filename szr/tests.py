@@ -37,7 +37,6 @@ class TestCron(TestCase):
     def setUp(self):
         self.req = HttpRequest()
         self.req.method = 'GET'
-        self.client = Client()
         
     def test_courts(self):
         cron.cron_courts(self.req)
@@ -124,7 +123,6 @@ class TestViews(TestCase):
     fixtures = ['szr_test.json']
     
     def setUp(self):
-        self.client = Client()
         User.objects.create_user('user', 'user@pecina.cz', 'none')
 
     def tearDown(self):
