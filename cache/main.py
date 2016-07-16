@@ -20,6 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from django.db.transaction import atomic
 from datetime import datetime
 from base64 import b64encode, b64decode
 from common.utils import get
@@ -50,19 +51,7 @@ def getasset(request, asset):
     a = Asset.objects.filter(sessionid=sid, assetid=asset)
     return (b64decode(a[0].data) if a else None)
 
-# def setasset(request, asset, data, lifespan):
-#     sid = request.COOKIES.get('sessionid')
-#     if not sid:
-#         return False
-#     Asset.objects.get_or_create(
-#         sessionid=sid,
-#         assetid=asset,
-#         defaults={
-#             'data': b64encode(data),
-#             'expire': (datetime.now() + lifespan) if lifespan else None}
-#     )[0].save()
-#     return True
-
+@atomic
 def setasset(request, asset, data, lifespan):
     sid = request.COOKIES.get('sessionid')
     if not sid:

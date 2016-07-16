@@ -30,12 +30,10 @@ from pickle import dumps, loads
 from xml.sax.saxutils import escape
 import csv
 import reportlab.rl_config
-from reportlab.pdfgen.canvas import Canvas
 from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfbase.pdfdoc import PDFName, PDFDictionary, PDFStream
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Table, \
-    TableStyle, Spacer, KeepTogether
+                               TableStyle, Spacer, KeepTogether
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
@@ -45,7 +43,7 @@ import os.path
 from common import fields
 from common.utils import getbutton, ydconvs, mdconvs, yfactor, mfactor, odp, \
                          formam, xmldecorate, xmlescape, xmlunescape, p2c, \
-                         LIM, rmdsl, getXML, newXML, iso2date
+                         LIM, rmdsl, getXML, newXML, iso2date, CanvasXML
 from common.views import error
 from cache.main import getasset, setasset
 from cnb.main import getMPIrate, getFXrate
@@ -987,20 +985,6 @@ def mainpage(request):
                         ('– %d –' % d.page))
                     c.restoreState()
 
-                class ModCanvas(Canvas):
-                    def save(self):
-                        xml = toxml(debt)
-                        data = PDFStream(dictionary=PDFDictionary(
-                            {'Type': PDFName('Data'),
-                             'Subtype': PDFName('XML')}),
-                                         content=xml,
-                                         filters=None)
-                        self._doc.Reference(data)
-                        if 'Data' not in self._doc.Catalog.__NoDefault__:
-                            self._doc.Catalog.__NoDefault__.append('Data')
-                        self._doc.Catalog.__setattr__('Data', data)
-                        Canvas.save(self)
-
                 fontdir = os.path.join(
                     os.path.dirname(os.path.dirname(__file__)),
                     'common/fonts/').replace('\\','/')
@@ -1503,11 +1487,12 @@ def mainpage(request):
                     topMargin=48.0,
                     bottomMargin=96.0,
                     )
+                CanvasXML.xml = toxml(debt)
                 doc.build(
                     flow,
                     onFirstPage=page1,
                     onLaterPages=page2,
-                    canvasmaker=ModCanvas)
+                    canvasmaker=CanvasXML)
                 response.write(temp.getvalue())
                 return response
 

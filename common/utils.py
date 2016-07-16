@@ -29,6 +29,8 @@ from bs4 import BeautifulSoup
 from pdfrw import PdfReader, PdfName
 from http import HTTPStatus
 import requests
+from reportlab.pdfgen.canvas import Canvas
+from reportlab.pdfbase.pdfdoc import PDFName, PDFDictionary, PDFStream
 from cache.models import Cache
 from .settings import TEST
 
@@ -360,6 +362,19 @@ def get(*args, **kwargs):  # pragma: no cover
     else:
         return requests.get(*args, **kwargs)
 
+class CanvasXML(Canvas):
+    def save(self):
+        data = PDFStream(dictionary=PDFDictionary(
+            {'Type': PDFName('Data'),
+             'Subtype': PDFName('XML')}),
+                         content=self.xml,
+                         filters=None)
+        self._doc.Reference(data)
+        if 'Data' not in self._doc.Catalog.__NoDefault__:
+            self._doc.Catalog.__NoDefault__.append('Data')
+        self._doc.Catalog.__setattr__('Data', data)
+        Canvas.save(self)
+        
 def post(*args, **kwargs):  # pragma: no cover
     if TEST:
         from .tests import DummyResponse
