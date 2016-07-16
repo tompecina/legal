@@ -351,17 +351,6 @@ def iso2date(tag):
     t = tag.text.strip().split('-')
     return date(int(t[0]), int(t[1]), int(t[2]))
 
-def get(*args, **kwargs):  # pragma: no cover
-    if TEST:
-        from .tests import DummyResponse
-        c = Cache.objects.filter(url=args[0])
-        if c:
-            return DummyResponse(c[0].text)
-        else:
-            return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
-    else:
-        return requests.get(*args, **kwargs)
-
 class CanvasXML(Canvas):
     def save(self):
         data = PDFStream(dictionary=PDFDictionary(
@@ -375,6 +364,17 @@ class CanvasXML(Canvas):
         self._doc.Catalog.__setattr__('Data', data)
         Canvas.save(self)
         
+def get(*args, **kwargs):  # pragma: no cover
+    if TEST:
+        from .tests import DummyResponse
+        c = Cache.objects.filter(url=args[0])
+        if c:
+            return DummyResponse(c[0].text)
+        else:
+            return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
+    else:
+        return requests.get(*args, **kwargs)
+
 def post(*args, **kwargs):  # pragma: no cover
     if TEST:
         from .tests import DummyResponse

@@ -35,9 +35,10 @@ from .models import Decision, Party, Agenda
 root_url = 'http://www.nssoud.cz/'
 form_url = root_url + 'main2Col.aspx?cls=RozhodnutiList&menu=185'
 find_url = root_url + 'main0Col.aspx?cls=JudikaturaBasicSearch&pageSource=0'
+
 if TEST:
     repo_pref = join(BASE_DIR, 'test')
-else:
+else:  # pragma: no cover
     repo_pref = join(BASE_DIR, 'repo/udn')
 fr = compile(filename_regex)
 
