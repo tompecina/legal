@@ -383,12 +383,13 @@ def udbreset(uid):
     Formula.objects.filter(uid=uid).delete()
     pp = []
     for p in pl:
-        pp.append(Place(uid=u,
-                        abbr=p[0],
-                        name=p[1],
-                        addr=p[2],
-                        lat=p[3],
-                        lon=p[4]))
+        pp.append(Place(
+            uid=u,
+            abbr=p[0],
+            name=p[1],
+            addr=p[2],
+            lat=p[3],
+            lon=p[4]))
     Place.objects.bulk_create(pp)
     for f in fo:
         ff = Formula(uid=u, abbr=f[0], name=f[1], flat=f[2])

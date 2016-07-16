@@ -1,0 +1,6 @@
+[run]
+omit =
+     venv-*
+     */migrations/*
+     common/wsgi.py
+     

@@ -23,35 +23,45 @@
 from datetime import datetime
 from base64 import b64encode, b64decode
 from common.utils import get
+from common.settings import TEST
 from .models import Cache, Asset
 
-now = datetime.now()
-
-def getcache(url, lifespan, test=False, test_response=None):
-    Cache.objects.filter(expire__lt=now).delete()
+def getcache(url, lifespan):  # pragma: no cover
+    Cache.objects.filter(expire__lt=datetime.now()).delete()
     c = Cache.objects.filter(url=url)
     if c:
         return (c[0].text, None)
-    if test:
-        t = test_response
-    else:
-        u = get(url)
-        if not u.ok:
-            return (None, 'Chyba při komunikaci se serverem')
-        t = u.text
-    Cache(url=url,
-          text=t,
-          expire=((now + lifespan) if lifespan else None)
+    u = get(url)
+    if not u.ok:
+        return (None, 'Chyba při komunikaci se serverem')
+    t = u.text
+    Cache(
+        url=url,
+        text=t,
+        expire=((datetime.now() + lifespan) if lifespan else None)
     ).save()
     return (t, None)
 
 def getasset(request, asset):
-    Asset.objects.filter(expire__lt=now).delete()
+    Asset.objects.filter(expire__lt=datetime.now()).delete()
     sid = request.COOKIES.get('sessionid')
     if not sid:
         return None
     a = Asset.objects.filter(sessionid=sid, assetid=asset)
     return (b64decode(a[0].data) if a else None)
+
+# def setasset(request, asset, data, lifespan):
+#     sid = request.COOKIES.get('sessionid')
+#     if not sid:
+#         return False
+#     Asset.objects.get_or_create(
+#         sessionid=sid,
+#         assetid=asset,
+#         defaults={
+#             'data': b64encode(data),
+#             'expire': (datetime.now() + lifespan) if lifespan else None}
+#     )[0].save()
+#     return True
 
 def setasset(request, asset, data, lifespan):
     sid = request.COOKIES.get('sessionid')
@@ -61,6 +71,6 @@ def setasset(request, asset, data, lifespan):
     Asset(sessionid=sid,
           assetid=asset,
           data=b64encode(data),
-          expire=((now + lifespan) if lifespan else None)
+          expire=((datetime.now() + lifespan) if lifespan else None)
     ).save()
     return True

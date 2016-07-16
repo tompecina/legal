@@ -24,5 +24,94 @@
         "text": "{\n   \"destination_addresses\" : [ \"Unnamed Road, Polsko\" ],\n   \"origin_addresses\" : [ \"33418, Kou\u0159im, \u010cesk\u00e1 republika\" ],\n   \"rows\" : [\n      {\n         \"elements\" : [\n            {\n               \"distance\" : {\n                  \"text\" : \"182 km\",\n                  \"value\" : 182046\n               },\n               \"duration\" : {\n                  \"text\" : \"3 hod, 51 min\",\n                  \"value\" : 20265\n               },\n               \"status\" : \"OK\"\n            }\n         ]\n      }\n   ],\n   \"status\" : \"OK\"\n}\n",
         "expire": "2199-07-14T16:24:36"
     }
+},
+{
+    "model": "cache.cache",
+    "pk": 3,
+    "fields": {
+        "url": "https://maps.googleapis.com/maps/api/geocode/json?address=Melantrichova%20504/6%2C%20Praha%201&language=cs&sensor=false",
+        "text": "{\n   \"results\" : [\n      {\n         \"address_components\" : [\n            {\n               \"long_name\" : \"5\",\n               \"short_name\" : \"5\",\n               \"types\" : [ \"street_number\" ]\n            },\n            {\n               \"long_name\" : \"504\",\n               \"short_name\" : \"504\",\n               \"types\" : [ \"premise\" ]\n            },\n            {\n               \"long_name\" : \"Melantrichova\",\n               \"short_name\" : \"Melantrichova\",\n               \"types\" : [ \"route\" ]\n            },\n            {\n               \"long_name\" : \"Star\u00e9 M\u011bsto\",\n               \"short_name\" : \"Star\u00e9 M\u011bsto\",\n               \"types\" : [ \"neighborhood\", \"political\" ]\n            },\n            {\n               \"long_name\" : \"Praha 1\",\n               \"short_name\" : \"Praha 1\",\n               \"types\" : [ \"political\", \"sublocality\", \"sublocality_level_1\" ]\n            },\n            {\n               \"long_name\" : \"Praha\",\n               \"short_name\" : \"Praha\",\n               \"types\" : [ \"locality\", \"political\" ]\n            },\n            {\n               \"long_name\" : \"Praha 1\",\n               \"short_name\" : \"Praha 1\",\n               \"types\" : [ \"postal_town\" ]\n            },\n            {\n               \"long_name\" : \"Hlavn\u00ed m\u011bsto Praha\",\n               \"short_name\" : \"Hlavn\u00ed m\u011bsto Praha\",\n               \"types\" : [ \"administrative_area_level_2\", \"political\" ]\n            },\n            {\n               \"long_name\" : \"Hlavn\u00ed m\u011bsto Praha\",\n               \"short_name\" : \"Hlavn\u00ed m\u011bsto Praha\",\n               \"types\" : [ \"administrative_area_level_1\", \"political\" ]\n            },\n            {\n               \"long_name\" : \"\u010cesk\u00e1 republika\",\n               \"short_name\" : \"CZ\",\n               \"types\" : [ \"country\", \"political\" ]\n            },\n            {\n               \"long_name\" : \"110 00\",\n               \"short_name\" : \"110 00\",\n               \"types\" : [ \"postal_code\" ]\n            }\n         ],\n         \"formatted_address\" : \"Melantrichova 504/5, 110 00 Praha 1-Star\u00e9 M\u011bsto, \u010cesk\u00e1 republika\",\n         \"geometry\" : {\n            \"location\" : {\n               \"lat\" : 51.0852574,\n               \"lng\" : 13.4211651\n            },\n            \"location_type\" : \"ROOFTOP\",\n            \"viewport\" : {\n               \"northeast\" : {\n                  \"lat\" : 51.0866063802915,\n                  \"lng\" : 13.4225140802915\n               },\n               \"southwest\" : {\n                  \"lat\" : 51.0839084197085,\n                  \"lng\" : 13.4198161197085\n               }\n            }\n         },\n         \"place_id\" : \"ChIJ9UyNpO6UC0cRmsN-P_qgZag\",\n         \"types\" : [ \"street_address\" ]\n      }\n   ],\n   \"status\" : \"ERROR\"\n}\n",
+        "expire": "2199-07-14T16:11:37"
+    }
+},
+{
+    "model": "cache.cache",
+    "pk": 4,
+    "fields": {
+        "url": "https://maps.googleapis.com/maps/api/distancematrix/json?origins=50.000000,15.000000&destinations=51.000000,18.000000&mode=driving&units=metric&language=cs&sensor=false",
+        "text": "{\n   \"destination_addresses\" : [ \"Unnamed Road, Polsko\" ],\n   \"origin_addresses\" : [ \"33418, Kou\u0159im, \u010cesk\u00e1 republika\" ],\n   \"rows\" : [\n      {\n         \"elements\" : [\n            {\n               \"distance\" : {\n                  \"text\" : \"182 km\",\n                  \"value\" : 182046\n               },\n               \"duration\" : {\n                  \"text\" : \"3 hod, 51 min\",\n                  \"value\" : 20265\n               },\n               \"status\" : \"OK\"\n            }\n         ]\n      }\n   ],\n   \"status\" : \"ERROR\"\n}\n",
+        "expire": "2199-07-14T16:24:36"
+    }
+},
+{
+    "model": "cache.cache",
+    "pk": 5,
+    "fields": {
+        "url": "https://maps.googleapis.com/maps/api/distancematrix/json?origins=50.000000,15.000000&destinations=51.000000,19.000000&mode=driving&units=metric&language=cs&sensor=false",
+        "text": "{\n   \"destination_addresses\" : [ \"Unnamed Road, Polsko\" ],\n   \"origin_addresses\" : [ \"33418, Kou\u0159im, \u010cesk\u00e1 republika\" ],\n   \"rows\" : [\n      {\n         \"elements\" : [\n            {\n               \"distance\" : {\n                  \"text\" : \"182 km\",\n                  \"value\" : 182046\n               },\n               \"duration\" : {\n                  \"text\" : \"3 hod, 51 min\",\n                  \"value\" : 20265\n               },\n               \"status\" : \"ERROR\"\n            }\n         ]\n      }\n   ],\n   \"status\" : \"OK\"\n}\n",
+        "expire": "2199-07-14T16:24:36"
+    }
+},
+{
+    "model": "knr.place",
+    "pk": 1,
+    "fields": {
+        "uid": 1,
+        "abbr": "TEST",
+        "name": "Test name",
+        "addr": "Test address",
+        "lat": 49.1975999,
+        "lon": 16.6044449
+    }
+},
+{
+    "model": "knr.car",
+    "pk": 1,
+    "fields": {
+        "uid": 1,
+        "abbr": "Car",
+        "name": "Test car",
+        "fuel": "BA95",
+        "cons1": "9.0",
+        "cons2": "10.1",
+        "cons3": "8.5"
+    }
+},
+{
+    "model": "knr.formula",
+    "pk": 1,
+    "fields": {
+        "uid": 1,
+        "abbr": "TEST",
+        "name": "Test formula",
+        "flat": "3.70"
+    }
+},
+{
+    "model": "knr.rate",
+    "pk": 1,
+    "fields": {
+        "formula": 1,
+        "fuel": "NM",
+        "rate": "32.00"
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$NgPs7J5tOUtD$5kUebN1O9+krlAxuIa6mNq3QYspsREzBekzQcf1IhBY=",
+        "last_login": "2016-07-07T15:42:24.712",
+        "is_superuser": false,
+        "username": "tompecina",
+        "first_name": "Tom\u00e1\u0161",
+        "last_name": "Pecina",
+        "email": "tomas@pecina.cz",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2012-04-07T03:02:21",
+        "groups": [],
+        "user_permissions": []
+    }
 }
 ]

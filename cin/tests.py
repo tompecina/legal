@@ -23,6 +23,7 @@
 from django.test import SimpleTestCase, Client
 from http import HTTPStatus
 from bs4 import BeautifulSoup
+from datetime import date
 from . import forms, views
 
 pp = [
@@ -159,15 +160,16 @@ class TestViews(SimpleTestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'cin_main.html')
+        today = date.today()
+        for f in ['beg', 'end']:
+            res = self.client.post('/cin/', {'submit_set_' + f: 'Dnes'})
+            self.assertEqual(res.context['f'][f].value(), today)
         for p in pp:
             res = self.client.post('/cin/', {'beg': p[0], 'end': p[1]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'cin_main.html')
-            try:
-                soup = BeautifulSoup(res.content, 'html.parser')
-                msg = soup.find('td', 'msg').select('div')
-            except:
-                self.fail()
+            soup = BeautifulSoup(res.content, 'html.parser')
+            msg = soup.find('td', 'msg').select('div')
             l = len(msg)
             self.assertEqual(l, len(p[2]))
             for i in range(l):

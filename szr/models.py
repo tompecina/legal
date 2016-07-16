@@ -77,5 +77,5 @@ class Proceedings(models.Model):
         auto_now=True)
 
     def __str__(self):
-        return '%s, sp. zn. %d %s %d/%d' % \
+        return '%s, %d %s %d/%d' % \
             (self.court, self.senate, self.register, self.number, self.year)

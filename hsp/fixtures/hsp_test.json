@@ -117,6 +117,15 @@
     }
 },
 {
+    "model": "cnb.mpirate",
+    "pk": 14,
+    "fields": {
+        "type": "REPO",
+        "rate": 7.25,
+        "valid": "2000-12-31"
+    }
+},
+{
     "model": "cnb.mpistat",
     "pk": "DISC",
     "fields": {
@@ -128,6 +137,22 @@
     "pk": "REPO",
     "fields": {
         "timestamp": "2016-01-08T21:16:15"
+    }
+},
+{
+    "model": "cnb.fxrate",
+    "pk": 1,
+    "fields": {
+        "date": "2015-07-14",
+        "text": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<kurzy banka=\"CNB\" datum=\"14.07.2015\" poradi=\"134\">\n<tabulka typ=\"XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU\">\n<radek kod=\"AUD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"18,263\" zeme=\"Austr\u00e1lie\"/>\n<radek kod=\"BRL\" mena=\"real\" mnozstvi=\"1\" kurz=\"7,845\" zeme=\"Braz\u00edlie\"/>\n<radek kod=\"BGN\" mena=\"lev\" mnozstvi=\"1\" kurz=\"13,847\" zeme=\"Bulharsko\"/>\n<radek kod=\"CNY\" mena=\"renminbi\" mnozstvi=\"1\" kurz=\"3,954\" zeme=\"\u010c\u00edna\"/>\n<radek kod=\"DKK\" mena=\"koruna\" mnozstvi=\"1\" kurz=\"3,629\" zeme=\"D\u00e1nsko\"/>\n<radek kod=\"EUR\" mena=\"euro\" mnozstvi=\"1\" kurz=\"27,080\" zeme=\"EMU\"/>\n<radek kod=\"PHP\" mena=\"peso\" mnozstvi=\"100\" kurz=\"54,287\" zeme=\"Filip\u00edny\"/>\n<radek kod=\"HKD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"3,167\" zeme=\"Hongkong\"/>\n<radek kod=\"HRK\" mena=\"kuna\" mnozstvi=\"1\" kurz=\"3,574\" zeme=\"Chorvatsko\"/>\n<radek kod=\"INR\" mena=\"rupie\" mnozstvi=\"100\" kurz=\"38,754\" zeme=\"Indie\"/>\n<radek kod=\"IDR\" mena=\"rupie\" mnozstvi=\"1000\" kurz=\"1,841\" zeme=\"Indonesie\"/>\n<radek kod=\"ILS\" mena=\"\u0161ekel\" mnozstvi=\"1\" kurz=\"6,516\" zeme=\"Izrael\"/>\n<radek kod=\"JPY\" mena=\"jen\" mnozstvi=\"100\" kurz=\"19,904\" zeme=\"Japonsko\"/>\n<radek kod=\"ZAR\" mena=\"rand\" mnozstvi=\"1\" kurz=\"1,980\" zeme=\"Jihoafrick\u00e1 rep.\"/>\n<radek kod=\"KRW\" mena=\"won\" mnozstvi=\"100\" kurz=\"2,150\" zeme=\"Ji\u017en\u00ed Korea\"/>\n<radek kod=\"CAD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"19,239\" zeme=\"Kanada\"/>\n<radek kod=\"HUF\" mena=\"forint\" mnozstvi=\"100\" kurz=\"8,709\" zeme=\"Ma\u010farsko\"/>\n<radek kod=\"MYR\" mena=\"ringgit\" mnozstvi=\"1\" kurz=\"6,447\" zeme=\"Malajsie\"/>\n<radek kod=\"MXN\" mena=\"peso\" mnozstvi=\"1\" kurz=\"1,565\" zeme=\"Mexiko\"/>\n<radek kod=\"XDR\" mena=\"SDR\" mnozstvi=\"1\" kurz=\"34,300\" zeme=\"MMF\"/>\n<radek kod=\"NOK\" mena=\"koruna\" mnozstvi=\"1\" kurz=\"3,012\" zeme=\"Norsko\"/>\n<radek kod=\"NZD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"16,442\" zeme=\"Nov\u00fd Z\u00e9land\"/>\n<radek kod=\"PLN\" mena=\"zlot\u00fd\" mnozstvi=\"1\" kurz=\"6,524\" zeme=\"Polsko\"/>\n<radek kod=\"RON\" mena=\"nov\u00e9 leu\" mnozstvi=\"1\" kurz=\"6,122\" zeme=\"Rumunsko\"/>\n<radek kod=\"RUB\" mena=\"rubl\" mnozstvi=\"100\" kurz=\"43,308\" zeme=\"Rusko\"/>\n<radek kod=\"SGD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"18,052\" zeme=\"Singapur\"/>\n<radek kod=\"SEK\" mena=\"koruna\" mnozstvi=\"1\" kurz=\"2,878\" zeme=\"\u0160v\u00e9dsko\"/>\n<radek kod=\"CHF\" mena=\"frank\" mnozstvi=\"1\" kurz=\"25,982\" zeme=\"\u0160v\u00fdcarsko\"/>\n<radek kod=\"THB\" mena=\"baht\" mnozstvi=\"100\" kurz=\"72,143\" zeme=\"Thajsko\"/>\n<radek kod=\"TRY\" mena=\"lira\" mnozstvi=\"1\" kurz=\"9,312\" zeme=\"Turecko\"/>\n<radek kod=\"USD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"24,550\" zeme=\"USA\"/>\n<radek kod=\"GBP\" mena=\"libra\" mnozstvi=\"1\" kurz=\"38,228\" zeme=\"Velk\u00e1 Brit\u00e1nie\"/>\n</tabulka>\n</kurzy>\n"
+    }
+},
+{
+    "model": "cnb.fxrate",
+    "pk": 2,
+    "fields": {
+        "date": "2015-03-18",
+        "text": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<kurzy banka=\"CNB\" datum=\"18.03.2015\" poradi=\"54\">\n<tabulka typ=\"XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU\">\n<radek kod=\"AUD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"19,651\" zeme=\"Austr\u00e1lie\"/>\n<radek kod=\"BRL\" mena=\"real\" mnozstvi=\"1\" kurz=\"7,973\" zeme=\"Braz\u00edlie\"/>\n<radek kod=\"BGN\" mena=\"lev\" mnozstvi=\"1\" kurz=\"13,970\" zeme=\"Bulharsko\"/>\n<radek kod=\"CNY\" mena=\"renminbi\" mnozstvi=\"1\" kurz=\"4,141\" zeme=\"\u010c\u00edna\"/>\n<radek kod=\"DKK\" mena=\"koruna\" mnozstvi=\"1\" kurz=\"3,663\" zeme=\"D\u00e1nsko\"/>\n<radek kod=\"EUR\" mena=\"euro\" mnozstvi=\"1\" kurz=\"27,320\" zeme=\"EMU\"/>\n<radek kod=\"PHP\" mena=\"peso\" mnozstvi=\"100\" kurz=\"57,518\" zeme=\"Filip\u00edny\"/>\n<radek kod=\"HKD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"3,325\" zeme=\"Hongkong\"/>\n<radek kod=\"HRK\" mena=\"kuna\" mnozstvi=\"1\" kurz=\"3,573\" zeme=\"Chorvatsko\"/>\n<radek kod=\"INR\" mena=\"rupie\" mnozstvi=\"100\" kurz=\"41,120\" zeme=\"Indie\"/>\n<radek kod=\"IDR\" mena=\"rupie\" mnozstvi=\"1000\" kurz=\"1,959\" zeme=\"Indonesie\"/>\n<radek kod=\"ILS\" mena=\"\u0161ekel\" mnozstvi=\"1\" kurz=\"6,401\" zeme=\"Izrael\"/>\n<radek kod=\"JPY\" mena=\"jen\" mnozstvi=\"100\" kurz=\"21,285\" zeme=\"Japonsko\"/>\n<radek kod=\"ZAR\" mena=\"rand\" mnozstvi=\"1\" kurz=\"2,084\" zeme=\"Jihoafrick\u00e1 rep.\"/>\n<radek kod=\"KRW\" mena=\"won\" mnozstvi=\"100\" kurz=\"2,284\" zeme=\"Ji\u017en\u00ed Korea\"/>\n<radek kod=\"CAD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"20,116\" zeme=\"Kanada\"/>\n<radek kod=\"HUF\" mena=\"forint\" mnozstvi=\"100\" kurz=\"8,988\" zeme=\"Ma\u010farsko\"/>\n<radek kod=\"MYR\" mena=\"ringgit\" mnozstvi=\"1\" kurz=\"6,958\" zeme=\"Malajsie\"/>\n<radek kod=\"MXN\" mena=\"peso\" mnozstvi=\"1\" kurz=\"1,675\" zeme=\"Mexiko\"/>\n<radek kod=\"XDR\" mena=\"SDR\" mnozstvi=\"1\" kurz=\"35,360\" zeme=\"MMF\"/>\n<radek kod=\"NOK\" mena=\"koruna\" mnozstvi=\"1\" kurz=\"3,071\" zeme=\"Norsko\"/>\n<radek kod=\"NZD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"18,892\" zeme=\"Nov\u00fd Z\u00e9land\"/>\n<radek kod=\"PLN\" mena=\"zlot\u00fd\" mnozstvi=\"1\" kurz=\"6,590\" zeme=\"Polsko\"/>\n<radek kod=\"RON\" mena=\"nov\u00e9 leu\" mnozstvi=\"1\" kurz=\"6,143\" zeme=\"Rumunsko\"/>\n<radek kod=\"RUB\" mena=\"rubl\" mnozstvi=\"100\" kurz=\"42,086\" zeme=\"Rusko\"/>\n<radek kod=\"SGD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"18,544\" zeme=\"Singapur\"/>\n<radek kod=\"SEK\" mena=\"koruna\" mnozstvi=\"1\" kurz=\"2,927\" zeme=\"\u0160v\u00e9dsko\"/>\n<radek kod=\"CHF\" mena=\"frank\" mnozstvi=\"1\" kurz=\"25,717\" zeme=\"\u0160v\u00fdcarsko\"/>\n<radek kod=\"THB\" mena=\"baht\" mnozstvi=\"100\" kurz=\"78,350\" zeme=\"Thajsko\"/>\n<radek kod=\"TRY\" mena=\"lira\" mnozstvi=\"1\" kurz=\"9,831\" zeme=\"Turecko\"/>\n<radek kod=\"USD\" mena=\"dolar\" mnozstvi=\"1\" kurz=\"25,797\" zeme=\"USA\"/>\n<radek kod=\"GBP\" mena=\"libra\" mnozstvi=\"1\" kurz=\"37,778\" zeme=\"Velk\u00e1 Brit\u00e1nie\"/>\n</tabulka>\n</kurzy>\n"
     }
 }
 ]

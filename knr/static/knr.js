@@ -1,6 +1,9 @@
 function initevents() {
     function mainpage_reset_onclick() {
-	if (($('#id_items').val() != '0') || $('#id_title').val() || $('#id_calculation_note').val() || $('#id_internal_note').val()) {
+	if (($('#id_items').val() != '0') ||
+	    $('#id_title').val() ||
+	    $('#id_calculation_note').val() ||
+	    $('#id_internal_note').val()) {
 	    return confirm('Skutečně chcete začít novou kalkulaci?');
 	} else {
 	    return true;
@@ -8,7 +11,10 @@ function initevents() {
     }
     function mainpage_load_button_onclick() {
 	if ($('#id_load').val()) {
-	    if (($('#id_items').val() != '0') || $('#id_title').val() || $('#id_calculation_note').val() || $('#id_internal_note').val()) {
+	    if (($('#id_items').val() != '0') ||
+		$('#id_title').val() ||
+		$('#id_calculation_note').val() ||
+		$('#id_internal_note').val()) {
 		return confirm('Skutečně chcete načíst jinou kalkulaci?');
 	    } else {
 		return true;
@@ -101,7 +107,10 @@ function initevents() {
 	return true;
     }
     function itemform_locset() {
-	return ($('#id_from_lat').val() && $('#id_from_lon').val() && $('#id_to_lat').val() && $('#id_to_lon').val());
+	return ($('#id_from_lat').val() &&
+		$('#id_from_lon').val() &&
+		$('#id_to_lat').val() &&
+		$('#id_to_lon').val());
     }
     function itemform_calcdist() {
 	if (itemform_locset()) {
@@ -195,11 +204,13 @@ function initevents() {
 	case 'service':
 	    $('#id_off10_flag').click(itemform_off10_flag_onclick);
 	    $('#id_off30_flag').click(itemform_off30_flag_onclick);
-	    $('#id_off30limit5000_flag').click(itemform_off30limit5000_flag_onclick);
+	    $('#id_off30limit5000_flag')
+	        .click(itemform_off30limit5000_flag_onclick);
 	    break;
 	case 'flat':
 	    $('#id_halved_flag').click(itemform_halved_flag_onclick);
-	    $('#id_halved_appeal_flag').click(itemform_halved_appeal_flag_onclick);
+	    $('#id_halved_appeal_flag')
+	        .click(itemform_halved_appeal_flag_onclick);
 	    $('#id_multiple_flag').click(itemform_multiple_flag_onclick);
 	    $('#id_multiple50_flag').click(itemform_multiple50_flag_onclick);
 	    break;

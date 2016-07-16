@@ -28,25 +28,29 @@ from . import forms, views
 class TestForms(SimpleTestCase):
 
     def test_MainForm(self):
-        f = forms.MainForm({'beg': '6.7.2016',
-                            'years': '',
-                            'months': '',
-                            'days': ''})
+        f = forms.MainForm(
+            {'beg': '6.7.2016',
+             'years': '',
+             'months': '',
+             'days': ''})
         self.assertFalse(f.is_valid())
-        f = forms.MainForm({'beg': '6.7.2016',
-                            'years': '10',
-                            'months': '',
-                            'days': ''})
+        f = forms.MainForm(
+            {'beg': '6.7.2016',
+             'years': '10',
+             'months': '',
+             'days': ''})
         self.assertTrue(f.is_valid())
-        f = forms.MainForm({'beg': '6.7.2016',
-                            'years': '',
-                            'months': '10',
-                            'days': ''})
+        f = forms.MainForm(
+            {'beg': '6.7.2016',
+             'years': '',
+             'months': '10',
+             'days': ''})
         self.assertTrue(f.is_valid())
-        f = forms.MainForm({'beg': '6.7.2016',
-                            'years': '',
-                            'months': '',
-                            'days': '10'})
+        f = forms.MainForm(
+            {'beg': '6.7.2016',
+             'years': '',
+             'months': '',
+             'days': '10'})
         self.assertTrue(f.is_valid())
 
 pp = [
@@ -84,18 +88,16 @@ class TestViews(SimpleTestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'dvt_main.html')
         for p in pp:
-            res = self.client.post('/dvt/',
-                                   {'beg': p[0],
-                                    'years': p[1],
-                                    'months': p[2],
-                                    'days': p[3]})
+            res = self.client.post(
+                '/dvt/',
+                {'beg': p[0],
+                 'years': p[1],
+                 'months': p[2],
+                 'days': p[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'dvt_main.html')
-            try:
-                soup = BeautifulSoup(res.content, 'html.parser')
-                msg = soup.find('td', 'msg').select('div')
-            except:
-                self.fail()
+            soup = BeautifulSoup(res.content, 'html.parser')
+            msg = soup.find('td', 'msg').select('div')
             l = len(msg)
             self.assertEqual(l, 4)
             self.assertEqual(msg[0].text, 'Trest skončí: ' + p[4])
@@ -103,16 +105,14 @@ class TestViews(SimpleTestCase):
             self.assertEqual(msg[2].text, 'Polovina trestu: ' + p[6])
             self.assertEqual(msg[3].text, 'Dvě třetiny trestu: ' + p[7])
         for p in ee:
-            res = self.client.post('/dvt/',
-                                   {'beg': p[0],
-                                    'years': p[1],
-                                    'months': p[2],
-                                    'days': p[3]})
+            res = self.client.post(
+                '/dvt/',
+                {'beg': p[0],
+                 'years': p[1],
+                 'months': p[2],
+                 'days': p[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'dvt_main.html')
-            try:
-                soup = BeautifulSoup(res.content, 'html.parser')
-                msg = soup.find('td', 'msg').select('div')
-            except:
-                self.fail()
+            soup = BeautifulSoup(res.content, 'html.parser')
+            msg = soup.find('td', 'msg').select('div')
             self.assertEqual(msg[0].text, 'Chybné zadání')

@@ -40,7 +40,7 @@ class Place(models.Model):
         validators=[MinValueValidator(-180.0), MaxValueValidator(180.0)])
 
     def __str__(self):
-        return self.name
+        return self.abbr
 
     class Meta:
         unique_together = (('uid', 'abbr'),)
@@ -69,7 +69,7 @@ class Car(models.Model):
         validators=[MinValueValidator(0)])
 
     def __str__(self):
-        return self.name
+        return self.abbr
 
     class Meta:
         unique_together = (('uid', 'abbr'),)
@@ -88,7 +88,7 @@ class Formula(models.Model):
         validators=[MinValueValidator(0)])
 
     def __str__(self):
-        return self.name
+        return self.abbr
 
     class Meta:
         unique_together = (('uid', 'abbr'),)
@@ -105,7 +105,7 @@ class Rate(models.Model):
         validators=[MinValueValidator(0)])
 
     def __str__(self):
-        return '%d/%s' % (self.formula_id, self.fuel)
+        return '%s/%s' % (self.formula.abbr, self.fuel)
 
     class Meta:
         unique_together = (('formula', 'fuel'),)

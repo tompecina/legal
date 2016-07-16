@@ -4,10 +4,8 @@ remote='legal.pecina.cz'
 
 ./manage.py collectstatic --noinput
 rsync -avhHzx \
-      --exclude '.svn/' \
-      --exclude '.git/' \
+      --exclude '.*' \
       --exclude '*.pyc' \
-      --exclude '.gitignore' \
       --exclude '*.pyc' \
       --exclude '*~' \
       --exclude '/update' \
@@ -21,8 +19,8 @@ rsync -avhHzx \
       --exclude 'test*' \
       --exclude 'fixtures/*_test*.json' \
       --exclude '/test/' \
+      --exclude '/htmlcov/' \
       --exclude '#*' \
-      --exclude '.#*' \
       --delete \
       ./ $remote:/var/www/django/legal/
 

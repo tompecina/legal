@@ -28,8 +28,7 @@ from http import HTTPStatus
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from re import compile
-from .models import Court, Proceedings
-from . import cron, forms, glob, views
+from . import cron, forms, glob, models, views
 
 class TestCron(TestCase):
     fixtures = ['szr_test.json']
@@ -40,21 +39,22 @@ class TestCron(TestCase):
         
     def test_courts(self):
         cron.cron_courts(self.req)
-        c = Court.objects.all()
+        c = models.Court.objects.all()
         self.assertEqual(len(c), 98)
-        c = Court.objects.exclude(reports=None)
+        c = models.Court.objects.exclude(reports=None)
         self.assertEqual(len(c), 86)
         
     def test_update(self):
-        self.assertEqual(Proceedings.objects.filter(court_id='NSS', auxid=0) \
-                         .count(), 2)
+        self.assertEqual(models.Proceedings.objects.filter(
+            court_id='NSS', auxid=0).count(), 2)
         st = datetime.now()
         for i in range(6):
             cron.cron_update(self.req)
-        self.assertFalse(Proceedings.objects.filter(court_id='NSS', auxid=0))
-        ch6 = Proceedings.objects.get(pk=6).changed
+        self.assertFalse(models.Proceedings.objects.filter(
+            court_id='NSS', auxid=0))
+        ch6 = models.Proceedings.objects.get(pk=6).changed
         self.assertGreaterEqual(ch6, st)
-        p = Proceedings.objects.all().order_by('pk')
+        p = models.Proceedings.objects.all().order_by('pk')
         self.assertEqual(
             tuple(p.values_list('pk', 'changed', 'hash', 'notify')),
             ((1,
@@ -90,9 +90,15 @@ class TestCron(TestCase):
         m = mail.outbox
         self.assertEqual(len(m), 1)
         m = m[0]
-        self.assertEqual(m.from_email, 'Server legal.pecina.cz <legal@pecina.cz>')
-        self.assertEqual(m.to, ['tomas@pecina.cz'])
-        self.assertEqual(m.subject, 'Zmeny ve sledovanych rizenich')
+        self.assertEqual(
+            m.from_email,
+            'Server legal.pecina.cz <legal@pecina.cz>')
+        self.assertEqual(
+            m.to,
+            ['tomas@pecina.cz'])
+        self.assertEqual(
+            m.subject,
+            'Zmeny ve sledovanych rizenich')
         self.assertEqual(
             m.body,
             'V těchto soudních řízeních, která sledujete, došlo ke změně:\n' \
@@ -119,14 +125,37 @@ class TestGlob(SimpleTestCase):
         for p in ['X', '']:
             self.assertIsNone(rr.match(p), msg=p)
 
+class TestModels(SimpleTestCase):
+
+    def test_models(self):
+        c = models.Court(
+            id='NSJIMBM',
+            name='Nejvyšší soud')
+        self.assertEqual(
+            str(c),
+            'Nejvyšší soud')
+        self.assertEqual(
+            str(models.Proceedings(
+                uid_id=1,
+                court=c,
+                senate=7,
+                register='Tdo',
+                number=315,
+                year=2000)),
+            'Nejvyšší soud, 7 Tdo 315/2000')
+
 class TestViews(TestCase):
     fixtures = ['szr_test.json']
     
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
+        super(TestViews, cls).setUpClass()
         User.objects.create_user('user', 'user@pecina.cz', 'none')
-
-    def tearDown(self):
+        
+    @classmethod
+    def tearDownClass(cls):
         User.objects.all().delete()
+        super(TestViews, cls).tearDownClass()
         
     def test_mainpage(self):
         res = self.client.get('/szr')

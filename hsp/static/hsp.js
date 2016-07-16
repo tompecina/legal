@@ -5,7 +5,10 @@ function initevents() {
 	return false;
     }
     function mainpage_reset_onclick() {
-	if ($('.itr').length || $('#id_title').val() || $('#id_note').val() || $('#id_internal_note').val()) {
+	if ($('.itr').length ||
+	    $('#id_title').val() ||
+	    $('#id_note').val() ||
+	    $('#id_internal_note').val()) {
 	    return confirm('Skutečně chcete smazat pohledávku?');
 	} else {
 	    return true;
@@ -13,7 +16,10 @@ function initevents() {
     }
     function mainpage_load_button_onclick() {
 	if ($('#id_load').val()) {
-	    if ($('.itr').length || $('#id_title').val() || $('#id_note').val() || $('#id_internal_note').val()) {
+	    if ($('.itr').length ||
+		$('#id_title').val() ||
+		$('#id_note').val() ||
+		$('#id_internal_note').val()) {
 		return confirm('Skutečně chcete načíst jinou pohledávku?');
 	    } else {
 		return true;
@@ -139,12 +145,16 @@ function initevents() {
 	    $('.immune').removeClass('immune');
 	    $('[name=model]').slice(1).d(true);
 	}
-	$('[name=model], #id_principal_debit').change(debitform_updatemodels).first().change();
+	$('[name=model], #id_principal_debit').change(debitform_updatemodels)
+	    .first().change();
     }
     if ($('#id_creditform').length) {
-	$dl = $('div.debord select').each( function() { $(this).data('pv', $(this).val()); } ).change(credit_reorder);
+	$dl = $('div.debord select').each(
+	    function() { $(this).data('pv', $(this).val()); } )
+	    .change(credit_reorder);
     }
     if ($('#id_fxrateform').length) {
-	$('#id_currency_from, #id_currency_to').on('change keyup', fxform_updatefields).first().change();
+	$('#id_currency_from, #id_currency_to')
+	    .on('change keyup', fxform_updatefields).first().change();
     }
 }

@@ -184,7 +184,7 @@
 	      <td><input type="submit" name="submit_empty" value="Vyprázdnit" id="id_reset" /></td>
 	      <td><input type="submit" name="submit_load" value="Načíst" id="id_load_button" /></td>
 	      <td><input type="submit" name="submit_xml" value="Uložit" /></td>
-	      <td><input type="submit" name="submit_csv" value="Export do CSV" /></td>
+	      <td><input type="submit" name="submit_csv" value="Export do CSV"  {% if res.msg %}disabled="disabled"{% endif %}/></td>
 	      <td><input type="submit" name="submit_pdf" value="Export do PDF" /></td>
 	    </tr>
 	    <tr>

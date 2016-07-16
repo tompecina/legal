@@ -23,30 +23,37 @@
 from django.test import SimpleTestCase, Client
 from http import HTTPStatus
 from bs4 import BeautifulSoup
+from datetime import date
 from . import forms, views
 
 class TestForms(SimpleTestCase):
 
     def test_MainForm(self):
-        f = forms.MainForm({'beg': '6.7.2016',
-                            'preset': 'none',
-                            'dur': '',
-                            'unit': 'd'})
+        f = forms.MainForm(
+            {'beg': '6.7.2016',
+             'preset': 'none',
+             'dur': '',
+             'unit': 'd'})
         self.assertFalse(f.is_valid())
-        self.assertEqual(f.errors, {'dur': ['Duration may not be empty']})
-        f = forms.MainForm({'beg': '6.7.2016',
-                            'submit_set_beg': 'Dnes',
-                            'preset': 'd3',
-                            'unit': 'd'})
+        self.assertEqual(
+            f.errors,
+            {'dur': ['Duration may not be empty']})
+        f = forms.MainForm(
+            {'beg': '6.7.2016',
+             'submit_set_beg': 'Dnes',
+             'preset': 'd3',
+             'unit': 'd'})
         self.assertTrue(f.is_valid())
-        f = forms.MainForm({'beg': '6.7.2016',
-                            'preset': 'd3',
-                            'unit': 'd'})
+        f = forms.MainForm(
+            {'beg': '6.7.2016',
+             'preset': 'd3',
+             'unit': 'd'})
         self.assertTrue(f.is_valid())
-        f = forms.MainForm({'beg': '6.7.2016',
-                            'dur': '1',
-                            'preset': 'd3',
-                            'unit': 'd'})
+        f = forms.MainForm(
+            {'beg': '6.7.2016',
+             'dur': '1',
+             'preset': 'd3',
+             'unit': 'd'})
         self.assertTrue(f.is_valid())
 
 pp = [
@@ -130,6 +137,8 @@ pp = [
           ['Pá 24. 6. 2016']],
          ['1.7.2016', 'none', '-100', 'b',
           ['St 10. 2. 2016']],
+         ['31.5.2016', 'm1', '', 'd',
+          ['Čt 30. 6. 2016']],
      ]
 
 ee = [
@@ -139,6 +148,7 @@ ee = [
          ['1.7.2016', 'none', '', 'd'],
          ['1.7.2016', 'none', '0', 'd'],
          ['1.7.2016', 'none', '0', 'b'],
+         ['31.12.1990', 'none', '5', 'b'],
      ]
        
 class TestViews(SimpleTestCase):
@@ -152,33 +162,34 @@ class TestViews(SimpleTestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'lht_main.html')
         for p in pp:
-            res = self.client.post('/lht/',
-                                   {'beg': p[0],
-                                    'preset': p[1],
-                                    'dur': p[2],
-                                    'unit': p[3]})
+            res = self.client.post(
+                '/lht/',
+                {'beg': p[0],
+                 'preset': p[1],
+                 'dur': p[2],
+                 'unit': p[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'lht_main.html')
-            try:
-                soup = BeautifulSoup(res.content, 'html.parser')
-                msg = soup.find('td', 'msg').select('div')
-            except:
-                self.fail()
+            soup = BeautifulSoup(res.content, 'html.parser')
+            msg = soup.find('td', 'msg').select('div')
             l = len(msg)
             self.assertEqual(l, len(p[4]))
             for i in range(l):
                 self.assertEqual(msg[i].text, p[4][i])
         for p in ee:
-            res = self.client.post('/lht/',
-                                   {'beg': p[0],
-                                    'preset': p[1],
-                                    'dur': p[2],
-                                    'unit': p[3]})
+            res = self.client.post(
+                '/lht/',
+                {'beg': p[0],
+                 'preset': p[1],
+                 'dur': p[2],
+                 'unit': p[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'lht_main.html')
-            try:
-                soup = BeautifulSoup(res.content, 'html.parser')
-                msg = soup.find('td', 'msg').select('div')
-            except:
-                self.fail()
-            self.assertEqual(msg[0].text, 'Chybné zadání')
+            soup = BeautifulSoup(res.content, 'html.parser')
+            msg = soup.find('td', 'msg').select('div')
+            self.assertTrue(msg[0].text)
+        res = self.client.post(
+            '/lht/',
+            {'submit_set_beg': 'Dnes'})
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertEqual(res.context['f']['beg'].value(), date.today())

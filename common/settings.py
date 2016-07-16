@@ -156,7 +156,7 @@ LOGGING = {
     }
 }
 
-if not (LOCAL or TEST):
+if not (LOCAL or TEST):  # pragma: no cover
     SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 15768000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True

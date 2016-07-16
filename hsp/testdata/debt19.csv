@@ -1,0 +1,3 @@
+Datum,Popis,Částka,Měna,Předchozí zůstatek A (VAL),Změna A (VAL),Nový zůstatek A (VAL)
+2015-03-18,Závazek,850000.00,VAL,0.00,850000.00,850000.00
+2015-07-14,Splátka,-300.00,EUR,850000.00,-580881.00,269119.00

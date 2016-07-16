@@ -115,7 +115,7 @@ def getdebt(request):
     if a:
         try:
             return loads(a)
-        except:
+        except:  # pragma: no cover
             pass
     setdebt(request, Debt())
     a = getasset(request, aid)
@@ -127,7 +127,7 @@ def setdebt(request, data):
 def n2l(n):
     return (chr(ord('A') + n) if (n <= (ord('Z') - ord('A'))) else '?')
 
-DR, CR, BAL = range(3)
+DR, CR, BAL = tuple(range(3))
 
 def calcint(interest, pastdate, presdate, debt, res):
 
@@ -246,60 +246,62 @@ def calcint(interest, pastdate, presdate, debt, res):
 
     return (None, 'Neznámý model')
     
+def distr(debt, dt, credit, amount, disarr, res):
+    if amount < LIM:
+        return (0.0, None)
+    for i in credit.debits:
+        debit = debt.debits[i]
+        if debit.nb >= LIM:
+            if credit.currency == debit.currency:
+                rt = 1.0
+            else:
+                for fxrate in debt.fxrates:
+                    if (fxrate.currency_from == credit.currency) and \
+                       (fxrate.currency_to == debit.currency) and \
+                       ((not fxrate.date_from) or \
+                        (fxrate.date_from <= dt)) and \
+                        ((not fxrate.date_to) or (dt <= fxrate.date_to)):
+                        rt = (fxrate.rate_to / fxrate.rate_from)
+                        break
+                else:
+                    if credit.currency == 'CZK':
+                        rcl = 1.0
+                    else:
+                        r, q, dr, msg = getFXrate(
+                            credit.currency,
+                            dt,
+                            log=res.fx,
+                            use_fixed=True,
+                            log_fixed=res.fix)
+                        if msg:
+                            return (0.0, msg)
+                        rcl = (r / q)
+                    if debit.currency == 'CZK':
+                        rld = 1.0
+                    else:
+                        r, q, dr, msg = getFXrate(
+                            debit.currency,
+                            dt,
+                            log=res.fx,
+                            use_fixed=True,
+                            log_fixed=res.fix)
+                        if msg:
+                            return (0.0, msg)
+                        rld = (r / q)
+                    rt = (rcl / rld)
+            camount = (amount * rt)
+            if camount < debit.nb:
+                debit.nb -= camount
+                debit.nb = round(debit.nb, debt.rounding)
+                disarr[i] += camount
+                return (0.0, None)
+            disarr[i] += debit.nb
+            amount -= (debit.nb / rt)
+            debit.nb = 0.0
+    return (amount, None)
+    
 def calc(debt, pram=(lambda x: x)):
 
-    def distr(credit, amount, disarr):
-        if amount < LIM:
-            return (0.0, None)
-        for i in credit.debits:
-            debit = debt.debits[i]
-            if debit.nb >= LIM:
-                if credit.currency == debit.currency:
-                    rt = 1.0
-                else:
-                    for fxrate in debt.fxrates:
-                        if (fxrate.currency_from == credit.currency) and \
-                           (fxrate.currency_to == debit.currency) and \
-                           ((not fxrate.date_from) or \
-                            (fxrate.date_from <= dt)) and \
-                            ((not fxrate.date_to) or (dt <= fxrate.date_to)):
-                            rt = (fxrate.rate_to / fxrate.rate_from)
-                            break
-                    else:
-                        if credit.currency == 'CZK':
-                            rcl = 1.0
-                        else:
-                            r, q, dr, msg = getFXrate(credit.currency,
-                                                      dt,
-                                                      log=res.fx,
-                                                      use_fixed=True,
-                                                      log_fixed=res.fix)
-                            if msg:
-                                return (0.0, msg)
-                            rcl = (r / q)
-                        if debit.currency == 'CZK':
-                            rld = 1.0
-                        else:
-                            r, q, dr, msg = getFXrate(debit.currency,
-                                                      dt,
-                                                      log=res.fx,
-                                                      use_fixed=True,
-                                                      log_fixed=res.fix)
-                            if msg:
-                                return (0.0, msg)
-                            rld = (r / q)
-                        rt = (rcl / rld)
-                camount = (amount * rt)
-                if camount < debit.nb:
-                    debit.nb -= camount
-                    debit.nb = round(debit.nb, debt.rounding)
-                    disarr[i] += camount
-                    return (0.0, None)
-                disarr[i] += debit.nb
-                amount -= (debit.nb / rt)
-                debit.nb = 0.0
-        return (amount, None)
-    
     res = Result()
 
     res.msg = None
@@ -405,7 +407,7 @@ def calc(debt, pram=(lambda x: x)):
         res.hrow = res.crow = res.ccol = res.scol = False
         res.c1 = res.c2 = res.c3 = 1
         res.c4 = 7
-    res.r3 = range(3)
+    res.r3 = list(range(3))
 
     if not ta:
         return res
@@ -453,7 +455,7 @@ def calc(debt, pram=(lambda x: x)):
                 debit.nb = debit.balance
             for i in ncust4:
                 ai, res.msg = calcint(i, cud, dt, debt, res)
-                if res.msg:
+                if res.msg:  # pragma: no cover
                     return res
                 i.nb += ai
             o = tt['o']
@@ -486,13 +488,15 @@ def calc(debt, pram=(lambda x: x)):
                 o.nb += o.fixed_amount
                 o.nb = round(o.nb, debt.rounding)
             for credit in debt.credits:
-                credit.nsp, res.msg = distr(credit, credit.sp, row['sp_distr'])
+                credit.nsp, res.msg = \
+                    distr(debt, dt, credit, credit.sp, row['sp_distr'], res)
                 if res.msg:
                     return res
             if tp == CR:
                 row['amount'] = pram(-o.amount)
                 row['debits'] = o.debits
-                sp, res.msg = distr(o, o.amount, row['cr_distr'])
+                sp, res.msg = \
+                    distr(debt, dt, o, o.amount, row['cr_distr'], res)
                 if res.msg:
                     return res
                 o.nsp += sp
@@ -698,9 +702,11 @@ def toxml(debt):
 
 def fromxml(d):
     s = getXML(d)
+    if not s:
+        return None, 'Chybný formát souboru (1)'
     h = s.debt
     if not (h and (h['application'] in [APP, 'hjp'])):
-        return None, 'Chybný formát souboru'
+        return None, 'Chybný formát souboru (2)'
 
     if h['application'] == APP:
         debt = Debt()
@@ -822,10 +828,7 @@ def fromxml(d):
         for tt in tr:
             if not tt.name:
                 continue
-            if tt.has_attr('type'):
-                tt_type = tt['type']
-            else:
-                tt_type = str(tt.name)
+            tt_type = str(tt.name)
             if tt_type == 'credit':
                 c = Credit()
                 debt.credits.append(c)
@@ -869,13 +872,14 @@ def mainpage(request):
 
     if (request.method == 'GET'):
         debt = getdebt(request)
-        if not debt:
+        if not debt:  # pragma: no cover
             return error(request)
 
-        var = {'title': debt.title,
-               'note': debt.note,
-               'internal_note': debt.internal_note,
-               'rounding': str(debt.rounding)
+        var = {
+            'title': debt.title,
+            'note': debt.note,
+            'internal_note': debt.internal_note,
+            'rounding': str(debt.rounding)
         }
         f = MainForm(initial=var)
 
@@ -884,7 +888,7 @@ def mainpage(request):
 
         if btn == 'empty':
             debt = Debt()
-            if not setdebt(request, debt):
+            if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
             return redirect('hsp:mainpage')
 
@@ -905,7 +909,7 @@ def mainpage(request):
                     err_message = 'Chyba při načtení souboru'
 
         debt = getdebt(request)
-        if not debt:
+        if not debt:  # pragma: no cover
             return error(request)
         
         f = MainForm(request.POST)
@@ -1020,140 +1024,157 @@ def mainpage(request):
                     italic='BookmanI',
                     boldItalic='BookmanBI')
 
-                s1 = ParagraphStyle(name='S1',
-                                    fontName='Bookman',
-                                    fontSize=8,
-                                    leading=9,
-                                    alignment=TA_RIGHT,
-                                    allowWidows=False,
-                                    allowOrphans=False)
-                s2 = ParagraphStyle(name='S2',
-                                    fontName='BookmanB',
-                                    fontSize=10,
-                                    leading=11,
-                                    alignment=TA_RIGHT,
-                                    allowWidows=False,
-                                    allowOrphans=False)
-                s4 = ParagraphStyle(name='S4',
-                                    fontName='BookmanB',
-                                    fontSize=8,
-                                    leading=10,
-                                    allowWidows=False,
-                                    allowOrphans=False)
-                s12 = ParagraphStyle(name='S12',
-                                     fontName='BookmanI',
-                                     fontSize=8,
-                                     leading=9,
-                                     spaceBefore=4,
-                                     spaceAfter=5,
-                                     leftIndent=8,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s13 = ParagraphStyle(name='S13',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=12,
-                                     alignment=TA_CENTER,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s14 = ParagraphStyle(name='S14',
-                                     fontName='BookmanB',
-                                     fontSize=8,
-                                     leading=12,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s15 = ParagraphStyle(name='S15',
-                                     fontName='BookmanB',
-                                     fontSize=8,
-                                     leading=10,
-                                     alignment=TA_CENTER,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s17 = ParagraphStyle(name='S17',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=10,
-                                     alignment=TA_CENTER,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s18 = ParagraphStyle(name='S18',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=10,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s19 = ParagraphStyle(name='S19',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=10,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s20 = ParagraphStyle(name='S20',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=10,
-                                     spaceBefore=4,
-                                     allowWidows=False,
-                                     allowOrphans=False,
-                                     bulletFontName='Bookman',
-                                     bulletFontSize=8,
-                                     bulletIndent=8,
-                                     leftIndent=16)
-                s22 = ParagraphStyle(name='S22',
-                                     fontName='BookmanI',
-                                     fontSize=8,
-                                     leading=10,
-                                     alignment=TA_CENTER,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s23 = ParagraphStyle(name='S23',
-                                     fontName='BookmanB',
-                                     fontSize=8,
-                                     leading=10,
-                                     spaceBefore=15,
-                                     spaceAfter=4,
-                                     allowWidows=False,
-                                     allowOrphans=False,
-                                     keepWithNext=True)
-                s24 = ParagraphStyle(name='S24',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=10,
-                                     spaceBefore=4,
-                                     allowWidows=False,
-                                     allowOrphans=False,
-                                     bulletFontName='BookmanB',
-                                     bulletFontSize=8,
-                                     bulletIndent=8,
-                                     leftIndent=24,
-                                     keepWithNext=True)
-                s25 = ParagraphStyle(name='S25',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=10,
-                                     leftIndent=24,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s26 = ParagraphStyle(name='S26',
-                                     fontName='Bookman',
-                                     fontSize=6,
-                                     leading=9,
-                                     spaceBefore=-2,
-                                     allowWidows=False,
-                                     allowOrphans=False)
+                s1 = ParagraphStyle(
+                    name='S1',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=9,
+                    alignment=TA_RIGHT,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s2 = ParagraphStyle(
+                    name='S2',
+                    fontName='BookmanB',
+                    fontSize=10,
+                    leading=11,
+                    alignment=TA_RIGHT,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s4 = ParagraphStyle(
+                    name='S4',
+                    fontName='BookmanB',
+                    fontSize=8,
+                    leading=10,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s12 = ParagraphStyle(
+                    name='S12',
+                    fontName='BookmanI',
+                    fontSize=8,
+                    leading=9,
+                    spaceBefore=4,
+                    spaceAfter=5,
+                    leftIndent=8,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s13 = ParagraphStyle(
+                    name='S13',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=12,
+                    alignment=TA_CENTER,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s14 = ParagraphStyle(
+                    name='S14',
+                    fontName='BookmanB',
+                    fontSize=8,
+                    leading=12,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s15 = ParagraphStyle(
+                    name='S15',
+                    fontName='BookmanB',
+                    fontSize=8,
+                    leading=10,
+                    alignment=TA_CENTER,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s17 = ParagraphStyle(
+                    name='S17',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=10,
+                    alignment=TA_CENTER,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s18 = ParagraphStyle(
+                    name='S18',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=10,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s19 = ParagraphStyle(
+                    name='S19',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=10,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s20 = ParagraphStyle(
+                    name='S20',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=10,
+                    spaceBefore=4,
+                    allowWidows=False,
+                    allowOrphans=False,
+                    bulletFontName='Bookman',
+                    bulletFontSize=8,
+                    bulletIndent=8,
+                    leftIndent=16)
+                s22 = ParagraphStyle(
+                    name='S22',
+                    fontName='BookmanI',
+                    fontSize=8,
+                    leading=10,
+                    alignment=TA_CENTER,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s23 = ParagraphStyle(
+                    name='S23',
+                    fontName='BookmanB',
+                    fontSize=8,
+                    leading=10,
+                    spaceBefore=15,
+                    spaceAfter=4,
+                    allowWidows=False,
+                    allowOrphans=False,
+                    keepWithNext=True)
+                s24 = ParagraphStyle(
+                    name='S24',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=10,
+                    spaceBefore=4,
+                    allowWidows=False,
+                    allowOrphans=False,
+                    bulletFontName='BookmanB',
+                    bulletFontSize=8,
+                    bulletIndent=8,
+                    leftIndent=24,
+                    keepWithNext=True)
+                s25 = ParagraphStyle(
+                    name='S25',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=10,
+                    leftIndent=24,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s26 = ParagraphStyle(
+                    name='S26',
+                    fontName='Bookman',
+                    fontSize=6,
+                    leading=9,
+                    spaceBefore=-2,
+                    allowWidows=False,
+                    allowOrphans=False)
 
                 d1 =[[[Paragraph('Historie peněžité pohledávky'.upper(), s1)]]]
                 if debt.title:
                     d1[0][0].append(Paragraph(escape(debt.title), s2))
                 t1 = Table(d1, colWidths=[483.30])
-                t1.setStyle(TableStyle([
-                            ('LINEABOVE', (0, 0), (0, -1), 1.0, black),
-                            ('TOPPADDING', (0, 0), (0, -1), 2),
-                            ('LINEBELOW', (-1, 0), (-1, -1), 1.0, black),
-                            ('BOTTOMPADDING', (-1, 0), (-1, -1), 3),
-                            ('LEFTPADDING', (0, 0), (-1, -1), 2),
-                            ('RIGHTPADDING', (0, 0), (-1, -1), 2),
-                            ]))
+                t1.setStyle(
+                    TableStyle([
+                        ('LINEABOVE', (0, 0), (0, -1), 1.0, black),
+                        ('TOPPADDING', (0, 0), (0, -1), 2),
+                        ('LINEBELOW', (-1, 0), (-1, -1), 1.0, black),
+                        ('BOTTOMPADDING', (-1, 0), (-1, -1), 3),
+                        ('LEFTPADDING', (0, 0), (-1, -1), 2),
+                        ('RIGHTPADDING', (0, 0), (-1, -1), 2),
+                    ]))
                 flow = [t1, Spacer(0, 36)]
 
                 bst = [('SPAN', (0, 0), (4, 0)),
@@ -1298,10 +1319,10 @@ def mainpage(request):
                     rmdsl(res.fix)
                     r.append(Paragraph(('Použité fixní směnné poměry:'), s23))
                     for fix in res.fix:
-                        r.append(Paragraph((p2c('{:n} {} = 1 {}, platný od ' \
-                            .format(fix['rate'],
-                                    fix['currency_from'],
-                                    fix['currency_to'])) + fix['date_from'] \
+                        r.append(Paragraph(('%s %s = 1 %s, platný od ' % \
+                            (formam(fix['rate']),
+                             fix['currency_from'],
+                             fix['currency_to']) + fix['date_from'] \
                                             .strftime('%d.%m.%Y')),
                                            s20,
                                            bulletText='–'))
@@ -1482,10 +1503,11 @@ def mainpage(request):
                     topMargin=48.0,
                     bottomMargin=96.0,
                     )
-                doc.build(flow,
-                          onFirstPage=page1,
-                          onLaterPages=page2,
-                          canvasmaker=ModCanvas)
+                doc.build(
+                    flow,
+                    onFirstPage=page1,
+                    onLaterPages=page2,
+                    canvasmaker=ModCanvas)
                 response.write(temp.getvalue())
                 return response
 
@@ -1543,16 +1565,17 @@ def mainpage(request):
         id += 1
     sb.sort(key=(lambda x: x.date))
     
-    return render(request,
-                  'hsp_mainpage.html',
-                  {'app': APP,
-                   'page_title': 'Historie složené peněžité pohledávky',
-                   'f': f,
-                   'debt': debt,
-                   'res': res,
-                   'sc': sc,
-                   'sb': sb,
-                   'err_message': err_message})
+    return render(
+        request,
+        'hsp_mainpage.html',
+        {'app': APP,
+         'page_title': 'Historie složené peněžité pohledávky',
+         'f': f,
+         'debt': debt,
+         'res': res,
+         'sc': sc,
+         'sb': sb,
+         'err_message': err_message})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -1563,7 +1586,7 @@ def debitform(request, id=0):
     err_message = ''
     id = int(id)
     debt = getdebt(request)
-    if not debt:
+    if not debt:  # pragma: no cover
         return error(request)
     fields.AmountField.rounding = debt.rounding
     nd = len(debt.debits)
@@ -1599,7 +1622,7 @@ def debitform(request, id=0):
                 if row['value'] == debit.principal_debit:
                     row['sel'] = True
                     break
-            else:
+            else:  # pragma: no cover
                 rows[0]['sel'] = True
             if m != 'fixed':
                 var['date_from'] = debit.date_from
@@ -1665,55 +1688,57 @@ def debitform(request, id=0):
                     debt.debits.append(debit)
                     for credit in debt.credits:
                         credit.debits.append(nd)
-                if not setdebt(request, debt):
+                if not setdebt(request, debt):  # pragma: no cover
                     return error(request)
                 return redirect('hsp:mainpage')
 
             elif not err_message:
                     err_message = inerr
         
-    return render(request,
-                  'hsp_debitform.html',
-                  {'app': APP,
-                   'f': f,
-                   'rows': rows,
-                   'page_title': page_title,
-                   'ydconvs': ydconvs,
-                   'mdconvs': mdconvs,
-                   'err_message': err_message})
+    return render(
+        request,
+        'hsp_debitform.html',
+        {'app': APP,
+         'f': f,
+         'rows': rows,
+         'page_title': page_title,
+         'ydconvs': ydconvs,
+         'mdconvs': mdconvs,
+         'err_message': err_message})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
 def debitdel(request, id=0):
     id = int(id) - 1
     debt = getdebt(request)
-    if not debt:
+    if not debt:  # pragma: no cover
         return error(request)
     nd = len(debt.debits)
     if id >= nd:
         raise Http404
     if request.method == 'GET':
-        return render(request,
-                      'hsp_debitdel.html',
-                      {'app': APP,
-                       'page_title': 'Smazání závazku'})
+        return render(
+            request,
+            'hsp_debitdel.html',
+            {'app': APP,
+             'page_title': 'Smazání závazku'})
     else:
         btn = getbutton(request)
         if btn == 'yes':
-            r = range(nd)
+            r = list(range(nd))
             for i in range((nd - 1), -1, -1):
                 if (i == id) or ((debt.debits[i].principal_debit - 1) == id):
                     r[i] = None
                     del debt.debits[i]
-            c = filter((lambda x: (x != None)), r)
-            m = map((lambda x: (None if (x == None) else c.index(x))), r)
+            c = list(filter((lambda x: (x != None)), r))
+            m = list(map((lambda x: (None if (x == None) else c.index(x))), r))
             for credit in debt.credits:
                 d = []
                 for i in credit.debits:
                     if m[i] != None:
                         d.append(m[i])
                 credit.debits = d
-            if not setdebt(request, debt):
+            if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
         return redirect('hsp:mainpage')
 
@@ -1724,7 +1749,7 @@ def creditform(request, id=0):
     page_title = ('Úprava splátky' if id else 'Nová splátka')
     err_message = ''
     debt = getdebt(request)
-    if not debt:
+    if not debt:  # pragma: no cover
         return error(request)
     fields.AmountField.rounding = debt.rounding
     rows = []
@@ -1797,7 +1822,7 @@ def creditform(request, id=0):
                 else:
                     debt.credits.append(credit)
                 debt.last_debits = credit.debits
-                if not setdebt(request, debt):
+                if not setdebt(request, debt):  # pragma: no cover
                     return error(request)
                 return redirect('hsp:mainpage')
 
@@ -1807,35 +1832,37 @@ def creditform(request, id=0):
                     for n in range(nd):
                         rows[n]['sel'] = int(request.POST['r%d' % n])
         
-    return render(request,
-                  'hsp_creditform.html',
-                  {'app': APP,
-                   'f': f,
-                   'rows': rows,
-                   'page_title': page_title,
-                   'err_message': err_message,
-                   'deb_class': deb_class})
+    return render(
+        request,
+        'hsp_creditform.html',
+        {'app': APP,
+         'f': f,
+         'rows': rows,
+         'page_title': page_title,
+         'err_message': err_message,
+         'deb_class': deb_class})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
 def creditdel(request, id=0):
     id = int(id) - 1
     debt = getdebt(request)
-    if not debt:
+    if not debt:  # pragma: no cover
         return error(request)
     if id >= len(debt.credits):
         raise Http404
     if request.method == 'GET':
-        return render(request,
-                      'hsp_creditdel.html',
-                      {'app': APP,
-                       'page_title': 'Smazání splátky',
-                       'date': debt.credits[id].date})
+        return render(
+            request,
+            'hsp_creditdel.html',
+            {'app': APP,
+             'page_title': 'Smazání splátky',
+             'date': debt.credits[id].date})
     else:
         btn = getbutton(request)
         if btn == 'yes':
             del debt.credits[id]
-            if not setdebt(request, debt):
+            if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
         return redirect('hsp:mainpage')
 
@@ -1846,7 +1873,7 @@ def balanceform(request, id=0):
     page_title = ('Úprava kontrolního bodu' if id else 'Nový kontrolní bod')
     err_message = ''
     debt = getdebt(request)
-    if not debt:
+    if not debt:  # pragma: no cover
         return error(request)
     id = int(id)
     if request.method == 'GET':
@@ -1877,40 +1904,42 @@ def balanceform(request, id=0):
                 debt.balances[id - 1] = balance
             else:
                 debt.balances.append(balance)
-            if not setdebt(request, debt):
+            if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
             return redirect('hsp:mainpage')
 
         else:
             err_message = inerr
         
-    return render(request,
-                  'hsp_balanceform.html',
-                  {'app': APP,
-                   'f': f,
-                   'page_title': page_title,
-                   'err_message': err_message})
+    return render(
+        request,
+        'hsp_balanceform.html',
+        {'app': APP,
+         'f': f,
+         'page_title': page_title,
+         'err_message': err_message})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
 def balancedel(request, id=0):
     id = int(id) - 1
     debt = getdebt(request)
-    if not debt:
+    if not debt:  # pragma: no cover
         return error(request)
     if id >= len(debt.balances):
         raise Http404
     if request.method == 'GET':
-        return render(request,
-                      'hsp_balancedel.html',
-                      {'app': APP,
-                       'page_title': 'Smazání kontrolního bodu',
-                       'date': debt.balances[id].date})
+        return render(
+            request,
+            'hsp_balancedel.html',
+            {'app': APP,
+             'page_title': 'Smazání kontrolního bodu',
+             'date': debt.balances[id].date})
     else:
         btn = getbutton(request)
         if btn == 'yes':
             del debt.balances[id]
-            if not setdebt(request, debt):
+            if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
         return redirect('hsp:mainpage')
 
@@ -1920,7 +1949,7 @@ def fxrateform(request, id=0):
     page_title = ('Úprava kursu' if id else 'Nový kurs')
     err_message = ''
     debt = getdebt(request)
-    if not debt:
+    if not debt:  # pragma: no cover
         return error(request)
     id = int(id)
     if request.method == 'GET':
@@ -1928,12 +1957,13 @@ def fxrateform(request, id=0):
             if id > len(debt.fxrates):
                 raise Http404
             fxrate = debt.fxrates[id - 1]
-            var = {'currency_from': fxrate.currency_from,
-                   'currency_to': fxrate.currency_to,
-                   'rate_from': fxrate.rate_from,
-                   'rate_to': fxrate.rate_to,
-                   'date_from': fxrate.date_from,
-                   'date_to': fxrate.date_to
+            var = {
+                'currency_from': fxrate.currency_from,
+                'currency_to': fxrate.currency_to,
+                'rate_from': fxrate.rate_from,
+                'rate_to': fxrate.rate_to,
+                'date_from': fxrate.date_from,
+                'date_to': fxrate.date_to
             }
             f = FXform(initial=var)
         else:
@@ -1959,41 +1989,43 @@ def fxrateform(request, id=0):
                 debt.fxrates[id - 1] = fxrate
             else:
                 debt.fxrates.append(fxrate)
-            if not setdebt(request, debt):
+            if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
             return redirect('hsp:mainpage')
 
         else:
             err_message = inerr
         
-    return render(request,
-                  'hsp_fxrateform.html',
-                  {'app': APP,
-                   'f': f,
-                   'page_title': page_title,
-                   'err_message': err_message,
-                   'display_note': True})
+    return render(
+        request,
+        'hsp_fxrateform.html',
+        {'app': APP,
+         'f': f,
+         'page_title': page_title,
+         'err_message': err_message,
+         'display_note': True})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
 def fxratedel(request, id=0):
     id = int(id) - 1
     debt = getdebt(request)
-    if not debt:
+    if not debt:  # pragma: no cover
         return error(request)
     if id >= len(debt.fxrates):
         raise Http404
     if request.method == 'GET':
-        return render(request,
-                      'hsp_fxratedel.html',
-                      {'app': APP,
-                       'page_title':
-                       'Smazání kursu',
-                       'fxrate': debt.fxrates[id]})
+        return render(
+            request,
+            'hsp_fxratedel.html',
+            {'app': APP,
+             'page_title':
+             'Smazání kursu',
+             'fxrate': debt.fxrates[id]})
     else:
         btn = getbutton(request)
         if btn == 'yes':
             del debt.fxrates[id]
-            if not setdebt(request, debt):
+            if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
         return redirect('hsp:mainpage')

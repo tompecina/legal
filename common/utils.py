@@ -27,6 +27,7 @@ from calendar import monthrange, isleap
 from xml.sax.saxutils import escape, unescape
 from bs4 import BeautifulSoup
 from pdfrw import PdfReader, PdfName
+from http import HTTPStatus
 import requests
 from cache.models import Cache
 from .settings import TEST
@@ -150,10 +151,7 @@ def yfactor(beg, end, dconv):
             return (end - beg).days / 365.0
         if dconv == 'ACT/360':
             return (end - beg).days / 360.0
-        if dconv == 'ACT/364':
-            return (end - beg).days / 364.0
-        else:
-            return None
+        return (end - beg).days / 364.0
 
     else:
         y1 = beg.year
@@ -184,8 +182,6 @@ def yfactor(beg, end, dconv):
                 m2 += 1
                 d2 = 1
         return (360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1)) / 360.0
-
-    return None
 
 def mfactor(beg, end, dconv):
     if (end < beg) or (dconv not in mdconvs):
@@ -278,6 +274,12 @@ def formam(x):
         i -= 3
     return ''.join(l)
 
+def getint(s):
+    if s:
+        return int(s)
+    else:
+        return 0
+
 def unrequire(f, flds):
     for fld in flds:
         f.fields[fld].required = False
@@ -293,11 +295,6 @@ def xmlescape(t):
 
 def xmlunescape(t):
     return unescape(t.strip())
-
-def curtail(text, limit):
-    if len(text) > limit:
-        text = text[:limit]+ '…'
-    return text
 
 def rmdsl(l):
     if l:
@@ -321,14 +318,15 @@ def getXML(d):
     if d.startswith(b'<?xml'):
         try:
             return newXML(d)
-        except:
+        except:  # pragma: no cover
             return None
     try:
         r = PdfReader(fdata=d)
         c = r['/Root']
         m = c.get(PdfName('Data'))
         return newXML(m.stream.encode('latin-1'))
-    except:
+    # these are legacy branches; I don't believe such files actually exist
+    except:  # pragma: no cover
         try:
             r = PdfReader(fdata=d)
             c = r['/Root']
@@ -351,18 +349,18 @@ def iso2date(tag):
     t = tag.text.strip().split('-')
     return date(int(t[0]), int(t[1]), int(t[2]))
 
-def get(*args, **kwargs):
+def get(*args, **kwargs):  # pragma: no cover
     if TEST:
         from .tests import DummyResponse
         c = Cache.objects.filter(url=args[0])
         if c:
             return DummyResponse(c[0].text)
         else:
-            raise Exception('GET data not in cache: "' + args[0 + '"'])
+            return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
     else:
         return requests.get(*args, **kwargs)
 
-def post(*args, **kwargs):
+def post(*args, **kwargs):  # pragma: no cover
     if TEST:
         from .tests import DummyResponse
         kk = list(args[1].keys())
@@ -377,6 +375,6 @@ def post(*args, **kwargs):
         if c:
             return DummyResponse(c[0].text)
         else:
-            raise Exception('POST data not in cache: "' + url + '"')
+            return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
     else:
         return requests.post(*args, **kwargs)

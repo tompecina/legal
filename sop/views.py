@@ -51,16 +51,13 @@ def mainpage(request):
             fx_info = ''
             if curr != 'CZK':
                 fx_date = cd['fx_date']
-                if not fx_date:
-                    messages = [[inerr, None]]
+                rate, qty, dr, msg = getFXrate(curr, fx_date)
+                if msg:
+                    messages = [[msg, None]]
                 else:
-                    rate, qty, dr, msg = getFXrate(curr, fx_date)
-                    if msg:
-                        messages = [[msg, None]]
-                    else:
-                        basis *= (rate / qty)
-                        fx_info = ('%d %s = %s CZK' % \
-                                   (qty, curr, p2c("%.3f" % (rate,))))
+                    basis *= (rate / qty)
+                    fx_info = ('%d %s = %s CZK' % \
+                               (qty, curr, p2c("%.3f" % (rate,))))
             if not messages:
                 if (opt == 'epr') and (basis > 1000000):
                     messages = [['Nad limit pro EPR', None]]

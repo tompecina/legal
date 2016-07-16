@@ -175,7 +175,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
     if (dr == dt) or ((today - dt) > sd):
         try:
             FXrate(date=dt, text=tx).save()
-        except:
+        except:  # pragma: no cover
             pass
     ln = soup.find('radek', {'kod': curr})
     fr = 1.0
@@ -259,11 +259,11 @@ def getMPIrate(tp, dt, log=None):
                     MPIrate.objects.get_or_create(type=tp,
                                                   rate=r[0],
                                                   valid=r[1])
-        except:
+        except:  # pragma: no cover
             return (None, 'Chyba zápisu do database (1)')
         try:
             MPIstat.objects.get_or_create(type=tp)[0].save()
-        except:
+        except:  # pragma: no cover
             return (None, 'Chyba zápisu do database (2)')
         
     d = MPIrate.objects.filter(type=tp, valid__lte=dt).order_by('-valid')

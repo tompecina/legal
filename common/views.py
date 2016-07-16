@@ -138,7 +138,7 @@ def useradd(request):
                 if user:
                     login(request, user)
                     return redirect('home')
-            return error(request)
+            return error(request)  # pragma: no cover
         else:
             err_message = 'Prosím, opravte označená pole ve formuláři'
     return render(request,

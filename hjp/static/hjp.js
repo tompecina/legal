@@ -5,7 +5,9 @@ function initevents() {
 	return false;
     }
     function mainform_updatefields() {
-	$('.curr').text($(($('#id_currency_0').val() == 'OTH') ? '#id_currency_1' : '#id_currency_0').val().toUpperCase().replace('CZK', 'Kč'));
+	$('.curr').text($(($('#id_currency_0').val() == 'OTH') ?
+	    '#id_currency_1' : '#id_currency_0').val().toUpperCase()
+	    .replace('CZK', 'Kč'));
     }
     function mainform_updatemodels() {
 	if ($('#id_fixed_amount').dp(!$('[value=fixed]').c())) {
@@ -14,14 +16,16 @@ function initevents() {
 	} else {
 	    class_enable($('#id_fa'));
 	}
-	if ($('#id_pa_rate').dp($('#id_ydconv').dp(!$('[value=per_annum]').c()))) {
+	if ($('#id_pa_rate').dp($('#id_ydconv')
+	    .dp(!$('[value=per_annum]').c()))) {
 	    $('#id_pa_rate').r();
 	    $('#id_ydconv').val('ACT/ACT');
 	    class_disable($('#id_pa'));
 	} else {
 	    class_enable($('#id_pa'));
 	}
-	if ($('#id_pm_rate').dp($('#id_mdconv').dp(!$('[value=per_mensem]').c()))) {
+	if ($('#id_pm_rate').dp($('#id_mdconv')
+	    .dp(!$('[value=per_mensem]').c()))) {
 	    $('#id_pm_rate').r();
 	    $('#id_mdconv').val('ACT');
 	    class_disable($('#id_pm'));
@@ -36,7 +40,10 @@ function initevents() {
 	}
     }
     function mainpage_reset_onclick() {
-	if ($('.trdt').length || $('#id_title').val() || $('#id_note').val() || $('#id_internal_note').val()) {
+	if ($('.trdt').length ||
+	    $('#id_title').val() ||
+	    $('#id_note').val() ||
+	    $('#id_internal_note').val()) {
 	    return confirm('Skutečně chcete smazat pohledávku?');
 	} else {
 	    return true;
@@ -44,7 +51,10 @@ function initevents() {
     }
     function mainpage_load_button_onclick() {
 	if ($('#id_load').val()) {
-	    if ($('.trdt').length || $('#id_title').val() || $('#id_note').val() || $('#id_internal_note').val()) {
+	    if ($('.trdt').length ||
+		$('#id_title').val() ||
+		$('#id_note').val() ||
+		$('#id_internal_note').val()) {
 		return confirm('Skutečně chcete načíst jinou pohledávku?');
 	    } else {
 		return true;
@@ -87,6 +97,7 @@ function initevents() {
 	$('#id_rounding').change(function () { $('#id_mainform').submit(); });
     }
     if ($('#id_transform').length) {
-	$('[name=transaction_type]').change(transform_updatefields).first().change();
+	$('[name=transaction_type]').change(transform_updatefields)
+	    .first().change();
     }
 }

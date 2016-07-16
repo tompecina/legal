@@ -58,61 +58,58 @@ def mainpage(request):
                 else:
                     dur = int(preset[1:])
                     unit = preset[0]
-                if not dur:
-                    messages = [[inerr, None]]
+                if dur > 0:
+                    o = odp
                 else:
+                    o = -odp
+                if unit == 'd':
+                    t = beg + timedelta(days = dur)
+                elif unit == 'w':
+                    t = beg + timedelta(weeks = dur)
+                elif unit in ['m', 'y']:
+                    if unit == 'y':
+                        dur *= 12
+                    d = beg.day
+                    m = beg.month
+                    y = beg.year
                     if dur > 0:
-                        o = odp
+                        for i in range(dur):
+                            m += 1
+                            if m > 12:
+                                m = 1
+                                y += 1
                     else:
-                        o = -odp
-                    if unit == 'd':
-                        t = beg + timedelta(days = dur)
-                    elif unit == 'w':
-                        t = beg + timedelta(weeks = dur)
-                    elif unit in ['m', 'y']:
-                        if unit == 'y':
-                            dur *= 12
-                        d = beg.day
-                        m = beg.month
-                        y = beg.year
-                        if dur > 0:
-                            for i in range(dur):
-                                m += 1
-                                if m > 12:
-                                    m = 1
-                                    y += 1
-                        else:
-                            for i in range(-dur):
-                                m -= 1
-                                if not m:
-                                    m = 12
-                                    y -= 1
-                        r = monthrange(y, m)[1]
-                        if d > r:
-                            d = r
-                        t = date(y, m, d)
-                    else:
-                        t = beg
-                        for i in range(abs(dur)):
-                            t += o
-                            while tod(t):
-                                t += o
-
-                    if tod(t):
-                        messages.append(
-                            [('%s není pracovní den' % pd(t)), None])
-
-                    while tod(t):
+                        for i in range(-dur):
+                            m -= 1
+                            if not m:
+                                m = 12
+                                y -= 1
+                    r = monthrange(y, m)[1]
+                    if d > r:
+                        d = r
+                    t = date(y, m, d)
+                else:
+                    t = beg
+                    for i in range(abs(dur)):
+                        t += o
+                        while tod(t):
                             t += o
 
+                if tod(t):
                     messages.append(
-                        [(wn[t.weekday()] + ' ' + pd(t)),
-                         'font-weight: bold; font-size: 120%;'])
-                    if t < date(1991, 1, 1):
-                        messages.append(
-                            ['(evidence pracovních dnů v tomto období ' \
-                             'není úplná)',
-                             'font-size: 80%;'])
+                        [('%s není pracovní den' % pd(t)), None])
+
+                while tod(t):
+                        t += o
+
+                messages.append(
+                    [(wn[t.weekday()] + ' ' + pd(t)),
+                     'font-weight: bold; font-size: 120%;'])
+                if t < date(1991, 1, 1):
+                    messages.append(
+                        ['(evidence pracovních dnů v tomto období ' \
+                         'není úplná)',
+                         'font-size: 80%;'])
            
         else:
             messages = [[inerr, None]]

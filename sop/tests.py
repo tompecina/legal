@@ -29,24 +29,27 @@ from cnb.models import FXrate
 class TestForms(SimpleTestCase):
 
     def test_MainForm(self):
-        f = forms.MainForm({'fx_date': '',
-                            'curr_0': 'EUR',
-                            'model': '1',
-                            'basis': '1000',
-                            'opt': 'none'})
+        f = forms.MainForm(
+            {'fx_date': '',
+             'curr_0': 'EUR',
+             'model': '1',
+             'basis': '1000',
+             'opt': 'none'})
         self.assertFalse(f.is_valid())
         self.assertEqual(f.errors, {'fx_date': ['Date is required']})
-        f = forms.MainForm({'fx_date': '',
-                            'curr_0': 'CZK',
-                            'model': '1',
-                            'basis': '1000',
-                            'opt': 'none'})
+        f = forms.MainForm(
+            {'fx_date': '',
+             'curr_0': 'CZK',
+             'model': '1',
+             'basis': '1000',
+             'opt': 'none'})
         self.assertTrue(f.is_valid())
-        f = forms.MainForm({'fx_date': '6.6.2016',
-                            'curr_0': 'EUR',
-                            'model': '1',
-                            'basis': '1000',
-                            'opt': 'none'})
+        f = forms.MainForm(
+            {'fx_date': '6.6.2016',
+             'curr_0': 'EUR',
+             'model': '1',
+             'basis': '1000',
+             'opt': 'none'})
         self.assertTrue(f.is_valid())
 
 pp = [
@@ -235,6 +238,8 @@ ee = [
          ['0,01', 'CZK', '', '', '1', 'none'],
          ['0,99', 'CZK', '', '', '1', 'none'],
          ['1000000,01', 'CZK', '', '', '1', 'epr'],
+         ['5690', 'EUR', '', '', '1', 'none'],
+         ['5690', 'XXX', '', '1.7.2016', '1', 'none'],
      ]
        
 class TestViews(TestCase):
@@ -249,35 +254,31 @@ class TestViews(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'sop_main.html')
         for p in pp:
-            res = self.client.post('/sop/',
-                                   {'basis': p[0],
-                                    'curr_0': p[1],
-                                    'curr_1': p[2],
-                                    'fx_date': p[3],
-                                    'model': p[4],
-                                    'opt': p[5]})
+            res = self.client.post(
+                '/sop/',
+                {'basis': p[0],
+                 'curr_0': p[1],
+                 'curr_1': p[2],
+                 'fx_date': p[3],
+                 'model': p[4],
+                 'opt': p[5]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'sop_main.html')
-            try:
-                soup = BeautifulSoup(res.content, 'html.parser')
-                msg = soup.find('td', 'msg').select('div')
-            except:
-                self.fail()
+            soup = BeautifulSoup(res.content, 'html.parser')
+            msg = soup.find('td', 'msg').select('div')
             self.assertGreater(len(msg), 1)
             self.assertEqual(msg[1].text, p[6] + ' Kč')
         for p in ee:
-            res = self.client.post('/sop/',
-                                   {'basis': p[0],
-                                    'curr_0': p[1],
-                                    'curr_1': p[2],
-                                    'fx_date': p[3],
-                                    'model': p[4],
-                                    'opt': p[5]})
+            res = self.client.post(
+                '/sop/',
+                {'basis': p[0],
+                 'curr_0': p[1],
+                 'curr_1': p[2],
+                 'fx_date': p[3],
+                 'model': p[4],
+                 'opt': p[5]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'sop_main.html')
-            try:
-                soup = BeautifulSoup(res.content, 'html.parser')
-                msg = soup.find('td', 'msg').select('div')
-            except:
-                self.fail()
+            soup = BeautifulSoup(res.content, 'html.parser')
+            msg = soup.find('td', 'msg').select('div')
             self.assertEqual(len(msg), 1)

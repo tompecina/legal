@@ -29,8 +29,7 @@ from re import compile
 from os.path import join
 from os import unlink
 from common.settings import BASE_DIR
-from .models import Decision
-from . import cron, forms, glob, utils, views
+from . import cron, forms, glob, models, utils, views
 
 class TestCron(TestCase):
     fixtures = ['udn_test.json']
@@ -55,7 +54,7 @@ class TestCron(TestCase):
         
     def test_update(self):
         cron.cron_update(self.req)
-        d = Decision.objects.all()
+        d = models.Decision.objects.all()
         self.assertEqual(len(d), 18)
         self.checkpdf([
             '0002_8As__1600055S.pdf',
@@ -79,11 +78,12 @@ class TestCron(TestCase):
         
     def test_find(self):
         cron.cron_find(self.req)
-        d = Decision.objects.filter(senate='8',
-                                    register='As',
-                                    number='158',
-                                    year='2015',
-                                    page='33')
+        d = models.Decision.objects.filter(
+            senate='8',
+            register='As',
+            number='158',
+            year='2015',
+            page='33')
         self.assertEqual(len(d), 1)
         self.assertTrue(d[0].anonfilename)
         self.checkpdf(['0046_3As__1600114_20160622142215_prevedeno.pdf'])
@@ -128,6 +128,29 @@ class TestGlob(SimpleTestCase):
             self.assertIsNotNone(fr.match(p), msg=p)
         for p in ee:
             self.assertIsNone(fr.match(p), msg=p)
+
+class TestModels(SimpleTestCase):
+
+    def test_models(self):
+        self.assertEqual(
+            str(models.Agenda(
+                desc='test_agenda')),
+            'test_agenda')
+        self.assertEqual(
+            str(models.Party(
+                name='test_party')),
+            'test_party')
+        self.assertEqual(
+            str(models.Decision(
+                senate=4,
+                register='As',
+                number=26,
+                year=2015,
+                page=88,
+                agenda_id=1,
+                date=date.today(),
+                filename='test_fn.pdf')),
+            '4 As 26/2015-88')
 
 class TestUtils(SimpleTestCase):
 

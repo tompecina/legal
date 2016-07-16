@@ -81,7 +81,7 @@ def getdebt(request):
     if a:
         try:
             return loads(a)
-        except:
+        except:  # pragma: no cover
             pass
     setdebt(request, Debt())
     a = getasset(request, aid)
@@ -535,10 +535,7 @@ def fromxml(d):
         transaction = Transaction()
         debt.transactions.append(transaction)
         transaction.description = xmlunescape(tt.description.text.strip())
-        if tt.has_attr('type'):
-            transaction.transaction_type = tt['type']
-        else:
-            transaction.transaction_type = str(tt.name)
+        transaction.transaction_type = str(tt.name)
         transaction.date = iso2date(tt.date)
         if transaction.transaction_type != 'balance':
             transaction.amount = float(tt.amount.text.strip())
@@ -567,14 +564,20 @@ def mainpage(request):
                       dispcurr(debt.currency)
 
     err_message = ''
+    rows_err = False
 
     if (request.method == 'GET'):
         debt = getdebt(request)
-        
-        if not debt:
+        if not debt:  # pragma: no cover
             return error(request)
         debt.rates = {}
 
+        rows = getrows(debt)
+        for row in rows:
+            if row['err']:
+                rows_err = True
+                break
+        
         var = {'title': debt.title,
                'note': debt.note,
                'internal_note': debt.internal_note,
@@ -601,7 +604,7 @@ def mainpage(request):
 
         if btn == 'empty':
             debt = Debt()
-            if not setdebt(request, debt):
+            if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
             return redirect('hjp:mainpage')
 
@@ -622,9 +625,14 @@ def mainpage(request):
                     err_message = 'Chyba při načtení souboru'
 
         debt = getdebt(request)
-        if not debt:
+        if not debt:  # pragma: no cover
             return error(request)
         debt.rates = {}
+        rows = getrows(debt)
+        for row in rows:
+            if row['err']:
+                rows_err = True
+                break
 
         f = MainForm(request.POST)
         if f.is_valid():
@@ -658,37 +666,38 @@ def mainpage(request):
                     'attachment; filename=Pohledavka.xml'
                 return response
 
-            if btn == 'csv':
-                rows = getrows(debt)
+            if (btn == 'csv') and not rows_err:
                 response = HttpResponse(content_type='text/csv')
                 response['Content-Disposition'] = \
                     'attachment; filename=Pohledavka.csv'
                 writer = csv.writer(response)
-                writer.writerow(['Datum',
-                                 'Popis',
-                                 'Přednost',
-                                 'Pohyb',
-                                 'Předchozí zůstatek/jistina',
-                                 'Předchozí zůstatek/úrok',
-                                 'Předchozí zůstatek/celkem',
-                                 'Započteno/jistina',
-                                 'Započteno/úrok',
-                                 'Nový zůstatek/jistina',
-                                 'Nový zůstatek/úrok',
-                                 'Nový zůstatek/celkem'])
+                writer.writerow(
+                    ['Datum',
+                     'Popis',
+                     'Přednost',
+                     'Pohyb',
+                     'Předchozí zůstatek/jistina',
+                     'Předchozí zůstatek/úrok',
+                     'Předchozí zůstatek/celkem',
+                     'Započteno/jistina',
+                     'Započteno/úrok',
+                     'Nový zůstatek/jistina',
+                     'Nový zůstatek/úrok',
+                     'Nový zůstatek/celkem'])
                 for row in rows:
-                    writer.writerow([row['date'].isoformat(),
-                                     row['description'],
-                                     row.get('rep', ''),
-                                     ('%.2f' % row['change']),
-                                     ('%.2f' % row['pre_principal']),
-                                     ('%.2f' % row['pre_interest']),
-                                     ('%.2f' % row['pre_total']),
-                                     ('%.2f' % row['change_principal']),
-                                     ('%.2f' % row['change_interest']),
-                                     ('%.2f' % row['post_principal']),
-                                     ('%.2f' % row['post_interest']),
-                                     ('%.2f' % row['post_total'])])
+                    writer.writerow(
+                        [row['date'].isoformat(),
+                         row['description'],
+                         row.get('rep', ''),
+                         ('%.2f' % row['change']),
+                         ('%.2f' % row['pre_principal']),
+                         ('%.2f' % row['pre_interest']),
+                         ('%.2f' % row['pre_total']),
+                         ('%.2f' % row['change_principal']),
+                         ('%.2f' % row['change_interest']),
+                         ('%.2f' % row['post_principal']),
+                         ('%.2f' % row['post_interest']),
+                         ('%.2f' % row['post_total'])])
                 return response
 
             if btn == 'pdf':
@@ -756,115 +765,130 @@ def mainpage(request):
                     italic='BookmanI',
                     boldItalic='BookmanBI')
 
-                s1 = ParagraphStyle(name='S1',
-                                    fontName='Bookman',
-                                    fontSize=8,
-                                    leading=9,
-                                    alignment=TA_RIGHT,
-                                    allowWidows=False,
-                                    allowOrphans=False)
-                s2 = ParagraphStyle(name='S2',
-                                    fontName='BookmanB',
-                                    fontSize=10,
-                                    leading=11,
-                                    alignment=TA_RIGHT,
-                                    allowWidows=False,
-                                    allowOrphans=False)
-                s4 = ParagraphStyle(name='S4',
-                                    fontName='BookmanB',
-                                    fontSize=8,
-                                    leading=10,
-                                    allowWidows=False,
-                                    allowOrphans=False)
-                s12 = ParagraphStyle(name='S12',
-                                     fontName='BookmanI',
-                                     fontSize=8,
-                                     leading=9,
-                                     spaceBefore=4,
-                                     spaceAfter=5,
-                                     leftIndent=8,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s13 = ParagraphStyle(name='S13',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=12,
-                                     alignment=TA_CENTER,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s14 = ParagraphStyle(name='S14',
-                                     fontName='BookmanB',
-                                     fontSize=8,
-                                     leading=12,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s15 = ParagraphStyle(name='S15',
-                                     fontName='BookmanB',
-                                     fontSize=8,
-                                     leading=10,
-                                     alignment=TA_CENTER,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s16 = ParagraphStyle(name='S16',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=10,
-                                     alignment=TA_CENTER,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s17 = ParagraphStyle(name='S17',
-                                     fontName='BookmanB',
-                                     fontSize=8,
-                                     leading=10,
-                                     alignment=TA_RIGHT,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s18 = ParagraphStyle(name='S18',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=10,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s19 = ParagraphStyle(name='S19',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=10,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s20 = ParagraphStyle(name='S20',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=10,
-                                     leftIndent=8,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s21 = ParagraphStyle(name='S21',
-                                     fontName='Bookman',
-                                     fontSize=8,
-                                     leading=10,
-                                     leftIndent=16,
-                                     allowWidows=False,
-                                     allowOrphans=False)
-                s22 = ParagraphStyle(name='S22',
-                                     fontName='BookmanI',
-                                     fontSize=8,
-                                     leading=10,
-                                     alignment=TA_CENTER,
-                                     allowWidows=False,
-                                     allowOrphans=False)
+                s1 = ParagraphStyle(
+                    name='S1',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=9,
+                    alignment=TA_RIGHT,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s2 = ParagraphStyle(
+                    name='S2',
+                    fontName='BookmanB',
+                    fontSize=10,
+                    leading=11,
+                    alignment=TA_RIGHT,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s4 = ParagraphStyle(
+                    name='S4',
+                    fontName='BookmanB',
+                    fontSize=8,
+                    leading=10,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s12 = ParagraphStyle(
+                    name='S12',
+                    fontName='BookmanI',
+                    fontSize=8,
+                    leading=9,
+                    spaceBefore=4,
+                    spaceAfter=5,
+                    leftIndent=8,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s13 = ParagraphStyle(
+                    name='S13',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=12,
+                    alignment=TA_CENTER,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s14 = ParagraphStyle(
+                    name='S14',
+                    fontName='BookmanB',
+                    fontSize=8,
+                    leading=12,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s15 = ParagraphStyle(
+                    name='S15',
+                    fontName='BookmanB',
+                    fontSize=8,
+                    leading=10,
+                    alignment=TA_CENTER,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s16 = ParagraphStyle(
+                    name='S16',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=10,
+                    alignment=TA_CENTER,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s17 = ParagraphStyle(
+                    name='S17',
+                    fontName='BookmanB',
+                    fontSize=8,
+                    leading=10,
+                    alignment=TA_RIGHT,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s18 = ParagraphStyle(
+                    name='S18',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=10,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s19 = ParagraphStyle(
+                    name='S19',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=10,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s20 = ParagraphStyle(
+                    name='S20',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=10,
+                    leftIndent=8,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s21 = ParagraphStyle(
+                    name='S21',
+                    fontName='Bookman',
+                    fontSize=8,
+                    leading=10,
+                    leftIndent=16,
+                    allowWidows=False,
+                    allowOrphans=False)
+                s22 = ParagraphStyle(
+                    name='S22',
+                    fontName='BookmanI',
+                    fontSize=8,
+                    leading=10,
+                    alignment=TA_CENTER,
+                    allowWidows=False,
+                    allowOrphans=False)
 
                 d1 =[[[Paragraph('Historie peněžité pohledávky'.upper(), s1)]]]
                 if debt.title:
                     d1[0][0].append(Paragraph(escape(debt.title), s2))
                 t1 = Table(d1, colWidths=[483.30])
-                t1.setStyle(TableStyle([
-                            ('LINEABOVE', (0, 0), (0, -1), 1.0, black),
-                            ('TOPPADDING', (0, 0), (0, -1), 2),
-                            ('LINEBELOW', (-1, 0), (-1, -1), 1.0, black),
-                            ('BOTTOMPADDING', (-1, 0), (-1, -1), 3),
-                            ('LEFTPADDING', (0, 0), (-1, -1), 2),
-                            ('RIGHTPADDING', (0, 0), (-1, -1), 2),
-                            ]))
+                t1.setStyle(
+                    TableStyle([
+                        ('LINEABOVE', (0, 0), (0, -1), 1.0, black),
+                        ('TOPPADDING', (0, 0), (0, -1), 2),
+                        ('LINEBELOW', (-1, 0), (-1, -1), 1.0, black),
+                        ('BOTTOMPADDING', (-1, 0), (-1, -1), 3),
+                        ('LEFTPADDING', (0, 0), (-1, -1), 2),
+                        ('RIGHTPADDING', (0, 0), (-1, -1), 2),
+                    ]))
                 flow = [t1, Spacer(0, 36)]
 
                 w = 483.30
@@ -876,11 +900,10 @@ def mainpage(request):
                      ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wg] + \
                      ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wr]
 
-                rows = getrows(debt)
                 tl = 0.5
 
                 r = [Paragraph(('<b>Měna:</b> ' + debt.currency), s19)]
-                if hasattr(debt, 'default_date'):
+                if hasattr(debt, 'default_date') and debt.default_date:
                     r.append(Paragraph(('<b>První den prodlení:</b> ' + \
                         debt.default_date.strftime('%d.%m.%Y')), s19))
                 i2 = None
@@ -914,7 +937,7 @@ def mainpage(request):
                     i1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
                          '(účinnost od 28.04.2005 do 30.06.2010)'
                     if (len(debt.rates) == 1):
-                        rt = rates.popitem()
+                        rt = debt.rates.popitem()
                         i2 = ('Použita 2T repo sazba ČNB ke dni ' + \
                               rt[0].strftime('%d.%m.%Y') + \
                               p2c(': %.2f' % rt[1]) + ' % <i>p. a.</i>')
@@ -1173,17 +1196,16 @@ def mainpage(request):
                     topMargin=48.0,
                     bottomMargin=96.0,
                     )
-                doc.build(flow,
-                          onFirstPage=page1,
-                          onLaterPages=page2,
-                          canvasmaker=ModCanvas)
+                doc.build(
+                    flow,
+                    onFirstPage=page1,
+                    onLaterPages=page2,
+                    canvasmaker=ModCanvas)
                 response.write(temp.getvalue())
                 return response
 
         else:
             err_message = inerr
-
-    rows = getrows(debt)         
 
     for row in rows:
         row['change'] = cellam(row['change'])
@@ -1196,16 +1218,18 @@ def mainpage(request):
             row['post_interest'] = cellam(row['post_interest'], True)
             row['post_total'] = cellam(row['post_total'], True)
 
-    return render(request,
-                  'hjp_mainpage.html',
-                  {'app': APP,
-                   'page_title': 'Historie jednoduché peněžité pohledávky',
-                   'f': f,
-                   'rows': rows,
-                   'currency': dispcurr(debt.currency),
-                   'ydconvs': ydconvs,
-                   'mdconvs': mdconvs,
-                   'err_message': err_message})
+    return render(
+        request,
+        'hjp_mainpage.html',
+        {'app': APP,
+         'page_title': 'Historie jednoduché peněžité pohledávky',
+         'f': f,
+         'rows': rows,
+         'currency': dispcurr(debt.currency),
+         'ydconvs': ydconvs,
+         'mdconvs': mdconvs,
+         'err_message': err_message,
+         'rows_err': rows_err})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -1214,7 +1238,7 @@ def transform(request, id=0):
     page_title = ('Úprava transakce' if id else 'Nová transakce')
     err_message = ''
     debt = getdebt(request)
-    if not debt:
+    if not debt:  # pragma: no cover
         return error(request)
     id = int(id)
     if request.method == 'GET':
@@ -1258,7 +1282,7 @@ def transform(request, id=0):
                 debt.transactions[id - 1] = transaction
             else:
                 debt.transactions.append(transaction)
-            if not setdebt(request, debt):
+            if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
             return redirect('hjp:mainpage')
 
@@ -1279,7 +1303,7 @@ def transdel(request, id=0):
 
     id = int(id) - 1
     debt = getdebt(request)
-    if not debt:
+    if not debt:  # pragma: no cover
         return error(request)
     if id >= len(debt.transactions):
         raise Http404
@@ -1293,6 +1317,6 @@ def transdel(request, id=0):
         btn = getbutton(request)
         if btn == 'yes':
             del debt.transactions[id]
-            if not setdebt(request, debt):
+            if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
         return redirect('hjp:mainpage')

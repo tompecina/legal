@@ -1,0 +1,11 @@
+[
+{
+    "model": "cache.cache",
+    "pk": 1,
+    "fields": {
+        "url": "test",
+        "text": "ok",
+        "expire": "2199-07-14T16:11:37"
+    }
+}
+]

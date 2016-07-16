@@ -49,7 +49,8 @@ from reportlab.lib.colors import black, gray
 from io import BytesIO
 import os.path
 from cache.main import getcache, getasset, setasset
-from common.utils import getbutton, unrequire, formam, c2p, getXML, newXML
+from common.utils import getbutton, unrequire, formam, c2p, getXML, \
+                         newXML, getint
 from common.views import error, unauth
 from .glob import fuels
 from .utils import getVAT
@@ -58,6 +59,7 @@ from .forms import PlaceForm, CarForm, FormulaForm, CalcForm, GeneralForm, \
                    AdministrativeForm, AdministrativeSubform, TimeForm, \
                    TimeSubform, TravelForm, TravelSubform
 from .models import Place, Car, Formula, Rate
+from .presets import udbreset
 
 APP = __package__
 
@@ -141,36 +143,40 @@ def placeform(request, id=0):
             return redirect('knr:placelist')
         else:
             err_message = inerr
-    return render(request,
-                  'knr_placeform.html',
-                  {'app': APP,
-                   'f': f,
-                   'page_title': page_title,
-                   'err_message': err_message})
+    return render(
+        request,
+        'knr_placeform.html',
+        {'app': APP,
+         'f': f,
+         'page_title': page_title,
+         'err_message': err_message})
 
 @require_http_methods(['GET'])
 @login_required
 def placelist(request):
-    return render(request,
-                  'knr_placelist.html',
-                  {'app': APP,
-                   'page_title': 'Přehled míst',
-                   'rows': Place \
-                           .objects \
-                           .filter(uid=request.user.id) \
-                           .order_by('abbr', 'name')})
+    return render(
+        request,
+        'knr_placelist.html',
+        {'app': APP,
+         'page_title': 'Přehled míst',
+         'rows': Place \
+         .objects \
+         .filter(uid=request.user.id) \
+         .order_by('abbr', 'name')})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
 def placedel(request, id=0):
     uid = request.user.id
     if request.method == 'GET':
-        return render(request,
-                      'knr_placedel.html',
-                      {'app': APP,
-                       'page_title': 'Smazání místa',
-                       'name': get_object_or_404(Place, pk=id, uid=uid).name})
+        return render(
+            request,
+            'knr_placedel.html',
+            {'app': APP,
+             'page_title': 'Smazání místa',
+             'name': get_object_or_404(Place, pk=id, uid=uid).name})
     else:
+        get_object_or_404(Place, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             get_object_or_404(Place, pk=id, uid=uid).delete()
         return redirect('knr:placelist')
@@ -198,38 +204,42 @@ def carform(request, id=0):
             return redirect('knr:carlist')
         else:
             err_message = inerr
-    return render(request,
-                  'knr_carform.html',
-                  {'app': APP,
-                   'f': f,
-                   'page_title': page_title,
-                   'err_message': err_message,
-                   'fuels': fuels})
+    return render(
+        request,
+        'knr_carform.html',
+        {'app': APP,
+         'f': f,
+         'page_title': page_title,
+         'err_message': err_message,
+         'fuels': fuels})
 
 @require_http_methods(['GET'])
 @login_required
 def carlist(request):
-    return render(request,
-                  'knr_carlist.html',
-                  {'app': APP,
-                   'page_title': 'Přehled vozidel',
-                   'rows': Car \
-                           .objects \
-                           .filter(uid=request.user.id) \
-                           .order_by('abbr', 'name')})
+    return render(
+        request,
+        'knr_carlist.html',
+        {'app': APP,
+         'page_title': 'Přehled vozidel',
+         'rows': Car \
+         .objects \
+         .filter(uid=request.user.id) \
+         .order_by('abbr', 'name')})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
 def cardel(request, id=0):
     uid = request.user.id
     if request.method == 'GET':
-        return render(request,
-                      'knr_cardel.html',
-                      {'app': APP,
-                       'page_title':
-                       'Smazání vozidla',
-                       'name': get_object_or_404(Car, pk=id, uid=uid).name})
+        return render(
+            request,
+            'knr_cardel.html',
+            {'app': APP,
+             'page_title':
+             'Smazání vozidla',
+             'name': get_object_or_404(Car, pk=id, uid=uid).name})
     else:
+        get_object_or_404(Car, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             get_object_or_404(Car, pk=id, uid=uid).delete()
         return redirect('knr:carlist')
@@ -283,13 +293,14 @@ def formulaform(request, id=0):
     for fuel in fuels:
         rates.append(f['rate_' + fuel])
     q = rates[0].name
-    return render(request,
-                  'knr_formulaform.html',
-                  {'app': APP,
-                   'f': f,
-                   'page_title': page_title,
-                   'err_message': err_message,
-                   'rates': rates})
+    return render(
+        request,
+        'knr_formulaform.html',
+        {'app': APP,
+         'f': f,
+         'page_title': page_title,
+         'err_message': err_message,
+         'rates': rates})
 
 @require_http_methods(['GET'])
 @login_required
@@ -305,25 +316,28 @@ def formulalist(request):
             r = Rate.objects.filter(formula=row['id'], fuel=fuel)
             rates.append(r[0].rate if r else 0)
         row['rates'] = rates
-    return render(request,
-                  'knr_formulalist.html',
-                  {'app': APP,
-                   'page_title': 'Přehled předpisů',
-                   'fuels': fuels,
-                   'colspan': (len(fuels) + 4),
-                   'rows': rows})
+    return render(
+        request,
+        'knr_formulalist.html',
+        {'app': APP,
+         'page_title': 'Přehled předpisů',
+         'fuels': fuels,
+         'colspan': (len(fuels) + 4),
+         'rows': rows})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
 def formuladel(request, id=0):
     uid = request.user.id
     if request.method == 'GET':
-        return render(request,
-                      'knr_formuladel.html',
-                      {'app': APP,
-                       'page_title': 'Smazání předpisu',
-                       'name': get_object_or_404(Formula, pk=id, uid=uid).name})
+        return render(
+            request,
+            'knr_formuladel.html',
+            {'app': APP,
+             'page_title': 'Smazání předpisu',
+             'name': get_object_or_404(Formula, pk=id, uid=uid).name})
     else:
+        get_object_or_404(Formula, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             get_object_or_404(Formula, pk=id, uid=uid).delete()
         return redirect('knr:formulalist')
@@ -598,7 +612,7 @@ ifields = list(gd.keys())
 for t in ['title', 'calculation_note', 'internal_note', 'vat_rate', 'type']:
     ifields.remove(t)
 
-class Calculation(object):
+class Calculation:
     def __init__(self):
         self.title = ''
         self.calculation_note = ''
@@ -606,7 +620,7 @@ class Calculation(object):
         self.vat_rate = getVAT()
         self.items = []
 
-class Item(object):
+class Item:
     def __init__(self):
         self.type = 'general'
         self.description = ''
@@ -722,7 +736,7 @@ def getcalc(request):
     if a:
         try:
             return loads(a)
-        except:
+        except:  # pragma: no cover
             pass
     setcalc(request, Calculation())
     a = getasset(request, aid)
@@ -747,7 +761,7 @@ def toxml(c):
         tag = xml.new_tag(t)
         tag.insert(0, escape(c.__getattribute__(t)).strip())
         calculation.insert(len(calculation), tag)
-        if tag.name in ga:
+        if tag.name in ga:  # pragma: no cover
             for key, val in ga[tag.name].items():
                 tag[key] = val
     vat_rate = xml.new_tag('vat_rate')
@@ -793,16 +807,16 @@ def fromxml(d):
     s2i(fields, s, c)
     l = s.items.children
     for ll in l:
-        if not ll.name:
+        if not ll.name:  # pragma: no cover
             continue
         item = Item()
         s2i(ifields, ll, item)
         try:
-            if ll.has_attr('type'):
+            if ll.has_attr('type'):  # pragma: no cover
                 item.type = str(ll['type'])
             else:
                 item.type = str(ll.name)
-        except:
+        except:  # pragma: no cover
             return None, 'Chybný formát souboru'
         c.items.append(item)
     return c, None
@@ -812,7 +826,7 @@ def fromxml(d):
 def mainpage(request):
     
     c = getcalc(request)
-    if not c:
+    if not c:  # pragma: no cover
         return error(request)
     var = {'app': APP,
            'page_title': 'Kalkulace nákladů řízení',
@@ -830,26 +844,26 @@ def mainpage(request):
         btn = getbutton(request)
         if btn == 'empty':
             c = Calculation()
-            if not setcalc(request, c):
+            if not setcalc(request, c):  # pragma: no cover
                 return error(request)
             return redirect('knr:mainpage')
         if btn == 'load':
             f = request.FILES.get('load')
             if not f:
                 var['errors'] = True
-                var['err_message'] = 'Nebyl načten soubor'
+                var['err_message'] = 'Nejprve zvolte soubor k načtení'
                 return render(request, 'knr_mainpage.html', var)
             try:
                 d = f.read()
                 f.close()
-            except:
+            except:  # pragma: no cover
                 raise Exception('Error reading file')
             c, m = fromxml(d)
             if m:
                 var['errors'] = True
                 var['err_message'] = m
                 return render(request, 'knr_mainpage.html', var)
-            if not setcalc(request, c):
+            if not setcalc(request, c):  # pragma: no cover
                 return error(request)
             return redirect('knr:mainpage')
         elif btn:
@@ -857,7 +871,7 @@ def mainpage(request):
             if f.is_valid():
                 cd = f.cleaned_data
                 d2i(fields, cd, c)
-                if not setcalc(request, c):
+                if not setcalc(request, c):  # pragma: no cover
                     return error(request)
                 var.update(cd)
                 for t in fields:
@@ -914,108 +928,122 @@ def mainpage(request):
                     registerFont(
                         TTFont('BookmanBI',
                                (fontdir + 'URWBookman-BoldItalic.ttf')))
-                    registerFontFamily('Bookman',
-                                       normal='Bookman',
-                                       bold='BookmanB',
-                                       italic='BookmanI',
-                                       boldItalic='BookmanBI')
-                    s1 = ParagraphStyle(name='S1',
-                                        fontName='Bookman',
-                                        fontSize=8,
-                                        leading=9,
-                                        alignment=TA_RIGHT,
-                                        allowWidows=False,
-                                        allowOrphans=False)
-                    s2 = ParagraphStyle(name='S2',
-                                        fontName='BookmanB',
-                                        fontSize=10,
-                                        leading=11,
-                                        alignment=TA_RIGHT,
-                                        allowWidows=False,
-                                        allowOrphans=False)
-                    s3 = ParagraphStyle(name='S3',
-                                        fontName='BookmanB',
-                                        fontSize=8,
-                                        leading=10,
-                                        alignment=TA_RIGHT,
-                                        allowWidows=False,
-                                        allowOrphans=False)
-                    s4 = ParagraphStyle(name='S4',
-                                        fontName='BookmanB',
-                                        fontSize=8,
-                                        leading=10,
-                                        allowWidows=False,
-                                        allowOrphans=False)
-                    s5 = ParagraphStyle(name='S5',
-                                        fontName='Bookman',
-                                        fontSize=8,
-                                        leading=10,
-                                        alignment=TA_RIGHT,
-                                        allowWidows=False,
-                                        allowOrphans=False)
-                    s6 = ParagraphStyle(name='S6',
-                                        fontName='Bookman',
-                                        fontSize=7,
-                                        leading=9,
-                                        leftIndent=8,
-                                        allowWidows=False,
-                                        allowOrphans=False)
-                    s7 = ParagraphStyle(name='S7',
-                                        fontName='BookmanI',
-                                        fontSize=7,
-                                        leading=9,
-                                        spaceBefore=1,
-                                        leftIndent=8,
-                                        allowWidows=False,
-                                        allowOrphans=False)
-                    s8 = ParagraphStyle(name='S8',
-                                        fontName='Bookman',
-                                        fontSize=8,
-                                        leading=10,
-                                        alignment=TA_RIGHT,
-                                        allowWidows=False,
-                                        allowOrphans=False)
-                    s9 = ParagraphStyle(name='S9',
-                                        fontName='BookmanB',
-                                        fontSize=8, leading=9,
-                                        alignment=TA_RIGHT,
-                                        allowWidows=False,
-                                        allowOrphans=False)
-                    s10 = ParagraphStyle(name='S10',
-                                         fontName='BookmanB',
-                                         fontSize=8,
-                                         leading=9,
-                                         alignment=TA_RIGHT,
-                                         allowWidows=False,
-                                         allowOrphans=False)
-                    s11 = ParagraphStyle(name='S11',
-                                         fontName='Bookman',
-                                         fontSize=8,
-                                         leading=9,
-                                         alignment=TA_RIGHT,
-                                         allowWidows=False,
-                                         allowOrphans=False)
-                    s12 = ParagraphStyle(name='S12',
-                                         fontName='BookmanI',
-                                         fontSize=8,
-                                         leading=9,
-                                         spaceBefore=4,
-                                         spaceAfter=5,
-                                         leftIndent=8,
-                                         allowWidows=False,
-                                         allowOrphans=False)
+                    registerFontFamily(
+                        'Bookman',
+                        normal='Bookman',
+                        bold='BookmanB',
+                        italic='BookmanI',
+                        boldItalic='BookmanBI')
+                    s1 = ParagraphStyle(
+                        name='S1',
+                        fontName='Bookman',
+                        fontSize=8,
+                        leading=9,
+                        alignment=TA_RIGHT,
+                        allowWidows=False,
+                        allowOrphans=False)
+                    s2 = ParagraphStyle(
+                        name='S2',
+                        fontName='BookmanB',
+                        fontSize=10,
+                        leading=11,
+                        alignment=TA_RIGHT,
+                        allowWidows=False,
+                        allowOrphans=False)
+                    s3 = ParagraphStyle(
+                        name='S3',
+                        fontName='BookmanB',
+                        fontSize=8,
+                        leading=10,
+                        alignment=TA_RIGHT,
+                        allowWidows=False,
+                        allowOrphans=False)
+                    s4 = ParagraphStyle(
+                        name='S4',
+                        fontName='BookmanB',
+                        fontSize=8,
+                        leading=10,
+                        allowWidows=False,
+                        allowOrphans=False)
+                    s5 = ParagraphStyle(
+                        name='S5',
+                        fontName='Bookman',
+                        fontSize=8,
+                        leading=10,
+                        alignment=TA_RIGHT,
+                        allowWidows=False,
+                        allowOrphans=False)
+                    s6 = ParagraphStyle(
+                        name='S6',
+                        fontName='Bookman',
+                        fontSize=7,
+                        leading=9,
+                        leftIndent=8,
+                        allowWidows=False,
+                        allowOrphans=False)
+                    s7 = ParagraphStyle(
+                        name='S7',
+                        fontName='BookmanI',
+                        fontSize=7,
+                        leading=9,
+                        spaceBefore=1,
+                        leftIndent=8,
+                        allowWidows=False,
+                        allowOrphans=False)
+                    s8 = ParagraphStyle(
+                        name='S8',
+                        fontName='Bookman',
+                        fontSize=8,
+                        leading=10,
+                        alignment=TA_RIGHT,
+                        allowWidows=False,
+                        allowOrphans=False)
+                    s9 = ParagraphStyle(
+                        name='S9',
+                        fontName='BookmanB',
+                        fontSize=8, leading=9,
+                        alignment=TA_RIGHT,
+                        allowWidows=False,
+                        allowOrphans=False)
+                    s10 = ParagraphStyle(
+                        name='S10',
+                        fontName='BookmanB',
+                        fontSize=8,
+                        leading=9,
+                        alignment=TA_RIGHT,
+                        allowWidows=False,
+                        allowOrphans=False)
+                    s11 = ParagraphStyle(
+                        name='S11',
+                        fontName='Bookman',
+                        fontSize=8,
+                        leading=9,
+                        alignment=TA_RIGHT,
+                        allowWidows=False,
+                        allowOrphans=False)
+                    s12 = ParagraphStyle(
+                        name='S12',
+                        fontName='BookmanI',
+                        fontSize=8,
+                        leading=9,
+                        spaceBefore=4,
+                        spaceAfter=5,
+                        leftIndent=8,
+                        allowWidows=False,
+                        allowOrphans=False)
                     d1 =[[[Paragraph('Kalkulace nákladů řízení'.upper(), s1)]]]
                     if c.title:
                         d1[0][0].append(Paragraph(escape(c.title), s2))
                     t1 = LongTable(d1, colWidths=[483.30])
-                    t1.setStyle(TableStyle([
-                                ('LINEABOVE', (0, 0), (0, -1), 1.0, black),
-                                ('TOPPADDING', (0, 0), (0, -1), 2),
-                                ('LINEBELOW', (-1, 0), (-1, -1), 1.0, black),
-                                ('BOTTOMPADDING', (-1, 0), (-1, -1), 3),
-                                ('LEFTPADDING', (0, 0), (-1, -1), 2),
-                                ('RIGHTPADDING', (0, 0), (-1, -1), 2),
-                                ]))
+                    t1.setStyle(
+                        TableStyle([
+                            ('LINEABOVE', (0, 0), (0, -1), 1.0, black),
+                            ('TOPPADDING', (0, 0), (0, -1), 2),
+                            ('LINEBELOW', (-1, 0), (-1, -1), 1.0, black),
+                            ('BOTTOMPADDING', (-1, 0), (-1, -1), 3),
+                            ('LEFTPADDING', (0, 0), (-1, -1), 2),
+                            ('RIGHTPADDING', (0, 0), (-1, -1), 2),
+                        ]))
                     flow = [t1, Spacer(0, 36)]
                     if c.items:
                         d2 = []
@@ -1115,18 +1143,19 @@ def mainpage(request):
                                 ('%s Kč' % convi(item.amount)), s5))
                             d2.append(r)         
                         t2 = LongTable(d2, colWidths=[16.15, 400.45, 66.70])
-                        t2.setStyle(TableStyle([
-                                    ('LINEABOVE', (0, 0), (-1, 0), 0.25, gray),
-                                    ('LINEBELOW', (0, 0), (-1, -1), 0.25, gray),
-                                    ('VALIGN', (0, 0), (1, -1), 'TOP'),
-                                    ('VALIGN', (-1, 0), (-1, -1), 'MIDDLE'),
-                                    ('RIGHTPADDING', (0, 0), (1, -1), 0),
-                                    ('RIGHTPADDING', (-1, 0), (-1, -1), 2),
-                                    ('LEFTPADDING', (0, 0), (-1, -1), 0),
-                                    ('LEFTPADDING', (1, 0), (1, -1), 6),
-                                    ('TOPPADDING', (0, 0), (-1, -1), 4),
-                                    ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
-                                    ]))
+                        t2.setStyle(
+                            TableStyle([
+                                ('LINEABOVE', (0, 0), (-1, 0), 0.25, gray),
+                                ('LINEBELOW', (0, 0), (-1, -1), 0.25, gray),
+                                ('VALIGN', (0, 0), (1, -1), 'TOP'),
+                                ('VALIGN', (-1, 0), (-1, -1), 'MIDDLE'),
+                                ('RIGHTPADDING', (0, 0), (1, -1), 0),
+                                ('RIGHTPADDING', (-1, 0), (-1, -1), 2),
+                                ('LEFTPADDING', (0, 0), (-1, -1), 0),
+                                ('LEFTPADDING', (1, 0), (1, -1), 6),
+                                ('TOPPADDING', (0, 0), (-1, -1), 4),
+                                ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+                            ]))
                         flow.extend([t2, Spacer(0, 24)])
                     total_net = total_ex = 0
                     for i in c.items:
@@ -1197,10 +1226,11 @@ def mainpage(request):
                         topMargin=48.0,
                         bottomMargin=96.0,
                         )
-                    doc.build(flow,
-                              onFirstPage=page1,
-                              onLaterPages=page1,
-                              canvasmaker=ModCanvas)
+                    doc.build(
+                        flow,
+                        onFirstPage=page1,
+                        onLaterPages=page1,
+                        canvasmaker=ModCanvas)
                     response.write(temp.getvalue())
                     return response
                 if btn == "place":
@@ -1217,7 +1247,7 @@ def mainpage(request):
                         var[t + '_error'] = 'err'
                     else:
                         var[t + '_error'] = 'ok'
-        else:
+        else:  # pragma: no cover
             i2d(fields, c, var)
     var['total_net'] = var['total_ex'] = var['num_items'] = 0
     for i in c.items:
@@ -1249,12 +1279,13 @@ def itemform(request, idx=0):
         l3 = []
         for t in p:
             l3.append({'idx': t.id, 'text': t.abbr + ' – ' + t.name})
-        var.update({'sep': ('-' * 110),
-                    'from_sels': l1,
-                    'to_sels': l1,
-                    'car_sels': l2,
-                    'formula_sels': l3,
-                    'fuel_names': fuels})
+        var.update(
+            {'sep': ('-' * 110),
+             'from_sels': l1,
+             'to_sels': l1,
+             'car_sels': l2,
+             'formula_sels': l3,
+             'fuel_names': fuels})
 
     def proc_from(sel, cd):
         p = Place.objects.filter(pk=sel, uid=uid)
@@ -1299,10 +1330,11 @@ def itemform(request, idx=0):
         p = {}
         d2d(['from_lat', 'from_lon', 'to_lat', 'to_lon'], cd, p)
         if (p['from_lat'] and p['from_lon'] and p['to_lat'] and p['to_lon']):
-            dist, dur = finddist(p['from_lat'],
-                                 p['from_lon'],
-                                 p['to_lat'],
-                                 p['to_lon'])
+            dist, dur = finddist(
+                p['from_lat'],
+                p['from_lon'],
+                p['to_lat'],
+                p['to_lon'])
             if dist:
                 cd['trip_distance'] = int(ceil(dist / 1000.0))
             if dur:
@@ -1310,7 +1342,7 @@ def itemform(request, idx=0):
 
     uid = request.user.id
     c = getcalc(request)
-    if not c:
+    if not c:  # pragma: no cover
         return error(request)
     var = {'app': APP, 'errors': False}
     if (request.method == 'GET'):
@@ -1318,7 +1350,7 @@ def itemform(request, idx=0):
             idx = int(idx)
             var.update({'idx': idx, 'page_title': 'Úprava položky'})
             if idx > len(c.items):
-                return redirect('knr:itemlist')
+                raise Http404
             c = c.items[idx - 1]
             i2d(gt[c.type], c, var)
             var['type'] = c.type
@@ -1372,8 +1404,9 @@ def itemform(request, idx=0):
                             proc_car(int(request.POST.get('car_sel')), cd)
                             sel = True
                         if request.POST.get('formula_sel'):
-                            proc_formula(int(request.POST.get('formula_sel')),
-                                         cd)
+                            proc_formula(
+                                int(request.POST.get('formula_sel')),
+                                cd)
                             sel = True
                         if (not (cd['trip_distance'] and cd['time_number'])):
                             proc_dist(cd)
@@ -1411,11 +1444,11 @@ def itemform(request, idx=0):
                                     c.items[idx - 1] = i
                                 else:
                                     c.items.append(i)
-                                if not setcalc(request, c):
+                                if not setcalc(request, c):  # pragma: no cover
                                     return error(request)
                                 return redirect('knr:itemlist')
                             else:
-                                idx = request.POST.get('idx')
+                                idx = getint(request.POST.get('idx'))
                                 var.update({'errors': True,
                                             'idx': idx,
                                             'type': type})
@@ -1461,12 +1494,11 @@ def itemform(request, idx=0):
                                 cd['amount'] = \
                                     max(int(round(0.5 * cd['amount'])), 750)
                             if cd['halved_flag']:
-                                if cd['halved_appeal_flag']:
-                                    cd['amount'] = lim(750, int(round(0.5 * \
-                                        cd['amount'])), 20000)
-                                else:
-                                    cd['amount'] = lim(750, int(round(0.5 * \
-                                        cd['amount'])), 15000)
+                                cd['amount'] = lim(750, int(round(0.5 * \
+                                    cd['amount'])), 15000)
+                            if cd['halved_appeal_flag']:
+                                cd['amount'] = lim(750, int(round(0.5 * \
+                                    cd['amount'])), 20000)
                             if cd['single_flag']:
                                 cd['amount'] = \
                                     max(int(round(0.5 * cd['amount'])), 400)
@@ -1488,11 +1520,11 @@ def itemform(request, idx=0):
                             c.items[idx - 1] = i
                         else:
                             c.items.append(i)
-                        if not setcalc(request, c):
+                        if not setcalc(request, c):  # pragma: no cover
                             return error(request)
                         return redirect('knr:itemlist')
                     else:
-                        idx = request.POST.get('idx')
+                        idx = getint(request.POST.get('idx'))
                         var.update({'errors': True, 'idx': idx, 'type': type})
                         if idx:
                             var['page_title'] = 'Úprava položky'
@@ -1597,7 +1629,7 @@ def itemform(request, idx=0):
                                 r = 3750
                             elif b <= 5000:
                                 r = 4800
-                            elif b < 10000:
+                            elif b <= 10000:
                                 r = 7500
                             elif b <= 200000:
                                 r = 7500 + 0.17 * (b - 10000.0)
@@ -1655,14 +1687,14 @@ def itemform(request, idx=0):
                               request.POST.get('from_address')):
                             loc = findloc(request.POST.get('from_address'))
                             if loc:
-                                cd['from_address'],
-                                cd['from_lat'],
+                                cd['from_address'], \
+                                cd['from_lat'], \
                                 cd['from_lon'] = loc
                             else:
-                                var.update({
-                                    'errors': True,
-                                    'err_message': 'Hledání neúspěšné, ' \
-                                    'prosím, upřesněte adresu.'})
+                                var.update(
+                                    {'errors': True,
+                                     'err_message': 'Hledání neúspěšné, ' \
+                                     'prosím, upřesněte adresu.'})
                                 cd.update({'from_lat': '', 'from_lon': ''})
                             proc_dist(cd)
                         elif ((btn == 'to_apply') and \
@@ -1673,14 +1705,14 @@ def itemform(request, idx=0):
                               request.POST.get('to_address')):
                             loc = findloc(request.POST.get('to_address'))
                             if loc:
-                                cd['to_address'],
-                                cd['to_lat'],
+                                cd['to_address'], \
+                                cd['to_lat'], \
                                 cd['to_lon'] = loc
                             else:
-                                var.update({
-                                    'errors': True,
-                                    'err_message': 'Hledání neúspěšné, ' \
-                                    'prosím, upřesněte adresu.'})
+                                var.update(
+                                    {'errors': True,
+                                     'err_message': 'Hledání neúspěšné, ' \
+                                     'prosím, upřesněte adresu.'})
                                 cd.update({'to_lat': '', 'to_lon': ''})
                             proc_dist(cd)
                         elif btn == 'calc':
@@ -1709,7 +1741,7 @@ def itemform(request, idx=0):
                             var[t + '_error'] = 'ok'
                         var['cons_error'] = 'ok'
                 else:
-                    idx = request.POST.get('idx')
+                    idx = getint(request.POST.get('idx'))
                     var.update({'errors': True, 'idx': idx, 'type': type})
                     if idx:
                         var['page_title'] = 'Úprava položky'
@@ -1723,10 +1755,11 @@ def itemform(request, idx=0):
                             var[t + '_error'] = 'ok'
     return render(request, 'knr_itemform.html', var)
 
+@require_http_methods(['GET', 'POST'])
 @login_required
 def itemlist(request):
     c = getcalc(request)
-    if not c:
+    if not c:  # pragma: no cover
         return error(request)
     var = {'app': APP,
            'page_title': 'Položky kalkulace',
@@ -1755,7 +1788,7 @@ def itemdel(request, idx=0):
     idx = (int(idx) - 1)
     var = {'app': APP, 'page_title': 'Smazání položky'}
     c = getcalc(request)
-    if not c:
+    if not c:  # pragma: no cover
         return error(request)
     if idx >= len(c.items):
         raise Http404
@@ -1767,7 +1800,7 @@ def itemdel(request, idx=0):
         btn = getbutton(request)
         if btn == 'yes':
             del c.items[idx]
-            if not setcalc(request, c):
+            if not setcalc(request, c):  # pragma: no cover
                 return error(request)
         return redirect('knr:itemlist')
 
@@ -1776,21 +1809,20 @@ def itemdel(request, idx=0):
 def itemmove(request, dir, idx):
     idx = int(idx)
     c = getcalc(request)
-    if not c:
+    if not c:  # pragma: no cover
         return error(request)
     if dir == 'u':
         idx -= 1
     if (idx >= len(c.items)) or (idx < 1):
         raise Http404
     c.items[idx - 1], c.items[idx] = c.items[idx], c.items[idx - 1]
-    if not setcalc(request,  c):
+    if not setcalc(request,  c):  # pragma: no cover
         return error(request)
     return redirect('knr:itemlist')
 
 @require_http_methods(['GET'])
 @login_required
 def userdbreset(request, uid=0):
-    from .presets import udbreset
     if not request.user.is_superuser:
         return unauth(request)
     if uid:

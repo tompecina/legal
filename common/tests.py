@@ -42,11 +42,12 @@ def stripxml(s):
         return ''
 
 class DummyResponse:
-    def __init__(self, content):
+    def __init__(self, content, status=HTTPStatus.OK):
         self.text = content
-        self.content = content.encode('utf-8')
-        self.ok = True
-        self.status_code = HTTPStatus.OK
+        if content:
+            self.content = content.encode('utf-8')
+        self.status_code = status
+        self.ok = (status == HTTPStatus.OK)
 
 class TestFields(SimpleTestCase):
 
@@ -256,72 +257,133 @@ class TestUtils(SimpleTestCase):
         self.assertEqual(utils.plm(date(2016, 1, 31), 1), date(2016, 2, 29))
 
     def test_yfactor(self):
-        self.assertIsNone(utils.yfactor(date(2011, 7, 12),
-                                        date(2011, 7, 11),
-                                        'ACT/ACT'))
-        self.assertIsNone(utils.yfactor(date(2011, 7, 12),
-                                        date(2016, 7, 5),
-                                        'XXX'))
-        self.assertAlmostEqual(utils.yfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             'ACT/ACT'),
-                               4.9821618384609625)
-        self.assertAlmostEqual(utils.yfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             'ACT/365'),
-                               1820/365)
-        self.assertAlmostEqual(utils.yfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             'ACT/360'),
-                               1820/360)
-        self.assertAlmostEqual(utils.yfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             'ACT/364'),
-                               1820/364)
-        self.assertAlmostEqual(utils.yfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             '30U/360'),
-                               1793/360)
-        self.assertAlmostEqual(utils.yfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             '30E/360'),
-                               1793/360)
-        self.assertAlmostEqual(utils.yfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             '30E/360 ISDA'),
-                               1793/360)
-        self.assertAlmostEqual(utils.yfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             '30E+/360'),
-                               1793/360)
+        self.assertIsNone(
+            utils.yfactor(
+                date(2011, 7, 12),
+                date(2011, 7, 11),
+                'ACT/ACT'))
+        self.assertIsNone(
+            utils.yfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                'XXX'))
+        self.assertAlmostEqual(
+            utils.yfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                'ACT/ACT'),
+            4.9821618384609625)
+        self.assertAlmostEqual(
+            utils.yfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                'ACT/365'),
+            1820/365)
+        self.assertAlmostEqual(
+            utils.yfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                'ACT/360'),
+            1820/360)
+        self.assertAlmostEqual(
+            utils.yfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                'ACT/364'),
+            1820/364)
+        self.assertAlmostEqual(
+            utils.yfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                '30U/360'),
+            1793/360)
+        self.assertAlmostEqual(
+            utils.yfactor(
+                date(2011, 7, 30),
+                date(2016, 7, 31),
+                '30U/360'),
+            5)
+        self.assertAlmostEqual(
+            utils.yfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                '30E/360'),
+            1793/360)
+        self.assertAlmostEqual(
+            utils.yfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                '30E/360 ISDA'),
+            1793/360)
+        self.assertAlmostEqual(
+            utils.yfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                '30E+/360'),
+            1793/360)
+        self.assertIsNone(
+            utils.yfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                'ACT/XXX'))
+        self.assertIsNone(
+            utils.yfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                'XXX'))
         
     def test_mfactor(self):
-        self.assertIsNone(utils.mfactor(date(2011, 7, 12),
-                                        date(2011, 7, 11),
-                                        'ACT'))
-        self.assertIsNone(utils.mfactor(date(2011, 7, 12),
-                                        date(2016, 7, 5),
-                                        'XXX'))
-        self.assertAlmostEqual(utils.mfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             'ACT'),
-                               59.774193548387096)
-        self.assertAlmostEqual(utils.mfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             '30U'),
-                               1793/30)
-        self.assertAlmostEqual(utils.mfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             '30E'),
-                               1793/30)
-        self.assertAlmostEqual(utils.mfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             '30E ISDA'),
-                               1793/30)
-        self.assertAlmostEqual(utils.mfactor(date(2011, 7, 12),
-                                             date(2016, 7, 5),
-                                             '30E+'),
-                               1793/30)
+        self.assertIsNone(
+            utils.mfactor(
+                date(2011, 7, 12),
+                date(2011, 7, 11),
+                'ACT'))
+        self.assertIsNone(
+            utils.mfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                'XXX'))
+        self.assertAlmostEqual(
+            utils.mfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                'ACT'),
+            59.774193548387096)
+        self.assertAlmostEqual(
+            utils.mfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                '30U'),
+            1793/30)
+        self.assertAlmostEqual(
+            utils.mfactor(
+                date(2011, 7, 30),
+                date(2016, 7, 31),
+                '30U'),
+            60)
+        self.assertAlmostEqual(
+            utils.mfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                '30E'),
+            1793/30)
+        self.assertAlmostEqual(
+            utils.mfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                '30E ISDA'),
+            1793/30)
+        self.assertAlmostEqual(
+            utils.mfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                '30E+'),
+            1793/30)
+        self.assertIsNone(
+            utils.mfactor(
+                date(2011, 7, 12),
+                date(2016, 7, 5),
+                'XXX'))
 
     def test_grammar(self):
         t = ['koruna', 'koruny', 'korun']
@@ -354,6 +416,13 @@ class TestUtils(SimpleTestCase):
         self.assertEqual(utils.formam(968562515458.216), '968.562.515.458,22')
         self.assertEqual(utils.formam(-968562515458.216), '-968.562.515.458,22')
 
+    def test_getint(self):
+        self.assertEqual(utils.getint(None), 0)
+        self.assertEqual(utils.getint(''), 0)
+        self.assertEqual(utils.getint('1'), 1)
+        with self.assertRaises(ValueError):
+            utils.getint('2.6')
+
     def test_rmdsl(self):
         self.assertEqual(utils.rmdsl([]), [])
         self.assertEqual(utils.rmdsl([1]), [1])
@@ -362,6 +431,21 @@ class TestUtils(SimpleTestCase):
         self.assertEqual(utils.rmdsl([1, 2, 2, 3]), [1, 2, 3])
         self.assertEqual(utils.rmdsl([1, 2, 2, 3, 4, 4, 4]), [1, 2, 3, 4])
 
+    def test_getxml(self):
+        self.assertIsNone(utils.getXML(b'test'))
+
+    def test_iso2date(self):
+        soup = utils.newXML(None)
+        t = soup.new_tag('date')
+        t['year'] = 2014
+        t['month'] = 11
+        t['day'] = 14
+        self.assertEqual(utils.iso2date(t), date(2014, 11, 14))
+        soup = utils.newXML(None)
+        t = soup.new_tag('date')
+        t.string = '2014-11-14'
+        self.assertEqual(utils.iso2date(t), date(2014, 11, 14))
+        
 class TestViews(TestCase):
 
     def setUp(self):
@@ -448,6 +532,12 @@ class TestViews(TestCase):
 
     def test_pwchange(self):
         self.assertTrue(self.client.login(username='user', password='none'))
+        res = self.client.post(
+            '/accounts/pwchange/',
+            {'back': 'Zpět'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'home.html')
         res = self.client.get('/accounts/pwchange/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
