@@ -23,7 +23,7 @@ seznamu; na serveru by přístup na jejich adresy měl být omezen na localhost:
 
  - /szr/cron/courts/ aktualisace seznamu soudů, např. jednou týdně
  - /szr/cron/notify/ notifikační e-maily, např. čtyřikrát denně
- - /szr/cron/update/ průměžné sledování řízení, např. každou minutu
+ - /szr/cron/update/ průběžné sledování řízení, např. každou minutu
  - /udn/cron/update/ aktualisace stavu úřední desky NSS, např. čtyřikrát denně
  - /udn/cron/find/   hledání anonymisovaných rozhodnutí, např. každých 15 minut
 
