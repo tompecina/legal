@@ -39,33 +39,30 @@ class TestCron(TestCase):
         self.req.method = 'GET'
 
     def checkpdf(self, ll):
+        fl = []
         for l in ll:
             fn = join(BASE_DIR, 'test', l)
-            fl = []
             try:
                 with open(fn) as fi:
                     fc = fi.read()
                 unlink(fn)
-            except:
+            except:  # pragma: no cover
                 fl.append('E: ' + l)
-            if not fc[:-1].endswith('/' + l):
+            if not fc[:-1].endswith('/' + l):  # pragma: no cover
                 fl.append('C: ' + l)
         self.assertFalse(fl, msg=fl)
         
     def test_update(self):
         cron.cron_update(self.req)
         d = models.Decision.objects.all()
-        self.assertEqual(len(d), 18)
+        self.assertEqual(len(d), 15)
         self.checkpdf([
             '0002_8As__1600055S.pdf',
             '0022_4As__1600037S.pdf',
             '0025_8As__1600041S.pdf',
             '0037_4Afs_1600033S.pdf',
-            '003810Ads_1600040S.pdf',
             '0065_4Afs_1600032S.pdf',
             '0066_4Afs_1600033S.pdf',
-            '007410Ads_1600027S.pdf',
-            '007710As__1600038S.pdf',
             '0079_8As__1600023S.pdf',
             '008110As__1600026S.pdf',
             '0095_4Afs_1600035S.pdf',
@@ -87,23 +84,28 @@ class TestCron(TestCase):
         self.assertEqual(len(d), 1)
         self.assertTrue(d[0].anonfilename)
         self.checkpdf(['0046_3As__1600114_20160622142215_prevedeno.pdf'])
+        cron.cron_find(self.req)
 
 class TestForms(SimpleTestCase):
 
     def test_MainForm(self):
-        f = forms.MainForm({'party_opt': 'icontains'})
+        f = forms.MainForm(
+            {'party_opt': 'icontains'})
         self.assertTrue(f.is_valid())
-        f = forms.MainForm({'party_opt': 'icontains',
-                            'date_from': '2.3.2005',
-                            'date_to': '2.6.2001'})
+        f = forms.MainForm(
+            {'party_opt': 'icontains',
+             'date_from': '2.3.2005',
+             'date_to': '2.6.2001'})
         self.assertFalse(f.is_valid())
-        f = forms.MainForm({'party_opt': 'icontains',
-                            'date_from': '2.3.2005',
-                            'date_to': '3.3.2005'})
+        f = forms.MainForm(
+            {'party_opt': 'icontains',
+             'date_from': '2.3.2005',
+             'date_to': '3.3.2005'})
         self.assertTrue(f.is_valid())
-        f = forms.MainForm({'party_opt': 'icontains',
-                            'date_from': '2.3.2005',
-                            'date_to': '2.3.2005'})
+        f = forms.MainForm(
+            {'party_opt': 'icontains',
+             'date_from': '2.3.2005',
+             'date_to': '2.3.2005'})
         self.assertTrue(f.is_valid())
 
 class TestGlob(SimpleTestCase):
@@ -170,6 +172,60 @@ class TestUtils(SimpleTestCase):
 class TestViews(TestCase):
     fixtures = ['udn_test.json']
     
+    def test_norm(self):
+        self.assertEqual(views.BATCH, 50)
+        pp = [
+            [0,  0],
+            [49,  0],
+            [50,  50],
+            [99, 50],
+            [100, 100],
+        ]
+        for p, r in pp:
+            self.assertEqual(views.norm(p), r)
+
+    def test_gennav(self):
+        pp = [
+            [0, 1, 'p', 's',
+             's0g0i0g1s1g0i1g1s2g1s31s4g0i2g1s5g0i3g1s6'],
+            [0, 50, 'p', 's',
+             's0g0i0g1s1g0i1g1s2g1s31s4g0i2g1s5g0i3g1s6'],
+            [0, 50, 'p', 's',
+             's0g0i0g1s1g0i1g1s2g1s31s4g0i2g1s5g0i3g1s6'],
+            [0, 51, 'p', 's',
+             's0g0i0g1s1g0i1g1s21s32s4a0p50sa1i2a2s5a0p50sa1i3a2s6'],
+            [0, 100, 'p', 's',
+             's0g0i0g1s1g0i1g1s21s32s4a0p50sa1i2a2s5a0p50sa1i3a2s6'],
+            [0, 101, 'p', 's',
+             's0g0i0g1s1g0i1g1s21s33s4a0p50sa1i2a2s5a0p100sa1i3a2s6'],
+            [0, 53697, 'p', 's',
+             's0g0i0g1s1g0i1g1s21s31074s4a0p50sa1i2a2s5a0p53650sa1i3a2s6'],
+            [50, 51, 'p', 's',
+             's0a0p0sa1i0a2s1a0p0sa1i1a2s22s32s4g0i2g1s5g0i3g1s6'],
+            [50, 100, 'p', 's',
+             's0a0p0sa1i0a2s1a0p0sa1i1a2s22s32s4g0i2g1s5g0i3g1s6'],
+            [50, 101, 'p', 's',
+             's0a0p0sa1i0a2s1a0p0sa1i1a2s22s33s4a0p100sa1i2a2s5a0p' \
+             '100sa1i3a2s6'],
+            [50, 53697, 'p', 's',
+             's0a0p0sa1i0a2s1a0p0sa1i1a2s22s31074s4a0p100sa1i2a2s5' \
+             'a0p53650sa1i3a2s6'],
+            [100, 53697, 'p', 's',
+             's0a0p0sa1i0a2s1a0p50sa1i1a2s23s31074s4a0p150sa1i2a2s' \
+             '5a0p53650sa1i3a2s6'],
+            [53600, 53697, 'p', 's',
+             's0a0p0sa1i0a2s1a0p53550sa1i1a2s21073s31074s4a0p53650' \
+             'sa1i2a2s5a0p53650sa1i3a2s6'],
+            [53650, 53697, 'p', 's',
+             's0a0p0sa1i0a2s1a0p53600sa1i1a2s21074s31074s4g0i2g1s5' \
+             'g0i3g1s6'],
+        ]
+        l = ['i0', 'i1', 'i2', 'i3', 'a0', 'a1', 'a2', 'g0', 'g1',
+             's0', 's1', 's2', 's2g', 's3', 's4', 's5', 's6']
+        d = {t: t for t in l}
+        for p in pp:
+            self.assertEqual(views.gennav(*p[:4], **d), p[4])
+        
     def test_main(self):
         res = self.client.get('/udn')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -178,9 +234,104 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'udn_mainpage.html')
-        res = self.client.post('/udn/',
-                               {'party_opt': 'icontains',
-                                'submit_update': 'Aktualisovat'},
-                               follow=True)
+        res = self.client.post(
+            '/udn/',
+            {'date_from': '1.1.2015',
+             'date_to': '1.7.2016',
+             'register': 'As',
+             'agenda': '1',
+             'party_opt': 'icontains',
+             'submit': 'Hledat'},
+            follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'udn_list.html')
+        res = self.client.post(
+            '/udn/',
+            {'party': 'Ing',
+             'party_opt': 'icontains',
+             'submit': 'Hledat'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        res = self.client.post(
+            '/udn/',
+            {'date_from': 'XXX',
+             'party_opt': 'icontains',
+             'submit': 'Hledat'})
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_mainpage.html')
+        self.assertEqual(
+            res.context['err_message'],
+            'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/udn/',
+            {'date_from': '1.1.2015',
+             'date_to': '1.7.2014',
+             'register': 'As',
+             'agenda': '1',
+             'party_opt': 'icontains',
+             'submit': 'Hledat'})
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_mainpage.html')
+        self.assertEqual(
+            res.context['err_message'],
+            'Chybné zadání, prosím, opravte údaje')
+
+    def test_declist(self):
+        res = self.client.get('/udn/list')
+        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+        res = self.client.get('/udn/list/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTrue(res.has_header('content-type'))
+        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
+        self.assertTemplateUsed(res, 'udn_list.html')
+        res = self.client.get('/udn/list/?senate=-1')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/list/?register=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/list/?number=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/list/?year=1989')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/list/?page=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/list/?agenda=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get( '/udn/list/?date_from=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/list/?date_to=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/list/?party_opt=X')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/list/?start=-1')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get(
+            '/udn/list/?date_from=2015-01-01&date_to=2199-07-01&register=As&' \
+            'agenda=1&party_opt=icontains')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 1)
+        res = self.client.get('/udn/list/?start=100')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 1)
+        res = self.client.get('/udn/list/?register=Ads')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 0)
+        res = self.client.get('/udn/list/?date_from=2199-07-01')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 1)
+        res = self.client.get('/udn/list/?date_from=2199-07-02')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 0)
+        res = self.client.get('/udn/list/?date_to=2199-07-01')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 1)
+        res = self.client.get('/udn/list/?date_to=2199-06-30')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 0)

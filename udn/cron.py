@@ -62,11 +62,12 @@ def cron_update(request):
                     r = item.select('tr')
                     senate, register, number, year, page = \
                         decomposeref(r[0].td.text.strip())
-                    if Decision.objects.filter(senate=senate,
-                                               register=register,
-                                               number=number,
-                                               year=year,
-                                               page=page).exists():
+                    if Decision.objects.filter(
+                            senate=senate,
+                            register=register,
+                            number=number,
+                            year=year,
+                            page=page).exists():
                         continue
                     furl = r[4].a['href']
                     fn = furl.split('/')[-1]
@@ -76,20 +77,21 @@ def cron_update(request):
                     if not res.ok:
                         continue
                     with open(repo_pref + '/' + fn, 'wb') as fo:
-                        if not fo.write(res.content):
+                        if not fo.write(res.content):  # pragma: no cover
                             continue
                     a = Agenda.objects.get_or_create( \
                         desc=r[2].td.text.strip())[0]
                     dt = date(*map(int, list(reversed(r[3].td.text \
                                                       .split('.')))))
-                    dec = Decision(senate=senate,
-                                   register=register,
-                                   number=number,
-                                   year=year,
-                                   page=page,
-                                   agenda=a,
-                                   date=dt,
-                                   filename=fn)
+                    dec = Decision(
+                        senate=senate,
+                        register=register,
+                        number=number,
+                        year=year,
+                        page=page,
+                        agenda=a,
+                        date=dt,
+                        filename=fn)
                     dec.save()
                     for q in r[1].td:
                         if 'strip' in dir(q):
@@ -107,7 +109,7 @@ def cron_update(request):
                  if i['type']=='hidden' and i.has_attr('value')}
             d['__EVENTTARGET'] = p[cp - 1]['href'][70:-34]
             d['__EVENTARGUMENT'] = ''
-    except:
+    except:  # pragma: no cover
         pass
     return HttpResponse()
 
@@ -125,10 +127,7 @@ def cron_find(request):
         form = soup.find('form')
         d = {i['name']: i['value'] for i in form.find_all('input') \
              if i['type']=='hidden' and i.has_attr('value')}
-        if int(dec.senate):
-            ref = '%s ' % dec.senate
-        else:
-            ref = ''
+        ref = ('%s ' % dec.senate) if dec.senate else ''
         ref += '%s %d/%d' % (dec.register, dec.number, dec.year)
         d['_ctl0:ContentPlaceMasterPage:_ctl0:txtDatumOd'] = \
         d['_ctl0:ContentPlaceMasterPage:_ctl0:txtDatumDo'] = \
@@ -147,7 +146,7 @@ def cron_find(request):
             if not res.ok:
                 continue
             with open(repo_pref + '/' + fn, 'wb') as fo:
-                if not fo.write(res.content):
+                if not fo.write(res.content):  # pragma: no cover
                     return HttpResponse()
             dec.anonfilename = fn
             dec.save()

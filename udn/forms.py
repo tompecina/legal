@@ -25,16 +25,17 @@ from datetime import date
 from common import forms, fields, widgets
 from szr.glob import register_regex
 
-party_opts = (('icontains',  'kdekoliv'),
-              ('istartswith',  'na začátku'),
+party_opts = (('icontains', 'kdekoliv'),
+              ('istartswith', 'na začátku'),
               ('iexact', 'přesně'))
 
 class MainForm(forms.Form):
     error_css_class = 'err'
     use_required_attribute = False
-    senate = fields.IntegerField(widget=widgets.saw(),
-                                 min_value=0, initial='',
-                                 required=False)
+    senate = fields.IntegerField(
+        widget=widgets.saw(),
+        min_value=0, initial='',
+        required=False)
     register = fields.CharField(
         widget=widgets.saw(),
         max_length=30,
@@ -77,19 +78,15 @@ class MainForm(forms.Form):
         widget=widgets.rs,
         choices=party_opts,
         initial='icontains')
-
-    def clean_date_from(self):
+    
+    def clean(self):
         cleaned_data = super(MainForm, self).clean()
         date_from = cleaned_data.get('date_from', None)
         date_to = cleaned_data.get('date_to', None)
         if date_from and date_to and (date_from > date_to):
-            raise forms.ValidationError('Invalid time interval')
-        return date_from
-
-    def clean_date_to(self):
-        cleaned_data = super(MainForm, self).clean()
-        date_from = cleaned_data.get('date_from', None)
-        date_to = cleaned_data.get('date_to', None)
-        if date_from and date_to and (date_from > date_to):
-            raise forms.ValidationError('Invalid time interval')
-        return date_to
+            msg = 'Invalid interval'
+            self._errors['date_from'] = self.error_class([msg])
+            self._errors['date_to'] = self.error_class([msg])
+            del cleaned_data['date_from']
+            del cleaned_data['date_to']
+        return cleaned_data

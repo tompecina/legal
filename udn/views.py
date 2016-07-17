@@ -24,11 +24,12 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from django.urls import reverse
-from django.http import QueryDict
-from datetime import date
+from django.http import QueryDict, Http404
+from datetime import date, datetime
 from math import floor, ceil
 from common.utils import formam, p2c
 from cnb.main import getFXrate
+from szr.glob import registers
 from .forms import MainForm, party_opts
 from .models import Agenda, Decision, Party
 
@@ -38,34 +39,33 @@ APPVERSION = apps.get_app_config(APP).version
 
 BATCH = 50
 
-def fixdate(d):
-    t = d.split('.')
-    return '%04d-%02d-%02d' % (int(t[2]), int(t[1]), int(t[0]))
-
+DTF = '%Y-%m-%d'
+        
 def norm(x):
     return (x // BATCH) * BATCH
 
-def gennav(start,
-           total,
-           prefix,
-           suffix,
-           i0='&lt;&lt;',
-           i1='&lt;',
-           i2='&gt;',
-           i3='&gt;&gt;',
-           a0='<span class="nav"><a href="',
-           a1='">',
-           a2='</a></span>',
-           g0='<span class="nav grayed">',
-           g1='</span>',
-           s0='',
-           s1='&nbsp;&nbsp;',
-           s2='&nbsp;&nbsp;&nbsp;<span class="pager">',
-           s2g='&nbsp;&nbsp;&nbsp;<span class="pager grayed">',
-           s3='/',
-           s4='</span>&nbsp;&nbsp;&nbsp;',
-           s5='&nbsp;&nbsp;',
-           s6=''):
+def gennav(
+        start,
+        total,
+        prefix,
+        suffix,
+        i0='&lt;&lt;',
+        i1='&lt;',
+        i2='&gt;',
+        i3='&gt;&gt;',
+        a0='<span class="nav"><a href="',
+        a1='">',
+        a2='</a></span>',
+        g0='<span class="nav grayed">',
+        g1='</span>',
+        s0='',
+        s1='&nbsp;&nbsp;',
+        s2='&nbsp;&nbsp;&nbsp;<span class="pager">',
+        s2g='&nbsp;&nbsp;&nbsp;<span class="pager grayed">',
+        s3='/',
+        s4='</span>&nbsp;&nbsp;&nbsp;',
+        s5='&nbsp;&nbsp;',
+        s6=''):
     i = [i0, i1, i2, i3]
     n = [-1] * 4
     if start:
@@ -100,13 +100,14 @@ def mainpage(request):
     if request.method == 'GET':
         agendas = Agenda.objects.all().order_by('desc')
         f = MainForm()
-        return render(request,
-                      'udn_mainpage.html',
-                      {'app': APP,
-                       'page_title': page_title,
-                       'err_message': err_message,
-                       'agendas': agendas,
-                       'f': f})
+        return render(
+            request,
+            'udn_mainpage.html',
+            {'app': APP,
+             'page_title': page_title,
+             'err_message': err_message,
+             'agendas': agendas,
+             'f': f})
     else:
         f = MainForm(request.POST)
         if f.is_valid():
@@ -120,44 +121,51 @@ def mainpage(request):
             return redirect(listurl(q))
         else:
             err_message = inerr
-            return render(request,
-                          'udn_mainpage.html',
-                          {'app': APP,
-                           'page_title': page_title,
-                           'err_message': err_message,
-                           'f': f})
+            return render(
+                request,
+                'udn_mainpage.html',
+                {'app': APP,
+                 'page_title': page_title,
+                 'err_message': err_message,
+                 'f': f})
 
 @require_http_methods(['GET'])
 def declist(request):
     page_title = apps.get_app_config(APP).verbose_name
     rd = request.GET.copy()
     p = {}
-    for f in ['senate', 'register', 'number', 'year', 'page']:
-        if f in rd:
-            p[f] = rd[f]
-    if 'date_from' in rd:
-        p['date__gte'] = fixdate(rd['date_from'])
-    if 'date_to' in rd:
-        p['date__lte'] = fixdate(rd['date_to'])
-    if 'agenda' in rd:
-        p['agenda_id'] = int(rd['agenda'])
-    if 'party' in rd:
-        if ('party_opt' in rd) and (rd['party_opt'] in dict(party_opts).keys()):
-            opt = rd['party_opt']
-        else:
-            opt = 'icontains'
-        p['parties__name__' + opt] = rd['party'].strip()
-    if 'start' in rd:
-        start = int(rd.pop('start')[0])
-    else:
-        start = 0
-    d = Decision.objects.filter(**p).order_by('-date', 'pk').distinct()
-    total = len(d)
-    return render(request,
-                  'udn_list.html',
-                  {'app': APP,
-                   'page_title': 'Výsledky vyhledávání',
-                   'rows': d[start:(start + BATCH)],
-                   'f': f,
-                   'nav': gennav(start, total, listurl(rd) + '&start=', ''),
-                   'total': total})
+    try:
+        for f, l in [['senate', 0], ['number', 1], ['year', 1990],
+                     ['page', 1], ['agenda', 1]]:
+            if f in rd:
+                p[f] = int(rd[f])
+                assert p[f] >= l
+        if 'register' in rd:
+            assert rd['register'] in registers
+            p['register'] = rd['register']
+        if 'date_from' in rd:
+            p['date__gte'] = datetime.strptime(rd['date_from'], DTF).date()
+        if 'date_to' in rd:
+            p['date__lte'] = datetime.strptime(rd['date_to'], DTF).date()
+        if 'party_opt' in rd:
+            assert rd['party_opt'] in dict(party_opts).keys()
+        if 'party' in rd:
+            assert 'party_opt' in rd
+            p['parties__name__' + rd['party_opt']] = rd['party']
+        start = int(rd['start']) if ('start' in rd) else 0
+        assert start >= 0
+        d = Decision.objects.filter(**p).order_by('-date', 'pk').distinct()
+        total = len(d)
+        if (start >= total) and (total > 0):
+            start = total - 1
+    except:
+        raise Http404
+    return render(
+        request,
+        'udn_list.html',
+        {'app': APP,
+         'page_title': 'Výsledky vyhledávání',
+         'rows': d[start:(start + BATCH)],
+         'f': f,
+         'nav': gennav(start, total, listurl(rd) + '&start=', ''),
+         'total': total})

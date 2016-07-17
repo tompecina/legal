@@ -77,8 +77,9 @@ class Decision(models.Model):
         auto_now=True)
 
     def __str__(self):
-        return composeref(self.senate,
-                          self.register,
-                          self.number,
-                          self.year,
-                          self.page)
+        return composeref(
+            self.senate,
+            self.register,
+            self.number,
+            self.year,
+            self.page)
