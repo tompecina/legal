@@ -31,8 +31,8 @@ from os import unlink
 from common.settings import BASE_DIR
 from . import cron, forms, glob, models, utils, views
 
-class TestCron(TestCase):
-    fixtures = ['udn_test.json']
+class TestCron1(TestCase):
+    fixtures = ['udn_test1.json']
     
     def setUp(self):
         self.req = HttpRequest()
@@ -76,15 +76,33 @@ class TestCron(TestCase):
     def test_find(self):
         cron.cron_find(self.req)
         d = models.Decision.objects.filter(
-            senate='8',
+            senate=8,
             register='As',
-            number='158',
-            year='2015',
-            page='33')
+            number=158,
+            year=2015,
+            page=33)
         self.assertEqual(len(d), 1)
         self.assertTrue(d[0].anonfilename)
         self.checkpdf(['0046_3As__1600114_20160622142215_prevedeno.pdf'])
         cron.cron_find(self.req)
+
+class TestCron2(TestCase):
+    fixtures = ['udn_test2.json']
+    
+    def setUp(self):
+        self.req = HttpRequest()
+        self.req.method = 'GET'
+
+    def test_find(self):
+        cron.cron_find(self.req)
+        d = models.Decision.objects.filter(
+            senate=8,
+            register='As',
+            number=158,
+            year=2015,
+            page=33)
+        self.assertEqual(len(d), 1)
+        self.assertFalse(d[0].anonfilename)
 
 class TestForms(SimpleTestCase):
 
@@ -170,7 +188,7 @@ class TestUtils(SimpleTestCase):
                 p.replace('-', ' - '))), p)
 
 class TestViews(TestCase):
-    fixtures = ['udn_test.json']
+    fixtures = ['udn_test1.json']
     
     def test_norm(self):
         self.assertEqual(views.BATCH, 50)
