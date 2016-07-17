@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- XML Schema for KNR V1.6 <https://legal.pecina.cz/> -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://legal.pecina.cz" xmlns="https://legal.pecina.cz" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://legal.pecina.cz" xmlns="http://legal.pecina.cz" elementFormDefault="qualified">
   <xs:element name="calculation">
     <xs:complexType>
       <xs:sequence>

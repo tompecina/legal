@@ -429,9 +429,9 @@ def getrows4(debt):
 def toxml(debt):
     xd = {
         'debt': {
-            'xmlns': 'https://legal.pecina.cz',
+            'xmlns': 'http://legal.pecina.cz',
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': 'https://legal.pecina.cz ' \
+            'xsi:schemaLocation': 'http://legal.pecina.cz ' \
             'https://legal.pecina.cz/static/%s-%s.xsd' % (APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,

@@ -747,10 +747,10 @@ def toxml(c):
     xml = newXML('')
     calculation = xml.new_tag('calculation')
     xml.insert(0, calculation)
-    calculation['xmlns'] = 'https://legal.pecina.cz'
+    calculation['xmlns'] = 'http://legal.pecina.cz'
     calculation['xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
     calculation['xsi:schemaLocation'] = \
-        'https://legal.pecina.cz https://legal.pecina.cz/static/%s-%s.xsd' % \
+        'http://legal.pecina.cz https://legal.pecina.cz/static/%s-%s.xsd' % \
         (APP, APPVERSION)
     calculation['application'] = APP
     calculation['version'] = APPVERSION
