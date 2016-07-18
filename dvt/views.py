@@ -25,7 +25,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from datetime import date, timedelta
 from calendar import monthrange
-from common.utils import pd
+from common.utils import pd, inerr_short
 from .forms import MainForm
 
 APP = __package__
@@ -46,7 +46,6 @@ def calc(beg, years, months, days):
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
     messages = []
-    inerr = 'Chybné zadání'
 
     if request.method == 'GET':
         f = MainForm()
@@ -87,7 +86,7 @@ def mainpage(request):
 
 
         else:
-            messages = [[inerr, None]]
+            messages = [[inerr_short, None]]
 
     return render(request,
                   'dvt_main.html',

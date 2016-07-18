@@ -26,7 +26,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.apps import apps
-from common.utils import getbutton
+from common.utils import getbutton, inerr
 from .forms import EmailForm, ProcForm
 from .models import Court, Proceedings
 from .cron import addauxid, updateproc
@@ -34,8 +34,6 @@ from .cron import addauxid, updateproc
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
-
-inerr = 'Chybné zadání, prosím, opravte údaje'
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -120,10 +118,11 @@ def mainpage(request):
             return redirect('szr:mainpage')
         else:
             err_message = inerr
-    return render(request,
-                  'szr_mainpage.html',
-                  {'app': APP,
-                   'f': f,
-                   'page_title': page_title,
-                   'err_message': err_message,
-                   'rows': Proceedings.objects.filter(uid=uid).order_by('id')})
+    return render(
+        request,
+        'szr_mainpage.html',
+        {'app': APP,
+         'f': f,
+         'page_title': page_title,
+         'err_message': err_message,
+         'rows': Proceedings.objects.filter(uid=uid).order_by('id')})

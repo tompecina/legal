@@ -27,7 +27,7 @@ from django.urls import reverse
 from django.http import QueryDict, Http404
 from datetime import date, datetime
 from math import floor, ceil
-from common.utils import formam, p2c
+from common.utils import formam, p2c, inerr
 from cnb.main import getFXrate
 from szr.glob import registers
 from .forms import MainForm, party_opts
@@ -95,7 +95,6 @@ def mainpage(request):
     err_message = ''
     messages = []
     page_title = apps.get_app_config(APP).verbose_name
-    inerr = 'Chybné zadání, prosím, opravte údaje'
 
     if request.method == 'GET':
         agendas = Agenda.objects.all().order_by('desc')

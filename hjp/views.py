@@ -42,7 +42,7 @@ from io import BytesIO
 import os.path
 from common.utils import getbutton, ydconvs, mdconvs, yfactor, mfactor, odp, \
                          formam, xmldecorate, xmlescape, xmlunescape, p2c, \
-                         LIM, getXML, newXML, iso2date, CanvasXML
+                         LIM, getXML, newXML, iso2date, CanvasXML, inerr
 from common.views import error
 from cache.main import getasset, setasset
 from cnb.main import getMPIrate
@@ -51,8 +51,6 @@ from .forms import MainForm, TransForm
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
-
-inerr = 'Chybné zadání, prosím, opravte údaje'
 
 class Debt(object):
     def __init__(self):

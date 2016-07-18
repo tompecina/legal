@@ -48,7 +48,7 @@ from io import BytesIO
 import os.path
 from cache.main import getcache, getasset, setasset
 from common.utils import getbutton, unrequire, formam, c2p, getXML, \
-                         newXML, getint, CanvasXML
+                         newXML, getint, CanvasXML, inerr
 from common.views import error, unauth
 from .glob import fuels
 from .utils import getVAT
@@ -64,7 +64,6 @@ APP = __package__
 APPVERSION = apps.get_app_config(APP).version
 
 ctrip = ['cons1', 'cons2', 'cons3']
-inerr = 'Chybné zadání, prosím, opravte údaje'
 
 def lim(lower, x, upper):
     return min(max(lower, x), upper)

@@ -40,6 +40,7 @@ if TEST:
     repo_pref = join(BASE_DIR, 'test')
 else:  # pragma: no cover
     repo_pref = join(BASE_DIR, 'repo/udn')
+
 fr = compile(filename_regex)
 
 OBS = timedelta(days=360)

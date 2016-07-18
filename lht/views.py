@@ -25,7 +25,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from datetime import date, timedelta
 from calendar import monthrange
-from common.utils import wn, pd, tod, odp, getbutton
+from common.utils import wn, pd, tod, odp, getbutton, inerr_short
 from .forms import MainForm
 
 APP = __package__
@@ -35,7 +35,6 @@ APPVERSION = apps.get_app_config(APP).version
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
     today = date.today()
-    inerr = 'Chybné zadání'
     messages = []
 
     if request.method == 'GET':
@@ -112,7 +111,7 @@ def mainpage(request):
                          'font-size: 80%;'])
            
         else:
-            messages = [[inerr, None]]
+            messages = [[inerr_short, None]]
 
     return render(request,
                   'lht_main.html',

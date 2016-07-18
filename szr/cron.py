@@ -186,9 +186,10 @@ def cron_notify(request):
                 p.notify = False
                 p.save()
             text += '\nServer legal.pecina.cz (https://legal.pecina.cz)\n'
-            send_mail('Zmeny ve sledovanych rizenich',
-                      text,
-                      'Server legal.pecina.cz <legal@pecina.cz>',
-                      [u.email],
-                      fail_silently=True)
+            send_mail(
+                'Zmeny ve sledovanych rizenich',
+                text,
+                'Server legal.pecina.cz <legal@pecina.cz>',
+                [u.email],
+                fail_silently=True)
     return HttpResponse()

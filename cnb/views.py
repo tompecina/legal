@@ -24,7 +24,8 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from datetime import date
 from django.apps import apps
-from common.utils import getbutton, pd, formam, unrequire, p2c
+from common.utils import getbutton, pd, formam, unrequire, p2c, \
+                         inerr_short
 from common.fields import AmountField
 from .main import getFXrate, getMPIrate
 from .forms import MainForm
@@ -39,7 +40,6 @@ def mainpage(request):
                  'LOMB': 'Lombardní sazba',
                  'REPO': 'Repo sazba pro dvoutýdenní operace'}
     messages = []
-    inerr = 'Chybné zadání'
     today = date.today()
     AmountField.rounding = 2
 
@@ -118,7 +118,7 @@ def mainpage(request):
                             [p2c('%.2f %%' % rate),
                              'font-weight: bold; font-size: 110%;'])
             else:
-                messages = [[inerr, None]]
+                messages = [[inerr_short, None]]
 
     return render(request,
                   'cnb_main.html',

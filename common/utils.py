@@ -38,6 +38,9 @@ wn = ('Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne')
 
 LIM = 0.005
 
+inerr = 'Chybné zadání, prosím, opravte údaje'
+inerr_short = 'Chybné zadání'
+
 def easter(dt):
     y = dt.year
     g = y % 19

@@ -25,7 +25,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from datetime import date
 from math import floor, ceil
-from common.utils import formam, p2c
+from common.utils import formam, p2c, inerr_short
 from cnb.main import getFXrate
 from .forms import MainForm
 
@@ -35,7 +35,6 @@ APPVERSION = apps.get_app_config(APP).version
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
-    inerr = 'Chybné zadání'
     messages = []
 
     if request.method == 'GET':
@@ -176,7 +175,7 @@ def mainpage(request):
                         messages.append([fx_info,
                                          'font-size: 80%; padding-top: 3px;'])
         else:
-            messages = [[inerr, None]]
+            messages = [[inerr_short, None]]
 
     return render(request,
                   'sop_main.html',

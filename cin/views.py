@@ -25,7 +25,8 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from datetime import date
 from common.utils import pd, tod, ply, plm, ydconvs, mdconvs, yfactor, \
-                         mfactor, odp, grammar, getbutton, unrequire, p2c
+                         mfactor, odp, grammar, getbutton, unrequire, p2c, \
+                         inerr_short
 from .forms import MainForm
 
 APP = __package__
@@ -41,7 +42,6 @@ GR_Y = ('rok', 'roky', 'let')
 def mainpage(request):
     today = date.today()
     messages = []
-    inerr = 'Chybné zadání'
 
     if request.method == 'GET':
         f = MainForm()
@@ -116,7 +116,7 @@ def mainpage(request):
                              'text-align: left; margin-left: 2em;'])
 
         else:
-            messages = [[inerr, None]]
+            messages = [[inerr_short, None]]
 
     return render(request, 'cin_main.html',
                   {'app': APP,

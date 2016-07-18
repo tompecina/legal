@@ -43,7 +43,8 @@ import os.path
 from common import fields
 from common.utils import getbutton, ydconvs, mdconvs, yfactor, mfactor, odp, \
                          formam, xmldecorate, xmlescape, xmlunescape, p2c, \
-                         LIM, rmdsl, getXML, newXML, iso2date, CanvasXML
+                         LIM, rmdsl, getXML, newXML, iso2date, CanvasXML, \
+                         inerr
 from common.views import error
 from cache.main import getasset, setasset
 from cnb.main import getMPIrate, getFXrate
@@ -52,8 +53,6 @@ from .forms import MainForm, DebitForm, CreditForm, BalanceForm, FXform
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
-
-inerr = 'Chybné zadání, prosím, opravte údaje'
 
 class Debt(object):
     def __init__(self):
