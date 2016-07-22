@@ -94,8 +94,7 @@ def pwchange(request):
             var['newpw1'] = var['newpw2'] = ''
         else:
             u.set_password(var['newpw1'])
-            if request.user.username != 'guest':
-                u.save()
+            u.save()
             return redirect('/accounts/pwchanged/')
     return render(request, 'pwchange.html', var)
 
