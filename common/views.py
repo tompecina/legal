@@ -231,5 +231,7 @@ def useradd(request):
         })
 
 @require_http_methods(['GET'])
-def genrender(request, template, page_title=None):
+def genrender(request, prefix, template, page_title=None):
+    if prefix:  # pragma: no cover
+        template = prefix + '_' + template
     return render(request, template + '.html', {'page_title': page_title})
