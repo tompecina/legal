@@ -40,13 +40,17 @@ urlpatterns = [
     url(r'^accounts/useradd/$', useradd, name='useradd'),
     url(r'^accounts/lostpw/$', lostpw, name='lostpw'),
     url(r'^accounts/resetpw/([0-9a-f]{32})/$', resetpw, name='resetpw'),
-    url(r'^accounts/()(pwchanged)/$',
+    url(r'^accounts/pwchanged/$',
         genrender,
-        kwargs={'page_title': 'Změna hesla'},
+        kwargs={
+            'template': 'pwchanged.html',
+            'page_title': 'Změna hesla'},
         name='pwchanged'),
-    url(r'^accounts/()(pwlinksent)/$',
+    url(r'^accounts/pwlinksent/$',
         genrender,
-        kwargs={'page_title': 'Obnovení hesla'},
+        kwargs={
+            'template': 'pwlinksent.html',
+            'page_title': 'Obnovení hesla'},
         name='pwlinksent'),
     url(r'^about/$', about, name='about'),
     url(r'^admin/', include((admin.site.urls[0], 'admin')))
