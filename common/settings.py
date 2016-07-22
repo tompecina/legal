@@ -68,9 +68,7 @@ STATIC_ROOT = os.path.join(LOCAL_ROOT, 'collect').replace('\\','/')
 STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
-STATICFILES_DIRS = (
-    os.path.join(LOCAL_ROOT, 'static').replace('\\','/'),
-)
+STATICFILES_DIRS = ()
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -110,7 +108,7 @@ APPS = ['common',
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(LOCAL_ROOT, 'templates').replace('\\','/')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
