@@ -24,7 +24,7 @@ from django.conf.urls import include, url
 from django.contrib.auth.views import login, settings
 from django.contrib import admin
 from .views import home, robots, pwchange, logout, useradd, lostpw, \
-                   resetpw, about
+                   resetpw, about, genrender
 
 admin.autodiscover()
 
@@ -40,6 +40,12 @@ urlpatterns = [
     url(r'^accounts/useradd/$', useradd, name='useradd'),
     url(r'^accounts/lostpw/$', lostpw, name='lostpw'),
     url(r'^accounts/resetpw/([0-9a-f]{32})/$', resetpw, name='resetpw'),
+    url(r'^accounts/(pwchanged)/$',
+        genrender,
+        kwargs={'page_title': 'Změna hesla'}),
+    url(r'^accounts/(pwlinksent)/$',
+        genrender,
+        kwargs={'page_title': 'Obnovení hesla'}),
     url(r'^about/$', about, name='about'),
     url(r'^admin/', include((admin.site.urls[0], 'admin')))
 ] + [url('^' + a + '/',

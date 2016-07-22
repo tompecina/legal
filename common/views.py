@@ -96,17 +96,16 @@ def pwchange(request):
             u.set_password(var['newpw1'])
             if request.user.username != 'guest':
                 u.save()
-            return redirect('home')
+            return redirect('/accounts/pwchanged/')
     return render(request, 'pwchange.html', var)
 
 @require_http_methods(['GET', 'POST'])
 def lostpw(request):
     err_message = None
     page_title = 'Ztracené heslo'
-    btn = getbutton(request)
     if request.method == 'GET':
         f = LostPwForm()
-    elif btn == 'back':
+    elif request.POST.get('back'):
         return redirect('login')
     else:
         f = LostPwForm(request.POST)
@@ -128,10 +127,7 @@ def lostpw(request):
                     'Server legal.pecina.cz (https://legal.pecina.cz)\n' % \
                     (u[0].username, reverse('resetpw', args=[link]))
                 send_mail('Link pro obnoveni hesla', text, [u[0].email])
-            return render(
-                request,
-                'pwlinksent.html',
-                {'page_title': page_title})
+            return redirect('/accounts/pwlinksent/')
         else:
             err_message = 'Prosím, opravte označená pole ve formuláři'
     return render(
@@ -233,3 +229,7 @@ def useradd(request):
          'err_message': err_message,
          'suppress_topline': True,
         })
+
+@require_http_methods(['GET'])
+def genrender(request, template, page_title=None):
+    return render(request, template + '.html', {'page_title': page_title})

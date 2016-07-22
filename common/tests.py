@@ -502,6 +502,22 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'login.html')
         res = self.client.get('/xxx/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.post(
+            '/accounts/login/?next=/knr/',
+            {'username': 'user',
+             'password': 'wrong'})
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'login.html')
+        self.assertContains(
+            res,
+            'Chybné uživatelské jméno nebo heslo')
+        res = self.client.post(
+            '/accounts/login/?next=/knr/',
+            {'username': 'user',
+             'password': 'none'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'knr_mainpage.html')
 
     def test_robots(self):
         res = self.client.get('/robots.txt')
@@ -557,7 +573,10 @@ class TestViews(TestCase):
         res = self.client.get('/accounts/pwchange/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
-        s = {'oldpw': 'none', 'newpw1': 'newpass', 'newpw2': 'newpass'}
+        s = {'oldpw': 'none',
+             'newpw1': 'newpass',
+             'newpw2': 'newpass',
+             'submit': 'Změnit'}
         d = copy(s)
         d['oldpw'] = 'wrong'
         res = self.client.post('/accounts/pwchange/', d)
@@ -569,19 +588,20 @@ class TestViews(TestCase):
         res = self.client.post('/accounts/pwchange/', d)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
-        self.assertEqual(res.context['error_message'],
-                         'Zadaná hesla se neshodují')
+        self.assertEqual(
+            res.context['error_message'],
+            'Zadaná hesla se neshodují')
         d = copy(s)
         d['newpw1'] = d['newpw2'] = 'short'
         res = self.client.post('/accounts/pwchange/', d)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
-        self.assertEqual(res.context['error_message'],
-                         'Nové heslo je příliš krátké')
-        res = self.client.post('/accounts/pwchange/', s)
-        self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        self.assertEqual(
+            res.context['error_message'],
+            'Nové heslo je příliš krátké')
         res = self.client.post('/accounts/pwchange/', s, follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pwchanged.html')
         self.assertTrue(self.client.login(username='user', password='newpass'))
         res = self.client.get('/hsp/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -593,7 +613,7 @@ class TestViews(TestCase):
         res = self.client.post(
             '/accounts/lostpw/',
             {'username': '',
-             'submit_back': 'Zpět'},
+             'back': 'Zpět'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'login.html')

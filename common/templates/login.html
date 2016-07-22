@@ -6,14 +6,18 @@
     <tr>
       <td></td>
       <td>
-	<h1 style="text-align: left; margin-bottom: 0;">
+	<h1 style="text-align: left; margin-bottom: 8px;">
 	  Přihlášení
 	</h1>
       </td>
     </tr>
-    {% if error_message %}<tr>
+    {% if request.method == 'POST' %}<tr>
       <td></td>
-      <td class="warning">{{ error_message }}</td>
+      <td class="warning">
+	<div class="warning">
+	  Chybné uživatelské jméno nebo heslo
+	</div>
+      </td>
     </tr>{% endif %}
     <tr>
       <td style="text-align: right;">
