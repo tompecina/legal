@@ -81,3 +81,8 @@ class UserAddForm(UserChangeForm, UserCreationForm):
         if captcha.lower() != 'praha':
             raise ValidationError('Wrong answer')
         return captcha
+
+class LostPwForm(Form):
+    username = forms.CharField(
+        max_length=150,
+        label='Uživatelské jméno')

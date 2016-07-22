@@ -22,16 +22,18 @@
 
 from django.test import SimpleTestCase, TestCase, Client
 from django.contrib.auth.models import User
+from django.core import mail
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from copy import copy
 from http import HTTPStatus
 from re import compile
-from . import fields, forms, utils
+from . import fields, forms, models, utils
 
 TEST_STRING = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské kódy'
 
 xml_regex = compile(r'^(<[^<]+<\w+)[^>]*(.*)$')
+pw_regex = compile(r'/accounts/resetpw/([0-9a-f]{32})/')
 
 def stripxml(s):
     try:
@@ -149,6 +151,20 @@ class TestForms(TestCase):
         d = copy(s)
         d['username'] = 'existing'
         self.assertFalse(forms.UserAddForm(d).is_valid())
+
+class TestModels(TestCase):
+
+    def test_models(self):
+        User.objects.create_user(
+            'user',
+            'user@pecina.cz',
+            'none'
+        )
+        uid = User.objects.all()[0].id
+        p = models.PwResetLink(
+            user_id=uid,
+            link=('0' * 32))
+        self.assertEqual(str(p), ('0' * 32))
 
 class TestUtils(SimpleTestCase):
 
@@ -569,7 +585,48 @@ class TestViews(TestCase):
         self.assertTrue(self.client.login(username='user', password='newpass'))
         res = self.client.get('/hsp/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
+
+    def test_pwlost(self):
+        res = self.client.get('/accounts/lostpw/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'lostpw.html')
+        res = self.client.post(
+            '/accounts/lostpw/',
+            {'username': ''})
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'lostpw.html')
+        res = self.client.post(
+            '/accounts/lostpw/',
+            {'username': 'user'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pwlinksent.html')
+        m = mail.outbox
+        self.assertEqual(len(m), 1)
+        m = m[0]
+        self.assertEqual(
+            m.from_email,
+            'Server legal.pecina.cz <legal@pecina.cz>')
+        self.assertEqual(
+            m.to,
+            ['user@pecina.cz'])
+        self.assertEqual(
+            m.subject,
+            'Link pro obnoveni hesla')
+        match = pw_regex.search(m.body)
+        self.assertTrue(match)
+        link = match.group(1)
+        res = self.client.get('/accounts/resetpw/%s/' % link)
+        self.assertTemplateUsed(res, 'pwreset.html')
+        newpw = res.context['newpw']
+        self.assertEqual(len(newpw), 10)
+        self.assertFalse(self.client.login(username='user', password='none'))
+        self.assertTrue(self.client.login(username='user', password=newpw))
         
+    def test_resetpw(self):
+        res = self.client.get('/accounts/resetpw/%s/' % ('0' * 32))
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
     def test_home(self):
         res = self.client.get('/')
         self.assertEqual(res.status_code, HTTPStatus.OK)

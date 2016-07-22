@@ -21,6 +21,7 @@
 #
 
 from django.http import QueryDict
+from django.core import mail
 from decimal import Decimal
 from datetime import date, timedelta
 from calendar import monthrange, isleap
@@ -396,3 +397,11 @@ def post(*args, **kwargs):  # pragma: no cover
             return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
     else:
         return requests.post(*args, **kwargs)
+
+def send_mail(subject, text, recipients):
+    mail.send_mail(
+        subject,
+        text,
+        'Server legal.pecina.cz <legal@pecina.cz>',
+        recipients,
+        fail_silently=True)

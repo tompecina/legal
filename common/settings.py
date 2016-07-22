@@ -92,7 +92,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'common.urls'
 
-APPS = ['sop',
+APPS = ['common',
+        'sop',
         'lht',
         'cin',
         'dvt',

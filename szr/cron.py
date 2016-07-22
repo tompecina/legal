@@ -24,13 +24,12 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.core.mail import send_mail
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from time import sleep
 from hashlib import md5
 from urllib.parse import quote
-from common.utils import get, post
+from common.utils import get, post, send_mail
 from .models import Court, Proceedings
 from .glob import supreme_court, supreme_administrative_court
 
@@ -189,7 +188,5 @@ def cron_notify(request):
             send_mail(
                 'Zmeny ve sledovanych rizenich',
                 text,
-                'Server legal.pecina.cz <legal@pecina.cz>',
-                [u.email],
-                fail_silently=True)
+                [u.email])
     return HttpResponse()

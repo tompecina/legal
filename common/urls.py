@@ -23,7 +23,8 @@
 from django.conf.urls import include, url
 from django.contrib.auth.views import login, settings
 from django.contrib import admin
-from .views import home, robots, pwchange, logout, useradd, about
+from .views import home, robots, pwchange, logout, useradd, lostpw, \
+                   resetpw, about
 
 admin.autodiscover()
 
@@ -37,7 +38,9 @@ urlpatterns = [
         name='login'),
     url(r'^accounts/logout/$', logout, name='logout'),
     url(r'^accounts/useradd/$', useradd, name='useradd'),
+    url(r'^accounts/lostpw/$', lostpw, name='lostpw'),
+    url(r'^accounts/resetpw/([0-9a-f]{32})/$', resetpw, name='resetpw'),
     url(r'^about/$', about, name='about'),
     url(r'^admin/', include((admin.site.urls[0], 'admin')))
 ] + [url('^' + a + '/',
-         include((a + '.urls', a))) for a in settings.APPS]
+         include((a + '.urls', a))) for a in settings.APPS if (a != 'common')]
