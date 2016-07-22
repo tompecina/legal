@@ -699,5 +699,6 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
         res = self.client.post('/accounts/useradd/', s, follow=True)
         self.assertTemplateUsed(res, 'useradd.html')
-        self.assertTrue(self.client.login(username='tompecina',
-                                          password='newpass'))
+        self.assertTrue(self.client.login(
+            username='tompecina',
+            password='newpass'))

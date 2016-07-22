@@ -34,7 +34,7 @@ from random import getrandbits, choice
 from datetime import datetime, timedelta
 from .settings import APPS
 from .forms import UserAddForm, LostPwForm, MIN_PWLEN
-from .utils import send_mail
+from .utils import send_mail, inerr
 from .models import PwResetLink
 from knr.presets import udbreset
 
@@ -219,7 +219,9 @@ def useradd(request):
                     return redirect('home')
             return error(request)  # pragma: no cover
         else:
-            err_message = 'Prosím, opravte označená pole ve formuláři'
+            err_message = inerr
+            if 'Duplicate username' in f['username'].errors.as_text():
+                err_message = 'Toto uživatelské jméno se již používá'
     return render(
         request,
         'useradd.html',
