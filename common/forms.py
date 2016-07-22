@@ -46,7 +46,7 @@ class UserAddForm(UserChangeForm, UserCreationForm):
         self.fields['first_name'].label = 'Jméno'
         self.fields['last_name'].required = True
         self.fields['last_name'].label = 'Příjmení'
-        self.fields['username'].label = 'Přihlašovací jméno'
+        self.fields['username'].label = 'Uživatelské jméno'
         self.fields['username'].help_text = \
             '(nejvýš 30 znaků; pouze písmena, číslice a znaky @/./+/-/_)'
         self.fields['password1'].label = 'Heslo'
