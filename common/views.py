@@ -34,7 +34,7 @@ from random import getrandbits, choice
 from datetime import datetime, timedelta
 from .settings import APPS
 from .forms import UserAddForm, LostPwForm, MIN_PWLEN
-from .utils import send_mail, inerr
+from .utils import send_mail, inerr, getbutton
 from .models import PwResetLink
 from knr.presets import udbreset
 
@@ -103,8 +103,11 @@ def pwchange(request):
 def lostpw(request):
     err_message = None
     page_title = 'Ztracené heslo'
+    btn = getbutton(request)
     if request.method == 'GET':
         f = LostPwForm()
+    elif btn == 'back':
+        return redirect('login')
     else:
         f = LostPwForm(request.POST)
         if f.is_valid():
@@ -115,15 +118,15 @@ def lostpw(request):
                 PwResetLink(user_id=u[0].id, link=link).save()
                 text = \
                     'Vážený uživateli,\n' \
-                    'někdo požádal o obnovení hesla pro váš účet na serveru ' \
-                    'legal.pecina.cz (https://legal.pecina.cz).\n\n' \
+                    'někdo požádal o obnovení hesla pro Váš účet "%s" na ' \
+                    'serveru legal.pecina.cz (https://legal.pecina.cz).\n\n' \
                     'Pokud skutečně chcete své heslo obnovit, použijte, ' \
                     'prosím, následující jednorázový odkaz:\n\n' \
                     '  https://legal.pecina.cz%s\n\n' \
                     'V případě, že jste o obnovení hesla nežádali, ' \
                     'můžete tuto zprávu ignorovat.\n\n' \
                     'Server legal.pecina.cz (https://legal.pecina.cz)\n' % \
-                    reverse('resetpw', args=[link])
+                    (u[0].username, reverse('resetpw', args=[link]))
                 send_mail('Link pro obnoveni hesla', text, [u[0].email])
             return render(
                 request,

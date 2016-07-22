@@ -592,6 +592,13 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'lostpw.html')
         res = self.client.post(
             '/accounts/lostpw/',
+            {'username': '',
+             'submit_back': 'Zpět'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'login.html')
+        res = self.client.post(
+            '/accounts/lostpw/',
             {'username': ''})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'lostpw.html')
