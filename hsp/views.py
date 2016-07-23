@@ -1724,6 +1724,7 @@ def debitdel(request, id=0):
                 credit.debits = d
             if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
+            return redirect('hsp:debitdeleted')
         return redirect('hsp:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -1848,6 +1849,7 @@ def creditdel(request, id=0):
             del debt.credits[id]
             if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
+            return redirect('hsp:creditdeleted')
         return redirect('hsp:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -1925,6 +1927,7 @@ def balancedel(request, id=0):
             del debt.balances[id]
             if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
+            return redirect('hsp:balancedeleted')
         return redirect('hsp:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -2012,4 +2015,5 @@ def fxratedel(request, id=0):
             del debt.fxrates[id]
             if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
+            return redirect('hsp:fxratedeleted')
         return redirect('hsp:mainpage')

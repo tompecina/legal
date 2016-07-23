@@ -21,6 +21,7 @@
 #
 
 from django.conf.urls import url
+from common.views import genrender
 from .views import mainpage, transform, transdel
 
 urlpatterns = [
@@ -28,4 +29,10 @@ urlpatterns = [
     url(r'^transform/(\d+)/$', transform, name='transform'),
     url(r'^transform/$', transform, name='transform'),
     url(r'^transdel/(\d+)/$', transdel, name='transdel'),
+    url(r'^transdeleted/$',
+        genrender,
+        kwargs={
+            'template': 'hjp_transdeleted.html',
+            'page_title': 'Smazání transakce'},
+        name='transdeleted'),
 ]

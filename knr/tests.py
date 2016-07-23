@@ -627,7 +627,7 @@ class TestViews(TestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_placelist.html')
+        self.assertTemplateUsed(res, 'knr_placedeleted.html')
         res = self.client.post('/knr/placedel/%s/' % pk, follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
             
@@ -738,7 +738,7 @@ class TestViews(TestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_carlist.html')
+        self.assertTemplateUsed(res, 'knr_cardeleted.html')
         res = self.client.post('/knr/cardel/%s/' % pk)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
             
@@ -839,7 +839,7 @@ class TestViews(TestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_formulalist.html')
+        self.assertTemplateUsed(res, 'knr_formuladeleted.html')
         res = self.client.post('/knr/formuladel/%s/ % pk')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
             
@@ -1603,7 +1603,7 @@ class TestViews(TestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemdeleted.html')
         res = self.client.post('/knr/itemdel/%d/' % last)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/knr/itemlist/')

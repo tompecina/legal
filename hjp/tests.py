@@ -515,7 +515,7 @@ class TestViews(TestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_transdeleted.html')
         res = self.client.get('/hjp/transdel/3/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.post('/hjp/transdel/3/', follow=True)

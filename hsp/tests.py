@@ -593,7 +593,7 @@ class TestViews(TestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        self.assertTemplateUsed(res, 'hsp_debitdeleted.html')
         res = self.client.get('/hsp/debitdel/6/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.post('/hsp/debitdel/6/', follow=True)
@@ -643,7 +643,7 @@ class TestViews(TestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        self.assertTemplateUsed(res, 'hsp_creditdeleted.html')
         res = self.client.post(
             '/hsp/debitform/',
             {'model': 'fixed',
@@ -765,7 +765,7 @@ class TestViews(TestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        self.assertTemplateUsed(res, 'hsp_creditdeleted.html')
         res = self.client.post('/hsp/creditdel/3/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
             
@@ -856,7 +856,7 @@ class TestViews(TestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        self.assertTemplateUsed(res, 'hsp_balancedeleted.html')
         res = self.client.post('/hsp/balancedel/2/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
             
@@ -956,7 +956,7 @@ class TestViews(TestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        self.assertTemplateUsed(res, 'hsp_fxratedeleted.html')
         res = self.client.post('/hsp/fxratedel/2/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
             

@@ -21,6 +21,7 @@
 #
 
 from django.conf.urls import url
+from common.views import genrender
 from .views import mainpage, debitform, debitdel, creditform, creditdel, \
                    balanceform, balancedel, fxrateform, fxrateform, fxratedel
 
@@ -29,13 +30,37 @@ urlpatterns = [
     url(r'^debitform/(\d+)/$', debitform, name='debitform'),
     url(r'^debitform/$', debitform, name='debitform'),
     url(r'^debitdel/(\d+)/$', debitdel, name='debitdel'),
+    url(r'^debitdeleted/$',
+        genrender,
+        kwargs={
+            'template': 'hsp_debitdeleted.html',
+            'page_title': 'Smazání závazku'},
+        name='debitdeleted'),
     url(r'^creditform/(\d+)/$', creditform, name='creditform'),
     url(r'^creditform/$', creditform, name='creditform'),
     url(r'^creditdel/(\d+)/$', creditdel, name='creditdel'),
+    url(r'^creditdeleted/$',
+        genrender,
+        kwargs={
+            'template': 'hsp_creditdeleted.html',
+            'page_title': 'Smazání splátky'},
+        name='creditdeleted'),
     url(r'^balanceform/(\d+)/$', balanceform, name='balanceform'),
     url(r'^balanceform/$', balanceform, name='balanceform'),
     url(r'^balancedel/(\d+)/$', balancedel, name='balancedel'),
+    url(r'^balancedeleted/$',
+        genrender,
+        kwargs={
+            'template': 'hsp_balancedeleted.html',
+            'page_title': 'Smazání kontrolního bodu'},
+        name='balancedeleted'),
     url(r'^fxrateform/(\d+)/$', fxrateform, name='fxrateform'),
     url(r'^fxrateform/$', fxrateform, name='fxrateform'),
     url(r'^fxratedel/(\d+)/$', fxratedel, name='fxratedel'),
+    url(r'^fxratedeleted/$',
+        genrender,
+        kwargs={
+            'template': 'hsp_fxratedeleted.html',
+            'page_title': 'Smazání kursu'},
+        name='fxratedeleted'),
 ]

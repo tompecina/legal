@@ -21,6 +21,7 @@
 #
 
 from django.conf.urls import url
+from common.views import genrender
 from .views import mainpage, procform, procdel
 from .cron import cron_courts, cron_update, cron_notify
 
@@ -29,6 +30,12 @@ urlpatterns = [
     url(r'^procform/(\d+)/$', procform, name='procform'),
     url(r'^procform/$', procform, name='procform'),
     url(r'^procdel/(\d+)/$', procdel, name='procdel'),
+    url(r'^procdeleted/$',
+        genrender,
+        kwargs={
+            'template': 'szr_procdeleted.html',
+            'page_title': 'Smazání řízení'},
+        name='procdeleted'),
     url(r'^cron/courts/$', cron_courts),
     url(r'^cron/update/$', cron_update),
     url(r'^cron/notify/$', cron_notify),

@@ -209,12 +209,7 @@ def useradd(request):
                 user.save()
                 udbreset(user.id)
                 logout(request)
-                user = authenticate(
-                    username=cd['username'],
-                    password=cd['password1'])
-                if user:
-                    login(request, user)
-                    return redirect('home')
+                return redirect('useradded')
             return error(request)  # pragma: no cover
         else:
             err_message = inerr

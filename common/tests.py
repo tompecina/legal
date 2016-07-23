@@ -674,7 +674,7 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'useradd.html')
         s = {'first_name': 'Tomáš',
              'last_name': 'Pecina',
-             'username': 'tompecina',
+             'username': 'newuser',
              'password1': 'newpass',
              'password2': 'newpass',
              'email': 'tomas@pecina.cz',
@@ -722,10 +722,9 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
-        res = self.client.post('/accounts/useradd/', s)
-        self.assertEqual(res.status_code, HTTPStatus.FOUND)
         res = self.client.post('/accounts/useradd/', s, follow=True)
-        self.assertTemplateUsed(res, 'useradd.html')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'useradded.html')
         self.assertTrue(self.client.login(
-            username='tompecina',
+            username='newuser',
             password='newpass'))

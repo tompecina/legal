@@ -97,6 +97,7 @@ def procdel(request, id=0):
     else:
         if (getbutton(request) == 'yes'):
             get_object_or_404(Proceedings, pk=id, uid=uid).delete()
+            return redirect('szr:procdeleted')
         return redirect('szr:mainpage')
 
 @require_http_methods(['GET', 'POST'])

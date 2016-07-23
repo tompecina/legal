@@ -1291,15 +1291,17 @@ def transdel(request, id=0):
     if id >= len(debt.transactions):
         raise Http404
     if request.method == 'GET':
-        return render(request,
-                      'hjp_transdel.html',
-                      {'app': APP,
-                       'page_title': 'Smazání transakce',
-                       'date': debt.transactions[id].date})
+        return render(
+            request,
+            'hjp_transdel.html',
+            {'app': APP,
+             'page_title': 'Smazání transakce',
+             'date': debt.transactions[id].date})
     else:
         btn = getbutton(request)
         if btn == 'yes':
             del debt.transactions[id]
             if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
+            return redirect('hjp:transdeleted')
         return redirect('hjp:mainpage')

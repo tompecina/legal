@@ -21,6 +21,7 @@
 #
 
 from django.conf.urls import url
+from common.views import genrender
 from .views import mainpage, placeform, placelist, placedel, carform, carlist, \
                    cardel, formulaform, formulalist, formuladel, itemlist, \
                    itemform, itemform, itemdel, itemmove, userdbreset
@@ -31,20 +32,44 @@ urlpatterns = [
     url(r'^placeform/$', placeform, name='placeform'),
     url(r'^placelist/$', placelist, name='placelist'),
     url(r'^placedel/(\d+)/$', placedel, name='placedel'),
+    url(r'^placedeleted/$',
+        genrender,
+        kwargs={
+            'template': 'knr_placedeleted.html',
+            'page_title': 'Smazání místa'},
+        name='placedeleted'),
     url(r'^carform/(\d+)/$', carform, name='carform'),
     url(r'^carform/$', carform, name='carform'),
     url(r'^carlist/$', carlist, name='carlist'),
     url(r'^cardel/(\d+)/$', cardel, name='cardel'),
+    url(r'^cardeleted/$',
+        genrender,
+        kwargs={
+            'template': 'knr_cardeleted.html',
+            'page_title': 'Smazání vozidla'},
+        name='cardeleted'),
     url(r'^formulaform/(\d+)/$', formulaform, name='formulaform'),
     url(r'^formulaform/$', formulaform, name='formulaform'),
     url(r'^formulalist/$', formulalist, name='formulalist'),
     url(r'^formuladel/(\d+)/$', formuladel, name='formuladel'),
+    url(r'^formuladeleted/$',
+        genrender,
+        kwargs={
+            'template': 'knr_formuladeleted.html',
+            'page_title': 'Smazání předpisu'},
+        name='formuladeleted'),
     url(r'^itemlist/$', itemlist, name='itemlist'),
     url(r'^itemform/(\d+)/$', itemform, name='itemform'),
     url(r'^itemform/$', itemform, name='itemform'),
     url(r'^itemdel/(\d+)/$', itemdel, name='itemdel'),
     url(r'^item(u)p/(\d+)/$', itemmove, name='itemup'),
     url(r'^item(d)own/(\d+)/$', itemmove, name='itemdown'),
+    url(r'^itemdeleted/$',
+        genrender,
+        kwargs={
+            'template': 'knr_itemdeleted.html',
+            'page_title': 'Smazání položky'},
+        name='itemdeleted'),
     url(r'^userdbreset/(\d+)/$', userdbreset, name='userdbreset'),
     url(r'^userdbreset/$', userdbreset, name='userdbreset'),
 ]

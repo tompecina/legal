@@ -176,6 +176,7 @@ def placedel(request, id=0):
         get_object_or_404(Place, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             get_object_or_404(Place, pk=id, uid=uid).delete()
+            return redirect('knr:placedeleted')
         return redirect('knr:placelist')
 
 @require_http_methods(['GET', 'POST'])
@@ -239,6 +240,7 @@ def cardel(request, id=0):
         get_object_or_404(Car, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             get_object_or_404(Car, pk=id, uid=uid).delete()
+            return redirect('knr:cardeleted')
         return redirect('knr:carlist')
 
 @require_http_methods(['GET', 'POST'])
@@ -337,6 +339,7 @@ def formuladel(request, id=0):
         get_object_or_404(Formula, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             get_object_or_404(Formula, pk=id, uid=uid).delete()
+            return redirect('knr:formuladeleted')
         return redirect('knr:formulalist')
 
 B = 'B'
@@ -1786,6 +1789,7 @@ def itemdel(request, idx=0):
             del c.items[idx]
             if not setcalc(request, c):  # pragma: no cover
                 return error(request)
+            return redirect('knr:itemdeleted')
         return redirect('knr:itemlist')
 
 @require_http_methods(['GET'])
