@@ -26,7 +26,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_http_methods
 from django.contrib import auth
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django import forms
 from django.apps import apps
 from http import HTTPStatus
