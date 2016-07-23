@@ -9,13 +9,14 @@ rsync -avhHzx \
       --exclude '*.pyc' \
       --exclude '*~' \
       --exclude '/update' \
+      --exclude 'static/' \
       --exclude '/collect/admin/' \
       --exclude '/aux/' \
       --exclude '*.po' \
       --exclude 'migrations/' \
       --exclude '__pycache__/' \
       --exclude '/venv*' \
-      --exclude '/repo/udn/*' \
+      --exclude '/repo/udn/' \
       --exclude 'test*' \
       --exclude 'fixtures/*_test*.json' \
       --exclude '/test/' \

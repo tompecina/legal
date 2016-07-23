@@ -58,6 +58,7 @@ tr.deb th {
 }
 td.taberr {
     text-align: center;
+    font-style: italic;
     background: white;
     background-image: url('/static/cb1.png');
     background-repeat: repeat;
