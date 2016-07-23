@@ -67,7 +67,7 @@ function set_today() {
 }
 function class_enable(elem) {
     $('*', elem)
-	.andSelf()
+	.addBack()
 	.not('.immune, .immune *')
 	.removeClass('disabled')
 	.filter('input, textarea, select')
@@ -75,7 +75,7 @@ function class_enable(elem) {
 }
 function class_disable(elem) {
     $('*', elem)
-	.andSelf()
+	.addBack()
 	.not('.immune, .immune *')
 	.addClass('disabled')
 	.removeClass('err')
