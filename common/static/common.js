@@ -92,12 +92,10 @@ function currsel_change() {
     }
     return true;
 }
-$(document).ready(
-    function() {
-	if (window.initevents) {
-	    initevents();
-	}
-	$('.currsel').change(currsel_change).change();
-	$('.today').click(set_today);
+$(function() {
+    if (window.initevents) {
+	initevents();
     }
-);
+    $('.currsel').change(currsel_change).change();
+    $('.today').click(set_today);
+})
