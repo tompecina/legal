@@ -1,28 +1,28 @@
+function bbMouseEnter() {
+    $(this).children('img').first().attr('src', '/static/bbr.svg');
+}
+function bbMouseLeave() {
+    $(this).children('img').first().attr('src', '/static/bb.svg');
+}
+function bMouseEnter() {
+    $(this).children('img').first().attr('src', '/static/br.svg');
+}
+function bMouseLeave() {
+    $(this).children('img').first().attr('src', '/static/b.svg');
+}
+function fMouseEnter() {
+    $(this).children('img').first().attr('src', '/static/fr.svg');
+}
+function fMouseLeave() {
+    $(this).children('img').first().attr('src', '/static/f.svg');
+}
+function ffMouseEnter() {
+    $(this).children('img').first().attr('src', '/static/ffr.svg');
+}
+function ffMouseLeave() {
+    $(this).children('img').first().attr('src', '/static/ff.svg');
+}
 $(function() {
-    function bbMouseEnter() {
-	$(this).children('img').first().attr('src', '/static/bbr.svg');
-    }
-    function bbMouseLeave() {
-	$(this).children('img').first().attr('src', '/static/bb.svg');
-    }
-    function bMouseEnter() {
-	$(this).children('img').first().attr('src', '/static/br.svg');
-    }
-    function bMouseLeave() {
-	$(this).children('img').first().attr('src', '/static/b.svg');
-    }
-    function fMouseEnter() {
-	$(this).children('img').first().attr('src', '/static/fr.svg');
-    }
-    function fMouseLeave() {
-	$(this).children('img').first().attr('src', '/static/f.svg');
-    }
-    function ffMouseEnter() {
-	$(this).children('img').first().attr('src', '/static/ffr.svg');
-    }
-    function ffMouseLeave() {
-	$(this).children('img').first().attr('src', '/static/ff.svg');
-    }
     var pl_bb = new Image();
     pl_bb.src = '/static/bbr.svg';
     var pl_b = new Image();
