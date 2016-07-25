@@ -88,7 +88,10 @@ def gennav(
         s5 + t[3] + s6
 
 def listurl(d):
-    return reverse('udn:list') + '?' + d.urlencode()
+    r = reverse('udn:list') + '?'
+    if d:
+        r += d.urlencode()
+    return r
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
@@ -161,6 +164,10 @@ def declist(request):
         start = total - 1
     if 'start' in rd:
         del rd['start']
+    if rd:
+        a = '&'
+    else:
+        a = ''
     return render(
         request,
         'udn_list.html',
@@ -168,5 +175,5 @@ def declist(request):
          'page_title': 'Výsledky vyhledávání',
          'rows': d[start:(start + BATCH)],
          'f': f,
-         'nav': gennav(start, total, listurl(rd) + '&start=', ''),
+         'nav': gennav(start, total, listurl(rd) + a + 'start=', ''),
          'total': total})
