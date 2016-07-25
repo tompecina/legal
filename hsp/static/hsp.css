@@ -60,7 +60,7 @@ td.taberr {
     text-align: center;
     font-style: italic;
     background: white;
-    background-image: url('/static/cb1.png');
+    background-image: url('/static/cb.svg');
     background-repeat: repeat;
     border-top: 1px solid #c4e0ff;
     padding: 5px 10px;

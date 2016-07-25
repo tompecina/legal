@@ -49,10 +49,14 @@ def gennav(
         total,
         prefix,
         suffix,
-        i0='&lt;&lt;',
-        i1='&lt;',
-        i2='&gt;',
-        i3='&gt;&gt;',
+        i0='<img src="/static/bb.svg" class="navbb" alt="first"/>',
+        i1='<img src="/static/b.svg" class="navb" alt="previous"/>',
+        i2='<img src="/static/f.svg" class="navf" alt="next"/>',
+        i3='<img src="/static/ff.svg" class="navff" alt="last"/>',
+        i0g='<img src="/static/bbg.svg" alt="first (disabled)"/>',
+        i1g='<img src="/static/bg.svg" alt="previous (disabled)"/>',
+        i2g='<img src="/static/fg.svg" alt="next (disabled)"/>',
+        i3g='<img src="/static/ffg.svg" alt="last (disabled)"/>',
         a0='<span class="nav"><a href="',
         a1='">',
         a2='</a></span>',
@@ -66,7 +70,7 @@ def gennav(
         s4='</span>&nbsp;&nbsp;&nbsp;',
         s5='&nbsp;&nbsp;',
         s6=''):
-    i = [i0, i1, i2, i3]
+    i = [[i0, i0g], [i1, i1g], [i2, i2g], [i3, i3g]]
     n = [-1] * 4
     if start:
         n[0] = 0
@@ -79,9 +83,9 @@ def gennav(
     t = list(range(4))
     for j in range(4):
         if n[j] < 0:
-            t[j] = g0 + i[j] + g1
+            t[j] = g0 + i[j][1] + g1
         else:
-            t[j] = a0 + prefix + str(n[j]) + suffix + a1 + i[j] + a2
+            t[j] = a0 + prefix + str(n[j]) + suffix + a1 + i[j][0] + a2
     if p2 == 1:
         s2 = s2g
     return s0 + t[0] + s1 + t[1] + s2 + str(p1) + s3 + str(p2) + s4 + t[2] + \

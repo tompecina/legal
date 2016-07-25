@@ -8,6 +8,7 @@ rsync -avhHzx \
       --exclude '*.pyc' \
       --exclude '*.pyc' \
       --exclude '*~' \
+      --exclude '/aux/' \
       --exclude '/update' \
       --exclude 'static/' \
       --exclude '/collect/admin/' \
