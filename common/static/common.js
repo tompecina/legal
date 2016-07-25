@@ -42,7 +42,7 @@ $.fn.dp = (
 )
 $.fn.r = (
     function() {
-	this.each( function() {
+	this.each(function() {
 	    var $t = $(this);
 	    if ($t.is('select')) {
 		$t.children().first().attr('selected', true);
@@ -93,9 +93,6 @@ function currsel_change() {
     return true;
 }
 $(function() {
-    if (window.initevents) {
-	initevents();
-    }
     $('.currsel').change(currsel_change).change();
     $('.today').click(set_today);
-})
+});

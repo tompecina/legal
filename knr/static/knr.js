@@ -1,4 +1,4 @@
-function initevents() {
+$(function() {
     function mainpage_reset_onclick() {
 	if (($('#id_items').val() != '0') ||
 	    $('#id_title').val() ||
@@ -232,4 +232,4 @@ function initevents() {
 	    $('#id_formula_apply').click(itemform_formula_apply_onclick);
 	    break;
     }
-}
+});

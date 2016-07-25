@@ -1,4 +1,4 @@
-function initevents() {
+$(function() {
     function submit_mainform() {
 	$('#id_next').val(this);
 	$('#id_mainform').submit();
@@ -100,4 +100,4 @@ function initevents() {
 	$('[name=transaction_type]').change(transform_updatefields)
 	    .first().change();
     }
-}
+});

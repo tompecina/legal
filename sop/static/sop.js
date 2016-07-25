@@ -1,4 +1,4 @@
-function initevents() {
+$(function() {
     function updatefields() {
 	if ($('#id_curr_0 [value=CZK]').s()) {
 	    class_disable($('#id_fx_date_span'));
@@ -12,4 +12,4 @@ function initevents() {
 	return true;
     }
     $('#id_curr_0').change(updatefields).change();
-}
+});

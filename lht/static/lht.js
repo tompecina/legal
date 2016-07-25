@@ -1,4 +1,4 @@
-function initevents() {
+$(function() {
     function updatefields() {
 	if ($('[value=none]').c()) {
 	    class_enable($('[value=none]').parents('.opt'));
@@ -8,4 +8,4 @@ function initevents() {
     }
     $('[value=none]').parent().addClass('immune');
     $('[name=preset]').change(updatefields).change();
-}
+});

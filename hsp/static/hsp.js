@@ -1,4 +1,4 @@
-function initevents() {
+$(function() {
     function submit_mainform() {
 	$('#id_next').val(this);
 	$('#id_mainform').submit();
@@ -157,4 +157,4 @@ function initevents() {
 	$('#id_currency_from, #id_currency_to')
 	    .on('change keyup', fxform_updatefields).first().change();
     }
-}
+});
