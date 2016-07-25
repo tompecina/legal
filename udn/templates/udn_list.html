@@ -20,7 +20,14 @@
 	      <td>{% for party in row.parties.all %}
 		<div>{{ party.name }}</div>{% endfor %}
 	      </td>
-	      <td style="text-align: center;"><a href="/repo/udn/{{ row.filename }}" target="_blank">[Z]</a>{% if row.anonfilename %}&nbsp;<a href="/repo/udn/{{ row.anonfilename }}" target="_blank">[A]</a>{% endif %}</td>
+	      <td style="text-align: center; white-space: nowrap;">
+		<a href="/repo/udn/{{ row.filename }}" target="_blank">
+		  [Z]
+		</a>{% if row.anonfilename %}
+		<a href="/repo/udn/{{ row.anonfilename }}" target="_blank">
+		  [A]
+		</a>{% endif %}
+	      </td>
 	    </tr>{% endfor %}
 	  </tbody>
 	</table>{% else %}        <p style="text-align: center;">(žádné výsledky)</p>{% endif %}

@@ -153,12 +153,14 @@ def declist(request):
             p['parties__name__' + rd['party_opt']] = rd['party']
         start = int(rd['start']) if ('start' in rd) else 0
         assert start >= 0
-        d = Decision.objects.filter(**p).order_by('-date', 'pk').distinct()
-        total = len(d)
-        if (start >= total) and (total > 0):
-            start = total - 1
     except:
         raise Http404
+    d = Decision.objects.filter(**p).order_by('-date', 'pk').distinct()
+    total = len(d)
+    if (start >= total) and (total > 0):
+        start = total - 1
+    if 'start' in rd:
+        del rd['start']
     return render(
         request,
         'udn_list.html',
