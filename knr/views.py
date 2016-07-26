@@ -1766,6 +1766,7 @@ def itemlist(request):
         r = {'idx': (n + 1), 'up': (n > 0), 'down': (n < (len(c.items) - 1))}
         i2d(['description', 'amount'], row, r)
         r['amount'] = formam(r['amount'])
+        r['user'] = True
         n += 1
         var['rows'].append(r)
     n = 0
