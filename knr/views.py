@@ -219,8 +219,6 @@ def carform(request, id=0):
 @login_required
 def carlist(request):
     rows = Car.objects.filter(uid=request.user.id).order_by('abbr', 'name')
-    for row in rows:
-        row.user = True
     return render(
         request,
         'knr_carlist.html',
@@ -1766,7 +1764,6 @@ def itemlist(request):
         r = {'idx': (n + 1), 'up': (n > 0), 'down': (n < (len(c.items) - 1))}
         i2d(['description', 'amount'], row, r)
         r['amount'] = formam(r['amount'])
-        r['user'] = True
         n += 1
         var['rows'].append(r)
     n = 0

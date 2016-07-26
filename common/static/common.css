@@ -69,11 +69,11 @@ tr.even {
 tr.odd {
     background-color: #ffffff;
 }
-tr.preset {
-    color: #333333;
-}
 tr.preset.grayed {
     color: #aaaaaa;
+}
+tr.preset + tr:not(.preset) {
+    border-top: 3px solid #c4e0ff;
 }
 tr.even td, tr.odd td, thead th, tr.footer td {
     padding: 3px 13px;
