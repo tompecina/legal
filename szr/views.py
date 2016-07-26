@@ -126,4 +126,4 @@ def mainpage(request):
          'f': f,
          'page_title': page_title,
          'err_message': err_message,
-         'rows': Proceedings.objects.filter(uid=uid).order_by('id')})
+         'rows': Proceedings.objects.filter(uid=uid).order_by('desc', 'id')})
