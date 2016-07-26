@@ -205,23 +205,23 @@ class TestViews(TestCase):
     def test_gennav(self):
         pp = [
             [0, 1, 'p', 's',
-             's0g0i0g1s1g0i1g1s2g1s31s4g0i2g1s5g0i3g1s6'],
+             's0g0i0gg1s1g0i1gg1s2g1s31s4g0i2gg1s5g0i3gg1s6'],
             [0, 50, 'p', 's',
-             's0g0i0g1s1g0i1g1s2g1s31s4g0i2g1s5g0i3g1s6'],
+             's0g0i0gg1s1g0i1gg1s2g1s31s4g0i2gg1s5g0i3gg1s6'],
             [0, 50, 'p', 's',
-             's0g0i0g1s1g0i1g1s2g1s31s4g0i2g1s5g0i3g1s6'],
+             's0g0i0gg1s1g0i1gg1s2g1s31s4g0i2gg1s5g0i3gg1s6'],
             [0, 51, 'p', 's',
-             's0g0i0g1s1g0i1g1s21s32s4a0p50sa1i2a2s5a0p50sa1i3a2s6'],
+             's0g0i0gg1s1g0i1gg1s21s32s4a0p50sa1i2a2s5a0p50sa1i3a2s6'],
             [0, 100, 'p', 's',
-             's0g0i0g1s1g0i1g1s21s32s4a0p50sa1i2a2s5a0p50sa1i3a2s6'],
+             's0g0i0gg1s1g0i1gg1s21s32s4a0p50sa1i2a2s5a0p50sa1i3a2s6'],
             [0, 101, 'p', 's',
-             's0g0i0g1s1g0i1g1s21s33s4a0p50sa1i2a2s5a0p100sa1i3a2s6'],
+             's0g0i0gg1s1g0i1gg1s21s33s4a0p50sa1i2a2s5a0p100sa1i3a2s6'],
             [0, 53697, 'p', 's',
-             's0g0i0g1s1g0i1g1s21s31074s4a0p50sa1i2a2s5a0p53650sa1i3a2s6'],
+             's0g0i0gg1s1g0i1gg1s21s31074s4a0p50sa1i2a2s5a0p53650sa1i3a2s6'],
             [50, 51, 'p', 's',
-             's0a0p0sa1i0a2s1a0p0sa1i1a2s22s32s4g0i2g1s5g0i3g1s6'],
+             's0a0p0sa1i0a2s1a0p0sa1i1a2s22s32s4g0i2gg1s5g0i3gg1s6'],
             [50, 100, 'p', 's',
-             's0a0p0sa1i0a2s1a0p0sa1i1a2s22s32s4g0i2g1s5g0i3g1s6'],
+             's0a0p0sa1i0a2s1a0p0sa1i1a2s22s32s4g0i2gg1s5g0i3gg1s6'],
             [50, 101, 'p', 's',
              's0a0p0sa1i0a2s1a0p0sa1i1a2s22s33s4a0p100sa1i2a2s5a0p' \
              '100sa1i3a2s6'],
@@ -235,14 +235,16 @@ class TestViews(TestCase):
              's0a0p0sa1i0a2s1a0p53550sa1i1a2s21073s31074s4a0p53650' \
              'sa1i2a2s5a0p53650sa1i3a2s6'],
             [53650, 53697, 'p', 's',
-             's0a0p0sa1i0a2s1a0p53600sa1i1a2s21074s31074s4g0i2g1s5' \
-             'g0i3g1s6'],
+             's0a0p0sa1i0a2s1a0p53600sa1i1a2s21074s31074s4g0i2gg1s5g0i3gg1s6'],
         ]
-        l = ['i0', 'i1', 'i2', 'i3', 'a0', 'a1', 'a2', 'g0', 'g1',
-             's0', 's1', 's2', 's2g', 's3', 's4', 's5', 's6']
+        l = ['i0', 'i1', 'i2', 'i3', 'i0g', 'i1g', 'i2g', 'i3g',
+             'a0', 'a1', 'a2', 'g0', 'g1', 's0', 's1', 's2', 's2g',
+             's3', 's4', 's5', 's6']
         d = {t: t for t in l}
+        i = 0
         for p in pp:
-            self.assertEqual(views.gennav(*p[:4], **d), p[4])
+            self.assertEqual(views.gennav(*p[:4], **d), p[4], msg=str(i))
+            i += 1
         
     def test_main(self):
         res = self.client.get('/udn')

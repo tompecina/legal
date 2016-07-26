@@ -29,6 +29,7 @@ from django.template import Context, Template
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.apps import apps
+from django.db.models import Q
 from math import floor, ceil
 from urllib.parse import quote, unquote
 from json import loads as json_loads
@@ -57,7 +58,6 @@ from .forms import PlaceForm, CarForm, FormulaForm, CalcForm, GeneralForm, \
                    AdministrativeForm, AdministrativeSubform, TimeForm, \
                    TimeSubform, TravelForm, TravelSubform
 from .models import Place, Car, Formula, Rate
-from .presets import udbreset
 
 APP = __package__
 
@@ -151,15 +151,19 @@ def placeform(request, id=0):
 @require_http_methods(['GET'])
 @login_required
 def placelist(request):
+    rows = Place.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
+                        .order_by('uid', 'abbr', 'name')
+    for row in rows:
+        if row.uid:
+            row.user = True
+        elif rows.filter(abbr=row.abbr).exclude(uid=None):
+            row.disabled = True
     return render(
         request,
         'knr_placelist.html',
         {'app': APP,
          'page_title': 'Přehled míst',
-         'rows': Place \
-         .objects \
-         .filter(uid=request.user.id) \
-         .order_by('abbr', 'name')})
+         'rows': rows})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -214,15 +218,15 @@ def carform(request, id=0):
 @require_http_methods(['GET'])
 @login_required
 def carlist(request):
+    rows = Car.objects.filter(uid=request.user.id).order_by('abbr', 'name')
+    for row in rows:
+        row.user = True
     return render(
         request,
         'knr_carlist.html',
         {'app': APP,
          'page_title': 'Přehled vozidel',
-         'rows': Car \
-         .objects \
-         .filter(uid=request.user.id) \
-         .order_by('abbr', 'name')})
+         'rows': rows})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -304,17 +308,18 @@ def formulaform(request, id=0):
 @require_http_methods(['GET'])
 @login_required
 def formulalist(request):
-    rows = Formula \
-           .objects \
-           .filter(uid=request.user.id) \
-           .order_by('abbr', 'name') \
-           .values()
+    rows = Formula.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
+                          .order_by('uid', 'abbr', 'name')
     for row in rows:
         rates = []
         for fuel in fuels:
-            r = Rate.objects.filter(formula=row['id'], fuel=fuel)
+            r = Rate.objects.filter(formula=row.id, fuel=fuel)
             rates.append(r[0].rate if r else 0)
-        row['rates'] = rates
+        row.rates = rates
+        if row.uid:
+            row.user = True
+        elif rows.filter(abbr=row.abbr).exclude(uid=None):
+            row.disabled = True
     return render(
         request,
         'knr_formulalist.html',
@@ -1254,18 +1259,22 @@ def mainpage(request):
 def itemform(request, idx=0):
 
     def addtravellists(var):
-        p = Place.objects.filter(uid=uid).order_by('abbr', 'name')
+        p = Place.objects.filter(Q(uid=None) | Q(uid=uid)) \
+                         .order_by('abbr', 'name')
         l1 = []
         for t in p:
-            l1.append({'idx': t.id, 'text': t.abbr + ' – ' + t.name})
+            if t.uid or (not p.filter(abbr=t.abbr, uid=uid)):
+                l1.append({'idx': t.id, 'text': t.abbr + ' – ' + t.name})
         p = Car.objects.filter(uid=uid).order_by('abbr', 'name')
         l2 = []
         for t in p:
             l2.append({'idx': t.id, 'text': t.abbr + ' – ' + t.name})
-        p = Formula.objects.filter(uid=uid).order_by('abbr', 'name')
+        p = Formula.objects.filter(Q(uid=None) | Q(uid=uid)) \
+                           .order_by('abbr', 'name')
         l3 = []
         for t in p:
-            l3.append({'idx': t.id, 'text': t.abbr + ' – ' + t.name})
+            if t.uid or (not p.filter(abbr=t.abbr, uid=uid)):
+                l3.append({'idx': t.id, 'text': t.abbr + ' – ' + t.name})
         var.update(
             {'sep': ('-' * 110),
              'from_sels': l1,
@@ -1275,7 +1284,7 @@ def itemform(request, idx=0):
              'fuel_names': fuels})
 
     def proc_from(sel, cd):
-        p = Place.objects.filter(pk=sel, uid=uid)
+        p = Place.objects.filter(Q(pk=sel) & (Q(uid=None) | Q(uid=uid)))
         if p:
             cd['from_name'] = p[0].name
             cd['from_address'] = p[0].addr
@@ -1284,7 +1293,7 @@ def itemform(request, idx=0):
             cd['trip_distance'] = cd['time_number'] = ''
 
     def proc_to(sel, cd):
-        p = Place.objects.filter(pk=sel, uid=uid)
+        p = Place.objects.filter(Q(pk=sel) & (Q(uid=None) | Q(uid=uid)))
         if p:
             cd['to_name'] = p[0].name
             cd['to_address'] = p[0].addr
@@ -1302,7 +1311,7 @@ def itemform(request, idx=0):
             cd['cons3'] = float(p[0].cons3)
 
     def proc_formula(sel, cd):
-        p = Formula.objects.filter(pk=sel, uid=uid)
+        p = Formula.objects.filter(Q(pk=sel) & (Q(uid=None) | Q(uid=uid)))
         if p:
             cd['formula_name'] = p[0].name
             cd['flat_rate'] = float(p[0].flat)
@@ -1810,28 +1819,27 @@ def itemmove(request, dir, idx):
 
 @require_http_methods(['GET'])
 @login_required
-def userdbreset(request, uid=0):
+def presets(request):
     if not request.user.is_superuser:
         return unauth(request)
-    if uid:
-        if not User.objects.filter(pk=uid).exists():
-            return error(request)
-        udbreset(uid)
-        return redirect('knr:userdbreset')
-    else:
-        rows = []
-        for row in User.objects.all().order_by('id'):
-            r = {'id': row.id,
-                 'username': row.username,
-                 'fullname': row.get_full_name(),
-                 'places': row.place_set.count(),
-                 'cars': row.car_set.count(),
-                 'formulas': row.formula_set.count()}
-            rows.append(r)
-        return render(
-            request,
-            'knr_userdbreset.html',
-            {'app': APP,
-             'page_title': 'Nastavení standardních tabulek pro uživatele',
-             'rows': rows,
-             'suppress_table_footer': True})
+    from .presets import pl, fo
+    Place.objects.filter(uid=None).delete()
+    Car.objects.filter(uid=None).delete()
+    Formula.objects.filter(uid=None).delete()
+    pp = []
+    for p in pl:
+        pp.append(Place(
+            uid=None,
+            abbr=p[0],
+            name=p[1],
+            addr=p[2],
+            lat=p[3],
+            lon=p[4]))
+    Place.objects.bulk_create(pp)
+    for f in fo:
+        ff = Formula(uid=None, abbr=f[0], name=f[1], flat=f[2])
+        ff.save()
+        fid = ff.id
+        for r in f[3]:
+            Rate(formula_id=fid, fuel=r[0], rate=r[1]).save()
+    return redirect('knr:mainpage')

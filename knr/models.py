@@ -27,6 +27,7 @@ from django.contrib.auth.models import User
 class Place(models.Model):
     uid = models.ForeignKey(
         User,
+        null=True,
         on_delete=models.CASCADE)
     abbr = models.CharField(
         max_length=30)
@@ -77,6 +78,7 @@ class Car(models.Model):
 class Formula(models.Model):
     uid = models.ForeignKey(
         User,
+        null=True,
         on_delete=models.CASCADE)
     abbr = models.CharField(
         max_length=30)

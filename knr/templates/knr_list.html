@@ -6,7 +6,7 @@
 	  <thead><tr class="header">{% block table_header %}<td></td>{% endblock %}</tr></thead>{% if not suppress_table_footer %}
           <tfoot><tr class="footer">{% block table_footer %}{% endblock %}</tr></tfoot>{% endif %}
 	  <tbody>{% for row in rows %}
-	    <tr class="{% cycle "odd" "even" %}">{% block table_row %}{% endblock %}</tr>{% endfor %}
+	    <tr class="{% cycle "odd" "even" %}{% if row.disabled %} grayed{% endif %}{% if not row.user %} preset{% endif %}">{% block table_row %}{% endblock %}</tr>{% endfor %}
 	  </tbody>
 	</table>{% else %}{% block empty %}{% endblock %}{% endif %}
 {% include "knr_back.html" %}{% endblock %}

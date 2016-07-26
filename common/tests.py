@@ -28,7 +28,8 @@ from decimal import Decimal
 from copy import copy
 from http import HTTPStatus
 from re import compile
-from . import fields, forms, models, utils
+from cache.tests import DummyRequest
+from . import fields, forms, models, utils, views
 
 TEST_STRING = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské kódy'
 
@@ -529,25 +530,28 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
         
     def test_unauth(self):
-        res = self.client.get('/knr/userdbreset/')
+        res = self.client.get('/knr/presets/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
-        res = self.client.get('/knr/userdbreset/', follow=True)
+        res = self.client.get('/knr/presets/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
-        res = self.client.get('/knr/userdbreset/')
+        res = self.client.get('/knr/presets/')
         self.assertEqual(res.status_code, HTTPStatus.UNAUTHORIZED)
         self.assertTemplateUsed(res, 'unauth.html')
         self.assertTrue(self.client.login(username='superuser',
                                           password='none'))
-        res = self.client.get('/knr/userdbreset/')
+        res = self.client.get('/knr/presets/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'knr_mainpage.html')
         
     def test_error(self):
-        self.assertTrue(self.client.login(username='superuser',
-                                          password='none'))
-        res = self.client.get('/knr/userdbreset/999/')
-        self.assertEqual(res.status_code, HTTPStatus.INTERNAL_SERVER_ERROR)
-        self.assertTemplateUsed(res, 'error.html')
+        req = DummyRequest(None)
+        req.method = 'GET'
+        res = views.error(req)
+        self.assertContains(
+            res,
+            'Interní chyba aplikace',
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
 
     def test_logout(self):
         self.assertTrue(self.client.login(username='user', password='none'))

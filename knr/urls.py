@@ -24,7 +24,7 @@ from django.conf.urls import url
 from common.views import genrender
 from .views import mainpage, placeform, placelist, placedel, carform, carlist, \
                    cardel, formulaform, formulalist, formuladel, itemlist, \
-                   itemform, itemform, itemdel, itemmove, userdbreset
+                   itemform, itemform, itemdel, itemmove, presets
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),
@@ -70,6 +70,5 @@ urlpatterns = [
             'template': 'knr_itemdeleted.html',
             'page_title': 'Smazání položky'},
         name='itemdeleted'),
-    url(r'^userdbreset/(\d+)/$', userdbreset, name='userdbreset'),
-    url(r'^userdbreset/$', userdbreset, name='userdbreset'),
+    url(r'^presets/$', presets, name='presets'),
 ]

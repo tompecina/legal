@@ -179,9 +179,9 @@ class TestViews(TestCase):
         User.objects.create_superuser('superuser', 'suser@pecina.cz', 'none')
         User.objects.create_user('anotheruser', 'auser@pecina.cz', 'none')
         uid = User.objects.get(username='user').pk
-        models.Place.objects.all().update(uid=uid)
+        models.Place.objects.exclude(uid=None).update(uid=uid)
         models.Car.objects.all().update(uid=uid)
-        models.Formula.objects.all().update(uid=uid)
+        models.Formula.objects.exclude(uid=None).update(uid=uid)
         
     @classmethod
     def tearDownClass(cls):
@@ -1621,28 +1621,22 @@ class TestViews(TestCase):
         res = self.client.get('/knr/itemup/1/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
             
-    def test_userdbreset(self):
-        res = self.client.get('/knr/userdbreset')
+    def test_presets(self):
+        res = self.client.get('/knr/presets')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
         res = self.client.get('/knr/itemform/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
-        res = self.client.get('/knr/userdbreset/', follow=True)
+        res = self.client.get('/knr/presets/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
-        res = self.client.get('/knr/userdbreset/')
+        res = self.client.get('/knr/presets/')
         self.assertEqual(res.status_code, HTTPStatus.UNAUTHORIZED)
         self.assertTrue(self.client.login(
             username='superuser',
             password='none'))
-        res = self.client.get('/knr/userdbreset/')
+        res = self.client.get('/knr/presets/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_userdbreset.html')
-        uid = User.objects.get(username='anotheruser').pk
-        res = self.client.get('/knr/userdbreset/%d/' % uid, follow=True)
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_userdbreset.html')
-        res = self.client.get('/knr/userdbreset/100/')
-        self.assertEqual(res.status_code, HTTPStatus.INTERNAL_SERVER_ERROR)
+        self.assertTemplateUsed(res, 'knr_mainpage.html')
         
     def dcomp(self, f, d1, d2):
         for n in f:

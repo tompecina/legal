@@ -1,4 +1,0 @@
-{% extends "knr_list.html" %}
-
-{% block table_header %}<th>ID</th><th>Username</th><th>Jméno a příjmení</th><th>Počet míst</th><th>Počet vozidel</th><th>Počet předpisů</th><th>Akce</th>{% endblock %}
-{% block table_row %}<td style="text-align: center;">{{ row.id }}</td><td>{{ row.username }}</td><td>{{ row.fullname }}</td><td style="text-align: center;">{{ row.places }}</td><td style="text-align: center;">{{ row.cars }}</td><td style="text-align: center;">{{ row.formulas }}</td><td style="text-align: center;"><a href="{% url 'knr:userdbreset' row.id %}">reset</a></td>{% endblock %}

@@ -20,9 +20,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.contrib.auth.models import User
-from .models import Place, Car, Formula, Rate
-
 pl = (('US', 'Ústavní soud',
        'Joštova 625/8, 602 00 Brno, Česká republika',
        49.1975999, 16.6044449),
@@ -375,25 +372,3 @@ fo = (('2016', 'Vyhláška č. 385/2015 Sb.', 3.80,
        (('BA91', 30.10), ('BA95', 30.40), ('BA98', 34.40), ('NM', 29.50))),
       ('2005', 'Vyhláška č. 647/2004 Sb.', 3.80,
        (('BA91', 27.50), ('BA95', 27.40), ('BA98', 31.00), ('NM', 26.60))))
-
-def udbreset(uid):
-    u = User.objects.get(pk=uid)
-    Place.objects.filter(uid=uid).delete()
-    Car.objects.filter(uid=uid).delete()
-    Formula.objects.filter(uid=uid).delete()
-    pp = []
-    for p in pl:
-        pp.append(Place(
-            uid=u,
-            abbr=p[0],
-            name=p[1],
-            addr=p[2],
-            lat=p[3],
-            lon=p[4]))
-    Place.objects.bulk_create(pp)
-    for f in fo:
-        ff = Formula(uid=u, abbr=f[0], name=f[1], flat=f[2])
-        ff.save()
-        fid = ff.id
-        for r in f[3]:
-            Rate(formula_id=fid, fuel=r[0], rate=r[1]).save()

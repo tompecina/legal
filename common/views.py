@@ -36,7 +36,6 @@ from .settings import APPS
 from .forms import UserAddForm, LostPwForm, MIN_PWLEN
 from .utils import send_mail, inerr, getbutton
 from .models import PwResetLink
-from knr.presets import udbreset
 
 @require_http_methods(['GET'])
 def robots(request):
@@ -207,7 +206,6 @@ def useradd(request):
                 user.first_name = cd['first_name']
                 user.last_name = cd['last_name']
                 user.save()
-                udbreset(user.id)
                 logout(request)
                 return redirect('useradded')
             return error(request)  # pragma: no cover
