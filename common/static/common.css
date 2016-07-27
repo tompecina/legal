@@ -47,15 +47,9 @@ div.warning {
     margin-bottom: 12px;
     background-color: #c4e0ff;
 }
-a, span.pager {
+a {
     color: #2551b7;
     text-decoration: none;
-}
-span.pager {
-    font-weight: normal;
-}
-span.nav {
-    font-weight: normal;
 }
 a:hover {
     color: #e00000;
@@ -73,7 +67,7 @@ tr.preset.grayed {
     color: #aaaaaa;
 }
 tr.preset + tr:not(.preset) {
-    border-top: 3px solid #c4e0ff;
+    border-top: 5px solid #c4e0ff;
 }
 tr.even td, tr.odd td, thead th, tr.footer td {
     padding: 3px 13px;
@@ -175,4 +169,26 @@ table.about td {
 }
 .hl {
     color: #e00000;
+}
+span.pager {
+    color: #2551b7;
+}
+span.pager svg {
+    fill: #2551b7;
+}
+span.pager span:first-child {
+    padding-right: 3px;
+}
+span.pager span:last-child {
+    padding-left: 3px;
+}
+span.pager span.num {
+    padding-left: 6px;
+    padding-right: 6px;
+}
+span.pager a svg:hover {
+    fill: #e00000;
+}
+span.grayed svg {
+    fill: #f2f6ff;
 }

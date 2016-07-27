@@ -23,6 +23,7 @@
 from django.test import SimpleTestCase, TestCase, Client
 from django.contrib.auth.models import User
 from django.core import mail
+from django.http import QueryDict
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from copy import copy
@@ -167,6 +168,11 @@ class TestModels(TestCase):
             link=('0' * 32))
         self.assertEqual(str(p), ('0' * 32))
 
+def proc_link(l):
+    if not l:
+        return -1
+    return int(l.split('=')[-1])
+        
 class TestUtils(SimpleTestCase):
 
     def test_easter(self):
@@ -462,7 +468,36 @@ class TestUtils(SimpleTestCase):
         t = soup.new_tag('date')
         t.string = '2014-11-14'
         self.assertEqual(utils.iso2date(t), date(2014, 11, 14))
-        
+
+    def test_pager(self):
+        pp = [
+            [0, 1, [1, 1, -1, -1, -1, -1]],
+            [0, 50, [1, 1, -1, -1, -1, -1]],
+            [0, 51, [1, 2, -1, -1, 50, 50]],
+            [0, 100, [1, 2, -1, -1, 50, 50]],
+            [0, 101, [1, 3, -1, -1, 50, 100]],
+            [0, 53697, [1, 1074, -1, -1, 50, 53650]],
+            [50, 51, [2, 2, 0, 0, -1, -1]],
+            [50, 100, [2, 2, 0, 0, -1, -1]],
+            [50, 101, [2, 3, 0, 0, 100, 100]],
+            [50, 53697, [2, 1074, 0, 0, 100, 53650]],
+            [100, 53697, [3, 1074, 0, 50, 150, 53650]],
+            [53600, 53697, [1073, 1074, 0, 53550, 53650, 53650]],
+            [53650, 53697, [1074, 1074, 0, 53600, -1, -1]],
+        ]
+        i = 0
+        for p in pp:
+            pag = utils.Pager(p[0], p[1], 'url', QueryDict(mutable=True), 50)
+            r = [pag.curr,
+                 pag.total,
+                 proc_link(pag.linkbb),
+                 proc_link(pag.linkb),
+                 proc_link(pag.linkf),
+                 proc_link(pag.linkff),
+            ]
+            self.assertEqual(r, p[2], msg=str(i))
+            i += 1
+
 class TestViews(TestCase):
 
     def setUp(self):

@@ -27,7 +27,7 @@ from django.urls import reverse
 from django.http import QueryDict, Http404
 from datetime import date, datetime
 from math import floor, ceil
-from common.utils import formam, p2c, inerr
+from common.utils import formam, p2c, inerr, Pager
 from cnb.main import getFXrate
 from szr.glob import registers
 from .forms import MainForm, party_opts
@@ -41,62 +41,6 @@ BATCH = 50
 
 DTF = '%Y-%m-%d'
         
-def norm(x):
-    return (x // BATCH) * BATCH
-
-def gennav(
-        start,
-        total,
-        prefix,
-        suffix,
-        i0='<img src="/static/bb.svg" class="navbb" alt="První"/>',
-        i1='<img src="/static/b.svg" class="navb" alt="Minulá"/>',
-        i2='<img src="/static/f.svg" class="navf" alt="Další"/>',
-        i3='<img src="/static/ff.svg" class="navff" alt="Poslední"/>',
-        i0g='<img src="/static/bbg.svg" alt="První (neaktivní)"/>',
-        i1g='<img src="/static/bg.svg" alt="Minulá (neaktivní)"/>',
-        i2g='<img src="/static/fg.svg" alt="Další (neaktivní)"/>',
-        i3g='<img src="/static/ffg.svg" alt="Poslední (neaktivní)"/>',
-        a0='<span class="nav"><a href="',
-        a1='">',
-        a2='</a></span>',
-        g0='<span class="nav grayed">',
-        g1='</span>',
-        s0='',
-        s1='&nbsp;&nbsp;',
-        s2='&nbsp;&nbsp;&nbsp;<span class="pager">',
-        s2g='&nbsp;&nbsp;&nbsp;<span class="pager grayed">',
-        s3='/',
-        s4='</span>&nbsp;&nbsp;&nbsp;',
-        s5='&nbsp;&nbsp;',
-        s6=''):
-    i = [[i0, i0g], [i1, i1g], [i2, i2g], [i3, i3g]]
-    n = [-1] * 4
-    if start:
-        n[0] = 0
-        n[1] = start - BATCH
-    if (start + BATCH) < total:
-        n[2] = start + BATCH
-        n[3] = norm(total - 1)
-    p1 = (start // BATCH) + 1
-    p2 = ((total - 1) // BATCH) + 1
-    t = list(range(4))
-    for j in range(4):
-        if n[j] < 0:
-            t[j] = g0 + i[j][1] + g1
-        else:
-            t[j] = a0 + prefix + str(n[j]) + suffix + a1 + i[j][0] + a2
-    if p2 == 1:
-        s2 = s2g
-    return s0 + t[0] + s1 + t[1] + s2 + str(p1) + s3 + str(p2) + s4 + t[2] + \
-        s5 + t[3] + s6
-
-def listurl(d):
-    r = reverse('udn:list') + '?'
-    if d:
-        r += d.urlencode()
-    return r
-
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
     err_message = ''
@@ -124,7 +68,8 @@ def mainpage(request):
             for p in cd:
                 if cd[p]:
                     q[p] = cd[p]
-            return redirect(listurl(q))
+            q['start'] = 0
+            return redirect(reverse('udn:list') + '?' + q.urlencode())
         else:
             err_message = inerr
             return render(
@@ -166,12 +111,6 @@ def declist(request):
     total = len(d)
     if (start >= total) and (total > 0):
         start = total - 1
-    if 'start' in rd:
-        del rd['start']
-    if rd:
-        a = '&'
-    else:
-        a = ''
     return render(
         request,
         'udn_list.html',
@@ -179,5 +118,5 @@ def declist(request):
          'page_title': 'Výsledky vyhledávání',
          'rows': d[start:(start + BATCH)],
          'f': f,
-         'nav': gennav(start, total, listurl(rd) + a + 'start=', ''),
+         'pager': Pager(start, total, reverse('udn:list'), rd, BATCH),
          'total': total})

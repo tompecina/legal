@@ -405,3 +405,24 @@ def send_mail(subject, text, recipients):
         'Server legal.pecina.cz <legal@pecina.cz>',
         recipients,
         fail_silently=True)
+
+class Pager:
+
+    def __init__(self, start, total, url, p, batch):
+
+        def link(n):
+            p['start'] = n
+            return url + '?' + p.urlencode()
+
+        self.curr = (start // batch) + 1
+        self.total = ((total - 1) // batch) + 1
+        self.linkbb = None
+        self.linkb = None
+        self.linkf = None
+        self.linkff = None
+        if start:
+            self.linkbb = link(0)
+            self.linkb = link(start - batch)
+        if (start + batch) < total:
+            self.linkf = link(start + batch)
+            self.linkff = link(((total - 1) // batch) * batch)

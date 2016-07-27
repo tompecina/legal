@@ -187,65 +187,25 @@ class TestUtils(SimpleTestCase):
             self.assertEqual(utils.composeref(*utils.decomposeref( \
                 p.replace('-', ' - '))), p)
 
+def link_equal(a, b):
+    a = a.split('?')
+    b = b.split('?')
+    if a[0] != b[0]:  # pragma: no cover
+        return False
+    a = a[1].split('&')
+    a.sort()
+    b = b[1].split('&')
+    b.sort()
+    if len(a) != len(b):  # pragma: no cover
+        return False
+    for i in range(len(a)):
+        if a[i] != b[i]:  # pragma: no cover
+            return False
+    return True
+            
 class TestViews(TestCase):
     fixtures = ['udn_test1.json']
     
-    def test_norm(self):
-        self.assertEqual(views.BATCH, 50)
-        pp = [
-            [0,  0],
-            [49,  0],
-            [50,  50],
-            [99, 50],
-            [100, 100],
-        ]
-        for p, r in pp:
-            self.assertEqual(views.norm(p), r)
-
-    def test_gennav(self):
-        pp = [
-            [0, 1, 'p', 's',
-             's0g0i0gg1s1g0i1gg1s2g1s31s4g0i2gg1s5g0i3gg1s6'],
-            [0, 50, 'p', 's',
-             's0g0i0gg1s1g0i1gg1s2g1s31s4g0i2gg1s5g0i3gg1s6'],
-            [0, 50, 'p', 's',
-             's0g0i0gg1s1g0i1gg1s2g1s31s4g0i2gg1s5g0i3gg1s6'],
-            [0, 51, 'p', 's',
-             's0g0i0gg1s1g0i1gg1s21s32s4a0p50sa1i2a2s5a0p50sa1i3a2s6'],
-            [0, 100, 'p', 's',
-             's0g0i0gg1s1g0i1gg1s21s32s4a0p50sa1i2a2s5a0p50sa1i3a2s6'],
-            [0, 101, 'p', 's',
-             's0g0i0gg1s1g0i1gg1s21s33s4a0p50sa1i2a2s5a0p100sa1i3a2s6'],
-            [0, 53697, 'p', 's',
-             's0g0i0gg1s1g0i1gg1s21s31074s4a0p50sa1i2a2s5a0p53650sa1i3a2s6'],
-            [50, 51, 'p', 's',
-             's0a0p0sa1i0a2s1a0p0sa1i1a2s22s32s4g0i2gg1s5g0i3gg1s6'],
-            [50, 100, 'p', 's',
-             's0a0p0sa1i0a2s1a0p0sa1i1a2s22s32s4g0i2gg1s5g0i3gg1s6'],
-            [50, 101, 'p', 's',
-             's0a0p0sa1i0a2s1a0p0sa1i1a2s22s33s4a0p100sa1i2a2s5a0p' \
-             '100sa1i3a2s6'],
-            [50, 53697, 'p', 's',
-             's0a0p0sa1i0a2s1a0p0sa1i1a2s22s31074s4a0p100sa1i2a2s5' \
-             'a0p53650sa1i3a2s6'],
-            [100, 53697, 'p', 's',
-             's0a0p0sa1i0a2s1a0p50sa1i1a2s23s31074s4a0p150sa1i2a2s' \
-             '5a0p53650sa1i3a2s6'],
-            [53600, 53697, 'p', 's',
-             's0a0p0sa1i0a2s1a0p53550sa1i1a2s21073s31074s4a0p53650' \
-             'sa1i2a2s5a0p53650sa1i3a2s6'],
-            [53650, 53697, 'p', 's',
-             's0a0p0sa1i0a2s1a0p53600sa1i1a2s21074s31074s4g0i2gg1s5g0i3gg1s6'],
-        ]
-        l = ['i0', 'i1', 'i2', 'i3', 'i0g', 'i1g', 'i2g', 'i3g',
-             'a0', 'a1', 'a2', 'g0', 'g1', 's0', 's1', 's2', 's2g',
-             's3', 's4', 's5', 's6']
-        d = {t: t for t in l}
-        i = 0
-        for p in pp:
-            self.assertEqual(views.gennav(*p[:4], **d), p[4], msg=str(i))
-            i += 1
-        
     def test_main(self):
         res = self.client.get('/udn')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -273,9 +233,10 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'udn_list.html')
-        red = [[('/udn/list/?party_opt=icontains&party=Ing', HTTPStatus.FOUND)],
-               [('/udn/list/?party=Ing&party_opt=icontains', HTTPStatus.FOUND)]]
-        self.assertIn(res.redirect_chain, red)
+        self.assertEqual(res.redirect_chain[0][1], HTTPStatus.FOUND)
+        self.assertTrue(link_equal(
+            res.redirect_chain[0][0],
+            '/udn/list/?party=Ing&party_opt=icontains&start=0'))
         res = self.client.post(
             '/udn/',
             {'date_from': 'XXX',
@@ -372,8 +333,12 @@ class TestViews(TestCase):
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 2)
-        self.assertEqual(links[0]['href'], '/udn/list/?senate=8&start=50')
-        self.assertEqual(links[1]['href'], '/udn/list/?senate=8&start=200')
+        self.assertTrue(link_equal(
+            links[0]['href'],
+            '/udn/list/?senate=8&start=50'))
+        self.assertTrue(link_equal(
+            links[1]['href'],
+            '/udn/list/?senate=8&start=200'))
         res = self.client.get('/udn/list/?senate=8&start=50')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'udn_list.html')
@@ -381,10 +346,18 @@ class TestViews(TestCase):
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 4)
-        self.assertEqual(links[0]['href'], '/udn/list/?senate=8&start=0')
-        self.assertEqual(links[1]['href'], '/udn/list/?senate=8&start=0')
-        self.assertEqual(links[2]['href'], '/udn/list/?senate=8&start=100')
-        self.assertEqual(links[3]['href'], '/udn/list/?senate=8&start=200')
+        self.assertTrue(link_equal(
+            links[0]['href'],
+            '/udn/list/?senate=8&start=0'))
+        self.assertTrue(link_equal(
+            links[1]['href'],
+            '/udn/list/?senate=8&start=0'))
+        self.assertTrue(link_equal(
+            links[2]['href'],
+            '/udn/list/?senate=8&start=100'))
+        self.assertTrue(link_equal(
+            links[3]['href'],
+            '/udn/list/?senate=8&start=200'))
         res = self.client.get('/udn/list/?senate=8&start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'udn_list.html')
@@ -392,10 +365,18 @@ class TestViews(TestCase):
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 4)
-        self.assertEqual(links[0]['href'], '/udn/list/?senate=8&start=0')
-        self.assertEqual(links[1]['href'], '/udn/list/?senate=8&start=50')
-        self.assertEqual(links[2]['href'], '/udn/list/?senate=8&start=150')
-        self.assertEqual(links[3]['href'], '/udn/list/?senate=8&start=200')
+        self.assertTrue(link_equal(
+            links[0]['href'],
+            '/udn/list/?senate=8&start=0'))
+        self.assertTrue(link_equal(
+            links[1]['href'],
+            '/udn/list/?senate=8&start=50'))
+        self.assertTrue(link_equal(
+            links[2]['href'],
+            '/udn/list/?senate=8&start=150'))
+        self.assertTrue(link_equal(
+            links[3]['href'],
+            '/udn/list/?senate=8&start=200'))
         res = self.client.get('/udn/list/?senate=8&start=200')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'udn_list.html')
@@ -403,5 +384,9 @@ class TestViews(TestCase):
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 2)
-        self.assertEqual(links[0]['href'], '/udn/list/?senate=8&start=0')
-        self.assertEqual(links[1]['href'], '/udn/list/?senate=8&start=150')
+        self.assertTrue(link_equal(
+            links[0]['href'],
+            '/udn/list/?senate=8&start=0'))
+        self.assertTrue(link_equal(
+            links[1]['href'],
+            '/udn/list/?senate=8&start=150'))
