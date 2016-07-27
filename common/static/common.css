@@ -175,6 +175,7 @@ span.pager {
 }
 span.pager svg {
     fill: #2551b7;
+    stroke: none;
 }
 span.pager span:first-child {
     padding-right: 3px;
