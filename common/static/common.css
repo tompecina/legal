@@ -173,9 +173,12 @@ table.about td {
 span.pager {
     color: #2551b7;
 }
-span.pager svg {
+svg {
     fill: #2551b7;
     stroke: none;
+}
+a svg:hover {
+    fill: #e00000;
 }
 span.pager span:first-child {
     padding-right: 3px;
@@ -186,9 +189,6 @@ span.pager span:last-child {
 span.pager span.num {
     padding-left: 6px;
     padding-right: 6px;
-}
-span.pager a svg:hover {
-    fill: #e00000;
 }
 span.grayed svg {
     fill: #f2f6ff;
