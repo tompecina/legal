@@ -193,3 +193,58 @@ span.pager span.num {
 span.grayed svg {
     fill: #f2f6ff;
 }
+div.ui-datepicker {
+    background-color: #e4ecff;
+    border: 2px solid #c0c0ff;
+    padding: 0;
+    width: auto;
+}
+div.ui-datepicker a.ui-datepicker-prev span,
+div.ui-datepicker a.ui-datepicker-next span {
+    width: 10px;
+}
+div.ui-datepicker a.ui-datepicker-prev,
+div.ui-datepicker a.ui-datepicker-next {
+    width: 25px;
+    height: 25px;
+    top: 4px;
+}
+div.ui-datepicker a.ui-datepicker-prev {
+    left: 5px;
+}
+div.ui-datepicker a.ui-datepicker-next {
+    right: 5px;
+}
+div.ui-datepicker a.ui-datepicker-prev span {
+    background-image: url("/static/b.svg");
+    left: 10px;
+}
+div.ui-datepicker a.ui-datepicker-prev span:hover {
+    background-image: url("/static/br.svg");
+    left: 10px;
+}
+div.ui-datepicker a.ui-datepicker-next span {
+    background-image: url("/static/f.svg");
+    left: 20px;
+}
+div.ui-datepicker a.ui-datepicker-next span:hover {
+    background-image: url("/static/fr.svg");
+    left: 20px;
+}
+div.ui-datepicker th,
+div.ui-datepicker td span,
+div.ui-datepicker td a {
+    padding: 3px 5px;
+    text-align: right;
+}
+div.ui-datepicker div.ui-datepicker-header {
+    border-bottom: 2px solid #c0c0ff;
+    padding: 0;
+    background-color: #c4e0ff;
+}
+table.ui-datepicker-calendar {
+    margin: 2px 0;
+}
+a.ui-state-active {
+    background-color: #c4e0ff;
+}

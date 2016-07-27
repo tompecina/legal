@@ -42,12 +42,12 @@ def mainpage(request):
     else:
         f = MainForm(request.POST)
         b = getbutton(request)
-        if b == 'set_beg':
-            f.data['beg'] = today
+        if b == 'set_beg_date':
+            f.data['beg_date'] = today
         elif f.is_valid():
             cd = f.cleaned_data
-            beg = cd['beg']
-            if (beg.year < 1991):
+            beg_date = cd['beg_date']
+            if (beg_date.year < 1991):
                 messages = [['Počátek musí být ≥1.1.1991', None]]
             else:
                 preset = cd['preset']
@@ -62,15 +62,15 @@ def mainpage(request):
                 else:
                     o = -odp
                 if unit == 'd':
-                    t = beg + timedelta(days = dur)
+                    t = beg_date + timedelta(days = dur)
                 elif unit == 'w':
-                    t = beg + timedelta(weeks = dur)
+                    t = beg_date + timedelta(weeks = dur)
                 elif unit in ['m', 'y']:
                     if unit == 'y':
                         dur *= 12
-                    d = beg.day
-                    m = beg.month
-                    y = beg.year
+                    d = beg_date.day
+                    m = beg_date.month
+                    y = beg_date.year
                     if dur > 0:
                         for i in range(dur):
                             m += 1
@@ -88,7 +88,7 @@ def mainpage(request):
                         d = r
                     t = date(y, m, d)
                 else:
-                    t = beg
+                    t = beg_date
                     for i in range(abs(dur)):
                         t += o
                         while tod(t):

@@ -38,7 +38,7 @@ presets = (('d3',  '3 dny'),
            ('none', 'jiná'))
 
 class MainForm(forms.Form):
-    beg = fields.DateField(
+    beg_date = fields.DateField(
         widget=widgets.dw(today=True),
         label='Počátek',
         initial=date.today)
@@ -55,7 +55,7 @@ class MainForm(forms.Form):
 
     def clean_dur(self):
         data = self.cleaned_data['dur']
-        if ('submit_set_beg' not in self.data) and \
+        if ('submit_set_beg_date' not in self.data) and \
            (self.data['preset'] == 'none') and (not data):
             raise forms.ValidationError('Duration may not be empty')
         return data

@@ -32,10 +32,10 @@ APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
 
-def calc(beg, years, months, days):
-    y = beg.year
-    m = beg.month
-    d = beg.day
+def calc(beg_date, years, months, days):
+    y = beg_date.year
+    m = beg_date.month
+    d = beg_date.day
     y += years
     m += months
     y += ((m - 1) // 12)
@@ -54,31 +54,31 @@ def mainpage(request):
         f = MainForm(request.POST)
         if f.is_valid():
             cd = f.cleaned_data
-            beg = cd['beg']
+            beg_date = cd['beg_date']
             years = (cd['years'] if cd['years'] else 0)
             months = (cd['months'] if cd['months'] else 0)
             days = (cd['days'] if cd['days'] else 0)
 
             messages.append(
-                [('Trest skončí: ' + calc(beg, years, months, days)),
+                [('Trest skončí: ' + calc(beg_date, years, months, days)),
                  'font-size: 115%; font-weight: bold; margin-bottom: 3px;'])
             messages.append(
                 [('Třetina trestu: ' + \
-                  calc(beg,
+                  calc(beg_date,
                        (years // 3),
                        (((years % 3) * 4) + (months // 3)),
                        (((months % 3) * 10) + (days // 3)))),
                  'margin-bottom: 2px;'])
             messages.append(
                 [('Polovina trestu: ' + \
-                  calc(beg,
+                  calc(beg_date,
                        (years // 2),
                        (((years % 2) * 6) + (months // 2)),
                        (((months % 2) * 15) + (days // 2)))),
                  'margin-bottom: 2px;'])
             messages.append(
                 [('Dvě třetiny trestu: ' + \
-                  calc(beg,
+                  calc(beg_date,
                        ((years * 2) // 3),
                        ((((years * 2) % 3) * 4) + ((months * 2) // 3)),
                        ((((months * 2) % 3) * 10) + ((days * 2) // 3)))),

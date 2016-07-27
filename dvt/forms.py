@@ -23,7 +23,7 @@
 from common import forms, fields, widgets
 
 class MainForm(forms.Form):
-    beg = fields.DateField(
+    beg_date = fields.DateField(
         widget=widgets.dw(),
         label='Nástup trestu')
     years = fields.IntegerField(

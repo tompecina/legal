@@ -4,12 +4,12 @@
         <form method="post" enctype="multipart/form-data" id="id_maintform">
 	  <table style="margin: auto auto 30px auto;">
 	    <tr><td colspan="3"><h1 style="text-align: center; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
-            <tr class="{{ f.beg.css_classes }}">
+            <tr class="{{ f.beg_date.css_classes }}">
 	      <th>
-		{{ f.beg.label_tag }}
+		{{ f.beg_date.label_tag }}
 	      </th>
 	      <td>
-		{{ f.beg }}
+		{{ f.beg_date }}
 	      </td>
 	    </tr>
 	    <tr>

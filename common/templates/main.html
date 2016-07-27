@@ -9,9 +9,11 @@
     <link rel="shortcut icon" href="/favicon.ico" />
     <meta name="GENERATOR" content="Quanta Plus" />
     <meta name="AUTHOR" content="Tomáš Pecina" />
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-ui.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'common.css' %}" />
 {% if app %}    <link rel="stylesheet" type="text/css" href="{% static '' %}{{ app }}.css" />
 {% endif %}    <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery-ui.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'common.js' %}"></script>
 {% if app %}    <script type="text/javascript" src="{% static '' %}{{ app }}.js"></script>
 {% endif %}  </head>

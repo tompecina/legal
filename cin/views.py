@@ -48,28 +48,28 @@ def mainpage(request):
     else:
         f = MainForm(request.POST)
         b = getbutton(request)
-        if b in ['set_beg', 'set_end']:
-            unrequire(f, ['beg', 'end'])
-            if b == 'set_beg':
-                f.data['beg'] = today
+        if b in ['set_beg_date', 'set_end_date']:
+            unrequire(f, ['beg_date', 'end_date'])
+            if b == 'set_beg_date':
+                f.data['beg_date'] = today
             else:
-                f.data['end'] = today
+                f.data['end_date'] = today
         elif f.is_valid():
             cd = f.cleaned_data
-            beg = cd['beg']
-            end = cd['end']
-            if beg >= end:
+            beg_date = cd['beg_date']
+            end_date = cd['end_date']
+            if beg_date >= end_date:
                 messages.append(['Počátek musí předcházet konci', None])
             else:
-                messages.append([('%s → %s' % (pd(beg), pd(end))),
+                messages.append([('%s → %s' % (pd(beg_date), pd(end_date))),
                                  'font-weight: bold; margin-bottom: 5px;'])
 
-                messages.append([grammar((end - beg).days, GR_D), None])
+                messages.append([grammar((end_date - beg_date).days, GR_D), None])
 
-                if beg.year >= 1991:
-                    t = beg + odp
+                if beg_date.year >= 1991:
+                    t = beg_date + odp
                     n = 0
-                    while t <= end:
+                    while t <= end_date:
                         if not tod(t):
                             n += 1
                         t += odp
@@ -77,18 +77,18 @@ def mainpage(request):
 
                 ny = nm = nd = 0
                 while True:
-                    t = ply(beg, (ny + 1))
-                    if t > end:
+                    t = ply(beg_date, (ny + 1))
+                    if t > end_date:
                         break
                     ny += 1
-                r = ply(beg, ny)
+                r = ply(beg_date, ny)
                 while True:
                     t = plm(r, (nm + 1))
-                    if t > end:
+                    if t > end_date:
                         break
                     nm += 1
                 r = plm(r, nm)
-                while r < end:
+                while r < end_date:
                     r += odp
                     nd += 1
                 messages.append(['%s %s %s' % (grammar(ny, GR_Y),
@@ -98,20 +98,20 @@ def mainpage(request):
 
                 for dconv in ydconvs:
                     messages.append(
-                        [p2c('%.6f' % yfactor(beg, end, dconv)) + \
+                        [p2c('%.6f' % yfactor(beg_date, end_date, dconv)) + \
                          ' let (' + dconv + \
                          ')', 'text-align: left; margin-left: 2em;'])
 
                 for dconv in mdconvs:
                     if dconv == mdconvs[0]:
                         messages.append(
-                            [p2c('%.6f' % mfactor(beg, end, dconv)) + \
+                            [p2c('%.6f' % mfactor(beg_date, end_date, dconv)) + \
                              ' měsíců (' + dconv + ')',
                              'text-align: left; margin-top: 8px; ' \
                              'margin-left: 2em;'])
                     else:
                         messages.append(
-                            [p2c('%.6f' % mfactor(beg, end, dconv)) + \
+                            [p2c('%.6f' % mfactor(beg_date, end_date, dconv)) + \
                              ' měsíců (' + dconv + ')',
                              'text-align: left; margin-left: 2em;'])
 
