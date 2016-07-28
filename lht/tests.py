@@ -30,7 +30,7 @@ class TestForms(SimpleTestCase):
 
     def test_MainForm(self):
         f = forms.MainForm(
-            {'beg': '6.7.2016',
+            {'beg_date': '6.7.2016',
              'preset': 'none',
              'dur': '',
              'unit': 'd'})
@@ -39,18 +39,18 @@ class TestForms(SimpleTestCase):
             f.errors,
             {'dur': ['Duration may not be empty']})
         f = forms.MainForm(
-            {'beg': '6.7.2016',
-             'submit_set_beg': 'Dnes',
+            {'beg_date': '6.7.2016',
+             'submit_set_beg_date': 'Dnes',
              'preset': 'd3',
              'unit': 'd'})
         self.assertTrue(f.is_valid())
         f = forms.MainForm(
-            {'beg': '6.7.2016',
+            {'beg_date': '6.7.2016',
              'preset': 'd3',
              'unit': 'd'})
         self.assertTrue(f.is_valid())
         f = forms.MainForm(
-            {'beg': '6.7.2016',
+            {'beg_date': '6.7.2016',
              'dur': '1',
              'preset': 'd3',
              'unit': 'd'})
@@ -164,7 +164,7 @@ class TestViews(SimpleTestCase):
         for p in pp:
             res = self.client.post(
                 '/lht/',
-                {'beg': p[0],
+                {'beg_date': p[0],
                  'preset': p[1],
                  'dur': p[2],
                  'unit': p[3]})
@@ -179,7 +179,7 @@ class TestViews(SimpleTestCase):
         for p in ee:
             res = self.client.post(
                 '/lht/',
-                {'beg': p[0],
+                {'beg_date': p[0],
                  'preset': p[1],
                  'dur': p[2],
                  'unit': p[3]})
@@ -190,6 +190,6 @@ class TestViews(SimpleTestCase):
             self.assertTrue(msg[0].text)
         res = self.client.post(
             '/lht/',
-            {'submit_set_beg': 'Dnes'})
+            {'submit_set_beg_date': 'Dnes'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(res.context['f']['beg'].value(), date.today())
+        self.assertEqual(res.context['f']['beg_date'].value(), date.today())

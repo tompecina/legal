@@ -161,11 +161,14 @@ class TestViews(SimpleTestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'cin_main.html')
         today = date.today()
-        for f in ['beg', 'end']:
+        for f in ['beg_date', 'end_date']:
             res = self.client.post('/cin/', {'submit_set_' + f: 'Dnes'})
             self.assertEqual(res.context['f'][f].value(), today)
         for p in pp:
-            res = self.client.post('/cin/', {'beg': p[0], 'end': p[1]})
+            res = self.client.post(
+                '/cin/',
+                {'beg_date': p[0],
+                 'end_date': p[1]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'cin_main.html')
             soup = BeautifulSoup(res.content, 'html.parser')

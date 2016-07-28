@@ -29,25 +29,25 @@ class TestForms(SimpleTestCase):
 
     def test_MainForm(self):
         f = forms.MainForm(
-            {'beg': '6.7.2016',
+            {'beg_date': '6.7.2016',
              'years': '',
              'months': '',
              'days': ''})
         self.assertFalse(f.is_valid())
         f = forms.MainForm(
-            {'beg': '6.7.2016',
+            {'beg_date': '6.7.2016',
              'years': '10',
              'months': '',
              'days': ''})
         self.assertTrue(f.is_valid())
         f = forms.MainForm(
-            {'beg': '6.7.2016',
+            {'beg_date': '6.7.2016',
              'years': '',
              'months': '10',
              'days': ''})
         self.assertTrue(f.is_valid())
         f = forms.MainForm(
-            {'beg': '6.7.2016',
+            {'beg_date': '6.7.2016',
              'years': '',
              'months': '',
              'days': '10'})
@@ -90,7 +90,7 @@ class TestViews(SimpleTestCase):
         for p in pp:
             res = self.client.post(
                 '/dvt/',
-                {'beg': p[0],
+                {'beg_date': p[0],
                  'years': p[1],
                  'months': p[2],
                  'days': p[3]})
@@ -107,7 +107,7 @@ class TestViews(SimpleTestCase):
         for p in ee:
             res = self.client.post(
                 '/dvt/',
-                {'beg': p[0],
+                {'beg_date': p[0],
                  'years': p[1],
                  'months': p[2],
                  'days': p[3]})
