@@ -98,7 +98,9 @@ $(function() {
     $.datepicker.setDefaults($.datepicker.regional['cs']);
     $.datepicker.setDefaults({
 	showOtherMonths: true,
-	selectOtherMonths: true
+	selectOtherMonths: true,
+	prevText: 'předchozí',
+	nextText: 'příští'
     });
     $('input[type=text][name*=date]').datepicker();
 });
