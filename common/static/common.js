@@ -95,13 +95,10 @@ function currsel_change() {
 $(function() {
     $('.currsel').change(currsel_change).change();
     $('.today').click(set_today);
+    $.datepicker.setDefaults($.datepicker.regional['cs']);
     $.datepicker.setDefaults({
-	dateFormat: 'dd.mm.yy',
-	dayNamesMin: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
-	firstDay: 1,
-	monthNames:
-	    ['leden', 'únor', 'březen', 'duben', 'květen', 'červen',
-	     'červenec', 'srpen', 'září', 'říjen', 'listopad', 'prosinec']
+	showOtherMonths: true,
+	selectOtherMonths: true
     });
     $('input[type=text][name*=date]').datepicker();
 });

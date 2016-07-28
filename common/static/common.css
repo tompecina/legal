@@ -248,3 +248,9 @@ table.ui-datepicker-calendar {
 a.ui-state-active {
     background-color: #c4e0ff;
 }
+td.ui-datepicker-other-month a {
+    color: #ffffff;
+}
+td.ui-datepicker-other-month a:hover {
+    color: #e00000;
+}
