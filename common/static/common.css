@@ -194,6 +194,7 @@ span.grayed svg {
     fill: #f2f6ff;
 }
 div.ui-datepicker {
+    font-size: 14px;
     background-color: #e4ecff;
     border: 2px solid #c0c0ff;
     padding: 0;
@@ -243,6 +244,7 @@ div.ui-datepicker div.ui-datepicker-header {
     background-color: #c4e0ff;
 }
 table.ui-datepicker-calendar {
+    font-size: 14px;
     margin: 2px 0;
 }
 a.ui-state-active {
