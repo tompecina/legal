@@ -100,7 +100,7 @@ $(function() {
 	showOtherMonths: true,
 	selectOtherMonths: true,
 	prevText: 'předchozí',
-	nextText: 'příští'
+	nextText: 'následující'
     });
     $('input[type=text][name*=date]').datepicker();
 });
