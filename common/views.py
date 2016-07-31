@@ -34,7 +34,8 @@ from random import getrandbits, choice
 from datetime import datetime, timedelta
 from .settings import APPS
 from .forms import UserAddForm, LostPwForm, MIN_PWLEN
-from .utils import send_mail, inerr, getbutton
+from .utils import send_mail, getbutton
+from .glob import inerr
 from .models import PwResetLink
 
 @require_http_methods(['GET'])

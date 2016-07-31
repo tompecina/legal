@@ -24,8 +24,8 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from datetime import date
 from django.apps import apps
-from common.utils import getbutton, pd, formam, unrequire, p2c, \
-                         inerr_short
+from common.utils import getbutton, pd, formam, unrequire, p2c
+from common.glob import inerr_short
 from common.fields import AmountField
 from .main import getFXrate, getMPIrate
 from .forms import MainForm

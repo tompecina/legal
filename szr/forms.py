@@ -22,7 +22,8 @@
 
 from django.core.validators import RegexValidator
 from common import forms, fields, widgets
-from .glob import register_regex, supreme_court
+from common.glob import register_regex
+from .glob import supreme_court
 
 class EmailForm(forms.Form):
     email = fields.EmailField(

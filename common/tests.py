@@ -498,6 +498,19 @@ class TestUtils(SimpleTestCase):
             self.assertEqual(r, p[2], msg=str(i))
             i += 1
 
+    def test_ref(self):
+        pp = ['3 As 12/2015-8',
+              '12 Azs 4/2009-118',
+              'Konf 1/2011-221',
+              '3 As 12/2015',
+              '12 Azs 4/2009',
+              'Konf 1/2011',
+        ]
+        for p in pp:
+            self.assertEqual(utils.composeref(*utils.decomposeref(p)), p)
+            self.assertEqual(utils.composeref(*utils.decomposeref( \
+                p.replace('-', ' - '))), p)
+
 class TestViews(TestCase):
 
     def setUp(self):

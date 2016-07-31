@@ -26,7 +26,8 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.apps import apps
-from common.utils import getbutton, inerr
+from common.utils import getbutton
+from common.glob import inerr
 from .forms import EmailForm, ProcForm
 from .models import Court, Proceedings
 from .cron import addauxid, updateproc

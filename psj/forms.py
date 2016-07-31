@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# udn/forms.py
+# psj/forms.py
 #
 # Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -32,6 +32,11 @@ class MainForm(forms.Form):
     date_to = fields.DateField(
         widget=widgets.dw(),
         required=False)
+    court = fields.CharField(
+        max_length=255,
+        required=False,
+        label='Soud',
+        initial='0')
     senate = fields.IntegerField(
         widget=widgets.saw(),
         min_value=0, initial='',
@@ -52,15 +57,15 @@ class MainForm(forms.Form):
         min_value=1990,
         initial='',
         required=False)
-    page = fields.IntegerField(
-        widget=widgets.saw(),
-        min_value=1,
-        initial='',
-        required=False)
-    agenda = fields.CharField(
+    courtroom = fields.CharField(
         max_length=255,
         required=False,
-        label='Oblast',
+        label='Jednací síň',
+        initial='0')
+    judge = fields.CharField(
+        max_length=255,
+        required=False,
+        label='Řešitel',
         initial='0')
     party = fields.CharField(
         widget=widgets.sew(),

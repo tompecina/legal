@@ -33,14 +33,8 @@ import requests
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.pdfbase.pdfdoc import PDFName, PDFDictionary, PDFStream
 from cache.models import Cache
+from .glob import hd, odp, ydconvs, mdconvs, registers
 from .settings import TEST
-
-wn = ('Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne')
-
-LIM = 0.005
-
-inerr = 'Chybné zadání, prosím, opravte údaje'
-inerr_short = 'Chybné zadání'
 
 def easter(dt):
     y = dt.year
@@ -56,21 +50,6 @@ def easter(dt):
     dt2 = dt + timedelta(3)
     return ((dt.month == m) and (dt.day == d)) or \
            ((y >= 2016) and (dt2.month == m) and (dt2.day == d))
-
-hd = (
-       {'f': None, 't': None, 'd':  1, 'm':  1},
-       {'f': None, 't': None, 'd':  1, 'm':  5},
-       {'f': 1992, 't': None, 'd':  8, 'm':  5},
-       {'f': None, 't': 1991, 'd':  9, 'm':  5},
-       {'f': None, 't': None, 'd':  5, 'm':  7},
-       {'f': None, 't': None, 'd':  6, 'm':  7},
-       {'f': 2000, 't': None, 'd': 28, 'm':  9},
-       {'f': None, 't': None, 'd': 28, 'm': 10},
-       {'f': 2000, 't': None, 'd': 17, 'm': 11},
-       {'f': None, 't': None, 'd': 24, 'm': 12},
-       {'f': None, 't': None, 'd': 25, 'm': 12},
-       {'f': None, 't': None, 'd': 26, 'm': 12},
-     )
 
 def pd(d):
     return '%d. %d. %d' % (d.day, d.month, d.year)
@@ -105,24 +84,6 @@ def plm(t, n):
     m = ((m - 1) % 12) + 1
     d = min(t.day, monthrange(y, m)[1])
     return date(y, m, d)    
-
-odp = timedelta(days=1)
-odm = timedelta(days=-1)
-
-ydconvs = ('ACT/ACT',
-           'ACT/365',
-           'ACT/360',
-           'ACT/364',
-           '30U/360',
-           '30E/360',
-           '30E/360 ISDA',
-           '30E+/360')
-
-mdconvs = ('ACT',
-           '30U',
-           '30E',
-           '30E ISDA',
-           '30E+')
 
 def yfactor(beg, end, dconv):
     if (end < beg) or (dconv not in ydconvs):
@@ -426,3 +387,42 @@ class Pager:
         if (start + batch) < total:
             self.linkf = link(start + batch)
             self.linkff = link(((total - 1) // batch) * batch)
+
+def composeref(*args):
+    if args[0]:
+        s = '%d ' % args[0]
+    else:
+        s = ''
+    s += '%s %d/%d' % args[1:4]
+    if len(args) == 5:
+        s += '-%d' % args[4]
+    return s
+
+def decomposeref(ref):
+    s = ref.split('-')
+    if len(s) == 1:
+        page = 0
+    else:
+        page = int(s[1])
+    s = s[0].split()
+    if s[0].isdigit():
+        senate = int(s[0])
+        del s[0]
+    else:
+        senate = 0
+    while not s[1][0].isdigit():
+        s[1] = s[0] + ' ' + s[1]
+        del s[0]
+    register = s[0]
+    t = s[1].split('/')
+    if page:
+        return senate, register, int(t[0]), int(t[1]), page
+    else:
+        return senate, register, int(t[0]), int(t[1])
+
+def normreg(reg):
+    rl = reg.lower()
+    for r in registers:
+        if r.lower() == rl:
+            return r
+    return reg.title()

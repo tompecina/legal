@@ -84,12 +84,13 @@ def updateproc(p):
                 court_type = 'ns'
             else:
                 court_type = 'os'
-            url = root_url + (get_proc % (court,
-                                          p.senate,
-                                          quote(p.register.upper()),
-                                          p.number,
-                                          p.year,
-                                          court_type))
+            url = root_url + (get_proc % \
+                (court,
+                 p.senate,
+                 quote(p.register.upper()),
+                 p.number,
+                 p.year,
+                 court_type))
             res = get(url)
             soup = BeautifulSoup(res.text, 'html.parser')
             table = soup.find('tr', 'AAAA')

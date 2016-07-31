@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# udn/views.py
+# psj/views.py
 #
 # Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -30,8 +30,9 @@ from math import floor, ceil
 from common.utils import formam, p2c, Pager
 from common.glob import registers, inerr, text_opts
 from cnb.main import getFXrate
+from szr.models import Court
+from .models import Hearing
 from .forms import MainForm
-from .models import Agenda, Decision, Party
 
 APP = __package__
 
@@ -48,15 +49,15 @@ def mainpage(request):
     page_title = apps.get_app_config(APP).verbose_name
 
     if request.method == 'GET':
-        agendas = Agenda.objects.all().order_by('desc')
+        courts = Court.objects.exclude(id='NSS').order_by('name')
         f = MainForm()
         return render(
             request,
-            'udn_mainpage.html',
+            'psj_mainpage.html',
             {'app': APP,
              'page_title': page_title,
              'err_message': err_message,
-             'agendas': agendas,
+             'courts': courts,
              'f': f})
     else:
         f = MainForm(request.POST)
@@ -69,28 +70,30 @@ def mainpage(request):
                 if cd[p]:
                     q[p] = cd[p]
             q['start'] = 0
-            return redirect(reverse('udn:list') + '?' + q.urlencode())
+            return redirect(reverse('psj:list') + '?' + q.urlencode())
         else:
             err_message = inerr
             return render(
                 request,
-                'udn_mainpage.html',
+                'psj_mainpage.html',
                 {'app': APP,
                  'page_title': page_title,
                  'err_message': err_message,
                  'f': f})
 
 @require_http_methods(['GET'])
-def declist(request):
+def hearinglist(request):
     page_title = apps.get_app_config(APP).verbose_name
     rd = request.GET.copy()
     p = {}
     try:
         for f, l in [['senate', 0], ['number', 1], ['year', 1990],
-                     ['page', 1], ['agenda', 1]]:
+                     ['courtroom', 1], ['judge', 1]]:
             if f in rd:
                 p[f] = int(rd[f])
                 assert p[f] >= l
+        if 'court' in rd:
+            p['courtroom__court_id'] = rd['court']
         if 'register' in rd:
             assert rd['register'] in registers
             p['register'] = rd['register']
@@ -107,16 +110,30 @@ def declist(request):
         assert start >= 0
     except:
         raise Http404
-    d = Decision.objects.filter(**p).order_by('-date', 'pk')
+    d = Hearing.objects.filter(**p).order_by('time', 'pk')
     total = len(d)
     if (start >= total) and (total > 0):
         start = total - 1
     return render(
         request,
-        'udn_list.html',
+        'psj_list.html',
         {'app': APP,
          'page_title': 'Výsledky vyhledávání',
          'rows': d[start:(start + BATCH)],
          'f': f,
-         'pager': Pager(start, total, reverse('udn:list'), rd, BATCH),
+         'pager': Pager(start, total, reverse('psj:list'), rd, BATCH),
          'total': total})
+
+@require_http_methods(['GET'])
+def courtinfo(request, court):
+    courtrooms = Hearing.objects.filter(courtroom__court_id=court) \
+        .values('courtroom_id', 'courtroom__desc').distinct() \
+        .order_by('courtroom__desc')
+    judges = Hearing.objects.filter(courtroom__court_id=court) \
+        .values('judge_id', 'judge__name').distinct() \
+        .order_by('judge__name')
+    return render(
+        request,
+        'psj_court.html',
+        {'courtrooms': courtrooms,
+         'judges': judges})

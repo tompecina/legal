@@ -28,6 +28,7 @@ from http import HTTPStatus
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from re import compile
+from common.glob import registers, register_regex
 from . import cron, forms, glob, models, views
 
 class TestCron(TestCase):
@@ -119,8 +120,8 @@ class TestCron(TestCase):
 class TestGlob(SimpleTestCase):
 
     def test_register_regex(self):
-        rr = compile(glob.register_regex)
-        for p in glob.registers:
+        rr = compile(register_regex)
+        for p in registers:
             self.assertIsNotNone(rr.match(p), msg=p)
         for p in ['X', '']:
             self.assertIsNone(rr.match(p), msg=p)

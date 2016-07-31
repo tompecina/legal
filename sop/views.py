@@ -25,7 +25,8 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from datetime import date
 from math import floor, ceil
-from common.utils import formam, p2c, inerr_short
+from common.utils import formam, p2c
+from common.glob import inerr_short
 from cnb.main import getFXrate
 from .forms import MainForm
 

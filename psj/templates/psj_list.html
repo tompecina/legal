@@ -1,0 +1,86 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+        <h1 style="margin-bottom: 3px;">{{ page_title }}</h1>{% if rows %}
+	<div class="res">Počet výsledků: {{ total }}</div>
+	<table style="border-collapse: collapse; margin: auto;">
+	  <thead>
+	    <tr class="header">
+	      <th>
+		<div>
+		  Soud
+		</div>
+		<div>
+		  Jednací síň
+		</div>
+	      </th>
+	      <th>
+		<div>
+		  Datum a čas
+		</div>
+		<div>
+		  Spisová značka
+		</div>
+	      </th>
+	      <th>
+		<div>
+		  Řešitel
+		</div>
+		<div>
+		  Druh jednání
+		</div>
+	      </th>
+	      <th>
+		Účastníci řízení
+	      </th>
+	      <th>
+		Poznámky
+	      </th>
+	    </tr>
+	  </thead>{% if not suppress_table_footer %}
+          <tfoot>
+	    <tr class="footer">
+	      <td colspan="9" style="text-align: right;">
+		{% include "pager.html" %}
+	      </td>
+	    </tr>
+	  </tfoot>{% endif %}
+	  <tbody>{% for row in rows %}
+	    <tr class="{% cycle "odd" "even" %}">
+	      <td>
+		<div>
+		  {{ row.courtroom.court.name }}
+		</div>
+		<div>
+		  {{ row.courtroom.desc }}
+		</div>
+	      </td>
+	      <td style="white-space: nowrap;">
+		<div>
+		  {{ row.time|date:'d.m.Y H:i' }}
+		</div>
+		<div>
+		  {% if row.senate %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}
+		</div>
+	      </td>
+	      <td>
+		<div>
+		  {{ row.judge }}
+		</div>
+		<div>
+		  {{ row.form }}
+		</div>
+	      </td>
+	      <td>{% for party in row.parties.all %}
+		<div>
+		  {{ party.name }}
+		</div>{% endfor %}
+	      </td>
+	      <td style="text-align: center;">
+		{% if row.closed %}<div>neveřejné</div>{% endif %}
+		{% if row.cancelled %}<div>zrušeno</div>{% endif %}
+	      </td>
+	    </tr>{% endfor %}
+	  </tbody>
+	</table>{% else %}        <p style="text-align: center;">(žádné výsledky)</p>{% endif %}
+        <p style="text-align: center;"><a href="{% url 'psj:mainpage' %}">Zpět na vyhledávací formulář</a></p>{% endblock %}

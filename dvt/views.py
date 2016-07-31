@@ -25,7 +25,8 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from datetime import date, timedelta
 from calendar import monthrange
-from common.utils import pd, inerr_short
+from common.utils import pd
+from common.glob import inerr_short
 from .forms import MainForm
 
 APP = __package__

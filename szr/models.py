@@ -23,7 +23,8 @@
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.contrib.auth.models import User
-from .glob import register_regex
+from common.utils import composeref
+from common.glob import register_regex
 
 class Court(models.Model):
     id = models.CharField(
@@ -77,5 +78,10 @@ class Proceedings(models.Model):
         auto_now=True)
 
     def __str__(self):
-        return '%s, %d %s %d/%d' % \
-            (self.court, self.senate, self.register, self.number, self.year)
+        return '%s, %s' % \
+            (self.court,
+             composeref(
+                 self.senate,
+                 self.register,
+                 self.number,
+                 self.year))

@@ -39,8 +39,8 @@ from datetime import datetime, timedelta
 import reportlab.rl_config
 from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import Paragraph, SimpleDocTemplate, LongTable, \
-                               TableStyle, Spacer, KeepTogether
+from reportlab.platypus import (
+    Paragraph, SimpleDocTemplate, LongTable, TableStyle, Spacer, KeepTogether)
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
@@ -48,15 +48,16 @@ from reportlab.lib.colors import black, gray
 from io import BytesIO
 import os.path
 from cache.main import getcache, getasset, setasset
-from common.utils import getbutton, unrequire, formam, c2p, getXML, \
-                         newXML, getint, CanvasXML, inerr
+from common.utils import (
+    getbutton, unrequire, formam, c2p, getXML, newXML, getint, CanvasXML)
+from common.glob import inerr
 from common.views import error, unauth
 from .glob import fuels
 from .utils import getVAT
-from .forms import PlaceForm, CarForm, FormulaForm, CalcForm, GeneralForm, \
-                   ServiceForm, ServiceSubform, FlatForm, FlatSubform, \
-                   AdministrativeForm, AdministrativeSubform, TimeForm, \
-                   TimeSubform, TravelForm, TravelSubform
+from .forms import (
+    PlaceForm, CarForm, FormulaForm, CalcForm, GeneralForm, ServiceForm,
+    ServiceSubform, FlatForm, FlatSubform, AdministrativeForm,
+    AdministrativeSubform, TimeForm, TimeSubform, TravelForm, TravelSubform)
 from .models import Place, Car, Formula, Rate
 
 APP = __package__

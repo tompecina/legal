@@ -15,7 +15,7 @@
 	  <tbody>{% for row in rows %}
 	    <tr class="{% cycle "odd" "even" %}">
 	      <td>{{ row.date|date:'d.m.Y' }}</td>
-	      <td style="white-space: nowrap;">{% if row.senate %}{{ row.senate }} {% else %}{% endif %}{{ row.register }} {{ row.number }}/{{row.year }}-{{ row.page }}</td>
+	      <td style="white-space: nowrap;">{% if row.senate %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}-{{ row.page }}</td>
 	      <td>{{ row.agenda }}</td>
 	      <td>{% for party in row.parties.all %}
 		<div>{{ party.name }}</div>{% endfor %}

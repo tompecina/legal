@@ -32,17 +32,18 @@ import csv
 import reportlab.rl_config
 from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Table, \
-                               TableStyle, Spacer, KeepTogether
+from reportlab.platypus import (
+    Paragraph, SimpleDocTemplate, Table, TableStyle, Spacer, KeepTogether)
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black
 from io import BytesIO
 import os.path
-from common.utils import getbutton, ydconvs, mdconvs, yfactor, mfactor, odp, \
-                         formam, xmldecorate, xmlescape, xmlunescape, p2c, \
-                         LIM, getXML, newXML, iso2date, CanvasXML, inerr
+from common.utils import (
+    getbutton, yfactor, mfactor, odp, formam, xmldecorate, xmlescape,
+    xmlunescape, p2c, getXML, newXML, iso2date, CanvasXML)
+from common.glob import ydconvs, mdconvs, LIM, inerr
 from common.views import error
 from cache.main import getasset, setasset
 from cnb.main import getMPIrate

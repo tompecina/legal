@@ -23,8 +23,8 @@
 from django.conf.urls import include, url
 from django.contrib.auth.views import login, settings
 from django.contrib import admin
-from .views import home, robots, pwchange, logout, useradd, lostpw, \
-                   resetpw, about, genrender
+from .views import (
+    home, robots, pwchange, logout, useradd, lostpw, resetpw, about, genrender)
 
 admin.autodiscover()
 

@@ -29,7 +29,7 @@ from re import compile
 from os.path import join
 from os import unlink
 from common.settings import BASE_DIR
-from . import cron, forms, glob, models, utils, views
+from . import cron, forms, glob, models, views
 
 class TestCron1(TestCase):
     fixtures = ['udn_test1.json']
@@ -171,21 +171,6 @@ class TestModels(SimpleTestCase):
                 date=date.today(),
                 filename='test_fn.pdf')),
             '4 As 26/2015-88')
-
-class TestUtils(SimpleTestCase):
-
-    def test_ref(self):
-        pp = ['3 As 12/2015-8',
-              '12 Azs 4/2009-118',
-              'Konf 1/2011-221',
-              '3 As 12/2015',
-              '12 Azs 4/2009',
-              'Konf 1/2011',
-        ]
-        for p in pp:
-            self.assertEqual(utils.composeref(*utils.decomposeref(p)), p)
-            self.assertEqual(utils.composeref(*utils.decomposeref( \
-                p.replace('-', ' - '))), p)
 
 def link_equal(a, b):
     a = a.split('?')

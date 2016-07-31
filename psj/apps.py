@@ -24,4 +24,5 @@ from django.apps import AppConfig
 
 class PsjConfig(AppConfig):
     name = 'psj'
-    version = None
+    verbose_name = 'Přehled soudních jednání'
+    version = '1.0'

@@ -22,9 +22,9 @@
 
 from django.db import models
 from django.core.validators import MinValueValidator, RegexValidator
-from szr.glob import register_regex
+from common.utils import composeref
+from common.glob import register_regex
 from .glob import filename_regex
-from .utils import composeref
 
 class Agenda(models.Model):
     desc = models.CharField(

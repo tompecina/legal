@@ -22,8 +22,9 @@
 
 from django.conf.urls import url
 from common.views import genrender
-from .views import mainpage, debitform, debitdel, creditform, creditdel, \
-                   balanceform, balancedel, fxrateform, fxrateform, fxratedel
+from .views import (
+    mainpage, debitform, debitdel, creditform, creditdel, balanceform,
+    balancedel, fxrateform, fxrateform, fxratedel)
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),

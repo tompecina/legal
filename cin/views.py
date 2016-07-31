@@ -24,9 +24,10 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from datetime import date
-from common.utils import pd, tod, ply, plm, ydconvs, mdconvs, yfactor, \
-                         mfactor, odp, grammar, getbutton, unrequire, p2c, \
-                         inerr_short
+from common.utils import (
+    pd, tod, ply, plm, ydconvs, mdconvs, yfactor, mfactor, odp, grammar,
+    getbutton, unrequire, p2c)
+from common.glob import inerr_short
 from .forms import MainForm
 
 APP = __package__

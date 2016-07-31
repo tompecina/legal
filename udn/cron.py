@@ -27,9 +27,8 @@ from datetime import date, datetime, timedelta
 from re import compile
 from os.path import join
 from common.settings import BASE_DIR, TEST
-from common.utils import get, post
+from common.utils import get, post, decomposeref
 from .glob import filename_regex
-from .utils import decomposeref
 from .models import Decision, Party, Agenda
 
 root_url = 'http://www.nssoud.cz/'
