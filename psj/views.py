@@ -100,7 +100,7 @@ def hearinglist(request):
         if 'date_from' in rd:
             p['time__gte'] = datetime.strptime(rd['date_from'], DTF).date()
         if 'date_to' in rd:
-            p['time__lte'] = datetime.strptime(rd['date_to'], DTF).date() + odp
+            p['time__lt'] = datetime.strptime(rd['date_to'], DTF).date() + odp
         if 'party_opt' in rd:
             assert rd['party_opt'] in dict(text_opts).keys()
         if 'party' in rd:
