@@ -103,4 +103,13 @@ $(function() {
 	nextText: 'následující'
     });
     $('input[type=text][name*=date]').datepicker();
+    $('select').each(function() {
+	var select = $(this);
+	var selectedValue = select.find('option[selected]').val();
+	if (selectedValue) {
+	    select.val(selectedValue);
+	} else {
+	    select.prop('selectedIndex', 0);
+	}
+    });
 });
