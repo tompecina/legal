@@ -28,7 +28,7 @@ from django.http import QueryDict, Http404
 from datetime import date, datetime
 from math import floor, ceil
 from common.utils import formam, p2c, Pager
-from common.glob import registers, inerr, text_opts
+from common.glob import registers, inerr, text_opts, odp
 from cnb.main import getFXrate
 from szr.models import Court
 from .models import Hearing
@@ -98,9 +98,9 @@ def hearinglist(request):
             assert rd['register'] in registers
             p['register'] = rd['register']
         if 'date_from' in rd:
-            p['date__gte'] = datetime.strptime(rd['date_from'], DTF).date()
+            p['time__gte'] = datetime.strptime(rd['date_from'], DTF).date()
         if 'date_to' in rd:
-            p['date__lte'] = datetime.strptime(rd['date_to'], DTF).date()
+            p['time__lte'] = datetime.strptime(rd['date_to'], DTF).date() + odp
         if 'party_opt' in rd:
             assert rd['party_opt'] in dict(text_opts).keys()
         if 'party' in rd:
