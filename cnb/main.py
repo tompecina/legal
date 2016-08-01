@@ -172,11 +172,8 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         dr = date(int(dr[6:]), int(dr[3:5]), int(dr[:2]))
     except:
         return (None, None, None, 'Chyba struktury kursové tabulky')
-    if (dr == dt) or ((today - dt) > sd):
-        try:
-            FXrate(date=dt, text=tx).save()
-        except:  # pragma: no cover
-            pass
+    if (not p) and ((dr == dt) or ((today - dt) > sd)):
+        FXrate(date=dt, text=tx).save()
     ln = soup.find('radek', {'kod': curr})
     fr = 1.0
     curr_rq = curr
