@@ -22,11 +22,12 @@
 
 from django.conf.urls import url
 from .views import mainpage, hearinglist, courtinfo
-from .cron import cron_import
+from .cron import cron_courtrooms, cron_import
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),
     url(r'^list/$', hearinglist, name='list'),
     url(r'^court/(\w+)/$', courtinfo),
+    url(r'^cron/courtrooms/$', cron_courtrooms),
     url(r'^cron/import/$', cron_import),
 ]

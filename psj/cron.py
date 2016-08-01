@@ -30,6 +30,24 @@ from szr.models import Court
 from szr.glob import supreme_administrative_court
 from .models import Courtroom, Judge, Form, Hearing, Party
 
+list_courtrooms = \
+    'http://infosoud.justice.cz/InfoSoud/seznamJednacichSini?okres=%s'
+
+@require_http_methods(['GET'])
+def cron_courtrooms(request):
+    for c in Court.objects.exclude(id=supreme_administrative_court):
+        try:
+            sleep(1)
+            res = get(list_courtrooms % c.pk)
+            soup = BeautifulSoup(res.text, 'xml')
+            for r in soup.find_all('jednaciSin'):
+                Courtroom.objects.get_or_create(
+                    court=c,
+                    desc=r.nazev.string)
+        except:
+            pass
+    return HttpResponse()
+
 ct = {
     'KSJIMBM': 'krajsky-soud-v-brne',
     'KSJICCB': 'krajsky-soud-v-ceskych-budejovicich',
