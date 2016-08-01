@@ -110,7 +110,7 @@ def hearinglist(request):
         assert start >= 0
     except:
         raise Http404
-    d = Hearing.objects.filter(**p).order_by('time', 'pk')
+    d = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
     total = len(d)
     if (start >= total) and (total > 0):
         start = total - 1

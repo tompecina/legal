@@ -107,7 +107,7 @@ def declist(request):
         assert start >= 0
     except:
         raise Http404
-    d = Decision.objects.filter(**p).order_by('-date', 'pk')
+    d = Decision.objects.filter(**p).order_by('-date', 'pk').distinct()
     total = len(d)
     if (start >= total) and (total > 0):
         start = total - 1
