@@ -30,6 +30,7 @@ from math import floor, ceil
 from common.utils import formam, p2c, Pager
 from common.glob import registers, inerr, text_opts, odp
 from cnb.main import getFXrate
+from szr.glob import supreme_court, supreme_administrative_court
 from szr.models import Court
 from .models import Hearing
 from .forms import MainForm
@@ -49,7 +50,8 @@ def mainpage(request):
     page_title = apps.get_app_config(APP).verbose_name
 
     if request.method == 'GET':
-        courts = Court.objects.exclude(id='NSS').order_by('name')
+        courts = Court.objects.exclude(id=supreme_court) \
+            .exclude(id=supreme_administrative_court).order_by('name')
         f = MainForm()
         return render(
             request,
