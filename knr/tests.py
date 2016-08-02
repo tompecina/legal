@@ -28,7 +28,7 @@ from copy import copy
 from bs4 import BeautifulSoup
 from io import BytesIO
 from common.settings import BASE_DIR
-from common.utils import newXML, p2c
+from common.utils import newXML, p2c, xmlbool
 from common.tests import TEST_STRING, stripxml
 from cache.tests import DummyRequest
 from . import forms, models, views, utils
@@ -1708,7 +1708,7 @@ class TestViews(TestCase):
         s = '<?xml version="1.0" encoding="utf-8"?><calculation>'
         for n in f:
             if views.gd[n] == views.B:
-                x = ['false', 'true'][d[n]]
+                x = xmlbool(d[n])
             else:
                 x = str(d[n])
             s += '<' + n + '>' + x + '</' + n + '>'

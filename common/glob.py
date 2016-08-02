@@ -84,5 +84,5 @@ odm = timedelta(days=-1)
 text_opts = (
     ('icontains', 'kdekoliv'),
     ('istartswith', 'na začátku'),
-    ('iexact', 'přesně')
+    ('iexact', 'přesně'),
 )

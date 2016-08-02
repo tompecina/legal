@@ -25,6 +25,12 @@ from datetime import date
 from common import forms, fields, widgets
 from common.glob import register_regex, text_opts
 
+format_opts = (
+    ('html', 'HTML'),
+    ('xml', 'XML'),
+    ('csv', 'CSV'),
+)
+
 class MainForm(forms.Form):
     date_from = fields.DateField(
         widget=widgets.dw(),
@@ -76,6 +82,11 @@ class MainForm(forms.Form):
         widget=widgets.rs,
         choices=text_opts,
         initial='icontains')
+    format = fields.ChoiceField(
+        widget=widgets.rs,
+        choices=format_opts,
+        label='Výstupní formát',
+        initial='html')
     
     def clean(self):
         cleaned_data = super(MainForm, self).clean()

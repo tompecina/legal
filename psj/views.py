@@ -20,14 +20,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
 from datetime import date, datetime
 from math import floor, ceil
-from common.utils import formam, p2c, Pager
+import csv
+from common.utils import (
+    formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
 from common.glob import registers, inerr, text_opts, odp
 from cnb.main import getFXrate
 from szr.glob import supreme_court, supreme_administrative_court
@@ -72,7 +74,8 @@ def mainpage(request):
                 if cd[p]:
                     q[p] = cd[p]
             q['start'] = 0
-            return redirect(reverse('psj:list') + '?' + q.urlencode())
+            return redirect(reverse('psj:' + cd['format'] + 'list') + \
+                '?' + q.urlencode())
         else:
             err_message = inerr
             return render(
@@ -82,32 +85,35 @@ def mainpage(request):
                  'page_title': page_title,
                  'err_message': err_message,
                  'f': f})
-
+def g2p(rd):
+    p = {}
+    for f, l in [['senate', 0], ['number', 1], ['year', 1990],
+                 ['courtroom', 1], ['judge', 1]]:
+        if f in rd:
+            p[f] = int(rd[f])
+            assert p[f] >= l
+    if 'court' in rd:
+        p['courtroom__court_id'] = rd['court']
+    if 'register' in rd:
+        assert rd['register'] in registers
+        p['register'] = rd['register']
+    if 'date_from' in rd:
+        p['time__gte'] = datetime.strptime(rd['date_from'], DTF).date()
+    if 'date_to' in rd:
+        p['time__lt'] = datetime.strptime(rd['date_to'], DTF).date() + odp
+    if 'party_opt' in rd:
+        assert rd['party_opt'] in dict(text_opts).keys()
+    if 'party' in rd:
+        assert 'party_opt' in rd
+        p['parties__name__' + rd['party_opt']] = rd['party']
+    return p
+        
 @require_http_methods(['GET'])
-def hearinglist(request):
+def htmllist(request):
     page_title = apps.get_app_config(APP).verbose_name
     rd = request.GET.copy()
-    p = {}
     try:
-        for f, l in [['senate', 0], ['number', 1], ['year', 1990],
-                     ['courtroom', 1], ['judge', 1]]:
-            if f in rd:
-                p[f] = int(rd[f])
-                assert p[f] >= l
-        if 'court' in rd:
-            p['courtroom__court_id'] = rd['court']
-        if 'register' in rd:
-            assert rd['register'] in registers
-            p['register'] = rd['register']
-        if 'date_from' in rd:
-            p['time__gte'] = datetime.strptime(rd['date_from'], DTF).date()
-        if 'date_to' in rd:
-            p['time__lt'] = datetime.strptime(rd['date_to'], DTF).date() + odp
-        if 'party_opt' in rd:
-            assert rd['party_opt'] in dict(text_opts).keys()
-        if 'party' in rd:
-            assert 'party_opt' in rd
-            p['parties__name__' + rd['party_opt']] = rd['party']
+        p = g2p(rd)
         start = int(rd['start']) if ('start' in rd) else 0
         assert start >= 0
     except:
@@ -122,10 +128,111 @@ def hearinglist(request):
         {'app': APP,
          'page_title': 'Výsledky vyhledávání',
          'rows': d[start:(start + BATCH)],
-         'f': f,
-         'pager': Pager(start, total, reverse('psj:list'), rd, BATCH),
+         'pager': Pager(start, total, reverse('psj:htmllist'), rd, BATCH),
          'today': date.today(),
          'total': total})
+
+@require_http_methods(['GET'])
+def xmllist(request):
+    rd = request.GET.copy()
+    try:
+        p = g2p(rd)
+    except:
+        raise Http404
+    hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
+    xd = {
+        'hearings': {
+            'xmlns': 'http://legal.pecina.cz',
+            'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+            'xsi:schemaLocation': 'http://legal.pecina.cz ' \
+            'https://legal.pecina.cz/static/%s-%s.xsd' % (APP, APPVERSION),
+            'application': APP,
+            'version': APPVERSION,
+            'created': datetime.now().replace(microsecond=0).isoformat()
+        }
+    }
+    xml = newXML('')
+    tag_hearings = xmldecorate(xml.new_tag('hearings'), xd)
+    xml.append(tag_hearings)
+    for h in hh:
+        tag_hearing = xml.new_tag('hearing')
+        tag_hearings.append(tag_hearing)
+        tag_court = xml.new_tag('court')
+        tag_hearing.append(tag_court)
+        tag_court['id'] = h.courtroom.court_id
+        tag_court.append(h.courtroom.court.name)
+        tag_courtroom = xml.new_tag('courtroom')
+        tag_hearing.append(tag_courtroom)
+        tag_courtroom.append(h.courtroom.desc)
+        tag_time = xml.new_tag('time')
+        tag_hearing.append(tag_time)
+        tag_time.append(h.time.replace(microsecond=0).isoformat())
+        tag_ref = xml.new_tag('ref')
+        tag_hearing.append(tag_ref)
+        tag_ref.append(composeref(h.senate, h.register, h.number, h.year))
+        tag_judge = xml.new_tag('judge')
+        tag_hearing.append(tag_judge)
+        tag_judge.append(h.judge.name)
+        tag_parties = xml.new_tag('parties')
+        tag_hearing.append(tag_parties)
+        for party in h.parties.values():
+            tag_party = xml.new_tag('party')
+            tag_parties.append(tag_party)
+            tag_party.append(party['name'])
+        tag_form = xml.new_tag('form')
+        tag_hearing.append(tag_form)
+        tag_form.append(h.form.name)
+        tag_closed = xml.new_tag('closed')
+        tag_hearing.append(tag_closed)
+        tag_closed.append(xmlbool(h.closed))
+        tag_cancelled = xml.new_tag('cancelled')
+        tag_hearing.append(tag_cancelled)
+        tag_cancelled.append(xmlbool(h.cancelled))
+    response = HttpResponse(
+        str(xml).encode('utf-8') + b'\n', content_type='text/xml')
+    response['Content-Disposition'] = \
+                'attachment; filename=Jednani.xml'
+    return response
+
+@require_http_methods(['GET'])
+def csvlist(request):
+    rd = request.GET.copy()
+    try:
+        p = g2p(rd)
+    except:
+        raise Http404
+    hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = \
+        'attachment; filename=Jednani.csv'
+    writer = csv.writer(response)
+    hdr = ['Soud',
+           'Jednací síň',
+           'Datum',
+           'Čas',
+           'Spisová značka',
+           'Řešitel',
+           'Účastníci řízení',
+           'Druh jednání',
+           'Neveřejné',
+           'Zrušeno',
+    ]
+    writer.writerow(hdr)
+    for h in hh:
+        dat = [
+            h.courtroom.court.name,
+            h.courtroom.desc,
+            h.time.strftime('%d.%m.%Y'),
+            h.time.strftime('%H:%M'),
+            composeref(h.senate, h.register, h.number, h.year),
+            h.judge.name,
+            ';'.join([p['name'] for p in h.parties.values()]),
+            h.form.name,
+            'ano' if h.closed else 'ne',
+            'ano' if h.cancelled else 'ne',
+        ]
+        writer.writerow(dat)
+    return response
 
 @require_http_methods(['GET'])
 def courtinfo(request, court):

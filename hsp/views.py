@@ -944,10 +944,11 @@ def mainpage(request):
                                (debit.id, debit.currency))
                 writer.writerow(hdr)
                 for row in res.rows:
-                    dat = [row['date'].isoformat(),
-                           row['description'],
-                           ('%.2f' % row['amount']),
-                           row['disp_currency']
+                    dat = [
+                        row['date'].isoformat(),
+                        row['description'],
+                        ('%.2f' % row['amount']),
+                        row['disp_currency']
                     ]
                     dat.extend(map(lambda t: ('%.2f' % t), row['pre']))
                     dat.extend(map(lambda t: ('%.2f' % t), row['change']))

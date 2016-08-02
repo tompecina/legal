@@ -426,3 +426,9 @@ def normreg(reg):
         if r.lower() == rl:
             return r
     return reg.title()
+
+def xmlbool(x):
+    if x:
+        return 'true'
+    else:
+        return 'false'
