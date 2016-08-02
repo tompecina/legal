@@ -35,7 +35,7 @@ from .glob import supreme_court, supreme_administrative_court
 
 root_url = 'http://infosoud.justice.cz/'
 list_courts = 'public/search.jsp'
-list_reports =  'InfoSoud/seznamOkresnichSoudu?kraj=%s'
+list_reports = 'InfoSoud/seznamOkresnichSoudu?kraj=%s'
 get_proc = 'InfoSoud/public/search.do?org=%s&cisloSenatu=%d&druhVec=%s' \
            '&bcVec=%d&rocnik=%d&typSoudu=%s&autoFill=true&type=spzn'
 nss_url = 'http://www.nssoud.cz/main0Col.aspx?cls=JudikaturaSimpleSearch' \
