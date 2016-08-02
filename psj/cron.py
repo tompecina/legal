@@ -21,7 +21,7 @@
 #
 
 from django.views.decorators.http import require_http_methods
-from django.http import HttpResponse
+from django.http import HttpResponse, QueryDict
 from bs4 import BeautifulSoup
 from time import sleep
 from datetime import date, datetime, timedelta
@@ -210,9 +210,6 @@ def cron_schedule(request):
 root_url = 'http://infosoud.justice.cz/'
 get_hear = 'InfoSoud/public/searchJednani.do?'
 
-
-from django.http import QueryDict
-
 @require_http_methods(['GET'])
 def cron_update(request):
     t = Task.objects.earliest('timestamp')
@@ -227,7 +224,6 @@ def cron_update(request):
     t.delete()
     try:
         for cr in Courtroom.objects.filter(court=t.court):
-            print(cr)
             q = QueryDict(mutable=True)
             q['type'] = 'jednani'
             q['typSoudu'] = c0
