@@ -202,7 +202,7 @@ def cron_schedule(request):
     for court in Court.objects.all():
         if court.id in [supreme_court, supreme_administrative_court]:
             continue
-        for d in [14, 21, 28]:
+        for d in [14, 28]:
             dt = date.today() + timedelta(d)
             Task.objects.get_or_create(court=court, date=dt)
     return HttpResponse()
