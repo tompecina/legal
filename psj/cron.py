@@ -224,7 +224,6 @@ def cron_update(request):
         c0 = 'os'
         c1 = t.court.id
         c2 = ''
-    print(t,t.court.id)
     t.delete()
     try:
         for cr in Courtroom.objects.filter(court=t.court):
