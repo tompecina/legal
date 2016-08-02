@@ -36,11 +36,14 @@
 	      <th>
 		Poznámky
 	      </th>
+	      <th>
+		infoSoud
+	      </th>
 	    </tr>
 	  </thead>{% if not suppress_table_footer %}
           <tfoot>
 	    <tr class="footer">
-	      <td colspan="9" style="text-align: right;">
+	      <td colspan="6" style="text-align: right;">
 		{% include "pager.html" %}
 	      </td>
 	    </tr>
@@ -79,6 +82,13 @@
 	      <td style="text-align: center;">
 		{% if row.closed %}<div>neveřejné</div>{% endif %}
 		{% if row.cancelled %}<div>zrušeno</div>{% endif %}
+	      </td>
+	      <td style="text-align: center; white-space: nowrap;">
+		{% if row.time|date:'c' >= today|date:'c' %}<a href="http://infosoud.justice.cz/InfoSoud/public/searchJednani.do?type=spzn&amp;typSoudu=os{% if row.courtroom.court.reports %}&amp;krajOrg={{ row.courtroom.court.reports_id }}&amp;org={{ row.courtroom.court_id }}{% else %}&amp;krajOrg={{ row.courtroom.court_id }}&amp;org={% endif %}&amp;cisloSenatu={{ row.senate }}&amp;druhVec={{ row.register|upper|urlencode }}&amp;bcVec={{ row.number }}&amp;rocnik={{ row.year }}&amp;spamQuestion=23" target="_blank">
+		  [J]
+		</a>{% endif %}		<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.courtroom.court_id }}&amp;cisloSenatu={{ row.senate }}&amp;druhVec={{ row.register|urlencode }}&amp;bcVec={{ row.number }}&amp;rocnik={{ row.year }}&amp;typSoudu={% if row.court_id == 'NSJIMBM' %}ns{% else %}os{% endif %}&amp;autoFill=true&amp;type=spzn" target="_blank">
+		  [Ř]
+		</a>
 	      </td>
 	    </tr>{% endfor %}
 	  </tbody>

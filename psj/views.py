@@ -122,6 +122,7 @@ def hearinglist(request):
          'rows': d[start:(start + BATCH)],
          'f': f,
          'pager': Pager(start, total, reverse('psj:list'), rd, BATCH),
+         'today': date.today(),
          'total': total})
 
 @require_http_methods(['GET'])
