@@ -20,15 +20,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
+from django.http import HttpResponse
 from bs4 import BeautifulSoup
 from time import sleep
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from common.utils import get, decomposeref, normreg
 from szr.models import Court
-from szr.glob import supreme_administrative_court
-from .models import Courtroom, Judge, Form, Hearing, Party
+from szr.glob import supreme_court, supreme_administrative_court
+from .models import Courtroom, Judge, Form, Hearing, Party, Task
 
 list_courtrooms = \
     'http://infosoud.justice.cz/InfoSoud/seznamJednacichSini?okres=%s'
@@ -190,8 +190,104 @@ def cron_import(request):
                     if hearing[1]:
                         for q in dd[4]:
                             if 'strip' in dir(q):
-                                p = Party.objects.get_or_create(name=q.strip())[0]
+                                p = Party.objects.get_or_create(
+                                    name=q.strip())[0]
                                 hearing[0].parties.add(p)
                 except:
                     pass
+    return HttpResponse()
+
+@require_http_methods(['GET'])
+def cron_schedule(request):
+    for court in Court.objects.all():
+        if court.id in [supreme_court, supreme_administrative_court]:
+            continue
+        for d in [14, 28]:
+            dt = date.today() + timedelta(d)
+            Task.objects.get_or_create(court=court, date=dt)
+    return HttpResponse()
+
+root_url = 'http://infosoud.justice.cz/'
+get_hear = 'InfoSoud/public/searchJednani.do?'
+
+
+from django.http import QueryDict
+
+@require_http_methods(['GET'])
+def cron_update(request):
+    t = Task.objects.earliest('timestamp')
+    if t.court.reports:
+        c0 = 'os'
+        c1 = t.court.reports.id
+        c2 = t.court.id
+    else:
+        c0 = 'os'
+        c1 = t.court.id
+        c2 = ''
+    print(t,t.court.id)
+    try:
+        for cr in Courtroom.objects.filter(court=t.court):
+            print(cr)
+            q = QueryDict(mutable=True)
+            q['type'] = 'jednani'
+            q['typSoudu'] = c0
+            q['krajOrg'] = c1
+            q['org'] = c2
+            q['sin'] = cr.desc
+            q['datum'] = '%d.%d.%d' % (t.date.day, t.date.month, t.date.year)
+            q['spamQuestion'] = '23'
+            q['druhVec'] = ''
+            url = root_url + get_hear + q.urlencode()
+            res = get(url)
+            soup = BeautifulSoup(res.text, 'html.parser')
+            sched = soup.select('table tr td + td table tr td table tr')[6]
+            if sched.select('b'):
+                continue
+            for tr in sched.td.table.children:
+                try:
+                    td = tr.td
+                    tm = td.text.split(':')
+                    tm = datetime(
+                        t.date.year,
+                        t.date.month,
+                        t.date.day,
+                        int(tm[0]),
+                        int(tm[1]))
+                    td = td.find_next_sibling('td')
+                    senate, register, number, year = \
+                        decomposeref(td.text.replace(' / ', '/'))
+                    register = normreg(register)
+                    td = td.find_next_sibling('td')
+                    form = Form.objects.get_or_create(name=td.text.strip())[0]
+                    td = td.find_next_sibling('td')
+                    judge = Judge.objects.get_or_create(name=td.text.strip())[0]
+                    td = td.find_next_sibling('td')
+                    parties = td.select('td')
+                    td = td.find_next_sibling('td')
+                    closed = 'Ano' in td.text
+                    td = td.find_next_sibling('td')
+                    cancelled = 'Ano' in td.text
+                    hearing = Hearing.objects.update_or_create(
+                        courtroom=cr,
+                        time=tm,
+                        senate=senate,
+                        register=register,
+                        number=number,
+                        year=year,
+                        form=form,
+                        judge=judge,
+                        defaults={
+                            'closed': closed,
+                            'cancelled': cancelled})
+                    if hearing[1]:
+                        for q in parties:
+                            if q.text.strip():
+                                p = Party.objects.get_or_create(
+                                    name=q.text.strip())[0]
+                                hearing[0].parties.add(p)
+                except:
+                    pass
+        t.delete()
+    except:
+        t.save()
     return HttpResponse()

@@ -36,7 +36,7 @@ class Courtroom(models.Model):
         auto_now=True)
 
     def __str__(self):
-        return '%s, %s' % (self.court, self.name)
+        return '%s, %s' % (self.court, self.desc)
 
 class Party(models.Model):
     name = models.CharField(
@@ -99,3 +99,14 @@ class Hearing(models.Model):
 
     def __str__(self):
         return '%s, %s' % (self.courtroom.court.id, self.ref)
+
+class Task(models.Model):
+    court = models.ForeignKey(
+        Court,
+        on_delete=models.CASCADE)
+    date = models.DateField()
+    timestamp = models.DateTimeField(
+        auto_now=True)
+
+    def __str__(self):
+        return '%s, %s' % (self.court, self.date)
