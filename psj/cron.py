@@ -202,7 +202,7 @@ def cron_schedule(request):
     for court in Court.objects.all():
         if court.id in [supreme_court, supreme_administrative_court]:
             continue
-        for d in [14, 28]:
+        for d in [14, 21, 28]:
             dt = date.today() + timedelta(d)
             Task.objects.get_or_create(court=court, date=dt)
     return HttpResponse()
@@ -225,6 +225,7 @@ def cron_update(request):
         c1 = t.court.id
         c2 = ''
     print(t,t.court.id)
+    t.delete()
     try:
         for cr in Courtroom.objects.filter(court=t.court):
             print(cr)
@@ -287,7 +288,6 @@ def cron_update(request):
                                 hearing[0].parties.add(p)
                 except:
                     pass
-        t.delete()
     except:
         t.save()
     return HttpResponse()
