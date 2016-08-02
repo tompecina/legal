@@ -212,7 +212,10 @@ get_hear = 'InfoSoud/public/searchJednani.do?'
 
 @require_http_methods(['GET'])
 def cron_update(request):
-    t = Task.objects.earliest('timestamp')
+    t = Task.objects.all()
+    if not t:
+        return HttpResponse()
+    t = t.earliest('timestamp')
     t.save()
     if t.court.reports:
         c0 = 'os'
