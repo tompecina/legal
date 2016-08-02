@@ -221,7 +221,6 @@ def cron_update(request):
         c0 = 'os'
         c1 = t.court.id
         c2 = ''
-    t.delete()
     try:
         for cr in Courtroom.objects.filter(court=t.court):
             q = QueryDict(mutable=True)
@@ -283,6 +282,7 @@ def cron_update(request):
                                 hearing[0].parties.add(p)
                 except:
                     pass
+        t.delete()
     except:
         t.save()
     return HttpResponse()
