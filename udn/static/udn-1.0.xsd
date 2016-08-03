@@ -32,7 +32,7 @@
     </xs:complexType>
   </xs:element>
   <xs:simpleType name="court_aux">
-    <xs:restriction base="xs:string">
+    <xs:restriction base="xs:token">
       <xs:enumeration value="Nejvyšší správní soud"/>
     </xs:restriction>
   </xs:simpleType>
