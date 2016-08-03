@@ -29,6 +29,7 @@ from re import compile
 from os.path import join
 from os import unlink
 from common.settings import BASE_DIR
+from common.tests import stripxml
 from . import cron, forms, glob, models, views
 
 class TestCron1(TestCase):
@@ -55,7 +56,7 @@ class TestCron1(TestCase):
     def test_update(self):
         cron.cron_update(self.req)
         d = models.Decision.objects.all()
-        self.assertEqual(len(d), 15)
+        self.assertEqual(len(d), 16)
         self.checkpdf([
             '0002_8As__1600055S.pdf',
             '0022_4As__1600037S.pdf',
@@ -108,22 +109,26 @@ class TestForms(SimpleTestCase):
 
     def test_MainForm(self):
         f = forms.MainForm(
-            {'party_opt': 'icontains'})
+            {'party_opt': 'icontains',
+             'format': 'html'})
         self.assertTrue(f.is_valid())
         f = forms.MainForm(
             {'party_opt': 'icontains',
              'date_from': '2.3.2005',
-             'date_to': '2.6.2001'})
+             'date_to': '2.6.2001',
+             'format': 'html'})
         self.assertFalse(f.is_valid())
         f = forms.MainForm(
             {'party_opt': 'icontains',
              'date_from': '2.3.2005',
-             'date_to': '3.3.2005'})
+             'date_to': '3.3.2005',
+             'format': 'html'})
         self.assertTrue(f.is_valid())
         f = forms.MainForm(
             {'party_opt': 'icontains',
              'date_from': '2.3.2005',
-             'date_to': '2.3.2005'})
+             'date_to': '2.3.2005',
+             'format': 'html'})
         self.assertTrue(f.is_valid())
 
 class TestGlob(SimpleTestCase):
@@ -187,7 +192,77 @@ def link_equal(a, b):
         if a[i] != b[i]:  # pragma: no cover
             return False
     return True
-            
+
+x0 = '<?xml version="1.0" encoding="utf-8"?>\n' \
+     '<decisions application="udn" created="2016-08-04T00:20:47" ' \
+     'version="1.0" xmlns="http://legal.pecina.cz" xmlns:xsi="http:' \
+     '//www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:' \
+     '//legal.pecina.cz https://legal.pecina.cz/static/udn-1.0.xsd">' \
+     '</decisions>\n'
+
+x1 = '<?xml version="1.0" encoding="utf-8"?>\n' \
+     '<decisions application="udn" created="2016-08-04T00:20:47" ' \
+     'version="1.0" xmlns="http://legal.pecina.cz" xmlns:xsi="http:' \
+     '//www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:' \
+     '//legal.pecina.cz https://legal.pecina.cz/static/udn-1.0.xsd">' \
+     '<decision><court id="NSS">Nejvyšší správní soud</court><date>' \
+     '2199-07-01</date><ref>8 As 158/2015-33</ref><agenda>Ochrana ' \
+     'hospodářské soutěže a veřejné zakázky</agenda><parties><party>' \
+     'Úřad pro ochranu hospodářské soutěže</party><party>BUREAU VERITAS ' \
+     'CZECH REPUBLIC, spol. s r.o.</party><party>Zlínský kraj</party>' \
+     '</parties><files><file type="abridged">https://legal.pecina.cz/' \
+     'repo/udn/0158_8As__1500033S.pdf</file></files></decision></decisions>\n'
+
+x2 = '<?xml version="1.0" encoding="utf-8"?>\n' \
+     '<decisions application="udn" created="2016-08-04T00:20:47" ' \
+     'version="1.0" xmlns="http://legal.pecina.cz" xmlns:xsi="http:' \
+     '//www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:' \
+     '//legal.pecina.cz https://legal.pecina.cz/static/udn-1.0.xsd">' \
+     '<decision><court id="NSS">Nejvyšší správní soud</court><date>' \
+     '2199-07-01</date><ref>8 As 158/2015-33</ref><agenda>Ochrana ' \
+     'hospodářské soutěže a veřejné zakázky</agenda><parties><party>' \
+     'Úřad pro ochranu hospodářské soutěže</party><party>BUREAU VERITAS ' \
+     'CZECH REPUBLIC, spol. s r.o.</party><party>Zlínský kraj</party>' \
+     '</parties><files><file type="abridged">https://legal.pecina.cz/' \
+     'repo/udn/0158_8As__1500033S.pdf</file><file type="anonymized">' \
+     'https://legal.pecina.cz/repo/udn/0067_5As__1500054_20151119130217' \
+     '_prevedeno.pdf</file></files></decision></decisions>\n'
+
+c0 = 'Soud,Datum,Číslo jednací,Oblast,Účastníci řízení,Zkrácené znění,' \
+     'Anonymisované znění\n'
+
+c1 = c0 + 'Nejvyšší správní soud,01.07.2199,8 As 158/2015-33,Ochrana ' \
+     'hospodářské soutěže a veřejné zakázky,"Úřad pro ochranu hospodářské ' \
+     'soutěže;BUREAU VERITAS CZECH REPUBLIC, spol. s r.o.;Zlínský kraj",' \
+     'https://legal.pecina.cz/repo/udn/0158_8As__1500033S.pdf,\n'
+
+c2 = c0 + 'Nejvyšší správní soud,01.07.2199,8 As 158/2015-33,Ochrana ' \
+     'hospodářské soutěže a veřejné zakázky,"Úřad pro ochranu hospodářské ' \
+     'soutěže;BUREAU VERITAS CZECH REPUBLIC, spol. s r.o.;Zlínský kraj",' \
+     'https://legal.pecina.cz/repo/udn/0158_8As__1500033S.pdf,https://' \
+     'legal.pecina.cz/repo/udn/0067_5As__1500054_20151119130217_prevedeno.pdf\n'
+
+j0 = '[]'
+
+j1 = '[{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
+     '\u00e9 sout\u011b\u017ee", "BUREAU VERITAS CZECH REPUBLIC, spol. ' \
+     's r.o.", "Zl\u00ednsk\u00fd kraj"], "files": {"abridged": "https:' \
+     '//legal.pecina.cz/repo/udn/0158_8As__1500033S.pdf"}, "date": ' \
+     '"2199-07-01", "court": {"name": "Nejvy\u0161\u0161\u00ed spr' \
+     '\u00e1vn\u00ed soud", "id": "NSS"}, "ref": "8 As 158/2015-33", ' \
+     '"agenda": "Ochrana hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee ' \
+     'a ve\u0159ejn\u00e9 zak\u00e1zky"}]'
+
+j2 = '[{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
+     '\u00e9 sout\u011b\u017ee", "BUREAU VERITAS CZECH REPUBLIC, spol. ' \
+     's r.o.", "Zl\u00ednsk\u00fd kraj"], "files": {"abridged": "https:' \
+     '//legal.pecina.cz/repo/udn/0158_8As__1500033S.pdf", "anonymized": ' \
+     '"https://legal.pecina.cz/repo/udn/0067_5As__1500054_20151119130217_' \
+     'prevedeno.pdf"}, "date": "2199-07-01", "court": {"name": "Nejvy' \
+     '\u0161\u0161\u00ed spr\u00e1vn\u00ed soud", "id": "NSS"}, "ref": ' \
+     '"8 As 158/2015-33", "agenda": "Ochrana hospod\u00e1\u0159sk\u00e9 ' \
+     'sout\u011b\u017ee a ve\u0159ejn\u00e9 zak\u00e1zky"}]'
+
 class TestViews(TestCase):
     fixtures = ['udn_test1.json']
     
@@ -206,6 +281,7 @@ class TestViews(TestCase):
              'register': 'As',
              'agenda': '1',
              'party_opt': 'icontains',
+             'format': 'html',
              'submit': 'Hledat'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -214,6 +290,7 @@ class TestViews(TestCase):
             '/udn/',
             {'party': 'Ing',
              'party_opt': 'icontains',
+             'format': 'html',
              'submit': 'Hledat'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -226,6 +303,7 @@ class TestViews(TestCase):
             '/udn/',
             {'date_from': 'XXX',
              'party_opt': 'icontains',
+             'format': 'html',
              'submit': 'Hledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'udn_mainpage.html')
@@ -239,6 +317,7 @@ class TestViews(TestCase):
              'register': 'As',
              'agenda': '1',
              'party_opt': 'icontains',
+             'format': 'html',
              'submit': 'Hledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'udn_mainpage.html')
@@ -246,7 +325,7 @@ class TestViews(TestCase):
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
 
-    def test_declist(self):
+    def test_htmllist(self):
         res = self.client.get('/udn/list')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
         res = self.client.post('/udn/list/')
@@ -375,3 +454,147 @@ class TestViews(TestCase):
         self.assertTrue(link_equal(
             links[1]['href'],
             '/udn/list/?senate=8&start=150'))
+        
+    def test_xmllist(self):
+        res = self.client.get('/udn/xmllist')
+        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+        res = self.client.post('/udn/xmllist/')
+        self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
+        res = self.client.get('/udn/xmllist/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTrue(res.has_header('content-type'))
+        self.assertEqual(res['content-type'], 'text/xml; charset=utf-8')
+        res = self.client.get('/udn/xmllist/?senate=-1')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/xmllist/?register=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/xmllist/?number=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/xmllist/?year=1989')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/xmllist/?page=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/xmllist/?agenda=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get( '/udn/xmllist/?date_from=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/xmllist/?date_to=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/xmllist/?party_opt=X')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/xmllist/?register=Ads')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertXMLEqual(stripxml(res.content), stripxml(x0.encode('utf-8')))
+        res = self.client.get(
+            '/udn/xmllist/?date_from=2015-01-01&date_to=2199-07-01&' \
+            'register=As&agenda=1&party_opt=icontains')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertXMLEqual(stripxml(res.content), stripxml(x1.encode('utf-8')))
+        models.Decision.objects.update(
+            anonfilename='0067_5As__1500054_20151119130217_prevedeno.pdf')
+        res = self.client.get(
+            '/udn/xmllist/?date_from=2015-01-01&date_to=2199-07-01&' \
+            'register=As&agenda=1&party_opt=icontains')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertXMLEqual(stripxml(res.content), stripxml(x2.encode('utf-8')))
+        views.EXLIM = 0
+        res = self.client.get('/udn/xmllist/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'exlim.html')
+        views.EXLIM = 1000
+     
+    def test_csvlist(self):
+        res = self.client.get('/udn/csvlist')
+        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+        res = self.client.post('/udn/csvlist/')
+        self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
+        res = self.client.get('/udn/csvlist/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTrue(res.has_header('content-type'))
+        self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
+        res = self.client.get('/udn/csvlist/?senate=-1')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/csvlist/?register=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/csvlist/?number=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/csvlist/?year=1989')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/csvlist/?page=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/csvlist/?agenda=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get( '/udn/csvlist/?date_from=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/csvlist/?date_to=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/csvlist/?party_opt=X')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/csvlist/?register=Ads')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c0)
+        res = self.client.get(
+            '/udn/csvlist/?date_from=2015-01-01&date_to=2199-07-01&' \
+            'register=As&agenda=1&party_opt=icontains')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c1)
+        models.Decision.objects.update(
+            anonfilename='0067_5As__1500054_20151119130217_prevedeno.pdf')
+        res = self.client.get(
+            '/udn/csvlist/?date_from=2015-01-01&date_to=2199-07-01&' \
+            'register=As&agenda=1&party_opt=icontains')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c2)
+        views.EXLIM = 0
+        res = self.client.get('/udn/csvlist/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'exlim.html')
+        views.EXLIM = 1000
+
+    def test_jsonlist(self):
+        res = self.client.get('/udn/jsonlist')
+        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+        res = self.client.post('/udn/jsonlist/')
+        self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
+        res = self.client.get('/udn/jsonlist/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTrue(res.has_header('content-type'))
+        self.assertEqual(res['content-type'], 'application/json; charset=utf-8')
+        res = self.client.get('/udn/jsonlist/?senate=-1')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/jsonlist/?register=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/jsonlist/?number=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/jsonlist/?year=1989')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/jsonlist/?page=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/jsonlist/?agenda=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get( '/udn/jsonlist/?date_from=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/jsonlist/?date_to=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/jsonlist/?party_opt=X')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/udn/jsonlist/?register=Ads')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertJSONEqual(res.content.decode('utf-8'), j0)
+        res = self.client.get(
+            '/udn/jsonlist/?date_from=2015-01-01&date_to=2199-07-01&' \
+            'register=As&agenda=1&party_opt=icontains')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertJSONEqual(res.content.decode('utf-8'), j1)
+        models.Decision.objects.update(
+            anonfilename='0067_5As__1500054_20151119130217_prevedeno.pdf')
+        res = self.client.get(
+            '/udn/jsonlist/?date_from=2015-01-01&date_to=2199-07-01&' \
+            'register=As&agenda=1&party_opt=icontains')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertJSONEqual(res.content.decode('utf-8'), j2)
+        views.EXLIM = 0
+        res = self.client.get('/udn/jsonlist/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'exlim.html')
+        views.EXLIM = 1000

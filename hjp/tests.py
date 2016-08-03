@@ -190,7 +190,7 @@ class TestViews(TestCase):
         internal_note = soup.select('#id_internal_note')
         self.assertEqual(len(internal_note), 1)
         self.assertEqual(internal_note[0].text, '')
-        for suffix in [['xml', 'Uložit', 'text/xml'],
+        for suffix in [['xml', 'Uložit', 'text/xml; charset=utf-8'],
                        ['pdf', 'Export do PDF', 'application/pdf']]:
             with open(BASE_DIR + '/hjp/testdata/debt1.' + suffix[0],
                       'rb') as fi:
@@ -286,7 +286,7 @@ class TestViews(TestCase):
              'submit_csv': 'Export do CSV'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertIn('content-type', res)
-        self.assertEqual(res['content-type'], 'text/csv')
+        self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
         s = res.content.decode('utf-8')
         with open(BASE_DIR + '/hjp/testdata/debt1.csv', 'rb') as fi:
             t = fi.read().decode('utf-8')
@@ -1052,7 +1052,7 @@ class TestViews(TestCase):
             res = self.client.post('/hjp/', d)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
-            self.assertEqual(res['content-type'], 'text/csv')
+            self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
             s = res.content.decode('utf-8')
             with open(BASE_DIR + '/hjp/testdata/debt%d.csv' % i, 'rb') as fi:
                 t = fi.read().decode('utf-8')

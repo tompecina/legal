@@ -97,7 +97,7 @@ def cron_update(request):
                         if 'strip' in dir(q):
                             p = Party.objects.get_or_create(name=q.strip())[0]
                             dec.parties.add(p)
-                except:
+                except:  # pragma: no cover
                     pass
             pagers = soup.select('div#PagingBox2')[0]
             cp = int(pagers.b.text[1:-1])

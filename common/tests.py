@@ -511,6 +511,35 @@ class TestUtils(SimpleTestCase):
             self.assertEqual(utils.composeref(*utils.decomposeref( \
                 p.replace('-', ' - '))), p)
 
+    def test_normreg(self):
+        registers = [[
+            'T', 'C', 'P A NC', 'D', 'E', 'P', 'NC', 'ERO', 'RO', 'EC',
+            'EVC', 'EXE', 'EPR', 'PP', 'CM', 'SM', 'CA', 'CAD', 'AZ', 'TO',
+            'NT', 'CO', 'NTD', 'CMO', 'KO', 'NCO', 'NCD', 'NCP', 'ECM',
+            'ICM', 'INS', 'K', 'KV', 'EVCM', 'A', 'AD', 'AF', 'NA', 'UL',
+            'CDO', 'ODO', 'TDO', 'TZ' , 'NCU', 'ADS', 'AFS', 'ANS', 'AO',
+            'AOS', 'APRK', 'APRN', 'APS', 'ARS', 'AS', 'ASZ', 'AZS', 'KOMP',
+            'KONF', 'KSE', 'KSEO', 'KSS', 'KSZ', 'NA', 'NAD', 'NAO', 'NCN',
+            'NK', 'NTN', 'OBN', 'PLEN', 'PLSN', 'PST', 'ROZK', 'RS', 'S',
+            'SPR', 'SST', 'VOL', 'ABC', 'abc'
+        ], [
+            'T', 'C', 'P a Nc', 'D', 'E', 'P', 'Nc', 'ERo', 'Ro', 'EC',
+            'EVC', 'EXE', 'EPR', 'PP', 'Cm', 'Sm', 'Ca', 'Cad', 'Az', 'To',
+            'Nt', 'Co', 'Ntd', 'Cmo', 'Ko', 'Nco', 'Ncd', 'Ncp', 'ECm',
+            'ICm', 'INS', 'K', 'Kv', 'EVCm', 'A', 'Ad', 'Af', 'Na', 'UL',
+            'Cdo', 'Odo', 'Tdo', 'Tz' , 'Ncu', 'Ads', 'Afs', 'Ans', 'Ao',
+            'Aos', 'Aprk', 'Aprn', 'Aps', 'Ars', 'As', 'Asz', 'Azs', 'Komp',
+            'Konf', 'Kse', 'Kseo', 'Kss', 'Ksz', 'Na', 'Nad', 'Nao', 'Ncn',
+            'Nk', 'Ntn', 'Obn', 'Plen', 'Plsn', 'Pst', 'Rozk', 'Rs', 'S',
+            'Spr', 'Sst', 'Vol', 'Abc', 'Abc'
+        ]]
+        for x, y in zip(registers[0], registers[1]):
+            self.assertEqual(utils.normreg(x), y)
+
+    def test_xmlbool(self):
+        self.assertEqual(utils.xmlbool(False), 'false')
+        self.assertEqual(utils.xmlbool(True), 'true')
+
 class TestViews(TestCase):
 
     def setUp(self):

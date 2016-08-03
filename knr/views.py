@@ -72,7 +72,7 @@ def lim(lower, x, upper):
 def findloc(s):
     if not s:
         return False
-    s = quote(unquote(s).encode('utf8'))
+    s = quote(unquote(s).encode('utf-8'))
     u = ('https://maps.googleapis.com/maps/api/geocode/' \
          'json?address=%s&language=cs&sensor=false' % s)
     r = getcache(u, timedelta(weeks=1))[0]

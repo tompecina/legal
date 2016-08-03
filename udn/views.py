@@ -78,6 +78,7 @@ def mainpage(request):
                 if cd[p]:
                     q[p] = cd[p]
             q['start'] = 0
+            del q['format']
             return redirect(reverse('udn:' + cd['format'] + 'list') + \
                 '?' + q.urlencode())
         else:

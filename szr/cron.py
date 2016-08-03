@@ -132,7 +132,7 @@ def cron_courts(request):
         upper = soup.find(id='kraj').find_all('option')[1:]
         lower = soup.find(id='soudy').find_all('option')[1:]
         for court in upper + lower:
-            Court(id=court['value'], name=court.string.encode('utf8')).save()
+            Court(id=court['value'], name=court.string.encode('utf-8')).save()
     except:
         pass
     Court.objects.all().update(reports=None)

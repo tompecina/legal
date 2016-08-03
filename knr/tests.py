@@ -302,7 +302,7 @@ class TestViews(TestCase):
         vat_rate = soup.select('#id_vat_rate')
         self.assertEqual(len(vat_rate), 1)
         self.assertEqual(vat_rate[0]['value'], '25,00')
-        for suffix in [['xml', 'Uložit kalkulaci', 'text/xml'],
+        for suffix in [['xml', 'Uložit kalkulaci', 'text/xml; charset=utf-8'],
                        ['pdf', 'Export do PDF', 'application/pdf']]:
             with open(BASE_DIR + '/knr/testdata/calc1.' + suffix[0], 'rb') \
                  as fi:
