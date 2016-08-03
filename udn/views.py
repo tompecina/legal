@@ -205,7 +205,8 @@ def xmllist(request):
             tag_file['type'] = 'anonymized'
             tag_file.append(repoprefix + d.anonfilename)
     response = HttpResponse(
-        str(xml).encode('utf-8') + b'\n', content_type='text/xml')
+        str(xml).encode('utf-8') + b'\n',
+        content_type='text/xml; charset=utf-8')
     response['Content-Disposition'] = \
                 'attachment; filename=Rozhodnuti.xml'
     return response

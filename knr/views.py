@@ -883,7 +883,9 @@ def mainpage(request):
                 if btn == 'edit':
                     return redirect('knr:itemlist')
                 if btn == 'xml':
-                    response = HttpResponse(toxml(c), content_type='text/xml')
+                    response = HttpResponse(
+                        toxml(c),
+                        content_type='text/xml; charset=utf-8')
                     response['Content-Disposition'] = \
                         'attachment; filename=Naklady.xml'
                     return response

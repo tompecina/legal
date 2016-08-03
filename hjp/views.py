@@ -658,13 +658,16 @@ def mainpage(request):
                 return redirect(cd['next'])
 
             if btn == 'xml':
-                response = HttpResponse(toxml(debt), content_type='text/xml')
+                response = HttpResponse(
+                    toxml(debt),
+                    content_type='text/xml; charset=utf-8')
                 response['Content-Disposition'] = \
                     'attachment; filename=Pohledavka.xml'
                 return response
 
             if (btn == 'csv') and not rows_err:
-                response = HttpResponse(content_type='text/csv')
+                response = \
+                    HttpResponse(content_type='text/csv; charset=utf-8')
                 response['Content-Disposition'] = \
                     'attachment; filename=Pohledavka.csv'
                 writer = csv.writer(response)

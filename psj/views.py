@@ -202,7 +202,8 @@ def xmllist(request):
         tag_hearing.append(tag_cancelled)
         tag_cancelled.append(xmlbool(h.cancelled))
     response = HttpResponse(
-        str(xml).encode('utf-8') + b'\n', content_type='text/xml')
+        str(xml).encode('utf-8') + b'\n',
+        content_type='text/xml; charset=utf-8')
     response['Content-Disposition'] = \
                 'attachment; filename=Jednani.xml'
     return response
