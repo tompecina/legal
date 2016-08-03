@@ -187,14 +187,14 @@ a svg:hover {
     fill: #e00000;
 }
 span.pager span:first-child {
-    padding-right: 3px;
+    padding-right: 7px;
 }
 span.pager span:last-child {
-    padding-left: 3px;
+    padding-left: 7px;
 }
 span.pager span.num {
-    padding-left: 6px;
-    padding-right: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 span.grayed svg {
     fill: #f2f6ff;
