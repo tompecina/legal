@@ -48,7 +48,7 @@ DTF = '%Y-%m-%d'
 
 repoprefix = repourl + APP + '/'
 
-EXLIM = 10000
+EXLIM = 1000
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):

@@ -46,7 +46,7 @@ BATCH = 50
 
 DTF = '%Y-%m-%d'
 
-EXLIM = 10000
+EXLIM = 1000
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
