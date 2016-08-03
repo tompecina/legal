@@ -20,16 +20,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
 from datetime import date, datetime
 from math import floor, ceil
-from common.utils import formam, p2c, Pager
-from common.glob import registers, inerr, text_opts
+from csv import writer as csvwriter
+from json import dump
+from common.utils import (
+    formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
+from common.glob import registers, inerr, text_opts, repourl
 from cnb.main import getFXrate
+from szr.glob import (
+    supreme_administrative_court, supreme_administrative_court_name)
 from .forms import MainForm
 from .models import Agenda, Decision, Party
 
@@ -40,7 +45,9 @@ APPVERSION = apps.get_app_config(APP).version
 BATCH = 50
 
 DTF = '%Y-%m-%d'
-        
+
+repoprefix = repourl + APP + '/'
+
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
     err_message = ''
@@ -69,7 +76,8 @@ def mainpage(request):
                 if cd[p]:
                     q[p] = cd[p]
             q['start'] = 0
-            return redirect(reverse('udn:list') + '?' + q.urlencode())
+            return redirect(reverse('udn:' + cd['format'] + 'list') + \
+                '?' + q.urlencode())
         else:
             err_message = inerr
             return render(
@@ -80,29 +88,33 @@ def mainpage(request):
                  'err_message': err_message,
                  'f': f})
 
+def g2p(rd):
+    p = {}
+    for f, l in [['senate', 0], ['number', 1], ['year', 1990],
+                 ['page', 1], ['agenda', 1]]:
+        if f in rd:
+            p[f] = int(rd[f])
+            assert p[f] >= l
+    if 'register' in rd:
+        assert rd['register'] in registers
+        p['register'] = rd['register']
+    if 'date_from' in rd:
+        p['date__gte'] = datetime.strptime(rd['date_from'], DTF).date()
+    if 'date_to' in rd:
+        p['date__lte'] = datetime.strptime(rd['date_to'], DTF).date()
+    if 'party_opt' in rd:
+        assert rd['party_opt'] in dict(text_opts).keys()
+    if 'party' in rd:
+        assert 'party_opt' in rd
+        p['parties__name__' + rd['party_opt']] = rd['party']
+    return p
+        
 @require_http_methods(['GET'])
-def declist(request):
+def htmllist(request):
     page_title = apps.get_app_config(APP).verbose_name
     rd = request.GET.copy()
-    p = {}
     try:
-        for f, l in [['senate', 0], ['number', 1], ['year', 1990],
-                     ['page', 1], ['agenda', 1]]:
-            if f in rd:
-                p[f] = int(rd[f])
-                assert p[f] >= l
-        if 'register' in rd:
-            assert rd['register'] in registers
-            p['register'] = rd['register']
-        if 'date_from' in rd:
-            p['date__gte'] = datetime.strptime(rd['date_from'], DTF).date()
-        if 'date_to' in rd:
-            p['date__lte'] = datetime.strptime(rd['date_to'], DTF).date()
-        if 'party_opt' in rd:
-            assert rd['party_opt'] in dict(text_opts).keys()
-        if 'party' in rd:
-            assert 'party_opt' in rd
-            p['parties__name__' + rd['party_opt']] = rd['party']
+        p = g2p(rd)
         start = int(rd['start']) if ('start' in rd) else 0
         assert start >= 0
     except:
@@ -117,6 +129,136 @@ def declist(request):
         {'app': APP,
          'page_title': 'Výsledky vyhledávání',
          'rows': d[start:(start + BATCH)],
-         'f': f,
-         'pager': Pager(start, total, reverse('udn:list'), rd, BATCH),
+         'pager': Pager(start, total, reverse('udn:htmllist'), rd, BATCH),
          'total': total})
+
+@require_http_methods(['GET'])
+def xmllist(request):
+    rd = request.GET.copy()
+    try:
+        p = g2p(rd)
+    except:
+        raise Http404
+    dd = Decision.objects.filter(**p).order_by('-date', 'pk').distinct()
+    xd = {
+        'decisions': {
+            'xmlns': 'http://legal.pecina.cz',
+            'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+            'xsi:schemaLocation': 'http://legal.pecina.cz ' \
+            'https://legal.pecina.cz/static/%s-%s.xsd' % (APP, APPVERSION),
+            'application': APP,
+            'version': APPVERSION,
+            'created': datetime.now().replace(microsecond=0).isoformat()
+        }
+    }
+    xml = newXML('')
+    tag_decisions = xmldecorate(xml.new_tag('decisions'), xd)
+    xml.append(tag_decisions)
+    for d in dd:
+        tag_decision = xml.new_tag('decision')
+        tag_decisions.append(tag_decision)
+        tag_court = xml.new_tag('court')
+        tag_decision.append(tag_court)
+        tag_court['id'] = supreme_administrative_court
+        tag_court.append(supreme_administrative_court_name)
+        tag_date = xml.new_tag('date')
+        tag_decision.append(tag_date)
+        tag_date.append(d.date.isoformat())
+        tag_ref = xml.new_tag('ref')
+        tag_decision.append(tag_ref)
+        tag_ref.append(composeref(
+            d.senate,
+            d.register,
+            d.number,
+            d.year,
+            d.page))
+        tag_agenda = xml.new_tag('agenda')
+        tag_decision.append(tag_agenda)
+        tag_agenda.append(d.agenda.desc)
+        tag_parties = xml.new_tag('parties')
+        tag_decision.append(tag_parties)
+        for party in d.parties.values():
+            tag_party = xml.new_tag('party')
+            tag_parties.append(tag_party)
+            tag_party.append(party['name'])
+        tag_files = xml.new_tag('files')
+        tag_decision.append(tag_files)
+        tag_file = xml.new_tag('file')
+        tag_files.append(tag_file)
+        tag_file['type'] = 'abridged'
+        tag_file.append(repoprefix + d.filename)
+        if d.anonfilename:
+            tag_file = xml.new_tag('file')
+            tag_files.append(tag_file)
+            tag_file['type'] = 'anonymized'
+            tag_file.append(repoprefix + d.anonfilename)
+    response = HttpResponse(
+        str(xml).encode('utf-8') + b'\n', content_type='text/xml')
+    response['Content-Disposition'] = \
+                'attachment; filename=Rozhodnuti.xml'
+    return response
+
+@require_http_methods(['GET'])
+def csvlist(request):
+    rd = request.GET.copy()
+    try:
+        p = g2p(rd)
+    except:
+        raise Http404
+    dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = \
+        'attachment; filename=Rozhodnuti.csv'
+    writer = csvwriter(response)
+    hdr = ['Soud',
+           'Datum',
+           'Číslo jednací',
+           'Oblast',
+           'Účastníci řízení',
+           'Zkrácené znění',
+           'Anonymisované znění',
+    ]
+    writer.writerow(hdr)
+    for d in dd:
+        dat = [
+            supreme_administrative_court_name,
+            d.date.strftime('%d.%m.%Y'),
+            composeref(d.senate, d.register, d.number, d.year, d.page),
+            d.agenda.desc,
+            ';'.join([p['name'] for p in d.parties.values()]),
+            repoprefix + d.filename,
+            (repoprefix + d.anonfilename) if d.anonfilename else '',
+        ]
+        writer.writerow(dat)
+    return response
+
+@require_http_methods(['GET'])
+def jsonlist(request):
+    rd = request.GET.copy()
+    try:
+        p = g2p(rd)
+    except:
+        raise Http404
+    dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
+    response = HttpResponse(content_type='application/json; charset=utf-8')
+    response['Content-Disposition'] = \
+        'attachment; filename=Rozhodnuti.json'
+    r = []
+    court = {
+        'id': supreme_administrative_court,
+        'name': supreme_administrative_court_name,
+    }
+    for d in dd:
+        files = {'abridged': repoprefix + d.filename}
+        if d.anonfilename:
+            files['anonymized'] = repoprefix + d.anonfilename
+        r.append({
+            'court': court,
+            'date': d.date.isoformat(),
+            'ref': composeref(d.senate, d.register, d.number, d.year, d.page),
+            'agenda': d.agenda.desc,
+            'parties': [p['name'] for p in d.parties.values()],
+            'files': files,
+        })
+    dump(r, response)
+    return response

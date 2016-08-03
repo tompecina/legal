@@ -21,4 +21,7 @@
 #
 
 supreme_court = 'NSJIMBM'
+supreme_court_name = 'Nejvyšší soud'
+
 supreme_administrative_court = 'NSS'
+supreme_administrative_court_name = 'Nejvyšší správní soud'

@@ -27,7 +27,7 @@ from django.urls import reverse
 from django.http import QueryDict, Http404
 from datetime import date, datetime
 from math import floor, ceil
-from csv import writer
+from csv import writer as csvwriter
 from json import dump
 from common.utils import (
     formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
@@ -206,7 +206,7 @@ def csvlist(request):
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = \
         'attachment; filename=Jednani.csv'
-    writer = writer(response)
+    writer = csvwriter(response)
     hdr = ['Soud',
            'Jednací síň',
            'Datum',
@@ -248,8 +248,12 @@ def jsonlist(request):
         'attachment; filename=Jednani.json'
     r = []
     for h in hh:
+        court = {
+            'id': h.courtroom.court.id,
+            'name': h.courtroom.court.name,
+        }
         r.append({
-            'court': h.courtroom.court.name,
+            'court': court,
             'courtroom': h.courtroom.desc,
             'time': h.time.isoformat(),
             'ref': composeref(h.senate, h.register, h.number, h.year),

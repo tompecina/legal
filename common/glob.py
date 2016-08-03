@@ -86,3 +86,6 @@ text_opts = (
     ('istartswith', 'na začátku'),
     ('iexact', 'přesně'),
 )
+
+localurl = 'https://legal.pecina.cz/'
+repourl = localurl + 'repo/'

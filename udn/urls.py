@@ -21,12 +21,15 @@
 #
 
 from django.conf.urls import url
-from .views import mainpage, declist
+from .views import mainpage, htmllist, xmllist, csvlist, jsonlist
 from .cron import cron_update, cron_find
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),
-    url(r'^list/$', declist, name='list'),
+    url(r'^list/$', htmllist, name='htmllist'),
+    url(r'^xmllist/$', xmllist, name='xmllist'),
+    url(r'^csvlist/$', csvlist, name='csvlist'),
+    url(r'^jsonlist/$', jsonlist, name='jsonlist'),
     url(r'^cron/update/$', cron_update),
     url(r'^cron/find/$', cron_find),
 ]
