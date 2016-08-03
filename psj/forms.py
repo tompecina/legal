@@ -29,6 +29,7 @@ format_opts = (
     ('html', 'HTML'),
     ('xml', 'XML'),
     ('csv', 'CSV'),
+    ('json', 'JSON'),
 )
 
 class MainForm(forms.Form):

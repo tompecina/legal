@@ -27,7 +27,8 @@ from django.urls import reverse
 from django.http import QueryDict, Http404
 from datetime import date, datetime
 from math import floor, ceil
-import csv
+from csv import writer
+from json import dump
 from common.utils import (
     formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
 from common.glob import registers, inerr, text_opts, odp
@@ -205,7 +206,7 @@ def csvlist(request):
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = \
         'attachment; filename=Jednani.csv'
-    writer = csv.writer(response)
+    writer = writer(response)
     hdr = ['Soud',
            'Jednací síň',
            'Datum',
@@ -232,6 +233,33 @@ def csvlist(request):
             'ano' if h.cancelled else 'ne',
         ]
         writer.writerow(dat)
+    return response
+
+@require_http_methods(['GET'])
+def jsonlist(request):
+    rd = request.GET.copy()
+    try:
+        p = g2p(rd)
+    except:
+        raise Http404
+    hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
+    response = HttpResponse(content_type='application/json; charset=utf-8')
+    response['Content-Disposition'] = \
+        'attachment; filename=Jednani.json'
+    r = []
+    for h in hh:
+        r.append({
+            'court': h.courtroom.court.name,
+            'courtroom': h.courtroom.desc,
+            'time': h.time.isoformat(),
+            'ref': composeref(h.senate, h.register, h.number, h.year),
+            'judge': h.judge.name,
+            'parties': [p['name'] for p in h.parties.values()],
+            'form': h.form.name,
+            'closed': h.closed,
+            'cancelled': h.cancelled,
+        })
+    dump(r, response)
     return response
 
 @require_http_methods(['GET'])
