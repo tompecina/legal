@@ -202,7 +202,7 @@ def csvlist(request):
     except:
         raise Http404
     hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = \
         'attachment; filename=Jednani.csv'
     writer = csv.writer(response)
