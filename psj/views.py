@@ -31,7 +31,7 @@ from csv import writer as csvwriter
 from json import dump
 from common.utils import (
     formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
-from common.glob import registers, inerr, text_opts, odp
+from common.glob import registers, inerr, text_opts, odp, exlim_title
 from cnb.main import getFXrate
 from szr.glob import supreme_court, supreme_administrative_court
 from szr.models import Court
@@ -45,7 +45,9 @@ APPVERSION = apps.get_app_config(APP).version
 BATCH = 50
 
 DTF = '%Y-%m-%d'
-        
+
+EXLIM = 10000
+
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
     err_message = ''
@@ -141,6 +143,16 @@ def xmllist(request):
     except:
         raise Http404
     hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
+    total = len(hh)
+    if total > EXLIM:
+        return render(
+            request,
+            'exlim.html',
+            {'app': APP,
+             'page_title': exlim_title,
+             'limit': EXLIM,
+             'total': total,
+             'back': reverse('psj:mainpage')})
     xd = {
         'hearings': {
             'xmlns': 'http://legal.pecina.cz',
@@ -203,6 +215,16 @@ def csvlist(request):
     except:
         raise Http404
     hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
+    total = len(hh)
+    if total > EXLIM:
+        return render(
+            request,
+            'exlim.html',
+            {'app': APP,
+             'page_title': exlim_title,
+             'limit': EXLIM,
+             'total': total,
+             'back': reverse('psj:mainpage')})
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = \
         'attachment; filename=Jednani.csv'
@@ -243,6 +265,16 @@ def jsonlist(request):
     except:
         raise Http404
     hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
+    total = len(hh)
+    if total > EXLIM:
+        return render(
+            request,
+            'exlim.html',
+            {'app': APP,
+             'page_title': exlim_title,
+             'limit': EXLIM,
+             'total': total,
+             'back': reverse('psj:mainpage')})
     response = HttpResponse(content_type='application/json; charset=utf-8')
     response['Content-Disposition'] = \
         'attachment; filename=Jednani.json'

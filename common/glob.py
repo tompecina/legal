@@ -89,3 +89,5 @@ text_opts = (
 
 localurl = 'https://legal.pecina.cz/'
 repourl = localurl + 'repo/'
+
+exlim_title = 'Příliš velký počet záznamů'

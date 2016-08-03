@@ -31,7 +31,7 @@ from csv import writer as csvwriter
 from json import dump
 from common.utils import (
     formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
-from common.glob import registers, inerr, text_opts, repourl
+from common.glob import registers, inerr, text_opts, repourl, exlim_title
 from cnb.main import getFXrate
 from szr.glob import (
     supreme_administrative_court, supreme_administrative_court_name)
@@ -47,6 +47,8 @@ BATCH = 50
 DTF = '%Y-%m-%d'
 
 repoprefix = repourl + APP + '/'
+
+EXLIM = 10000
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
@@ -140,6 +142,16 @@ def xmllist(request):
     except:
         raise Http404
     dd = Decision.objects.filter(**p).order_by('-date', 'pk').distinct()
+    total = len(dd)
+    if total > EXLIM:
+        return render(
+            request,
+            'exlim.html',
+            {'app': APP,
+             'page_title': exlim_title,
+             'limit': EXLIM,
+             'total': total,
+             'back': reverse('udn:mainpage')})
     xd = {
         'decisions': {
             'xmlns': 'http://legal.pecina.cz',
@@ -206,6 +218,16 @@ def csvlist(request):
     except:
         raise Http404
     dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
+    total = len(dd)
+    if total > EXLIM:
+        return render(
+            request,
+            'exlim.html',
+            {'app': APP,
+             'page_title': exlim_title,
+             'limit': EXLIM,
+             'total': total,
+             'back': reverse('udn:mainpage')})
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = \
         'attachment; filename=Rozhodnuti.csv'
@@ -240,6 +262,16 @@ def jsonlist(request):
     except:
         raise Http404
     dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
+    total = len(dd)
+    if total > EXLIM:
+        return render(
+            request,
+            'exlim.html',
+            {'app': APP,
+             'page_title': exlim_title,
+             'limit': EXLIM,
+             'total': total,
+             'back': reverse('udn:mainpage')})
     response = HttpResponse(content_type='application/json; charset=utf-8')
     response['Content-Disposition'] = \
         'attachment; filename=Rozhodnuti.json'
