@@ -237,6 +237,7 @@ def cron_update(request):
             q['spamQuestion'] = '23'
             q['druhVec'] = ''
             url = root_url + get_hear + q.urlencode()
+            sleep(1)
             res = get(url)
             soup = BeautifulSoup(res.text, 'html.parser')
             sched = soup.select('table tr td + td table tr td table tr')[6]
