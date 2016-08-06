@@ -22,7 +22,6 @@
 
 from django.test import SimpleTestCase, TestCase, Client
 from django.contrib.auth.models import User
-from django.http import HttpRequest
 from django.core import mail
 from http import HTTPStatus
 from datetime import datetime, timedelta
@@ -34,12 +33,8 @@ from . import cron, forms, glob, models, views
 class TestCron(TestCase):
     fixtures = ['szr_test.json']
     
-    def setUp(self):
-        self.req = HttpRequest()
-        self.req.method = 'GET'
-        
     def test_courts(self):
-        cron.courts(self.req)
+        cron.courts()
         c = models.Court.objects.all()
         self.assertEqual(len(c), 98)
         c = models.Court.objects.exclude(reports=None)
@@ -50,7 +45,7 @@ class TestCron(TestCase):
             court_id='NSS', auxid=0).count(), 2)
         st = datetime.now()
         for i in range(6):
-            cron.update(self.req)
+            cron.update()
         self.assertFalse(models.Proceedings.objects.filter(
             court_id='NSS', auxid=0))
         ch6 = models.Proceedings.objects.get(pk=6).changed
@@ -86,8 +81,8 @@ class TestCron(TestCase):
 
     def test_notify(self):
         for i in range(6):
-            cron.update(self.req)
-        cron.notify(self.req)
+            cron.update()
+        cron.notify()
         m = mail.outbox
         self.assertEqual(len(m), 1)
         m = m[0]

@@ -21,7 +21,6 @@
 #
 
 from django.test import SimpleTestCase, TestCase, Client
-from django.http import HttpRequest
 from http import HTTPStatus
 from datetime import date
 from bs4 import BeautifulSoup
@@ -35,10 +34,6 @@ from . import cron, forms, glob, models, views
 class TestCron1(TestCase):
     fixtures = ['udn_test1.json']
     
-    def setUp(self):
-        self.req = HttpRequest()
-        self.req.method = 'GET'
-
     def checkpdf(self, ll):
         fl = []
         for l in ll:
@@ -54,7 +49,7 @@ class TestCron1(TestCase):
         self.assertFalse(fl, msg=fl)
         
     def test_update(self):
-        cron.update(self.req)
+        cron.update()
         d = models.Decision.objects.all()
         self.assertEqual(len(d), 16)
         self.checkpdf([
@@ -75,7 +70,7 @@ class TestCron1(TestCase):
             ])
         
     def test_find(self):
-        cron.find(self.req)
+        cron.find()
         d = models.Decision.objects.filter(
             senate=8,
             register='As',
@@ -85,17 +80,13 @@ class TestCron1(TestCase):
         self.assertEqual(len(d), 1)
         self.assertTrue(d[0].anonfilename)
         self.checkpdf(['0046_3As__1600114_20160622142215_prevedeno.pdf'])
-        cron.find(self.req)
+        cron.find()
 
 class TestCron2(TestCase):
     fixtures = ['udn_test2.json']
     
-    def setUp(self):
-        self.req = HttpRequest()
-        self.req.method = 'GET'
-
     def test_find(self):
-        cron.find(self.req)
+        cron.find()
         d = models.Decision.objects.filter(
             senate=8,
             register='As',
