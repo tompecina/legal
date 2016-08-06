@@ -123,13 +123,16 @@ def courts():
     try:
         res = get(root_url + list_courts)
         soup = BeautifulSoup(res.text, 'html.parser')
-        Court(id=supreme_court, name='Nejvyšší soud').save()
-        Court(id=supreme_administrative_court,
-              name='Nejvyšší správní soud').save()
+        Court.objects.get_or_create(id=supreme_court, name='Nejvyšší soud')
+        Court.objects.get_or_create(
+            id=supreme_administrative_court,
+            name='Nejvyšší správní soud')
         upper = soup.find(id='kraj').find_all('option')[1:]
         lower = soup.find(id='soudy').find_all('option')[1:]
         for court in upper + lower:
-            Court(id=court['value'], name=court.string.encode('utf-8')).save()
+            Court.objects.get_or_create(
+                id=court['value'],
+                name=court.string.encode('utf-8'))
     except:
         pass
     Court.objects.all().update(reports=None)
