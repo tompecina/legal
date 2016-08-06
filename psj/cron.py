@@ -193,16 +193,13 @@ def importpj():
                     pass
 
 def schedule(*args):
-    if args:
-        dd = []
-        for a in args:
-            if len(a) > 2:
-                s = a.split('.')
-                dd.append(date(int(s[2]), int(s[1]), int(s[0])))
-            else:
-                dd.append(date.today() + timedelta(int(a)))
-    else:
-        dd = [date.today() + timedelta(14), date.today() + timedelta(28)]
+    dd = []
+    for a in args:
+        if len(a) > 2:
+            s = a.split('.')
+            dd.append(date(int(s[2]), int(s[1]), int(s[0])))
+        else:
+            dd.append(date.today() + timedelta(int(a)))
     for court in Court.objects.all():
         if court.id in [supreme_court, supreme_administrative_court]:
             continue
