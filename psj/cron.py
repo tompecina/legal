@@ -203,7 +203,6 @@ def schedule(*args):
                 dd.append(date.today() + timedelta(int(a)))
     else:
         dd = [date.today() + timedelta(14), date.today() + timedelta(28)]
-    print(dd)
     for court in Court.objects.all():
         if court.id in [supreme_court, supreme_administrative_court]:
             continue
