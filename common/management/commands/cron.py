@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# udn/urls.py
+# common/management/commands/cron.py
 #
 # Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -20,13 +20,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.conf.urls import url
-from .views import mainpage, htmllist, xmllist, csvlist, jsonlist
+from django.core.management.base import BaseCommand
+from importlib import import_module
+import szr.cron
+import psj.cron
+import udn.cron
 
-urlpatterns = [
-    url(r'^$', mainpage, name='mainpage'),
-    url(r'^list/$', htmllist, name='htmllist'),
-    url(r'^xmllist/$', xmllist, name='xmllist'),
-    url(r'^csvlist/$', csvlist, name='csvlist'),
-    url(r'^jsonlist/$', jsonlist, name='jsonlist'),
-]
+class Command(BaseCommand):
+
+    def add_arguments(self, parser):
+        parser.add_argument('module', type=str)
+        parser.add_argument('method', type=str)
+    
+    def handle(self, *args, **options):
+        module = options['module']
+        method = options['method']
+        getattr(import_module(module).cron, method)()

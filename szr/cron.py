@@ -20,8 +20,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.http import HttpResponse
-from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from django.db.models import Q
 from datetime import datetime, timedelta
@@ -121,8 +119,7 @@ def isreg(c):
     s = c.pk
     return (s[:2] == 'KS') or (s == 'MSPHAAB')
     
-@require_http_methods(['GET'])
-def cron_courts(request):
+def courts():
     try:
         res = get(root_url + list_courts)
         soup = BeautifulSoup(res.text, 'html.parser')
@@ -146,20 +143,16 @@ def cron_courts(request):
                     Court.objects.filter(pk=r.id.string).update(reports=c)
             except:
                 pass
-    return HttpResponse()
 
-@require_http_methods(['GET'])
-def cron_update(request):
+def update():
     p = Proceedings.objects.filter(Q(updated__lte=datetime.now()-update_delay) \
             | Q(updated__isnull=True)).order_by('updated')
     if p:
         p = p[0]
         updateproc(p)
         p.save()
-    return HttpResponse()
     
-@require_http_methods(['GET'])
-def cron_notify(request):
+def notify():
     for u in User.objects.filter(email__isnull=False):
         uid = u.id;
         pp = Proceedings.objects.filter(uid=uid, notify=True)
@@ -190,4 +183,3 @@ def cron_notify(request):
                 'Zmeny ve sledovanych rizenich',
                 text,
                 [u.email])
-    return HttpResponse()

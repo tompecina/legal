@@ -20,8 +20,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.http import HttpResponse
-from django.views.decorators.http import require_http_methods
 from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
 from re import compile
@@ -44,8 +42,7 @@ fr = compile(filename_regex)
 
 OBS = timedelta(days=360)
 
-@require_http_methods(['GET'])
-def cron_update(request):
+def update():
     try:
         res = get(form_url)
         soup = BeautifulSoup(res.text, 'html.parser')
@@ -111,10 +108,8 @@ def cron_update(request):
             d['__EVENTARGUMENT'] = ''
     except:  # pragma: no cover
         pass
-    return HttpResponse()
 
-@require_http_methods(['GET'])
-def cron_find(request):
+def find():
     now = datetime.now()
     try:
         dec = Decision.objects.filter(
@@ -147,10 +142,9 @@ def cron_find(request):
                 continue
             with open(repo_pref + '/' + fn, 'wb') as fo:
                 if not fo.write(res.content):  # pragma: no cover
-                    return HttpResponse()
+                    return
             dec.anonfilename = fn
             dec.save()
-            return HttpResponse()
+            return
     except:
         pass
-    return HttpResponse()

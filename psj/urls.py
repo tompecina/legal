@@ -22,7 +22,6 @@
 
 from django.conf.urls import url
 from .views import mainpage, htmllist, xmllist, csvlist, jsonlist, courtinfo
-from .cron import cron_courtrooms, cron_import, cron_schedule, cron_update
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),
@@ -31,8 +30,4 @@ urlpatterns = [
     url(r'^csvlist/$', csvlist, name='csvlist'),
     url(r'^jsonlist/$', jsonlist, name='jsonlist'),
     url(r'^court/(\w+)/$', courtinfo),
-    url(r'^cron/courtrooms/$', cron_courtrooms),
-    url(r'^cron/import/$', cron_import),
-    url(r'^cron/schedule/$', cron_schedule),
-    url(r'^cron/update/$', cron_update),
 ]

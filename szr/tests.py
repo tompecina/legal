@@ -39,7 +39,7 @@ class TestCron(TestCase):
         self.req.method = 'GET'
         
     def test_courts(self):
-        cron.cron_courts(self.req)
+        cron.courts(self.req)
         c = models.Court.objects.all()
         self.assertEqual(len(c), 98)
         c = models.Court.objects.exclude(reports=None)
@@ -50,7 +50,7 @@ class TestCron(TestCase):
             court_id='NSS', auxid=0).count(), 2)
         st = datetime.now()
         for i in range(6):
-            cron.cron_update(self.req)
+            cron.update(self.req)
         self.assertFalse(models.Proceedings.objects.filter(
             court_id='NSS', auxid=0))
         ch6 = models.Proceedings.objects.get(pk=6).changed
@@ -86,8 +86,8 @@ class TestCron(TestCase):
 
     def test_notify(self):
         for i in range(6):
-            cron.cron_update(self.req)
-        cron.cron_notify(self.req)
+            cron.update(self.req)
+        cron.notify(self.req)
         m = mail.outbox
         self.assertEqual(len(m), 1)
         m = m[0]

@@ -20,8 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.views.decorators.http import require_http_methods
-from django.http import HttpResponse, QueryDict
+from django.http import QueryDict
 from bs4 import BeautifulSoup
 from time import sleep
 from datetime import date, datetime, timedelta
@@ -33,8 +32,7 @@ from .models import Courtroom, Judge, Form, Hearing, Party, Task
 list_courtrooms = \
     'http://infosoud.justice.cz/InfoSoud/seznamJednacichSini?okres=%s'
 
-@require_http_methods(['GET'])
-def cron_courtrooms(request):
+def courtrooms():
     for c in Court.objects.exclude(id=supreme_administrative_court):
         try:
             sleep(1)
@@ -46,10 +44,8 @@ def cron_courtrooms(request):
                     desc=r.nazev.string)
         except:
             pass
-    return HttpResponse()
 
-@require_http_methods(['GET'])
-def cron_import(request):
+def importpj():
 
     ct = {
         'KSJIMBM': 'krajsky-soud-v-brne',
@@ -195,26 +191,22 @@ def cron_import(request):
                                 hearing[0].parties.add(p)
                 except:
                     pass
-    return HttpResponse()
 
-@require_http_methods(['GET'])
-def cron_schedule(request):
+def schedule():
     for court in Court.objects.all():
         if court.id in [supreme_court, supreme_administrative_court]:
             continue
         for d in [14, 28]:
             dt = date.today() + timedelta(d)
             Task.objects.get_or_create(court=court, date=dt)
-    return HttpResponse()
 
 root_url = 'http://infosoud.justice.cz/'
 get_hear = 'InfoSoud/public/searchJednani.do?'
 
-@require_http_methods(['GET'])
-def cron_update(request):
+def update():
     t = Task.objects.all()
     if not t:
-        return HttpResponse()
+        return
     t = t.earliest('timestamp')
     t.save()
     if t.court.reports:
@@ -290,4 +282,3 @@ def cron_update(request):
         t.delete()
     except:
         pass
-    return HttpResponse()
