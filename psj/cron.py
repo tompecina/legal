@@ -192,13 +192,23 @@ def importpj():
                 except:
                     pass
 
-def schedule():
+def schedule(*args):
+    if args:
+        dd = []
+        for a in args:
+            if len(a) > 2:
+                s = a.split('.')
+                dd.append(date(int(s[2]), int(s[1]), int(s[0])))
+            else:
+                dd.append(date.today() + timedelta(int(a)))
+    else:
+        dd = [date.today() + timedelta(14), date.today() + timedelta(28)]
+    print(dd)
     for court in Court.objects.all():
         if court.id in [supreme_court, supreme_administrative_court]:
             continue
-        for d in [14, 28]:
-            dt = date.today() + timedelta(d)
-            Task.objects.get_or_create(court=court, date=dt)
+        for d in dd:
+            Task.objects.get_or_create(court=court, date=d)
 
 root_url = 'http://infosoud.justice.cz/'
 get_hear = 'InfoSoud/public/searchJednani.do?'

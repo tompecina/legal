@@ -31,8 +31,10 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('module', type=str)
         parser.add_argument('method', type=str)
+        parser.add_argument('custargs', nargs='*', type=str)
     
     def handle(self, *args, **options):
         module = options['module']
         method = options['method']
-        getattr(import_module(module).cron, method)()
+        custargs = options['custargs']
+        getattr(import_module(module).cron, method)(*custargs)
