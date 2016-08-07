@@ -123,7 +123,7 @@ def htmllist(request):
     except:
         raise Http404
     d = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
-    total = len(d)
+    total = d.count()
     if (start >= total) and (total > 0):
         start = total - 1
     return render(
@@ -144,7 +144,7 @@ def xmllist(request):
     except:
         raise Http404
     hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
-    total = len(hh)
+    total = hh.count()
     if total > EXLIM:
         return render(
             request,
@@ -217,7 +217,7 @@ def csvlist(request):
     except:
         raise Http404
     hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
-    total = len(hh)
+    total = hh.count()
     if total > EXLIM:
         return render(
             request,
@@ -267,7 +267,7 @@ def jsonlist(request):
     except:
         raise Http404
     hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
-    total = len(hh)
+    total = hh.count()
     if total > EXLIM:
         return render(
             request,

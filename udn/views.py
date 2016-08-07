@@ -123,7 +123,7 @@ def htmllist(request):
     except:
         raise Http404
     d = Decision.objects.filter(**p).order_by('-date', 'pk').distinct()
-    total = len(d)
+    total = d.count()
     if (start >= total) and (total > 0):
         start = total - 1
     return render(
@@ -143,7 +143,7 @@ def xmllist(request):
     except:
         raise Http404
     dd = Decision.objects.filter(**p).order_by('-date', 'pk').distinct()
-    total = len(dd)
+    total = dd.count()
     if total > EXLIM:
         return render(
             request,
@@ -220,7 +220,7 @@ def csvlist(request):
     except:
         raise Http404
     dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
-    total = len(dd)
+    total = dd.count()
     if total > EXLIM:
         return render(
             request,
@@ -264,7 +264,7 @@ def jsonlist(request):
     except:
         raise Http404
     dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
-    total = len(dd)
+    total = dd.count()
     if total > EXLIM:
         return render(
             request,
