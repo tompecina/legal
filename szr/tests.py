@@ -80,6 +80,7 @@ class TestCron(TestCase):
             ))
 
     def test_notify(self):
+        self.maxDiff = None
         for i in range(6):
             cron.update()
         cron.notify()
@@ -98,18 +99,18 @@ class TestCron(TestCase):
         self.assertEqual(
             m.body,
             'V těchto soudních řízeních, která sledujete, došlo ke změně:\n' \
-            ' - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)\n' \
-            ' - http://infosoud.justice.cz/InfoSoud/public/search.do?' \
-            'org=MSPHAAB&cisloSenatu=10&druhVec=T&bcVec=8&rocnik=2014' \
-            '&typSoudu=os&autoFill=true&type=spzn\n' \
             ' - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)\n' \
-            ' - http://infosoud.justice.cz/InfoSoud/public/search.do?' \
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
             'org=MSPHAAB&cisloSenatu=41&druhVec=T&bcVec=3&rocnik=2016' \
             '&typSoudu=os&autoFill=true&type=spzn\n' \
             ' - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 ' \
             '(Miloš Zbránek)\n' \
-            ' - http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&' \
-            'kau_id=173442\n\n' \
+            '   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&' \
+            'kau_id=173442\n' \
+            ' - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)\n' \
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
+            'org=MSPHAAB&cisloSenatu=10&druhVec=T&bcVec=8&rocnik=2014' \
+            '&typSoudu=os&autoFill=true&type=spzn\n\n' \
             'Server legal.pecina.cz (https://legal.pecina.cz)\n')
 
 class TestGlob(SimpleTestCase):
