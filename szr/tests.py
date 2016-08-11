@@ -98,7 +98,7 @@ class TestCron(TestCase):
             'Zmeny ve sledovanych rizenich')
         self.assertEqual(
             m.body,
-            'V těchto soudních řízeních, která sledujete, došlo ke změně:\n' \
+            'V těchto soudních řízeních, která sledujete, došlo ke změně:\n\n' \
             ' - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)\n' \
             '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
             'org=MSPHAAB&cisloSenatu=41&druhVec=T&bcVec=3&rocnik=2016' \

@@ -162,7 +162,7 @@ def notify():
                 .order_by('desc', 'id')
         if pp:
             text = 'V těchto soudních řízeních, která sledujete, ' \
-                   'došlo ke změně:\n'
+                   'došlo ke změně:\n\n'
             for p in pp:
                 if p.desc:
                     desc = ' (%s)' % p.desc
