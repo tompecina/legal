@@ -88,7 +88,8 @@ class Hearing(models.Model):
     judge = models.ForeignKey(
         Judge,
         on_delete=models.CASCADE)
-    parties = models.ManyToManyField(Party)
+    parties = models.ManyToManyField(
+        Party)
     closed = models.BooleanField(
         default=False)
     cancelled = models.BooleanField(

@@ -175,14 +175,14 @@ def notify():
                         court_type = 'ns'
                     else:
                         court_type = 'os'
-                    text += '   %s\n' % (root_url + (get_proc % \
+                    text += '   %s\n\n' % (root_url + (get_proc % \
                         (p.court_id, p.senate, quote(p.register.upper()), \
                          p.number, p.year, court_type)))
                 elif p.auxid:
-                    text += '   %s\n' % (nss_get_proc % p.auxid)
+                    text += '   %s\n\n' % (nss_get_proc % p.auxid)
                 p.notify = False
                 p.save()
-            text += '\nServer legal.pecina.cz (https://legal.pecina.cz)\n'
+            text += 'Server legal.pecina.cz (https://legal.pecina.cz)\n'
             send_mail(
                 'Zmeny ve sledovanych rizenich',
                 text,

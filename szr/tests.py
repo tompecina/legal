@@ -102,11 +102,11 @@ class TestCron(TestCase):
             ' - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)\n' \
             '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
             'org=MSPHAAB&cisloSenatu=41&druhVec=T&bcVec=3&rocnik=2016' \
-            '&typSoudu=os&autoFill=true&type=spzn\n' \
+            '&typSoudu=os&autoFill=true&type=spzn\n\n' \
             ' - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 ' \
             '(Miloš Zbránek)\n' \
             '   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&' \
-            'kau_id=173442\n' \
+            'kau_id=173442\n\n' \
             ' - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)\n' \
             '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
             'org=MSPHAAB&cisloSenatu=10&druhVec=T&bcVec=8&rocnik=2014' \
