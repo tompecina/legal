@@ -92,8 +92,9 @@ def updateproc(p):
             res = get(url)
             soup = BeautifulSoup(res.text, 'html.parser')
             table = soup.find('tr', 'AAAA')
+            assert table
     except:
-        return
+        return False
     hash = md5(str(table).encode()).hexdigest()
     if court != supreme_administrative_court:
         changed = None
@@ -114,6 +115,7 @@ def updateproc(p):
         if notnew:
             p.changed = p.updated
     p.hash = hash
+    return True
 
 def isreg(c):
     s = c.pk
@@ -152,8 +154,8 @@ def update():
             | Q(updated__isnull=True)).order_by('updated')
     if p:
         p = p[0]
-        updateproc(p)
-        p.save()
+        if updateproc(p):
+            p.save()
     
 def notify():
     for u in User.objects.filter(email__isnull=False):
