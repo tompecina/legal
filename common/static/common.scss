@@ -1,6 +1,17 @@
+$red: #e00000;
+$white: #ffffff;
+$gray: #f2f6ff;
+$neutral_gray: #aaaaaa;
+$pink: #ffecec;
+$very_dark_blue: #000040;
+$dark_blue: #2551b7;
+$medium_blue: #c4e0ff;
+$light_blue: #e4ecff;
+$border_blue: #c0c0ff;
+
 body, h1, h2, input[type="file"], legend, .immune {
-    color: #000040;
-    background-color: #e4ecff;
+    color: $very_dark_blue;
+    background-color: $light_blue;
     font-family: Verdana, "DejaVu Sans", sans-serif;
 }
 body {
@@ -23,7 +34,7 @@ table {
     border-collapse: collapse;
 }
 tr.header, tr.footer, tr.topline {
-    background-color: #c4e0ff;
+    background-color: $medium_blue;
 }
 th {
     font-weight: normal;
@@ -45,29 +56,29 @@ div.warning {
     padding: 4px 30px;
     text-align: center;
     margin-bottom: 12px;
-    background-color: #c4e0ff;
+    background-color: $medium_blue;
 }
 a {
-    color: #2551b7;
+    color: $dark_blue;
     text-decoration: none;
 }
 a:hover {
-    color: #e00000;
+    color: $red;
 }
 .grayed, span.grayed {
-    color: #f2f6ff;
+    color: $gray;
 }
 tr.even {
-    background-color: #f2f6ff;
+    background-color: $gray;
 }
 tr.odd {
-    background-color: #ffffff;
+    background-color: $white;
 }
 tr.preset.grayed {
-    color: #aaaaaa;
+    color: $neutral_gray;
 }
 tr.preset + tr:not(.preset) {
-    border-top: 5px solid #c4e0ff;
+    border-top: 5px solid $medium_blue;
 }
 tr.even td, tr.odd td, thead th, tr.footer td {
     padding: 3px 13px;
@@ -96,7 +107,7 @@ p.foot {
     text-align: center;
 }
 fieldset, hr {
-    border-color: #c0c0ff;
+    border-color: $border_blue;
 }
 fieldset {
     padding: 2px 5px;
@@ -105,14 +116,14 @@ legend {
     padding: 0 3px;
 }
 .err th, .err label, th.err, span.err {
-    color: #e00000;
+    color: $red;
     font-weight: bold;
 }
 .err input[type="text"],
 .err input[type="password"],
 .err textarea, input[type="text"].err,
 input[type="password"].err {
-    background: #ffecec;
+    background: $pink;
 }
 input {
     margin: 3px 0 2px;
@@ -174,17 +185,17 @@ table.about td {
     padding: 4px 15px 4px 10px;
 }
 .hl {
-    color: #e00000;
+    color: $red;
 }
 span.pager {
-    color: #2551b7;
+    color: $dark_blue;
 }
 svg {
-    fill: #2551b7;
+    fill: $dark_blue;
     stroke: none;
 }
 a svg:hover {
-    fill: #e00000;
+    fill: $red;
 }
 span.pager span:first-child {
     padding-right: 7px;
@@ -197,12 +208,12 @@ span.pager span.num {
     padding-right: 8px;
 }
 span.grayed svg {
-    fill: #f2f6ff;
+    fill: $gray;
 }
 div.ui-datepicker {
     font-size: 14px;
-    background-color: #e4ecff;
-    border: 2px solid #c0c0ff;
+    background-color: $light_blue;
+    border: 2px solid $border_blue;
     padding: 0;
     width: auto;
 }
@@ -245,20 +256,23 @@ div.ui-datepicker td a {
     text-align: right;
 }
 div.ui-datepicker div.ui-datepicker-header {
-    border-bottom: 2px solid #c0c0ff;
+    border-bottom: 2px solid $border_blue;
     padding: 0;
-    background-color: #c4e0ff;
+    background-color: $medium_blue;
 }
 table.ui-datepicker-calendar {
     font-size: 14px;
     margin: 2px 0;
 }
 a.ui-state-active {
-    background-color: #c4e0ff;
+    background-color: $medium_blue;
 }
 td.ui-datepicker-other-month a {
-    color: #ffffff;
+    color: $white;
 }
 td.ui-datepicker-other-month a:hover {
-    color: #e00000;
+    color: $red;
+}
+.opt {
+    padding: 3px 8px;
 }
