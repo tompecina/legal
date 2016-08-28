@@ -12,3 +12,5 @@ __pycache__/
 /common/secrets.py
 /test/
 /htmlcov/
+*.css
+*.map

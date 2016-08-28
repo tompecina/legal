@@ -1,0 +1,7 @@
+#!/bin/bash
+
+apps='cin cnb common dvt hjp hsp knr lht psj sop szr udn'
+
+for b in $apps; do
+    sass --style=compressed $b/static/$b.scss $b/static/$b.css || exit 1
+done

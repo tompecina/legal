@@ -2,7 +2,8 @@
 
 remote='legal.pecina.cz'
 
-./manage.py collectstatic --noinput
+./dosass || exit 1
+./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'
 rsync -avhHzx \
       --exclude '.*' \
       --exclude '*.pyc' \
@@ -22,6 +23,8 @@ rsync -avhHzx \
       --exclude 'fixtures/*_test*.json' \
       --exclude '/test/' \
       --exclude '/htmlcov/' \
+      --exclude 'scss.map' \
+      --exclude '*.map' \
       --exclude '#*' \
       --delete \
       ./ $remote:/var/www/django/legal/
