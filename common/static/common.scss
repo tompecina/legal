@@ -135,6 +135,9 @@ input {
 input[type="submit"], input[type="reset"] {
     padding: 1px 7px;
 }
+select, input[type="submit"], input[type="reset"] {
+    font-size: 13.5px;
+}
 input[type="radio"] {
     margin: 3px 3px 0 5px;
 }
