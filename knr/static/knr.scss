@@ -1,15 +1,11 @@
-tr.bgrid td, tr.bgridwg td, tr.bgrid th, tr.bgridwg th {
-    padding: 4px 5px;
-}
-tr.bgridwg td, tr.bgridwg th {
-    padding-bottom: 40px;
-}
-table.vattbl th, table.vattbl td {
-    text-align: right;
-    white-space: nowrap;
-    padding: 1px 3px;
-}
-table.vattbl th {
-    width: 100%;
-    padding-right: 5px;
+table.vattbl {
+    th, td {
+	text-align: right;
+	white-space: nowrap;
+	padding: 1px 3px;
+    }
+    th {
+	width: 100%;
+	padding-right: 5px;
+    }
 }

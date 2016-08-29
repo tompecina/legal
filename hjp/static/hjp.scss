@@ -1,3 +1,5 @@
+@import "include";
+
 fieldset.infotbl {
     padding: 5px 15px;
 }
@@ -5,23 +7,25 @@ fieldset.intbl {
     margin: 20px 0;
     padding: 0 15px;
 }
-.intbl table {
-    margin: 5px auto;
-    width: 100%;
-}
-.intbl th, .intbl td {
-    text-align: left;
-    padding: 4px 0 8px;
-}
-.intbl hr {
-    margin: 0;
+.intbl {
+    table {
+	margin: 5px auto;
+	width: 100%;
+    }
+    th, td {
+	text-align: left;
+	padding: 4px 0 8px;
+    }
+    hr {
+	margin: 0;
+    }
 }
 .intbl tr.disabled th * {
-    color: #000040;
+    color: $very-dark-blue;
     font-weight: normal;
 }
 .dr, .drs {
-    color: #e00000;
+    color: $red;
 }
 td.cr, td.dr, td.crs, td.drs {
     text-align: right;
@@ -32,13 +36,15 @@ tr.header:first-child th {
 td.taberr {
     text-align: center;
     font-style: italic;
-    background: white;
-    background-image: url('/static/cb.svg');
-    background-repeat: repeat;
-    border-top: 1px solid #c4e0ff;
+    background: {
+	color: $white;
+ 	image: url('/static/cb.svg');
+	repeat: repeat;
+    }
+    border-top: 1px solid $medium-blue;
 }
 #id_calc td + td {
-    border-left: 1px solid #c4e0ff;
+    border-left: 1px solid $medium-blue;
 }
 #id_calc td + td.crs, #id_calc td + td.drs {
     border-left: none;

@@ -1,17 +1,8 @@
-$red: #e00000;
-$white: #ffffff;
-$gray: #f2f6ff;
-$neutral_gray: #aaaaaa;
-$pink: #ffecec;
-$very_dark_blue: #000040;
-$dark_blue: #2551b7;
-$medium_blue: #c4e0ff;
-$light_blue: #e4ecff;
-$border_blue: #c0c0ff;
+@import "include";
 
 body, h1, h2, input[type="file"], legend, .immune {
-    color: $very_dark_blue;
-    background-color: $light_blue;
+    color: $very-dark-blue;
+    background-color: $light-blue;
     font-family: Verdana, "DejaVu Sans", sans-serif;
 }
 body {
@@ -22,19 +13,23 @@ h1, h2 {
     text-align: center;
 }
 h1 {
-    font-size: 21px;
-    font-weight: bold;
+    font: {
+	size: 21px;
+	weight: bold;
+    }
     margin-top: 30px;
 }
 h2 {
-    font-size: 17px;
-    font-weight: normal;
+    font: {
+	size: 17px;
+	weight: normal;
+    }
 }
 table {
     border-collapse: collapse;
 }
 tr.header, tr.footer, tr.topline {
-    background-color: $medium_blue;
+    background-color: $medium-blue;
 }
 th {
     font-weight: normal;
@@ -51,19 +46,21 @@ td {
     padding: 1px 3px;
 }
 div.warning {
-    border-style: solid;
-    border-width: 2px;
+    border: {
+	style: solid;
+	width: 2px;
+    }
     padding: 4px 30px;
     text-align: center;
     margin-bottom: 12px;
-    background-color: $medium_blue;
+    background-color: $medium-blue;
 }
 a {
-    color: $dark_blue;
+    color: $dark-blue;
     text-decoration: none;
-}
-a:hover {
-    color: $red;
+    &:hover {
+	color: $red;
+    }
 }
 .grayed, span.grayed {
     color: $gray;
@@ -75,10 +72,10 @@ tr.odd {
     background-color: $white;
 }
 tr.preset.grayed {
-    color: $neutral_gray;
+    color: $neutral-gray;
 }
 tr.preset + tr:not(.preset) {
-    border-top: 5px solid $medium_blue;
+    border-top: 5px solid $medium-blue;
 }
 tr.even td, tr.odd td, thead th, tr.footer td {
     padding: 3px 13px;
@@ -97,9 +94,11 @@ th {
     white-space: nowrap;
 }
 .res {
-    font-style: italic;
+    font: {
+	style: italic;
+	size: 15px;
+    }
     text-align: center;
-    font-size: 15px;
     margin-bottom: 15px;
 }
 p.foot {
@@ -107,7 +106,7 @@ p.foot {
     text-align: center;
 }
 fieldset, hr {
-    border-color: $border_blue;
+    border-color: $border-blue;
 }
 fieldset {
     padding: 2px 5px;
@@ -156,8 +155,10 @@ td.msg div {
     white-space: nowrap;
 }
 .inlop input[type="radio"] {
-    margin-right: 1px;
-    margin-left: 1px;
+    margin: {
+	right: 1px;
+	left: 1px;
+    }
 }
 .inlop label {
     margin-left: 15px;
@@ -188,32 +189,36 @@ table.about td {
     color: $red;
 }
 span.pager {
-    color: $dark_blue;
+    color: $dark-blue;
 }
 svg {
-    fill: $dark_blue;
+    fill: $dark-blue;
     stroke: none;
 }
 a svg:hover {
     fill: $red;
 }
-span.pager span:first-child {
-    padding-right: 7px;
-}
-span.pager span:last-child {
-    padding-left: 7px;
-}
-span.pager span.num {
-    padding-left: 8px;
-    padding-right: 8px;
+span.pager {
+    span:first-child {
+	padding-right: 7px;
+    }
+    span:last-child {
+	padding-left: 7px;
+    }
+    span.num {
+	padding: {
+	    left: 8px;
+	    right: 8px;
+	}
+    }
 }
 span.grayed svg {
     fill: $gray;
 }
 div.ui-datepicker {
     font-size: 14px;
-    background-color: $light_blue;
-    border: 2px solid $border_blue;
+    background-color: $light-blue;
+    border: 2px solid $border-blue;
     padding: 0;
     width: auto;
 }
@@ -256,16 +261,16 @@ div.ui-datepicker td a {
     text-align: right;
 }
 div.ui-datepicker div.ui-datepicker-header {
-    border-bottom: 2px solid $border_blue;
+    border-bottom: 2px solid $border-blue;
     padding: 0;
-    background-color: $medium_blue;
+    background-color: $medium-blue;
 }
 table.ui-datepicker-calendar {
     font-size: 14px;
     margin: 2px 0;
 }
 a.ui-state-active {
-    background-color: $medium_blue;
+    background-color: $medium-blue;
 }
 td.ui-datepicker-other-month a {
     color: $white;
@@ -275,4 +280,10 @@ td.ui-datepicker-other-month a:hover {
 }
 .opt {
     padding: 3px 8px;
+}
+tr.bgrid td, tr.bgridwg td, tr.bgrid th, tr.bgridwg th {
+    padding: 4px 5px;
+}
+tr.bgridwg td, tr.bgridwg th {
+    padding-bottom: 40px;
 }
