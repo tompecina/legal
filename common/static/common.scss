@@ -106,9 +106,13 @@ p.foot {
     text-align: center;
 }
 fieldset, hr {
-    border-color: $border-blue;
+    border: {
+	style: solid;
+	color: $border-blue;
+    }
 }
 fieldset {
+    border-width: 2px;
     padding: 2px 5px;
 }
 legend {

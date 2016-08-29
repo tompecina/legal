@@ -3,6 +3,5 @@
 apps='cin cnb common dvt hjp hsp knr lht psj sop szr udn'
 
 for b in $apps; do
-    sass -t compressed --update -I common/static \
-	 $b/static/$b.scss:$b/static/$b.css
+    sass --update -I common/static $b/static/$b.scss:$b/static/$b.css
 done

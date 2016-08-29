@@ -10,7 +10,7 @@
 		<fieldset style="margin: 10px auto;">
 		  <legend>{{ f.preset.label }}</legend>
 {% for p in f.preset %}{% if not forloop.last %}		  <div class="opt">{{ p }}</div>
-{% endif %}{% endfor %}		  <div class="opt">
+{% endif %}{% endfor %}		  <div class="opt" style="padding-bottom: 0;">
 		    <label><input type="radio" name="preset" value="none"{% if f.preset.value == "none" %} checked="checked"{% endif %} /> jiná</label>:
 		    <span class="{{ f.dur.css_classes }}">{{ f.dur }}</span>
 		    <select name="unit" id="id_unit">
@@ -21,7 +21,7 @@
 		      <option value="b" id="id_b"{% if f.unit.value == "b" %} selected="selected"{% endif %}>pracovních dnů</option>
 		    </select>
 		  </div>
-		  <div style="text-align: center; font-size: 80%;">(lze zadat i zápornou délku)</div>
+		  <div style="text-align: center; font-size: 80%; padding-bottom: 3px;">(lze zadat i zápornou délku)</div>
 	        </fieldset>
 	      </td>
 	    </tr>
