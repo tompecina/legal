@@ -179,12 +179,21 @@ def xmllist(request):
         tag_date.append(d.date.isoformat())
         tag_ref = xml.new_tag('ref')
         tag_decision.append(tag_ref)
-        tag_ref.append(composeref(
-            d.senate,
-            d.register,
-            d.number,
-            d.year,
-            d.page))
+        tag_senate = xml.new_tag('senate')
+        tag_senate.append(str(d.senate))
+        tag_ref.append(tag_senate)
+        tag_register = xml.new_tag('register')
+        tag_register.append(d.register)
+        tag_ref.append(tag_register)
+        tag_number = xml.new_tag('number')
+        tag_number.append(str(d.number))
+        tag_ref.append(tag_number)
+        tag_year = xml.new_tag('year')
+        tag_year.append(str(d.year))
+        tag_ref.append(tag_year)
+        tag_page = xml.new_tag('page')
+        tag_page.append(str(d.page))
+        tag_ref.append(tag_page)
         tag_agenda = xml.new_tag('agenda')
         tag_decision.append(tag_agenda)
         tag_agenda.append(d.agenda.desc)
@@ -289,10 +298,15 @@ def jsonlist(request):
         r.append({
             'court': court,
             'date': d.date.isoformat(),
-            'ref': composeref(d.senate, d.register, d.number, d.year, d.page),
+            'senate': d.senate,
+            'register': d.register,
+            'number': d.number,
+            'year': d.year,
+            'page': d.page,
             'agenda': d.agenda.desc,
             'parties': [p['name'] for p in d.parties.values()],
             'files': files,
         })
+        r.append(m)
     dump(r, response)
     return response

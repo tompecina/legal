@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML Schema for PSJ V1.1 <https://legal.pecina.cz/> -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://legal.pecina.cz" xmlns="http://legal.pecina.cz" elementFormDefault="qualified">
+  <xs:element name="hearings">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="hearing" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="version" use="required" type="xs:NMTOKEN" fixed="1.1"/>
+      <xs:attribute name="application" use="required" type="xs:NCName" fixed="psj"/>
+      <xs:attribute name="created" use="required" type="xs:dateTime"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hearing">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="court">
+	  <xs:complexType>
+	    <xs:simpleContent>
+	      <xs:extension base="xs:token">
+		<xs:attribute name="id" use="required" type="xs:NCName"/>
+	      </xs:extension>
+	    </xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element name="courtroom" type="xs:token"/>
+	<xs:element name="time" type="xs:dateTime"/>
+	<xs:element ref="ref"/>
+	<xs:element name="judge" type="xs:token"/>
+	<xs:element ref="parties"/>
+	<xs:element name="form" type="xs:token"/>
+	<xs:element name="closed" type="xs:boolean"/>
+	<xs:element name="cancelled" type="xs:boolean"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ref">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="senate" type="xs:nonNegativeInteger"/>
+	<xs:element name="register" type="xs:token"/>
+	<xs:element name="number" type="xs:positiveInteger"/>
+	<xs:element name="year" type="xs:positiveInteger"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="parties">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="party" type="xs:token" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

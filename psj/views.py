@@ -183,7 +183,18 @@ def xmllist(request):
         tag_time.append(h.time.replace(microsecond=0).isoformat())
         tag_ref = xml.new_tag('ref')
         tag_hearing.append(tag_ref)
-        tag_ref.append(composeref(h.senate, h.register, h.number, h.year))
+        tag_senate = xml.new_tag('senate')
+        tag_senate.append(str(h.senate))
+        tag_ref.append(tag_senate)
+        tag_register = xml.new_tag('register')
+        tag_register.append(h.register)
+        tag_ref.append(tag_register)
+        tag_number = xml.new_tag('number')
+        tag_number.append(str(h.number))
+        tag_ref.append(tag_number)
+        tag_year = xml.new_tag('year')
+        tag_year.append(str(h.year))
+        tag_ref.append(tag_year)
         tag_judge = xml.new_tag('judge')
         tag_hearing.append(tag_judge)
         tag_judge.append(h.judge.name)
@@ -290,13 +301,17 @@ def jsonlist(request):
             'court': court,
             'courtroom': h.courtroom.desc,
             'time': h.time.isoformat(),
-            'ref': composeref(h.senate, h.register, h.number, h.year),
+            'senate': h.senate,
+            'register': h.register,
+            'number': h.number,
+            'year': h.year,
             'judge': h.judge.name,
             'parties': [p['name'] for p in h.parties.values()],
             'form': h.form.name,
             'closed': h.closed,
             'cancelled': h.cancelled,
         })
+        r.append(m)
     dump(r, response)
     return response
 
