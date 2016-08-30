@@ -122,6 +122,9 @@ legend {
     color: $red;
     font-weight: bold;
 }
+input[type="text"], input[type="password"], textarea {
+    font-size: 13.5px;
+}
 .err input[type="text"],
 .err input[type="password"],
 .err textarea, input[type="text"].err,
@@ -135,6 +138,9 @@ input {
 input[type="submit"], input[type="reset"] {
     padding: 1px 7px;
 }
+input[type="file"] {
+    padding-left: 0;
+}
 select, input[type="submit"], input[type="reset"] {
     font-size: 13.5px;
 }
@@ -144,7 +150,7 @@ input[type="radio"] {
 label input[type=radio] {
     margin-left: 10px;
 }
-label:first-child input[type=radio] {
+label:first-child input[type="radio"] {
     margin-left: 3px;
 }
 select {
