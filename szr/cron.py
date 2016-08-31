@@ -158,34 +158,35 @@ def update():
             p.save()
     
 def notify():
-    for u in User.objects.filter(email__isnull=False):
-        uid = u.id;
-        pp = Proceedings.objects.filter(uid=uid, notify=True) \
-                .order_by('desc', 'id')
-        if pp:
-            text = 'V těchto soudních řízeních, která sledujete, ' \
-                   'došlo ke změně:\n\n'
-            for p in pp:
-                if p.desc:
-                    desc = ' (%s)' % p.desc
-                else:
-                    desc = ''
-                text += ' - %s, sp. zn. %d %s %d/%d%s\n' % \
-                        (p.court, p.senate, p.register, p.number, p.year, desc)
-                if p.court_id != supreme_administrative_court:
-                    if p.court_id == supreme_court:
-                        court_type = 'ns'
+    for u in User.objects.all():
+        if u.email:
+            uid = u.id;
+            pp = Proceedings.objects.filter(uid=uid, notify=True) \
+                    .order_by('desc', 'id')
+            if pp:
+                text = 'V těchto soudních řízeních, která sledujete, ' \
+                       'došlo ke změně:\n\n'
+                for p in pp:
+                    if p.desc:
+                        desc = ' (%s)' % p.desc
                     else:
-                        court_type = 'os'
-                    text += '   %s\n\n' % (root_url + (get_proc % \
-                        (p.court_id, p.senate, quote(p.register.upper()), \
-                         p.number, p.year, court_type)))
-                elif p.auxid:
-                    text += '   %s\n\n' % (nss_get_proc % p.auxid)
-                p.notify = False
-                p.save()
-            text += 'Server legal.pecina.cz (https://legal.pecina.cz)\n'
-            send_mail(
-                'Zmeny ve sledovanych rizenich',
-                text,
-                [u.email])
+                        desc = ''
+                    text += ' - %s, sp. zn. %d %s %d/%d%s\n' % \
+                            (p.court, p.senate, p.register, p.number, p.year, desc)
+                    if p.court_id != supreme_administrative_court:
+                        if p.court_id == supreme_court:
+                            court_type = 'ns'
+                        else:
+                            court_type = 'os'
+                        text += '   %s\n\n' % (root_url + (get_proc % \
+                            (p.court_id, p.senate, quote(p.register.upper()), \
+                             p.number, p.year, court_type)))
+                    elif p.auxid:
+                        text += '   %s\n\n' % (nss_get_proc % p.auxid)
+                    p.notify = False
+                    p.save()
+                text += 'Server legal.pecina.cz (https://legal.pecina.cz)\n'
+                send_mail(
+                    'Zmeny ve sledovanych rizenich',
+                    text,
+                    [u.email])
