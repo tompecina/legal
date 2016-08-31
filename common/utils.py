@@ -360,12 +360,15 @@ def post(*args, **kwargs):  # pragma: no cover
         return requests.post(*args, **kwargs)
 
 def send_mail(subject, text, recipients):
-    mail.send_mail(
-        subject,
-        text,
-        'Server legal.pecina.cz <legal@pecina.cz>',
-        recipients,
-        fail_silently=True)
+    try:
+        mail.send_mail(
+            subject,
+            text,
+            'Server legal.pecina.cz <legal@pecina.cz>',
+            recipients,
+            fail_silently=True)
+    except:  # pragma: no cover
+        pass
 
 class Pager:
 
