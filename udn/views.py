@@ -307,6 +307,5 @@ def jsonlist(request):
             'parties': [p['name'] for p in d.parties.values()],
             'files': files,
         })
-        r.append(m)
     dump(r, response)
     return response

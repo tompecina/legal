@@ -186,19 +186,20 @@ def link_equal(a, b):
 
 x0 = '<?xml version="1.0" encoding="utf-8"?>\n' \
      '<decisions application="udn" created="2016-08-04T00:20:47" ' \
-     'version="1.0" xmlns="http://legal.pecina.cz" xmlns:xsi="http:' \
+     'version="1.1" xmlns="http://legal.pecina.cz" xmlns:xsi="http:' \
      '//www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:' \
      '//legal.pecina.cz https://legal.pecina.cz/static/udn-1.0.xsd">' \
      '</decisions>\n'
 
 x1 = '<?xml version="1.0" encoding="utf-8"?>\n' \
      '<decisions application="udn" created="2016-08-04T00:20:47" ' \
-     'version="1.0" xmlns="http://legal.pecina.cz" xmlns:xsi="http:' \
+     'version="1.1" xmlns="http://legal.pecina.cz" xmlns:xsi="http:' \
      '//www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:' \
      '//legal.pecina.cz https://legal.pecina.cz/static/udn-1.0.xsd">' \
      '<decision><court id="NSS">Nejvyšší správní soud</court><date>' \
-     '2199-07-01</date><ref>8 As 158/2015-33</ref><agenda>Ochrana ' \
-     'hospodářské soutěže a veřejné zakázky</agenda><parties><party>' \
+     '2199-07-01</date><ref><senate>8</senate><register>As</register>' \
+     '<number>158</number><year>2015</year><page>33</page></ref><agenda>' \
+     'Ochrana hospodářské soutěže a veřejné zakázky</agenda><parties><party>' \
      'Úřad pro ochranu hospodářské soutěže</party><party>BUREAU VERITAS ' \
      'CZECH REPUBLIC, spol. s r.o.</party><party>Zlínský kraj</party>' \
      '</parties><files><file type="abridged">https://legal.pecina.cz/' \
@@ -206,12 +207,13 @@ x1 = '<?xml version="1.0" encoding="utf-8"?>\n' \
 
 x2 = '<?xml version="1.0" encoding="utf-8"?>\n' \
      '<decisions application="udn" created="2016-08-04T00:20:47" ' \
-     'version="1.0" xmlns="http://legal.pecina.cz" xmlns:xsi="http:' \
+     'version="1.1" xmlns="http://legal.pecina.cz" xmlns:xsi="http:' \
      '//www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:' \
      '//legal.pecina.cz https://legal.pecina.cz/static/udn-1.0.xsd">' \
      '<decision><court id="NSS">Nejvyšší správní soud</court><date>' \
-     '2199-07-01</date><ref>8 As 158/2015-33</ref><agenda>Ochrana ' \
-     'hospodářské soutěže a veřejné zakázky</agenda><parties><party>' \
+     '2199-07-01</date><ref><senate>8</senate><register>As</register>' \
+     '<number>158</number><year>2015</year><page>33</page></ref><agenda>' \
+     'Ochrana hospodářské soutěže a veřejné zakázky</agenda><parties><party>' \
      'Úřad pro ochranu hospodářské soutěže</party><party>BUREAU VERITAS ' \
      'CZECH REPUBLIC, spol. s r.o.</party><party>Zlínský kraj</party>' \
      '</parties><files><file type="abridged">https://legal.pecina.cz/' \
@@ -240,9 +242,10 @@ j1 = '[{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
      's r.o.", "Zl\u00ednsk\u00fd kraj"], "files": {"abridged": "https:' \
      '//legal.pecina.cz/repo/udn/0158_8As__1500033S.pdf"}, "date": ' \
      '"2199-07-01", "court": {"name": "Nejvy\u0161\u0161\u00ed spr' \
-     '\u00e1vn\u00ed soud", "id": "NSS"}, "ref": "8 As 158/2015-33", ' \
-     '"agenda": "Ochrana hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee ' \
-     'a ve\u0159ejn\u00e9 zak\u00e1zky"}]'
+     '\u00e1vn\u00ed soud", "id": "NSS"}, "senate": 8, "register": "As", ' \
+     '"number": 158, "year": 2015, "page": 33, "agenda": "Ochrana ' \
+     'hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee a ve\u0159ejn\u00e9 ' \
+     'zak\u00e1zky"}]'
 
 j2 = '[{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
      '\u00e9 sout\u011b\u017ee", "BUREAU VERITAS CZECH REPUBLIC, spol. ' \
@@ -250,9 +253,10 @@ j2 = '[{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
      '//legal.pecina.cz/repo/udn/0158_8As__1500033S.pdf", "anonymized": ' \
      '"https://legal.pecina.cz/repo/udn/0067_5As__1500054_20151119130217_' \
      'prevedeno.pdf"}, "date": "2199-07-01", "court": {"name": "Nejvy' \
-     '\u0161\u0161\u00ed spr\u00e1vn\u00ed soud", "id": "NSS"}, "ref": ' \
-     '"8 As 158/2015-33", "agenda": "Ochrana hospod\u00e1\u0159sk\u00e9 ' \
-     'sout\u011b\u017ee a ve\u0159ejn\u00e9 zak\u00e1zky"}]'
+     '\u0161\u0161\u00ed spr\u00e1vn\u00ed soud", "id": "NSS"}, "senate": ' \
+     '8, "register": "As", "number": 158, "year": 2015, "page": 33, ' \
+     '"agenda": "Ochrana hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee a ' \
+     've\u0159ejn\u00e9 zak\u00e1zky"}]'
 
 class TestViews(TestCase):
     fixtures = ['udn_test1.json']

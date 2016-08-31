@@ -311,7 +311,6 @@ def jsonlist(request):
             'closed': h.closed,
             'cancelled': h.cancelled,
         })
-        r.append(m)
     dump(r, response)
     return response
 
