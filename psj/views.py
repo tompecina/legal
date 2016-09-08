@@ -29,6 +29,7 @@ from datetime import date, datetime
 from math import floor, ceil
 from csv import writer as csvwriter
 from json import dump
+from re import compile
 from locale import strxfrm
 from common.utils import (
     formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
@@ -315,11 +316,10 @@ def jsonlist(request):
     dump(r, response)
     return response
 
+sjre = compile(r'^(\S*\.\S*\s)*(.*)$')
+
 def stripjudge(name):
-    s = name['judge__name'].split()
-    while '.' in s[0]:
-        del s[0]
-    return strxfrm(' '.join(s))
+    return strxfrm(sjre.match(name['judge__name']).group(2))
 
 @require_http_methods(['GET'])
 def courtinfo(request, court):
