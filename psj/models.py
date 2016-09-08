@@ -98,7 +98,8 @@ class Hearing(models.Model):
         auto_now=True)
 
     def __str__(self):
-        return '%s, %s' % (self.courtroom.court.id, self.ref)
+        return '%s, %s' % (self.courtroom.court.id,
+            composeref(self.senate, self.register, self.number, self.year))
 
 class Task(models.Model):
     court = models.ForeignKey(

@@ -29,6 +29,7 @@ from datetime import date, datetime
 from math import floor, ceil
 from csv import writer as csvwriter
 from json import dump
+from locale import strxfrm
 from common.utils import (
     formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
 from common.glob import registers, inerr, text_opts, odp, exlim_title
@@ -314,14 +315,20 @@ def jsonlist(request):
     dump(r, response)
     return response
 
+def stripjudge(name):
+    s = name['judge__name'].split()
+    while '.' in s[0]:
+        del s[0]
+    return strxfrm(' '.join(s))
+
 @require_http_methods(['GET'])
 def courtinfo(request, court):
     courtrooms = Hearing.objects.filter(courtroom__court_id=court) \
         .values('courtroom_id', 'courtroom__desc').distinct() \
         .order_by('courtroom__desc')
-    judges = Hearing.objects.filter(courtroom__court_id=court) \
-        .values('judge_id', 'judge__name').distinct() \
-        .order_by('judge__name')
+    judges = list(Hearing.objects.filter(courtroom__court_id=court) \
+        .values('judge_id', 'judge__name').distinct())
+    judges.sort(key=stripjudge)
     return render(
         request,
         'psj_court.html',
