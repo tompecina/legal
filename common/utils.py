@@ -329,7 +329,7 @@ class CanvasXML(Canvas):
         self._doc.Catalog.__setattr__('Data', data)
         Canvas.save(self)
 
-TIMEOUT = 100
+TIMEOUT = 1000
         
 def get(*args, **kwargs):  # pragma: no cover
     if TEST:
