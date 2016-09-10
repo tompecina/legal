@@ -328,6 +328,8 @@ class CanvasXML(Canvas):
             self._doc.Catalog.__NoDefault__.append('Data')
         self._doc.Catalog.__setattr__('Data', data)
         Canvas.save(self)
+
+TIMEOUT = 1000
         
 def get(*args, **kwargs):  # pragma: no cover
     if TEST:
@@ -338,6 +340,8 @@ def get(*args, **kwargs):  # pragma: no cover
         else:
             return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
     else:
+        if not 'timeout' in kwargs:
+            kwargs['timeout'] = TIMEOUT
         return requests.get(*args, **kwargs)
 
 def post(*args, **kwargs):  # pragma: no cover
@@ -357,6 +361,8 @@ def post(*args, **kwargs):  # pragma: no cover
         else:
             return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
     else:
+        if not 'timeout' in kwargs:
+            kwargs['timeout'] = TIMEOUT
         return requests.post(*args, **kwargs)
 
 def send_mail(subject, text, recipients):
