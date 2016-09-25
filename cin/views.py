@@ -27,17 +27,12 @@ from datetime import date
 from common.utils import (
     pd, tod, ply, plm, ydconvs, mdconvs, yfactor, mfactor, odp, grammar,
     getbutton, unrequire, p2c)
-from common.glob import inerr_short
+from common.glob import inerr_short, GR_D, GR_B, GR_M, GR_Y
 from .forms import MainForm
 
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
-
-GR_D = ('den', 'dny', 'dnů')
-GR_B = ('pracovní den', 'pracovní dny', 'pracovních dnů')
-GR_M = ('měsíc', 'měsíce', 'měsíců')
-GR_Y = ('rok', 'roky', 'let')
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):

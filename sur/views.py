@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# szr/views.py
+# sur/views.py
 #
 # Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -26,11 +26,12 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.apps import apps
-from common.utils import getbutton
-from common.glob import inerr
-from .forms import EmailForm, ProcForm
-from .models import Court, Proceedings
-from .cron import addauxid, updateproc
+from common.utils import getbutton, grammar
+from common.glob import inerr, GR_C, text_opts, text_opts_keys
+from szr.forms import EmailForm
+from .forms import PartyForm
+from .models import Party
+from .glob import MIN_LENGTH
 
 APP = __package__
 
@@ -38,78 +39,64 @@ APPVERSION = apps.get_app_config(APP).version
 
 @require_http_methods(['GET', 'POST'])
 @login_required
-def procform(request, id=0):
+def partyform(request, id=0):
     err_message = ''
     uid = request.user.id
-    page_title = ('Úprava řízení' if id else 'Nové řízení')
+    page_title = ('Úprava účastníka' if id else 'Nový účastník')
     btn = getbutton(request)
-    courts = Court.objects.order_by('name')
     if request.method == 'GET':
-        f = (ProcForm(initial=model_to_dict(get_object_or_404( \
-            Proceedings, pk=id, uid=uid))) if id else ProcForm())
+        if id:
+            d = model_to_dict(get_object_or_404(Party, pk=id, uid=uid))
+            d['party_opt'] = text_opts_keys[d['party_opt']]
+            f = PartyForm(initial=d)
+        else:
+            f = PartyForm()
     elif btn == 'back':
-        return redirect('szr:mainpage')
+        return redirect('sur:mainpage')
     else:
-        f = ProcForm(request.POST)
+        f = PartyForm(request.POST)
         if f.is_valid():
             cd = f.cleaned_data
-            if not cd['senate']:
-                cd['senate'] = '0'
             if id:
-                p = get_object_or_404(Proceedings, pk=id, uid=uid)
+                p = get_object_or_404(Party, pk=id, uid=uid)
                 cd['pk'] = id
-            cd['court_id'] = cd['court']
-            del cd['court']
-            onlydesc = ( \
-                id and \
-                p.court.id == cd['court_id'] and \
-                p.senate == cd['senate'] and \
-                p.register == cd['register'] and \
-                p.number == cd['number'] and \
-                p.year == cd['year'])
-            if onlydesc:
-                cd['changed'] = p.changed
-                cd['updated'] = p.updated
-                cd['hash'] = p.hash
-                cd['notify'] = p.notify
-            p = Proceedings(uid=User(uid), **cd)
-            if not onlydesc:
-                updateproc(p)
+            p = Party(uid=User(uid), **cd)
+            p.party_opt = text_opts_keys.index(cd['party_opt'])
             p.save()
-            return redirect('szr:mainpage')
+            return redirect('sur:mainpage')
         else:
             err_message = inerr
     return render(
         request,
-        'szr_procform.html',
+        'sur_partyform.html',
         {'app': APP,
          'f': f,
+         'min_chars': grammar(MIN_LENGTH, GR_C),
          'page_title': page_title,
-         'err_message': err_message,
-         'courts': courts})
+         'err_message': err_message})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
-def procdel(request, id=0):
+def partydel(request, id=0):
     uid = request.user.id
     if request.method == 'GET':
         return render(
             request,
-            'szr_procdel.html',
+            'sur_partydel.html',
             {'app': APP,
-             'page_title': 'Smazání řízení'})
+             'page_title': 'Smazání účastníka'})
     else:
         if (getbutton(request) == 'yes'):
-            get_object_or_404(Proceedings, pk=id, uid=uid).delete()
-            return redirect('szr:procdeleted')
-        return redirect('szr:mainpage')
+            get_object_or_404(Party, pk=id, uid=uid).delete()
+            return redirect('sur:partydeleted')
+        return redirect('sur:mainpage')
 
 @require_http_methods(['GET', 'POST'])
 @login_required
 def mainpage(request):
     err_message = ''
     uid = request.user.id
-    page_title = 'Sledování změn v řízení'
+    page_title = 'Sledování účastníků řízení'
     btn = getbutton(request)
     if request.method == 'GET':
         f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
@@ -120,14 +107,18 @@ def mainpage(request):
             p = get_object_or_404(User, pk=uid)
             p.email = cd['email']
             p.save()
-            return redirect('szr:mainpage')
+            return redirect('sur:mainpage')
         else:
             err_message = inerr
+    rows = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'id') \
+        .values()
+    for row in rows:
+        row['party_opt_text'] = text_opts[row['party_opt']][1]
     return render(
         request,
-        'szr_mainpage.html',
+        'sur_mainpage.html',
         {'app': APP,
          'f': f,
          'page_title': page_title,
          'err_message': err_message,
-         'rows': Proceedings.objects.filter(uid=uid).order_by('desc', 'id')})
+         'rows': rows})

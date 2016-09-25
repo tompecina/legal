@@ -81,8 +81,7 @@ class taw(forms.Textarea):
 
     def render(self, *args, **kwargs):
         return mark_safe(super(taw, self)
-                             .render(*args, **kwargs)
-                             .replace('>\r\n', '>', 1))
+            .render(*args, **kwargs).replace('>\r\n', '>', 1))
 
 class currw(forms.TextInput):
     def __init__(self, **kwargs):
@@ -121,6 +120,13 @@ class shw(forms.TextInput):
 
 class hw(forms.HiddenInput):
     pass
+
+class emw(forms.TextInput):
+    def __init__(self, **kwargs):
+        attrs = {'size': '40'}
+        attrs.update(kwargs.get('attrs', {}))
+        kwargs['attrs'] = attrs
+        return super(emw, self).__init__(**kwargs)
 
 rs = forms.RadioSelect
 

@@ -31,7 +31,8 @@ from csv import writer as csvwriter
 from json import dump
 from common.utils import (
     formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
-from common.glob import registers, inerr, text_opts, repourl, exlim_title
+from common.glob import (
+    registers, inerr, text_opts, repourl, exlim_title, localsubdomain, localurl)
 from cnb.main import getFXrate
 from szr.glob import (
     supreme_administrative_court, supreme_administrative_court_name)
@@ -155,10 +156,10 @@ def xmllist(request):
              'back': reverse('udn:mainpage')})
     xd = {
         'decisions': {
-            'xmlns': 'http://legal.pecina.cz',
+            'xmlns': 'http://' + localsubdomain,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': 'http://legal.pecina.cz ' \
-            'https://legal.pecina.cz/static/%s-%s.xsd' % (APP, APPVERSION),
+            'xsi:schemaLocation': ('http://' + localsubdomain + ' ' + \
+            localurl + '/static/%s-%s.xsd') % (APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()

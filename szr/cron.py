@@ -28,6 +28,8 @@ from time import sleep
 from hashlib import md5
 from urllib.parse import quote
 from common.utils import get, post, send_mail
+from common.glob import localsubdomain, localurl
+from sur.cron import sur_notice
 from .models import Court, Proceedings
 from .glob import supreme_court, supreme_administrative_court
 
@@ -157,36 +159,42 @@ def update():
         if updateproc(p):
             p.save()
     
+def szr_notice(uid):
+    text = ''
+    pp = Proceedings.objects.filter(uid=uid, notify=True) \
+            .order_by('desc', 'id')
+    if pp:
+        text = 'V těchto soudních řízeních, která sledujete, ' \
+               'došlo ke změně:\n\n'
+        for p in pp:
+            if p.desc:
+                desc = ' (%s)' % p.desc
+            else:
+                desc = ''
+            text += ' - %s, sp. zn. %d %s %d/%d%s\n' % \
+                    (p.court, p.senate, p.register, p.number, p.year, desc)
+            if p.court_id != supreme_administrative_court:
+                if p.court_id == supreme_court:
+                    court_type = 'ns'
+                else:
+                    court_type = 'os'
+                text += '   %s\n\n' % (root_url + (get_proc % \
+                    (p.court_id, p.senate, quote(p.register.upper()), \
+                     p.number, p.year, court_type)))
+            elif p.auxid:
+                text += '   %s\n\n' % (nss_get_proc % p.auxid)
+            p.notify = False
+            p.save()
+    return text
+
 def notify():
     for u in User.objects.all():
         if u.email:
             uid = u.id;
-            pp = Proceedings.objects.filter(uid=uid, notify=True) \
-                    .order_by('desc', 'id')
-            if pp:
-                text = 'V těchto soudních řízeních, která sledujete, ' \
-                       'došlo ke změně:\n\n'
-                for p in pp:
-                    if p.desc:
-                        desc = ' (%s)' % p.desc
-                    else:
-                        desc = ''
-                    text += ' - %s, sp. zn. %d %s %d/%d%s\n' % \
-                            (p.court, p.senate, p.register, p.number, p.year, desc)
-                    if p.court_id != supreme_administrative_court:
-                        if p.court_id == supreme_court:
-                            court_type = 'ns'
-                        else:
-                            court_type = 'os'
-                        text += '   %s\n\n' % (root_url + (get_proc % \
-                            (p.court_id, p.senate, quote(p.register.upper()), \
-                             p.number, p.year, court_type)))
-                    elif p.auxid:
-                        text += '   %s\n\n' % (nss_get_proc % p.auxid)
-                    p.notify = False
-                    p.save()
-                text += 'Server legal.pecina.cz (https://legal.pecina.cz)\n'
+            text = szr_notice(uid) + sur_notice(uid)
+            if text:
+                text += 'Server ' + localsubdomain + ' (' + localurl + ')\n'
                 send_mail(
-                    'Zmeny ve sledovanych rizenich',
+                    'Zprava ze serveru ' + localsubdomain,
                     text,
                     [u.email])

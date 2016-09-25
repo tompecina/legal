@@ -27,7 +27,7 @@ from .glob import supreme_court
 
 class EmailForm(forms.Form):
     email = fields.EmailField(
-        widget=widgets.genw(),
+        widget=widgets.emw(),
         max_length=60,
         label='E-mail')
 

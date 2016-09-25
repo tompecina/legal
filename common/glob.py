@@ -84,10 +84,23 @@ odm = timedelta(days=-1)
 text_opts = (
     ('icontains', 'kdekoliv'),
     ('istartswith', 'na začátku'),
+    ('iendswith', 'na konci'),
     ('iexact', 'přesně'),
 )
+text_opts_keys = list(map(lambda x: x[0], text_opts))
 
-localurl = 'https://legal.pecina.cz/'
-repourl = localurl + 'repo/'
+localdomain = 'pecina.cz'
+localsubdomain = 'legal.' + localdomain
+localemail = 'legal@' + localdomain
+localscheme = 'https'
+localprefix = localscheme + '://'
+localurl = localprefix + localsubdomain
+repourl = localurl + '/repo/'
 
 exlim_title = 'Příliš velký počet záznamů'
+
+GR_C = ('znak', 'znaky', 'znaků')
+GR_D = ('den', 'dny', 'dnů')
+GR_B = ('pracovní den', 'pracovní dny', 'pracovních dnů')
+GR_M = ('měsíc', 'měsíce', 'měsíců')
+GR_Y = ('rok', 'roky', 'let')

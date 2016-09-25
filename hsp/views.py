@@ -44,7 +44,8 @@ from common import fields
 from common.utils import (
     getbutton, yfactor, mfactor, formam, xmldecorate, xmlescape, xmlunescape,
     p2c, rmdsl, getXML, newXML, iso2date, CanvasXML)
-from common.glob import ydconvs, odp,  mdconvs, LIM, inerr
+from common.glob import (
+    ydconvs, odp,  mdconvs, LIM, inerr, localsubdomain, localurl)
 from common.views import error
 from cache.main import getasset, setasset
 from cnb.main import getMPIrate, getFXrate
@@ -548,10 +549,10 @@ def calc(debt, pram=(lambda x: x)):
 def toxml(debt):
     xd = {
         'debt': {
-            'xmlns': 'http://legal.pecina.cz',
+            'xmlns': 'http://' + localsubdomain,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': 'http://legal.pecina.cz ' \
-            'https://legal.pecina.cz/static/%s-%s.xsd' % (APP, APPVERSION),
+            'xsi:schemaLocation': ('http://' + localsubdomain + ' ' + \
+            localurl + '/static/%s-%s.xsd') % (APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()

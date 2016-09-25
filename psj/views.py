@@ -33,7 +33,8 @@ from re import compile
 from locale import strxfrm
 from common.utils import (
     formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
-from common.glob import registers, inerr, text_opts, odp, exlim_title
+from common.glob import (
+    registers, inerr, text_opts, odp, exlim_title, localsubdomain, localurl)
 from cnb.main import getFXrate
 from szr.glob import supreme_court, supreme_administrative_court
 from szr.models import Court
@@ -158,10 +159,10 @@ def xmllist(request):
              'back': reverse('psj:mainpage')})
     xd = {
         'hearings': {
-            'xmlns': 'http://legal.pecina.cz',
+            'xmlns': 'http://' + localsubdomain,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': 'http://legal.pecina.cz ' \
-            'https://legal.pecina.cz/static/%s-%s.xsd' % (APP, APPVERSION),
+            'xsi:schemaLocation': ('http://' + localsubdomain + ' ' + \
+            localurl + '/static/%s-%s.xsd') % (APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()

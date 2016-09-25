@@ -35,7 +35,7 @@ from datetime import datetime, timedelta
 from .settings import APPS
 from .forms import UserAddForm, LostPwForm, MIN_PWLEN
 from .utils import send_mail, getbutton
-from .glob import inerr
+from .glob import inerr, localsubdomain, localurl
 from .models import PwResetLink
 
 @require_http_methods(['GET'])
@@ -115,15 +115,15 @@ def lostpw(request):
                 link = '%032x' % getrandbits(16 * 8)
                 PwResetLink(user_id=u[0].id, link=link).save()
                 text = \
-                    'Vážený uživateli,\n' \
+                    ('Vážený uživateli,\n' \
                     'někdo požádal o obnovení hesla pro Váš účet "%s" na ' \
-                    'serveru legal.pecina.cz (https://legal.pecina.cz).\n\n' \
+                    'serveru ' + localsubdomain + ' (' + localurl + ').\n\n' \
                     'Pokud skutečně chcete své heslo obnovit, použijte, ' \
                     'prosím, následující jednorázový odkaz:\n\n' \
-                    '  https://legal.pecina.cz%s\n\n' \
+                    '  ' + localurl + '%s\n\n' \
                     'V případě, že jste o obnovení hesla nežádali, ' \
                     'můžete tuto zprávu ignorovat.\n\n' \
-                    'Server legal.pecina.cz (https://legal.pecina.cz)\n' % \
+                    'Server ' + localsubdomain + ' (' + localurl + ')\n') % \
                     (u[0].username, reverse('resetpw', args=[link]))
                 send_mail('Link pro obnoveni hesla', text, [u[0].email])
             return redirect('/accounts/pwlinksent/')

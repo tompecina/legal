@@ -27,7 +27,9 @@ from http import HTTPStatus
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from re import compile
-from common.glob import registers, register_regex
+from common.glob import (
+    registers, register_regex, localdomain, localsubdomain, localurl,
+    localemail)
 from . import cron, forms, glob, models, views
 
 class TestCron(TestCase):
@@ -89,13 +91,13 @@ class TestCron(TestCase):
         m = m[0]
         self.assertEqual(
             m.from_email,
-            'Server legal.pecina.cz <legal@pecina.cz>')
+            'Server ' + localsubdomain + ' <' + localemail + '>')
         self.assertEqual(
             m.to,
-            ['tomas@pecina.cz'])
+            ['tomas@' + localdomain])
         self.assertEqual(
             m.subject,
-            'Zmeny ve sledovanych rizenich')
+            'Zprava ze serveru ' + localsubdomain)
         self.assertEqual(
             m.body,
             'V těchto soudních řízeních, která sledujete, došlo ke změně:\n\n' \
@@ -111,7 +113,7 @@ class TestCron(TestCase):
             '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
             'org=MSPHAAB&cisloSenatu=10&druhVec=T&bcVec=8&rocnik=2014' \
             '&typSoudu=os&autoFill=true&type=spzn\n\n' \
-            'Server legal.pecina.cz (https://legal.pecina.cz)\n')
+            'Server ' + localsubdomain + ' (' + localurl + ')\n')
 
 class TestGlob(SimpleTestCase):
 
@@ -147,7 +149,7 @@ class TestViews(TestCase):
     @classmethod
     def setUpClass(cls):
         super(TestViews, cls).setUpClass()
-        User.objects.create_user('user', 'user@pecina.cz', 'none')
+        User.objects.create_user('user', 'user@' + localdomain, 'none')
         
     @classmethod
     def tearDownClass(cls):
@@ -168,12 +170,12 @@ class TestViews(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         res = self.client.post('/szr/',
-                               {'email': 'alt@pecina.cz',
+                               {'email': 'alt@' + localdomain,
                                 'submit': 'Změnit'},
                                follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertEqual(User.objects.get(username='user').email,
-                         'alt@pecina.cz')
+                         'alt@' + localdomain)
         res = self.client.get('/szr/')
         try:
             soup = BeautifulSoup(res.content, 'html.parser')

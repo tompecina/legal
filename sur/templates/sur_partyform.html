@@ -1,0 +1,24 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+	<form id="id_partyform" method="post" enctype="multipart/form-data">
+	  <table style="margin: auto auto 15px auto;">	    <tr><td></td><td colspan="2"><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+{% if err_message %}            <tr><td></td><td colspan="2" class="warning">
+              {% include "formwarning.html" %}            </td></tr>
+{% endif %}	    <tr class="{{ f.party.css_classes }}">
+	      <th>{{ f.party.label_tag }}</th>
+	      <td colspan="2" style="white-space: nowrap;">
+		{{ f.party }} (min. {{ min_chars }})
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>{{ f.party_opt.label_tag }}</th>
+	      <td colspan="2" style="white-space: nowrap;">
+{% for p in f.party_opt %}		  {{ p }}
+{% endfor %}	      </td>
+	    </tr>
+	    {% include "submit.html" %}	  </table>
+{% if type %}          <div class="hidden"><input type="hidden" name="idx" value="{{ idx }}" /><input type="hidden" name="type" id="id_type" value="{{ type }}" /></div>
+{% endif %}	  {% csrf_token %}
+	</form>
+{% endblock %}

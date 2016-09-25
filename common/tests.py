@@ -30,6 +30,7 @@ from copy import copy
 from http import HTTPStatus
 from re import compile
 from cache.tests import DummyRequest
+from .glob import localdomain, localsubdomain, localemail
 from . import fields, forms, models, utils, views
 
 TEST_STRING = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské kódy'
@@ -123,7 +124,7 @@ class TestFields(SimpleTestCase):
 class TestForms(TestCase):
 
     def setUp(self):
-        User.objects.create_user('existing', 'existing@pecina.cz', 'none')
+        User.objects.create_user('existing', 'existing@' + localdomain, 'none')
 
     def tearDown(self):
         User.objects.get(username='existing').delete()
@@ -159,7 +160,7 @@ class TestModels(TestCase):
     def test_models(self):
         User.objects.create_user(
             'user',
-            'user@pecina.cz',
+            'user@' + localdomain,
             'none'
         )
         uid = User.objects.all()[0].id
@@ -540,17 +541,143 @@ class TestUtils(SimpleTestCase):
         self.assertEqual(utils.xmlbool(False), 'false')
         self.assertEqual(utils.xmlbool(True), 'true')
 
+    def test_icontains(self):
+        self.assertTrue(utils.icontains('yz', 'xyzw'))
+        self.assertFalse(utils.icontains('q', 'xyzw'))
+        self.assertTrue(utils.icontains('YZ', 'xyzw'))
+        self.assertTrue(utils.icontains('yz', 'XYZW'))
+        self.assertTrue(utils.icontains('YZ', 'xyzw'))
+        self.assertTrue(utils.icontains('čď', 'áčďě'))
+        self.assertFalse(utils.icontains('é', 'áčďě'))
+        self.assertTrue(utils.icontains('ČĎ', 'áčďě'))
+        self.assertTrue(utils.icontains('čď', 'ÁČĎĚ'))
+        self.assertTrue(utils.icontains('ČĎ', 'áčďě'))
+        self.assertFalse(utils.icontains('yz', ''))
+        self.assertTrue(utils.icontains('', 'xyzw'))
+        self.assertTrue(utils.icontains('', ''))
+
+    def test_istartswith(self):
+        self.assertTrue(utils.istartswith('xy', 'xyzw'))
+        self.assertFalse(utils.istartswith('y', 'xyzw'))
+        self.assertFalse(utils.istartswith('q', 'xyzw'))
+        self.assertTrue(utils.istartswith('XY', 'xyzw'))
+        self.assertTrue(utils.istartswith('xy', 'XYZW'))
+        self.assertTrue(utils.istartswith('XY', 'xyzw'))
+        self.assertTrue(utils.istartswith('áč', 'áčďě'))
+        self.assertFalse(utils.istartswith('č', 'áčďě'))
+        self.assertFalse(utils.istartswith('ě', 'áčďě'))
+        self.assertTrue(utils.istartswith('ÁČ', 'áčďě'))
+        self.assertTrue(utils.istartswith('áč', 'ÁČĎĚ'))
+        self.assertTrue(utils.istartswith('ÁČ', 'áčďě'))
+        self.assertFalse(utils.istartswith('y', ''))
+        self.assertTrue(utils.istartswith('', 'xyzw'))
+        self.assertTrue(utils.istartswith('', ''))
+        
+    def test_iendswith(self):
+        self.assertTrue(utils.iendswith('zw', 'xyzw'))
+        self.assertFalse(utils.iendswith('y', 'xyzw'))
+        self.assertFalse(utils.iendswith('q', 'xyzw'))
+        self.assertTrue(utils.iendswith('ZW', 'xyzw'))
+        self.assertTrue(utils.iendswith('zw', 'XYZW'))
+        self.assertTrue(utils.iendswith('ZW', 'xyzw'))
+        self.assertTrue(utils.iendswith('ďě', 'áčďě'))
+        self.assertFalse(utils.iendswith('č', 'áčďě'))
+        self.assertFalse(utils.iendswith('á', 'áčďě'))
+        self.assertTrue(utils.iendswith('ĎĚ', 'áčďě'))
+        self.assertTrue(utils.iendswith('ďě', 'ÁČĎĚ'))
+        self.assertTrue(utils.iendswith('ĎĚ', 'áčďě'))
+        self.assertFalse(utils.iendswith('y', ''))
+        self.assertTrue(utils.iendswith('', 'xyzw'))
+        self.assertTrue(utils.iendswith('', ''))
+        
+    def test_iexact(self):
+        self.assertTrue(utils.iexact('xyzw', 'xyzw'))
+        self.assertFalse(utils.iexact('y', 'xyzw'))
+        self.assertFalse(utils.iexact('q', 'xyzw'))
+        self.assertTrue(utils.iexact('XYZW', 'xyzw'))
+        self.assertTrue(utils.iexact('xyzw', 'XYZW'))
+        self.assertTrue(utils.iexact('XYZW', 'xyzw'))
+        self.assertTrue(utils.iexact('áčďě', 'áčďě'))
+        self.assertFalse(utils.iexact('č', 'áčďě'))
+        self.assertFalse(utils.iexact('ě', 'áčďě'))
+        self.assertTrue(utils.iexact('ÁČĎĚ', 'áčďě'))
+        self.assertTrue(utils.iexact('áčďě', 'ÁČĎĚ'))
+        self.assertTrue(utils.iexact('ÁČĎĚ', 'áčďě'))
+        self.assertFalse(utils.iexact('y', ''))
+        self.assertFalse(utils.iexact('', 'xyzw'))
+        self.assertTrue(utils.iexact('', ''))
+
+    def test_text_opt(self):
+        self.assertTrue(utils.text_opt('yz', 'xyzw', 0))
+        self.assertFalse(utils.text_opt('q', 'xyzw', 0))
+        self.assertTrue(utils.text_opt('YZ', 'xyzw', 0))
+        self.assertTrue(utils.text_opt('yz', 'XYZW', 0))
+        self.assertTrue(utils.text_opt('YZ', 'xyzw', 0))
+        self.assertTrue(utils.text_opt('čď', 'áčďě', 0))
+        self.assertFalse(utils.text_opt('é', 'áčďě', 0))
+        self.assertTrue(utils.text_opt('ČĎ', 'áčďě', 0))
+        self.assertTrue(utils.text_opt('čď', 'ÁČĎĚ', 0))
+        self.assertTrue(utils.text_opt('ČĎ', 'áčďě', 0))
+        self.assertFalse(utils.text_opt('yz', '', 0))
+        self.assertTrue(utils.text_opt('', 'xyzw', 0))
+        self.assertTrue(utils.text_opt('', '', 0))
+        self.assertTrue(utils.text_opt('xy', 'xyzw', 1))
+        self.assertFalse(utils.text_opt('y', 'xyzw', 1))
+        self.assertFalse(utils.text_opt('q', 'xyzw', 1))
+        self.assertTrue(utils.text_opt('XY', 'xyzw', 1))
+        self.assertTrue(utils.text_opt('xy', 'XYZW', 1))
+        self.assertTrue(utils.text_opt('XY', 'xyzw', 1))
+        self.assertTrue(utils.text_opt('áč', 'áčďě', 1))
+        self.assertFalse(utils.text_opt('č', 'áčďě', 1))
+        self.assertFalse(utils.text_opt('ě', 'áčďě', 1))
+        self.assertTrue(utils.text_opt('ÁČ', 'áčďě', 1))
+        self.assertTrue(utils.text_opt('áč', 'ÁČĎĚ', 1))
+        self.assertTrue(utils.text_opt('ÁČ', 'áčďě', 1))
+        self.assertFalse(utils.text_opt('y', '', 1))
+        self.assertTrue(utils.text_opt('', 'xyzw', 1))
+        self.assertTrue(utils.text_opt('', '', 1))
+        self.assertTrue(utils.text_opt('zw', 'xyzw', 2))
+        self.assertFalse(utils.text_opt('y', 'xyzw', 2))
+        self.assertFalse(utils.text_opt('q', 'xyzw', 2))
+        self.assertTrue(utils.text_opt('ZW', 'xyzw', 2))
+        self.assertTrue(utils.text_opt('zw', 'XYZW', 2))
+        self.assertTrue(utils.text_opt('ZW', 'xyzw', 2))
+        self.assertTrue(utils.text_opt('ďě', 'áčďě', 2))
+        self.assertFalse(utils.text_opt('č', 'áčďě', 2))
+        self.assertFalse(utils.text_opt('á', 'áčďě', 2))
+        self.assertTrue(utils.text_opt('ĎĚ', 'áčďě', 2))
+        self.assertTrue(utils.text_opt('ďě', 'ÁČĎĚ', 2))
+        self.assertTrue(utils.text_opt('ĎĚ', 'áčďě', 2))
+        self.assertFalse(utils.text_opt('y', '', 2))
+        self.assertTrue(utils.text_opt('', 'xyzw', 2))
+        self.assertTrue(utils.text_opt('', '', 2))
+        self.assertTrue(utils.text_opt('xyzw', 'xyzw', 3))
+        self.assertFalse(utils.text_opt('y', 'xyzw', 3))
+        self.assertFalse(utils.text_opt('q', 'xyzw', 3))
+        self.assertTrue(utils.text_opt('XYZW', 'xyzw', 3))
+        self.assertTrue(utils.text_opt('xyzw', 'XYZW', 3))
+        self.assertTrue(utils.text_opt('XYZW', 'xyzw', 3))
+        self.assertTrue(utils.text_opt('áčďě', 'áčďě', 3))
+        self.assertFalse(utils.text_opt('č', 'áčďě', 3))
+        self.assertFalse(utils.text_opt('ě', 'áčďě', 3))
+        self.assertTrue(utils.text_opt('ÁČĎĚ', 'áčďě', 3))
+        self.assertTrue(utils.text_opt('áčďě', 'ÁČĎĚ', 3))
+        self.assertTrue(utils.text_opt('ÁČĎĚ', 'áčďě', 3))
+        self.assertFalse(utils.text_opt('y', '', 3))
+        self.assertFalse(utils.text_opt('', 'xyzw', 3))
+        self.assertTrue(utils.text_opt('', '', 3))
+        
 class TestViews(TestCase):
 
     def setUp(self):
         User.objects.create_user(
             'user',
-            'user@pecina.cz',
+            'user@' + localdomain,
             'none'
         )
         User.objects.create_superuser(
             'superuser',
-            'superuser@pecina.cz',
+            'superuser@' + localdomain,
             'none'
         )
         
@@ -714,10 +841,10 @@ class TestViews(TestCase):
         m = m[0]
         self.assertEqual(
             m.from_email,
-            'Server legal.pecina.cz <legal@pecina.cz>')
+            'Server ' + localsubdomain + ' <' + localemail + '>')
         self.assertEqual(
             m.to,
-            ['user@pecina.cz'])
+            ['user@' + localdomain])
         self.assertEqual(
             m.subject,
             'Link pro obnoveni hesla')
@@ -758,7 +885,7 @@ class TestViews(TestCase):
              'username': 'newuser',
              'password1': 'newpass',
              'password2': 'newpass',
-             'email': 'tomas@pecina.cz',
+             'email': 'tomas@' + localdomain,
              'captcha': 'Praha'
         }
         d = copy(s)

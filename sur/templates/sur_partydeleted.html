@@ -1,0 +1,15 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+<h1 style="text-align: center; margin-bottom: 5px;">
+  {{ page_title }}
+</h1>
+<p style="text-align: center;">
+  Účastník byl smazán.
+</p>
+<p style="text-align: center;">
+  <a href="{% url 'sur:mainpage' %}">
+    Zpět na seznam sledovaných účastníků
+  </a>
+</p>
+{% endblock %}

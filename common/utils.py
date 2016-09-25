@@ -33,7 +33,8 @@ import requests
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.pdfbase.pdfdoc import PDFName, PDFDictionary, PDFStream
 from cache.models import Cache
-from .glob import hd, odp, ydconvs, mdconvs, registers
+from .glob import (
+    hd, odp, ydconvs, mdconvs, registers, localsubdomain, localemail)
 from .settings import TEST
 
 def easter(dt):
@@ -370,7 +371,7 @@ def send_mail(subject, text, recipients):
         mail.send_mail(
             subject,
             text,
-            'Server legal.pecina.cz <legal@pecina.cz>',
+            'Server ' + localsubdomain + ' <' + localemail + '>',
             recipients,
             fail_silently=True)
     except:  # pragma: no cover
@@ -441,3 +442,18 @@ def xmlbool(x):
         return 'true'
     else:
         return 'false'
+
+def icontains(needle, haystack):
+    return needle.lower() in haystack.lower()
+
+def istartswith(needle, haystack):
+    return haystack.lower().startswith(needle.lower())
+    
+def iendswith(needle, haystack):
+    return haystack.lower().endswith(needle.lower())
+
+def iexact(needle, haystack):
+    return needle.lower() == haystack.lower()
+
+def text_opt(needle, haystack, opt):
+    return [icontains, istartswith, iendswith, iexact][opt](needle, haystack)

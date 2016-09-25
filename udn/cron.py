@@ -24,14 +24,22 @@ from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
 from re import compile
 from os.path import join
+from urllib.parse import quote
 from common.settings import BASE_DIR, TEST
 from common.utils import get, post, decomposeref
+from common.glob import localurl
+from szr.glob import supreme_administrative_court
+from szr.models import Court
+from sur.cron import sur_check
 from .glob import filename_regex
 from .models import Decision, Party, Agenda
 
 root_url = 'http://www.nssoud.cz/'
 form_url = root_url + 'main2Col.aspx?cls=RozhodnutiList&menu=185'
 find_url = root_url + 'main0Col.aspx?cls=JudikaturaBasicSearch&pageSource=0'
+
+decurl = localurl + \
+    '/udn/list/?senate=%d&register=%s&number=%d&year=%d&page=%d'
 
 if TEST:
     repo_pref = join(BASE_DIR, 'test')
@@ -43,6 +51,7 @@ fr = compile(filename_regex)
 OBS = timedelta(days=360)
 
 def update():
+    NSS = Court.objects.get(pk=supreme_administrative_court)
     try:
         res = get(form_url)
         soup = BeautifulSoup(res.text, 'html.parser')
@@ -79,7 +88,7 @@ def update():
                     a = Agenda.objects.get_or_create( \
                         desc=r[2].td.text.strip())[0]
                     dt = date(*map(int, list(reversed(r[3].td.text \
-                                                      .split('.')))))
+                        .split('.')))))
                     dec = Decision(
                         senate=senate,
                         register=register,
@@ -92,8 +101,22 @@ def update():
                     dec.save()
                     for q in r[1].td:
                         if 'strip' in dir(q):
-                            p = Party.objects.get_or_create(name=q.strip())[0]
+                            qs = q.strip()
+                            p = Party.objects.get_or_create(name=qs)[0]
                             dec.parties.add(p)
+                            sur_check(
+                                qs,
+                                NSS,
+                                senate,
+                                register,
+                                number,
+                                year,
+                                decurl % \
+                                    (senate,
+                                     quote(register),
+                                     number,
+                                     year,
+                                     page))
                 except:  # pragma: no cover
                     pass
             pagers = soup.select('div#PagingBox2')[0]

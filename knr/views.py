@@ -50,7 +50,7 @@ import os.path
 from cache.main import getcache, getasset, setasset
 from common.utils import (
     getbutton, unrequire, formam, c2p, getXML, newXML, getint, CanvasXML)
-from common.glob import inerr
+from common.glob import inerr, localsubdomain, localurl
 from common.views import error, unauth
 from .glob import fuels
 from .utils import getVAT
@@ -753,10 +753,10 @@ def toxml(c):
     xml = newXML('')
     calculation = xml.new_tag('calculation')
     xml.insert(0, calculation)
-    calculation['xmlns'] = 'http://legal.pecina.cz'
+    calculation['xmlns'] = 'http://' + localsubdomain
     calculation['xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
     calculation['xsi:schemaLocation'] = \
-        'http://legal.pecina.cz https://legal.pecina.cz/static/%s-%s.xsd' % \
+        ('http://' + localsubdomain + ' ' + localurl + '/static/%s-%s.xsd') % \
         (APP, APPVERSION)
     calculation['application'] = APP
     calculation['version'] = APPVERSION
