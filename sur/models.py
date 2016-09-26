@@ -35,7 +35,8 @@ class Party(models.Model):
         on_delete=models.CASCADE)
     party = models.CharField(
         max_length=MAX_LENGTH,
-        validators=[MinLengthValidator(MIN_LENGTH)])
+        validators=[MinLengthValidator(MIN_LENGTH)],
+        db_index=True)
     party_opt = models.SmallIntegerField(
         validators=[
             MinValueValidator(0),
@@ -51,7 +52,8 @@ class Found(models.Model):
         User,
         on_delete=models.CASCADE)
     name = models.CharField(
-        max_length=255)
+        max_length=255,
+        db_index=True)
     court = models.ForeignKey(
         Court,
         on_delete=models.CASCADE)
