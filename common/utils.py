@@ -457,3 +457,9 @@ def iexact(needle, haystack):
 
 def text_opt(needle, haystack, opt):
     return [icontains, istartswith, iendswith, iexact][opt](needle, haystack)
+
+def lim(lower, x, upper):
+    return min(max(lower, x), upper)
+
+def between(lower, x, upper):
+    return (x >= lower) and (x <= upper)

@@ -667,6 +667,18 @@ class TestUtils(SimpleTestCase):
         self.assertFalse(utils.text_opt('', 'xyzw', 3))
         self.assertTrue(utils.text_opt('', '', 3))
         
+    def test_lim(self):
+        self.assertEqual(utils.lim(1, 2, 3), 2)
+        self.assertEqual(utils.lim(1, -2, 3), 1)
+        self.assertEqual(utils.lim(1, 4, 3), 3)
+
+    def test_between(self):
+        self.assertTrue(utils.between(1, 2, 3))
+        self.assertTrue(utils.between(1, 1, 3))
+        self.assertTrue(utils.between(1, 3, 3))
+        self.assertFalse(utils.between(1, -2, 3))
+        self.assertFalse(utils.between(1, 4, 3))
+
 class TestViews(TestCase):
 
     def setUp(self):

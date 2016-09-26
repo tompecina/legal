@@ -49,7 +49,7 @@ from io import BytesIO
 import os.path
 from cache.main import getcache, getasset, setasset
 from common.utils import (
-    getbutton, unrequire, formam, c2p, getXML, newXML, getint, CanvasXML)
+    getbutton, unrequire, formam, c2p, getXML, newXML, getint, CanvasXML, lim)
 from common.glob import inerr, localsubdomain, localurl
 from common.views import error, unauth
 from .glob import fuels
@@ -65,9 +65,6 @@ APP = __package__
 APPVERSION = apps.get_app_config(APP).version
 
 ctrip = ['cons1', 'cons2', 'cons3']
-
-def lim(lower, x, upper):
-    return min(max(lower, x), upper)
 
 def findloc(s):
     if not s:
@@ -137,7 +134,7 @@ def placeform(request, id=0):
             if id:
                 p = get_object_or_404(Place, pk=id, uid=uid)
                 cd['pk'] = id
-            Place(uid=User(uid), **cd).save()
+            Place(uid_id=uid, **cd).save()
             return redirect('knr:placelist')
         else:
             err_message = inerr
@@ -203,7 +200,7 @@ def carform(request, id=0):
             if id:
                 p = get_object_or_404(Car, pk=id, uid=uid)
                 cd['pk'] = id
-            Car(uid=User(uid), **cd).save()
+            Car(uid_id=uid, **cd).save()
             return redirect('knr:carlist')
         else:
             err_message = inerr
@@ -276,7 +273,7 @@ def formulaform(request, id=0):
             for k, v in cd.items():
                 if k[:5] != 'rate_':
                     d[k] = v
-            p = Formula(uid=User(uid), **d)
+            p = Formula(uid_id=uid, **d)
             p.save()
             for fuel in fuels:
                 r = Rate.objects.filter(formula=p, fuel=fuel)

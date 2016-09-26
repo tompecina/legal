@@ -268,5 +268,14 @@
         "name": "Zl\u00ednsk\u00fd kraj",
         "timestamp": "2016-07-01T15:35:52.291"
     }
+},
+{
+    "model": "szr.court",
+    "pk": "NSS",
+    "fields": {
+        "name": "Nejvy\u0161\u0161\u00ed spr\u00e1vn\u00ed soud",
+        "reports": null,
+        "timestamp": "2016-06-24T00:00:03.089"
+    }
 }
 ]

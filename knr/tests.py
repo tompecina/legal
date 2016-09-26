@@ -188,11 +188,6 @@ class TestViews(TestCase):
         User.objects.all().delete()
         super(TestViews, cls).tearDownClass()
 
-    def test_lim(self):
-        self.assertEqual(views.lim(1, 2, 3), 2)
-        self.assertEqual(views.lim(1, -2, 3), 1)
-        self.assertEqual(views.lim(1, 4, 3), 3)
-
     def test_findloc(self):
         r = views.findloc('Melantrichova 504/5, Praha 1')
         self.assertEqual(

@@ -22,7 +22,7 @@
 
 from django.conf.urls import url
 from common.views import genrender
-from .views import mainpage, partyform, partydel
+from .views import mainpage, partyform, partydel, partybatchform
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),
@@ -35,4 +35,5 @@ urlpatterns = [
             'template': 'sur_partydeleted.html',
             'page_title': 'Smazání vyhledávacího řetězce'},
         name='partydeleted'),
+    url(r'^partybatchform/$', partybatchform, name='partybatchform'),
 ]

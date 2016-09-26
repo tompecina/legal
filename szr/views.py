@@ -72,7 +72,7 @@ def procform(request, id=0):
                 cd['updated'] = p.updated
                 cd['hash'] = p.hash
                 cd['notify'] = p.notify
-            p = Proceedings(uid=User(uid), **cd)
+            p = Proceedings(uid_id=uid, **cd)
             if not onlydesc:
                 updateproc(p)
             p.save()

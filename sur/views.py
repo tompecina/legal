@@ -26,12 +26,12 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.apps import apps
-from common.utils import getbutton, grammar
+from common.utils import getbutton, grammar, between
 from common.glob import inerr, GR_C, text_opts, text_opts_keys
 from szr.forms import EmailForm
-from .forms import PartyForm
+from .forms import PartyForm, PartyBatchForm
 from .models import Party
-from .glob import MIN_LENGTH
+from .glob import MIN_LENGTH, MAX_LENGTH
 
 APP = __package__
 
@@ -60,7 +60,7 @@ def partyform(request, id=0):
             if id:
                 p = get_object_or_404(Party, pk=id, uid=uid)
                 cd['pk'] = id
-            p = Party(uid=User(uid), **cd)
+            p = Party(uid_id=uid, **cd)
             p.party_opt = text_opts_keys.index(cd['party_opt'])
             p.save()
             return redirect('sur:mainpage')
@@ -90,6 +90,63 @@ def partydel(request, id=0):
             get_object_or_404(Party, pk=id, uid=uid).delete()
             return redirect('sur:partydeleted')
         return redirect('sur:mainpage')
+
+@require_http_methods(['GET', 'POST'])
+@login_required
+def partybatchform(request):
+
+    err_message = ''
+    uid = request.user.id
+
+    if (request.method == 'GET'):
+        f = PartyBatchForm()
+
+    else:
+        btn = getbutton(request)
+
+        if btn == 'load':
+            f = request.FILES.get('load')
+            if not f:
+                err_message = 'Nejprve zvolte soubor k načtení'
+            else:
+                try:
+                    count = 0
+                    with f:
+                        for line in f:
+                            line = line.decode('utf-8').strip()
+                            if between(MIN_LENGTH, len(line), MAX_LENGTH):
+                                if Party.objects.get_or_create(
+                                        uid_id=uid,
+                                        party=line,
+                                        defaults={'party_opt': 0}
+                                )[1]:
+                                    count += 1
+                    return render(
+                        request,
+                        'sur_partybatchresult.html',
+                        {'app': APP,
+                         'page_title': 'Import účastníků řízení ze souboru',
+                         'count': count})
+                except:
+                    err_message = 'Chyba při načtení souboru'
+
+        f = PartyBatchForm(request.POST)
+        if f.is_valid():
+            cd = f.cleaned_data
+            
+            if (not btn) and cd['next']:
+                return redirect(cd['next'])
+
+        else:
+            err_message = inerr
+
+    return render(
+        request,
+        'sur_partybatchform.html',
+        {'app': APP,
+         'page_title': 'Import účastníků řízení ze souboru',
+         'f': f,
+         'err_message': err_message})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
