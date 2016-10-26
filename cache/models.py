@@ -26,7 +26,8 @@ class Cache(models.Model):
         max_length=1024)
     text = models.TextField()
     expire = models.DateTimeField(
-        null=True)
+        null=True,
+        db_index=True)
 
     def __str__(self):
         return self.url
@@ -38,10 +39,11 @@ class Asset(models.Model):
         max_length=30)
     data = models.TextField()
     expire = models.DateTimeField(
-        null=True)
+        null=True,
+        db_index=True)
+
+    class Meta:
+        unique_together = ('sessionid', 'assetid')
 
     def __str__(self):
         return self.sessionid
-
-    class Meta:
-        unique_together = (('sessionid', 'assetid'),)

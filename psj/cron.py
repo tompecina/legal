@@ -38,7 +38,7 @@ list_courtrooms = \
 hearingurl = localurl + '/psj/list/?court=%s&senate=%d&register=%s&' \
     'number=%d&year=%d&date_from=%s&date_to=%s'
 
-def courtrooms():
+def cron_courtrooms():
     for c in Court.objects.exclude(id=supreme_administrative_court):
         try:
             sleep(1)
@@ -51,7 +51,7 @@ def courtrooms():
         except:
             pass
 
-def schedule(*args):
+def cron_schedule(*args):
     dd = []
     for a in args:
         if len(a) > 2:
@@ -68,7 +68,7 @@ def schedule(*args):
 root_url = 'http://infosoud.justice.cz/'
 get_hear = 'InfoSoud/public/searchJednani.do?'
 
-def update():
+def cron_update():
     t = Task.objects.all()
     if not t:
         return

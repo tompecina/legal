@@ -36,7 +36,7 @@ class TestCron(TestCase):
     fixtures = ['szr_test.json']
     
     def test_courts(self):
-        cron.courts()
+        cron.cron_courts()
         c = models.Court.objects.all()
         self.assertEqual(len(c), 98)
         c = models.Court.objects.exclude(reports=None)
@@ -47,7 +47,7 @@ class TestCron(TestCase):
             court_id='NSS', auxid=0).count(), 2)
         st = datetime.now()
         for i in range(6):
-            cron.update()
+            cron.cron_update()
         self.assertFalse(models.Proceedings.objects.filter(
             court_id='NSS', auxid=0))
         ch6 = models.Proceedings.objects.get(pk=6).changed
@@ -84,8 +84,8 @@ class TestCron(TestCase):
     def test_notify(self):
         self.maxDiff = None
         for i in range(6):
-            cron.update()
-        cron.notify()
+            cron.cron_update()
+        cron.cron_notify()
         m = mail.outbox
         self.assertEqual(len(m), 1)
         m = m[0]

@@ -32,7 +32,8 @@ from json import dump
 from common.utils import (
     formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
 from common.glob import (
-    registers, inerr, text_opts, repourl, exlim_title, localsubdomain, localurl)
+    registers, inerr, text_opts, text_opts_keys, repourl, exlim_title,
+    localsubdomain, localurl, DTF)
 from cnb.main import getFXrate
 from szr.glob import (
     supreme_administrative_court, supreme_administrative_court_name)
@@ -45,8 +46,6 @@ APPVERSION = apps.get_app_config(APP).version
 
 BATCH = 50
 
-DTF = '%Y-%m-%d'
-
 repoprefix = repourl + APP + '/'
 
 EXLIM = 1000
@@ -57,8 +56,8 @@ def mainpage(request):
     messages = []
     page_title = apps.get_app_config(APP).verbose_name
 
+    agendas = Agenda.objects.all().order_by('desc')
     if request.method == 'GET':
-        agendas = Agenda.objects.all().order_by('desc')
         f = MainForm()
         return render(
             request,
@@ -90,6 +89,7 @@ def mainpage(request):
                 {'app': APP,
                  'page_title': page_title,
                  'err_message': err_message,
+                 'agendas': agendas,
                  'f': f})
 
 def g2p(rd):
@@ -107,7 +107,7 @@ def g2p(rd):
     if 'date_to' in rd:
         p['date__lte'] = datetime.strptime(rd['date_to'], DTF).date()
     if 'party_opt' in rd:
-        assert rd['party_opt'] in dict(text_opts).keys()
+        assert rd['party_opt'] in text_opts_keys
     if 'party' in rd:
         assert 'party_opt' in rd
         p['parties__name__' + rd['party_opt']] = rd['party']
@@ -143,7 +143,7 @@ def xmllist(request):
         p = g2p(rd)
     except:
         raise Http404
-    dd = Decision.objects.filter(**p).order_by('-date', 'pk').distinct()
+    dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
     total = dd.count()
     if total > EXLIM:
         return render(
@@ -244,13 +244,14 @@ def csvlist(request):
     response['Content-Disposition'] = \
         'attachment; filename=Rozhodnuti.csv'
     writer = csvwriter(response)
-    hdr = ['Soud',
-           'Datum',
-           'Číslo jednací',
-           'Oblast',
-           'Účastníci řízení',
-           'Zkrácené znění',
-           'Anonymisované znění',
+    hdr = [
+        'Soud',
+        'Datum',
+        'Číslo jednací',
+        'Oblast',
+        'Účastníci řízení',
+        'Zkrácené znění',
+        'Anonymisované znění',
     ]
     writer.writerow(hdr)
     for d in dd:
@@ -299,11 +300,13 @@ def jsonlist(request):
         r.append({
             'court': court,
             'date': d.date.isoformat(),
-            'senate': d.senate,
-            'register': d.register,
-            'number': d.number,
-            'year': d.year,
-            'page': d.page,
+            'ref': {
+                'senate': d.senate,
+                'register': d.register,
+                'number': d.number,
+                'year': d.year,
+                'page': d.page,
+            },
             'agenda': d.agenda.desc,
             'parties': [p['name'] for p in d.parties.values()],
             'files': files,

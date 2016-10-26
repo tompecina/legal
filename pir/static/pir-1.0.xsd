@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML Schema for PIR V1.0 <https://legal.pecina.cz/> -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://legal.pecina.cz" xmlns="http://legal.pecina.cz" elementFormDefault="qualified">
+  <xs:element name="insolvencies">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="insolvency" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="version" use="required" type="xs:NMTOKEN" fixed="1.0"/>
+      <xs:attribute name="application" use="required" type="xs:NCName" fixed="pir"/>
+      <xs:attribute name="created" use="required" type="xs:dateTime"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="insolvency">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="court">
+	  <xs:complexType>
+	    <xs:simpleContent>
+	      <xs:extension base="xs:token">
+		<xs:attribute name="id" use="required" type="xs:NCName"/>
+	      </xs:extension>
+	    </xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element ref="ref"/>
+	<xs:element name="state" type="xs:token" minOccurs="0"/>
+	<xs:element ref="debtors"/>
+	<xs:element ref="trustees"/>
+	<xs:element ref="creditors" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ref">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="court" type="xs:NCName"/>
+	<xs:element name="senate" type="xs:nonNegativeInteger"/>
+	<xs:element name="register" type="xs:token" fixed="INS"/>
+	<xs:element name="number" type="xs:positiveInteger"/>
+	<xs:element name="year" type="xs:positiveInteger"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="debtors">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="debtor" type="person" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="trustees">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="trustee" type="person" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="creditors">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="creditor" type="person" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="person">
+    <xs:sequence>
+      <xs:element name="name" type="xs:token"/>
+      <xs:element name="business_name" type="xs:token" minOccurs="0"/>
+      <xs:element name="first_name" type="xs:token" minOccurs="0"/>
+      <xs:element name="honorifics_prepended" type="xs:token" minOccurs="0"/>
+      <xs:element name="honorifics_appended" type="xs:token" minOccurs="0"/>
+      <xs:element name="gen_id" minOccurs="0">
+	<xs:simpleType>
+	  <xs:restriction base="xs:token">
+	    <xs:pattern value="\d{1,9}"/>
+	  </xs:restriction>
+	</xs:simpleType>
+      </xs:element>
+      <xs:element name="tax_id" minOccurs="0">
+	<xs:simpleType>
+	  <xs:restriction base="xs:token">
+	    <xs:maxLength value="14"/>
+	  </xs:restriction>
+	</xs:simpleType>
+      </xs:element>
+      <xs:element name="birth_date" type="xs:date" minOccurs="0"/>
+      <xs:element name="birth_id" minOccurs="0">
+	<xs:simpleType>
+	  <xs:restriction base="xs:token">
+	    <xs:pattern value="\d{6}/\d{3,4}"/>
+	  </xs:restriction>
+	</xs:simpleType>
+      </xs:element>
+      <xs:element name="addresses">
+	<xs:complexType>
+	  <xs:sequence>
+	    <xs:element name="address" minOccurs="0" maxOccurs="unbounded">
+	      <xs:complexType>
+		<xs:sequence>
+		  <xs:element name="city" type="xs:token" minOccurs="0"/>
+		  <xs:element name="street" type="xs:token" minOccurs="0"/>
+		  <xs:element name="street_number" type="xs:token" minOccurs="0"/>
+		  <xs:element name="district" type="xs:token" minOccurs="0"/>
+		  <xs:element name="country" type="xs:token" minOccurs="0"/>
+		  <xs:element name="zip" type="xs:token" minOccurs="0"/>
+		  <xs:element name="phone" type="xs:token" minOccurs="0"/>
+		  <xs:element name="fax" type="xs:token" minOccurs="0"/>
+		  <xs:element name="email" type="xs:token" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="type" use="required" type="xs:token"/>
+	      </xs:complexType>
+	    </xs:element>
+	  </xs:sequence>
+	</xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

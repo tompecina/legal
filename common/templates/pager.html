@@ -1,4 +1,6 @@
 <span class="pager">
+  {% if pager.total == 1 %}
+  &nbsp;{% else %}
   {% if pager.linkbb %}<span>
     <a href="{{ pager.linkbb }}">{% else %}<span class="grayed">{% endif %}
       <svg width="20" height="10">
@@ -29,5 +31,5 @@
 	<path d="M 0,0 10,5 10,0 20,5 10,10 10,5 0,10 Z"/>
       </svg>
     {% if pager.linkff %}</a>{% endif %}
-  </span>
+  </span>{% endif %}
 </span>

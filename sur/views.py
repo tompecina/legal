@@ -20,14 +20,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.apps import apps
-from common.utils import getbutton, grammar, between
-from common.glob import inerr, GR_C, text_opts, text_opts_keys
+from django.urls import reverse
+from csv import reader as csvreader, writer as csvwriter
+from io import StringIO
+from common.utils import getbutton, grammar, between, Pager
+from common.glob import (
+    inerr, GR_C, text_opts, text_opts_keys, text_opts_abbr, text_opts_ca,
+    text_opts_ai)
 from szr.forms import EmailForm
 from .forms import PartyForm, PartyBatchForm
 from .models import Party
@@ -36,6 +41,8 @@ from .glob import MIN_LENGTH, MAX_LENGTH
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
+
+BATCH = 50
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -112,15 +119,21 @@ def partybatchform(request):
                 try:
                     count = 0
                     with f:
-                        for line in f:
-                            line = line.decode('utf-8').strip()
-                            if between(MIN_LENGTH, len(line), MAX_LENGTH):
-                                if Party.objects.get_or_create(
-                                        uid_id=uid,
-                                        party=line,
-                                        defaults={'party_opt': 0}
-                                )[1]:
-                                    count += 1
+                        for line in csvreader(StringIO(f.read().decode())):
+                            line = line[0].strip()
+                            if ':' in line:
+                               line, party_opt = line.split(':', 1)
+                            else:
+                                party_opt = '*'
+                            if between(MIN_LENGTH, len(line), MAX_LENGTH) and \
+                                (party_opt in text_opts_abbr):
+                                Party.objects.update_or_create(
+                                    uid_id=uid,
+                                    party=line,
+                                    defaults={'party_opt': \
+                                        text_opts_ai[party_opt]}
+                                )
+                                count += 1
                     return render(
                         request,
                         'sur_partybatchresult.html',
@@ -146,7 +159,9 @@ def partybatchform(request):
         {'app': APP,
          'page_title': 'Import účastníků řízení ze souboru',
          'f': f,
-         'err_message': err_message})
+         'err_message': err_message,
+         'min_length': MIN_LENGTH,
+         'max_length': MAX_LENGTH})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -154,6 +169,8 @@ def mainpage(request):
     err_message = ''
     uid = request.user.id
     page_title = 'Sledování účastníků řízení'
+    rd = request.GET.copy()
+    start = int(rd['start']) if ('start' in rd) else 0
     btn = getbutton(request)
     if request.method == 'GET':
         f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
@@ -167,8 +184,12 @@ def mainpage(request):
             return redirect('sur:mainpage')
         else:
             err_message = inerr
-    rows = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'id') \
+    p = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'pk') \
         .values()
+    total = p.count()
+    if (start >= total) and (total > 0):
+        start = total - 1
+    rows = p[start:(start + BATCH)]
     for row in rows:
         row['party_opt_text'] = text_opts[row['party_opt']][1]
     return render(
@@ -178,4 +199,21 @@ def mainpage(request):
          'f': f,
          'page_title': page_title,
          'err_message': err_message,
-         'rows': rows})
+         'rows': rows,
+         'pager': Pager(start, total, reverse('sur:mainpage'), rd, BATCH),
+         'total': total})
+
+@require_http_methods(['GET'])
+@login_required
+def partyexport(request):
+    uid = request.user.id
+    pp = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'id') \
+        .distinct()
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = \
+        'attachment; filename=sur.csv'
+    writer = csvwriter(response)
+    for p in pp:
+        dat = [p.party + text_opts_ca[p.party_opt]]
+        writer.writerow(dat)
+    return response

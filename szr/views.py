@@ -26,7 +26,8 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.apps import apps
-from common.utils import getbutton
+from django.urls import reverse
+from common.utils import getbutton, Pager
 from common.glob import inerr
 from .forms import EmailForm, ProcForm
 from .models import Court, Proceedings
@@ -35,6 +36,8 @@ from .cron import addauxid, updateproc
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
+
+BATCH = 50
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -71,6 +74,7 @@ def procform(request, id=0):
                 cd['changed'] = p.changed
                 cd['updated'] = p.updated
                 cd['hash'] = p.hash
+                cd['auxid'] = p.auxid
                 cd['notify'] = p.notify
             p = Proceedings(uid_id=uid, **cd)
             if not onlydesc:
@@ -110,6 +114,8 @@ def mainpage(request):
     err_message = ''
     uid = request.user.id
     page_title = 'Sledování změn v řízení'
+    rd = request.GET.copy()
+    start = int(rd['start']) if ('start' in rd) else 0
     btn = getbutton(request)
     if request.method == 'GET':
         f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
@@ -123,6 +129,11 @@ def mainpage(request):
             return redirect('szr:mainpage')
         else:
             err_message = inerr
+    p = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk')
+    total = p.count()
+    if (start >= total) and (total > 0):
+        start = total - 1
+    rows = p[start:(start + BATCH)]
     return render(
         request,
         'szr_mainpage.html',
@@ -130,4 +141,6 @@ def mainpage(request):
          'f': f,
          'page_title': page_title,
          'err_message': err_message,
-         'rows': Proceedings.objects.filter(uid=uid).order_by('desc', 'id')})
+         'rows': rows,
+         'pager': Pager(start, total, reverse('szr:mainpage'), rd, BATCH),
+         'total': total})

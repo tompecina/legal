@@ -40,11 +40,11 @@ class Place(models.Model):
     lon = models.FloatField(
         validators=[MinValueValidator(-180.0), MaxValueValidator(180.0)])
 
+    class Meta:
+        unique_together = ('abbr', 'uid')
+
     def __str__(self):
         return self.abbr
-
-    class Meta:
-        unique_together = (('uid', 'abbr'),)
     
 class Car(models.Model):
     uid = models.ForeignKey(
@@ -69,12 +69,12 @@ class Car(models.Model):
         decimal_places=1,
         validators=[MinValueValidator(0)])
 
+    class Meta:
+        unique_together = ('abbr', 'uid')
+    
     def __str__(self):
         return self.abbr
 
-    class Meta:
-        unique_together = (('uid', 'abbr'),)
-    
 class Formula(models.Model):
     uid = models.ForeignKey(
         User,
@@ -89,12 +89,12 @@ class Formula(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0)])
 
+    class Meta:
+        unique_together = ('abbr', 'uid')
+    
     def __str__(self):
         return self.abbr
 
-    class Meta:
-        unique_together = (('uid', 'abbr'),)
-    
 class Rate(models.Model):
     formula = models.ForeignKey(
         Formula,
@@ -106,11 +106,11 @@ class Rate(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0)])
 
+    class Meta:
+        unique_together = ('formula', 'fuel')
+
     def __str__(self):
         return '%s/%s' % (self.formula.abbr, self.fuel)
-
-    class Meta:
-        unique_together = (('formula', 'fuel'),)
     
 class VATrate(models.Model):
     rate = models.FloatField()
@@ -118,4 +118,4 @@ class VATrate(models.Model):
         db_index=True)
 
     def __str__(self):
-        return "%s" % self.valid
+        return str(self.valid)

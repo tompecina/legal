@@ -23,14 +23,7 @@
 from django.core.validators import RegexValidator
 from datetime import date
 from common import forms, fields, widgets
-from common.glob import register_regex, text_opts
-
-format_opts = (
-    ('html', 'HTML'),
-    ('xml', 'XML'),
-    ('csv', 'CSV'),
-    ('json', 'JSON'),
-)
+from common.glob import register_regex, text_opts, format_opts
 
 class MainForm(forms.Form):
     date_from = fields.DateField(
@@ -41,7 +34,8 @@ class MainForm(forms.Form):
         required=False)
     senate = fields.IntegerField(
         widget=widgets.saw(),
-        min_value=0, initial='',
+        min_value=0,
+        initial='',
         required=False)
     register = fields.CharField(
         widget=widgets.saw(),
@@ -68,7 +62,7 @@ class MainForm(forms.Form):
         max_length=255,
         required=False,
         label='Oblast',
-        initial='0')
+        initial='')
     party = fields.CharField(
         widget=widgets.sew(),
         required=False,
@@ -77,7 +71,7 @@ class MainForm(forms.Form):
     party_opt = fields.ChoiceField(
         widget=widgets.rs,
         choices=text_opts,
-        initial='icontains')
+        initial='istartswith')
     format = fields.ChoiceField(
         widget=widgets.rs,
         choices=format_opts,

@@ -45,6 +45,11 @@ td {
     vertical-align: middle;
     padding: 1px 3px;
 }
+hr.tablediv {
+    margin-top: 2px;
+    margin-bottom: 1px;
+    border-bottom: 0;
+}
 div.warning {
     border: {
 	style: solid;
@@ -80,6 +85,12 @@ tr.preset + tr:not(.preset) {
 tr.even td, tr.odd td, thead th, tr.footer td {
     padding: 3px 13px;
 }
+tr.even td:first-child, tr.odd td:first-child, thead th:first-child, tr.footer td:first-child {
+    padding-left: 20px;
+}
+tr.even td:last-child, tr.odd td:last-child, thead th:last-child {
+    padding-right: 20px;
+}
 th {
     padding: 3px 5px;
 }
@@ -93,7 +104,7 @@ th {
     font-size: 12px;
     white-space: nowrap;
 }
-.res {
+.res, .subtitle {
     font: {
 	style: italic;
 	size: 15px;
@@ -153,6 +164,9 @@ label input[type=radio] {
 label:first-child input[type="radio"] {
     margin-left: 3px;
 }
+input[type="checkbox"] + span {
+    margin-right: 20px;
+}
 select {
     padding: 1px 2px;
 }
@@ -197,6 +211,9 @@ table.about th {
 }
 table.about td {
     padding: 4px 15px 4px 10px;
+}
+table.list {
+    margin: 20px auto 30px;
 }
 .hl {
     color: $red;
@@ -299,4 +316,50 @@ tr.bgrid td, tr.bgridwg td, tr.bgrid th, tr.bgridwg th {
 }
 tr.bgridwg td, tr.bgridwg th {
     padding-bottom: 40px;
+}
+table.detail {
+    thead tr {
+	background-color: $medium-blue;
+	th {
+	    font-size: 120%;
+	    padding-bottom: 5px;
+	}
+    }
+    tbody {
+	tr {
+	    th, td {
+		background-color: $white;
+		padding-top: 2px;
+		padding-bottom: 3px;
+	    }
+	    th {
+		padding-left: 20px;
+		padding-right: 2px;
+	    }
+	    td {
+		padding-left: 5px;
+		padding-right: 15px;
+	    }
+	}
+	tr.odd {
+	    th, td {
+		background-color: $white;
+	    }
+	}
+	tr.even {
+	    th, td {
+		background-color: $gray;
+	    }
+	}
+	tr.first {
+	    th, td {
+		padding-top: 8px;
+	    }
+	}
+	tr.last {
+	    th, td {
+		padding-bottom: 10px;
+	    }
+	}
+    }
 }

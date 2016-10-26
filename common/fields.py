@@ -38,6 +38,11 @@ stypes = (str,)
 class BooleanField(forms.BooleanField):
     pass
 
+class InlineBooleanField(forms.BooleanField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(InlineBooleanField, self).__init__(*args, **kwargs)
+
 class CharField(forms.CharField):
     pass
 

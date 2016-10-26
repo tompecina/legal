@@ -103,6 +103,8 @@ APPS = ['common',
         'sur',
         'psj',
         'udn',
+        'sir',
+        'pir',
         'cache',
 ]
 
@@ -130,7 +132,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-] + list(map(lambda x: x + '.apps.' + x.capitalize() + 'Config', APPS))
+] + [(x + '.apps.' + x.capitalize() + 'Config') for x in APPS]
 
 LOGGING = {
     'version': 1,

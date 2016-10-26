@@ -1,0 +1,50 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+        <h1>{{ page_title }}</h1>{% if rows %}
+	<table id="list" style="border-collapse: collapse; margin: auto;">
+	  <thead>
+	    <tr class="header">
+	      <th style="text-align: left;">Spisová značka</th>
+	      <th>Popis</th>
+	      <th>Vše</th>
+	      <th>Akce</th>
+	    </tr>
+	  </thead>{% if not suppress_table_footer %}
+          <tfoot>
+	    <tr class="footer">
+	      <td>
+		<a href="{% url 'sir:insform' %}">Přidat řízení</a>
+	      </td>
+	      <td colspan="3" style="text-align: right;">
+		{% include "pager.html" %}
+	      </td>
+	    </tr>
+	  </tfoot>{% endif %}
+	  <tbody>{% for row in rows %}
+	    <tr class="{% cycle "odd" "even" %}">
+	      <td style="white-space: nowrap;"><a href="{% url 'pir:htmllist' %}?number={{ row.number }}&amp;year={{ row.year }}">INS {{ row.number }}/{{ row.year }}</a></td>
+	      <td>{{ row.desc }}</td>
+	      <td style="text-align: center;">{% if row.detailed %}ano{% else %}ne{% endif %}</td>
+	      <td style="word-spacing: 5px; white-space: nowrap;"><a href="{% url 'sir:insform' row.id %}">upravit</a> <a href="{% url 'sir:insdel' row.id %}">smazat</a></td>
+	    </tr>{% endfor %}
+	  </tbody>
+	</table>{% else %}
+          <p style="text-align: center;">(nesledujete žádná řízení)</p>
+          <p style="text-align: center;"><a href="{% url 'sir:insform' %}">Přidat řízení</a></p>{% endif %}
+    <form method="post" enctype="multipart/form-data">
+      <table style="margin: 20px auto 15px auto;">
+{% if err_message %}	      <tr>
+		  <td colspan="3" class="warning">
+		    {% include "formwarning.html" %}
+		  </td>
+	        </tr>
+{% endif %}        <tr>
+		  <th class="{{ f.email_error }}">{{ f.email.label_tag }}</th>
+		  <td>{{ f.email }}</td>
+		  <td><input type="submit" name="submit" value="Změnit" /></td>
+	    </tr>
+      </table>
+      {% csrf_token %}
+    </form>
+{% endblock %}

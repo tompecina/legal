@@ -679,6 +679,19 @@ class TestUtils(SimpleTestCase):
         self.assertFalse(utils.between(1, -2, 3))
         self.assertFalse(utils.between(1, 4, 3))
 
+    def test_normalize(self):
+        self.assertEqual(utils.normalize('a'), 'a')
+        self.assertEqual(utils.normalize(' a'), 'a')
+        self.assertEqual(utils.normalize('  a'), 'a')
+        self.assertEqual(utils.normalize('a '), 'a')
+        self.assertEqual(utils.normalize('a  '), 'a')
+        self.assertEqual(utils.normalize('  a  '), 'a')
+        self.assertEqual(utils.normalize('a b'), 'a b')
+        self.assertEqual(utils.normalize('a  b'), 'a b')
+        self.assertEqual(utils.normalize('  a b  '), 'a b')
+        self.assertEqual(utils.normalize('  a  b  '), 'a b')
+        self.assertEqual(utils.normalize('  a \u00a0 b  '), 'a b')
+
 class TestViews(TestCase):
 
     def setUp(self):

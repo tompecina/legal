@@ -23,6 +23,7 @@
 from django.core.management.base import BaseCommand
 from importlib import import_module
 import szr.cron
+import sir.cron
 import psj.cron
 import udn.cron
 
@@ -35,6 +36,6 @@ class Command(BaseCommand):
     
     def handle(self, *args, **options):
         module = options['module']
-        method = options['method']
+        method = 'cron_' + options['method']
         custargs = options['custargs']
         getattr(import_module(module).cron, method)(*custargs)

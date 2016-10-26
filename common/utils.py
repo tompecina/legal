@@ -463,3 +463,6 @@ def lim(lower, x, upper):
 
 def between(lower, x, upper):
     return (x >= lower) and (x <= upper)
+
+def normalize(s):
+    return ' '.join(s.replace('\u00a0', ' ').strip().split())

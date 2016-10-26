@@ -18,11 +18,12 @@ rsync -avhHzx \
       --exclude 'migrations/' \
       --exclude '__pycache__/' \
       --exclude '/venv*' \
-      --exclude '/repo/udn/' \
+      --exclude '/repo/' \
       --exclude 'test*' \
       --exclude 'fixtures/*_test*.json' \
       --exclude '/test/' \
       --exclude '/htmlcov/' \
+      --exclude '/dosass' \
       --exclude 'scss.map' \
       --exclude '*.map' \
       --exclude '#*' \

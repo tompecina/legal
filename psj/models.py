@@ -31,7 +31,8 @@ class Courtroom(models.Model):
         Court,
         on_delete=models.CASCADE)
     desc = models.CharField(
-        max_length=255)
+        max_length=255,
+        db_index=True)
     timestamp = models.DateTimeField(
         auto_now=True)
 
@@ -72,8 +73,7 @@ class Hearing(models.Model):
     courtroom = models.ForeignKey(
         Courtroom,
         on_delete=models.CASCADE)
-    time = models.DateTimeField(
-        db_index=True)
+    time = models.DateTimeField()
     senate = models.IntegerField(
         validators=[MinValueValidator(0)])
     register = models.CharField(
@@ -97,6 +97,9 @@ class Hearing(models.Model):
     timestamp = models.DateTimeField(
         auto_now=True)
 
+    class Meta:
+        unique_together = ('time', 'id')
+    
     def __str__(self):
         return '%s, %s' % (self.courtroom.court.id,
             composeref(self.senate, self.register, self.number, self.year))

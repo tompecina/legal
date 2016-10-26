@@ -27,7 +27,8 @@ def sur_notice(uid):
     text = ''
     ff = Found.objects.filter(uid=uid).order_by('name', 'id').distinct()
     if ff:
-        text = 'Byli nově zaznamenáni tito účastníci řízení, které sledujete:\n\n'
+        text = 'Byli nově zaznamenáni tito účastníci řízení, ' \
+               'které sledujete:\n\n'
         for f in ff:
             text += ' - %s, %s, sp. zn. %d %s %d/%d\n' % \
                     (f.name, f.court, f.senate, f.register, f.number, f.year)

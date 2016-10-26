@@ -34,7 +34,8 @@ from locale import strxfrm
 from common.utils import (
     formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
 from common.glob import (
-    registers, inerr, text_opts, odp, exlim_title, localsubdomain, localurl)
+    registers, inerr, text_opts, text_opts_keys, odp, exlim_title,
+    localsubdomain, localurl, DTF)
 from cnb.main import getFXrate
 from szr.glob import supreme_court, supreme_administrative_court
 from szr.models import Court
@@ -47,8 +48,6 @@ APPVERSION = apps.get_app_config(APP).version
 
 BATCH = 50
 
-DTF = '%Y-%m-%d'
-
 EXLIM = 1000
 
 @require_http_methods(['GET', 'POST'])
@@ -57,9 +56,9 @@ def mainpage(request):
     messages = []
     page_title = apps.get_app_config(APP).verbose_name
 
+    courts = Court.objects.exclude(id=supreme_court) \
+        .exclude(id=supreme_administrative_court).order_by('name')
     if request.method == 'GET':
-        courts = Court.objects.exclude(id=supreme_court) \
-            .exclude(id=supreme_administrative_court).order_by('name')
         f = MainForm()
         return render(
             request,
@@ -91,6 +90,7 @@ def mainpage(request):
                 {'app': APP,
                  'page_title': page_title,
                  'err_message': err_message,
+                 'courts': courts,
                  'f': f})
 def g2p(rd):
     p = {}
@@ -109,7 +109,7 @@ def g2p(rd):
     if 'date_to' in rd:
         p['time__lt'] = datetime.strptime(rd['date_to'], DTF).date() + odp
     if 'party_opt' in rd:
-        assert rd['party_opt'] in dict(text_opts).keys()
+        assert rd['party_opt'] in text_opts_keys
     if 'party' in rd:
         assert 'party_opt' in rd
         p['parties__name__' + rd['party_opt']] = rd['party']
@@ -245,16 +245,17 @@ def csvlist(request):
     response['Content-Disposition'] = \
         'attachment; filename=Jednani.csv'
     writer = csvwriter(response)
-    hdr = ['Soud',
-           'Jednací síň',
-           'Datum',
-           'Čas',
-           'Spisová značka',
-           'Řešitel',
-           'Účastníci řízení',
-           'Druh jednání',
-           'Neveřejné',
-           'Zrušeno',
+    hdr = [
+        'Soud',
+        'Jednací síň',
+        'Datum',
+        'Čas',
+        'Spisová značka',
+        'Řešitel',
+        'Účastníci řízení',
+        'Druh jednání',
+        'Neveřejné',
+        'Zrušeno',
     ]
     writer.writerow(hdr)
     for h in hh:
@@ -304,10 +305,12 @@ def jsonlist(request):
             'court': court,
             'courtroom': h.courtroom.desc,
             'time': h.time.isoformat(),
-            'senate': h.senate,
-            'register': h.register,
-            'number': h.number,
-            'year': h.year,
+            'ref': {
+                'senate': h.senate,
+                'register': h.register,
+                'number': h.number,
+                'year': h.year,
+            },
             'judge': h.judge.name,
             'parties': [p['name'] for p in h.parties.values()],
             'form': h.form.name,

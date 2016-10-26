@@ -50,7 +50,7 @@ class TestCron1(TestCase):
         self.assertFalse(fl, msg=fl)
         
     def test_update(self):
-        cron.update()
+        cron.cron_update()
         d = models.Decision.objects.all()
         self.assertEqual(len(d), 16)
         self.checkpdf([
@@ -71,7 +71,7 @@ class TestCron1(TestCase):
             ])
         
     def test_find(self):
-        cron.find()
+        cron.cron_find()
         d = models.Decision.objects.filter(
             senate=8,
             register='As',
@@ -81,13 +81,13 @@ class TestCron1(TestCase):
         self.assertEqual(len(d), 1)
         self.assertTrue(d[0].anonfilename)
         self.checkpdf(['0046_3As__1600114_20160622142215_prevedeno.pdf'])
-        cron.find()
+        cron.cron_find()
 
 class TestCron2(TestCase):
     fixtures = ['udn_test2.json']
     
     def test_find(self):
-        cron.find()
+        cron.cron_find()
         d = models.Decision.objects.filter(
             senate=8,
             register='As',

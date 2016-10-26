@@ -954,9 +954,9 @@ def mainpage(request):
                         ('%.2f' % row['amount']),
                         row['disp_currency']
                     ]
-                    dat.extend(map(lambda t: ('%.2f' % t), row['pre']))
-                    dat.extend(map(lambda t: ('%.2f' % t), row['change']))
-                    dat.extend(map(lambda t: ('%.2f' % t), row['post']))
+                    dat.extend([('%.2f' % t) for t in row['pre']])
+                    dat.extend([('%.2f' % t) for t in row['change']])
+                    dat.extend([('%.2f' % t) for t in row['post']])
                     writer.writerow(dat)
                 return response
 
@@ -1719,8 +1719,8 @@ def debitdel(request, id=0):
                 if (i == id) or ((debt.debits[i].principal_debit - 1) == id):
                     r[i] = None
                     del debt.debits[i]
-            c = list(filter((lambda x: (x != None)), r))
-            m = list(map((lambda x: (None if (x == None) else c.index(x))), r))
+            c = [x for x in r if (x != None)]
+            m = [(None if (x == None) else c.index(x)) for x in r]
             for credit in debt.credits:
                 d = []
                 for i in credit.debits:

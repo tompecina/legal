@@ -12,8 +12,12 @@
 	  </thead>{% if not suppress_table_footer %}
           <tfoot>
 	    <tr class="footer">
-	      <td colspan="2"><a href="{% url 'sur:partyform' %}">Přidat účastníka</a></td>
-	      <td colspan="2" style="text-align: right;"><a href="{% url 'sur:partybatchform' %}">Import</a></td>
+	      <td>
+		<a href="{% url 'sur:partyform' %}">Přidat účastníka</a>
+	      </td>
+	      <td colspan="2" style="text-align: right;">
+		{% include "pager.html" %}
+	      </td>
 	    </tr>
 	  </tfoot>{% endif %}
 	  <tbody>{% for row in rows %}
@@ -23,12 +27,16 @@
 	      <td style="word-spacing: 5px; white-space: nowrap;"><a href="{% url 'sur:partyform' row.id %}">upravit</a> <a href="{% url 'sur:partydel' row.id %}">smazat</a></td>
 	    </tr>{% endfor %}
 	  </tbody>
-	</table>{% else %}
+	</table>
+        <p style="text-align: center;">
+	  <a href="{% url 'sur:partybatchform' %}">Import</a>
+	  /
+	  <a href="{% url 'sur:partyexport' %}">Export</a>
+	</p>{% else %}
           <p style="text-align: center;">(nesledujete žádné účastníky řízení)</p>
           <p style="text-align: center;">
 	    <a href="{% url 'sur:partyform' %}">Přidat účastníka</a>
-	    <br />
-	    <a href="{% url 'sur:partybatchform' %}">Import ze souboru</a>
+	    <a href="{% url 'sur:partybatchform' %}">Import</a>
 	  </p>{% endif %}
     <form method="post" enctype="multipart/form-data">
       <table style="margin: 20px auto 15px auto;">

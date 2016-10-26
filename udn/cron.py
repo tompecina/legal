@@ -50,7 +50,7 @@ fr = compile(filename_regex)
 
 OBS = timedelta(days=360)
 
-def update():
+def cron_update():
     NSS = Court.objects.get(pk=supreme_administrative_court)
     try:
         res = get(form_url)
@@ -132,7 +132,7 @@ def update():
     except:  # pragma: no cover
         pass
 
-def find():
+def cron_find():
     now = datetime.now()
     try:
         dec = Decision.objects.filter(

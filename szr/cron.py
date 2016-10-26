@@ -30,14 +30,13 @@ from urllib.parse import quote
 from common.utils import get, post, send_mail
 from common.glob import localsubdomain, localurl
 from sur.cron import sur_notice
+from sir.cron import sir_notice
 from .models import Court, Proceedings
-from .glob import supreme_court, supreme_administrative_court
+from .glob import (
+    supreme_court, supreme_administrative_court, root_url, get_proc)
 
-root_url = 'http://infosoud.justice.cz/'
 list_courts = 'public/search.jsp'
 list_reports = 'InfoSoud/seznamOkresnichSoudu?kraj=%s'
-get_proc = 'InfoSoud/public/search.do?org=%s&cisloSenatu=%d&druhVec=%s' \
-           '&bcVec=%d&rocnik=%d&typSoudu=%s&autoFill=true&type=spzn'
 nss_url = 'http://www.nssoud.cz/main0Col.aspx?cls=JudikaturaSimpleSearch' \
           '&pageSource=1&menu=187'
 nss_get_proc = 'http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&kau_id=%d'
@@ -123,7 +122,7 @@ def isreg(c):
     s = c.pk
     return (s[:2] == 'KS') or (s == 'MSPHAAB')
     
-def courts():
+def cron_courts():
     try:
         res = get(root_url + list_courts)
         soup = BeautifulSoup(res.text, 'html.parser')
@@ -151,7 +150,7 @@ def courts():
             except:
                 pass
 
-def update():
+def cron_update():
     p = Proceedings.objects.filter(Q(updated__lte=datetime.now()-update_delay) \
             | Q(updated__isnull=True)).order_by('updated')
     if p:
@@ -187,11 +186,11 @@ def szr_notice(uid):
             p.save()
     return text
 
-def notify():
+def cron_notify():
     for u in User.objects.all():
         if u.email:
             uid = u.id;
-            text = szr_notice(uid) + sur_notice(uid)
+            text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid)
             if text:
                 text += 'Server ' + localsubdomain + ' (' + localurl + ')\n'
                 send_mail(

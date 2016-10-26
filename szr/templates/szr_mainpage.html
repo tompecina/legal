@@ -7,13 +7,19 @@
 	    <tr class="header">
 	      <th style="text-align: left;">Soud</th>
 	      <th style="text-align: left;">Spisová značka</th>
-	      <th>Popis</th><th>Poslední změna</th>
+	      <th>Popis</th>
+	      <th>Poslední změna</th>
 	      <th>Akce</th>
 	    </tr>
 	  </thead>{% if not suppress_table_footer %}
           <tfoot>
 	    <tr class="footer">
-	      <td colspan="5"><a href="{% url 'szr:procform' %}">Přidat řízení</a></td>
+	      <td>
+		<a href="{% url 'szr:procform' %}">Přidat řízení</a>
+	      </td>
+	      <td colspan="4" style="text-align: right;">
+		{% include "pager.html" %}
+	      </td>
 	    </tr>
 	  </tfoot>{% endif %}
 	  <tbody>{% for row in rows %}

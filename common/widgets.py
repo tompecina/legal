@@ -44,6 +44,20 @@ class sew(forms.TextInput):
         kwargs['attrs'] = attrs
         return super(sew, self).__init__(**kwargs)
 
+class msew(forms.TextInput):
+    def __init__(self, **kwargs):
+        attrs = {'size': '35'}
+        attrs.update(kwargs.get('attrs', {}))
+        kwargs['attrs'] = attrs
+        return super(msew, self).__init__(**kwargs)
+
+class ssew(forms.TextInput):
+    def __init__(self, **kwargs):
+        attrs = {'size': '20'}
+        attrs.update(kwargs.get('attrs', {}))
+        kwargs['attrs'] = attrs
+        return super(ssew, self).__init__(**kwargs)
+
 class abbrw(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '12'}
@@ -118,6 +132,13 @@ class shw(forms.TextInput):
         kwargs['attrs'] = attrs
         return super(shw, self).__init__(**kwargs)
 
+class yw(forms.TextInput):
+    def __init__(self, **kwargs):
+        attrs = {'size': '4'}
+        attrs.update(kwargs.get('attrs', {}))
+        kwargs['attrs'] = attrs
+        return super(yw, self).__init__(**kwargs)
+
 class hw(forms.HiddenInput):
     pass
 
@@ -137,7 +158,7 @@ class CurrencyWidget(forms.widgets.MultiWidget):
         self._currlist = ((['CZK'] if czk else []) + self.std_curr)
         super(CurrencyWidget, self).__init__(
             (forms.Select(
-                choices=(list(map((lambda x: [x, x]), self._currlist)) + \
+                choices=([[x, x] for x in self._currlist] + \
                          [['OTH', 'Jiná:']]),
                 attrs={'class': 'currsel'}),
              currw()),

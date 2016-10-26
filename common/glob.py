@@ -81,13 +81,29 @@ mdconvs = (
 odp = timedelta(days=1)
 odm = timedelta(days=-1)
 
-text_opts = (
-    ('icontains', 'kdekoliv'),
-    ('istartswith', 'na začátku'),
-    ('iendswith', 'na konci'),
-    ('iexact', 'přesně'),
-)
-text_opts_keys = list(map(lambda x: x[0], text_opts))
+TEXTOPTS = [
+    {
+        'sql': 'icontains',
+        'abbr': '*', 'desc':
+        'kdekoliv'},
+    {
+        'sql': 'istartswith',
+        'abbr': '<',
+        'desc': 'na začátku'},
+    {
+        'sql': 'iendswith',
+        'abbr': '>',
+        'desc': 'na konci'},
+    {
+        'sql': 'iexact',
+        'abbr': '=',
+        'desc': 'přesně'},
+]
+text_opts = [[x['sql'], x['desc']] for x in TEXTOPTS]
+text_opts_keys = [x['sql'] for x in TEXTOPTS]
+text_opts_abbr = [x['abbr'] for x in TEXTOPTS]
+text_opts_ai = {x: text_opts_abbr.index(x) for x in text_opts_abbr}
+text_opts_ca = [':' + x for x in text_opts_abbr]
 
 localdomain = 'pecina.cz'
 localsubdomain = 'legal.' + localdomain
@@ -104,3 +120,17 @@ GR_D = ('den', 'dny', 'dnů')
 GR_B = ('pracovní den', 'pracovní dny', 'pracovních dnů')
 GR_M = ('měsíc', 'měsíce', 'měsíců')
 GR_Y = ('rok', 'roky', 'let')
+
+format_opts = (
+    ('html', 'HTML'),
+    ('xml', 'XML'),
+    ('csv', 'CSV'),
+    ('json', 'JSON'),
+)
+
+ic_regex = r'\d{1,9}'
+rc_regex = r'\d{9,10}'
+rc_full_regex = r'\d{6}/\d{3,4}'
+psc_regex = r'\d{5}'
+
+DTF = '%Y-%m-%d'
