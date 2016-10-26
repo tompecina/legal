@@ -243,8 +243,8 @@ j1 = '[{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
      's r.o.", "Zl\u00ednsk\u00fd kraj"], "files": {"abridged": "' + \
      repourl + 'udn/0158_8As__1500033S.pdf"}, "date": "2199-07-01", ' \
      '"court": {"name": "Nejvy\u0161\u0161\u00ed spr\u00e1vn\u00ed ' \
-     'soud", "id": "NSS"}, "senate": 8, "register": "As", "number": ' \
-     '158, "year": 2015, "page": 33, "agenda": "Ochrana ' \
+     'soud", "id": "NSS"}, "ref": {"senate": 8, "register": "As", ' \
+     '"number": 158, "year": 2015, "page": 33}, "agenda": "Ochrana ' \
      'hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee a ve\u0159ejn\u00e9 ' \
      'zak\u00e1zky"}]'
 
@@ -254,10 +254,10 @@ j2 = '[{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
      repourl + 'udn/0158_8As__1500033S.pdf", "anonymized": "' + repourl + \
      'udn/0067_5As__1500054_20151119130217_prevedeno.pdf"}, "date": ' \
      '"2199-07-01", "court": {"name": "Nejvy\u0161\u0161\u00ed ' \
-     'spr\u00e1vn\u00ed soud", "id": "NSS"}, "senate": 8, "register": ' \
-     '"As", "number": 158, "year": 2015, "page": 33, "agenda": ' \
-     '"Ochrana hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee a ' \
-     've\u0159ejn\u00e9 zak\u00e1zky"}]'
+     'spr\u00e1vn\u00ed soud", "id": "NSS"}, "ref": {"senate": 8, ' \
+     '"register": "As", "number": 158, "year": 2015, "page": 33}, ' \
+     '"agenda": "Ochrana hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee ' \
+     'a ve\u0159ejn\u00e9 zak\u00e1zky"}]'
 
 class TestViews(TestCase):
     fixtures = ['udn_test1.json']
