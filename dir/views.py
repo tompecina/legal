@@ -208,10 +208,10 @@ def debtorbatchform(request):
                                         errors.append([i, 'Příliš dlouhé ' \
                                             'pole <q>jméno</q>'])
                                         continue
-                                elif key == 'IČ':
+                                elif key == 'IČO':
                                     if not compile(ic_regex).match(value):
                                         errors.append([i, 'Chybná hodnota ' \
-                                            'pro IČ'])
+                                            'pro IČO'])
                                         continue
                                     genid = value
                                 elif key == 'DIČ':
@@ -369,7 +369,7 @@ def debtorexport(request):
         if p.first_name:
             dat.append('jméno=' + p.first_name + text_opts_ca[p.first_name_opt])
         if p.genid:
-            dat.append('IČ=' + p.genid)
+            dat.append('IČO=' + p.genid)
         if p.taxid:
             dat.append('DIČ=' + p.taxid)
         if p.birthid:

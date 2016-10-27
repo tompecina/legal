@@ -63,7 +63,7 @@ class DebtorForm(forms.Form):
         required=False,
         max_length=9,
         validators=[RegexValidator(regex=ic_regex)],
-        label='IČ')
+        label='IČO')
     taxid = fields.CharField(
         widget=widgets.ssew(),
         required=False,

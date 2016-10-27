@@ -172,7 +172,7 @@ def o2s(o, detailed=False):
         if o.datumNarozeni:
             r += ', nar.&nbsp;' + o.datumNarozeni.strftime('%d.%m.%Y')
         elif o.ic:
-            r += ', IČ:&nbsp;' + o.ic
+            r += ', IČO:&nbsp;' + o.ic
     return r
         
 @require_http_methods(['GET'])
