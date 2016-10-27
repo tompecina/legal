@@ -101,7 +101,7 @@ def mainpage(request):
                 else:
                     rep2 = 0
                 rem2 = (rem2 // 3) * 3
-                rep2 = (rem2 * 2) // 3
+                rep2 += (rem2 * 2) // 3
                 rep += rep2
             else:
                 totnetincome = netincome
