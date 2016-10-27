@@ -263,21 +263,26 @@ def debtorbatchform(request):
                                     continue
 
                             if not errors:
-                                Debtor.objects.update_or_create(
-                                    uid_id=uid,
-                                    desc=desc,
-                                    defaults={
-                                        'name': name,
-                                        'name_opt': name_opt,
-                                        'first_name': first_name,
-                                        'first_name_opt': first_name_opt,
-                                        'genid': genid,
-                                        'taxid': taxid,
-                                        'birthid': birthid,
-                                        'date_birth': date_birth,
-                                        'year_birth_from': year_birth_from,
-                                        'year_birth_to': year_birth_to}
-                                )
+                                try:
+                                    Debtor.objects.update_or_create(
+                                        uid_id=uid,
+                                        desc=desc,
+                                        defaults={
+                                            'name': name,
+                                            'name_opt': name_opt,
+                                            'first_name': first_name,
+                                            'first_name_opt': first_name_opt,
+                                            'genid': genid,
+                                            'taxid': taxid,
+                                            'birthid': birthid,
+                                            'date_birth': date_birth,
+                                            'year_birth_from': year_birth_from,
+                                            'year_birth_to': year_birth_to}
+                                    )
+                                except:
+                                    errors.append([i, 'Popisu "' + desc + \
+                                        '" odpovídá více než jeden dlužník'])
+                                    continue
                                 count += 1
                     return render(
                         request,

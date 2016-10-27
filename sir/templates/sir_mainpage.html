@@ -31,6 +31,14 @@
 	  </tbody>
 	</table>
         <p style="text-align: center;">
+	  <a href="{% url 'sir:insbatchform' %}">
+	    Import
+	  </a>
+	  /
+	  <a href="{% url 'sir:insexport' %}">
+	    Export
+	  </a>
+	  /
 	  <a href="{% url 'sir:insdelall' %}">
 	    Smazat vše
 	  </a>
@@ -41,6 +49,10 @@
         <p style="text-align: center;">
 	  <a href="{% url 'sir:insform' %}">
 	    Přidat řízení
+	  </a>
+	  /
+	  <a href="{% url 'sir:insbatchform' %}">
+	    Import
 	  </a>
 	</p>{% endif %}
     <form method="post" enctype="multipart/form-data">

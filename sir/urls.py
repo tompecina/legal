@@ -22,7 +22,8 @@
 
 from django.conf.urls import url
 from common.views import genrender
-from .views import mainpage, courts, insform, insdel, insdelall
+from .views import (
+    mainpage, insform, insdel, insdelall, insbatchform, insexport, courts)
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),
@@ -36,5 +37,7 @@ urlpatterns = [
             'page_title': 'Smazání řízení'},
         name='insdeleted'),
     url(r'^insdelall/$', insdelall, name='insdelall'),
+    url(r'^insbatchform/$', insbatchform, name='insbatchform'),
+    url(r'^insexport/$', insexport, name='insexport'),
     url(r'^courts/$', courts, name='courts'),
 ]

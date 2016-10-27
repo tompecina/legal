@@ -35,9 +35,13 @@ class InsForm(forms.Form):
     desc = fields.CharField(
         widget=widgets.genw(),
         max_length=255,
-        label='Popis',
-        required=False)
+        label='Popis')
     detailed = fields.BooleanField(
         initial=True,
         label='Všechny události',
+        required=False)
+
+class InsBatchForm(forms.Form):
+    next = fields.CharField(
+        widget=widgets.hw(),
         required=False)

@@ -133,10 +133,13 @@ def partybatchform(request):
             if not f:
                 err_message = 'Nejprve zvolte soubor k načtení'
             else:
+                errors = []
                 try:
                     count = 0
                     with f:
+                        i = 0
                         for line in csvreader(StringIO(f.read().decode())):
+                            i += 1
                             if not line.strip():
                                 continue
                             line = line[0].strip()
@@ -144,21 +147,31 @@ def partybatchform(request):
                                line, party_opt = line.split(':', 1)
                             else:
                                 party_opt = '*'
-                            if between(MIN_LENGTH, len(line), MAX_LENGTH) and \
-                                (party_opt in text_opts_abbr):
+                            if not between(MIN_LENGTH, len(line), MAX_LENGTH):
+                                errors.append([i, 'Chybná délka řetězce'])
+                                continue
+                            if party_opt not in text_opts_abbr:
+                                errors.append([i, 'Chybná zkratka pro posici'])
+                                continue
+                            try:
                                 Party.objects.update_or_create(
                                     uid_id=uid,
                                     party=line,
                                     defaults={'party_opt': \
                                         text_opts_ai[party_opt]}
                                 )
-                                count += 1
+                            except:
+                                errors.append([i, 'Řetězci "' + line + \
+                                    '" odpovídá více než jeden účastník'])
+                                continue
+                            count += 1
                     return render(
                         request,
                         'sur_partybatchresult.html',
                         {'app': APP,
                          'page_title': 'Import účastníků řízení ze souboru',
-                         'count': count})
+                         'count': count,
+                         'errors': errors})
                 except:
                     err_message = 'Chyba při načtení souboru'
 

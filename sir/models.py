@@ -252,8 +252,7 @@ class Insolvency(models.Model):
     year = models.IntegerField(
         validators=[MinValueValidator(1990)])
     desc = models.CharField(
-        max_length=255,
-        blank=True)
+        max_length=255)
     detailed = models.BooleanField(
         default=False)
     timestamp = models.DateTimeField(

@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
@@ -28,12 +28,14 @@ from django.forms.models import model_to_dict
 from django.apps import apps
 from django.urls import reverse
 from locale import strxfrm
+from csv import reader as csvreader, writer as csvwriter
+from io import StringIO
 from common.utils import getbutton, grammar, between, Pager
 from common.glob import inerr, GR_C, text_opts, text_opts_keys
 from szr.forms import EmailForm
 from .glob import l2n, l2s
 from .models import Vec, Insolvency
-from .forms import InsForm
+from .forms import InsForm, InsBatchForm
 
 APP = __package__
 
@@ -108,6 +110,101 @@ def insdelall(request, id=0):
 
 @require_http_methods(['GET', 'POST'])
 @login_required
+def insbatchform(request):
+
+    err_message = ''
+    uid = request.user.id
+
+    if (request.method == 'GET'):
+        f = InsBatchForm()
+
+    else:
+        btn = getbutton(request)
+
+        if btn == 'load':
+            f = request.FILES.get('load')
+            if not f:
+                err_message = 'Nejprve zvolte soubor k načtení'
+            else:
+                errors = []
+                try:
+                    count = 0
+                    with f:
+                        i = 0
+                        for line in csvreader(StringIO(f.read().decode())):
+                            i += 1
+                            if not line:
+                                continue
+                            desc = line[0].strip()
+                            if not desc:
+                                errors.append([i, 'Prázdný popis'])
+                                continue
+                            try:
+                                number = int(line[1])
+                                assert number > 0
+                            except:
+                                errors.append([i, 'Chybný formát běžného čísla'])
+                                continue
+                            try:
+                                year = int(line[2])
+                                assert year > 0
+                            except:
+                                errors.append([i, 'Chybný formát ročníku'])
+                                continue
+                            detailed = line[3].strip()
+                            if detailed == 'ano':
+                                detailed = True
+                            elif detailed == 'ne':
+                                detailed = False
+                            else:
+                                errors.append([i, 'Chybný formát pro pole Vše'])
+                                continue
+
+                            if not errors:
+                                try:
+                                    Insolvency.objects.update_or_create(
+                                        uid_id=uid,
+                                        desc=desc,
+                                        defaults={
+                                            'number': number,
+                                            'year': year,
+                                            'detailed': detailed}
+                                    )
+                                except:
+                                    errors.append([i, 'Popisu "' + desc + \
+                                        '" odpovídá více než jedno řízení'])
+                                    continue
+                                count += 1
+                    return render(
+                        request,
+                        'sir_insbatchresult.html',
+                        {'app': APP,
+                         'page_title': 'Import řízení ze souboru',
+                         'count': count,
+                         'errors': errors})
+                except:
+                    err_message = 'Chyba při načtení souboru'
+
+        f = InsBatchForm(request.POST)
+        if f.is_valid():
+            cd = f.cleaned_data
+            
+            if (not btn) and cd['next']:
+                return redirect(cd['next'])
+
+        else:
+            err_message = inerr
+
+    return render(
+        request,
+        'sir_insbatchform.html',
+        {'app': APP,
+         'page_title': 'Import řízení ze souboru',
+         'f': f,
+         'err_message': err_message})
+
+@require_http_methods(['GET', 'POST'])
+@login_required
 def mainpage(request):
     err_message = ''
     uid = request.user.id
@@ -142,6 +239,26 @@ def mainpage(request):
          'rows': rows,
          'pager': Pager(start, total, reverse('sir:mainpage'), rd, BATCH),
          'total': total})
+
+@require_http_methods(['GET'])
+@login_required
+def insexport(request):
+    uid = request.user.id
+    ii = Insolvency.objects.filter(uid=uid).order_by('desc', 'pk') \
+        .distinct()
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = \
+        'attachment; filename=sir.csv'
+    writer = csvwriter(response)
+    for i in ii:
+        dat = [
+            i.desc,
+            str(i.number),
+            str(i.year),
+            ('ano' if i.detailed else 'ne'),
+        ]
+        writer.writerow(dat)
+    return response
 
 @require_http_methods(['GET'])
 def courts(request):

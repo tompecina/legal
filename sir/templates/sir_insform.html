@@ -17,7 +17,7 @@
 	    <tr class="{{ f.desc.css_classes }}"><th>{{ f.desc.label_tag }}</th><td colspan="2">{{ f.desc }}</td></tr>
 	    <tr>
 	      <th>{{ f.detailed.label_tag }}</th>
-	      <td colspan="2" style="white-space: nowrap;">{{ f.detailed }} (jinak jen usnesení o úpadku)</td>
+	      <td colspan="2" style="white-space: nowrap;">{{ f.detailed }} (jinak pouze rozhodnutí o úpadku)</td>
 	    </tr>
 	    {% include "submit.html" %}	  </table>
 {% if type %}          <div class="hidden"><input type="hidden" name="idx" value="{{ idx }}" /><input type="hidden" name="type" id="id_type" value="{{ type }}" /></div>

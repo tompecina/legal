@@ -27,18 +27,30 @@
 	  </tbody>
 	</table>
         <p style="text-align: center;">
-	  <a href="{% url 'dir:debtorbatchform' %}">Import</a>
+	  <a href="{% url 'dir:debtorbatchform' %}">
+	    Import
+	  </a>
 	  /
-	  <a href="{% url 'dir:debtorexport' %}">Export</a>
+	  <a href="{% url 'dir:debtorexport' %}">
+	    Export
+	  </a>
 	  /
-	  <a href="{% url 'dir:debtordelall' %}">Smazat vše</a>
+	  <a href="{% url 'dir:debtordelall' %}">
+	    Smazat vše
+	  </a>
 	</p>{% else %}
-          <p style="text-align: center;">(nesledujete žádné dlužníky)</p>
-          <p style="text-align: center;">
-	    <a href="{% url 'dir:debtorform' %}">Přidat dlužníka</a>
-	    /
-	    <a href="{% url 'dir:debtorbatchform' %}">Import</a>
-	  </p>{% endif %}
+        <p style="text-align: center;">
+	  (nesledujete žádné dlužníky)
+	</p>
+        <p style="text-align: center;">
+	  <a href="{% url 'dir:debtorform' %}">
+	    Přidat dlužníka
+	  </a>
+	  /
+	  <a href="{% url 'dir:debtorbatchform' %}">
+	    Import
+	  </a>
+	</p>{% endif %}
     <form method="post" enctype="multipart/form-data">
       <table style="margin: 20px auto 15px auto;">
 {% if err_message %}	      <tr>
