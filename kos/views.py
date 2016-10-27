@@ -84,6 +84,7 @@ def mainpage(request):
             rem = (rem // 3) * 3
             rep += (rem * 2) // 3
             if dual:
+                totnetincome = netincome + netincome2
                 basis2 = ceil(prot * (1.0 + (deps2 / 4.0)))
                 messages.append([
                     ('Celková základní částka pro 1. manžela: %s Kč' % \
@@ -103,12 +104,16 @@ def mainpage(request):
                 rep2 = (rem2 * 2) // 3
                 rep += rep2
             else:
+                totnetincome = netincome
                 messages.append([
                     ('Celková základní částka: %s Kč' % formam(round(basis1))),
                     None])
             messages.append([
                 ('Výše měsíční splátky: %s Kč' % formam(round(rep))),
                 'margin-top: 8px;'])
+            messages.append([
+                ('Zůstatek ze mzdy: %s Kč' % formam(round(totnetincome - rep))),
+                None])
             tru = fee + exp
             if vat:
                 tru *= 1.0 + (vatrate / 100.0)
