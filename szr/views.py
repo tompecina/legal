@@ -110,6 +110,23 @@ def procdel(request, id=0):
 
 @require_http_methods(['GET', 'POST'])
 @login_required
+def procdelall(request):
+    uid = request.user.id
+    if request.method == 'GET':
+        return render(
+            request,
+            'szr_procdelall.html',
+            {'app': APP,
+             'page_title': 'Smazání všech řízení'})
+    else:
+        if (getbutton(request) == 'yes') and \
+           ('conf' in request.POST) and \
+           (request.POST['conf'] == 'Ano'):
+            Proceedings.objects.filter(uid=uid).delete()
+        return redirect('szr:mainpage')
+
+@require_http_methods(['GET', 'POST'])
+@login_required
 def mainpage(request):
     err_message = ''
     uid = request.user.id

@@ -456,6 +456,8 @@ def iexact(needle, haystack):
     return needle.lower() == haystack.lower()
 
 def text_opt(needle, haystack, opt):
+    if not needle:
+        return True
     return [icontains, istartswith, iendswith, iexact][opt](needle, haystack)
 
 def lim(lower, x, upper):
@@ -466,3 +468,9 @@ def between(lower, x, upper):
 
 def normalize(s):
     return ' '.join(s.replace('\u00a0', ' ').strip().split())
+
+def icmp(x, y):
+    if x and y:
+        return x.lower() == y.lower()
+    else:
+        return x == y

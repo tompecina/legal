@@ -140,11 +140,9 @@ def g2p(rd):
         p['osoby__datumNarozeni'] = \
             datetime.strptime(rd['date_birth'], DTF).date()
     if 'year_birth_from' in rd:
-        p['osoby__datumNarozeni__gte'] = \
-            datetime.date(rd['year_birth_from'], 1, 1)
+        p['osoby__datumNarozeni__year__gte'] = rd['year_birth_from']
     if 'year_birth_to' in rd:
-        p['osoby__datumNarozeni__lte'] = \
-            datetime.date(rd['year_birth_to'], 12, 31)
+        p['osoby__datumNarozeni__year__lte'] = rd['year_birth_to']
     if ('name' in rd) or \
        ('first_name' in rd) or \
        ('city' in rd) or \
@@ -235,7 +233,7 @@ def htmllist(request):
          'total': total})
 
 @require_http_methods(['GET'])
-def party(request, id):
+def party(request, id=0):
     osoba = get_object_or_404(Osoba, id=id)
     adresy = osoba.adresy.order_by('-id')
     i = 0

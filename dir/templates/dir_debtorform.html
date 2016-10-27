@@ -1,0 +1,80 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+	<form id="id_partyform" method="post" enctype="multipart/form-data">
+	  <table style="margin: auto auto 15px auto;">	    <tr><td></td><td colspan="2"><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+{% if err_message %}            <tr><td></td><td colspan="2" class="warning">
+              {% include "formwarning.html" %}            </td></tr>
+{% endif %}	    <tr class="{{ f.desc.css_classes }}">
+	      <th>{{ f.desc.label_tag }}</th>
+	      <td colspan="2" style="white-space: nowrap;">
+		{{ f.desc }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <td colspan="3" style="height: 10px;">
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>{{ f.court.label_tag }}</th>
+	      <td colspan="2">
+		<select name="court" id="id_court" style="width: 100%;">
+		  <option value="">(všechny)</option>
+{% for court in courts %}		  <option value="{{ court.id }}">{{ court.name }}</option>
+{% endfor %}	        </select>
+	      </td>
+	    </tr>
+	    <tr class="{{ f.name.css_classes }}">
+	      <th>{{ f.name.label_tag }}</th>
+	      <td colspan="2" style="white-space: nowrap;">
+		<span>{{ f.name }}</span>
+{% for p in f.name_opt %}		  {{ p }}
+{% endfor %}	      </td>
+	    </tr>
+	    <tr class="{{ f.first_name.css_classes }}">
+	      <th>{{ f.first_name.label_tag }}</th>
+	      <td colspan="2" style="white-space: nowrap;">
+		<span>{{ f.first_name }}</span>
+{% for p in f.first_name_opt %}		  {{ p }}
+{% endfor %}	      </td>
+	    </tr>
+	    <tr>
+	      <th>{{ f.genid.label_tag }}</th>
+	      <td colspan="2">
+		<span>{{ f.genid }}</span>
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>{{ f.taxid.label_tag }}</th>
+	      <td colspan="2">
+		<span>{{ f.taxid }}</span>
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>{{ f.birthid.label_tag }}</th>
+	      <td colspan="2">
+		<span>{{ f.birthid }}</span>
+		(včetně lomítka)
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>{{ f.date_birth.label_tag }}</th>
+	      <td colspan="2">
+		<span>{{ f.date_birth }}</span>
+	      </td>
+	    </tr>
+	    <tr>
+	      <th class="{% if f.year_birth_from.errors or f.year_birth_to.errors %}err{% endif %}">
+		Rok narození:
+	      </th>
+	      <td colspan="2" style="white-space: nowrap;">
+		<span class="{{ f.year_birth_from.css_classes }}" id="id_year_birth_from_span">{{ f.year_birth_from }}</span>
+		–
+		<span class="{{ f.year_birth_to.css_classes }}" id="id_year_birth_to_span">{{ f.year_birth_to }}</span>
+	      </td>
+	    </tr>
+	    {% include "submit.html" %}	  </table>
+{% if type %}          <div class="hidden"><input type="hidden" name="idx" value="{{ idx }}" /><input type="hidden" name="type" id="id_type" value="{{ type }}" /></div>
+{% endif %}	  {% csrf_token %}
+	</form>
+{% endblock %}

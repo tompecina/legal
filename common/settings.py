@@ -104,6 +104,7 @@ APPS = ['common',
         'psj',
         'udn',
         'sir',
+        'dir',
         'pir',
         'cache',
 ]

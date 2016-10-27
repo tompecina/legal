@@ -31,6 +31,7 @@ from common.utils import get, post, send_mail
 from common.glob import localsubdomain, localurl
 from sur.cron import sur_notice
 from sir.cron import sir_notice
+from dir.cron import dir_notice
 from .models import Court, Proceedings
 from .glob import (
     supreme_court, supreme_administrative_court, root_url, get_proc)
@@ -190,7 +191,8 @@ def cron_notify():
     for u in User.objects.all():
         if u.email:
             uid = u.id;
-            text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid)
+            text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) + \
+                   dir_notice(uid)
             if text:
                 text += 'Server ' + localsubdomain + ' (' + localurl + ')\n'
                 send_mail(

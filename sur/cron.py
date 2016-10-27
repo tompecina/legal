@@ -39,7 +39,7 @@ def sur_notice(uid):
 def sur_check(name, court, senate, register, number, year, url):
     for p in Party.objects.all():
         if text_opt(p.party, name, p.party_opt):
-            Found(
+            Found.objects.update_or_create(
                 uid_id=p.uid_id,
                 name=name,
                 court=court,
@@ -47,4 +47,4 @@ def sur_check(name, court, senate, register, number, year, url):
                 register=register,
                 number=number,
                 year=year,
-                url=url).save()
+                url=url)

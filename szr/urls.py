@@ -22,7 +22,7 @@
 
 from django.conf.urls import url
 from common.views import genrender
-from .views import mainpage, procform, procdel
+from .views import mainpage, procform, procdel, procdelall
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),
@@ -35,4 +35,5 @@ urlpatterns = [
             'template': 'szr_procdeleted.html',
             'page_title': 'Smazání řízení'},
         name='procdeleted'),
+    url(r'^procdelall/$', procdelall, name='procdelall'),
 ]

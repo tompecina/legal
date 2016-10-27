@@ -8,7 +8,7 @@
 {% endif %}	    <tr>
 	      <th>{{ f.court.label_tag }}</th>
 	      <td colspan="2">
-		<select name="court" id="id_court">
+		<select name="court" id="id_court" style="width: 100%;">
 {% for court in courts %}		  <option value="{{ court.id }}"{% if f.court.value == court.id %} selected="selected"{% endif %}>{{ court.name }}</option>
 {% endfor %}	        </select>
 	      </td>

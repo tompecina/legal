@@ -28,10 +28,11 @@ from os.path import join
 from common.settings import BASE_DIR, TEST
 from common.utils import normalize, get, post
 from szr.glob import root_url, get_proc
+from dir.cron import dir_check
 from .glob import COURTS, l2n, l2r, l2s, SELIST, BELIST
 from .models import (
     DruhStavRizeni, Vec, DruhRoleVRizeni, Osoba, DruhAdresy, Adresa, Counter,
-    Transaction, Insolvency, Tracked)
+    Transaction, Error, Insolvency, Tracked)
 
 PREF = 20
                 
@@ -102,6 +103,7 @@ def cron_gettr():
 
 def cron_proctr():
     id = Counter.objects.get(id='DL').number
+    debtor = DruhRoleVRizeni.objects.get(desc='DLUŽNÍK')
     for tr in Transaction.objects.filter(id__gt=id).order_by('id'):
         id = tr.id
         try:
@@ -207,18 +209,21 @@ def cron_proctr():
                     day = int(rc[4:6])
                     datumNarozeni = datetime(year, month, day)
 
-                osoba.druhRoleVRizenid = druhRoleVRizeni
-                osoba.nazevOsoby=nazevOsoby
-                osoba.nazevOsobyObchodni=nazevOsobyObchodni
-                osoba.jmeno=jmeno
-                osoba.titulPred=titulPred
-                osoba.titulZa=titulZa
-                osoba.ic=ic
-                osoba.dic=dic
-                osoba.rc=rc
-                osoba.datumNarozeni=datumNarozeni
+                osoba.druhRoleVRizeni = druhRoleVRizeni
+                osoba.nazevOsoby = nazevOsoby
+                osoba.nazevOsobyObchodni = nazevOsobyObchodni
+                osoba.jmeno = jmeno
+                osoba.titulPred = titulPred
+                osoba.titulZa = titulZa
+                osoba.ic = ic
+                osoba.dic = dic
+                osoba.rc = rc
+                osoba.datumNarozeni = datumNarozeni
 
                 osoba.save()
+                if (osoba.druhRoleVRizeni == debtor) and \
+                   (osoba not in vec.osoby.all()):
+                    dir_check(osoba, vec)
                 vec.osoby.add(osoba)
 
                 if t_osoba.datumosobavevecizrusena:
@@ -285,7 +290,17 @@ def cron_proctr():
                         if t_adresa.datumpobytdo:
                             osoba.adresy.remove(adresa)
         except:
-            print('Error, id =', id)
+            Error.objects.update_or_create(
+                id=tr.id,
+                datumZalozeniUdalosti=tr.datumZalozeniUdalosti,
+                datumZverejneniUdalosti=tr.datumZverejneniUdalosti,
+                dokumentUrl=tr.dokumentUrl,
+                spisovaZnacka=tr.spisovaZnacka,
+                typUdalosti=tr.typUdalosti,
+                popisUdalosti=tr.popisUdalosti,
+                oddil=tr.oddil,
+                cisloVOddilu=tr.cisloVOddilu,
+                poznamkaText=tr.poznamkaText)
 
     Counter.objects.update_or_create(id='DL', defaults={'number': id})
 
@@ -365,8 +380,8 @@ def sir_notice(uid):
         text = 'Došlo ke změně v těchto insolvenčních řízeních, ' \
                'která sledujete:\n\n'
         for t in tt:
-            text += ' - %s, sp. zn. %s %d INS %d/%d\n' % \
-                    (t.desc,
+            text += ' - %ssp. zn. %s %d INS %d/%d\n' % \
+                    ((t.desc + ', ' if t.desc else ''),
                      l2s[t.vec.idOsobyPuvodce],
                      t.vec.senat,
                      t.vec.bc,
@@ -374,3 +389,10 @@ def sir_notice(uid):
             text += '   %s\n\n' % t.vec.link
         Tracked.objects.filter(uid=uid, vec__link__isnull=False).delete()
     return text
+
+def cron_deltest():
+    Adresa.objects.all().delete()
+    Osoba.objects.all().delete()
+    Vec.objects.all().delete()
+    Counter.objects.filter(id='DL').update(number=27240063-10000)
+    Counter.objects.filter(id='PR').update(number=-1)

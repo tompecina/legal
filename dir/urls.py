@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# sir/urls.py
+# dir/urls.py
 #
 # Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -22,19 +22,22 @@
 
 from django.conf.urls import url
 from common.views import genrender
-from .views import mainpage, courts, insform, insdel, insdelall
+from .views import (
+    mainpage, debtorform, debtordel, debtordelall, debtorbatchform,
+    debtorexport)
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),
-    url(r'^insform/(\d+)/$', insform, name='insform'),
-    url(r'^insform/$', insform, name='insform'),
-    url(r'^insdel/(\d+)/$', insdel, name='insdel'),
-    url(r'^insdeleted/$',
+    url(r'^debtorform/(\d+)/$', debtorform, name='debtorform'),
+    url(r'^debtorform/$', debtorform, name='debtorform'),
+    url(r'^debtordel/(\d+)/$', debtordel, name='debtordel'),
+    url(r'^debtordeleted/$',
         genrender,
         kwargs={
-            'template': 'sir_insdeleted.html',
-            'page_title': 'Smazání řízení'},
-        name='insdeleted'),
-    url(r'^insdelall/$', insdelall, name='insdelall'),
-    url(r'^courts/$', courts, name='courts'),
+            'template': 'dir_debtordeleted.html',
+            'page_title': 'Smazání vyhledávacího řetězce'},
+        name='debtordeleted'),
+    url(r'^debtordelall/$', debtordelall, name='debtordelall'),
+    url(r'^debtorbatchform/$', debtorbatchform, name='debtorbatchform'),
+    url(r'^debtorexport/$', debtorexport, name='debtorexport'),
 ]

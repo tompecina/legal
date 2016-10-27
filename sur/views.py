@@ -100,6 +100,23 @@ def partydel(request, id=0):
 
 @require_http_methods(['GET', 'POST'])
 @login_required
+def partydelall(request):
+    uid = request.user.id
+    if request.method == 'GET':
+        return render(
+            request,
+            'sur_partydelall.html',
+            {'app': APP,
+             'page_title': 'Smazání všech účastníků'})
+    else:
+        if (getbutton(request) == 'yes') and \
+           ('conf' in request.POST) and \
+           (request.POST['conf'] == 'Ano'):
+            Party.objects.filter(uid=uid).delete()
+        return redirect('sur:mainpage')
+
+@require_http_methods(['GET', 'POST'])
+@login_required
 def partybatchform(request):
 
     err_message = ''
@@ -120,6 +137,8 @@ def partybatchform(request):
                     count = 0
                     with f:
                         for line in csvreader(StringIO(f.read().decode())):
+                            if not line.strip():
+                                continue
                             line = line[0].strip()
                             if ':' in line:
                                line, party_opt = line.split(':', 1)

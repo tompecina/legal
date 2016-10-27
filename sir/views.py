@@ -91,6 +91,23 @@ def insdel(request, id=0):
 
 @require_http_methods(['GET', 'POST'])
 @login_required
+def insdelall(request, id=0):
+    uid = request.user.id
+    if request.method == 'GET':
+        return render(
+            request,
+            'sir_insdelall.html',
+            {'app': APP,
+             'page_title': 'Smazání všech řízení'})
+    else:
+        if (getbutton(request) == 'yes') and \
+           ('conf' in request.POST) and \
+           (request.POST['conf'] == 'Ano'):
+            Insolvency.objects.filter(uid=uid).delete()
+        return redirect('sir:mainpage')
+
+@require_http_methods(['GET', 'POST'])
+@login_required
 def mainpage(request):
     err_message = ''
     uid = request.user.id
