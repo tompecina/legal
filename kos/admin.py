@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# knr/admin.py
+# kos/admin.py
 #
 # Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -21,6 +21,6 @@
 #
 
 from django.contrib import admin
-from .models import VATrate
+from .models import Preset
 
-admin.site.register(VATrate)
+admin.site.register(Preset)

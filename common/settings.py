@@ -106,6 +106,7 @@ APPS = ['common',
         'sir',
         'dir',
         'pir',
+        'kos',
         'cache',
 ]
 

@@ -1,0 +1,134 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+        <form method="post" enctype="multipart/form-data">
+	  <table style="margin: auto auto 30px auto;">
+	    <thead>
+	      <tr>
+		<td></td>
+		<th colspan="2" style="padding-left: 2px;">
+		  <h1 style="text-align: left; margin-bottom: 20px">
+		    {{ page_title }}
+		  </h1>
+                </th>
+	      </tr>
+	      <tr>
+		<th></th>
+		<th style="text-align: left; padding: 3px 35px 5px 3px;">
+		  Samostatný dlužník
+		</th>
+		<th style="text-align: left; padding: 3px 0 5px 3px;">
+		  Společný návrh manželů
+		</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr>
+		<th>
+		  {{ f.netincome.label_tag }}
+		</th>
+		<td class="{{ f.netincome.css_classes }}">
+		  {{ f.netincome }} Kč/měsíc
+		</td>
+		<td class="{{ f.netincome2.css_classes }}">
+		  {{ f.netincome2 }} Kč/měsíc (druhý manžel)
+		</td>
+	      </tr>
+	      <tr>
+		<th>
+		  {{ f.partner.label_tag }}
+		</th>
+		<td>
+		  {{ f.partner }}
+		</td>
+		<td>
+		  {{ f.partner2 }}
+	      </tr>
+	      <tr>
+		<th>
+		  {{ f.deps.label_tag }}
+		</th>
+		<td>
+		  {{ f.deps }}
+		</td>
+		<td>
+		  {{ f.deps2 }} (druhý manžel)
+		</td>
+	      </tr>
+	      <tr>
+		<th>
+		  {{ f.subs.label_tag }}
+		</th>
+		<td colspan="2">
+		  {{ f.subs }} Kč/měsíc
+		</td>
+	      </tr>
+	      <tr>
+		<th>
+		  {{ f.apt.label_tag }}
+		</th>
+		<td colspan="2">
+		  {{ f.apt }} Kč/měsíc
+		</td>
+	      </tr>
+	      <tr>
+		<th>
+		  {{ f.fee.label_tag }}
+		</th>
+		<td>
+		  {{ f.fee }} Kč/měsíc
+		</td>
+		<td>
+		  {{ f.fee2 }} Kč/měsíc
+		</td>
+	      </tr>
+	      <tr>
+		<th>
+		  {{ f.exp.label_tag }}
+		</th>
+		<td>
+		  {{ f.exp }} Kč/měsíc
+		</td>
+		<td>
+		  {{ f.exp2 }} Kč/měsíc
+		</td>
+	      </tr>
+	      <tr>
+		<th>
+		  {{ f.vat.label_tag }}
+		</th>
+		<td colspan="2">
+		  {{ f.vat }}
+		</td>
+	      </tr>
+	      <tr>
+		<th>
+		  {{ f.vatrate.label_tag }}
+		</th>
+		<td colspan="2" style="white-space: nowrap;">
+		  {{ f.vatrate }} %
+		</td>
+	      </tr>
+	      <tr class="submit">
+		<td></td>
+		<td>
+		  <input type="submit" name="submit_single" value="Vypočítat" />
+		</td>
+		<td>
+		  <input type="submit" name="submit_dual" value="Vypočítat" />
+		  {% csrf_token %}
+		</td>
+	      </tr>
+  {% if messages %}	    <tr>
+		<td></td>
+		<td colspan="2" class="msg">
+		  <hr style="margin-top: 35px;" />
+  {% for message in messages %}		<div{% if message.1 %} style="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
+  {% endfor %}                <hr />
+		</td>
+	      </tr>
+	    </tbody>
+{% endif %}	  </table>
+	  
+	</form>
+{% endblock %}

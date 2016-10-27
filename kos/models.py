@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# knr/admin.py
+# kos/models.py
 #
 # Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -20,7 +20,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.contrib import admin
-from .models import VATrate
+from django.db import models
 
-admin.site.register(VATrate)
+class Preset(models.Model):
+    id = models.CharField(
+        max_length=30,
+        primary_key=True,
+        unique_for_date='valid')
+    value = models.FloatField()
+    valid = models.DateField()
+
+    def __str__(self):
+        return str(self.valid)

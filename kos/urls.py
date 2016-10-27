@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# knr/admin.py
+# kos/urls.py
 #
 # Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -20,7 +20,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.contrib import admin
-from .models import VATrate
+from django.conf.urls import url
+from .views import mainpage
 
-admin.site.register(VATrate)
+urlpatterns = [
+    url(r'^$', mainpage, name='mainpage'),
+]
