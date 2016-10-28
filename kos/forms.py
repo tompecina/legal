@@ -58,7 +58,6 @@ class MainForm(forms.Form):
         label='Počet dalších vyživovaných osob',
         initial=0)
     deps2 = fields.IntegerField(
-        required=False,
         widget=widgets.saw(),
         min_value=0,
         initial=0)
