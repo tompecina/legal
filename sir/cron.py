@@ -24,15 +24,13 @@ from django.db.models import Max
 from bs4 import BeautifulSoup
 from datetime import datetime
 from time import sleep
-from os.path import join
-from common.settings import BASE_DIR, TEST
 from common.utils import normalize, get, post
 from szr.glob import root_url, get_proc
 from dir.cron import dir_check
 from .glob import COURTS, l2n, l2r, l2s, SELIST, BELIST
 from .models import (
-    DruhStavRizeni, Vec, DruhRoleVRizeni, Osoba, DruhAdresy, Adresa, Counter,
-    Transaction, Error, Insolvency, Tracked)
+    DruhStavRizeni, Vec, DruhRoleVRizeni, Osoba, Role, DruhAdresy, Adresa,
+    Counter, Transaction, Error, Insolvency, Tracked)
 
 PREF = 20
                 
@@ -166,8 +164,10 @@ def cron_proctr():
                     idOsobyPuvodce=idOsobyPuvodce,
                     idOsoby=idOsoby,
                     defaults={
-                        'druhRoleVRizeni': druhRoleVRizeni,
                         'nazevOsoby': nazevOsoby})
+                role, c_role = Role.objects.get_or_create(
+                    osoba=osoba,
+                    druhRoleVRizeni=druhRoleVRizeni)
                 if t_osoba.nazevosobyobchodni:
                     nazevOsobyObchodni = \
                         normalize(t_osoba.nazevosobyobchodni.string)
@@ -209,7 +209,6 @@ def cron_proctr():
                     day = int(rc[4:6])
                     datumNarozeni = datetime(year, month, day)
 
-                osoba.druhRoleVRizeni = druhRoleVRizeni
                 osoba.nazevOsoby = nazevOsoby
                 osoba.nazevOsobyObchodni = nazevOsobyObchodni
                 osoba.jmeno = jmeno
@@ -221,13 +220,13 @@ def cron_proctr():
                 osoba.datumNarozeni = datumNarozeni
 
                 osoba.save()
-                if (osoba.druhRoleVRizeni == debtor) and \
-                   (osoba not in vec.osoby.all()):
+                if (druhRoleVRizeni == debtor) and \
+                   (role not in vec.roles.all()):
                     dir_check(osoba, vec)
-                vec.osoby.add(osoba)
+                vec.roles.add(role)
 
                 if t_osoba.datumosobavevecizrusena:
-                    vec.osoby.remove(osoba)
+                    vec.roles.remove(role)
                 else:
                     t_adresa = t_udalost.adresa
 
@@ -389,10 +388,3 @@ def sir_notice(uid):
             text += '   %s\n\n' % t.vec.link
         Tracked.objects.filter(uid=uid, vec__link__isnull=False).delete()
     return text
-
-def cron_deltest():
-    Adresa.objects.all().delete()
-    Osoba.objects.all().delete()
-    Vec.objects.all().delete()
-    Counter.objects.filter(id='DL').update(number=27240063-10000)
-    Counter.objects.filter(id='PR').update(number=-1)

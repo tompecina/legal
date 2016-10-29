@@ -122,27 +122,27 @@ def g2p(rd):
         assert rd['name_opt'] in text_opts_keys
     if 'name' in rd:
         assert 'name_opt' in rd
-        p['osoby__nazevOsoby__' + rd['name_opt']] = rd['name']
+        p['roles__osoba__nazevOsoby__' + rd['name_opt']] = rd['name']
     if 'first_name_opt' in rd:
         assert rd['first_name_opt'] in text_opts_keys
     if 'first_name' in rd:
         assert 'first_name_opt' in rd
-        p['osoby__jmeno__' + rd['first_name_opt']] = rd['first_name']
+        p['roles__osoba__jmeno__' + rd['first_name_opt']] = rd['first_name']
     if 'city_opt' in rd:
         assert rd['city_opt'] in text_opts_keys
     if 'city' in rd:
         assert 'city_opt' in rd
-        p['osoby__adresy__mesto__' + rd['city_opt']] = rd['city']
+        p['roles__osoba__adresy__mesto__' + rd['city_opt']] = rd['city']
     for f, m in [['genid', 'ic'], ['taxid', 'dic'], ['birthid', 'rc']]:
         if f in rd:
-            p['osoby__' + m] = rd[f]
+            p['roles__osoba__' + m] = rd[f]
     if 'date_birth' in rd:
-        p['osoby__datumNarozeni'] = \
+        p['roles__osoba__datumNarozeni'] = \
             datetime.strptime(rd['date_birth'], DTF).date()
     if 'year_birth_from' in rd:
-        p['osoby__datumNarozeni__year__gte'] = rd['year_birth_from']
+        p['roles__osoba__datumNarozeni__year__gte'] = rd['year_birth_from']
     if 'year_birth_to' in rd:
-        p['osoby__datumNarozeni__year__lte'] = rd['year_birth_to']
+        p['roles__osoba__datumNarozeni__year__lte'] = rd['year_birth_to']
     if ('name' in rd) or \
        ('first_name' in rd) or \
        ('city' in rd) or \
@@ -157,7 +157,7 @@ def g2p(rd):
         if 'role_creditor' in rd:
             role.append(DruhRoleVRizeni.objects.get(desc=r2i['motioner']))
         if role:
-            p['osoby__druhRoleVRizeni__in'] = role
+            p['roles__osoba__druhRoleVRizeni__in'] = role
     if 'deleted' not in rd:
         p['datumVyskrtnuti__isnull'] = True
     return p
@@ -174,7 +174,12 @@ def o2s(o, detailed=False):
         elif o.ic:
             r += ', IČO:&nbsp;' + o.ic
     return r
-        
+
+def getosoby(v, *d):
+    r = [DruhRoleVRizeni.objects.get(desc=r2i[x]).id for x in d]
+    l = v.roles.filter(druhRoleVRizeni__in=r).values_list('osoba', flat=True)
+    return Osoba.objects.filter(id__in=l).order_by('nazevOsoby', 'jmeno', 'id')
+
 @require_http_methods(['GET'])
 def htmllist(request):
     page_title = apps.get_app_config(APP).verbose_name
@@ -202,25 +207,18 @@ def htmllist(request):
         else:
             row.state = '(není známo)'
         row.debtors = []
-        for osoba in row.osoby.filter(druhRoleVRizeni=DruhRoleVRizeni \
-            .objects.get(desc=r2i['debtor'])) \
-            .order_by('nazevOsoby', 'jmeno', 'id'):
+        for osoba in getosoby(row, 'debtor'):
             row.debtors.append({
                 'text': o2s(osoba, detailed=True),
                 'id': osoba.id})
         row.trustees = []
-        for osoba in row.osoby.filter(druhRoleVRizeni=DruhRoleVRizeni \
-            .objects.get(desc=r2i['trustee'])) \
-            .order_by('nazevOsoby', 'jmeno', 'id'):
+        for osoba in getosoby(row, 'trustee'):
             row.trustees.append({
                 'text': o2s(osoba),
                 'id': osoba.id})
         if creditors:
             row.creditors = []
-            for osoba in row.osoby.filter(druhRoleVRizeni__in=[DruhRoleVRizeni \
-                .objects.get(desc=r2i['motioner']), \
-                DruhRoleVRizeni.objects.get(desc=r2i['creditor'])]) \
-                .order_by('nazevOsoby', 'jmeno', 'id'):
+            for osoba in getosoby(row, 'motioner', 'creditor'):
                 row.creditors.append({'text': o2s(osoba), 'id': osoba.id})
     return render(
         request,
@@ -250,7 +248,6 @@ def party(request, id=0):
          'page_title': 'Informace o osobě',
          'subtitle': o2s(osoba),
          'osoba': osoba,
-         'role': r2d[osoba.druhRoleVRizeni.desc],
          'birthid': ((osoba.rc[:6] + '/' + osoba.rc[6:]) if osoba.rc else ''),
          'adresy': adresy})
 
@@ -400,18 +397,14 @@ def xmllist(request):
         tag_debtors = xml.new_tag('debtors')
         tag_insolvency.append(tag_debtors)
         xml_addparties(
-            v.osoby.filter(druhRoleVRizeni=DruhRoleVRizeni \
-                .objects.get(desc=r2i['debtor'])) \
-                .order_by('nazevOsoby', 'jmeno', 'id'),
+            getosoby(v, 'debtor'),
             xml,
             tag_debtors,
             'debtor')
         tag_trustees = xml.new_tag('trustees')
         tag_insolvency.append(tag_trustees)
         xml_addparties(
-            v.osoby.filter(druhRoleVRizeni=DruhRoleVRizeni \
-                .objects.get(desc=r2i['trustee'])) \
-                .order_by('nazevOsoby', 'jmeno', 'id'),
+            getosoby(v, 'trustee'),
             xml,
             tag_trustees,
             'trustee')
@@ -419,10 +412,7 @@ def xmllist(request):
             tag_creditors = xml.new_tag('creditors')
             tag_insolvency.append(tag_creditors)
             xml_addparties(
-                v.osoby.filter(druhRoleVRizeni__in=[DruhRoleVRizeni \
-                    .objects.get(desc=r2i['motioner']), \
-                    DruhRoleVRizeni.objects.get(desc=r2i['creditor'])]) \
-                    .order_by('nazevOsoby', 'jmeno', 'id'),
+                getosoby(v, 'motioner', 'creditor'),
                 xml,
                 tag_creditors,
                 'creditor')
@@ -553,21 +543,11 @@ def jsonlist(request):
                 'year': v.rocnik,
                 },
             'state': (s2d[v.druhStavRizeni.desc] if v.druhStavRizeni else ''),
-            'debtors': json_addparties(
-                v.osoby.filter(druhRoleVRizeni=DruhRoleVRizeni \
-                    .objects.get(desc=r2i['debtor'])) \
-                    .order_by('nazevOsoby', 'jmeno', 'id')),
-            'trustees': json_addparties(
-                v.osoby.filter(druhRoleVRizeni=DruhRoleVRizeni \
-                    .objects.get(desc=r2i['trustee'])) \
-                    .order_by('nazevOsoby', 'jmeno', 'id')),
+            'debtors': json_addparties(getosoby(v, 'debtor')),
+            'trustees': json_addparties(getosoby(v, 'trustee')),
         }
         if 'creditors' in rd:
-            p['creditors'] = json_addparties(
-                v.osoby.filter(druhRoleVRizeni__in=[DruhRoleVRizeni \
-                    .objects.get(desc=r2i['motioner']), \
-                    DruhRoleVRizeni.objects.get(desc=r2i['creditor'])]) \
-                    .order_by('nazevOsoby', 'jmeno', 'id'))
+            p['creditors'] = json_addparties(getosoby(v, 'motioner', 'creditor'))
         r.append(p)
     dump(r, response)
     return response

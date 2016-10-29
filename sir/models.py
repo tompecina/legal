@@ -86,9 +86,6 @@ class Osoba(models.Model):
         max_length=20)
     idOsoby = models.CharField(
         max_length=20)
-    druhRoleVRizeni = models.ForeignKey(
-        DruhRoleVRizeni,
-        on_delete=models.CASCADE)
     nazevOsoby = models.CharField(
         max_length=255,
         db_index=True)
@@ -133,6 +130,22 @@ class Osoba(models.Model):
     def __str__(self):
         return self.nazevOsoby
 
+class Role(models.Model):
+    osoba = models.ForeignKey(
+        Osoba,
+        on_delete=models.CASCADE)
+    druhRoleVRizeni = models.ForeignKey(
+        DruhRoleVRizeni,
+        on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(
+        auto_now=True)
+
+    class Meta:
+        unique_together = ('osoba', 'druhRoleVRizeni')
+
+    def __str__(self):
+        return str(self.osoba) + ',' + str(self.druhRoleVRizeni)
+
 class DruhStavRizeni(models.Model):
     desc = models.CharField(
         max_length=10)
@@ -165,8 +178,8 @@ class Vec(models.Model):
         db_index=True)
     link = models.URLField(
         null=True)
-    osoby = models.ManyToManyField(
-        Osoba)
+    roles = models.ManyToManyField(
+        Role)
     timestamp = models.DateTimeField(
         auto_now=True)
 
