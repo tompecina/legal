@@ -157,7 +157,7 @@ def g2p(rd):
         if 'role_creditor' in rd:
             role.append(DruhRoleVRizeni.objects.get(desc=r2i['motioner']))
         if role:
-            p['roles__osoba__druhRoleVRizeni__in'] = role
+            p['roles__druhRoleVRizeni__in'] = role
     if 'deleted' not in rd:
         p['datumVyskrtnuti__isnull'] = True
     return p

@@ -27,6 +27,7 @@ rsync -avhHzx \
       --exclude 'scss.map' \
       --exclude '*.map' \
       --exclude '#*' \
+      --exclude '/nohup.out' \
       --delete \
       ./ $remote:/var/www/django/legal/
 
