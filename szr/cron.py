@@ -33,11 +33,13 @@ from sur.cron import sur_notice
 from sir.cron import sir_notice
 from dir.cron import dir_notice
 from .models import Court, Proceedings
-from .glob import (
-    supreme_court, supreme_administrative_court, root_url, get_proc)
+from .glob import supreme_court, supreme_administrative_court
 
 list_courts = 'public/search.jsp'
 list_reports = 'InfoSoud/seznamOkresnichSoudu?kraj=%s'
+root_url = 'http://infosoud.justice.cz/'
+get_proc = 'InfoSoud/public/search.do?org=%s&krajOrg=%s&cisloSenatu=%d' \
+           '&druhVec=%s&bcVec=%d&rocnik=%d&typSoudu=%s&autoFill=true&type=spzn'
 nss_url = 'http://www.nssoud.cz/main0Col.aspx?cls=JudikaturaSimpleSearch' \
           '&pageSource=1&menu=187'
 nss_get_proc = 'http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&kau_id=%d'
@@ -86,6 +88,7 @@ def updateproc(p):
                 court_type = 'os'
             url = root_url + (get_proc % \
                 (court,
+                 (p.court.reports if p.court.reports else p.court),
                  p.senate,
                  quote(p.register.upper()),
                  p.number,
@@ -179,8 +182,13 @@ def szr_notice(uid):
                 else:
                     court_type = 'os'
                 text += '   %s\n\n' % (root_url + (get_proc % \
-                    (p.court_id, p.senate, quote(p.register.upper()), \
-                     p.number, p.year, court_type)))
+                    (p.court,
+                     (p.court.reports if p.court.reports else p.court),
+                     p.senate,
+                     quote(p.register.upper()),
+                     p.number,
+                     p.year,
+                     court_type)))
             elif p.auxid:
                 text += '   %s\n\n' % (nss_get_proc % p.auxid)
             p.notify = False

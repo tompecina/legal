@@ -25,7 +25,3 @@ supreme_court_name = 'Nejvyšší soud'
 
 supreme_administrative_court = 'NSS'
 supreme_administrative_court_name = 'Nejvyšší správní soud'
-
-root_url = 'http://infosoud.justice.cz/'
-get_proc = 'InfoSoud/public/search.do?org=%s&cisloSenatu=%d&druhVec=%s' \
-           '&bcVec=%d&rocnik=%d&typSoudu=%s&autoFill=true&type=spzn'
