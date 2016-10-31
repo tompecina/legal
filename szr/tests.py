@@ -61,12 +61,12 @@ class TestCron(TestCase):
               False),
              (2,
               datetime(2016, 5, 21, 6, 12, 33),
-              '42408bc2325387d17c0946c4fa2f2fd1',
-              True),
+              'bb8b743a7cce90ebfc06eb3d7ebf88dd',
+              False),
              (3,
-              datetime(2016, 6, 28, 9, 18, 55),
+              datetime(2016, 5, 28, 9, 18, 55),
               '5b40f8705599e6f2dada0af88aa759bb',
-              True),
+              False),
              (4,
               None,
               '9dd13c91a9eb4795c1ac3a1c0678d482',
@@ -101,18 +101,10 @@ class TestCron(TestCase):
         self.assertEqual(
             m.body,
             'V těchto soudních řízeních, která sledujete, došlo ke změně:\n\n' \
-            ' - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)\n' \
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
-            'org=MSPHAAB&cisloSenatu=41&druhVec=T&bcVec=3&rocnik=2016' \
-            '&typSoudu=os&autoFill=true&type=spzn\n\n' \
             ' - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 ' \
             '(Miloš Zbránek)\n' \
             '   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&' \
             'kau_id=173442\n\n' \
-            ' - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)\n' \
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
-            'org=MSPHAAB&cisloSenatu=10&druhVec=T&bcVec=8&rocnik=2014' \
-            '&typSoudu=os&autoFill=true&type=spzn\n\n' \
             'Server ' + localsubdomain + ' (' + localurl + ')\n')
 
 class TestGlob(SimpleTestCase):
