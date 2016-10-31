@@ -111,13 +111,13 @@ def g2p(rd):
             datetime.strptime(rd['date_first_from'], DTF).date()
     if 'date_first_to' in rd:
         p['firstAction__lte'] = \
-            datetime.strptime(rd['date_first_from'], DTF).date()
+            datetime.strptime(rd['date_first_to'], DTF).date()
     if 'date_last_from' in rd:
         p['lastAction__gte'] = \
             datetime.strptime(rd['date_last_from'], DTF).date()
     if 'date_last_to' in rd:
         p['lastAction__lte'] = \
-            datetime.strptime(rd['date_last_from'], DTF).date()
+            datetime.strptime(rd['date_last_to'], DTF).date()
     if 'name_opt' in rd:
         assert rd['name_opt'] in text_opts_keys
     if 'name' in rd:
