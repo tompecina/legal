@@ -38,7 +38,7 @@ class PartyForm(forms.Form):
         widget=widgets.rs,
         choices=text_opts,
         label='Posice',
-        initial='istartswith')
+        initial='icontains')
 
 class PartyBatchForm(forms.Form):
     next = fields.CharField(
