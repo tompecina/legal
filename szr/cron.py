@@ -189,13 +189,12 @@ def szr_notice(uid):
 
 def cron_notify():
     for u in User.objects.all():
-        if u.email:
-            uid = u.id;
-            text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) + \
-                   dir_notice(uid)
-            if text:
-                text += 'Server ' + localsubdomain + ' (' + localurl + ')\n'
-                send_mail(
-                    'Zprava ze serveru ' + localsubdomain,
-                    text,
-                    [u.email])
+        uid = u.id;
+        text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) + \
+               dir_notice(uid)
+        if text and u.email:
+            text += 'Server ' + localsubdomain + ' (' + localurl + ')\n'
+            send_mail(
+                'Zprava ze serveru ' + localsubdomain,
+                text,
+                [u.email])

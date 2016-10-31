@@ -664,7 +664,7 @@ class TestUtils(SimpleTestCase):
         self.assertTrue(utils.text_opt('áčďě', 'ÁČĎĚ', 3))
         self.assertTrue(utils.text_opt('ÁČĎĚ', 'áčďě', 3))
         self.assertFalse(utils.text_opt('y', '', 3))
-        self.assertFalse(utils.text_opt('', 'xyzw', 3))
+        self.assertTrue(utils.text_opt('', 'xyzw', 3))
         self.assertTrue(utils.text_opt('', '', 3))
         
     def test_lim(self):
