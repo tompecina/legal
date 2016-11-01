@@ -88,7 +88,7 @@ def updateproc(p):
                 court_type = 'os'
             url = root_url + (get_proc % \
                 (court,
-                 (p.court.reports if p.court.reports else p.court),
+                 (p.court.reports.id if p.court.reports else p.court.id),
                  p.senate,
                  quote(p.register.upper()),
                  p.number,
@@ -182,8 +182,8 @@ def szr_notice(uid):
                 else:
                     court_type = 'os'
                 text += '   %s\n\n' % (root_url + (get_proc % \
-                    (p.court,
-                     (p.court.reports if p.court.reports else p.court),
+                    (p.court.id,
+                     (p.court.reports.id if p.court.reports else p.court.id),
                      p.senate,
                      quote(p.register.upper()),
                      p.number,
