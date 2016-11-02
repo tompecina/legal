@@ -76,7 +76,7 @@ class MainForm(forms.Form):
     party_opt = fields.ChoiceField(
         widget=widgets.rs,
         choices=text_opts,
-        initial='istartswith')
+        initial='icontains')
     format = fields.ChoiceField(
         widget=widgets.rs,
         choices=format_opts,
