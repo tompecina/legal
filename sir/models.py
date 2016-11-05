@@ -225,32 +225,8 @@ class Transaction(models.Model):
         null=True)
     poznamkaText = models.TextField(
         null=True)
-    timestamp = models.DateTimeField(
-        auto_now=True)
-    
-    def __str__(self):
-        return str(self.id) + ', ' + self.spisovaZnacka
-
-class Error(models.Model):
-    id = models.PositiveIntegerField(
-        primary_key=True)
-    datumZalozeniUdalosti = models.DateTimeField()
-    datumZverejneniUdalosti = models.DateTimeField()
-    dokumentUrl = models.URLField(
-        null=True)
-    spisovaZnacka = models.CharField(
-        max_length=50)
-    typUdalosti = models.CharField(
-        max_length=255)
-    popisUdalosti = models.CharField(
-        max_length=255)
-    oddil = models.CharField(
-        max_length=10,
-        null=True)
-    cisloVOddilu = models.IntegerField(
-        null=True)
-    poznamkaText = models.TextField(
-        null=True)
+    error = models.BooleanField(
+        default=False)
     timestamp = models.DateTimeField(
         auto_now=True)
     

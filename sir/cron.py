@@ -29,7 +29,7 @@ from dir.cron import dir_check
 from .glob import COURTS, l2n, l2r, l2s, SELIST, BELIST
 from .models import (
     DruhStavRizeni, Vec, DruhRoleVRizeni, Osoba, Role, DruhAdresy, Adresa,
-    Counter, Transaction, Error, Insolvency, Tracked)
+    Counter, Transaction, Insolvency, Tracked)
 
 PREF = 20
                 
@@ -94,14 +94,15 @@ def cron_gettr():
                 cisloVOddilu=(int(t_data.cislovoddilu.string) \
                     if t_data.cislovoddilu else None),
                 poznamkaText=(t_data.poznamka.string.strip() \
-                    if t_data.poznamka else None)))
+                    if t_data.poznamka else None),
+                error=False))
 
         Transaction.objects.bulk_create(l)
 
 def cron_proctr():
     id = Counter.objects.get(id='DL').number
     debtor = DruhRoleVRizeni.objects.get(desc='DLUŽNÍK')
-    for tr in Transaction.objects.filter(id__gt=id).order_by('id'):
+    for tr in Transaction.objects.filter(id__gt=id, error=False).order_by('id'):
         id = tr.id
         try:
             bc, rocnik = \
@@ -288,22 +289,13 @@ def cron_proctr():
                         if t_adresa.datumpobytdo:
                             osoba.adresy.remove(adresa)
         except:
-            Error.objects.update_or_create(
-                id=tr.id,
-                datumZalozeniUdalosti=tr.datumZalozeniUdalosti,
-                datumZverejneniUdalosti=tr.datumZverejneniUdalosti,
-                dokumentUrl=tr.dokumentUrl,
-                spisovaZnacka=tr.spisovaZnacka,
-                typUdalosti=tr.typUdalosti,
-                popisUdalosti=tr.popisUdalosti,
-                oddil=tr.oddil,
-                cisloVOddilu=tr.cisloVOddilu,
-                poznamkaText=tr.poznamkaText)
+            tr.error = True
+            tr.save()
 
     Counter.objects.update_or_create(id='DL', defaults={'number': id})
 
 def cron_deltr():
-    Transaction.objects.all().delete()
+    Transaction.objects.filter(error=False).delete()
 
 def cron_getws2():
     id = Counter.objects.get(id='PR').number
