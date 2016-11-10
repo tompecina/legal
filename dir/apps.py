@@ -21,8 +21,33 @@
 #
 
 from django.apps import AppConfig
+from datetime import datetime, timedelta
 
 class DirConfig(AppConfig):
     name = 'dir'
     verbose_name = 'Sledování nových dlužníků v insolvenci'
     version = '1.0'
+
+    def stat(self):
+        from .models import Debtor, Discovered
+        now = datetime.now()
+        return [
+            [
+                'Počet dlužníků',
+                Debtor.objects.count()],
+            [
+                'Počet nových dlužníků za posledních 24 hodin',
+                Debtor.objects.filter(timestamp__gte=(now - \
+                    timedelta(hours=24))).count()],
+            [
+                'Počet nových dlužníků za poslední týden',
+                Debtor.objects.filter(timestamp__gte=(now - \
+                    timedelta(weeks=1))).count()],
+            [
+                'Počet nových dlužníků za poslední měsíc',
+                Debtor.objects.filter(timestamp__gte=(now - \
+                    timedelta(days=30))).count()],
+            [
+                'Počet dlužníků pro příští notifikaci',
+                Discovered.objects.count()],
+        ]

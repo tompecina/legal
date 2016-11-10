@@ -21,8 +21,65 @@
 #
 
 from django.apps import AppConfig
+from datetime import datetime, timedelta
 
 class PsjConfig(AppConfig):
     name = 'psj'
     verbose_name = 'Přehled soudních jednání'
     version = '1.1'
+
+    def stat(self):
+        from .models import Courtroom, Party, Judge, Form, Hearing, Task
+        now = datetime.now()
+        return [
+            [
+                'Počet jednacích síní',
+                Courtroom.objects.count()],
+            [
+                'Počet řešitelů',
+                Judge.objects.count()],
+            [
+                'Počet druhů jednání',
+                Form.objects.count()],
+            [
+                'Počet účastníků',
+                Party.objects.count()],
+            [
+                'Počet nových účastníků za posledních 24 hodin',
+                Party.objects.filter(timestamp__gte=(now - \
+                    timedelta(hours=24))).count()],
+            [
+                'Počet nových účastníků za poslední týden',
+                Party.objects.filter(timestamp__gte=(now - \
+                    timedelta(weeks=1))).count()],
+            [
+                'Počet nových účastníků za poslední měsíc',
+                Party.objects.filter(timestamp__gte=(now - \
+                    timedelta(days=30))).count()],
+            [
+                'Počet jednání',
+                Hearing.objects.count()],
+            [
+                'Počet nových jednání za posledních 24 hodin',
+                Hearing.objects.filter(timestamp__gte=(now - \
+                    timedelta(hours=24))).count()],
+            [
+                'Počet nových jednání za poslední týden',
+                Hearing.objects.filter(timestamp__gte=(now - \
+                    timedelta(weeks=1))).count()],
+            [
+                'Počet nových jednání za poslední měsíc',
+                Hearing.objects.filter(timestamp__gte=(now - \
+                    timedelta(days=30))).count()],
+            [
+                'Počet položek v tabulce Task',
+                Task.objects.count()],
+            [
+                'Počet položek v tabulce Task starších než 12 hodin',
+                Task.objects.filter(timestamp__lt=(now - \
+                    timedelta(hours=12))).count()],
+            [
+                'Počet položek v tabulce Task starších než 24 hodin',
+                Task.objects.filter(timestamp__lt=(now - \
+                    timedelta(hours=24))).count()],
+        ]

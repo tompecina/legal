@@ -190,6 +190,27 @@ def about(request):
         'about.html',
         {'page_title': 'O aplikaci', 'apps': getappinfo()})
 
+def getappstat():
+    appstat = []
+    for id in APPS:
+        c = apps.get_app_config(id)
+        if c.stat:
+            appstat.append(
+                {'abbr': c.name,
+                 'name': c.verbose_name,
+                 'stat': c.stat(),
+                })
+    return appstat
+
+@require_http_methods(['GET'])
+def stat(request):
+    return render(
+        request,
+        'stat.html',
+        {'page_title': 'Statistické údaje',
+         'apps': getappstat(),
+        })
+
 @require_http_methods(['GET', 'POST'])
 def useradd(request):
     err_message = None

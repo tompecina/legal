@@ -26,3 +26,12 @@ class HspConfig(AppConfig):
     name = 'hsp'
     verbose_name = 'Historie složené pohledávky'
     version = '1.6'
+
+    def stat(self):
+        from cache.models import Asset
+        return [
+            [
+                'Počet položek v tabulce Asset',
+                Asset.objects.filter(assetid__startswith= \
+                    self.name.upper()).count()],
+        ]

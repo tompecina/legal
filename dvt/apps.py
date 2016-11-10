@@ -26,3 +26,4 @@ class DvtConfig(AppConfig):
     name = 'dvt'
     verbose_name = 'Doba výkonu trestu'
     version = '1.1'
+    stat = None

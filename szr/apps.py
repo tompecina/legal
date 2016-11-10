@@ -21,8 +21,27 @@
 #
 
 from django.apps import AppConfig
+from datetime import datetime, timedelta
 
 class SzrConfig(AppConfig):
     name = 'szr'
     verbose_name = 'Sledování změn v řízení'
     version = '1.0'
+
+    def stat(self):
+        from .models import Court, Proceedings
+        now = datetime.now()
+        return [
+            [
+                'Počet soudů',
+                Court.objects.count()],
+            [
+                'Z toho okresních soudů',
+                Court.objects.filter(reports__isnull=False).count()],
+            [
+                'Počet sledovaných řízení',
+                Proceedings.objects.count()],
+            [
+                'Počet sledovaných řízení pro příští notifikaci',
+                Proceedings.objects.filter(notify=1).count()],
+        ]

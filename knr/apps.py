@@ -26,3 +26,28 @@ class KnrConfig(AppConfig):
     name = 'knr'
     verbose_name = 'Náklady řízení'
     version = '1.6'
+
+    def stat(self):
+        from cache.models import Asset
+        from .models import Place, Car, Formula, Rate, VATrate
+        return [
+            [
+                'Počet míst',
+                Place.objects.count()],
+            [
+                'Počet vozidel',
+                Car.objects.count()],
+            [
+                'Počet předpisů',
+                Formula.objects.count()],
+            [
+                'Počet sazeb',
+                Rate.objects.count()],
+            [
+                'Počet historických sazeb DPH',
+                VATrate.objects.count()],
+            [
+                'Počet položek v tabulce Asset',
+                Asset.objects.filter(assetid__startswith= \
+                    self.name.upper()).count()],
+        ]

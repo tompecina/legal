@@ -24,7 +24,8 @@ from django.conf.urls import include, url
 from django.contrib.auth.views import login, settings
 from django.contrib import admin
 from .views import (
-    home, robots, pwchange, logout, useradd, lostpw, resetpw, about, genrender)
+    home, robots, pwchange, logout, useradd, lostpw, resetpw, about,
+    stat, genrender)
 
 admin.autodiscover()
 
@@ -59,6 +60,7 @@ urlpatterns = [
             'page_title': 'Obnovení hesla'},
         name='pwlinksent'),
     url(r'^about/$', about, name='about'),
+    url(r'^stat/$', stat, name='stat'),
     url(r'^admin/', include((admin.site.urls[0], 'admin')))
 ] + [url('^' + a + '/',
          include((a + '.urls', a))) for a in settings.APPS if (a != 'common')]

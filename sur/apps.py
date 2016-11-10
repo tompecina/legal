@@ -21,8 +21,33 @@
 #
 
 from django.apps import AppConfig
+from datetime import datetime, timedelta
 
 class SurConfig(AppConfig):
     name = 'sur'
     verbose_name = 'Sledování účastníků řízení'
     version = '1.0'
+
+    def stat(self):
+        from .models import Party, Found
+        now = datetime.now()
+        return [
+            [
+                'Počet účastníků řízení',
+                Party.objects.count()],
+            [
+                'Počet nových účastníků řízení za posledních 24 hodin',
+                Party.objects.filter(timestamp__gte=(now - \
+                    timedelta(hours=24))).count()],
+            [
+                'Počet nových účastníků řízení za poslední týden',
+                Party.objects.filter(timestamp__gte=(now - \
+                    timedelta(weeks=1))).count()],
+            [
+                'Počet nových účastníků řízení za poslední měsíc',
+                Party.objects.filter(timestamp__gte=(now - \
+                    timedelta(days=30))).count()],
+            [
+                'Počet účastníků řízení pro příští notifikaci',
+                Found.objects.count()],
+        ]

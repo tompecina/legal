@@ -26,3 +26,4 @@ class LhtConfig(AppConfig):
     name = 'lht'
     verbose_name = 'Konec lhůty'
     version = '1.0'
+    stat = None

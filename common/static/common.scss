@@ -361,6 +361,14 @@ table.detail {
 		padding-bottom: 10px;
 	    }
 	}
+	tr.header {
+	    th {
+		background-color: $medium-blue;
+		font-size: 120%;
+		font-weight: bold;
+		text-align: center;
+	    }
+	}
     }
 }
 tr.submit td {

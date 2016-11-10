@@ -26,3 +26,4 @@ class PirConfig(AppConfig):
     name = 'pir'
     verbose_name = 'Prohledávání insolvenčního rejstříku'
     version = '1.0'
+    stat = None

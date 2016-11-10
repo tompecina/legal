@@ -26,3 +26,4 @@ class SopConfig(AppConfig):
     name = 'sop'
     verbose_name = 'Soudní poplatek'
     version = '1.0'
+    stat = None

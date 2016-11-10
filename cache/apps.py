@@ -24,4 +24,16 @@ from django.apps import AppConfig
 
 class CacheConfig(AppConfig):
     name = 'cache'
+    verbose_name = 'Společná cache'
     version = None
+
+    def stat(self):
+        from .models import Cache, Asset
+        return [
+            [
+                'Počet položek v tabulce Cache',
+                Cache.objects.count()],
+            [
+                'Počet položek v tabulce Asset',
+                Asset.objects.count()],
+        ]

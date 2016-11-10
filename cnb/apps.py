@@ -26,3 +26,17 @@ class CnbConfig(AppConfig):
     name = 'cnb'
     verbose_name = 'Kursy a sazby ČNB'
     version = '1.0'
+
+    def stat(self):
+        from .models import FXrate, MPIrate, MPIstat
+        return [
+            [
+                'Počet kursových tabulek',
+                FXrate.objects.count()],
+            [
+                'Počet historických úrokových sazeb',
+                MPIrate.objects.count()],
+            [
+                'Počet aktuálních úrokových sazeb',
+                MPIstat.objects.count()],
+        ]

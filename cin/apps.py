@@ -26,3 +26,4 @@ class CinConfig(AppConfig):
     name = 'cin'
     verbose_name = 'Délka časového intervalu'
     version = '1.0'
+    stat = None

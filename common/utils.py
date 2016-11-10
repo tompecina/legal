@@ -472,5 +472,4 @@ def normalize(s):
 def icmp(x, y):
     if x and y:
         return x.lower() == y.lower()
-    else:
-        return x == y
+    return x == y

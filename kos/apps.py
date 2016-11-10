@@ -26,3 +26,11 @@ class KosConfig(AppConfig):
     name = 'kos'
     verbose_name = 'Kalkulace splátek při oddlužení'
     version = '1.0'
+
+    def stat(self):
+        from .models import Preset
+        return [
+            [
+                'Počet záznamů v tabulce Preset',
+                Preset.objects.count()],
+        ]
