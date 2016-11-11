@@ -66,6 +66,9 @@ class UdnConfig(AppConfig):
                 Decision.objects.filter(timestamp__gte=(now - \
                     timedelta(days=30))).count()],
             [
+                'Počet neúplných rozhodnutí',
+                Decision.objects.filter(anonfilename='').count()],
+            [
                 'Počet neúplných rozhodnutí starších než 30 dnů',
                 Decision.objects.filter(anonfilename='',
                     date__lt=(now - timedelta(days=30))).count()],
