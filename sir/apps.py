@@ -95,15 +95,15 @@ class SirConfig(AppConfig):
                 'Z toho vyškrtnutých',
                 Vec.objects.filter(datumVyskrtnuti__isnull=False).count()],
             [
-                'Počet nových řízení za posledních 24 hodin',
+                'Počet řízení změněných za posledních 24 hodin',
                 Vec.objects.filter(timestamp__gte=(now - \
                     timedelta(hours=24))).count()],
             [
-                'Počet nových řízení za poslední týden',
+                'Počet řízení změněných za poslední týden',
                 Vec.objects.filter(timestamp__gte=(now - \
                     timedelta(weeks=1))).count()],
             [
-                'Počet nových řízení za poslední měsíc',
+                'Počet řízení změněných za poslední měsíc',
                 Vec.objects.filter(timestamp__gte=(now - \
                     timedelta(days=30))).count()],
             [
