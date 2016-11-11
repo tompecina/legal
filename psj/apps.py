@@ -60,15 +60,15 @@ class PsjConfig(AppConfig):
                 'Počet jednání',
                 Hearing.objects.count()],
             [
-                'Počet nových jednání za posledních 24 hodin',
+                'Počet jednání změněných za posledních 24 hodin',
                 Hearing.objects.filter(timestamp__gte=(now - \
                     timedelta(hours=24))).count()],
             [
-                'Počet nových jednání za poslední týden',
+                'Počet jednání změněných za poslední týden',
                 Hearing.objects.filter(timestamp__gte=(now - \
                     timedelta(weeks=1))).count()],
             [
-                'Počet nových jednání za poslední měsíc',
+                'Počet jednání změněných za poslední měsíc',
                 Hearing.objects.filter(timestamp__gte=(now - \
                     timedelta(days=30))).count()],
             [
