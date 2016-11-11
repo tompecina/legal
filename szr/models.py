@@ -38,7 +38,7 @@ class Court(models.Model):
         null=True,
         on_delete=models.SET_NULL)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -75,7 +75,7 @@ class Proceedings(models.Model):
     notify = models.BooleanField(
         default=False)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     def __str__(self):
         return '%s, %s' % \

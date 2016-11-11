@@ -34,7 +34,7 @@ class Courtroom(models.Model):
         max_length=255,
         db_index=True)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     def __str__(self):
         return '%s, %s' % (self.court, self.desc)
@@ -44,7 +44,7 @@ class Party(models.Model):
         max_length=255,
         unique=True)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -54,7 +54,7 @@ class Judge(models.Model):
         max_length=255,
         unique=True)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -64,7 +64,7 @@ class Form(models.Model):
         max_length=255,
         unique=True)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -95,7 +95,7 @@ class Hearing(models.Model):
     cancelled = models.BooleanField(
         default=False)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     class Meta:
         unique_together = ('time', 'id')

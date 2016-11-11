@@ -31,7 +31,7 @@ class Agenda(models.Model):
         max_length=255,
         unique=True)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     def __str__(self):
         return self.desc
@@ -41,7 +41,7 @@ class Party(models.Model):
         max_length=255,
         unique=True)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -73,7 +73,7 @@ class Decision(models.Model):
         null=True,
         db_index=True)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     class Meta:
         unique_together = ('date', 'id')

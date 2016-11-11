@@ -79,7 +79,7 @@ class Debtor(models.Model):
             MinValueValidator(1900),
             MaxValueValidator(curryear)])
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
     
     def __str__(self):
         return self.party
@@ -96,7 +96,7 @@ class Discovered(models.Model):
         Vec,
         on_delete=models.CASCADE)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     def __str__(self):
         return self.desc

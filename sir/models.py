@@ -69,7 +69,7 @@ class Adresa(models.Model):
         null=True,
         max_length=255)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     def __str__(self):
         return self.mesto
@@ -122,7 +122,7 @@ class Osoba(models.Model):
     adresy = models.ManyToManyField(
         Adresa)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
     
     class Meta:
         unique_together = ('idOsoby', 'idOsobyPuvodce')
@@ -138,7 +138,7 @@ class Role(models.Model):
         DruhRoleVRizeni,
         on_delete=models.CASCADE)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     class Meta:
         unique_together = ('osoba', 'druhRoleVRizeni')
@@ -181,7 +181,7 @@ class Vec(models.Model):
     roles = models.ManyToManyField(
         Role)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     class Meta:
         unique_together = ('rocnik', 'bc', 'idOsobyPuvodce')
@@ -228,7 +228,7 @@ class Transaction(models.Model):
     error = models.BooleanField(
         default=False)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
     
     def __str__(self):
         return str(self.id) + ', ' + self.spisovaZnacka
@@ -245,7 +245,7 @@ class Insolvency(models.Model):
     detailed = models.BooleanField(
         default=False)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     class Meta:
         index_together = ('number', 'year')
@@ -264,7 +264,7 @@ class Tracked(models.Model):
         Vec,
         on_delete=models.CASCADE)
     timestamp = models.DateTimeField(
-        auto_now=True)
+        auto_now_add=True)
 
     def __str__(self):
         return self.desc
