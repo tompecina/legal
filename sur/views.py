@@ -140,10 +140,11 @@ def partybatchform(request):
                     with f:
                         i = 0
                         for line in csvreader(StringIO(f.read().decode())):
+                            line = line[0]
                             i += 1
                             if not line.strip():
                                 continue
-                            line = line[0].strip()
+                            line = line.strip()
                             if ':' in line:
                                line, party_opt = line.split(':', 1)
                             else:

@@ -161,6 +161,7 @@ def debtorbatchform(request):
                         i = 0
                         for line in csvreader(StringIO(f.read().decode())):
                             i += 1
+                            errlen = len(errors)
                             if not line:
                                 continue
                             desc = line[0].strip()
@@ -266,7 +267,7 @@ def debtorbatchform(request):
                                         'rok narození'])
                                     continue
 
-                            if not errors:
+                            if len(errors) == errlen:
                                 try:
                                     Debtor.objects.update_or_create(
                                         uid_id=uid,
