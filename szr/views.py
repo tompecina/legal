@@ -61,6 +61,7 @@ def procform(request, id=0):
             if id:
                 p = get_object_or_404(Proceedings, pk=id, uid=uid)
                 cd['pk'] = id
+                cd['timestamp'] = p.timestamp
             cd['court_id'] = cd['court']
             del cd['court']
             onlydesc = ( \

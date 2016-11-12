@@ -67,6 +67,7 @@ def partyform(request, id=0):
             if id:
                 p = get_object_or_404(Party, pk=id, uid=uid)
                 cd['pk'] = id
+                cd['timestamp'] = p.timestamp
             p = Party(uid_id=uid, **cd)
             p.party_opt = text_opts_keys.index(cd['party_opt'])
             p.save()

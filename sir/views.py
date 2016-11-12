@@ -62,6 +62,7 @@ def insform(request, id=0):
             if id:
                 p = get_object_or_404(Insolvency, pk=id, uid=uid)
                 cd['pk'] = id
+                cd['timestamp'] = p.timestamp
             p = Insolvency(uid_id=uid, **cd)
             p.save()
             return redirect('sir:mainpage')

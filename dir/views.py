@@ -82,6 +82,7 @@ def debtorform(request, id=0):
             if id:
                 p = get_object_or_404(Debtor, pk=id, uid=uid)
                 cd['pk'] = id
+                cd['timestamp'] = p.timestamp
             cd['birthid'] = cd['birthid'].replace('/', '')
             for key in cd:
                 if cd[key] == '':
