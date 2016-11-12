@@ -111,6 +111,8 @@ class Task(models.Model):
     date = models.DateField()
     timestamp = models.DateTimeField(
         auto_now=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True)
 
     def __str__(self):
         return '%s, %s' % (self.court, self.date)

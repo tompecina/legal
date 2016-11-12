@@ -76,10 +76,10 @@ class PsjConfig(AppConfig):
                 Task.objects.count()],
             [
                 'Počet položek v tabulce Task starších než 12 hodin',
-                Task.objects.filter(timestamp__lt=(now - \
+                Task.objects.filter(timestamp_add__lt=(now - \
                     timedelta(hours=12))).count()],
             [
                 'Počet položek v tabulce Task starších než 24 hodin',
-                Task.objects.filter(timestamp__lt=(now - \
+                Task.objects.filter(timestamp_add__lt=(now - \
                     timedelta(hours=24))).count()],
         ]
