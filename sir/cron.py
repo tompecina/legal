@@ -102,7 +102,7 @@ def cron_gettr():
 def cron_proctr():
     id = Counter.objects.get(id='DL').number
     debtor = DruhRoleVRizeni.objects.get(desc='DLUŽNÍK')
-    for tr in Transaction.objects.filter(id__gt=id, error=False).order_by('id'):
+    for tr in Transaction.objects.filter(error=False).order_by('id'):
         id = tr.id
         try:
             bc, rocnik = \
