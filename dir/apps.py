@@ -37,15 +37,15 @@ class DirConfig(AppConfig):
                 Debtor.objects.count()],
             [
                 'Počet nových dlužníků za posledních 24 hodin',
-                Debtor.objects.filter(timestamp__gte=(now - \
+                Debtor.objects.filter(timestamp_add__gte=(now - \
                     timedelta(hours=24))).count()],
             [
                 'Počet nových dlužníků za poslední týden',
-                Debtor.objects.filter(timestamp__gte=(now - \
+                Debtor.objects.filter(timestamp_add__gte=(now - \
                     timedelta(weeks=1))).count()],
             [
                 'Počet nových dlužníků za poslední měsíc',
-                Debtor.objects.filter(timestamp__gte=(now - \
+                Debtor.objects.filter(timestamp_add__gte=(now - \
                     timedelta(days=30))).count()],
             [
                 'Počet dlužníků pro příští notifikaci',

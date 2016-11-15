@@ -40,8 +40,11 @@ class Party(models.Model):
     name = models.CharField(
         max_length=255,
         unique=True)
-    timestamp = models.DateTimeField(
-        auto_now_add=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
 
     def __str__(self):
         return self.name
@@ -72,8 +75,11 @@ class Decision(models.Model):
     updated = models.DateTimeField(
         null=True,
         db_index=True)
-    timestamp = models.DateTimeField(
-        auto_now_add=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
 
     class Meta:
         unique_together = ('date', 'id')

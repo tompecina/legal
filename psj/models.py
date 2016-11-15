@@ -43,8 +43,11 @@ class Party(models.Model):
     name = models.CharField(
         max_length=255,
         unique=True)
-    timestamp = models.DateTimeField(
-        auto_now_add=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
 
     def __str__(self):
         return self.name
@@ -94,8 +97,11 @@ class Hearing(models.Model):
         default=False)
     cancelled = models.BooleanField(
         default=False)
-    timestamp = models.DateTimeField(
-        auto_now_add=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
 
     class Meta:
         unique_together = ('time', 'id')
@@ -109,10 +115,12 @@ class Task(models.Model):
         Court,
         on_delete=models.CASCADE)
     date = models.DateField()
-    timestamp = models.DateTimeField(
-        auto_now=True)
     timestamp_add = models.DateTimeField(
-        auto_now_add=True)
+        auto_now_add=True,
+        db_index=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True,
+        db_index=True)
 
     def __str__(self):
         return '%s, %s' % (self.court, self.date)

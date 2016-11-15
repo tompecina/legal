@@ -46,30 +46,30 @@ class PsjConfig(AppConfig):
                 Party.objects.count()],
             [
                 'Počet nových účastníků za posledních 24 hodin',
-                Party.objects.filter(timestamp__gte=(now - \
+                Party.objects.filter(timestamp_add__gte=(now - \
                     timedelta(hours=24))).count()],
             [
                 'Počet nových účastníků za poslední týden',
-                Party.objects.filter(timestamp__gte=(now - \
+                Party.objects.filter(timestamp_add__gte=(now - \
                     timedelta(weeks=1))).count()],
             [
                 'Počet nových účastníků za poslední měsíc',
-                Party.objects.filter(timestamp__gte=(now - \
+                Party.objects.filter(timestamp_add__gte=(now - \
                     timedelta(days=30))).count()],
             [
                 'Počet jednání',
                 Hearing.objects.count()],
             [
                 'Počet nových jednání za posledních 24 hodin',
-                Hearing.objects.filter(timestamp__gte=(now - \
+                Hearing.objects.filter(timestamp_add__gte=(now - \
                     timedelta(hours=24))).count()],
             [
                 'Počet nových jednání za poslední týden',
-                Hearing.objects.filter(timestamp__gte=(now - \
+                Hearing.objects.filter(timestamp_add__gte=(now - \
                     timedelta(weeks=1))).count()],
             [
                 'Počet nových jednání za poslední měsíc',
-                Hearing.objects.filter(timestamp__gte=(now - \
+                Hearing.objects.filter(timestamp_add__gte=(now - \
                     timedelta(days=30))).count()],
             [
                 'Počet položek v tabulce Task',

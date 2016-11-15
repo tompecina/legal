@@ -78,8 +78,11 @@ class Debtor(models.Model):
         validators=[
             MinValueValidator(1900),
             MaxValueValidator(curryear)])
-    timestamp = models.DateTimeField(
-        auto_now_add=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
     
     def __str__(self):
         return self.party

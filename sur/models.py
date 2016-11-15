@@ -41,8 +41,11 @@ class Party(models.Model):
         validators=[
             MinValueValidator(0),
             MaxValueValidator(len(text_opts) - 1)])
-    timestamp = models.DateTimeField(
-        auto_now_add=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
     
     def __str__(self):
         return self.party

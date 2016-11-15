@@ -68,8 +68,11 @@ class Adresa(models.Model):
     textAdresy = models.CharField(
         null=True,
         max_length=255)
-    timestamp = models.DateTimeField(
-        auto_now_add=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
 
     def __str__(self):
         return self.mesto
@@ -121,8 +124,11 @@ class Osoba(models.Model):
         db_index=True)
     adresy = models.ManyToManyField(
         Adresa)
-    timestamp = models.DateTimeField(
-        auto_now_add=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
     
     class Meta:
         unique_together = ('idOsoby', 'idOsobyPuvodce')
@@ -137,8 +143,11 @@ class Role(models.Model):
     druhRoleVRizeni = models.ForeignKey(
         DruhRoleVRizeni,
         on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(
-        auto_now_add=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
 
     class Meta:
         unique_together = ('osoba', 'druhRoleVRizeni')
@@ -180,8 +189,11 @@ class Vec(models.Model):
         null=True)
     roles = models.ManyToManyField(
         Role)
-    timestamp = models.DateTimeField(
-        auto_now_add=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
 
     class Meta:
         unique_together = ('rocnik', 'bc', 'idOsobyPuvodce')
@@ -244,8 +256,11 @@ class Insolvency(models.Model):
         max_length=255)
     detailed = models.BooleanField(
         default=False)
-    timestamp = models.DateTimeField(
-        auto_now_add=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
 
     class Meta:
         index_together = ('number', 'year')

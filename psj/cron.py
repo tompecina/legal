@@ -72,7 +72,7 @@ def cron_update():
     t = Task.objects.all()
     if not t:
         return
-    t = t.earliest('timestamp')
+    t = t.earliest('timestamp_update')
     t.save()
     if t.court.reports:
         c0 = 'os'
