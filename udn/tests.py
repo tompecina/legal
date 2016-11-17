@@ -32,9 +32,8 @@ from common.tests import stripxml
 from common.glob import localsubdomain, localurl, repourl
 from . import cron, forms, glob, models, views
 
-class TestCron1(TestCase):
-    fixtures = ['udn_test1.json']
-    
+class TestCron(TestCase):
+
     def checkpdf(self, ll):
         fl = []
         for l in ll:
@@ -48,7 +47,10 @@ class TestCron1(TestCase):
             if not fc[:-1].endswith('/' + l):  # pragma: no cover
                 fl.append('C: ' + l)
         self.assertFalse(fl, msg=fl)
-        
+   
+class TestCron1(TestCron):
+    fixtures = ['udn_test1.json']
+    
     def test_update(self):
         cron.cron_update()
         d = models.Decision.objects.all()
@@ -70,21 +72,23 @@ class TestCron1(TestCase):
             '0233_5As__1500046S.pdf',
             ])
         
+class TestCron2(TestCron):
+    fixtures = ['udn_test2.json']
+    
     def test_find(self):
         cron.cron_find()
         d = models.Decision.objects.filter(
             senate=8,
             register='As',
-            number=158,
+            number=159,
             year=2015,
             page=33)
         self.assertEqual(len(d), 1)
         self.assertTrue(d[0].anonfilename)
         self.checkpdf(['0046_3As__1600114_20160622142215_prevedeno.pdf'])
-        cron.cron_find()
 
-class TestCron2(TestCase):
-    fixtures = ['udn_test2.json']
+class TestCron3(TestCron):
+    fixtures = ['udn_test3.json']
     
     def test_find(self):
         cron.cron_find()

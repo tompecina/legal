@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kurzy banka="CNB" datum="01.01.1999" poradi="128">
+<tabulka typ="XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU">
+<radek kod="EUR" mena="euro" mnozstvi="1" kurz="11,095" zeme="EMU"/>
+<radek kod="THB" mena="baht" mnozstvi="100" kurz="14,430" zeme="Thajsko"/>
+<radek kod="USD" mena="dolar" mnozstvi="1" kurz="19,335" zeme="USA"/>
+</tabulka>
+</kurzy>

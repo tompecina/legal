@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kurzy banka="CNB" datum="11.05.2001" poradi="91">
+<tabulka typ="XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU">
+<radek kod="AUD" mena="dolar" mnozstvi="1" kurz="16,383" zeme="Austrálie"/>
+</tabulka>
+<tabulka typ="XML_TYP_CNB_PREPOCITACI_POMERY">
+<radek kod="BEF" mena="frank" mnozstvi="100" pomer="55,275" zeme="Belgie"/>
+</tabulka>
+</kurzy>

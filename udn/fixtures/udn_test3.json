@@ -5,12 +5,12 @@
     "fields": {
         "senate": 8,
         "register": "As",
-        "number": 159,
+        "number": 158,
         "year": 2015,
         "page": 33,
         "agenda": 1,
         "date": "2199-07-01",
-        "filename": "0159_8As__1500033S.pdf",
+        "filename": "0158_8As__1500033S.pdf",
         "anonfilename": "",
         "updated": "2016-07-02T13:40:00.971",
         "timestamp_add": "2199-07-02T13:40:16.062",
@@ -52,15 +52,6 @@
     "fields": {
         "name": "Zl\u00ednsk\u00fd kraj",
         "timestamp_add": "2016-07-01T15:35:52.291"
-    }
-},
-{
-    "model": "szr.court",
-    "pk": "NSS",
-    "fields": {
-        "name": "Nejvy\u0161\u0161\u00ed spr\u00e1vn\u00ed soud",
-        "reports": null,
-        "timestamp_add": "2016-06-24T00:00:03.089"
     }
 }
 ]

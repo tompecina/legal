@@ -1,0 +1,151 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><title>
+	Nejvyšší správní soud
+</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link href="css/menu.css" type="text/css" rel="StyleSheet" /><link href="css/style.css" type="text/css" rel="StyleSheet" /><link href="css/calendar.css" rel="stylesheet" type="text/css" />
+
+    <script language="JavaScript" src="script/popupMenu2.js?tista=55"></script>
+    <script language="JavaScript" src="script/GlobalUtils.js"></script>
+<meta name="keywords" content="Nejvyšší správní soud, NSS, Kasační stížnost, Rozhodnutí" lang="cs"></head>
+<body style="background-image: none;">
+    
+    <form name="form1" method="post" action="./mainc.aspx?cls=InfoSoud&amp;kau_id=176459" id="form1">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="Uxec81zMFnU5OuDqGei+u4HWW+KIlazD/8VvgGrhcyNNLqUjLGCr/CiOk5Do6F5Ejkjjnj3jtAttsq7uccdI1qo2cvLfyP6lRl0G8fQg1lW2hJcSboYkREfSvDpRDbEzyt8Opj57fX2FM0od6/R+jZGKiXZfc7WXnLPvTltF+3w4GyH+9S4ujtZYxIpTKiU+BTXu0f1/ACdWa7YORViWY9PHACGd6tNk5CqbI4vkcJ1dezB58OFZV58OriiAiB1ikKx4HWG1HZFuSutC/7mby22wvuwnciRt0b2Wr404fcHP8X/az1CjLoFaMEP6C3AlwbhujkW2ZG/tBlyCiv1VvDhKeKenKMN0HEjlXFETtkZ6valxkH49Ed/2XZDqgPOFTZHFNXgZXGpTFHJqtt+HCOKHzwZFZgo7Qu6hAB4Yw4RzuAfA85n4gOhaXVD4sin/30KnlkTMyvM9cwE+HfacqtuwB120AcJat1YvGdSE9+QKPu/Wr4rXkXeuPVipUjPPmDB5mu41cW85XYd+mFacFYPOhvx3KfDiXlJrFjzj2MXXp7tbCTrIdbcgy35HGTQT/pwPAfV4nObNDqzNYE23VqKTTMDKzopKNaIVtls9UqKINak0uYcXsqiFwqYYig00YbhfUKff34RUFbJXPV5y4q0uaGkSE1pH5VhTDbC6eOzcHD2eQpUnd4nkAmV2h71NDJrEQHC02a2rMxDCoXR35MgLhAc3+T9BMf7tVMjMBkAvBEbVyCZ4hp/XFmJfFKy2tipthxSEVbmD77Fzk43FqZ5w8qxNyj90PYAOQrigG1JOR4gm6THMmDOWxx3UHXssb7rjXdP9C0L9TZIWyp265POeFYbRZsTepfm9G4M9DKPZXgL1Xszb2Yt2N3PoqKR6fODDw2fm9rxZ38kOhUXiH4agRJ+k8WSgaYBpN7JSYLfnA9qbmgHWjgb/8Omnl78njgxc2EOIvNoepnCrT3CqgVyjiaONF7m0y+z+8lFaKKlG1h7CcbdZ9cR72dX6wNvroLR4bU9iVBPEv3UOAtKQiisZCFTO1wWHpkn284AIMMSQfXmM9wYXtmDlcX0JwxtMg53g+YFiVqkGsFhPgjixVmU6FnZxOnKQxqo+0Trm7ouoeLVd9iwkV2ub47zDCTzlm7nRDUfypr1WqlJI9ioN9xwGkRJB5eV0y6cx6v5FcAga6aDNheFnNi8pVneige0a1pEQHKeSpBeN/d6SrZ7Rf2BG/V6rVu6uws1yCMfeUK+tobbYxQLO3SpcZChDBe2BwlqFBAHAIGeGWoJgAo0IPw==" />
+
+
+<script type="text/javascript">
+<!--
+var __cultureInfo = {"name":"cs-CZ","numberFormat":{"CurrencyDecimalDigits":2,"CurrencyDecimalSeparator":",","IsReadOnly":true,"CurrencyGroupSizes":[3],"NumberGroupSizes":[3],"PercentGroupSizes":[3],"CurrencyGroupSeparator":" ","CurrencySymbol":"Kč","NaNSymbol":"Není číslo","CurrencyNegativePattern":8,"NumberNegativePattern":1,"PercentPositivePattern":1,"PercentNegativePattern":1,"NegativeInfinitySymbol":"-nekonečno","NegativeSign":"-","NumberDecimalDigits":2,"NumberDecimalSeparator":",","NumberGroupSeparator":" ","CurrencyPositivePattern":3,"PositiveInfinitySymbol":"+nekonečno","PositiveSign":"+","PercentDecimalDigits":2,"PercentDecimalSeparator":",","PercentGroupSeparator":" ","PercentSymbol":"%","PerMilleSymbol":"‰","NativeDigits":["0","1","2","3","4","5","6","7","8","9"],"DigitSubstitution":1},"dateTimeFormat":{"AMDesignator":"dop.","Calendar":{"MinSupportedDateTime":"\/Date(-62135596800000)\/","MaxSupportedDateTime":"\/Date(253402297199999)\/","AlgorithmType":1,"CalendarType":1,"Eras":[1],"TwoDigitYearMax":2029,"IsReadOnly":true},"DateSeparator":".","FirstDayOfWeek":1,"CalendarWeekRule":0,"FullDateTimePattern":"d. MMMM yyyy H:mm:ss","LongDatePattern":"d. MMMM yyyy","LongTimePattern":"H:mm:ss","MonthDayPattern":"dd MMMM","PMDesignator":"odp.","RFC1123Pattern":"ddd, dd MMM yyyy HH\u0027:\u0027mm\u0027:\u0027ss \u0027GMT\u0027","ShortDatePattern":"d.M.yyyy","ShortTimePattern":"H:mm","SortableDateTimePattern":"yyyy\u0027-\u0027MM\u0027-\u0027dd\u0027T\u0027HH\u0027:\u0027mm\u0027:\u0027ss","TimeSeparator":":","UniversalSortableDateTimePattern":"yyyy\u0027-\u0027MM\u0027-\u0027dd HH\u0027:\u0027mm\u0027:\u0027ss\u0027Z\u0027","YearMonthPattern":"MMMM yyyy","AbbreviatedDayNames":["ne","po","út","st","čt","pá","so"],"ShortestDayNames":["ne","po","út","st","čt","pá","so"],"DayNames":["neděle","pondělí","úterý","středa","čtvrtek","pátek","sobota"],"AbbreviatedMonthNames":["1","2","3","4","5","6","7","8","9","10","11","12",""],"MonthNames":["leden","únor","březen","duben","květen","červen","červenec","srpen","září","říjen","listopad","prosinec",""],"IsReadOnly":true,"NativeCalendarName":"gregoriánský kalendář","AbbreviatedMonthGenitiveNames":["1","2","3","4","5","6","7","8","9","10","11","12",""],"MonthGenitiveNames":["ledna","února","března","dubna","května","června","července","srpna","září","října","listopadu","prosince",""]},"eras":[1,"n. l.",null,0]};// -->
+</script>
+
+<script src="/ScriptResource.axd?d=DW3HPAtvyL0ZaoShsT4ZTv12HMssfdZrviYg2KtyjLS0-SXn4AXZ4NpVmxn_unlV7aILshvc-QWhC_2euyH2xkPkh4DIK_J_cbDK38IgCMl4j9DOmFtN6-s7fQJboO-8Xea7-lqRnDYxaY0CdLiFUg2&amp;t=f2cd5c5" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="C22C47D3" />
+<input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
+    
+    <div id="pnMain">
+	
+    
+
+
+<h1>Informace o řízení vedeném u NSS</h1>
+
+            <table class="frm" cellspacing="0" border="0" id="_ctl5_frmIS" style="border-collapse:collapse;">
+		<tr>
+			<td colspan="2">
+                    
+                </td>
+		</tr><tr>
+			<td colspan="2">                
+                <table>
+                    <tr>
+                        <th >Spisová značka</th>
+                        <td valign="top" width="300px"><span style='color:#08298C;'><span id="_ctl5_frmIS_label2">3 As 58/2016</span></span></td>
+                    </tr>                                          
+                    
+                        
+                            <tr>
+                                <th >stěžovatel</th>
+                                <td valign="top" width="300px">xxx</td>
+                            </tr>
+                        
+                            <tr>
+                                <th >účastník řízení</th>
+                                <td valign="top" width="300px">Ministerstvo  vnitra</td>
+                            </tr>
+                        
+                        
+                            
+                     
+                           
+                    <tr><th >Věc</th>
+                        <td valign="top" width="300px"><span id="_ctl5_frmIS_label6">Právo na informace</span>&nbsp;</td>
+                    </tr>
+                    <tr><td></td><td></td></tr> 
+                    
+                        <tr><th >Soud</th><td valign="top" width="300px">
+                            <span id="_ctl5_frmIS_rep1St__ctl0_label1">Městský soud v Praze</span>&nbsp;</td></tr>
+                        
+                        <tr><th >Spisová značka</th><td valign="top" width="300px">
+                            <span id="_ctl5_frmIS_rep1St__ctl0_label3">5 A 5/2015</span>&nbsp;</td></tr> 
+                        
+                    
+                        <tr><th >Správní orgán</th><td valign="top" width="300px">
+                            <span id="_ctl5_frmIS_repSprOrgan__ctl0_label4">Ministerstvo  vnitra</span>&nbsp;</td></tr>
+                            
+                        <tr><th >Č.j.správního orgánu</th><td valign="top" width="300px">
+                            <span id="_ctl5_frmIS_repSprOrgan__ctl0_label5">MV-130037-8/VS-2014</span>&nbsp;</td></tr>    
+                    
+                </table>
+              
+
+<br />
+<table border="0">
+    <tr>
+        <td>
+            
+                    <table>
+                                    
+                        <tr>
+                            <td>Datum zahájení řízení u krajského soudu</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">8.1.2015</td>
+                        </tr>                    
+                                    
+                        <tr>
+                            <td>Datum rozhodnutí krajského soudu</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">11.3.2016</td>
+                        </tr>                    
+                                    
+                        <tr>
+                            <td>Napadlo k Nejvyššímu správnímu soudu</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">21.3.2016</td>
+                        </tr>                    
+                                    
+                        <tr>
+                            <td>Procesní rozhodnutí - Usnesení - Výzva k zaplacení SOP + výzva k doplnění</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">24.3.2016</td>
+                        </tr>                    
+                                    
+                        <tr>
+                            <td>Vypracování rozhodnutí</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">29.3.2016</td>
+                        </tr>                    
+                                    
+                        <tr>
+                            <td>Vypravení rozhodnutí</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">29.3.2016</td>
+                        </tr>                    
+                                    
+                        <tr>
+                            <td>Nabytí právní moci</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">30.3.2016</td>
+                        </tr>                    
+                
+                    </table>
+                
+        </td>
+    </tr>
+</table>
+
+</td>
+		</tr><tr>
+			<td colspan="2">
+                    
+                </td>
+		</tr>
+	</table>
+
+
+
+</div>
+    </form>
+</body>
+</html>

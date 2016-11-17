@@ -1,0 +1,139 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><title>
+	Nejvyšší správní soud
+</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link href="css/menu.css" type="text/css" rel="StyleSheet" /><link href="css/style.css" type="text/css" rel="StyleSheet" /><link href="css/calendar.css" rel="stylesheet" type="text/css" />
+
+    <script language="JavaScript" src="script/popupMenu2.js?tista=55"></script>
+    <script language="JavaScript" src="script/GlobalUtils.js"></script>
+<meta name="keywords" content="Nejvyšší správní soud, NSS, Kasační stížnost, Rozhodnutí" lang="cs"></head>
+<body style="background-image: none;">
+    
+    <form name="form1" method="post" action="./mainc.aspx?cls=InfoSoud&amp;kau_id=173442" id="form1">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="GDMNSoUBLyd8Bd3SQLTpkIcnloAicUC7UxKMj/kXgJsElsK53qCVkxAANc+K4eFf7isTw/QBNQ6si8Dow/Fr0oFDxU11A5KH2GgITn+TNM/jLiPAl7vLHYztQsETu3s2t2KORoKVbKr30CWJRYaCkteB1WYHv20Am9D+v46+E/zGc+2mbfJf8ZHRBJmMFGU6ipjQTY1MYNVTrTIjdCsRoKtPNxOdodQSd0w85e65CrA+YoNXwGBGFq42BAYc3Pm9Pl8H64AYhymBrLlSxfX+hxspZodwY8RyMyqCiezolzYb8hI8gX084GGIkpz54gNdWcsQYvKe2Pz4C71+74bnOm1YvpNFdfRoBT16a1x4D39O2B45t72wotHH7PPdP/gFA1vCKel1oHPG4cN4joEhjLqm3RwV3oHhmhPgFtz5klxeezjhMVOPEw46MoB81cTZcUZZ6D7TqNz3eGoyBfeybCKgxL5hmGGzLdSx/rv5CQirwsWxenIzscEunXt3sg4T3QpxdluQeewBNP27JJNLHKzDzenff4HJzWL07rwifYKOh8LzpnJGpykk4rfkhaPSi9KCxTyaaN5I9sArwxDVI7VURP/GqhbM30C0iyOaTzh4HjppGt/dAcbONKtS5W1Z9y2CIgxddCASG/cFnpqu7DPfhRhcVTj7TVVAmbgVW7zeGNHmQPHzu87wwY+abVXlhXrABdfZcWg3ysl1r6PjTi+2DgD514SttSQqWrHtRv8EPuVglU5vuzJy2gAnR8q47GWbUbN4gWHB9GhlOh0NaHtWFN1aLFJSySY3T+0JoMPx9vgRsfume0xfQtBne8AlU0ZxzcIpgBYylK4/MuN2fbcBdj0t+cyGkyCf690ClNb4HzZZkVjOtQp2AitVD0e0jkV37AMoFu2Xr8hCUTzvFYMq5QauSx1o3veY6gdhmoWnxdei82YpGhXDCN+bFssECYYmm7pZ2GBOCRY8UVjdXjimBlDsReGPiUTvFNsATfuJytl6lKmbm0K718DYh/Gx1qBox7LFZJ0GQLzYhJI8Zw==" />
+
+
+<script type="text/javascript">
+<!--
+var __cultureInfo = {"name":"cs-CZ","numberFormat":{"CurrencyDecimalDigits":2,"CurrencyDecimalSeparator":",","IsReadOnly":true,"CurrencyGroupSizes":[3],"NumberGroupSizes":[3],"PercentGroupSizes":[3],"CurrencyGroupSeparator":" ","CurrencySymbol":"Kč","NaNSymbol":"Není číslo","CurrencyNegativePattern":8,"NumberNegativePattern":1,"PercentPositivePattern":1,"PercentNegativePattern":1,"NegativeInfinitySymbol":"-nekonečno","NegativeSign":"-","NumberDecimalDigits":2,"NumberDecimalSeparator":",","NumberGroupSeparator":" ","CurrencyPositivePattern":3,"PositiveInfinitySymbol":"+nekonečno","PositiveSign":"+","PercentDecimalDigits":2,"PercentDecimalSeparator":",","PercentGroupSeparator":" ","PercentSymbol":"%","PerMilleSymbol":"‰","NativeDigits":["0","1","2","3","4","5","6","7","8","9"],"DigitSubstitution":1},"dateTimeFormat":{"AMDesignator":"dop.","Calendar":{"MinSupportedDateTime":"\/Date(-62135596800000)\/","MaxSupportedDateTime":"\/Date(253402297199999)\/","AlgorithmType":1,"CalendarType":1,"Eras":[1],"TwoDigitYearMax":2029,"IsReadOnly":true},"DateSeparator":".","FirstDayOfWeek":1,"CalendarWeekRule":0,"FullDateTimePattern":"d. MMMM yyyy H:mm:ss","LongDatePattern":"d. MMMM yyyy","LongTimePattern":"H:mm:ss","MonthDayPattern":"dd MMMM","PMDesignator":"odp.","RFC1123Pattern":"ddd, dd MMM yyyy HH\u0027:\u0027mm\u0027:\u0027ss \u0027GMT\u0027","ShortDatePattern":"d.M.yyyy","ShortTimePattern":"H:mm","SortableDateTimePattern":"yyyy\u0027-\u0027MM\u0027-\u0027dd\u0027T\u0027HH\u0027:\u0027mm\u0027:\u0027ss","TimeSeparator":":","UniversalSortableDateTimePattern":"yyyy\u0027-\u0027MM\u0027-\u0027dd HH\u0027:\u0027mm\u0027:\u0027ss\u0027Z\u0027","YearMonthPattern":"MMMM yyyy","AbbreviatedDayNames":["ne","po","út","st","čt","pá","so"],"ShortestDayNames":["ne","po","út","st","čt","pá","so"],"DayNames":["neděle","pondělí","úterý","středa","čtvrtek","pátek","sobota"],"AbbreviatedMonthNames":["1","2","3","4","5","6","7","8","9","10","11","12",""],"MonthNames":["leden","únor","březen","duben","květen","červen","červenec","srpen","září","říjen","listopad","prosinec",""],"IsReadOnly":true,"NativeCalendarName":"gregoriánský kalendář","AbbreviatedMonthGenitiveNames":["1","2","3","4","5","6","7","8","9","10","11","12",""],"MonthGenitiveNames":["ledna","února","března","dubna","května","června","července","srpna","září","října","listopadu","prosince",""]},"eras":[1,"n. l.",null,0]};// -->
+</script>
+
+<script src="/ScriptResource.axd?d=DW3HPAtvyL0ZaoShsT4ZTv12HMssfdZrviYg2KtyjLS0-SXn4AXZ4NpVmxn_unlV7aILshvc-QWhC_2euyH2xkPkh4DIK_J_cbDK38IgCMl4j9DOmFtN6-s7fQJboO-8Xea7-lqRnDYxaY0CdLiFUg2&amp;t=f2cd5c5" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="C22C47D3" />
+<input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
+    
+    <div id="pnMain">
+	
+    
+
+
+<h1>Informace o řízení vedeném u NSS</h1>
+
+            <table class="frm" cellspacing="0" border="0" id="_ctl5_frmIS" style="border-collapse:collapse;">
+		<tr>
+			<td colspan="2">
+                    
+                </td>
+		</tr><tr>
+			<td colspan="2">                
+                <table>
+                    <tr>
+                        <th >Spisová značka</th>
+                        <td valign="top" width="300px"><span style='color:#DE1018;'><span id="_ctl5_frmIS_label2">11 Kss 6/2015</span></span></td>
+                    </tr>                                          
+                    
+                        
+                            <tr>
+                                <th >navrhovatel</th>
+                                <td valign="top" width="300px">xxx</td>
+                            </tr>
+                        
+                            <tr>
+                                <th >kárně obviněný</th>
+                                <td valign="top" width="300px">xxx</td>
+                            </tr>
+                        
+                        
+                            
+                     
+                           
+                    <tr><th >Věc</th>
+                        <td valign="top" width="300px"><span id="_ctl5_frmIS_label6">Kárná odpovědnost - Kárná odpovědnost soudců</span>&nbsp;</td>
+                    </tr>
+                    <tr><td></td><td></td></tr> 
+                    
+                    
+                </table>
+              
+
+<br />
+<table border="0">
+    <tr>
+        <td>
+            
+                    <table>
+                                    
+                        <tr>
+                            <td>Napadlo k Nejvyššímu správnímu soudu</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">18.12.2015</td>
+                        </tr>                    
+                                    
+                        <tr>
+                            <td>Veřejné jednání</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">26.5.2016</td>
+                        </tr>                    
+                                    
+                        <tr>
+                            <td>Veřejné jednání</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">6.6.2016</td>
+                        </tr>                    
+                                    
+                        <tr>
+                            <td>Meritorní rozhodnutí - Rozhodnutí - uznání viny</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">6.6.2016</td>
+                        </tr>                    
+                                    
+                        <tr>
+                            <td>Vypracování rozhodnutí</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">30.6.2016</td>
+                        </tr>                    
+                                    
+                        <tr>
+                            <td>Vypravení rozhodnutí</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">1.7.2016</td>
+                        </tr>                    
+                                    
+                        <tr>
+                            <td>Nabytí právní moci</td>
+                            <td style="vertical-align:top; text-align:right; width:150px;">6.6.2016</td>
+                        </tr>                    
+                
+                    </table>
+                
+        </td>
+    </tr>
+</table>
+
+</td>
+		</tr><tr>
+			<td colspan="2">
+                    
+                </td>
+		</tr>
+	</table>
+
+
+
+</div>
+    </form>
+</body>
+</html>

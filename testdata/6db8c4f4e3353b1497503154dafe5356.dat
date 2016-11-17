@@ -1,0 +1,84 @@
+{
+   "results" : [
+      {
+         "address_components" : [
+            {
+               "long_name" : "5",
+               "short_name" : "5",
+               "types" : [ "street_number" ]
+            },
+            {
+               "long_name" : "504",
+               "short_name" : "504",
+               "types" : [ "premise" ]
+            },
+            {
+               "long_name" : "Melantrichova",
+               "short_name" : "Melantrichova",
+               "types" : [ "route" ]
+            },
+            {
+               "long_name" : "Staré Město",
+               "short_name" : "Staré Město",
+               "types" : [ "neighborhood", "political" ]
+            },
+            {
+               "long_name" : "Praha 1",
+               "short_name" : "Praha 1",
+               "types" : [ "political", "sublocality", "sublocality_level_1" ]
+            },
+            {
+               "long_name" : "Praha",
+               "short_name" : "Praha",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Praha 1",
+               "short_name" : "Praha 1",
+               "types" : [ "postal_town" ]
+            },
+            {
+               "long_name" : "Hlavní město Praha",
+               "short_name" : "Hlavní město Praha",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Hlavní město Praha",
+               "short_name" : "Hlavní město Praha",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "Česká republika",
+               "short_name" : "CZ",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "110 00",
+               "short_name" : "110 00",
+               "types" : [ "postal_code" ]
+            }
+         ],
+         "formatted_address" : "Melantrichova 504/5, 110 00 Praha 1-Staré Město, Česká republika",
+         "geometry" : {
+            "location" : {
+               "lat" : 51.0852574,
+               "lng" : 13.4211651
+            },
+            "location_type" : "ROOFTOP",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 51.0866063802915,
+                  "lng" : 13.4225140802915
+               },
+               "southwest" : {
+                  "lat" : 51.0839084197085,
+                  "lng" : 13.4198161197085
+               }
+            }
+         },
+         "place_id" : "ChIJ9UyNpO6UC0cRmsN-P_qgZag",
+         "types" : [ "street_address" ]
+      }
+   ],
+   "status" : "ERROR"
+}

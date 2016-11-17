@@ -28,7 +28,6 @@ from cache.models import Cache
 from . import main, models, views
 
 class TestMain(TestCase):
-    fixtures = ['cnb_test.json']
 
     def test_getFXrate(self):
         self.assertEqual(
@@ -93,7 +92,7 @@ class TestMain(TestCase):
         self.assertAlmostEqual(r[0], 16.383)
         self.assertEqual(r[1:], (1, date(2001, 5, 11), None))
 
-    def test_getMPIrate1(self):
+    def test_getMPIrate(self):
         self.assertEqual(
             main.getMPIrate('XXXX', date(2016, 7, 1)),
             (None, 'Chybný druh sazby'))
@@ -132,22 +131,18 @@ class TestMain(TestCase):
         r = main.getMPIrate('LOMB', date(1997, 5, 16))
         self.assertAlmostEqual(r[0], 51.00)
         self.assertIsNone(r[1])
-
-    def test_getMPIrate2(self):
-        Cache.objects.filter(pk=2).update(text='XXX')
+        models.MPIstat.objects.all().delete()
+        Cache.objects.filter(
+            url='https://www.cnb.cz/cs/faq/vyvoj_lombard_historie.txt') \
+            .update(text='XXX')
         self.assertEqual(
             main.getMPIrate('LOMB', date(1997, 5, 16)),
             (None, 'Chyba tabulky sazeb (1)'))
-        Cache.objects.filter(pk=1).delete()
-        self.assertEqual(
-            main.getMPIrate('DISC', date(1997, 5, 16)),
-            (None, 'Chyba spojení se serverem ČNB'))
-        
-    def test_getMPIrate3(self):
-        c = Cache.objects.filter(pk=2)
+        c = Cache.objects.filter(
+            url='https://www.cnb.cz/cs/faq/vyvoj_diskontni_historie.txt')
         c.update(text=c[0].text.replace(',', 'x'))
         self.assertEqual(
-            main.getMPIrate('LOMB', date(1997, 5, 16)),
+            main.getMPIrate('DISC', date(2014, 11, 19)),
             (None, 'Chyba tabulky sazeb (2)'))
         
 bn = ['submit_show_fx',
@@ -274,7 +269,6 @@ class TestModels(SimpleTestCase):
             'LOMB')
 
 class TestViews(TestCase):
-    fixtures = ['cnb_test.json']
 
     def test_main(self):
         res = self.client.get('/cnb')

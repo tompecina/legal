@@ -1,0 +1,1863 @@
+
+
+
+
+
+  
+  
+  
+  
+  
+
+
+
+
+
+
+ <!-- IDS002F -->
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Výpis událostí v řízení</title>
+    <link rel='stylesheet' type='text/css' href='../common/css/infoSoud.css'/>
+    
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-store, no-cache, must-revalidate, post-check=0, pre-check=0">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
+
+    <meta name="robots" content="noindex, nofollow">
+  </head>
+  <body>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
+      <tbody>
+      <tr>
+<!-- menu bar - begin -->
+	      
+
+
+
+
+
+
+
+
+
+
+<!-- menu bar - begin -->
+<td valign="top" width="321px">
+          <table border="0" cellpadding="0" cellspacing="0" width="321px" height="100%">
+            <tbody>
+            <tr>
+              <td class="menu-left" width="275px">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" >
+                <tr ><td height="10px">&nbsp;</td></tr>
+                <tr>   
+                  <td  style="padding-top: 6pt; padding-left: 0pt; padding-right: 0pt;" valign="top" align="center" height="20px">
+                        
+                        <a href="../public/search.jsp" ><img src="../common/images/nadpis.png"  class="undecore" /></a>
+                        
+                  </td>
+                </tr>
+                <tr ><td height="15px">&nbsp;</td></tr>
+                <tr>
+                  <td  style="padding-top: 6pt; padding-left: 0pt; padding-right: 0pt; " valign="top" align="center" height="20px">
+                       
+                        <span class="title_text">informace o průběhu řízení</span>
+                        
+                  </td>
+                </tr>
+                <tr>
+                  <td  style="padding-top: 6pt; padding-left: 0pt; padding-right: 0pt; " valign="top" align="center" height="20px">
+                    <span class="title_info_text">Zobrazovaná data mají pouze informativní charakter</span>
+                    <br/>&nbsp;
+                  </td>
+                </tr>
+                <!-- tr>
+                  <td style="padding-top: 6pt; padding-left: 10pt; padding-right: 10pt;" valign="top" height="20px">
+                    <a href="../public/search.jsp"><span class="title_info">Info</span><span class="title_soud">Soud</span></a><br/>
+                    <br/>
+                    <span class="title_text">informace o průběhu řízení</span>
+                    <br/>&nbsp;
+                  </td>
+                </tr-->
+                <tr>
+                  <td style="padding-left: 6pt; padding-right: 10pt;" valign="top" height="20px">
+
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <col width="5%">
+                      <col width="95%">
+                      <tbody>
+                      <tr>
+                        <td colspan="2" bgcolor="white"><img src="../common/images/white_pixel.gif" border="0"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td class="menu"><img src="../common/images/white_box.gif" alt="-" border="0"></td>
+                        <td class="menu"><a href="/InfoSoud/public/search.jsp" class="menu">Informace o řízení</a></td>
+                      </tr>
+                      <tr>
+                        <td class="menu">&nbsp;</td>
+                        <td class="menu-popis">Informace o průběhu řízení. Přehled událostí, které nastaly v průběhu řízení ve formě přehledné tabulky a podrobného zobrazení</td>
+                      </tr>
+                      <tr>
+                        <td class="menu"><img src="../common/images/white_box.gif" alt="-" border="0"></td>
+                        <td class="menu"><a href="/InfoSoud/public/searchJednani.jsp" class="menu">Informace o jednání</a></td>
+                      </tr>
+                      <tr>
+                        <td class="menu">&nbsp;</td>
+                        <td class="menu-popis">Informace o nařízených jednání. Přehled nařízených jednání v jednacích síních soudů zobrazených podle místnosti a data.</td>
+                      </tr>
+                      <tr>
+                        <td class="menu"><img src="../common/images/white_box.gif" alt="-" border="0"></td>
+                        <td class="menu"><a href="/InfoSoud/public/help.jsp#faq" class="menu">Nejčastější dotazy</a></td>
+                      </tr>
+                      <tr>
+                        <td class="menu"><img src="../common/images/white_box.gif" alt="-" border="0"></td>
+                        <td class="menu"><a href="/InfoSoud/public/help.jsp#conceptions" class="menu">Vysvětlení pojmů</a></td>
+                      </tr>
+
+                      <tr>
+                        <td colspan="2" bgcolor="white"><img src="../common/images/white_pixel.gif" border="0"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu" height="5px"><img src="../common/images/white_pixel.gif" border="0"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu">
+                            Důležité informace
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu">
+                            V aplikaci infoSoud se zobrazují pouze spisové značky okresních soudů, které mají ročník starší než 2006 a spisové značky krajských soudů s ročníkem starším než 2007. 
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu">
+                            Průběh řízení vedených u Nejvyššího správního soudu lze sledovat na <a href="http://www.nssoud.cz" class="menu">internetových stránkách organizace</a>.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu">
+                            Průběh insolvenčního řízení (včetně incidenčních sporů) lze sledovat v <a href="https://isir.justice.cz" class="menu">insolvenčním rejstříku</a>.
+                        </td>
+                      </tr>
+                    </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-left: 6pt; padding-right: 10pt;" valign="top" height="20px">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td colspan="2" bgcolor="white"><img src="../common/images/white_pixel.gif" border="0"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                        <a class="menu" href="http://www.justice.cz/" target="_blank">www.justice.cz</a></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                </table>
+              </td>
+              <td width="9px" bgcolor="white">&nbsp;</td>
+              <td class="menu-right" width="37px">&nbsp;</td>
+            </tr>
+          </tbody>
+          </table>
+        </td>
+<!-- menu bar - end -->
+
+
+
+  <!-- body cell start -->
+        <td class="body" valign="top" width="100%">
+          <table border="0" cellpadding="6pt" cellspacing="0pt" width="100%">
+
+<!-- global errors and messages start -->
+					
+					
+					
+<!-- global errors and messages end -->
+
+<!-- body cell data - start -->
+            <tr>
+            	<td>
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="../common/js/tooltip.js" type="text/javascript"></script>
+
+
+
+
+
+ <table border="0" cellpadding="6pt" cellspacing="0pt" width="100%">
+   <tr>
+     <td class="body-banner" height="91px" valign="bottom">
+       <span class="body-banner-label">Spisová značka:&nbsp;&nbsp;</span>
+       <span class="body-banner-data">6 T 136 / 2013</span>
+     </td>
+   </tr>
+   <tr>
+     <td height="1px">&nbsp;</td>
+   </tr>
+   <tr>
+     <td valign="top">
+       <table border="0" cellpadding="0pt" cellspacing="0pt" width="100%">
+         <tr>
+           <td style="padding-bottom: 12pt;" width="100%"><span class="body-vyrazny-text"></span></td>
+		   <td style="padding-bottom: 12pt;">
+			  <a href="javascript:history.go(-1)">zpět</a>
+		   </td>
+         </tr>
+         <tr>
+           <td bgcolor="#2c2c2c" height="1px"></td>
+         </tr>
+       </table>
+     </td>
+   </tr>
+   <!-- tr>
+     <td style="padding-top: 6pt;"><span class="body-vyrazny-text">Předmět řízení</span>: <=predmetRizeni ></td>
+   </tr -->
+   <tr>
+
+    <td style="padding-top: 0pt;"><span class="body-vyrazny-text">Stav řízení</span>: Obživlá věc - po zrušení konečného rozhodnutí (od 29.02.2016)</td>
+    
+   </tr>
+	   
+   <tr>
+     <td height="1px"><img src="../common/images/transparent_pixel.gif" border="0"/></td>
+   </tr>
+   <tr>
+     <td style="padding-top: 0pt;">
+     	<span class="body-vyrazny-text">Průběh řízení</span>
+     </td>
+   </tr>
+   <tr class="AAAA">
+     <td>
+       <table width="50%" border="1">
+         <tr>
+           <th>Událost v řízení</th>
+           <th>Datum</th>
+         </tr>
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=1&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ZAHAJ_RIZ&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost1OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost1OSPHA02T20136136', 'udalost1OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost1OSPHA02T20136136');"
+	                class="data"> 
+	                     Zahájení řízení
+
+	                </a>
+	             <div id="tooltip_udalost1OSPHA02T20136136" class="xstooltip">
+	               <b>Zahájení řízení</b> je zápis spisové značky do příslušného rejstříku
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		04.04.2013
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=7&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost7OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost7OSPHA02T20136136', 'udalost7OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost7OSPHA02T20136136');"
+	                class="data"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost7OSPHA02T20136136" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		05.08.2013
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=9&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VYD_ROZH&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost9OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost9OSPHA02T20136136', 'udalost9OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost9OSPHA02T20136136');"
+	                class="data"> 
+	                     Vydání rozhodnutí
+
+	                </a>
+	             <div id="tooltip_udalost9OSPHA02T20136136" class="xstooltip">
+	               <b>Vydání rozhodnutí</b> je rozhodnutí soudce nebo vyšší soudní úřednice
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		05.08.2013
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=6&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost6OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost6OSPHA02T20136136', 'udalost6OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost6OSPHA02T20136136');"
+	                class="data"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost6OSPHA02T20136136" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		08.08.2013
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="dataSediva">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=13&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ZRUS_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost13OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost13OSPHA02T20136136', 'udalost13OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost13OSPHA02T20136136');"
+	                class="dataSediva"> 
+	                     Zrušení jednání
+
+	                </a>
+	             <div id="tooltip_udalost13OSPHA02T20136136" class="xstooltip">
+	               Zrušení nařízeného jednání
+
+	             </div> 
+	           </td>
+	           <td class="dataSediva">
+	           		28.08.2013
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="dataSediva">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=8&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost8OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost8OSPHA02T20136136', 'udalost8OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost8OSPHA02T20136136');"
+	                class="dataSediva"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost8OSPHA02T20136136" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="dataSediva">
+	           		16.09.2013
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=15&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ODES_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost15OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost15OSPHA02T20136136', 'udalost15OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost15OSPHA02T20136136');"
+	                class="data"> 
+	                     Odeslání spisu
+
+	                </a>
+	             <div id="tooltip_udalost15OSPHA02T20136136" class="xstooltip">
+	               <b>Odesláním spisu</b> se rozumí: např.: odeslání nadřízenému soudu k prostudování
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		17.09.2013
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=1&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ODVOLANI&idUdalosti=null&druhVecId=TO&rocnikId=2013&cisloSenatuId=61&bcVecId=331&orgId=MSPHAAB"
+	                id="udalost1MSPHAABTO201361331" 
+	                onmouseover="xstooltip_show('tooltip_udalost1MSPHAABTO201361331', 'udalost1MSPHAABTO201361331', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost1MSPHAABTO201361331');"
+	                class="data"> 
+	                     Řízení o opravném prostředku u krajského a vrchního soudu
+
+	                </a>
+	             <div id="tooltip_udalost1MSPHAABTO201361331" class="xstooltip">
+	               <b>Řízení o opraveném prostředku u krajského a vrchního soudu</b> se myslí zahájení odvolacího řízení
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		26.09.2013
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=16&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VRAC_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost16OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost16OSPHA02T20136136', 'udalost16OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost16OSPHA02T20136136');"
+	                class="data"> 
+	                     Vrácení spisu
+
+	                </a>
+	             <div id="tooltip_udalost16OSPHA02T20136136" class="xstooltip">
+	               <b>Vrácením spisu</b> se rozumí: např.: na vrácení spisu od nadřízeného soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		10.10.2013
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=12&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost12OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost12OSPHA02T20136136', 'udalost12OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost12OSPHA02T20136136');"
+	                class="data"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost12OSPHA02T20136136" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		14.10.2013
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=17&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VYD_ROZH&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost17OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost17OSPHA02T20136136', 'udalost17OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost17OSPHA02T20136136');"
+	                class="data"> 
+	                     Vydání rozhodnutí
+
+	                </a>
+	             <div id="tooltip_udalost17OSPHA02T20136136" class="xstooltip">
+	               <b>Vydání rozhodnutí</b> je rozhodnutí soudce nebo vyšší soudní úřednice
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		14.10.2013
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=14&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost14OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost14OSPHA02T20136136', 'udalost14OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost14OSPHA02T20136136');"
+	                class="data"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost14OSPHA02T20136136" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		15.10.2013
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=18&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost18OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost18OSPHA02T20136136', 'udalost18OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost18OSPHA02T20136136');"
+	                class="data"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost18OSPHA02T20136136" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		21.10.2013
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="dataSediva">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=20&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ZRUS_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost20OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost20OSPHA02T20136136', 'udalost20OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost20OSPHA02T20136136');"
+	                class="dataSediva"> 
+	                     Zrušení jednání
+
+	                </a>
+	             <div id="tooltip_udalost20OSPHA02T20136136" class="xstooltip">
+	               Zrušení nařízeného jednání
+
+	             </div> 
+	           </td>
+	           <td class="dataSediva">
+	           		21.10.2013
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=27&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost27OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost27OSPHA02T20136136', 'udalost27OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost27OSPHA02T20136136');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost27OSPHA02T20136136" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		21.10.2013
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=26&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost26OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost26OSPHA02T20136136', 'udalost26OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost26OSPHA02T20136136');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost26OSPHA02T20136136" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		21.10.2013
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=23&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VYD_ROZH&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost23OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost23OSPHA02T20136136', 'udalost23OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost23OSPHA02T20136136');"
+	                class="data"> 
+	                     Vydání rozhodnutí
+
+	                </a>
+	             <div id="tooltip_udalost23OSPHA02T20136136" class="xstooltip">
+	               <b>Vydání rozhodnutí</b> je rozhodnutí soudce nebo vyšší soudní úřednice
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		21.10.2013
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="dataSediva">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=19&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost19OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost19OSPHA02T20136136', 'udalost19OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost19OSPHA02T20136136');"
+	                class="dataSediva"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost19OSPHA02T20136136" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="dataSediva">
+	           		24.10.2013
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=33&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost33OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost33OSPHA02T20136136', 'udalost33OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost33OSPHA02T20136136');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost33OSPHA02T20136136" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		14.11.2013
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=34&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost34OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost34OSPHA02T20136136', 'udalost34OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost34OSPHA02T20136136');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost34OSPHA02T20136136" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		14.11.2013
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=32&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost32OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost32OSPHA02T20136136', 'udalost32OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost32OSPHA02T20136136');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost32OSPHA02T20136136" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		14.11.2013
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=25&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ODES_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost25OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost25OSPHA02T20136136', 'udalost25OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost25OSPHA02T20136136');"
+	                class="data"> 
+	                     Odeslání spisu
+
+	                </a>
+	             <div id="tooltip_udalost25OSPHA02T20136136" class="xstooltip">
+	               <b>Odesláním spisu</b> se rozumí: např.: odeslání nadřízenému soudu k prostudování
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		22.01.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=1&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ODVOLANI&idUdalosti=null&druhVecId=TO&rocnikId=2014&cisloSenatuId=5&bcVecId=39&orgId=MSPHAAB"
+	                id="udalost1MSPHAABTO2014539" 
+	                onmouseover="xstooltip_show('tooltip_udalost1MSPHAABTO2014539', 'udalost1MSPHAABTO2014539', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost1MSPHAABTO2014539');"
+	                class="data"> 
+	                     Řízení o opravném prostředku u krajského a vrchního soudu
+
+	                </a>
+	             <div id="tooltip_udalost1MSPHAABTO2014539" class="xstooltip">
+	               <b>Řízení o opraveném prostředku u krajského a vrchního soudu</b> se myslí zahájení odvolacího řízení
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		23.01.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=29&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VYR_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost29OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost29OSPHA02T20136136', 'udalost29OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost29OSPHA02T20136136');"
+	                class="data"> 
+	                     Vyřízení opravného prostředku
+
+	                </a>
+	             <div id="tooltip_udalost29OSPHA02T20136136" class="xstooltip">
+	               <b>Opravný prostředek</b> je vyřízen např. nadřízeným krajským soudem, kde je vydáno nové rozhodnutí
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		04.02.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=30&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VYR_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost30OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost30OSPHA02T20136136', 'udalost30OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost30OSPHA02T20136136');"
+	                class="data"> 
+	                     Vyřízení opravného prostředku
+
+	                </a>
+	             <div id="tooltip_udalost30OSPHA02T20136136" class="xstooltip">
+	               <b>Opravný prostředek</b> je vyřízen např. nadřízeným krajským soudem, kde je vydáno nové rozhodnutí
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		04.02.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=28&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VRAC_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost28OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost28OSPHA02T20136136', 'udalost28OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost28OSPHA02T20136136');"
+	                class="data"> 
+	                     Vrácení spisu
+
+	                </a>
+	             <div id="tooltip_udalost28OSPHA02T20136136" class="xstooltip">
+	               <b>Vrácením spisu</b> se rozumí: např.: na vrácení spisu od nadřízeného soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		06.02.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=31&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ODES_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost31OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost31OSPHA02T20136136', 'udalost31OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost31OSPHA02T20136136');"
+	                class="data"> 
+	                     Odeslání spisu
+
+	                </a>
+	             <div id="tooltip_udalost31OSPHA02T20136136" class="xstooltip">
+	               <b>Odesláním spisu</b> se rozumí: např.: odeslání nadřízenému soudu k prostudování
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		17.02.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=35&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VRAC_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost35OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost35OSPHA02T20136136', 'udalost35OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost35OSPHA02T20136136');"
+	                class="data"> 
+	                     Vrácení spisu
+
+	                </a>
+	             <div id="tooltip_udalost35OSPHA02T20136136" class="xstooltip">
+	               <b>Vrácením spisu</b> se rozumí: např.: na vrácení spisu od nadřízeného soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		15.04.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=36&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ST_VEC_OBZ&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost36OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost36OSPHA02T20136136', 'udalost36OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost36OSPHA02T20136136');"
+	                class="data"> 
+	                     Obživnutí věci
+
+	                </a>
+	             <div id="tooltip_udalost36OSPHA02T20136136" class="xstooltip">
+	               <b>Obživnutím věci</b> se myslí zrušení původního vyřizujícího rozhodnutí a v soudním řízení se pokračuje
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		17.04.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=41&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VYD_ROZH&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost41OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost41OSPHA02T20136136', 'udalost41OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost41OSPHA02T20136136');"
+	                class="data"> 
+	                     Vydání rozhodnutí
+
+	                </a>
+	             <div id="tooltip_udalost41OSPHA02T20136136" class="xstooltip">
+	               <b>Vydání rozhodnutí</b> je rozhodnutí soudce nebo vyšší soudní úřednice
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		26.09.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=55&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ST_VEC_VYR&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost55OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost55OSPHA02T20136136', 'udalost55OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost55OSPHA02T20136136');"
+	                class="data"> 
+	                     Vyřízení věci
+
+	                </a>
+	             <div id="tooltip_udalost55OSPHA02T20136136" class="xstooltip">
+	               <b>Vyřízením věci</b> se myslí vyřízení věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		26.09.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=45&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost45OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost45OSPHA02T20136136', 'udalost45OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost45OSPHA02T20136136');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost45OSPHA02T20136136" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		18.12.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=49&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ODES_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost49OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost49OSPHA02T20136136', 'udalost49OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost49OSPHA02T20136136');"
+	                class="data"> 
+	                     Odeslání spisu
+
+	                </a>
+	             <div id="tooltip_udalost49OSPHA02T20136136" class="xstooltip">
+	               <b>Odesláním spisu</b> se rozumí: např.: odeslání nadřízenému soudu k prostudování
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		15.01.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=1&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ODVOLANI&idUdalosti=null&druhVecId=TO&rocnikId=2015&cisloSenatuId=61&bcVecId=29&orgId=MSPHAAB"
+	                id="udalost1MSPHAABTO20156129" 
+	                onmouseover="xstooltip_show('tooltip_udalost1MSPHAABTO20156129', 'udalost1MSPHAABTO20156129', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost1MSPHAABTO20156129');"
+	                class="data"> 
+	                     Řízení o opravném prostředku u krajského a vrchního soudu
+
+	                </a>
+	             <div id="tooltip_udalost1MSPHAABTO20156129" class="xstooltip">
+	               <b>Řízení o opraveném prostředku u krajského a vrchního soudu</b> se myslí zahájení odvolacího řízení
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		20.01.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=51&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VYR_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost51OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost51OSPHA02T20136136', 'udalost51OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost51OSPHA02T20136136');"
+	                class="data"> 
+	                     Vyřízení opravného prostředku
+
+	                </a>
+	             <div id="tooltip_udalost51OSPHA02T20136136" class="xstooltip">
+	               <b>Opravný prostředek</b> je vyřízen např. nadřízeným krajským soudem, kde je vydáno nové rozhodnutí
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		29.01.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=59&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ST_VEC_PUK&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost59OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost59OSPHA02T20136136', 'udalost59OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost59OSPHA02T20136136');"
+	                class="data"> 
+	                     Datum pravomocného ukončení věci
+
+	                </a>
+	             <div id="tooltip_udalost59OSPHA02T20136136" class="xstooltip">
+	               Datum pravomocného ukončení věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		29.01.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=50&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VRAC_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost50OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost50OSPHA02T20136136', 'udalost50OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost50OSPHA02T20136136');"
+	                class="data"> 
+	                     Vrácení spisu
+
+	                </a>
+	             <div id="tooltip_udalost50OSPHA02T20136136" class="xstooltip">
+	               <b>Vrácením spisu</b> se rozumí: např.: na vrácení spisu od nadřízeného soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		10.02.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=58&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ST_VEC_ODS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost58OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost58OSPHA02T20136136', 'udalost58OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost58OSPHA02T20136136');"
+	                class="data"> 
+	                     Skončení věci 
+
+	                </a>
+	             <div id="tooltip_udalost58OSPHA02T20136136" class="xstooltip">
+	               Tzv. <b>"Odškrtnutí"</b> věci, nastane v okamžiku vyřízení všech náležitostí souvisejících s řízením
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		25.03.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=60&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost60OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost60OSPHA02T20136136', 'udalost60OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost60OSPHA02T20136136');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost60OSPHA02T20136136" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		01.04.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=65&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ODES_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost65OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost65OSPHA02T20136136', 'udalost65OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost65OSPHA02T20136136');"
+	                class="data"> 
+	                     Odeslání spisu
+
+	                </a>
+	             <div id="tooltip_udalost65OSPHA02T20136136" class="xstooltip">
+	               <b>Odesláním spisu</b> se rozumí: např.: odeslání nadřízenému soudu k prostudování
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		25.06.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=66&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VRAC_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost66OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost66OSPHA02T20136136', 'udalost66OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost66OSPHA02T20136136');"
+	                class="data"> 
+	                     Vrácení spisu
+
+	                </a>
+	             <div id="tooltip_udalost66OSPHA02T20136136" class="xstooltip">
+	               <b>Vrácením spisu</b> se rozumí: např.: na vrácení spisu od nadřízeného soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		17.07.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=67&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ODES_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost67OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost67OSPHA02T20136136', 'udalost67OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost67OSPHA02T20136136');"
+	                class="data"> 
+	                     Odeslání spisu
+
+	                </a>
+	             <div id="tooltip_udalost67OSPHA02T20136136" class="xstooltip">
+	               <b>Odesláním spisu</b> se rozumí: např.: odeslání nadřízenému soudu k prostudování
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		15.10.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=70&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ST_VEC_OBZ&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost70OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost70OSPHA02T20136136', 'udalost70OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost70OSPHA02T20136136');"
+	                class="data"> 
+	                     Obživnutí věci
+
+	                </a>
+	             <div id="tooltip_udalost70OSPHA02T20136136" class="xstooltip">
+	               <b>Obživnutím věci</b> se myslí zrušení původního vyřizujícího rozhodnutí a v soudním řízení se pokračuje
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		29.02.2016
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=72&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost72OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost72OSPHA02T20136136', 'udalost72OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost72OSPHA02T20136136');"
+	                class="data"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost72OSPHA02T20136136" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		26.05.2016
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="dataSediva">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=74&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=ZRUS_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost74OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost74OSPHA02T20136136', 'udalost74OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost74OSPHA02T20136136');"
+	                class="dataSediva"> 
+	                     Zrušení jednání
+
+	                </a>
+	             <div id="tooltip_udalost74OSPHA02T20136136" class="xstooltip">
+	               Zrušení nařízeného jednání
+
+	             </div> 
+	           </td>
+	           <td class="dataSediva">
+	           		01.07.2016
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="dataSediva">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=73&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost73OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost73OSPHA02T20136136', 'udalost73OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost73OSPHA02T20136136');"
+	                class="dataSediva"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost73OSPHA02T20136136" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="dataSediva">
+	           		18.08.2016
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=75&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost75OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost75OSPHA02T20136136', 'udalost75OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost75OSPHA02T20136136');"
+	                class="data"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost75OSPHA02T20136136" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		20.10.2016
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2013&cisloSenatu=6&bcVec=136&kraj=null&org=OSPHA02&poradiUdalosti=68&cisloSenatuLabel=6&typSoudu=os&agendaNc=null&druhUdalosti=VRAC_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2013&cisloSenatuId=6&bcVecId=136&orgId=OSPHA02"
+	                id="udalost68OSPHA02T20136136" 
+	                onmouseover="xstooltip_show('tooltip_udalost68OSPHA02T20136136', 'udalost68OSPHA02T20136136', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost68OSPHA02T20136136');"
+	                class="data"> 
+	                     Vrácení spisu
+
+	                </a>
+	             <div id="tooltip_udalost68OSPHA02T20136136" class="xstooltip">
+	               <b>Vrácením spisu</b> se rozumí: např.: na vrácení spisu od nadřízeného soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		19.02.2017
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+         
+	              
+       </table>
+     </td>
+   </tr>
+   <tr>
+   	<td>
+   		<table>
+   		</table>
+   	</td>
+   </tr>
+	<tr>
+		<td>
+		   <table width="100%">
+		  	  <tr>
+	    		<td align="right" nowrap="nowrap">
+   
+		    		Poslední změna ve spisu:&nbsp;<br>
+		    		
+		  			Údaje platné k:&nbsp;
+	    		</td>
+			    <td width="100%"> 
+   
+	    	  		08.07.2016 12:25:19<br>
+		    		
+			        11.07.2016 16:25:24
+		    	</td>
+			    <td>
+				   <a href="javascript:history.go(-1)">zpět</a>
+			    </td>
+			  </tr>
+			</table>
+		</td>	    
+	 </tr>
+   <tr>
+     <td class="data">
+       <a href="/InfoSoud/public/help.jsp#list" target="_blank">Nápověda</a>
+     </td>
+   </tr>
+ </table>
+ 
+
+
+
+              </td>
+            </tr>
+<!-- body cell data - end -->
+            <tr>
+               <td height="130px"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+    </table>
+  </body>
+</html>
+
+
