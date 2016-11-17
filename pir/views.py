@@ -193,7 +193,7 @@ def htmllist(request):
     v = Vec.objects.filter(**p) \
         .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce').distinct()
     total = v.count()
-    if (start >= total) and (total > 0):
+    if total and (start >= total):
         start = total - 1
     creditors = ('creditors' in rd)
     BATCH = (10 if creditors else 20)

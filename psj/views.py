@@ -127,7 +127,7 @@ def htmllist(request):
         raise Http404
     d = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
     total = d.count()
-    if (start >= total) and (total > 0):
+    if total and (start >= total):
         start = total - 1
     return render(
         request,

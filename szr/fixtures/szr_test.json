@@ -194,7 +194,7 @@
     "fields": {
         "name": "M\u011bstsk\u00fd soud Praha",
         "reports": null,
-        "timestamp": "2016-06-24T00:00:03.442"
+        "timestamp_add": "2016-06-24T00:00:03.442"
     }
 },
 {
@@ -203,7 +203,7 @@
     "fields": {
         "name": "Nejvy\u0161\u0161\u00ed soud",
         "reports": null,
-        "timestamp": "2016-06-24T00:00:03.028"
+        "timestamp_add": "2016-06-24T00:00:03.028"
     }
 },
 {
@@ -212,7 +212,7 @@
     "fields": {
         "name": "Nejvy\u0161\u0161\u00ed spr\u00e1vn\u00ed soud",
         "reports": null,
-        "timestamp": "2016-06-24T00:00:03.089"
+        "timestamp_add": "2016-06-24T00:00:03.089"
     }
 },
 {
@@ -221,7 +221,7 @@
     "fields": {
         "name": "Obvodn\u00ed soud Praha 2",
         "reports": "MSPHAAB",
-        "timestamp": "2016-06-24T00:00:03.816"
+        "timestamp_add": "2016-06-24T00:00:03.816"
     }
 },
 {
@@ -240,7 +240,8 @@
         "changed": "2016-07-08T12:25:19",
         "updated": "2016-06-24T01:38:01.128",
         "notify": false,
-        "timestamp": "2016-06-24T01:38:03.375"
+        "timestamp_add": "2016-06-24T01:38:03.375",
+        "timestamp_update": "2016-06-24T01:38:03.375"
     }
 },
 {
@@ -259,7 +260,8 @@
         "changed": "2016-05-21T06:12:33",
         "updated": "2016-06-24T01:39:01.492",
         "notify": false,
-        "timestamp": "2016-06-24T01:39:04.130"
+        "timestamp_add": "2016-06-24T01:39:04.130",
+        "timestamp_update": "2016-06-24T01:39:04.130"
     }
 },
 {
@@ -278,7 +280,8 @@
         "changed": "2016-05-28T09:18:55",
         "updated": "2016-06-24T01:40:01.250",
         "notify": false,
-        "timestamp": "2016-06-24T01:40:01.812"
+        "timestamp_add": "2016-06-24T01:40:01.812",
+        "timestamp_update": "2016-06-24T01:40:01.812"
     }
 },
 {
@@ -297,7 +300,8 @@
         "changed": null,
         "updated": "2016-06-23T22:36:01.289",
         "notify": false,
-        "timestamp": "2016-06-23T22:36:03.117"
+        "timestamp_add": "2016-06-23T22:36:03.117",
+        "timestamp_update": "2016-06-23T22:36:03.117"
     }
 },
 {
@@ -316,7 +320,8 @@
         "changed": null,
         "updated": "2016-06-24T02:35:01.941",
         "notify": false,
-        "timestamp": "2016-06-24T02:35:02.753"
+        "timestamp_add": "2016-06-24T02:35:02.753",
+        "timestamp_update": "2016-06-24T02:35:02.753"
     }
 },
 {
@@ -335,7 +340,8 @@
         "changed": null,
         "updated": "2016-06-23T21:37:01.831",
         "notify": false,
-        "timestamp": "2016-06-23T21:37:02.652"
+        "timestamp_add": "2016-06-23T21:37:02.652",
+        "timestamp_update": "2016-06-23T21:37:02.652"
     }
 },
 {

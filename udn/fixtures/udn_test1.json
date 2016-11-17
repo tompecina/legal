@@ -229,7 +229,8 @@
         "filename": "0158_8As__1500033S.pdf",
         "anonfilename": "",
         "updated": "2016-07-02T13:40:00.971",
-        "timestamp": "2199-07-02T13:40:16.062",
+        "timestamp_add": "2199-07-02T13:40:16.062",
+        "timestamp_update": "2199-07-02T13:40:16.062",
         "parties": [
             1,
             2,
@@ -242,7 +243,7 @@
     "pk": 1,
     "fields": {
         "desc": "Ochrana hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee a ve\u0159ejn\u00e9 zak\u00e1zky",
-        "timestamp": "2016-07-01T15:35:52.251"
+        "timestamp_add": "2016-07-01T15:35:52.251"
     }
 },
 {
@@ -250,7 +251,7 @@
     "pk": 1,
     "fields": {
         "name": "\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee",
-        "timestamp": "2016-07-01T15:35:52.262"
+        "timestamp_add": "2016-07-01T15:35:52.262"
     }
 },
 {
@@ -258,7 +259,7 @@
     "pk": 2,
     "fields": {
         "name": "BUREAU VERITAS CZECH REPUBLIC, spol. s r.o.",
-        "timestamp": "2016-07-01T15:35:52.273"
+        "timestamp_add": "2016-07-01T15:35:52.273"
     }
 },
 {
@@ -266,7 +267,7 @@
     "pk": 3,
     "fields": {
         "name": "Zl\u00ednsk\u00fd kraj",
-        "timestamp": "2016-07-01T15:35:52.291"
+        "timestamp_add": "2016-07-01T15:35:52.291"
     }
 },
 {
@@ -275,7 +276,7 @@
     "fields": {
         "name": "Nejvy\u0161\u0161\u00ed spr\u00e1vn\u00ed soud",
         "reports": null,
-        "timestamp": "2016-06-24T00:00:03.089"
+        "timestamp_add": "2016-06-24T00:00:03.089"
     }
 }
 ]

@@ -30,7 +30,7 @@ class Agenda(models.Model):
     desc = models.CharField(
         max_length=255,
         unique=True)
-    timestamp = models.DateTimeField(
+    timestamp_add = models.DateTimeField(
         auto_now_add=True)
 
     def __str__(self):
@@ -43,8 +43,6 @@ class Party(models.Model):
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)
-    timestamp_update = models.DateTimeField(
-        auto_now=True)
 
     def __str__(self):
         return self.name

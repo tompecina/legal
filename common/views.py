@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.shortcuts import render, redirect, Http404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_http_methods
@@ -111,7 +111,7 @@ def lostpw(request):
         if f.is_valid():
             cd = f.cleaned_data
             u = User.objects.filter(username=cd['username'])
-            if u and u[0].email:
+            if u.exists() and u[0].email:
                 link = '%032x' % getrandbits(16 * 8)
                 PwResetLink(user_id=u[0].id, link=link).save()
                 text = \
@@ -144,17 +144,15 @@ PWLEN = 10
 @require_http_methods(['GET'])
 def resetpw(request, link):
     PwResetLink.objects \
-        .filter(timestamp__lt=(datetime.now() - LINKLIFE)).delete()
-    p = PwResetLink.objects.filter(link=link)
-    if not p:
-        raise Http404
-    u = p[0].user
+        .filter(timestamp_add__lt=(datetime.now() - LINKLIFE)).delete()
+    p = get_object_or_404(PwResetLink, link=link)
+    u = p.user
     newpw = ''
     for i in range(PWLEN):
         newpw += choice(PWCHARS)
     u.set_password(newpw)
     u.save()
-    p[0].delete()
+    p.delete()
     return render(
         request,
         'pwreset.html',

@@ -45,7 +45,7 @@ class MPIstat(models.Model):
     type = models.CharField(
         max_length=20,
         primary_key=True)
-    timestamp = models.DateTimeField(
+    timestamp_update = models.DateTimeField(
         auto_now=True)
 
     def __str__(self):

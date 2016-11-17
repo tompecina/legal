@@ -33,8 +33,10 @@ class Courtroom(models.Model):
     desc = models.CharField(
         max_length=255,
         db_index=True)
-    timestamp = models.DateTimeField(
+    timestamp_add = models.DateTimeField(
         auto_now_add=True)
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
 
     def __str__(self):
         return '%s, %s' % (self.court, self.desc)
@@ -46,8 +48,6 @@ class Party(models.Model):
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)
-    timestamp_update = models.DateTimeField(
-        auto_now=True)
 
     def __str__(self):
         return self.name
@@ -56,7 +56,7 @@ class Judge(models.Model):
     name = models.CharField(
         max_length=255,
         unique=True)
-    timestamp = models.DateTimeField(
+    timestamp_add = models.DateTimeField(
         auto_now_add=True)
 
     def __str__(self):
@@ -66,7 +66,7 @@ class Form(models.Model):
     name = models.CharField(
         max_length=255,
         unique=True)
-    timestamp = models.DateTimeField(
+    timestamp_add = models.DateTimeField(
         auto_now_add=True)
 
     def __str__(self):

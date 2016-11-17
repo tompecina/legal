@@ -37,7 +37,7 @@ class Court(models.Model):
         'self',
         null=True,
         on_delete=models.SET_NULL)
-    timestamp = models.DateTimeField(
+    timestamp_add = models.DateTimeField(
         auto_now_add=True)
 
     def __str__(self):
@@ -62,7 +62,8 @@ class Proceedings(models.Model):
         default=0)
     desc = models.CharField(
         max_length=255,
-        blank=True)
+        blank=True,
+        db_index=True)
     hash = models.CharField(
         max_length=32,
         blank=True,

@@ -49,7 +49,7 @@ class Party(models.Model):
     
     def __str__(self):
         return self.party
-    
+
 class Found(models.Model):
     uid = models.ForeignKey(
         User,
@@ -70,7 +70,7 @@ class Found(models.Model):
         validators=[MinValueValidator(1990)])
     url = models.URLField(
         max_length=1024)
-    timestamp = models.DateTimeField(
+    timestamp_add = models.DateTimeField(
         auto_now_add=True)
 
     def __str__(self):

@@ -172,14 +172,12 @@ class Vec(models.Model):
         db_index=True)
     bc = models.PositiveIntegerField()
     rocnik = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(2008)],
-        db_index=True)
+        validators=[MinValueValidator(2008)])
     druhStavRizeni = models.ForeignKey(
         DruhStavRizeni,
         null=True,
         on_delete=models.CASCADE)
-    firstAction = models.DateField(
-        db_index=True)
+    firstAction = models.DateField()
     lastAction = models.DateField(
         db_index=True)
     datumVyskrtnuti = models.DateField(
@@ -239,7 +237,7 @@ class Transaction(models.Model):
         null=True)
     error = models.BooleanField(
         default=False)
-    timestamp = models.DateTimeField(
+    timestamp_add = models.DateTimeField(
         auto_now_add=True)
     
     def __str__(self):
@@ -253,7 +251,8 @@ class Insolvency(models.Model):
     year = models.IntegerField(
         validators=[MinValueValidator(1990)])
     desc = models.CharField(
-        max_length=255)
+        max_length=255,
+        db_index=True)
     detailed = models.BooleanField(
         default=False)
     timestamp_add = models.DateTimeField(
@@ -278,7 +277,7 @@ class Tracked(models.Model):
     vec = models.ForeignKey(
         Vec,
         on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(
+    timestamp_add = models.DateTimeField(
         auto_now_add=True)
 
     def __str__(self):

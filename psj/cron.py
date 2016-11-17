@@ -45,9 +45,11 @@ def cron_courtrooms():
             res = get(list_courtrooms % c.pk)
             soup = BeautifulSoup(res.text, 'xml')
             for r in soup.find_all('jednaciSin'):
-                Courtroom.objects.get_or_create(
+                cr, crc = Courtroom.objects.get_or_create(
                     court=c,
                     desc=r.nazev.string)
+                if not crc:
+                    cr.save()
         except:
             pass
 
@@ -70,7 +72,7 @@ get_hear = 'InfoSoud/public/searchJednani.do?'
 
 def cron_update():
     t = Task.objects.all()
-    if not t:
+    if not t.exists():
         return
     t = t.earliest('timestamp_update')
     t.save()

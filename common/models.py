@@ -30,8 +30,8 @@ class PwResetLink(models.Model):
     link = models.CharField(
         max_length=32,
         db_index=True)
-    timestamp = models.DateTimeField(
-        auto_now=True,
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
         db_index=True)
 
     def __str__(self):

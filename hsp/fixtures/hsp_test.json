@@ -129,14 +129,14 @@
     "model": "cnb.mpistat",
     "pk": "DISC",
     "fields": {
-        "timestamp": "2016-01-08T21:17:27"
+        "timestamp_update": "2016-01-08T21:17:27"
     }
 },
 {
     "model": "cnb.mpistat",
     "pk": "REPO",
     "fields": {
-        "timestamp": "2016-01-08T21:16:15"
+        "timestamp_update": "2016-01-08T21:16:15"
     }
 },
 {

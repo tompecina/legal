@@ -228,7 +228,7 @@ def getMPIrate(tp, dt, log=None):
         return (None, 'Chybné datum, data nejsou k disposici')
 
     st = MPIstat.objects.get_or_create(type=tp)
-    updated = st[0].timestamp.date()
+    updated = st[0].timestamp_update.date()
     if st[1] or \
        ((not MPIrate.objects.filter(valid__gte=dt).exists()) and \
         ((updated - dt) < sd)):
@@ -264,7 +264,7 @@ def getMPIrate(tp, dt, log=None):
             return (None, 'Chyba zápisu do database (2)')
         
     d = MPIrate.objects.filter(type=tp, valid__lte=dt).order_by('-valid')
-    if not d:
+    if not d.exists():
         return (None, 'Sazba není k disposici')
 
     if log != None:
