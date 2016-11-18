@@ -22,10 +22,9 @@
 
 from django.http import QueryDict
 from bs4 import BeautifulSoup
-from time import sleep
 from datetime import date, datetime, timedelta
 from urllib.parse import quote
-from common.utils import get, decomposeref, normreg
+from common.utils import get, decomposeref, normreg, sleep
 from common.glob import localurl
 from szr.models import Court
 from szr.glob import supreme_court, supreme_administrative_court
@@ -50,7 +49,7 @@ def cron_courtrooms():
                     desc=r.nazev.string)
                 if not crc:
                     cr.save()
-        except:
+        except:  # pragma: no cover
             pass
 
 def cron_schedule(*args):

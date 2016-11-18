@@ -1,0 +1,45 @@
+[
+{
+    "model": "szr.court",
+    "pk": "MSPHAAB",
+    "fields": {
+        "name": "M\u011bstsk\u00fd soud Praha",
+        "reports": null,
+        "timestamp_add": "2016-06-24T00:00:03.442"
+    }
+},
+{
+    "model": "szr.court",
+    "pk": "OSPHA02",
+    "fields": {
+        "name": "Obvodn\u00ed soud Praha 2",
+        "reports": "MSPHAAB",
+        "timestamp_add": "2016-06-24T00:00:03.816"
+    }
+},
+{
+    "model": "szr.court",
+    "pk": "NSS",
+    "fields": {
+        "name": "Nejvy\u0161\u0161\u00ed spr\u00e1vn\u00ed soud",
+        "reports": null,
+        "timestamp_add": "2016-06-24T00:00:03.089"
+    }
+},
+{
+    "model": "psj.form",
+    "pk": 1,
+    "fields": {
+        "name": "Hlavn\u00ed l\u00ed\u010den\u00ed",
+        "timestamp_add": "2016-07-31T22:11:19.951"
+    }
+},
+{
+    "model": "psj.judge",
+    "pk": 1,
+    "fields": {
+        "name": "JUDr. Nedv\u011bd Vlastimil",
+        "timestamp_add": "2016-07-31T22:11:19.873"
+    }
+}
+]

@@ -23,6 +23,7 @@
 from django.http import QueryDict
 from django.core import mail
 from decimal import Decimal
+import time
 from datetime import date, timedelta
 from calendar import monthrange, isleap
 from xml.sax.saxutils import escape, unescape
@@ -373,6 +374,10 @@ def post(*args, **kwargs):  # pragma: no cover
         if not 'timeout' in kwargs:
             kwargs['timeout'] = TIMEOUT
         return requests.post(*args, **kwargs)
+
+def sleep(*args, **kwargs):  # pragma: no cover
+    if not TEST:
+        time.sleep(*args, **kwargs)
 
 def send_mail(subject, text, recipients):
     try:

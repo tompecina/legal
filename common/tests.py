@@ -30,6 +30,7 @@ from copy import copy
 from http import HTTPStatus
 from re import compile
 from cache.tests import DummyRequest
+from sir.models import Counter
 from .glob import localdomain, localsubdomain, localemail
 from . import fields, forms, models, utils, views
 
@@ -53,6 +54,22 @@ class DummyResponse:
             self.content = content.encode('utf-8')
         self.status_code = status
         self.ok = (status == HTTPStatus.OK)
+
+def link_equal(a, b):
+    a = a.split('?')
+    b = b.split('?')
+    if a[0] != b[0]:  # pragma: no cover
+        return False
+    a = a[1].split('&')
+    a.sort()
+    b = b[1].split('&')
+    b.sort()
+    if len(a) != len(b):  # pragma: no cover
+        return False
+    for i in range(len(a)):
+        if a[i] != b[i]:  # pragma: no cover
+            return False
+    return True
 
 class TestFields(SimpleTestCase):
 
@@ -899,6 +916,15 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'about.html')
         res = self.client.post('/about/')
+        self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
+        
+    def test_stat(self):
+        Counter(id='DL', number=1).save()
+        Counter(id='PR', number=1).save()
+        res = self.client.get('/stat/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'stat.html')
+        res = self.client.post('/stat/')
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
         
     def test_useradd(self):

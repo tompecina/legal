@@ -28,7 +28,7 @@ from re import compile
 from os.path import join
 from os import unlink
 from common.settings import BASE_DIR
-from common.tests import stripxml
+from common.tests import stripxml, link_equal
 from common.glob import localsubdomain, localurl, repourl
 from . import cron, forms, glob, models, views
 
@@ -172,22 +172,6 @@ class TestModels(SimpleTestCase):
                 date=date.today(),
                 filename='test_fn.pdf')),
             '4 As 26/2015-88')
-
-def link_equal(a, b):
-    a = a.split('?')
-    b = b.split('?')
-    if a[0] != b[0]:  # pragma: no cover
-        return False
-    a = a[1].split('&')
-    a.sort()
-    b = b[1].split('&')
-    b.sort()
-    if len(a) != len(b):  # pragma: no cover
-        return False
-    for i in range(len(a)):
-        if a[i] != b[i]:  # pragma: no cover
-            return False
-    return True
 
 x0 = '<?xml version="1.0" encoding="utf-8"?>\n' \
      '<decisions application="udn" created="2016-08-04T00:20:47" ' \

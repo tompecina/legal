@@ -24,10 +24,9 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
-from time import sleep
 from hashlib import md5
 from urllib.parse import quote
-from common.utils import get, post, send_mail
+from common.utils import get, post, send_mail, sleep
 from common.glob import localsubdomain, localurl
 from sur.cron import sur_notice
 from sir.cron import sir_notice

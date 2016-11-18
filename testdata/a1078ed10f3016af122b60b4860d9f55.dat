@@ -1,0 +1,784 @@
+
+
+
+
+  
+  
+  
+
+
+
+
+
+
+ <!-- IDS021F -->
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Vyhledání spisu</title>
+    <link rel='stylesheet' type='text/css' href='../common/css/infoSoud.css'/>
+    
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-store, no-cache, must-revalidate, post-check=0, pre-check=0">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
+
+    <meta name="robots" content="noindex, nofollow">
+  </head>
+  <body>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
+      <tbody>
+      <tr>
+<!-- menu bar - begin -->
+	      
+
+
+
+
+
+
+
+
+
+
+<!-- menu bar - begin -->
+<td valign="top" width="321px">
+          <table border="0" cellpadding="0" cellspacing="0" width="321px" height="100%">
+            <tbody>
+            <tr>
+              <td class="menu-left" width="275px">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" >
+                <tr ><td height="10px">&nbsp;</td></tr>
+                <tr>   
+                  <td  style="padding-top: 6pt; padding-left: 0pt; padding-right: 0pt;" valign="top" align="center" height="20px">
+                    
+                        <a href="../public/searchJednani.jsp" ><img src="../common/images/nadpisJednani.png"  class="undecore" /></a>
+                        
+                  </td>
+                </tr>
+                <tr ><td height="15px">&nbsp;</td></tr>
+                <tr>
+                  <td  style="padding-top: 6pt; padding-left: 0pt; padding-right: 0pt; " valign="top" align="center" height="20px">
+                    
+                        <br><span class="title_text">informace <br />o nařízených jednáních</span>
+                        
+                  </td>
+                </tr>
+                <tr>
+                  <td  style="padding-top: 6pt; padding-left: 0pt; padding-right: 0pt; " valign="top" align="center" height="20px">
+                    <span class="title_info_text">Zobrazovaná data mají pouze informativní charakter</span>
+                    <br/>&nbsp;
+                  </td>
+                </tr>
+                <!-- tr>
+                  <td style="padding-top: 6pt; padding-left: 10pt; padding-right: 10pt;" valign="top" height="20px">
+                    <a href="../public/search.jsp"><span class="title_info">Info</span><span class="title_soud">Soud</span></a><br/>
+                    <br/>
+                    <span class="title_text">informace o průběhu řízení</span>
+                    <br/>&nbsp;
+                  </td>
+                </tr-->
+                <tr>
+                  <td style="padding-left: 6pt; padding-right: 10pt;" valign="top" height="20px">
+
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <col width="5%">
+                      <col width="95%">
+                      <tbody>
+                      <tr>
+                        <td colspan="2" bgcolor="white"><img src="../common/images/white_pixel.gif" border="0"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td class="menu"><img src="../common/images/white_box.gif" alt="-" border="0"></td>
+                        <td class="menu"><a href="/InfoSoud/public/search.jsp;jsessionid=73e12d216807a7af547dee05b7b6" class="menu">Informace o řízení</a></td>
+                      </tr>
+                      <tr>
+                        <td class="menu">&nbsp;</td>
+                        <td class="menu-popis">Informace o průběhu řízení. Přehled událostí, které nastaly v průběhu řízení ve formě přehledné tabulky a podrobného zobrazení</td>
+                      </tr>
+                      <tr>
+                        <td class="menu"><img src="../common/images/white_box.gif" alt="-" border="0"></td>
+                        <td class="menu"><a href="/InfoSoud/public/searchJednani.jsp;jsessionid=73e12d216807a7af547dee05b7b6" class="menu">Informace o jednání</a></td>
+                      </tr>
+                      <tr>
+                        <td class="menu">&nbsp;</td>
+                        <td class="menu-popis">Informace o nařízených jednání. Přehled nařízených jednání v jednacích síních soudů zobrazených podle místnosti a data.</td>
+                      </tr>
+                      <tr>
+                        <td class="menu"><img src="../common/images/white_box.gif" alt="-" border="0"></td>
+                        <td class="menu"><a href="/InfoSoud/public/help.jsp;jsessionid=73e12d216807a7af547dee05b7b6#faq" class="menu">Nejčastější dotazy</a></td>
+                      </tr>
+                      <tr>
+                        <td class="menu"><img src="../common/images/white_box.gif" alt="-" border="0"></td>
+                        <td class="menu"><a href="/InfoSoud/public/help.jsp;jsessionid=73e12d216807a7af547dee05b7b6#conceptions" class="menu">Vysvětlení pojmů</a></td>
+                      </tr>
+
+                      <tr>
+                        <td colspan="2" bgcolor="white"><img src="../common/images/white_pixel.gif" border="0"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu" height="5px"><img src="../common/images/white_pixel.gif" border="0"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu">
+                            Důležité informace
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu">
+                            V aplikaci infoSoud se zobrazují pouze spisové značky okresních soudů, které mají ročník starší než 2006 a spisové značky krajských soudů s ročníkem starším než 2007. 
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu">
+                            Průběh řízení vedených u Nejvyššího správního soudu lze sledovat na <a href="http://www.nssoud.cz" class="menu">internetových stránkách organizace</a>.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu">
+                            Průběh insolvenčního řízení (včetně incidenčních sporů) lze sledovat v <a href="https://isir.justice.cz" class="menu">insolvenčním rejstříku</a>.
+                        </td>
+                      </tr>
+                    </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-left: 6pt; padding-right: 10pt;" valign="top" height="20px">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td colspan="2" bgcolor="white"><img src="../common/images/white_pixel.gif" border="0"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                        <a class="menu" href="http://www.justice.cz/" target="_blank">www.justice.cz</a></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                </table>
+              </td>
+              <td width="9px" bgcolor="white">&nbsp;</td>
+              <td class="menu-right" width="37px">&nbsp;</td>
+            </tr>
+          </tbody>
+          </table>
+        </td>
+<!-- menu bar - end -->
+
+
+
+  <!-- body cell start -->
+        <td class="body" valign="top" width="100%">
+          <table border="0" cellpadding="6pt" cellspacing="0pt" width="100%">
+
+<!-- global errors and messages start -->
+					
+					
+					
+<!-- global errors and messages end -->
+
+<!-- body cell data - start -->
+            <tr>
+            	<td>
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+<!--
+    var xmlHttp;
+    
+    function vytvorXMLHttpRequest() {
+      if (window.ActiveXObject) {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      else if (window.XMLHttpRequest) {
+        xmlHttp = new XMLHttpRequest();
+      }
+    }
+    
+    function obnovSeznamSoudu() {
+      var kraj = document.getElementById("kraj").value;
+      
+      var url = "../seznamOkresnichSoudu?"
+        + vytvorDotazovaciRetezec(kraj);
+    
+      vytvorXMLHttpRequest();
+      xmlHttp.onreadystatechange = zpracujZmenuStavu;
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+    }
+
+    function obnovSeznamJednacichSini() {
+      var okres = document.getElementById("soudy").value;
+
+      if (okres == "") {
+        okres = document.getElementById("kraj").value;
+      }
+      
+      if (document.getElementById("typSoudu").value == "ns") {
+        okres = "NSJIMBM";
+      }
+      
+      var url = "../seznamJednacichSini?"
+        + vytvorDotazovaciRetezecJednaciSine(okres);
+
+      vytvorXMLHttpRequest();
+      xmlHttp.onreadystatechange = zpracujZmenuStavuJednaciSine;
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+    }
+    
+    function vytvorDotazovaciRetezec(kraj) {
+      var dotazovaciRetezec = "kraj=" + kraj;
+      return dotazovaciRetezec;
+    }
+
+    function vytvorDotazovaciRetezecJednaciSine(okres) {
+      var dotazovaciRetezec = "okres=" + okres;
+      return dotazovaciRetezec;
+    }
+    
+    function zpracujZmenuStavu() {
+      if(xmlHttp.readyState == 4) {
+        if(xmlHttp.status == 200) {
+          aktualizujSeznamSoudu();
+        }
+      }
+    }
+
+    function zpracujZmenuStavuJednaciSine() {
+      if(xmlHttp.readyState == 4) {
+        if(xmlHttp.status == 200) {
+          aktualizujSeznamJednacichSini();
+        }
+      }
+    }
+    
+    function aktualizujSeznamSoudu() {
+      vymazSeznamSoudu();
+      var soudy = document.getElementById("soudy");
+      var vysledky = xmlHttp.responseXML.getElementsByTagName("okresniSoud");
+      var moznost = null;
+      
+      moznost = document.createElement("option");
+      moznost.appendChild
+        (document.createTextNode(""));
+      moznost.setAttribute
+        ("value", "");
+      soudy.appendChild(moznost);
+      
+      for(var i = 0; i < vysledky.length; i++) {
+        moznost = document.createElement("option");
+        moznost.appendChild
+          (document.createTextNode(vysledky[i].firstChild.firstChild.nodeValue));
+        moznost.setAttribute
+          ("value", vysledky[i].lastChild.firstChild.nodeValue);
+        soudy.appendChild(moznost);
+      }
+      
+      obnovSeznamJednacichSini();
+    }
+    
+    function aktualizujSeznamJednacichSini() {
+      vymazSeznamJednacichSini();
+      var sin = document.getElementById("sin");
+      var vysledky = xmlHttp.responseXML.getElementsByTagName("jednaciSin");
+      var moznost = null;
+      
+      moznost = document.createElement("option");
+      moznost.appendChild
+        (document.createTextNode(""));
+      moznost.setAttribute
+        ("value", "");
+      sin.appendChild(moznost);
+      
+      for(var i = 0; i < vysledky.length; i++) {
+        moznost = document.createElement("option");
+        moznost.appendChild
+          (document.createTextNode(vysledky[i].firstChild.firstChild.nodeValue));
+        moznost.setAttribute
+          ("value", vysledky[i].lastChild.firstChild.nodeValue);
+        sin.appendChild(moznost);
+      }
+    }
+    
+    
+    function vymazSeznamSoudu() {
+      var soudy = document.getElementById("soudy");
+      while(soudy.childNodes.length > 0) {
+        soudy.removeChild(soudy.childNodes[0]);
+      }
+      vymazSeznamJednacichSini();
+    }
+
+    function vymazSeznamJednacichSini() {
+      var sin = document.getElementById("sin");
+      while(sin.childNodes.length > 0) {
+        sin.removeChild(sin.childNodes[0]);
+      }
+    }
+    
+    function changefocus(theevent,thetarget)
+    {
+      if (theevent == 13) {
+        document.searchJednaniForm.elements[thetarget].focus();
+      }
+    }
+
+    function submitForm(theevent,type)
+    {
+      if (theevent == 13) {
+        document.searchJednaniForm.type.value = type;
+        document.searchJednaniForm.submit();
+      }
+    }
+    
+    function ukazAgendyNc() 
+    {
+      if ((document.searchJednaniForm.elements["druhVec"].value.toUpperCase() == "NC") && 
+          (document.searchJednaniForm.elements["typSoudu"].value != "ns") &&
+          (document.searchJednaniForm.elements["krajOrg"].value != "VSECHNY_KRAJE") && 
+          (document.searchJednaniForm.elements["org"].value.toUpperCase() == "")) {
+        document.getElementById("agendaNcDiv").style.display = "";
+      } else {
+        document.getElementById("agendaNcDiv").style.display = "none";
+      }
+    }  
+    
+    
+    function clearForm()
+    {
+        for (i=0;i<document.searchJednaniForm.elements.length;i++) {
+            if (document.searchJednaniForm.elements[i].name != 'robot' &&
+                document.searchJednaniForm.elements[i].id != 'spamQuestion' &&
+                (document.searchJednaniForm.elements[i].type == "text" ||
+                document.searchJednaniForm.elements[i].type == "select-one")) {
+                document.searchJednaniForm.elements[i].value="";
+            }
+        }
+        document.searchJednaniForm.elements["typSoudu"].value = "os";
+        povolSeznamSoudu();
+        document.searchJednaniForm.elements["kraj"].value = "VSECHNY_KRAJE";
+        obnovSeznamSoudu();
+        obnovSeznamJednacichSini();
+        ukazAgendyNc();
+    }
+    
+    function povolSeznamSoudu()
+    {
+      if (document.searchJednaniForm.elements["typSoudu"].value == "ns") {
+        document.searchJednaniForm.elements["krajOrg"].disabled = true;
+        document.searchJednaniForm.elements["krajOrg"].value = "VSECHNY_KRAJE";
+        document.searchJednaniForm.elements["org"].value = "";
+        document.searchJednaniForm.elements["org"].disabled = true;
+
+        //document.getElementById("razitko").style.display = "";
+      } else {
+        document.searchJednaniForm.elements["krajOrg"].disabled = false;
+        document.searchJednaniForm.elements["org"].disabled = false;
+
+        //document.getElementById("razitko").style.display = "none";
+      }
+    }
+    
+-->
+</script>
+
+
+<form name="searchJednaniForm" method="GET" action="/InfoSoud/public/searchJednani.do;jsessionid=73e12d216807a7af547dee05b7b6" accept-charset="utf-8" enctype="application/x-www-form-urlencoded">
+  <input type="submit" value="Im a robot" name="robot" style="display: none;"/>
+  <input type="hidden" name="type" value="" />
+
+  <table border="0" cellpadding="6pt" cellspacing="6pt" width="100%">
+    <tr>
+      <td class="body-banner" height="91px" valign="bottom">
+           <span class="body-banner-data">Informace o jednání</span>
+      </td>
+    </tr>
+    <tr>
+      <td height="1px"><img src="../common/images/transparent_pixel.gif" border="0"/></td>
+    </tr>
+    
+    <tr>
+      <td class="body-chybovy-text"/>
+        Nelze vyhledávat jednání, která již proběhla.
+      </td>
+    </tr>
+
+    <tr>
+      <td valign="top">
+        <table border="0" cellpadding="0pt" cellspacing="0pt" width="100%" >
+          <col width="145px"/>
+          <col/>
+          <tr>
+            <td colspan="2" style="padding-bottom: 6pt;"><span class="body-vyrazny-text">Výběr soudu</span></td>
+          </tr>
+          <!-- tr>
+            <td class="body-vyrazny-text" valing="middle">Typ soudu</td>
+            <td style="padding-bottom: 2pt;" >
+              <select name="typSoudu" size="1" onchange="povolSeznamSoudu();obnovSeznamJednacichSini();" id="typSoudu" class="body-text"><option value="os" selected="selected">Okresní soud</option>
+                <option value="ns">Nejvyšší soud</option></select>
+            </td>
+          </tr -->
+          <input type="hidden" name="typSoudu" value="os" id="typSoudu">
+          
+          <tr>
+              
+            <td class="body-vyrazny-text" valing="middle">Krajský/Vrchní soud</td>
+            <td style="padding-bottom: 2pt;" >
+              <select name="krajOrg" size="1" onchange="obnovSeznamSoudu(); ukazAgendyNc(); " id="kraj" class="body-text"><option value="VSECHNY_KRAJE">-- Celá ČR --</option>
+
+                 
+                  <option value="KSJIMBM">Krajský soud Brno</option>
+                 
+                  <option value="KSVYCHK">Krajský soud Hradec Králové</option>
+                 
+                  <option value="KSSEMOS">Krajský soud Ostrava</option>
+                 
+                  <option value="KSZPCPM">Krajský soud Plzeň</option>
+                 
+                  <option value="KSSTCAB">Krajský soud Praha</option>
+                 
+                  <option value="KSSCEUL">Krajský soud Ústí nad Labem</option>
+                 
+                  <option value="KSJICCB">Krajský soud České Budějovice</option>
+                 
+                  <option value="MSPHAAB" selected="selected">Městský soud Praha</option>
+                 
+                  <option value="VSSEMOL">Vrchní soud Olomouc</option>
+                 
+                  <option value="VSPHAAB">Vrchní soud Praha</option></select>
+            </td>
+          </tr>
+          <tr>
+            <td class="body-vyrazny-text" valing="middle">Okresní soud</td>
+            <td>
+                            
+              <select name="org" size="1" onchange="obnovSeznamJednacichSini(); ukazAgendyNc(); " id="soudy" class="body-text"><option value="" selected="selected"></option>
+                 
+                  <option value="OSPHA01">Obvodní soud Praha 1</option>
+                 
+                  <option value="OSPHA10">Obvodní soud Praha 10</option>
+                 
+                  <option value="OSPHA02">Obvodní soud Praha 2</option>
+                 
+                  <option value="OSPHA03">Obvodní soud Praha 3</option>
+                 
+                  <option value="OSPHA04">Obvodní soud Praha 4</option>
+                 
+                  <option value="OSPHA05">Obvodní soud Praha 5</option>
+                 
+                  <option value="OSPHA06">Obvodní soud Praha 6</option>
+                 
+                  <option value="OSPHA07">Obvodní soud Praha 7</option>
+                 
+                  <option value="OSPHA08">Obvodní soud Praha 8</option>
+                 
+                  <option value="OSPHA09">Obvodní soud Praha 9</option></select>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2" height="6pt"><img src="../common/images/transparent_pixel.gif" height="1px" border="0"/></td>
+          </tr>
+          <tr>
+            <td colspan="2" bgcolor="#2c2c2c" height="1px"><img src="../common/images/transparent_pixel.gif" height="1px" border="0"/></td>
+          </tr>
+          <tr>
+            <td colspan="2" height="6pt"><img src="../common/images/transparent_pixel.gif" height="1px" border="0"/></td>
+          </tr>
+          <tr>
+            <td class="body-vyrazny-text" valing="middle">Spisová značka</td>
+            <td class="body-text" valign="middle">
+              <table border="0" cellpadding="0pt" cellspacing="0pt" width="100%" >
+                <tr>
+                  <td width="100%">
+                      <input type="text" name="cisloSenatu" size="3" value="" onkeyup="changefocus(event.keyCode|event.charCode,'druhVec');" class="text">&nbsp;<input type="text" name="druhVec" size="3" value="" onkeyup="changefocus(event.keyCode|event.charCode,'bcVec'); ukazAgendyNc();" class="text">&nbsp;<input type="text" name="bcVec" size="3" value="" onkeyup="changefocus(event.keyCode|event.charCode,'rocnik');" class="text">&nbsp;/&nbsp;<input type="text" name="rocnik" size="3" value="" onkeyup="submitForm(event.keyCode|event.charCode,'spzn');" class="text">&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:document.searchJednaniForm.type.value='spzn'; document.searchJednaniForm.submit();" name="go" style="undecore"><img class="undecore" name="go1" style="vertical-align: middle" height="14" title="vyhledej" src="../common/images/go.gif"/></a> 
+                  </td>    
+                </tr>
+              </table>    
+            </td>
+          </tr>
+          <tr>
+             <td colspan="2">
+                <div id="agendaNcDiv" style="display:none; ">           
+                    <table border="0" width="100%" cellpadding="0pt" cellspacing="0pt">
+                        <col width="130px"/>
+                        <col/>
+                        <tr>
+                            <td class="body-vyrazny-text" valing="middle">Agenda</td>
+                            <td>
+                                <select name="agendaNc" size="1" class="body-text"><option value="CIVIL">Civilní agenda</option>
+                                    <option value="OBCHOD">Obchodní agenda</option>
+                                    <option value="SPRAVA">Správní agenda</option></select>
+                            </td>
+                        </tr>
+                    </table>    
+                </div>
+            </td>
+            
+          </tr>
+          
+          <tr>
+            <td colspan="2" height="6pt"><img src="../common/images/transparent_pixel.gif" height="1px" border="0"/></td>
+          </tr>
+          <tr>
+            <td colspan="2" bgcolor="#2c2c2c" height="1px"><img src="../common/images/transparent_pixel.gif" height="1px" border="0"/></td>
+          </tr>
+          <tr>
+            <td colspan="2" height="6pt"><img src="../common/images/transparent_pixel.gif" height="1px" border="0"/></td>
+          </tr>
+          <tr>
+            <td class="body-vyrazny-text" valing="middle" >Jednací síň</td>
+            <td class="body-text" valign="middle" style="padding-bottom: 2pt;">
+                <select name="sin" size="1" onkeyup="changefocus(event.keyCode|event.charCode,'datum');" id="sin" class="body-text"><option value=""></option>
+                 
+                    <option value=" 155 Slezská 1. patro">155 Slezská 1. patro</option>
+                 
+                    <option value="A001 přízemí, vchod z Karlova nám.">A001 přízemí, vchod z Karlova nám.</option>
+                 
+                    <option value="A002 přízemí, vchod z Karlova nám.">A002 přízemí, vchod z Karlova nám.</option>
+                 
+                    <option value="A003 přízemí, vchod z Karlova nám." selected="selected">A003 přízemí, vchod z Karlova nám.</option>
+                 
+                    <option value="mimo jednací síň">mimo jednací síň</option>
+                 
+                    <option value="055 Slezská přízemí">055 Slezská přízemí</option>
+                 
+                    <option value="056 Slezská přízemí">056 Slezská přízemí</option>
+                 
+                    <option value="057 Slezská přízemí">057 Slezská přízemí</option>
+                 
+                    <option value="058 Slezská přízemí">058 Slezská přízemí</option>
+                 
+                    <option value="059 Slezská přízemí">059 Slezská přízemí</option>
+                 
+                    <option value="061 Slezská přízemí">061 Slezská přízemí</option>
+                 
+                    <option value="101 1. patro, Spálená ul.">101 1. patro, Spálená ul.</option>
+                 
+                    <option value="102 Slezská 1. patro">102 Slezská 1. patro</option>
+                 
+                    <option value="107 1. patro, Spálená ul.">107 1. patro, Spálená ul.</option>
+                 
+                    <option value="108 1. patro, Spálená ul.">108 1. patro, Spálená ul.</option>
+                 
+                    <option value="109 1. patro, Spálená ul.">109 1. patro, Spálená ul.</option>
+                 
+                    <option value="114 1. patro, Spálená ul.">114 1. patro, Spálená ul.</option>
+                 
+                    <option value="115 1. patro, Spálená ul.">115 1. patro, Spálená ul.</option>
+                 
+                    <option value="117 1. patro, Spálená ul.">117 1. patro, Spálená ul.</option>
+                 
+                    <option value="119 1. patro, Spálená ul.">119 1. patro, Spálená ul.</option>
+                 
+                    <option value="121 1. patro, Spálená ul.">121 1. patro, Spálená ul.</option>
+                 
+                    <option value="122 1. patro, Spálená ul.">122 1. patro, Spálená ul.</option>
+                 
+                    <option value="124 1. patro, Spálená ul.">124 1. patro, Spálená ul.</option>
+                 
+                    <option value="143 Slezská 1. patro">143 Slezská 1. patro</option>
+                 
+                    <option value="150 Slezská 1. patro">150 Slezská 1. patro</option>
+                 
+                    <option value="151 Slezská 1. patro">151 Slezská 1. patro</option>
+                 
+                    <option value="152 Slezská 1. patro">152 Slezská 1. patro</option>
+                 
+                    <option value="22 Spálená ul. - přízemí">22 Spálená ul. - přízemí</option>
+                 
+                    <option value="228 2. patro, Spálená ul.">228 2. patro, Spálená ul.</option>
+                 
+                    <option value="230 2. patro, Spálená ul.">230 2. patro, Spálená ul.</option>
+                 
+                    <option value="231 2. patro, Spálená ul.">231 2. patro, Spálená ul.</option>
+                 
+                    <option value="232 2. patro, Spálená ul.">232 2. patro, Spálená ul.</option>
+                 
+                    <option value="247 1.patro, Hybernská ul.">247 1.patro, Hybernská ul.</option>
+                 
+                    <option value="254 Slezská 2. patro">254 Slezská 2. patro</option>
+                 
+                    <option value="256 1.patro, Hybernská ul.">256 1.patro, Hybernská ul.</option>
+                 
+                    <option value="257 1.patro, Hybernská ul.">257 1.patro, Hybernská ul.</option>
+                 
+                    <option value="258 1.patro, Hybernská ul.">258 1.patro, Hybernská ul.</option>
+                 
+                    <option value="260 1.patro, Hybernská ul.">260 1.patro, Hybernská ul.</option>
+                 
+                    <option value="261 Slezská 2. patro">261 Slezská 2. patro</option>
+                 
+                    <option value="262 Slezská 2. patro">262 Slezská 2. patro</option>
+                 
+                    <option value="263 Slezská 2. patro">263 Slezská 2. patro</option>
+                 
+                    <option value="264 Slezská 2. patro">264 Slezská 2. patro</option>
+                 
+                    <option value="265 Slezská 2. patro">265 Slezská 2. patro</option>
+                 
+                    <option value="267 Slezská 2. patro">267 Slezská 2. patro</option>
+                 
+                    <option value="301 3. patro, Spálená ul.">301 3. patro, Spálená ul.</option>
+                 
+                    <option value="302 3. patro, Spálená ul.">302 3. patro, Spálená ul.</option>
+                 
+                    <option value="325 3. patro, Spálená ul.">325 3. patro, Spálená ul.</option>
+                 
+                    <option value="327 3. patro, Spálená ul.">327 3. patro, Spálená ul.</option>
+                 
+                    <option value="328 3. patro, Spálená ul.">328 3. patro, Spálená ul.</option>
+                 
+                    <option value="329 3. patro, Spálená ul.">329 3. patro, Spálená ul.</option>
+                 
+                    <option value="330 3. patro, Spálená ul.">330 3. patro, Spálená ul.</option>
+                 
+                    <option value="331 3. patro, Spálená ul.">331 3. patro, Spálená ul.</option>
+                 
+                    <option value="333 3. patro, Spálená ul.">333 3. patro, Spálená ul.</option>
+                 
+                    <option value="353 Slezská 3. patro">353 Slezská 3. patro</option>
+                 
+                    <option value="360 Slezská 3. patro">360 Slezská 3. patro</option>
+                 
+                    <option value="361 Slezská 3. patro">361 Slezská 3. patro</option>
+                 
+                    <option value="362 Slezská 3. patro">362 Slezská 3. patro</option>
+                 
+                    <option value="363 Slezská 3. patro">363 Slezská 3. patro</option>
+                 
+                    <option value="364 Slezská 3. patro">364 Slezská 3. patro</option>
+                 
+                    <option value="366 Slezská 3. patro">366 Slezská 3. patro</option>
+                 
+                    <option value="453 Slezská 4. patro">453 Slezská 4. patro</option>
+                 
+                    <option value="466 Slezská 4. patro">466 Slezská 4. patro</option></select>
+            </td>
+          </tr>
+          <tr>  
+            <td class="body-vyrazny-text" valing="middle">Datum jednání</td>
+            <td>
+              <table border="0" cellpadding="0pt" cellspacing="0pt" width="100%" >
+                <tr>
+                  <td width="100%">
+                    <input type="text" name="datum" size="10" value="1.12.2015" onkeyup="submitForm(event.keyCode|event.charCode,'jednani');" class="text">&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:document.searchJednaniForm.type.value='jednani'; document.searchJednaniForm.submit();" style="undecore"><img class="undecore" style="vertical-align: middle" height="14" title="vyhledej" src="../common/images/go.gif"/></a> 
+                  </td>    
+                  <td width="0%" nowrap="nowrap">
+                    <a href="javascript:clearForm();">Vyčistit formulář</a>
+                  </td>
+                </tr>
+              </table>    
+            </td>
+          </tr>
+          <tr id="antispam">
+            <td class="body-vyrazny-text" valing="middle">
+                <label for="spamQuestion">Ochrana proti spamu. Kolik je 15 + 8?</label>
+            </td>
+            <td>    
+                <input id="spamQuestion" type="text" value="" name="spamQuestion"/>
+                <script type="text/javascript">
+                    <!--
+                    document.getElementById("spamQuestion").value=(Math.round(23.7544614)-1);
+                    document.getElementById("antispam").style.display = "none";
+                    -->
+                </script>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" class="body-text">
+        Vyplňte údaje nutné pro vyhledání <b>jednání v jednací síni</b>, které chcete zobrazit. Vyberte soud ze seznamu <b>Okresních soudů</b>. Seznam obsahuje všechny okresní soudy v České republice. Pokud nejprve vyberete kraj v seznamu <b>Krajských soudů</b>, bude seznam okresních soudů omezen pouze na organizace příslušné k tomuto kraji. Pokud chcete nalézt jednání krajského nebo vrchního soudu, vyberte soud v seznamu Krajský/Vrchní soud a již nevyplňujte nic v seznamu Okresních soudů.
+        <br/>
+        <br/>
+        Dále jsou dvě možnosti:
+        <br/>       
+        <br/>
+        1. <b>Výběr podle spisové značky:</b>
+        Vyplňte spisovou značku řízení. Spisovou značku najdete na všech dokumentech, které jste od soudu obdrželi v souvislosti s řízením. Má čtyři části: číslo senátu (vždy číselný údaj), druh věci (např. "T", "C", "P a Nc", "D", "E", ... ), běžné číslo (číselný údaj) a za lomítkem ročník (číselný údaj). Jednotlivé části spisové značky mohou, ale nemusí, být odděleny mezerami. Zápis 2T213/2008 znamená totéž co 2 T 213 / 2008. Do polí pro spisovou značku postupně vepište číslo senátu 2, druh věci T, běžné číslo 213 a ročník 2008.
+        <br/>       
+        <br/>
+        Tlačítkem <img style="vertical-align: bottom;"src="../common/images/go.gif" border="0" height="14" width="14"> zobrazíte jednání pro daný soud a spisovou značku.
+        <br/>       
+        <br/>
+        2. <b>Výběr podle jednací síně a dne:</b>
+        Vyberte ze seznamu Jednací síň. V seznamu jsou jednací síně pouze vybraného soudu. V předvolání, které jste obdrželi od soudu, je zpravidla označení síně uvedeno společně s datem a časem jednání. V posledním poli je nutné zadat den, pro který chcete zobrazit jednání v jednací síni. Datum se zapisuje ve tvaru DD.MM.RRRR např. 15.09.2008.
+        <br/>       
+        <br/>
+        Tlačítkem <img style="vertical-align: bottom;"src="../common/images/go.gif" border="0" height="14" width="14"> zobrazíte jednání pro daný soud, jednací síň a datum.  
+        
+      </td>
+    </tr>
+    <tr>
+     <td class="data">
+       <b>V InfoJednání se zobrazují nařízená jednání pouze na následujících 30 dnů.</b>
+     </td>
+    </tr>
+    <tr>
+     <td class="data">
+       <a href="/InfoSoud/public/help.jsp;jsessionid=73e12d216807a7af547dee05b7b6#list" target="_blank">Nápověda</a>
+     </td>
+    </tr>
+
+
+  </table>
+  
+  
+  <input type="hidden" name="backPage" value="../public/searchJednani.jsp">
+
+
+
+  
+
+</form> 
+
+
+<script type="text/javascript">
+<!--
+povolSeznamSoudu();
+ukazAgendyNc();
+
+-->
+</script>
+
+
+              </td>
+            </tr>
+<!-- body cell data - end -->
+            <tr>
+               <td height="130px"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+    </table>
+  </body>
+</html>
+
+

@@ -23,8 +23,7 @@
 from django.db.models import Max
 from bs4 import BeautifulSoup
 from datetime import datetime
-from time import sleep
-from common.utils import normalize, get, post
+from common.utils import normalize, get, post, sleep
 from dir.cron import dir_check
 from .glob import COURTS, l2n, l2r, l2s, SELIST, BELIST
 from .models import (
