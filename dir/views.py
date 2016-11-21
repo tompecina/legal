@@ -115,8 +115,9 @@ def debtordel(request, id=0):
             {'app': APP,
              'page_title': 'Smazání dlužníka'})
     else:
+        debtor = get_object_or_404(Debtor, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
-            get_object_or_404(Debtor, pk=id, uid=uid).delete()
+            debtor.delete()
             return redirect('dir:debtordeleted')
         return redirect('dir:mainpage')
 

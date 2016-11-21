@@ -1,0 +1,72 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$NgPs7J5tOUtD$5kUebN1O9+krlAxuIa6mNq3QYspsREzBekzQcf1IhBY=",
+        "last_login": "2016-07-07T15:42:24.712",
+        "is_superuser": true,
+        "username": "tompecina",
+        "first_name": "Tom\u00e1\u0161",
+        "last_name": "Pecina",
+        "email": "tomas@pecina.cz",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2012-04-07T03:02:21",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "sir.insolvency",
+    "pk": 1,
+    "fields": {
+        "uid": 1,
+        "number": 47,
+        "year": 2015,
+        "desc": "Test 47/2015",
+        "detailed": true,
+        "timestamp_add": "2016-10-25T21:25:45.907",
+        "timestamp_update": "2016-10-25T21:25:45.907"
+    }
+},
+{
+    "model": "sir.insolvency",
+    "pk": 2,
+    "fields": {
+        "uid": 1,
+        "number": 577,
+        "year": 2013,
+        "desc": "Test 577/2013",
+        "detailed": true,
+        "timestamp_add": "2016-10-25T21:26:16.963",
+        "timestamp_update": "2016-10-25T21:26:16.963"
+    }
+},
+{
+    "model": "sir.insolvency",
+    "pk": 3,
+    "fields": {
+        "uid": 1,
+        "number": 19124,
+        "year": 2016,
+        "desc": "Test 19124/2016",
+        "detailed": false,
+        "timestamp_add": "2016-10-25T21:30:27.352",
+        "timestamp_update": "2016-10-25T21:30:27.352"
+    }
+},
+{
+    "model": "sir.insolvency",
+    "pk": 4,
+    "fields": {
+        "uid": 1,
+        "number": 19125,
+        "year": 2016,
+        "desc": "Test 19125/2016",
+        "detailed": true,
+        "timestamp_add": "2016-10-25T21:30:27.352",
+        "timestamp_update": "2016-10-25T21:30:27.352"
+    }
+}
+]

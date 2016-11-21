@@ -20,7 +20,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.db.models import Max
 from bs4 import BeautifulSoup
 from datetime import datetime
 from common.utils import normalize, get, post, sleep
@@ -100,7 +99,7 @@ def cron_gettr():
 
 def cron_proctr():
     id = Counter.objects.get(id='DL').number
-    debtor = DruhRoleVRizeni.objects.get(desc='DLUŽNÍK')
+    debtor = DruhRoleVRizeni.objects.get_or_create(desc='DLUŽNÍK')[0]
     for tr in Transaction.objects.filter(error=False).order_by('id'):
         id = tr.id
         try:
@@ -233,41 +232,41 @@ def cron_proctr():
                         druhAdresy = DruhAdresy.objects.get_or_create(
                             desc=t_adresa.druhadresy.string.strip())[0]
                         if t_adresa.mesto:
-                            mesto = normalize(t_osoba.mesto.string)
+                            mesto = normalize(t_adresa.mesto.string)
                         else:
                             mesto = None
                         if t_adresa.ulice:
-                            ulice = normalize(t_osoba.ulice.string)
+                            ulice = normalize(t_adresa.ulice.string)
                         else:
                             ulice = None
                         if t_adresa.cislopopisne:
                             cisloPopisne = \
-                                normalize(t_osoba.cislopopisne.string)
+                                normalize(t_adresa.cislopopisne.string)
                         else:
                             cisloPopisne = None
                         if t_adresa.okres:
-                            okres = normalize(t_osoba.okres.string)
+                            okres = normalize(t_adresa.okres.string)
                         else:
                             okres = None
                         if t_adresa.zeme:
-                            zeme = normalize(t_osoba.zeme.string)
+                            zeme = normalize(t_adresa.zeme.string)
                         else:
                             zeme = None
                         if t_adresa.psc:
-                            psc = t_osoba.psc.string \
+                            psc = t_adresa.psc.string \
                                 .replace(' ', '').replace('/', '')[:5]
                         else:
                             psc = None
                         if t_adresa.telefon:
-                            telefon = normalize(t_osoba.telefon.string)
+                            telefon = normalize(t_adresa.telefon.string)
                         else:
                             telefon = None
                         if t_adresa.fax:
-                            fax = normalize(t_osoba.fax.string)
+                            fax = normalize(t_adresa.fax.string)
                         else:
                             fax = None
                         if t_adresa.textadresy:
-                            textAdresy = normalize(t_osoba.textadresy.string)
+                            textAdresy = normalize(t_adresa.textadresy.string)
                         else:
                             textAdresy = None
 

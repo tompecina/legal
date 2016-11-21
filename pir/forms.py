@@ -46,7 +46,7 @@ class MainForm(forms.Form):
         required=False)
     year = fields.IntegerField(
         widget=widgets.saw(),
-        min_value=1990,
+        min_value=2008,
         initial='',
         required=False)
     date_first_from = fields.DateField(

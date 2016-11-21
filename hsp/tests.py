@@ -163,18 +163,43 @@ class TestForms(SimpleTestCase):
              'date_to': '2.1.2000'})
         self.assertTrue(f.is_valid())
 
-class TestViews(TestCase):
+class TestViews1(SimpleTestCase):
+
+    def test_n2l(self):
+        self.assertEqual(views.n2l(0), 'A')
+        self.assertEqual(views.n2l(1), 'B')
+        self.assertEqual(views.n2l(25), 'Z')
+        self.assertEqual(views.n2l(26), '?')
+
+    def test_xml(self):
+        i = 1
+        while True:
+            try:
+                with open(BASE_DIR + '/hsp/testdata/debt%d.xml' % i,
+                          'rb') as fi:
+                    d = fi.read()
+            except:
+                self.assertGreater(i, 1)
+                break
+            c = views.fromxml(d)
+            self.assertIsNone(c[1])
+            self.assertIs(type(c[0]), views.Debt)
+            e = views.toxml(c[0])
+            self.assertXMLEqual(stripxml(d), stripxml(e), msg=str(i))
+            i += 1
+
+class TestViews2(TestCase):
     fixtures = ['hsp_test.json']
     
     @classmethod
     def setUpClass(cls):
-        super(TestViews, cls).setUpClass()
+        super(TestViews2, cls).setUpClass()
         User.objects.create_user('user', 'user@pecina.cz', 'none')
         
     @classmethod
     def tearDownClass(cls):
         User.objects.all().delete()
-        super(TestViews, cls).tearDownClass()
+        super(TestViews2, cls).tearDownClass()
         
     def test_main(self):
         res = self.client.get('/hsp')
@@ -967,12 +992,6 @@ class TestViews(TestCase):
         self.assertTrue(views.setdebt(req, c))
         self.assertEqual(views.getdebt(req).title, TEST_STRING)
 
-    def test_n2l(self):
-        self.assertEqual(views.n2l(0), 'A')
-        self.assertEqual(views.n2l(1), 'B')
-        self.assertEqual(views.n2l(25), 'Z')
-        self.assertEqual(views.n2l(26), '?')
-
     def test_calcint(self):
         pp = [
             [date(2015, 1, 1),
@@ -1405,23 +1424,6 @@ class TestViews(TestCase):
                 self.assertIs(type(debt), views.Debt)
                 res = views.calc(debt)
                 self.assertTrue(res.msg)
-            i += 1
-
-    def test_xml(self):
-        i = 1
-        while True:
-            try:
-                with open(BASE_DIR + '/hsp/testdata/debt%d.xml' % i,
-                          'rb') as fi:
-                    d = fi.read()
-            except:
-                self.assertGreater(i, 1)
-                break
-            c = views.fromxml(d)
-            self.assertIsNone(c[1])
-            self.assertIs(type(c[0]), views.Debt)
-            e = views.toxml(c[0])
-            self.assertXMLEqual(stripxml(d), stripxml(e), msg=str(i))
             i += 1
 
     def test_calculation(self):

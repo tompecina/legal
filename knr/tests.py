@@ -169,43 +169,8 @@ class TestUtils(TestCase):
     def test_getVAT(self):
         self.assertAlmostEqual(utils.getVAT(), 25)
     
-class TestViews(TestCase):
-    fixtures = ['knr_test.json']
+class TestViews1(SimpleTestCase):
     
-    @classmethod
-    def setUpClass(cls):
-        super(TestViews, cls).setUpClass()
-        User.objects.create_user('user', 'user@pecina.cz', 'none')
-        User.objects.create_superuser('superuser', 'suser@pecina.cz', 'none')
-        User.objects.create_user('anotheruser', 'auser@pecina.cz', 'none')
-        uid = User.objects.get(username='user').pk
-        models.Place.objects.exclude(uid=None).update(uid=uid)
-        models.Car.objects.all().update(uid=uid)
-        models.Formula.objects.exclude(uid=None).update(uid=uid)
-        
-    @classmethod
-    def tearDownClass(cls):
-        User.objects.all().delete()
-        super(TestViews, cls).tearDownClass()
-
-    def test_findloc(self):
-        r = views.findloc('Melantrichova 504/5, Praha 1')
-        self.assertEqual(
-            r[0],
-            'Melantrichova 504/5, 110 00 Praha 1-Staré Město, Česká republika')
-        self.assertAlmostEqual(r[1], 51.0852574)
-        self.assertAlmostEqual(r[2], 13.4211651)
-        self.assertFalse(views.findloc(''))
-        self.assertFalse(views.findloc('XXX'))
-        self.assertFalse(views.findloc('Melantrichova 504/6, Praha 1'))
-        
-    def test_finddist(self):
-        r = views.finddist(50, 15, 51, 16)
-        self.assertEqual(r, (182046, 20265))
-        self.assertEqual(views.finddist(50, 15, 51, 17), (False, False))
-        self.assertEqual(views.finddist(50, 15, 51, 18), (False, False))
-        self.assertEqual(views.finddist(50, 15, 51, 19), (False, False))
-        
     def test_convi(self):
         self.assertEqual(views.convi(0), '0')
         self.assertEqual(views.convi(1), '1')
@@ -243,6 +208,174 @@ class TestViews(TestCase):
         self.assertEqual(views.convf(-5458.7101589, 6), '-5458,710159')
         self.assertEqual(views.convf(-5458.7101589, 7), '-5458,7101589')
 
+    def dcomp(self, f, d1, d2):
+        for n in f:
+            if views.gd[n][0] == 'F':
+                self.assertAlmostEqual(d1[n], d2[n])
+            else:
+                self.assertEqual(d1[n], d2[n])
+
+    def test_conv(self):
+        d = {'title': TEST_STRING,
+             'calculation_note': 'cn',
+             'internal_note': 'in',
+             'vat_rate': 26.50,
+             'type': 'Typ',
+             'description': 'Popis',
+             'amount': 50,
+             'vat': True,
+             'item_note': 'itn',
+             'major_number': 5,
+             'rate': 450,
+             'minor_number': 4,
+             'multiple_number': 2,
+             'multiple_flag': True,
+             'multiple50_flag': True,
+             'single_flag': True,
+             'halved_flag': True,
+             'halved_appeal_flag': True,
+             'collection_flag': True,
+             'off10_flag': True,
+             'off30_flag': True,
+             'off30limit5000_flag': True,
+             'basis': 6500,
+             'number': 16,
+             'from_name': 'Z jméno',
+             'from_address': 'Z adresa',
+             'from_lat': 50.1234567,
+             'from_lon': 15.1234567,
+             'to_name': 'Do jméno',
+             'to_address': 'Do adresa',
+             'to_lat': 51.1234567,
+             'to_lon': 16.1234567,
+             'trip_number': 2,
+             'trip_distance': 45,
+             'time_rate': 250,
+             'time_number': 8,
+             'car_name': 'Vozidlo',
+             'fuel_name': 'NM',
+             'cons1': 5.1,
+             'cons2': 6.1,
+             'cons3': 7.1,
+             'formula_name': 'Předpis',
+             'flat_rate': 4.12,
+             'fuel_price': 14.12}
+        f = d.keys()
+        o = T()
+        views.d2i(f, d, o)
+        e = {}
+        views.i2d(f, o, e)
+        self.dcomp(f, d, e)
+        g = {n: str(d[n]) for n in f}
+        o = T()
+        views.d2i(g, d, o)
+        h = {}
+        views.i2d(f, o, h)
+        self.dcomp(f, d, h)
+        k = {}
+        views.d2d(f, d, k)
+        self.dcomp(f, d, k)
+        s = '<?xml version="1.0" encoding="utf-8"?><calculation>'
+        for n in f:
+            if views.gd[n] == views.B:
+                x = xmlbool(d[n])
+            else:
+                x = str(d[n])
+            s += '<' + n + '>' + x + '</' + n + '>'
+        s += '</calculation>'
+        o = T()
+        views.s2i(f, BeautifulSoup(s, 'xml'), o)
+        l = {}
+        views.d2d(f, d, l)
+        self.dcomp(f, d, l)
+
+    def test_d2d(self):
+        v = {}
+        views.d2d(['amount'], {'amount': 'XXX'}, v)
+        self.assertEqual(v, {'amount': 'XXX'})
+        v = {}
+        views.d2d(['vat_rate'], {'vat_rate': 'XXX'}, v)
+        self.assertEqual(v, {'vat_rate': 'XXX'})
+        
+    def test_s2i(self):
+        s = newXML('<?xml version="1.0" encoding="utf-8"?>\n' \
+                   '<vat_rate>22.0</vat_rate>\n')
+        c = views.Calculation()
+        views.s2i(['vat_rate'], s, c)
+        self.assertAlmostEqual(c.vat_rate, 22)
+        s = newXML('<?xml version="1.0" encoding="utf-8"?>\n' \
+                   '<vat_rate>XXX</vat_rate>\n')
+        c = views.Calculation()
+        o = c.vat_rate
+        views.s2i(['vat_rate'], s, c)
+        self.assertAlmostEqual(c.vat_rate, o)
+
+    def test_xml(self):
+        i = 1
+        while True:
+            try:
+                with open(BASE_DIR + '/knr/testdata/calc%d.xml' % i, 'rb') \
+                     as fi:
+                    d = fi.read()
+            except:
+                self.assertGreater(i, 1)
+                break
+            c = views.fromxml(d)
+            self.assertIsNone(c[1])
+            self.assertIs(type(c[0]), views.Calculation)
+            e = views.toxml(c[0])
+            self.assertXMLEqual(stripxml(d), stripxml(e))
+            i += 1
+        i = 1
+        while True:
+            try:
+                with open(BASE_DIR + '/knr/testdata/err_calc%d.xml' % i,
+                          'rb') as fi:
+                    d = fi.read()
+            except:
+                self.assertGreater(i, 1)
+                break
+            c, m = views.fromxml(d)
+            self.assertTrue(m)
+            i += 1
+
+class TestViews2(TestCase):
+    fixtures = ['knr_test.json']
+    
+    @classmethod
+    def setUpClass(cls):
+        super(TestViews2, cls).setUpClass()
+        User.objects.create_user('user', 'user@pecina.cz', 'none')
+        User.objects.create_superuser('superuser', 'suser@pecina.cz', 'none')
+        User.objects.create_user('anotheruser', 'auser@pecina.cz', 'none')
+        uid = User.objects.get(username='user').pk
+        models.Place.objects.exclude(uid=None).update(uid=uid)
+        models.Car.objects.all().update(uid=uid)
+        models.Formula.objects.exclude(uid=None).update(uid=uid)
+        
+    @classmethod
+    def tearDownClass(cls):
+        User.objects.all().delete()
+        super(TestViews2, cls).tearDownClass()
+
+    def test_findloc(self):
+        r = views.findloc('Melantrichova 504/5, Praha 1')
+        self.assertEqual(
+            r[0],
+            'Melantrichova 504/5, 110 00 Praha 1-Staré Město, Česká republika')
+        self.assertAlmostEqual(r[1], 51.0852574)
+        self.assertAlmostEqual(r[2], 13.4211651)
+        self.assertFalse(views.findloc(''))
+        self.assertFalse(views.findloc('XXX'))
+        self.assertFalse(views.findloc('Melantrichova 504/6, Praha 1'))
+        
+    def test_finddist(self):
+        r = views.finddist(50, 15, 51, 16)
+        self.assertEqual(r, (182046, 20265))
+        self.assertEqual(views.finddist(50, 15, 51, 17), (False, False))
+        self.assertEqual(views.finddist(50, 15, 51, 18), (False, False))
+        self.assertEqual(views.finddist(50, 15, 51, 19), (False, False))
+        
     def test_main(self):
         res = self.client.get('/knr')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -1633,143 +1766,12 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_mainpage.html')
         
-    def dcomp(self, f, d1, d2):
-        for n in f:
-            if views.gd[n][0] == 'F':
-                self.assertAlmostEqual(d1[n], d2[n])
-            else:
-                self.assertEqual(d1[n], d2[n])
-
-    def test_conv(self):
-        d = {'title': TEST_STRING,
-             'calculation_note': 'cn',
-             'internal_note': 'in',
-             'vat_rate': 26.50,
-             'type': 'Typ',
-             'description': 'Popis',
-             'amount': 50,
-             'vat': True,
-             'item_note': 'itn',
-             'major_number': 5,
-             'rate': 450,
-             'minor_number': 4,
-             'multiple_number': 2,
-             'multiple_flag': True,
-             'multiple50_flag': True,
-             'single_flag': True,
-             'halved_flag': True,
-             'halved_appeal_flag': True,
-             'collection_flag': True,
-             'off10_flag': True,
-             'off30_flag': True,
-             'off30limit5000_flag': True,
-             'basis': 6500,
-             'number': 16,
-             'from_name': 'Z jméno',
-             'from_address': 'Z adresa',
-             'from_lat': 50.1234567,
-             'from_lon': 15.1234567,
-             'to_name': 'Do jméno',
-             'to_address': 'Do adresa',
-             'to_lat': 51.1234567,
-             'to_lon': 16.1234567,
-             'trip_number': 2,
-             'trip_distance': 45,
-             'time_rate': 250,
-             'time_number': 8,
-             'car_name': 'Vozidlo',
-             'fuel_name': 'NM',
-             'cons1': 5.1,
-             'cons2': 6.1,
-             'cons3': 7.1,
-             'formula_name': 'Předpis',
-             'flat_rate': 4.12,
-             'fuel_price': 14.12}
-        f = d.keys()
-        o = T()
-        views.d2i(f, d, o)
-        e = {}
-        views.i2d(f, o, e)
-        self.dcomp(f, d, e)
-        g = {n: str(d[n]) for n in f}
-        o = T()
-        views.d2i(g, d, o)
-        h = {}
-        views.i2d(f, o, h)
-        self.dcomp(f, d, h)
-        k = {}
-        views.d2d(f, d, k)
-        self.dcomp(f, d, k)
-        s = '<?xml version="1.0" encoding="utf-8"?><calculation>'
-        for n in f:
-            if views.gd[n] == views.B:
-                x = xmlbool(d[n])
-            else:
-                x = str(d[n])
-            s += '<' + n + '>' + x + '</' + n + '>'
-        s += '</calculation>'
-        o = T()
-        views.s2i(f, BeautifulSoup(s, 'xml'), o)
-        l = {}
-        views.d2d(f, d, l)
-        self.dcomp(f, d, l)
-
-    def test_d2d(self):
-        v = {}
-        views.d2d(['amount'], {'amount': 'XXX'}, v)
-        self.assertEqual(v, {'amount': 'XXX'})
-        v = {}
-        views.d2d(['vat_rate'], {'vat_rate': 'XXX'}, v)
-        self.assertEqual(v, {'vat_rate': 'XXX'})
-        
-    def test_s2i(self):
-        s = newXML('<?xml version="1.0" encoding="utf-8"?>\n' \
-                   '<vat_rate>22.0</vat_rate>\n')
-        c = views.Calculation()
-        views.s2i(['vat_rate'], s, c)
-        self.assertAlmostEqual(c.vat_rate, 22)
-        s = newXML('<?xml version="1.0" encoding="utf-8"?>\n' \
-                   '<vat_rate>XXX</vat_rate>\n')
-        c = views.Calculation()
-        o = c.vat_rate
-        views.s2i(['vat_rate'], s, c)
-        self.assertAlmostEqual(c.vat_rate, o)
-
     def test_calc(self):
         req = DummyRequest('test_session')
         c = views.Calculation()
         c.title = TEST_STRING
         self.assertTrue(views.setcalc(req, c))
         self.assertEqual(views.getcalc(req).title, TEST_STRING)
-
-    def test_xml(self):
-        i = 1
-        while True:
-            try:
-                with open(BASE_DIR + '/knr/testdata/calc%d.xml' % i, 'rb') \
-                     as fi:
-                    d = fi.read()
-            except:
-                self.assertGreater(i, 1)
-                break
-            c = views.fromxml(d)
-            self.assertIsNone(c[1])
-            self.assertIs(type(c[0]), views.Calculation)
-            e = views.toxml(c[0])
-            self.assertXMLEqual(stripxml(d), stripxml(e))
-            i += 1
-        i = 1
-        while True:
-            try:
-                with open(BASE_DIR + '/knr/testdata/err_calc%d.xml' % i,
-                          'rb') as fi:
-                    d = fi.read()
-            except:
-                self.assertGreater(i, 1)
-                break
-            c, m = views.fromxml(d)
-            self.assertTrue(m)
-            i += 1
 
     def test_calculation(self):
         self.assertTrue(self.client.login(username='user', password='none'))
@@ -1781,10 +1783,11 @@ class TestViews(TestCase):
         for r in rr:
             with open(BASE_DIR + '/knr/testdata/calc' + r[0] + '.xml', 'rb') \
                  as fi:
-                res = self.client.post('/knr/',
-                                       {'submit_load': 'Načíst kalkulaci',
-                                        'load': fi},
-                                       follow=True)
+                res = self.client.post(
+                    '/knr/',
+                    {'submit_load': 'Načíst kalkulaci',
+                     'load': fi},
+                    follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'knr_mainpage.html')
             soup = BeautifulSoup(res.content, 'html.parser')

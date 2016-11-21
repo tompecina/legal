@@ -161,13 +161,15 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'szr_mainpage.html')
-        res = self.client.post('/szr/',
-                               {'email': 'alt@' + localdomain,
-                                'submit': 'Změnit'},
-                               follow=True)
+        res = self.client.post(
+            '/szr/',
+            {'email': 'alt@' + localdomain,
+             'submit': 'Změnit'},
+            follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(User.objects.get(username='user').email,
-                         'alt@' + localdomain)
+        self.assertEqual(
+            User.objects.get(username='user').email,
+            'alt@' + localdomain)
         res = self.client.get('/szr/')
         try:
             soup = BeautifulSoup(res.content, 'html.parser')

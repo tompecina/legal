@@ -1,0 +1,1289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ns2:getIsirWsPublicDataResponse xmlns:ns2="http://isirpublicws.cca.cz/types/">
+      <data>
+        <id>16130765</id>
+        <datumZalozeniUdalosti>2015-01-05T10:23:08.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-01-05T10:28:19.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=16188211</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>185</typUdalosti>
+        <popisUdalosti>Vyhláška o zahájení insolvenčního řízení</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;idOsoby1&gt;BÁRTOVÁVERO141080  1&lt;/idOsoby1&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16130766</id>
+        <datumZalozeniUdalosti>2015-01-05T10:23:08.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-01-05T10:28:19.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;BÁRTOVÁVERO141080  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;DLUŽNÍK&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;Bártová&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;F&lt;/druhOsoby&gt;&lt;jmeno&gt;Veronika&lt;/jmeno&gt;&lt;rc&gt;806014/3487&lt;/rc&gt;&lt;datumNarozeni&gt;1980-10-14+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16130767</id>
+        <datumZalozeniUdalosti>2015-01-05T10:23:08.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-01-05T10:28:19.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>2</typUdalosti>
+        <popisUdalosti>Změna adresy osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;BÁRTOVÁVERO141080  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;DLUŽNÍK&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;Bártová&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;F&lt;/druhOsoby&gt;&lt;jmeno&gt;Veronika&lt;/jmeno&gt;&lt;rc&gt;806014/3487&lt;/rc&gt;&lt;adresa&gt;&lt;druhAdresy&gt;TRVALÁ&lt;/druhAdresy&gt;&lt;datumPobytOd&gt;2015-01-05+01:00&lt;/datumPobytOd&gt;&lt;mesto&gt;Litomyšl&lt;/mesto&gt;&lt;ulice&gt;Šmilovského&lt;/ulice&gt;&lt;cisloPopisne&gt;197&lt;/cisloPopisne&gt;&lt;okres&gt;Svitavy&lt;/okres&gt;&lt;psc&gt;570 01&lt;/psc&gt;&lt;idAdresy&gt;351497&lt;/idAdresy&gt;&lt;/adresa&gt;&lt;datumNarozeni&gt;1980-10-14+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16130768</id>
+        <datumZalozeniUdalosti>2015-01-05T10:23:08.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-01-05T10:28:19.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=16188214</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>6</typUdalosti>
+        <popisUdalosti>Insolvenční návrh spojený s návrhem na povolení oddlužení</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16130769</id>
+        <datumZalozeniUdalosti>2015-01-05T10:23:09.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-01-05T10:28:19.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=16188215</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>23</typUdalosti>
+        <popisUdalosti>Návrh - přílohy</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>2</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16135241</id>
+        <datumZalozeniUdalosti>2015-01-05T13:59:18.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-01-05T13:59:18.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=16192858</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>185</typUdalosti>
+        <popisUdalosti>Vyhláška o zahájení insolvenčního řízení</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16142707</id>
+        <datumZalozeniUdalosti>2015-01-06T03:06:25.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-01-06T03:06:25.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;BÁRTOVÁVERO141080  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;DLUŽNÍK&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;Bártová&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;F&lt;/druhOsoby&gt;&lt;jmeno&gt;Veronika&lt;/jmeno&gt;&lt;rc&gt;806014/3487&lt;/rc&gt;&lt;datumNarozeni&gt;1980-10-14+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16142750</id>
+        <datumZalozeniUdalosti>2015-01-06T03:06:33.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-01-06T03:06:33.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>2</typUdalosti>
+        <popisUdalosti>Změna adresy osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;BÁRTOVÁVERO141080  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;DLUŽNÍK&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;Bártová&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;F&lt;/druhOsoby&gt;&lt;jmeno&gt;Veronika&lt;/jmeno&gt;&lt;rc&gt;806014/3487&lt;/rc&gt;&lt;adresa&gt;&lt;druhAdresy&gt;TRVALÁ&lt;/druhAdresy&gt;&lt;datumPobytOd&gt;2015-01-05+01:00&lt;/datumPobytOd&gt;&lt;mesto&gt;Litomyšl&lt;/mesto&gt;&lt;ulice&gt;Šmilovského&lt;/ulice&gt;&lt;cisloPopisne&gt;197&lt;/cisloPopisne&gt;&lt;okres&gt;Svitavy&lt;/okres&gt;&lt;psc&gt;570 01&lt;/psc&gt;&lt;idAdresy&gt;351497&lt;/idAdresy&gt;&lt;/adresa&gt;&lt;datumNarozeni&gt;1980-10-14+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16444872</id>
+        <datumZalozeniUdalosti>2015-01-23T08:19:03.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-01-23T08:19:03.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=16504069</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>182</typUdalosti>
+        <popisUdalosti>Dotaz</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>4</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16739237</id>
+        <datumZalozeniUdalosti>2015-02-08T23:32:40.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-02-08T23:32:40.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=16192858</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>185</typUdalosti>
+        <popisUdalosti>Vyhláška o zahájení insolvenčního řízení</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-02-08+01:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16798705</id>
+        <datumZalozeniUdalosti>2015-02-11T15:37:43.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-02-11T15:37:43.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=16858955</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>56</typUdalosti>
+        <popisUdalosti>Výpis</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>5</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16798777</id>
+        <datumZalozeniUdalosti>2015-02-11T15:40:15.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-02-11T15:40:15.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=16859028</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>8</typUdalosti>
+        <popisUdalosti>Návrh</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>6</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16798872</id>
+        <datumZalozeniUdalosti>2015-02-11T15:44:32.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-02-11T15:44:32.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=16859115</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>66</typUdalosti>
+        <popisUdalosti>Usnesení</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>7</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>16824257</id>
+        <datumZalozeniUdalosti>2015-02-13T00:30:11.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-02-13T00:30:11.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=16884550</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>66</typUdalosti>
+        <popisUdalosti>Usnesení</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>7</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>17090657</id>
+        <datumZalozeniUdalosti>2015-02-28T21:45:40.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-02-28T21:45:40.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=16192858</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>185</typUdalosti>
+        <popisUdalosti>Vyhláška o zahájení insolvenčního řízení</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-02-28+01:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>17186795</id>
+        <datumZalozeniUdalosti>2015-03-06T00:39:53.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-03-06T00:39:53.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=16884550</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>66</typUdalosti>
+        <popisUdalosti>Usnesení</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>7</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-03-06+01:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>17214072</id>
+        <datumZalozeniUdalosti>2015-03-09T03:02:29.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-03-09T03:02:29.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;BÁRTOVÁVERO141080  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;DLUŽNÍK&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;Bártová&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;F&lt;/druhOsoby&gt;&lt;jmeno&gt;Veronika&lt;/jmeno&gt;&lt;rc&gt;806014/3487&lt;/rc&gt;&lt;datumNarozeni&gt;1980-10-14+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>17798959</id>
+        <datumZalozeniUdalosti>2015-04-03T07:47:48.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-03T07:47:48.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18037851</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>42</typUdalosti>
+        <popisUdalosti>Vyjádření dlužníka</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>8</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>17823580</id>
+        <datumZalozeniUdalosti>2015-04-07T08:55:36.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-07T08:55:36.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18062881</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>367</typUdalosti>
+        <popisUdalosti>Žádost</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>9</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18166251</id>
+        <datumZalozeniUdalosti>2015-04-28T08:20:33.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-28T08:20:33.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;VODRÁŽKJANA776205  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;SPRÁVCE&lt;/druhRoleVRizeni&gt;&lt;druhSpravce&gt;INS SPRÁV&lt;/druhSpravce&gt;&lt;nazevOsoby&gt;Vodrážková&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;SPRÁV_INS&lt;/druhOsoby&gt;&lt;jmeno&gt;Jana&lt;/jmeno&gt;&lt;titulPred&gt;Ing.&lt;/titulPred&gt;&lt;ic&gt;74267604&lt;/ic&gt;&lt;datumNarozeni&gt;1977-12-05+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumUstanoveniSpravce&gt;2015-04-28+02:00&lt;/datumUstanoveniSpravce&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18166252</id>
+        <datumZalozeniUdalosti>2015-04-28T08:20:33.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-28T08:20:33.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>2</typUdalosti>
+        <popisUdalosti>Změna adresy osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;VODRÁŽKJANA776205  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;SPRÁVCE&lt;/druhRoleVRizeni&gt;&lt;druhSpravce&gt;INS SPRÁV&lt;/druhSpravce&gt;&lt;nazevOsoby&gt;Vodrážková&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;SPRÁV_INS&lt;/druhOsoby&gt;&lt;jmeno&gt;Jana&lt;/jmeno&gt;&lt;titulPred&gt;Ing.&lt;/titulPred&gt;&lt;ic&gt;74267604&lt;/ic&gt;&lt;adresa&gt;&lt;druhAdresy&gt;TRVALÁ&lt;/druhAdresy&gt;&lt;datumPobytOd&gt;2014-01-08+01:00&lt;/datumPobytOd&gt;&lt;mesto&gt;Chrudim&lt;/mesto&gt;&lt;ulice&gt;Sladkovského&lt;/ulice&gt;&lt;cisloPopisne&gt;756&lt;/cisloPopisne&gt;&lt;okres&gt;Chrudim&lt;/okres&gt;&lt;zeme&gt;CZE&lt;/zeme&gt;&lt;psc&gt;537 01&lt;/psc&gt;&lt;idAdresy&gt;301496&lt;/idAdresy&gt;&lt;/adresa&gt;&lt;datumNarozeni&gt;1977-12-05+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumUstanoveniSpravce&gt;2015-04-28+02:00&lt;/datumUstanoveniSpravce&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18166253</id>
+        <datumZalozeniUdalosti>2015-04-28T08:20:33.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-28T08:20:33.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>2</typUdalosti>
+        <popisUdalosti>Změna adresy osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;VODRÁŽKJANA776205  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;SPRÁVCE&lt;/druhRoleVRizeni&gt;&lt;druhSpravce&gt;INS SPRÁV&lt;/druhSpravce&gt;&lt;nazevOsoby&gt;Vodrážková&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;SPRÁV_INS&lt;/druhOsoby&gt;&lt;jmeno&gt;Jana&lt;/jmeno&gt;&lt;titulPred&gt;Ing.&lt;/titulPred&gt;&lt;ic&gt;74267604&lt;/ic&gt;&lt;adresa&gt;&lt;druhAdresy&gt;SÍDLO FY&lt;/druhAdresy&gt;&lt;datumPobytOd&gt;2014-01-01+01:00&lt;/datumPobytOd&gt;&lt;mesto&gt;Chrudim&lt;/mesto&gt;&lt;ulice&gt;Novoměstská&lt;/ulice&gt;&lt;cisloPopisne&gt;960&lt;/cisloPopisne&gt;&lt;okres&gt;Chrudim&lt;/okres&gt;&lt;zeme&gt;CZE&lt;/zeme&gt;&lt;psc&gt;537 01&lt;/psc&gt;&lt;idAdresy&gt;301681&lt;/idAdresy&gt;&lt;/adresa&gt;&lt;datumNarozeni&gt;1977-12-05+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumUstanoveniSpravce&gt;2015-04-28+02:00&lt;/datumUstanoveniSpravce&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18168252</id>
+        <datumZalozeniUdalosti>2015-04-28T09:31:19.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-28T09:31:19.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18408922</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>501</typUdalosti>
+        <popisUdalosti>Žádost o určení osoby správce</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>10</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;NEVYRIZENA&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18168605</id>
+        <datumZalozeniUdalosti>2015-04-28T09:43:18.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-28T09:43:18.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18409281</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>228</typUdalosti>
+        <popisUdalosti>Opatření o určení osoby správce</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>11</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18168990</id>
+        <datumZalozeniUdalosti>2015-04-28T09:54:47.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-28T09:54:47.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18409656</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>78</typUdalosti>
+        <popisUdalosti>Usnesení o úpadku spojené s povolením oddlužení</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>12</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18168996</id>
+        <datumZalozeniUdalosti>2015-04-28T09:54:47.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-28T09:54:47.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>105</typUdalosti>
+        <popisUdalosti>Usnesení o ustanovení správce</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>12</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;T&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18169475</id>
+        <datumZalozeniUdalosti>2015-04-28T10:11:13.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-28T10:11:13.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18410147</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>439</typUdalosti>
+        <popisUdalosti>Přezkumné jednání</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18169480</id>
+        <datumZalozeniUdalosti>2015-04-28T10:11:13.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-28T10:11:13.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>451</typUdalosti>
+        <popisUdalosti>Schůze věřitelů</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;T&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18170950</id>
+        <datumZalozeniUdalosti>2015-04-28T10:54:08.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-28T10:54:08.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18411632</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>357</typUdalosti>
+        <popisUdalosti>Přípis</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>13</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18182674</id>
+        <datumZalozeniUdalosti>2015-04-29T03:03:09.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-29T03:03:09.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;BÁRTOVÁVERO141080  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;DLUŽNÍK&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;Bártová&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;F&lt;/druhOsoby&gt;&lt;jmeno&gt;Veronika&lt;/jmeno&gt;&lt;rc&gt;806014/3487&lt;/rc&gt;&lt;datumNarozeni&gt;1980-10-14+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18183139</id>
+        <datumZalozeniUdalosti>2015-04-29T03:04:35.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-29T03:04:35.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;VODRÁŽKJANA776205  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;SPRÁVCE&lt;/druhRoleVRizeni&gt;&lt;druhSpravce&gt;INS SPRÁV&lt;/druhSpravce&gt;&lt;nazevOsoby&gt;Vodrážková&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;SPRÁV_INS&lt;/druhOsoby&gt;&lt;jmeno&gt;Jana&lt;/jmeno&gt;&lt;titulPred&gt;Ing.&lt;/titulPred&gt;&lt;ic&gt;74267604&lt;/ic&gt;&lt;datumNarozeni&gt;1977-12-05+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumUstanoveniSpravce&gt;2015-04-28+02:00&lt;/datumUstanoveniSpravce&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18192155</id>
+        <datumZalozeniUdalosti>2015-04-29T08:29:08.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-29T08:29:08.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18432852</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>30</typUdalosti>
+        <popisUdalosti>Sdělení věřitele</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>2</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18206399</id>
+        <datumZalozeniUdalosti>2015-04-30T01:52:59.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-30T01:52:59.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18447123</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>357</typUdalosti>
+        <popisUdalosti>Přípis</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>13</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18225299</id>
+        <datumZalozeniUdalosti>2015-04-30T23:21:05.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-04-30T23:21:05.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18466171</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>78</typUdalosti>
+        <popisUdalosti>Usnesení o úpadku spojené s povolením oddlužení</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>12</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18324501</id>
+        <datumZalozeniUdalosti>2015-05-08T07:34:35.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-08T07:34:35.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18466171</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>78</typUdalosti>
+        <popisUdalosti>Usnesení o úpadku spojené s povolením oddlužení</popisUdalosti>
+        <oddil>A</oddil>
+        <cisloVOddilu>12</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-05-08+02:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18352662</id>
+        <datumZalozeniUdalosti>2015-05-12T07:33:04.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-12T07:33:04.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>625</typUdalosti>
+        <popisUdalosti>Zasílání údajů o změně osoby věřitele v přihlášce</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;CETELEM Č25085689  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;CETELEM ČR, a.s.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;druhPravniForma&gt;a.s.&lt;/druhPravniForma&gt;&lt;ic&gt;25085689&lt;/ic&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;druhOddilPrihl&gt;P1&lt;/druhOddilPrihl&gt;&lt;cisloOddiluPrihl&gt;1&lt;/cisloOddiluPrihl&gt;&lt;osobaVeritel&gt;CETELEM Č25085689  1&lt;/osobaVeritel&gt;&lt;priznakPlatnyVeritel&gt;T&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18352667</id>
+        <datumZalozeniUdalosti>2015-05-12T07:33:34.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-12T07:33:34.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18593687</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P1</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18353275</id>
+        <datumZalozeniUdalosti>2015-05-12T08:08:21.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-12T08:08:21.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>625</typUdalosti>
+        <popisUdalosti>Zasílání údajů o změně osoby věřitele v přihlášce</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;PROVIDENT25621351  2&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;Provident Financial s. r. o.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;ic&gt;25621351&lt;/ic&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;druhOddilPrihl&gt;P2&lt;/druhOddilPrihl&gt;&lt;cisloOddiluPrihl&gt;1&lt;/cisloOddiluPrihl&gt;&lt;osobaVeritel&gt;PROVIDENT25621351  2&lt;/osobaVeritel&gt;&lt;priznakPlatnyVeritel&gt;T&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18353282</id>
+        <datumZalozeniUdalosti>2015-05-12T08:08:36.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-12T08:08:36.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18594307</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P2</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18410967</id>
+        <datumZalozeniUdalosti>2015-05-15T01:24:03.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-15T01:24:03.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18652106</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P2</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18410968</id>
+        <datumZalozeniUdalosti>2015-05-15T01:24:03.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-15T01:24:03.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18652107</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P1</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18636792</id>
+        <datumZalozeniUdalosti>2015-05-29T13:34:13.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T13:34:13.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>625</typUdalosti>
+        <popisUdalosti>Zasílání údajů o změně osoby věřitele v přihlášce</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;PPF B2 B.34186049  5&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;AB 4 B.V.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;ic&gt;34186049&lt;/ic&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;druhOddilPrihl&gt;P3&lt;/druhOddilPrihl&gt;&lt;cisloOddiluPrihl&gt;1&lt;/cisloOddiluPrihl&gt;&lt;osobaVeritel&gt;PPF B2 B.34186049  5&lt;/osobaVeritel&gt;&lt;priznakPlatnyVeritel&gt;T&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18636805</id>
+        <datumZalozeniUdalosti>2015-05-29T13:34:43.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T13:34:43.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18878239</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P3</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18637033</id>
+        <datumZalozeniUdalosti>2015-05-29T13:42:58.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T13:42:58.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>625</typUdalosti>
+        <popisUdalosti>Zasílání údajů o změně osoby věřitele v přihlášce</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;KOMERČNÍ           1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;Komerční banka, a.s.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;ic&gt;45317054&lt;/ic&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;druhOddilPrihl&gt;P4&lt;/druhOddilPrihl&gt;&lt;cisloOddiluPrihl&gt;1&lt;/cisloOddiluPrihl&gt;&lt;osobaVeritel&gt;KOMERČNÍ           1&lt;/osobaVeritel&gt;&lt;priznakPlatnyVeritel&gt;T&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18637046</id>
+        <datumZalozeniUdalosti>2015-05-29T13:43:28.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T13:43:28.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18878477</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P4</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18637270</id>
+        <datumZalozeniUdalosti>2015-05-29T13:53:13.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T13:53:13.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>625</typUdalosti>
+        <popisUdalosti>Zasílání údajů o změně osoby věřitele v přihlášce</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;MAKOVSKJAN 221192  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;Makovský&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;F&lt;/druhOsoby&gt;&lt;jmeno&gt;Jan&lt;/jmeno&gt;&lt;rc&gt;921122/3780&lt;/rc&gt;&lt;datumNarozeni&gt;1992-11-22+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;druhOddilPrihl&gt;P5&lt;/druhOddilPrihl&gt;&lt;cisloOddiluPrihl&gt;1&lt;/cisloOddiluPrihl&gt;&lt;osobaVeritel&gt;MAKOVSKJAN 221192  1&lt;/osobaVeritel&gt;&lt;priznakPlatnyVeritel&gt;T&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18637280</id>
+        <datumZalozeniUdalosti>2015-05-29T13:53:43.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T13:53:43.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18878712</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P5</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18637440</id>
+        <datumZalozeniUdalosti>2015-05-29T13:59:59.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T13:59:59.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18878871</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>563</typUdalosti>
+        <popisUdalosti>Doplnění/oprava přihlášené pohledávky</popisUdalosti>
+        <oddil>P5</oddil>
+        <cisloVOddilu>2</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18637611</id>
+        <datumZalozeniUdalosti>2015-05-29T14:06:44.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T14:06:44.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>625</typUdalosti>
+        <popisUdalosti>Zasílání údajů o změně osoby věřitele v přihlášce</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;ESSOX  S.26764652  4&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;ESSOX  s.r.o.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;ic&gt;26764652&lt;/ic&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;druhOddilPrihl&gt;P6&lt;/druhOddilPrihl&gt;&lt;cisloOddiluPrihl&gt;1&lt;/cisloOddiluPrihl&gt;&lt;osobaVeritel&gt;ESSOX  S.26764652  4&lt;/osobaVeritel&gt;&lt;priznakPlatnyVeritel&gt;T&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18637619</id>
+        <datumZalozeniUdalosti>2015-05-29T14:07:14.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T14:07:14.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18879052</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P6</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18637740</id>
+        <datumZalozeniUdalosti>2015-05-29T14:13:14.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T14:13:14.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>625</typUdalosti>
+        <popisUdalosti>Zasílání údajů o změně osoby věřitele v přihlášce</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;JET MONEY25858246  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;JET Money s.r.o.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;ic&gt;25858246&lt;/ic&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;druhOddilPrihl&gt;P7&lt;/druhOddilPrihl&gt;&lt;cisloOddiluPrihl&gt;1&lt;/cisloOddiluPrihl&gt;&lt;osobaVeritel&gt;JET MONEY25858246  1&lt;/osobaVeritel&gt;&lt;priznakPlatnyVeritel&gt;T&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18637755</id>
+        <datumZalozeniUdalosti>2015-05-29T14:13:45.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T14:13:45.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18879188</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P7</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18637900</id>
+        <datumZalozeniUdalosti>2015-05-29T14:19:14.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T14:19:14.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>625</typUdalosti>
+        <popisUdalosti>Zasílání údajů o změně osoby věřitele v přihlášce</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;ČESKÁ SPO45244782  3&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;Česká spořitelna, a.s.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;ic&gt;45244782&lt;/ic&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;druhOddilPrihl&gt;P8&lt;/druhOddilPrihl&gt;&lt;cisloOddiluPrihl&gt;1&lt;/cisloOddiluPrihl&gt;&lt;osobaVeritel&gt;ČESKÁ SPO45244782  3&lt;/osobaVeritel&gt;&lt;priznakPlatnyVeritel&gt;T&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18637903</id>
+        <datumZalozeniUdalosti>2015-05-29T14:19:29.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T14:19:29.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18879341</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P8</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18638053</id>
+        <datumZalozeniUdalosti>2015-05-29T14:27:00.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-29T14:27:00.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18879490</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>563</typUdalosti>
+        <popisUdalosti>Doplnění/oprava přihlášené pohledávky</popisUdalosti>
+        <oddil>P2</oddil>
+        <cisloVOddilu>2</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18644891</id>
+        <datumZalozeniUdalosti>2015-05-30T03:04:55.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-05-30T03:04:55.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;MAKOVSKJAN 221192  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;Makovský&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;F&lt;/druhOsoby&gt;&lt;jmeno&gt;Jan&lt;/jmeno&gt;&lt;rc&gt;921122/3780&lt;/rc&gt;&lt;datumNarozeni&gt;1992-11-22+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18663435</id>
+        <datumZalozeniUdalosti>2015-06-02T01:32:21.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-06-02T01:32:21.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18904770</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P5</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18663438</id>
+        <datumZalozeniUdalosti>2015-06-02T01:32:21.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-06-02T01:32:21.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18904773</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P4</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18663439</id>
+        <datumZalozeniUdalosti>2015-06-02T01:32:21.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-06-02T01:32:21.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18904774</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P3</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18663440</id>
+        <datumZalozeniUdalosti>2015-06-02T01:32:21.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-06-02T01:32:21.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18904775</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P8</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18663442</id>
+        <datumZalozeniUdalosti>2015-06-02T01:32:21.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-06-02T01:32:21.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18904777</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>563</typUdalosti>
+        <popisUdalosti>Doplnění/oprava přihlášené pohledávky</popisUdalosti>
+        <oddil>P5</oddil>
+        <cisloVOddilu>2</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18663443</id>
+        <datumZalozeniUdalosti>2015-06-02T01:32:21.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-06-02T01:32:21.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18904778</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P7</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18663444</id>
+        <datumZalozeniUdalosti>2015-06-02T01:32:21.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-06-02T01:32:21.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18904779</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>63</typUdalosti>
+        <popisUdalosti>Přihláška pohledávky</popisUdalosti>
+        <oddil>P6</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18663445</id>
+        <datumZalozeniUdalosti>2015-06-02T01:32:21.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-06-02T01:32:21.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18904780</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>563</typUdalosti>
+        <popisUdalosti>Doplnění/oprava přihlášené pohledávky</popisUdalosti>
+        <oddil>P2</oddil>
+        <cisloVOddilu>2</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18670258</id>
+        <datumZalozeniUdalosti>2015-06-02T09:33:33.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-06-02T09:33:33.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18911726</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>563</typUdalosti>
+        <popisUdalosti>Doplnění/oprava přihlášené pohledávky</popisUdalosti>
+        <oddil>P5</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18708884</id>
+        <datumZalozeniUdalosti>2015-06-04T04:05:08.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-06-04T04:05:07.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=18948460</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>563</typUdalosti>
+        <popisUdalosti>Doplnění/oprava přihlášené pohledávky</popisUdalosti>
+        <oddil>P5</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>18802754</id>
+        <datumZalozeniUdalosti>2015-06-11T03:11:53.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-06-11T03:11:53.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;PPF B2 B.34186049  5&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;AB 4 B.V.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19153911</id>
+        <datumZalozeniUdalosti>2015-07-07T13:26:34.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-07-07T13:26:34.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=19396117</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>49</typUdalosti>
+        <popisUdalosti>Zpráva o hospodářské situaci dlužníka</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19153913</id>
+        <datumZalozeniUdalosti>2015-07-07T13:26:34.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-07-07T13:26:34.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>582</typUdalosti>
+        <popisUdalosti>Žádost insolvenčního správce</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;T&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19153914</id>
+        <datumZalozeniUdalosti>2015-07-07T13:26:34.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-07-07T13:26:34.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>334</typUdalosti>
+        <popisUdalosti>Soupis majetkové podstaty</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;T&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19153915</id>
+        <datumZalozeniUdalosti>2015-07-07T13:26:34.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-07-07T13:26:34.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>64</typUdalosti>
+        <popisUdalosti>Seznam přihlášených pohledávek</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;T&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19233346</id>
+        <datumZalozeniUdalosti>2015-07-10T14:44:07.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-07-10T14:44:07.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=19475682</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>966</typUdalosti>
+        <popisUdalosti>Omluva na jednání</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>4</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19298033</id>
+        <datumZalozeniUdalosti>2015-07-15T15:44:34.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-07-15T15:44:34.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=19540413</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>568</typUdalosti>
+        <popisUdalosti>Protokol z přezkumného jednání</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>5</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19426541</id>
+        <datumZalozeniUdalosti>2015-07-23T03:10:01.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-07-23T03:10:01.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;PPF B2 B.34186049  5&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;AB 4 B.V.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19536572</id>
+        <datumZalozeniUdalosti>2015-07-30T13:08:24.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-07-30T13:08:24.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=19779217</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>643</typUdalosti>
+        <popisUdalosti>Nový nápad</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>1</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;bcVecICm&gt;2957&lt;/bcVecICm&gt;&lt;druhVecICm&gt;ICM&lt;/druhVecICm&gt;&lt;rocnikICm&gt;2015&lt;/rocnikICm&gt;&lt;senatICm&gt;56&lt;/senatICm&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19583243</id>
+        <datumZalozeniUdalosti>2015-08-03T11:00:04.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-08-03T11:00:04.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=19825945</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>998</typUdalosti>
+        <popisUdalosti>Vyrozumění o popření přihlášené pohledávky</popisUdalosti>
+        <oddil>P2</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19583658</id>
+        <datumZalozeniUdalosti>2015-08-03T11:20:19.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-08-03T11:20:19.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=19826361</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>998</typUdalosti>
+        <popisUdalosti>Vyrozumění o popření přihlášené pohledávky</popisUdalosti>
+        <oddil>P5</oddil>
+        <cisloVOddilu>4</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19844747</id>
+        <datumZalozeniUdalosti>2015-08-20T09:50:22.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-08-20T09:50:22.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=20105094</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>175</typUdalosti>
+        <popisUdalosti>Usnesení o schválení oddlužení plněním splátkového kalendáře</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>6</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19855448</id>
+        <datumZalozeniUdalosti>2015-08-20T23:02:29.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-08-20T23:02:29.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=20115830</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>175</typUdalosti>
+        <popisUdalosti>Usnesení o schválení oddlužení plněním splátkového kalendáře</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>6</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19855452</id>
+        <datumZalozeniUdalosti>2015-08-20T23:02:29.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-08-20T23:02:29.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=20115834</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>568</typUdalosti>
+        <popisUdalosti>Protokol z přezkumného jednání</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>5</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19867907</id>
+        <datumZalozeniUdalosti>2015-08-21T13:39:27.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-08-21T13:39:27.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=20128299</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>725</typUdalosti>
+        <popisUdalosti>Usn. o výzvě k zaplacení SOP/doplatku SOP</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>2</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19894946</id>
+        <datumZalozeniUdalosti>2015-08-24T22:27:22.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-08-24T22:27:22.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=20115830</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>175</typUdalosti>
+        <popisUdalosti>Usnesení o schválení oddlužení plněním splátkového kalendáře</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>6</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-08-24+02:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>19921532</id>
+        <datumZalozeniUdalosti>2015-08-25T21:40:43.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-08-25T21:40:43.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=20115830</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>175</typUdalosti>
+        <popisUdalosti>Usnesení o schválení oddlužení plněním splátkového kalendáře</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>6</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-08-25+02:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>20008074</id>
+        <datumZalozeniUdalosti>2015-08-30T19:15:30.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-08-30T19:15:30.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>625</typUdalosti>
+        <popisUdalosti>Zasílání údajů o změně osoby věřitele v přihlášce</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;CETELEM Č25085689  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;CETELEM ČR, a.s.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;druhPravniForma&gt;a.s.&lt;/druhPravniForma&gt;&lt;ic&gt;25085689&lt;/ic&gt;&lt;datumOsobaVeVeciZrusena&gt;2015-08-30T00:00:00.000+02:00&lt;/datumOsobaVeVeciZrusena&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;druhOddilPrihl&gt;P1&lt;/druhOddilPrihl&gt;&lt;cisloOddiluPrihl&gt;1&lt;/cisloOddiluPrihl&gt;&lt;osobaVeritel&gt;CETELEM Č25085689  1&lt;/osobaVeritel&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>20008076</id>
+        <datumZalozeniUdalosti>2015-08-30T19:15:30.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-08-30T19:15:30.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>625</typUdalosti>
+        <popisUdalosti>Zasílání údajů o změně osoby věřitele v přihlášce</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;BNP PARIB3814742   1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;BNP Paribas Personal Finance SA, odštěpný závod&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;ic&gt;03814742&lt;/ic&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;druhOddilPrihl&gt;P1&lt;/druhOddilPrihl&gt;&lt;cisloOddiluPrihl&gt;1&lt;/cisloOddiluPrihl&gt;&lt;osobaVeritel&gt;BNP PARIB3814742   1&lt;/osobaVeritel&gt;&lt;priznakPlatnyVeritel&gt;T&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>20187962</id>
+        <datumZalozeniUdalosti>2015-09-11T07:59:56.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-09-11T07:59:56.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=20448935</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>592</typUdalosti>
+        <popisUdalosti>Usnesení o část. nepřihlížení a odmítnutí přihlášky</popisUdalosti>
+        <oddil>P2</oddil>
+        <cisloVOddilu>4</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>20200192</id>
+        <datumZalozeniUdalosti>2015-09-11T21:07:17.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-09-11T21:07:17.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=20461184</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>592</typUdalosti>
+        <popisUdalosti>Usnesení o část. nepřihlížení a odmítnutí přihlášky</popisUdalosti>
+        <oddil>P2</oddil>
+        <cisloVOddilu>4</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>20241203</id>
+        <datumZalozeniUdalosti>2015-09-15T22:15:51.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-09-15T22:15:51.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=20461184</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>592</typUdalosti>
+        <popisUdalosti>Usnesení o část. nepřihlížení a odmítnutí přihlášky</popisUdalosti>
+        <oddil>P2</oddil>
+        <cisloVOddilu>4</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-09-15+02:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>20344273</id>
+        <datumZalozeniUdalosti>2015-09-22T09:18:34.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-09-22T09:18:34.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>725</typUdalosti>
+        <popisUdalosti>Usn. o výzvě k zaplacení SOP/doplatku SOP</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>2</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;datumPravniMoci&gt;2015-08-21+02:00&lt;/datumPravniMoci&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-09-22+02:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>20379651</id>
+        <datumZalozeniUdalosti>2015-09-23T22:33:57.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-09-23T22:33:56.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=20461184</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>592</typUdalosti>
+        <popisUdalosti>Usnesení o část. nepřihlížení a odmítnutí přihlášky</popisUdalosti>
+        <oddil>P2</oddil>
+        <cisloVOddilu>4</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;T&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-09-23+02:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>20384695</id>
+        <datumZalozeniUdalosti>2015-09-24T03:10:01.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-09-24T03:10:01.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;JET MONEY25858246  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;JET Money s.r.o.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;ic&gt;25858246&lt;/ic&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>20505766</id>
+        <datumZalozeniUdalosti>2015-10-02T07:16:08.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-10-02T07:16:08.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>175</typUdalosti>
+        <popisUdalosti>Usnesení o schválení oddlužení plněním splátkového kalendáře</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>6</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;datumPravniMoci&gt;2015-08-20+02:00&lt;/datumPravniMoci&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-10-02+02:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>20596652</id>
+        <datumZalozeniUdalosti>2015-10-08T10:43:53.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-10-08T10:43:53.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=20858030</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>755</typUdalosti>
+        <popisUdalosti>Usnesení - výzva, aby se účastník vyjádřil k žalobě</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>20596966</id>
+        <datumZalozeniUdalosti>2015-10-08T10:55:57.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-10-08T10:55:57.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=20858342</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>755</typUdalosti>
+        <popisUdalosti>Usnesení - výzva, aby se účastník vyjádřil k žalobě</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>4</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21245950</id>
+        <datumZalozeniUdalosti>2015-11-19T07:42:57.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-11-19T07:42:57.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>755</typUdalosti>
+        <popisUdalosti>Usnesení - výzva, aby se účastník vyjádřil k žalobě</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>3</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;datumPravniMoci&gt;2015-10-08+02:00&lt;/datumPravniMoci&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-11-19+01:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21245951</id>
+        <datumZalozeniUdalosti>2015-11-19T07:42:57.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-11-19T07:42:57.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>755</typUdalosti>
+        <popisUdalosti>Usnesení - výzva, aby se účastník vyjádřil k žalobě</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>4</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;datumPravniMoci&gt;2015-10-08+02:00&lt;/datumPravniMoci&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-11-19+01:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21312852</id>
+        <datumZalozeniUdalosti>2015-11-24T10:47:34.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-11-24T10:47:34.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=21574849</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>755</typUdalosti>
+        <popisUdalosti>Usnesení - výzva, aby se účastník vyjádřil k žalobě</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>5</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21426076</id>
+        <datumZalozeniUdalosti>2015-12-01T11:06:44.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-12-01T11:06:44.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=21688279</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>927</typUdalosti>
+        <popisUdalosti>Vyjádření k žalobě</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>6</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21593064</id>
+        <datumZalozeniUdalosti>2015-12-11T07:29:37.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-12-11T07:29:37.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=21855400</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>878</typUdalosti>
+        <popisUdalosti>Usnesení - výzva, zda účastník souhlasí s rozhodnutím bez jednání</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>7</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21593110</id>
+        <datumZalozeniUdalosti>2015-12-11T07:35:07.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-12-11T07:35:07.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=21855442</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>878</typUdalosti>
+        <popisUdalosti>Usnesení - výzva, zda účastník souhlasí s rozhodnutím bez jednání</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>8</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21593207</id>
+        <datumZalozeniUdalosti>2015-12-11T07:41:52.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-12-11T07:41:52.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=21855542</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>878</typUdalosti>
+        <popisUdalosti>Usnesení - výzva, zda účastník souhlasí s rozhodnutím bez jednání</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>9</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21666889</id>
+        <datumZalozeniUdalosti>2015-12-16T12:43:01.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-12-16T12:43:01.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=21929322</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>41</typUdalosti>
+        <popisUdalosti>Vyjádření</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>10</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21667010</id>
+        <datumZalozeniUdalosti>2015-12-16T12:48:46.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-12-16T12:48:46.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=21929441</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>41</typUdalosti>
+        <popisUdalosti>Vyjádření</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>11</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21791003</id>
+        <datumZalozeniUdalosti>2015-12-28T08:15:07.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-12-28T08:15:07.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>878</typUdalosti>
+        <popisUdalosti>Usnesení - výzva, zda účastník souhlasí s rozhodnutím bez jednání</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>7</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;datumPravniMoci&gt;2015-12-11+01:00&lt;/datumPravniMoci&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-12-28+01:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21791004</id>
+        <datumZalozeniUdalosti>2015-12-28T08:15:07.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-12-28T08:15:07.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>878</typUdalosti>
+        <popisUdalosti>Usnesení - výzva, zda účastník souhlasí s rozhodnutím bez jednání</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>8</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;datumPravniMoci&gt;2015-12-11+01:00&lt;/datumPravniMoci&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-12-28+01:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21791005</id>
+        <datumZalozeniUdalosti>2015-12-28T08:15:07.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2015-12-28T08:15:07.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>878</typUdalosti>
+        <popisUdalosti>Usnesení - výzva, zda účastník souhlasí s rozhodnutím bez jednání</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>9</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;datumPravniMoci&gt;2015-12-11+01:00&lt;/datumPravniMoci&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2015-12-28+01:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21940132</id>
+        <datumZalozeniUdalosti>2016-01-07T14:23:30.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2016-01-07T14:23:30.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>592</typUdalosti>
+        <popisUdalosti>Usnesení o část. nepřihlížení a odmítnutí přihlášky</popisUdalosti>
+        <oddil>P2</oddil>
+        <cisloVOddilu>4</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;datumPravniMoci&gt;2015-09-30+02:00&lt;/datumPravniMoci&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2016-01-07+01:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>21941153</id>
+        <datumZalozeniUdalosti>2016-01-07T15:06:14.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2016-01-07T15:06:14.000+01:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=22203817</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>39</typUdalosti>
+        <popisUdalosti>Sdělení správce o plnění oddlužení</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>7</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>22010136</id>
+        <datumZalozeniUdalosti>2016-01-12T03:24:52.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2016-01-12T03:24:52.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;PPF B2 B.34186049  5&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;AB 4 B.V.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>22595347</id>
+        <datumZalozeniUdalosti>2016-02-12T09:50:04.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2016-02-12T09:50:04.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>755</typUdalosti>
+        <popisUdalosti>Usnesení - výzva, aby se účastník vyjádřil k žalobě</popisUdalosti>
+        <oddil>C1</oddil>
+        <cisloVOddilu>5</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;datumPravniMoci&gt;2015-11-24+01:00&lt;/datumPravniMoci&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumZverejneniOpraveneUdalosti&gt;2016-02-12+01:00&lt;/datumZverejneniOpraveneUdalosti&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>22748937</id>
+        <datumZalozeniUdalosti>2016-02-20T03:07:51.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2016-02-20T03:07:51.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;VODRÁŽKJANA776205  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;SPRÁVCE&lt;/druhRoleVRizeni&gt;&lt;druhSpravce&gt;INS SPRÁV&lt;/druhSpravce&gt;&lt;nazevOsoby&gt;Vodrážková&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;SPRÁV_INS&lt;/druhOsoby&gt;&lt;jmeno&gt;Jana&lt;/jmeno&gt;&lt;titulPred&gt;Ing.&lt;/titulPred&gt;&lt;ic&gt;74267604&lt;/ic&gt;&lt;datumNarozeni&gt;1977-12-05+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumUstanoveniSpravce&gt;2015-04-28+02:00&lt;/datumUstanoveniSpravce&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>23246157</id>
+        <datumZalozeniUdalosti>2016-03-22T03:13:48.000+01:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2016-03-22T03:13:48.000+01:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;VODRÁŽKJANA776205  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;SPRÁVCE&lt;/druhRoleVRizeni&gt;&lt;druhSpravce&gt;INS SPRÁV&lt;/druhSpravce&gt;&lt;nazevOsoby&gt;Vodrážková&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;SPRÁV_INS&lt;/druhOsoby&gt;&lt;jmeno&gt;Jana&lt;/jmeno&gt;&lt;titulPred&gt;Ing.&lt;/titulPred&gt;&lt;ic&gt;74267604&lt;/ic&gt;&lt;datumNarozeni&gt;1977-12-05+01:00&lt;/datumNarozeni&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;datumUstanoveniSpravce&gt;2015-04-28+02:00&lt;/datumUstanoveniSpravce&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>24369139</id>
+        <datumZalozeniUdalosti>2016-05-12T04:24:50.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2016-05-12T04:24:50.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;BNP PARIB3814742   1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;BNP Paribas Personal Finance SA, odštěpný závod&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;ic&gt;03814742&lt;/ic&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>25307953</id>
+        <datumZalozeniUdalosti>2016-06-28T03:29:10.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2016-06-28T03:29:10.000+02:00</datumZverejneniUdalosti>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>1</typUdalosti>
+        <popisUdalosti>Změna osoby</popisUdalosti>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;KOMERČNÍ           1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;VĚŘITEL&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;Komerční banka, a.s.&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;ic&gt;45317054&lt;/ic&gt;&lt;/osoba&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <data>
+        <id>25707639</id>
+        <datumZalozeniUdalosti>2016-07-20T09:54:38.000+02:00</datumZalozeniUdalosti>
+        <datumZverejneniUdalosti>2016-07-20T09:54:38.000+02:00</datumZverejneniUdalosti>
+        <dokumentUrl>https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=25981066</dokumentUrl>
+        <spisovaZnacka>INS 47/2015</spisovaZnacka>
+        <typUdalosti>39</typUdalosti>
+        <popisUdalosti>Sdělení správce o plnění oddlužení</popisUdalosti>
+        <oddil>B</oddil>
+        <cisloVOddilu>8</cisloVOddilu>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1_10" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd"&gt;&lt;idOsobyPuvodce&gt;KSVYCHKP1&lt;/idOsobyPuvodce&gt;&lt;vec&gt;&lt;druhStavRizeni&gt;ODDLUŽENÍ&lt;/druhStavRizeni&gt;&lt;/vec&gt;&lt;priznakAnVedlejsiUdalost&gt;F&lt;/priznakAnVedlejsiUdalost&gt;&lt;priznakAnVedlejsiDokument&gt;F&lt;/priznakAnVedlejsiDokument&gt;&lt;priznakPlatnyVeritel&gt;F&lt;/priznakPlatnyVeritel&gt;&lt;priznakMylnyZapisVeritelPohled&gt;F&lt;/priznakMylnyZapisVeritelPohled&gt;&lt;/ns2:udalost&gt;</poznamka>
+      </data>
+      <status>
+        <stav>OK</stav>
+      </status>
+    </ns2:getIsirWsPublicDataResponse>
+  </S:Body>
+</S:Envelope>

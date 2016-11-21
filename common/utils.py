@@ -30,15 +30,13 @@ from xml.sax.saxutils import escape, unescape
 from bs4 import BeautifulSoup
 from pdfrw import PdfReader, PdfName
 from http import HTTPStatus
-from os.path import join
 import requests
-from hashlib import md5
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.pdfbase.pdfdoc import PDFName, PDFDictionary, PDFStream
 from cache.models import Cache
+from .settings import TEST
 from .glob import (
     hd, odp, ydconvs, mdconvs, registers, localsubdomain, localemail)
-from .settings import BASE_DIR, TEST
 
 def easter(dt):
     y = dt.year
@@ -334,33 +332,10 @@ class CanvasXML(Canvas):
         Canvas.save(self)
 
 TIMEOUT = 1000
-testdata_prefix = join(BASE_DIR, 'testdata')
-        
-def testreq(post, *args):
-    from .tests import DummyResponse
-    if post:
-        r, d = args
-    else:
-        n = args[0]
-        if '?' in n:
-            r, q = n.split('?', 1)
-        else:
-            r = n
-            q = ''
-        d = QueryDict(q).dict()
-    m = md5(r.encode())
-    for k in sorted(d):
-        m.update(k.encode())
-        m.update(d[k].encode())
-    fn = m.hexdigest() + '.dat'
-    try:
-        with open(testdata_prefix + '/' + fn, 'rb') as fi:
-            return DummyResponse(fi.read().decode())
-    except:
-        return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
 
 def get(*args, **kwargs):  # pragma: no cover
     if TEST:
+        from .tests import testreq
         return testreq(False, *args)
     else:
         if not 'timeout' in kwargs:
@@ -369,6 +344,7 @@ def get(*args, **kwargs):  # pragma: no cover
 
 def post(*args, **kwargs):  # pragma: no cover
     if TEST:
+        from .tests import testreq
         return testreq(True, *args)
     else:
         if not 'timeout' in kwargs:

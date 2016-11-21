@@ -23,7 +23,7 @@ from django.db import models
 
 class Cache(models.Model):
     url = models.URLField(
-        max_length=1024)
+        db_index=True)
     text = models.TextField()
     expire = models.DateTimeField(
         null=True,

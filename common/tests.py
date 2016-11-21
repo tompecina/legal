@@ -25,12 +25,15 @@ from django.contrib.auth.models import User
 from django.core import mail
 from django.http import QueryDict
 from datetime import date, datetime, timedelta
+from os.path import join
 from decimal import Decimal
 from copy import copy
 from http import HTTPStatus
 from re import compile
+from hashlib import md5
 from cache.tests import DummyRequest
 from sir.models import Counter
+from .settings import BASE_DIR
 from .glob import localdomain, localsubdomain, localemail
 from . import fields, forms, models, utils, views
 
@@ -38,6 +41,14 @@ TEST_STRING = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské 
 
 xml_regex = compile(r'^(<[^<]+<\w+)[^>]*(.*)$')
 pw_regex = compile(r'/accounts/resetpw/([0-9a-f]{32})/')
+
+class DummyResponse:
+    def __init__(self, content, status=HTTPStatus.OK):
+        self.text = content
+        if content:
+            self.content = content.encode('utf-8')
+        self.status_code = status
+        self.ok = (status == HTTPStatus.OK)
 
 def stripxml(s):
     try:
@@ -47,13 +58,31 @@ def stripxml(s):
     except:
         return ''
 
-class DummyResponse:
-    def __init__(self, content, status=HTTPStatus.OK):
-        self.text = content
-        if content:
-            self.content = content.encode('utf-8')
-        self.status_code = status
-        self.ok = (status == HTTPStatus.OK)
+testdata_prefix = join(BASE_DIR, 'common', 'testdata')
+        
+def testreq(post, *args):
+    if post:
+        r, d = args
+        if isinstance(d, bytes):
+            d = {'bytes': d.decode()}
+    else:
+        n = args[0]
+        if '?' in n:
+            r, q = n.split('?', 1)
+        else:
+            r = n
+            q = ''
+        d = QueryDict(q).dict()
+    m = md5(r.encode())
+    for k in sorted(d):
+        m.update(k.encode())
+        m.update(d[k].encode())
+    fn = m.hexdigest() + '.dat'
+    try:
+        with open(testdata_prefix + '/' + fn, 'rb') as fi:
+            return DummyResponse(fi.read().decode())
+    except:
+        return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
 
 def link_equal(a, b):
     a = a.split('?')
@@ -70,6 +99,24 @@ def link_equal(a, b):
         if a[i] != b[i]:  # pragma: no cover
             return False
     return True
+
+def setcounter(k, n):
+    Counter.objects.update_or_create(id=k, defaults={'number': n})
+
+def setdl(n):
+    setcounter('DL', n)
+
+def setpr(n):
+    setcounter('PR', n)
+
+def getcounter(k):
+    return Counter.objects.get(id=k).number
+
+def getdl():
+    return getcounter('DL')
+
+def getpr():
+    return getcounter('PR')
 
 class TestFields(SimpleTestCase):
 
@@ -709,6 +756,16 @@ class TestUtils(SimpleTestCase):
         self.assertEqual(utils.normalize('  a  b  '), 'a b')
         self.assertEqual(utils.normalize('  a \u00a0 b  '), 'a b')
 
+    def test_icmp(self):
+        self.assertTrue(utils.icmp('ab', 'ab'))
+        self.assertTrue(utils.icmp('aB', 'Ab'))
+        self.assertFalse(utils.icmp('aB', 'AbC'))
+        self.assertTrue(utils.icmp('', ''))
+        self.assertFalse(utils.icmp(None, ''))
+        self.assertTrue(utils.icmp(None, None))
+        self.assertFalse(utils.icmp('a', ''))
+        self.assertFalse(utils.icmp('', 'a'))
+
 class TestViews(TestCase):
 
     def setUp(self):
@@ -919,8 +976,8 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
         
     def test_stat(self):
-        Counter(id='DL', number=1).save()
-        Counter(id='PR', number=1).save()
+        setdl(1)
+        setpr(1)
         res = self.client.get('/stat/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'stat.html')

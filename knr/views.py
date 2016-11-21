@@ -175,9 +175,9 @@ def placedel(request, id=0):
              'page_title': 'Smazání místa',
              'name': get_object_or_404(Place, pk=id, uid=uid).name})
     else:
-        get_object_or_404(Place, pk=id, uid=uid)
+        place = get_object_or_404(Place, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
-            get_object_or_404(Place, pk=id, uid=uid).delete()
+            place.delete()
             return redirect('knr:placedeleted')
         return redirect('knr:placelist')
 
@@ -237,9 +237,9 @@ def cardel(request, id=0):
              'Smazání vozidla',
              'name': get_object_or_404(Car, pk=id, uid=uid).name})
     else:
-        get_object_or_404(Car, pk=id, uid=uid)
+        car = get_object_or_404(Car, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
-            get_object_or_404(Car, pk=id, uid=uid).delete()
+            car.delete()
             return redirect('knr:cardeleted')
         return redirect('knr:carlist')
 
@@ -337,9 +337,9 @@ def formuladel(request, id=0):
              'page_title': 'Smazání předpisu',
              'name': get_object_or_404(Formula, pk=id, uid=uid).name})
     else:
-        get_object_or_404(Formula, pk=id, uid=uid)
+        formula = get_object_or_404(Formula, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
-            get_object_or_404(Formula, pk=id, uid=uid).delete()
+            formula.delete()
             return redirect('knr:formuladeleted')
         return redirect('knr:formulalist')
 

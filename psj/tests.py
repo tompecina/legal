@@ -130,6 +130,19 @@ class TestModels(TestCase):
                 date=date(2016, 1, 10))),
             'Městský soud Praha, 2016-01-10')
 
+
+class TestViews1(SimpleTestCase):
+
+    def test_stripjudge(self):
+        jj = [
+            ['Žlouťoučký Příliš', 'Žlouťoučký Příliš'],
+            ['JUDr. Žlouťoučký Příliš', 'Žlouťoučký Příliš'],
+            ['JUDr. Ing. Žlouťoučký Příliš', 'Žlouťoučký Příliš'],
+        ]
+        for j in jj:
+            self.assertTrue(
+                j[0],
+                views.stripjudge({'judge__name': j[0]}) == strxfrm(j[1]))
 def populate():
     cron.cron_courtrooms()
     Court.objects.exclude(id='OSPHA02').delete()
@@ -216,7 +229,7 @@ s0 = '<select id="courtroom">' \
      '<option value="%d">JUDr. Henzlová Šárka</option>' \
      '</select>\n'
 
-class TestViews(TestCase):
+class TestViews2(TestCase):
     fixtures = ['psj_test.json']
     
     def test_main(self):
@@ -575,17 +588,6 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
         views.EXLIM = 1000
-
-    def test_stripjudge(self):
-        jj = [
-            ['Žlouťoučký Příliš', 'Žlouťoučký Příliš'],
-            ['JUDr. Žlouťoučký Příliš', 'Žlouťoučký Příliš'],
-            ['JUDr. Ing. Žlouťoučký Příliš', 'Žlouťoučký Příliš'],
-        ]
-        for j in jj:
-            self.assertTrue(
-                j[0],
-                views.stripjudge({'judge__name': j[0]}) == strxfrm(j[1]))
 
     def test_courtinfo(self):
         populate()

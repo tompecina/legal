@@ -153,7 +153,7 @@ class Role(models.Model):
         unique_together = ('osoba', 'druhRoleVRizeni')
 
     def __str__(self):
-        return str(self.osoba) + ',' + str(self.druhRoleVRizeni)
+        return str(self.osoba) + ', ' + str(self.druhRoleVRizeni)
 
 class DruhStavRizeni(models.Model):
     desc = models.CharField(
@@ -213,7 +213,7 @@ class Counter(models.Model):
     number = models.IntegerField()
 
     def __str__(self):
-        return str(self.number)
+        return '%s: %d' % (self.id, self.number)
 
 class Transaction(models.Model):
     id = models.PositiveIntegerField(
@@ -249,7 +249,7 @@ class Insolvency(models.Model):
         on_delete=models.CASCADE)
     number = models.PositiveIntegerField()
     year = models.IntegerField(
-        validators=[MinValueValidator(1990)])
+        validators=[MinValueValidator(2008)])
     desc = models.CharField(
         max_length=255,
         db_index=True)

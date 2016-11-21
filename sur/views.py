@@ -95,8 +95,9 @@ def partydel(request, id=0):
             {'app': APP,
              'page_title': 'Smazání účastníka'})
     else:
+        party = get_object_or_404(Party, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
-            get_object_or_404(Party, pk=id, uid=uid).delete()
+            party.delete()
             return redirect('sur:partydeleted')
         return redirect('sur:mainpage')
 

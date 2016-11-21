@@ -105,8 +105,9 @@ def procdel(request, id=0):
             {'app': APP,
              'page_title': 'Smazání řízení'})
     else:
+        proc = get_object_or_404(Proceedings, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
-            get_object_or_404(Proceedings, pk=id, uid=uid).delete()
+            proc.delete()
             return redirect('szr:procdeleted')
         return redirect('szr:mainpage')
 

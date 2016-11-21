@@ -20,7 +20,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.core.validators import RegexValidator
 from common import forms, fields, widgets
 
 class InsForm(forms.Form):
@@ -30,7 +29,7 @@ class InsForm(forms.Form):
         initial='')
     year = fields.IntegerField(
         widget=widgets.saw(),
-        min_value=1990,
+        min_value=2008,
         initial='')
     desc = fields.CharField(
         widget=widgets.genw(),
@@ -42,6 +41,4 @@ class InsForm(forms.Form):
         required=False)
 
 class InsBatchForm(forms.Form):
-    next = fields.CharField(
-        widget=widgets.hw(),
-        required=False)
+    pass

@@ -45,6 +45,43 @@ BATCH = 50
 
 @require_http_methods(['GET', 'POST'])
 @login_required
+def mainpage(request):
+    err_message = ''
+    uid = request.user.id
+    page_title = 'Sledování změn v insolvenčních řízeních'
+    rd = request.GET.copy()
+    start = int(rd['start']) if ('start' in rd) else 0
+    btn = getbutton(request)
+    if request.method == 'GET':
+        f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
+    else:
+        f = EmailForm(request.POST)
+        if f.is_valid():
+            cd = f.cleaned_data
+            p = get_object_or_404(User, pk=uid)
+            p.email = cd['email']
+            p.save()
+            return redirect('sir:mainpage')
+        else:
+            err_message = inerr
+    p = Insolvency.objects.filter(uid=uid).order_by('desc', 'pk')
+    total = p.count()
+    if (start >= total) and (total > 0):
+        start = total - 1
+    rows = p[start:(start + BATCH)]
+    return render(
+        request,
+        'sir_mainpage.html',
+        {'app': APP,
+         'f': f,
+         'page_title': page_title,
+         'err_message': err_message,
+         'rows': rows,
+         'pager': Pager(start, total, reverse('sir:mainpage'), rd, BATCH),
+         'total': total})
+
+@require_http_methods(['GET', 'POST'])
+@login_required
 def insform(request, id=0):
     err_message = ''
     uid = request.user.id
@@ -88,8 +125,9 @@ def insdel(request, id=0):
             {'app': APP,
              'page_title': 'Smazání řízení'})
     else:
+        ins = get_object_or_404(Insolvency, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
-            get_object_or_404(Insolvency, pk=id, uid=uid).delete()
+            ins.delete()
             return redirect('sir:insdeleted')
         return redirect('sir:mainpage')
 
@@ -117,10 +155,7 @@ def insbatchform(request):
     err_message = ''
     uid = request.user.id
 
-    if (request.method == 'GET'):
-        f = InsBatchForm()
-
-    else:
+    if (request.method == 'POST'):
         btn = getbutton(request)
 
         if btn == 'load':
@@ -135,6 +170,7 @@ def insbatchform(request):
                         i = 0
                         for line in csvreader(StringIO(f.read().decode())):
                             i += 1
+                            errlen = len(errors)
                             if not line:
                                 continue
                             desc = line[0].strip()
@@ -145,13 +181,13 @@ def insbatchform(request):
                                 number = int(line[1])
                                 assert number > 0
                             except:
-                                errors.append([i, 'Chybný formát běžného čísla'])
+                                errors.append([i, 'Chybné běžné číslo'])
                                 continue
                             try:
                                 year = int(line[2])
-                                assert year > 0
+                                assert year >= 2008
                             except:
-                                errors.append([i, 'Chybný formát ročníku'])
+                                errors.append([i, 'Chybný ročník'])
                                 continue
                             detailed = line[3].strip()
                             if detailed == 'ano':
@@ -159,10 +195,10 @@ def insbatchform(request):
                             elif detailed == 'ne':
                                 detailed = False
                             else:
-                                errors.append([i, 'Chybný formát pro pole Vše'])
+                                errors.append([i, 'Chybný údaj pro pole Vše'])
                                 continue
 
-                            if not errors:
+                            if len(errors) == errlen:
                                 try:
                                     Insolvency.objects.update_or_create(
                                         uid_id=uid,
@@ -184,63 +220,16 @@ def insbatchform(request):
                          'page_title': 'Import řízení ze souboru',
                          'count': count,
                          'errors': errors})
-                except:
+
+                except:  # pragma: no cover
                     err_message = 'Chyba při načtení souboru'
-
-        f = InsBatchForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            
-            if (not btn) and cd['next']:
-                return redirect(cd['next'])
-
-        else:
-            err_message = inerr
 
     return render(
         request,
         'sir_insbatchform.html',
         {'app': APP,
          'page_title': 'Import řízení ze souboru',
-         'f': f,
          'err_message': err_message})
-
-@require_http_methods(['GET', 'POST'])
-@login_required
-def mainpage(request):
-    err_message = ''
-    uid = request.user.id
-    page_title = 'Sledování změn v insolvenčních řízeních'
-    rd = request.GET.copy()
-    start = int(rd['start']) if ('start' in rd) else 0
-    btn = getbutton(request)
-    if request.method == 'GET':
-        f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
-    else:
-        f = EmailForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            p = get_object_or_404(User, pk=uid)
-            p.email = cd['email']
-            p.save()
-            return redirect('sir:mainpage')
-        else:
-            err_message = inerr
-    p = Insolvency.objects.filter(uid=uid).order_by('desc', 'pk')
-    total = p.count()
-    if (start >= total) and (total > 0):
-        start = total - 1
-    rows = p[start:(start + BATCH)]
-    return render(
-        request,
-        'sir_mainpage.html',
-        {'app': APP,
-         'f': f,
-         'page_title': page_title,
-         'err_message': err_message,
-         'rows': rows,
-         'pager': Pager(start, total, reverse('sir:mainpage'), rd, BATCH),
-         'total': total})
 
 @require_http_methods(['GET'])
 @login_required

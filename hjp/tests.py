@@ -117,18 +117,48 @@ class TestForms(SimpleTestCase):
              'pd_rate': '0.125'})
         self.assertTrue(f.is_valid())
 
-class TestViews(TestCase):
+class TestViews1(SimpleTestCase):
+
+    def test_xml(self):
+        i = 1
+        while True:
+            try:
+                with open(BASE_DIR + '/hjp/testdata/debt%d.xml' % i,
+                          'rb') as fi:
+                    d = fi.read()
+            except:
+                self.assertGreater(i, 1)
+                break
+            c = views.fromxml(d)
+            self.assertIsNone(c[1])
+            self.assertIs(type(c[0]), views.Debt)
+            e = views.toxml(c[0])
+            self.assertXMLEqual(stripxml(d), stripxml(e), msg=str(i))
+            i += 1
+        self.assertEqual(views.fromxml(b'XXX'), (None, 'Chybný formát souboru'))
+
+    def test_dispcurr(self):
+        self.assertEqual(views.dispcurr('CZK'), 'Kč')
+        self.assertEqual(views.dispcurr('EUR'), 'EUR')
+
+    def test_getrows(self):
+        self.assertEqual(views.getrows(views.Debt()), [])
+
+    def test_getrows4(self):
+        self.assertEqual(views.getrows4(views.Debt()), [])
+
+class TestViews2(TestCase):
     fixtures = ['hjp_test.json']
     
     @classmethod
     def setUpClass(cls):
-        super(TestViews, cls).setUpClass()
+        super(TestViews2, cls).setUpClass()
         User.objects.create_user('user', 'user@pecina.cz', 'none')
         
     @classmethod
     def tearDownClass(cls):
         User.objects.all().delete()
-        super(TestViews, cls).tearDownClass()
+        super(TestViews2, cls).tearDownClass()
         
     def test_main(self):
         res = self.client.get('/hjp')
@@ -527,10 +557,6 @@ class TestViews(TestCase):
         c.title = TEST_STRING
         self.assertTrue(views.setdebt(req, c))
         self.assertEqual(views.getdebt(req).title, TEST_STRING)
-
-    def test_dispcurr(self):
-        self.assertEqual(views.dispcurr('CZK'), 'Kč')
-        self.assertEqual(views.dispcurr('EUR'), 'EUR')
 
     def test_calcint(self):
         pp = [
@@ -986,24 +1012,6 @@ class TestViews(TestCase):
             self.assertIsNone(c[0])
             self.assertEqual(c[1], p[6])
 
-    def test_xml(self):
-        i = 1
-        while True:
-            try:
-                with open(BASE_DIR + '/hjp/testdata/debt%d.xml' % i,
-                          'rb') as fi:
-                    d = fi.read()
-            except:
-                self.assertGreater(i, 1)
-                break
-            c = views.fromxml(d)
-            self.assertIsNone(c[1])
-            self.assertIs(type(c[0]), views.Debt)
-            e = views.toxml(c[0])
-            self.assertXMLEqual(stripxml(d), stripxml(e), msg=str(i))
-            i += 1
-        self.assertEqual(views.fromxml(b'XXX'), (None, 'Chybný formát souboru'))
-
     def test_calculation(self):
         self.assertTrue(self.client.login(username='user', password='none'))
         i = 1
@@ -1058,9 +1066,3 @@ class TestViews(TestCase):
                 t = fi.read().decode('utf-8')
             self.assertEqual(s, t, msg=str(i))
             i += 1
-
-    def test_getrows(self):
-        self.assertEqual(views.getrows(views.Debt()), [])
-
-    def test_getrows4(self):
-        self.assertEqual(views.getrows4(views.Debt()), [])
