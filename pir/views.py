@@ -33,7 +33,8 @@ from csv import writer as csvwriter
 from json import dump
 from common.utils import between, Pager, newXML, xmldecorate
 from common.glob import (
-    inerr, text_opts, text_opts_keys, localsubdomain, localurl, DTF)
+    inerr, text_opts, text_opts_keys, exlim_title, localsubdomain, localurl,
+    DTF)
 from sir.glob import l2n, l2s, l2r, s2d, r2i, r2d, a2d
 from sir.models import Vec, Osoba, DruhRoleVRizeni, Counter
 from .forms import MainForm
@@ -70,6 +71,7 @@ def mainpage(request):
             for n in ['name', 'first_name', 'city']:
                 if not cd[n]:
                     del cd[n + '_opt']
+            cd['birthid'] = cd['birthid'].replace('/', '')
             q = QueryDict(mutable=True)
             for p in cd:
                 if cd[p]:
@@ -102,7 +104,7 @@ def g2p(rd):
     if 'court' in rd:
         p['idOsobyPuvodce'] = rd['court']
     for f, d, l in \
-        [['senate', 'senat', 0], ['number', 'bc', 1], ['year', 'rocnik', 1990]]:
+        [['senate', 'senat', 0], ['number', 'bc', 1], ['year', 'rocnik', 2008]]:
         if f in rd:
             p[d] = int(rd[f])
             assert p[d] >= l
@@ -150,24 +152,21 @@ def g2p(rd):
        ('taxid' in rd) or \
        ('birthid' in rd) or \
        ('date_birth' in rd) or \
-       ('year_birth_from' in rd) or ('year_birth_to' in rd):
+       ('year_birth_from' in rd) or \
+       ('year_birth_to' in rd):
         role = [DruhRoleVRizeni.objects.get(desc=r2i[f]).id \
-                for f in ['debtor', 'trustee', 'creditor'] \
-                if ('role_' + f) in rd]
+            for f in ['debtor', 'trustee', 'creditor'] \
+            if ('role_' + f) in rd]
         if 'role_creditor' in rd:
-            role.append(DruhRoleVRizeni.objects.get(desc=r2i['motioner']))
-        if role:
-            p['roles__druhRoleVRizeni__in'] = role
+            role.append(DruhRoleVRizeni.objects.get(desc=r2i['motioner']).id)
+        p['roles__druhRoleVRizeni__in'] = role
     if 'deleted' not in rd:
         p['datumVyskrtnuti__isnull'] = True
     return p
 
-def join(delim, *args):
-    return delim.join([x for x in args if x])
-    
 def o2s(o, detailed=False):
-    r = join(' ', o.titulPred, o.jmeno, o.nazevOsoby)
-    r = join(', ', r, o.titulZa, o.nazevOsobyObchodni)
+    r = ' '.join(filter(bool, [o.titulPred, o.jmeno, o.nazevOsoby]))
+    r = ', '.join(filter(bool, [r, o.titulZa, o.nazevOsobyObchodni]))
     if detailed:
         if o.datumNarozeni:
             r += ', nar.&nbsp;' + o.datumNarozeni.strftime('%d.%m.%Y')
@@ -188,10 +187,11 @@ def htmllist(request):
         p = g2p(rd)
         start = int(rd['start']) if ('start' in rd) else 0
         assert start >= 0
+        v = Vec.objects.filter(**p) \
+            .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce') \
+            .distinct()
     except:
         raise Http404
-    v = Vec.objects.filter(**p) \
-        .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce').distinct()
     total = v.count()
     if total and (start >= total):
         start = total - 1
@@ -229,27 +229,6 @@ def htmllist(request):
          'creditors': creditors,
          'pager': Pager(start, total, reverse('pir:htmllist'), rd, BATCH),
          'total': total})
-
-@require_http_methods(['GET'])
-def party(request, id=0):
-    osoba = get_object_or_404(Osoba, id=id)
-    adresy = osoba.adresy.order_by('-id')
-    i = 0
-    for adresa in adresy:
-        adresa.type = a2d[adresa.druhAdresy.desc]
-        adresa.psc = ((adresa.psc[:3] + ' ' + adresa.psc[3:]) \
-            if adresa.psc else '')
-        adresa.cl = ['odd', 'even'][i % 2]
-        i += 1
-    return render(
-        request,
-        'pir_party.html',
-        {'app': APP,
-         'page_title': 'Informace o osobě',
-         'subtitle': o2s(osoba),
-         'osoba': osoba,
-         'birthid': ((osoba.rc[:6] + '/' + osoba.rc[6:]) if osoba.rc else ''),
-         'adresy': adresy})
 
 def xml_addparties(osoby, xml, tag, tagname):            
     for osoba in osoby:
@@ -338,10 +317,11 @@ def xmllist(request):
     rd = request.GET.copy()
     try:
         p = g2p(rd)
+        vv = Vec.objects.filter(**p) \
+            .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce') \
+            .distinct()
     except:
         raise Http404
-    vv = Vec.objects.filter(**p) \
-        .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce').distinct()
     total = vv.count()
     if total > EXLIM:
         return render(
@@ -428,10 +408,11 @@ def csvlist(request):
     rd = request.GET.copy()
     try:
         p = g2p(rd)
+        vv = Vec.objects.filter(**p) \
+            .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce') \
+            .distinct()
     except:
         raise Http404
-    vv = Vec.objects.filter(**p) \
-        .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce').distinct()
     total = vv.count()
     if total > EXLIM:
         return render(
@@ -458,7 +439,7 @@ def csvlist(request):
             '%s%s INS %d/%d' % (
                 l2s[v.idOsobyPuvodce],
                 ((' %d' % v.senat) if v.senat else ''), v.bc, v.rocnik),
-            (s2d[v.druhStavRizeni.desc] if v.druhStavRizeni else ''),
+            (s2d[v.druhStavRizeni.desc] if v.druhStavRizeni else '(není známo)'),
         ]
         writer.writerow(dat)
     return response
@@ -514,10 +495,11 @@ def jsonlist(request):
     rd = request.GET.copy()
     try:
         p = g2p(rd)
+        vv = Vec.objects.filter(**p) \
+            .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce') \
+            .distinct()
     except:
         raise Http404
-    vv = Vec.objects.filter(**p) \
-        .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce').distinct()
     total = vv.count()
     if total > EXLIM:
         return render(
@@ -551,3 +533,24 @@ def jsonlist(request):
         r.append(p)
     dump(r, response)
     return response
+
+@require_http_methods(['GET'])
+def party(request, id=0):
+    osoba = get_object_or_404(Osoba, id=id)
+    adresy = osoba.adresy.order_by('-id')
+    i = 0
+    for adresa in adresy:
+        adresa.type = a2d[adresa.druhAdresy.desc]
+        adresa.psc = ((adresa.psc[:3] + ' ' + adresa.psc[3:]) \
+            if adresa.psc else '')
+        adresa.cl = ['odd', 'even'][i % 2]
+        i += 1
+    return render(
+        request,
+        'pir_party.html',
+        {'app': APP,
+         'page_title': 'Informace o osobě',
+         'subtitle': o2s(osoba),
+         'osoba': osoba,
+         'birthid': ((osoba.rc[:6] + '/' + osoba.rc[6:]) if osoba.rc else ''),
+         'adresy': adresy})

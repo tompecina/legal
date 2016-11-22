@@ -232,7 +232,7 @@ s0 = '<select id="courtroom">' \
 class TestViews2(TestCase):
     fixtures = ['psj_test.json']
     
-    def test_main(self):
+    def test_mainpage(self):
         res = self.client.get('/psj')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
         res = self.client.get('/psj/')
@@ -289,8 +289,13 @@ class TestViews2(TestCase):
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
 
-    def test_htmllist(self):
+class TestViews3(TestCase):
+    fixtures = ['psj_test.json']
+    
+    def setUp(self):
         populate()
+
+    def test_htmllist(self):
         res = self.client.get('/psj/list')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
         res = self.client.post('/psj/list/')
@@ -302,15 +307,27 @@ class TestViews2(TestCase):
         self.assertTemplateUsed(res, 'psj_list.html')
         res = self.client.get('/psj/list/?senate=-1')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/list/?senate=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/list/?register=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/list/?register=XXX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/list/?number=0')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/list/?number=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/list/?year=1989')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/list/?year=XXX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/list/?courtroom=0')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/list/?courtroom=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/list/?judge=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/list/?judge=XXX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get( '/psj/list/?date_from=2015-X-01')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -464,7 +481,6 @@ class TestViews2(TestCase):
             '/psj/list/?senate=26&start=150'))
         
     def test_xmllist(self):
-        populate()
         res = self.client.get('/psj/xmllist')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
         res = self.client.post('/psj/xmllist/')
@@ -475,15 +491,27 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/xml; charset=utf-8')
         res = self.client.get('/psj/xmllist/?senate=-1')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/xmllist/?senate=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/xmllist/?register=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/xmllist/?register=XX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/xmllist/?number=0')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/xmllist/?number=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/xmllist/?year=1989')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/xmllist/?year=XXX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/xmllist/?courtroom=0')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/xmllist/?courtroom=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/xmllist/?judge=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/xmllist/?judge=XXX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get( '/psj/xmllist/?date_from=2015-X-01')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -504,7 +532,6 @@ class TestViews2(TestCase):
         views.EXLIM = 1000
 
     def test_csvlist(self):
-        populate()
         res = self.client.get('/psj/csvlist')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
         res = self.client.post('/psj/csvlist/')
@@ -515,15 +542,27 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
         res = self.client.get('/psj/csvlist/?senate=-1')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/csvlist/?senate=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/csvlist/?register=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/csvlist/?register=XXX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/csvlist/?number=0')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/csvlist/?number=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/csvlist/?year=1989')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/csvlist/?year=XXX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/csvlist/?courtroom=0')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/csvlist/?courtroom=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/psj/csvlist/?judge=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        res = self.client.get('/psj/csvlist/?judge=XXX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get( '/psj/csvlist/?date_from=2015-X-01')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -547,7 +586,6 @@ class TestViews2(TestCase):
         views.EXLIM = 1000
 
     def test_jsonlist(self):
-        populate()
         res = self.client.get('/psj/jsonlist')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
         res = self.client.post('/psj/jsonlist/')
@@ -590,7 +628,6 @@ class TestViews2(TestCase):
         views.EXLIM = 1000
 
     def test_courtinfo(self):
-        populate()
         res = self.client.get('/psj/court/OSPHA02')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
         res = self.client.post('/psj/court/OSPHA02/')

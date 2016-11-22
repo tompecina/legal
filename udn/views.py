@@ -121,9 +121,9 @@ def htmllist(request):
         p = g2p(rd)
         start = int(rd['start']) if ('start' in rd) else 0
         assert start >= 0
+        d = Decision.objects.filter(**p).order_by('-date', 'pk').distinct()
     except:
         raise Http404
-    d = Decision.objects.filter(**p).order_by('-date', 'pk').distinct()
     total = d.count()
     if total and (start >= total):
         start = total - 1
@@ -141,9 +141,9 @@ def xmllist(request):
     rd = request.GET.copy()
     try:
         p = g2p(rd)
+        dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
     except:
         raise Http404
-    dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
     total = dd.count()
     if total > EXLIM:
         return render(
@@ -227,9 +227,9 @@ def csvlist(request):
     rd = request.GET.copy()
     try:
         p = g2p(rd)
+        dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
     except:
         raise Http404
-    dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
     total = dd.count()
     if total > EXLIM:
         return render(
@@ -272,9 +272,9 @@ def jsonlist(request):
     rd = request.GET.copy()
     try:
         p = g2p(rd)
+        dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
     except:
         raise Http404
-    dd = Decision.objects.filter(**p).order_by('date', 'pk').distinct()
     total = dd.count()
     if total > EXLIM:
         return render(

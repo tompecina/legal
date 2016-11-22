@@ -123,9 +123,9 @@ def htmllist(request):
         p = g2p(rd)
         start = int(rd['start']) if ('start' in rd) else 0
         assert start >= 0
+        d = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
     except:
         raise Http404
-    d = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
     total = d.count()
     if total and (start >= total):
         start = total - 1
@@ -144,9 +144,9 @@ def xmllist(request):
     rd = request.GET.copy()
     try:
         p = g2p(rd)
+        hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
     except:
         raise Http404
-    hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
     total = hh.count()
     if total > EXLIM:
         return render(
@@ -228,9 +228,9 @@ def csvlist(request):
     rd = request.GET.copy()
     try:
         p = g2p(rd)
+        hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
     except:
         raise Http404
-    hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
     total = hh.count()
     if total > EXLIM:
         return render(
@@ -279,9 +279,9 @@ def jsonlist(request):
     rd = request.GET.copy()
     try:
         p = g2p(rd)
+        hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
     except:
         raise Http404
-    hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
     total = hh.count()
     if total > EXLIM:
         return render(

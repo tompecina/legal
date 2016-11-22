@@ -23,14 +23,12 @@
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 from http import HTTPStatus
-from datetime import date, datetime
+from datetime import datetime
 from bs4 import BeautifulSoup
-from re import compile
-from os.path import join
 from locale import strxfrm
 from common.settings import BASE_DIR
 from common.glob import localdomain
-from common.tests import stripxml, link_equal, setdl, setpr, getdl, getpr
+from common.tests import link_equal, setdl, setpr, getdl, getpr
 from . import cron, glob, models, views
 
 class DummyTag:
@@ -94,6 +92,8 @@ def populate():
         setdl(472015)
         cron.cron_gettr()
         setdl(5772013)
+        cron.cron_gettr()
+        setdl(160462011)
         cron.cron_gettr()
         setdl(191242016)
         cron.cron_gettr()
