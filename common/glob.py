@@ -128,9 +128,9 @@ format_opts = (
     ('json', 'JSON'),
 )
 
-ic_regex = r'\d{1,9}'
-rc_regex = r'\d{9,10}'
-rc_full_regex = r'\d{6}/\d{3,4}'
-psc_regex = r'\d{5}'
+ic_regex = r'^\d{1,9}$'
+rc_regex = r'^\d{9,10}$'
+rc_full_regex = r'^\d{6}/\d{3,4}$'
+psc_regex = r'^\d{5}$'
 
 DTF = '%Y-%m-%d'

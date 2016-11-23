@@ -1,0 +1,335 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$NgPs7J5tOUtD$5kUebN1O9+krlAxuIa6mNq3QYspsREzBekzQcf1IhBY=",
+        "last_login": "2016-07-07T15:42:24.712",
+        "is_superuser": true,
+        "username": "tompecina",
+        "first_name": "Tom\u00e1\u0161",
+        "last_name": "Pecina",
+        "email": "tomas@pecina.cz",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2012-04-07T03:02:21",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 1,
+    "fields": {
+        "uid": 1,
+        "desc": "Error 01",
+        "court": "MSPHAAB",
+        "name": "KOTYSGLOBAL",
+        "name_opt": 0,
+        "first_name": null,
+        "first_name_opt": 0,
+        "genid": null,
+        "taxid": null,
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-28T16:24:44.430",
+        "timestamp_update": "2016-10-28T16:24:44.430"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 2,
+    "fields": {
+        "uid": 1,
+        "desc": "Test 02",
+        "court": "KSJIMBM",
+        "name": "AZ CENTRUM",
+        "name_opt": 1,
+        "first_name": null,
+        "first_name_opt": 0,
+        "genid": null,
+        "taxid": null,
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-28T17:55:42.558",
+        "timestamp_update": "2016-10-28T17:55:42.558"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 3,
+    "fields": {
+        "uid": 1,
+        "desc": "Test 03",
+        "court": null,
+        "name": "informační",
+        "name_opt": 0,
+        "first_name": null,
+        "first_name_opt": 0,
+        "genid": null,
+        "taxid": null,
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-28T21:21:25.750",
+        "timestamp_update": "2016-10-28T21:21:25.750"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 4,
+    "fields": {
+        "uid": 1,
+        "desc": "Test 04",
+        "court": null,
+        "name": "O",
+        "name_opt": 1,
+        "first_name": null,
+        "first_name_opt": 0,
+        "genid": null,
+        "taxid": null,
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-28T17:55:42.760",
+        "timestamp_update": "2016-10-28T17:55:42.760"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 5,
+    "fields": {
+        "uid": 1,
+        "desc": "Test 05",
+        "court": null,
+        "name": "R",
+        "name_opt": 2,
+        "first_name": null,
+        "first_name_opt": 0,
+        "genid": null,
+        "taxid": null,
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-28T19:24:31.613",
+        "timestamp_update": "2016-10-28T19:24:31.613"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 6,
+    "fields": {
+        "uid": 1,
+        "desc": "Error 06",
+        "court": null,
+        "name": "HABITATIO",
+        "name_opt": 3,
+        "first_name": null,
+        "first_name_opt": 0,
+        "genid": null,
+        "taxid": null,
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-28T18:32:54.286",
+        "timestamp_update": "2016-10-28T18:32:54.286"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 7,
+    "fields": {
+        "uid": 1,
+        "desc": "Test 07",
+        "court": null,
+        "name": null,
+        "name_opt": 0,
+        "first_name": "tak",
+        "first_name_opt": 0,
+        "genid": null,
+        "taxid": null,
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-28T19:08:58.061",
+        "timestamp_update": "2016-10-28T19:08:58.061"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 8,
+    "fields": {
+        "uid": 1,
+        "desc": "Test 08",
+        "court": null,
+        "name": null,
+        "name_opt": 0,
+        "first_name": "J",
+        "first_name_opt": 1,
+        "genid": null,
+        "taxid": null,
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-28T19:09:20.656",
+        "timestamp_update": "2016-10-28T19:09:20.656"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 9,
+    "fields": {
+        "uid": 1,
+        "desc": "Test 09",
+        "court": null,
+        "name": null,
+        "name_opt": 0,
+        "first_name": "E",
+        "first_name_opt": 2,
+        "genid": null,
+        "taxid": null,
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-28T19:09:36.401",
+        "timestamp_update": "2016-10-28T19:09:36.401"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 10,
+    "fields": {
+        "uid": 1,
+        "desc": "Error 10",
+        "court": null,
+        "name": null,
+        "name_opt": 0,
+        "first_name": "Anton",
+        "first_name_opt": 3,
+        "genid": null,
+        "taxid": null,
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-28T19:10:01.280",
+        "timestamp_update": "2016-10-28T19:10:01.280"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 11,
+    "fields": {
+        "uid": 1,
+        "desc": "Test 11",
+        "court": null,
+        "name": null,
+        "name_opt": 0,
+        "first_name": null,
+        "first_name_opt": 0,
+        "genid": "48292257",
+        "taxid": null,
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-28T19:10:17.502",
+        "timestamp_update": "2016-10-28T19:10:17.502"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 12,
+    "fields": {
+        "uid": 1,
+        "desc": "Test 12",
+        "court": null,
+        "name": null,
+        "name_opt": 0,
+        "first_name": null,
+        "first_name_opt": 0,
+        "genid": null,
+        "taxid": "001-25643444",
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-29T05:51:16.421",
+        "timestamp_update": "2016-10-29T05:51:16.421"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 13,
+    "fields": {
+        "uid": 1,
+        "desc": "Test 13",
+        "court": null,
+        "name": null,
+        "name_opt": 0,
+        "first_name": null,
+        "first_name_opt": 0,
+        "genid": null,
+        "taxid": null,
+        "birthid": "7462113395",
+        "date_birth": null,
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-29T05:51:11.257",
+        "timestamp_update": "2016-10-29T05:51:11.257"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 14,
+    "fields": {
+        "uid": 1,
+        "desc": "Test 14",
+        "court": null,
+        "name": null,
+        "name_opt": 0,
+        "first_name": null,
+        "first_name_opt": 0,
+        "genid": null,
+        "taxid": null,
+        "birthid": null,
+        "date_birth": "1958-07-19",
+        "year_birth_from": null,
+        "year_birth_to": null,
+        "timestamp_add": "2016-10-29T05:51:32.015",
+        "timestamp_update": "2016-10-29T05:51:32.015"
+    }
+},
+{
+    "model": "dir.debtor",
+    "pk": 15,
+    "fields": {
+        "uid": 1,
+        "desc": "Test 15",
+        "court": null,
+        "name": null,
+        "name_opt": 0,
+        "first_name": null,
+        "first_name_opt": 0,
+        "genid": null,
+        "taxid": null,
+        "birthid": null,
+        "date_birth": null,
+        "year_birth_from": "1960",
+        "year_birth_to": "1967",
+        "timestamp_add": "2016-10-29T05:51:32.015",
+        "timestamp_update": "2016-10-29T05:51:32.015"
+    }
+}
+]

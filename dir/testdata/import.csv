@@ -1,0 +1,26 @@
+Test 1,xxx=,název=Název 2
+
+,název=Název:*
+Error 4,název
+Error 5,název=Název:X
+Error 6,název=E12345678901234567890123456789012345678901234567890123456789012345678901234567890
+Error 7,jméno=Jméno:X
+Error 8,jméno=E12345678901234567890123456789012345678901234567890123456789012345678901234567890
+Error 9,IČO=XXX
+Error 10,IČO=1234567890
+Error 11,DIČ=123456789012345
+Error 12,RČ=700101/12345
+Error 13,datumNarození=1970-X-01
+Error 14,rokNarozeníOd=1899
+Error 15,rokNarozeníOd=XXX
+Error 16,rokNarozeníDo=1899
+Error 17,rokNarozeníDo=XXX
+Error 18,rokNarozeníOd=1965,rokNarozeníDo=1964
+Error 19,
+Error 20,xxx=yyy
+Test 21
+Test 22,soud=KSSEMOS,název=Název:*,jméno=Jméno:<,IČO=12345678,DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,rokNarozeníOd=1965,rokNarozeníDo=1966
+Test 23,soud=KSSEMOS,název=Název:<,jméno=Jméno:>,IČO=12345678,DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,rokNarozeníOd=1965,rokNarozeníDo=1966
+Test 24,soud=KSSEMOS,název=Název:>,jméno=Jméno:=,IČO=12345678,DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,rokNarozeníOd=1965,rokNarozeníDo=1966
+Test 25,soud=KSSEMOS,název=Název:=,jméno=Jméno,IČO=12345678,DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,rokNarozeníOd=1965,rokNarozeníDo=1966
+Test 26,soud=KSSEMOS,název=Název,jméno=Jméno:*,IČO=12345678,DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,rokNarozeníOd=1965,rokNarozeníDo=1966

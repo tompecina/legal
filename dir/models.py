@@ -45,7 +45,6 @@ class Debtor(models.Model):
         max_length=MAX_LENGTH,
         null=True)
     name_opt = models.SmallIntegerField(
-        null=True,
         validators=[
             MinValueValidator(0),
             MaxValueValidator(len(text_opts) - 1)])
@@ -53,7 +52,6 @@ class Debtor(models.Model):
         null=True,
         max_length=MAX_LENGTH)
     first_name_opt = models.SmallIntegerField(
-        null=True,
         validators=[
             MinValueValidator(0),
             MaxValueValidator(len(text_opts) - 1)])
@@ -85,7 +83,7 @@ class Debtor(models.Model):
         auto_now=True)
     
     def __str__(self):
-        return self.party
+        return self.desc
     
 class Discovered(models.Model):
     uid = models.ForeignKey(

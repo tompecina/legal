@@ -40,7 +40,7 @@ from szr.forms import EmailForm
 from sir.glob import l2n, l2s
 from sir.models import Vec
 from .glob import MAX_LENGTH
-from .forms import DebtorForm, DebtorBatchForm
+from .forms import DebtorForm
 from .models import Debtor
 
 APP = __package__
@@ -51,6 +51,44 @@ BATCH = 50
 
 OFIELDS = ['name', 'first_name']
 OPTS = [x + '_opt' for x in OFIELDS]
+
+@require_http_methods(['GET', 'POST'])
+@login_required
+def mainpage(request):
+    err_message = ''
+    uid = request.user.id
+    page_title = 'Sledování nových dlužníků v insolvenci'
+    rd = request.GET.copy()
+    start = int(rd['start']) if ('start' in rd) else 0
+    btn = getbutton(request)
+    if request.method == 'GET':
+        f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
+    else:
+        f = EmailForm(request.POST)
+        if f.is_valid():
+            cd = f.cleaned_data
+            p = get_object_or_404(User, pk=uid)
+            p.email = cd['email']
+            p.save()
+            return redirect('dir:mainpage')
+        else:
+            err_message = inerr
+    d = Debtor.objects.filter(uid=uid).order_by('desc', 'pk') \
+        .values()
+    total = d.count()
+    if (start >= total) and (total > 0):
+        start = total - 1
+    rows = d[start:(start + BATCH)]
+    return render(
+        request,
+        'dir_mainpage.html',
+        {'app': APP,
+         'f': f,
+         'page_title': page_title,
+         'err_message': err_message,
+         'rows': rows,
+         'pager': Pager(start, total, reverse('dir:mainpage'), rd, BATCH),
+         'total': total})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -145,10 +183,7 @@ def debtorbatchform(request):
     err_message = ''
     uid = request.user.id
 
-    if (request.method == 'GET'):
-        f = DebtorBatchForm()
-
-    else:
+    if (request.method == 'POST'):
         btn = getbutton(request)
 
         if btn == 'load':
@@ -167,7 +202,7 @@ def debtorbatchform(request):
                             if not line:
                                 continue
                             desc = line[0].strip()
-                            name = first_name = genid = taxid = \
+                            court = name = first_name = genid = taxid = \
                                 birthid = date_birth = year_birth_from = \
                                 year_birth_to = None
                             name_opt = first_name_opt = 0
@@ -183,7 +218,9 @@ def debtorbatchform(request):
                                     term.split('=', 1))
                                 if not value:
                                     continue
-                                if key == 'název':
+                                if key == 'soud':
+                                    court = value
+                                elif key == 'název':
                                     if ':' in value:
                                         name, name_opt = value.split(':', 1)
                                         if name_opt not in text_opts_abbr:
@@ -275,6 +312,7 @@ def debtorbatchform(request):
                                         uid_id=uid,
                                         desc=desc,
                                         defaults={
+                                            'court': court,
                                             'name': name,
                                             'name_opt': name_opt,
                                             'first_name': first_name,
@@ -298,16 +336,9 @@ def debtorbatchform(request):
                          'page_title': 'Import dlužníků ze souboru',
                          'count': count,
                          'errors': errors})
-                except:
+
+                except:  # pragma: no cover
                     err_message = 'Chyba při načtení souboru'
-
-        f = DebtorBatchForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            
-            if (not btn) and cd['next']:
-                return redirect(cd['next'])
-
         else:
             err_message = inerr
 
@@ -316,46 +347,7 @@ def debtorbatchform(request):
         'dir_debtorbatchform.html',
         {'app': APP,
          'page_title': 'Import dlužníků ze souboru',
-         'f': f,
          'err_message': err_message})
-
-@require_http_methods(['GET', 'POST'])
-@login_required
-def mainpage(request):
-    err_message = ''
-    uid = request.user.id
-    page_title = 'Sledování nových dlužníků v insolvenci'
-    rd = request.GET.copy()
-    start = int(rd['start']) if ('start' in rd) else 0
-    btn = getbutton(request)
-    if request.method == 'GET':
-        f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
-    else:
-        f = EmailForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            p = get_object_or_404(User, pk=uid)
-            p.email = cd['email']
-            p.save()
-            return redirect('dir:mainpage')
-        else:
-            err_message = inerr
-    d = Debtor.objects.filter(uid=uid).order_by('desc', 'pk') \
-        .values()
-    total = d.count()
-    if (start >= total) and (total > 0):
-        start = total - 1
-    rows = d[start:(start + BATCH)]
-    return render(
-        request,
-        'dir_mainpage.html',
-        {'app': APP,
-         'f': f,
-         'page_title': page_title,
-         'err_message': err_message,
-         'rows': rows,
-         'pager': Pager(start, total, reverse('dir:mainpage'), rd, BATCH),
-         'total': total})
 
 @require_http_methods(['GET'])
 @login_required

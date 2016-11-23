@@ -1620,7 +1620,7 @@
         <spisovaZnacka>INS 32/2008</spisovaZnacka>
         <typUdalosti>1</typUdalosti>
         <popisUdalosti>Změna osoby</popisUdalosti>
-        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka.xsd"&gt;&lt;idOsobyPuvodce&gt;KSSTCAB&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;PROLYS  25643444  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;DLUŽNÍK&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;PROLYS&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;druhPravniForma&gt;s.r.o.&lt;/druhPravniForma&gt;&lt;ic&gt;25643444&lt;/ic&gt;&lt;/osoba&gt;&lt;/ns2:udalost&gt;</poznamka>
+        <poznamka>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;ns2:udalost xmlns:ns2="http://www.cca.cz/isir/poznamka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" verzeXsd="1" xsi:schemaLocation="https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka.xsd"&gt;&lt;idOsobyPuvodce&gt;KSSTCAB&lt;/idOsobyPuvodce&gt;&lt;osoba&gt;&lt;idOsoby&gt;PROLYS  25643444  1&lt;/idOsoby&gt;&lt;druhRoleVRizeni&gt;DLUŽNÍK&lt;/druhRoleVRizeni&gt;&lt;nazevOsoby&gt;PROLYS&lt;/nazevOsoby&gt;&lt;druhOsoby&gt;P&lt;/druhOsoby&gt;&lt;druhPravniForma&gt;s.r.o.&lt;/druhPravniForma&gt;&lt;ic&gt;25643444&lt;/ic&gt;&lt;dic&gt;001-25643444&lt;/dic&gt;&lt;/osoba&gt;&lt;/ns2:udalost&gt;</poznamka>
       </data>
       <data>
         <id>1690</id>

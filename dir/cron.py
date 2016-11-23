@@ -45,7 +45,10 @@ def dir_notice(uid):
 def dir_check(osoba, vec):
     for d in Debtor.objects.all():
         od = osoba.datumNarozeni
-        if text_opt(d.name, osoba.nazevOsoby, d.name_opt) and \
+        if od:
+            od = od.date()
+        if ((not d.court) or (d.court == osoba.idOsobyPuvodce)) and \
+           text_opt(d.name, osoba.nazevOsoby, d.name_opt) and \
            text_opt(d.first_name, osoba.jmeno, d.first_name_opt) and \
            ((not d.genid) or (d.genid == osoba.ic)) and \
            ((not d.taxid) or icmp(d.taxid, osoba.dic)) and \

@@ -35,7 +35,7 @@ from common.glob import inerr, GR_C, text_opts, text_opts_keys
 from szr.forms import EmailForm
 from .glob import l2n, l2s
 from .models import Vec, Insolvency
-from .forms import InsForm, InsBatchForm
+from .forms import InsForm
 
 APP = __package__
 

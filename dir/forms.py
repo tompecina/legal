@@ -91,8 +91,17 @@ class DebtorForm(forms.Form):
         max_value=curryear,
         initial='',
         required=False)
-
-class DebtorBatchForm(forms.Form):
-    next = fields.CharField(
-        widget=widgets.hw(),
-        required=False)
+    
+    def clean(self):
+        cleaned_data = super(DebtorForm, self).clean()
+        year_birth_from = cleaned_data.get('year_birth_from', None)
+        year_birth_to = cleaned_data.get('year_birth_to', None)
+        if year_birth_from and \
+           year_birth_to and \
+           (year_birth_from > year_birth_to):
+            msg = 'Invalid interval'
+            self._errors['year_birth_from'] = self.error_class([msg])
+            self._errors['year_birth_to'] = self.error_class([msg])
+            del cleaned_data['year_birth_from']
+            del cleaned_data['year_birth_to']
+        return cleaned_data

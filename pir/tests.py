@@ -22,11 +22,8 @@
 
 from django.test import SimpleTestCase, TestCase
 from http import HTTPStatus
-from datetime import date, datetime
+from datetime import date
 from bs4 import BeautifulSoup
-from re import compile
-from os.path import join
-from locale import strxfrm
 from common.tests import stripxml, link_equal, setpr, getpr
 from sir.tests import populate
 from sir.cron import cron_getws2
@@ -1510,6 +1507,6 @@ class TestViews2(TestCase):
         self.assertTemplateUsed(res, 'pir_party.html')
         con = res.context
         self.assertEqual(con['page_title'], 'Informace o osobě')
-        self.assertEqual(con['subtitle'], 'Andéla Hanzlíková')
+        self.assertEqual(con['subtitle'], 'Anděla Hanzlíková')
         self.assertEqual(con['birthid'], '755819/0112')
         self.assertEqual(len(con['adresy']), 3)

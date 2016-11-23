@@ -39,6 +39,3 @@ class InsForm(forms.Form):
         initial=True,
         label='Všechny události',
         required=False)
-
-class InsBatchForm(forms.Form):
-    pass
