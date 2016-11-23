@@ -150,15 +150,11 @@ class TestViews1(SimpleTestCase):
 class TestViews2(TestCase):
     fixtures = ['hjp_test.json']
     
-    @classmethod
-    def setUpClass(cls):
-        super(TestViews2, cls).setUpClass()
+    def setUp(self):
         User.objects.create_user('user', 'user@pecina.cz', 'none')
         
-    @classmethod
-    def tearDownClass(cls):
-        User.objects.all().delete()
-        super(TestViews2, cls).tearDownClass()
+    def tearDown(self):
+        self.client.logout()
         
     def test_main(self):
         res = self.client.get('/hjp')

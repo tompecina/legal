@@ -342,21 +342,17 @@ class TestViews1(SimpleTestCase):
 class TestViews2(TestCase):
     fixtures = ['knr_test.json']
     
-    @classmethod
-    def setUpClass(cls):
-        super(TestViews2, cls).setUpClass()
+    def setUp(self):
         User.objects.create_user('user', 'user@pecina.cz', 'none')
         User.objects.create_superuser('superuser', 'suser@pecina.cz', 'none')
         User.objects.create_user('anotheruser', 'auser@pecina.cz', 'none')
-        uid = User.objects.get(username='user').pk
-        models.Place.objects.exclude(uid=None).update(uid=uid)
-        models.Car.objects.all().update(uid=uid)
-        models.Formula.objects.exclude(uid=None).update(uid=uid)
+        self.user = User.objects.get(username='user').pk
+        models.Place.objects.exclude(uid=None).update(uid=self.user)
+        models.Car.objects.all().update(uid=self.user)
+        models.Formula.objects.exclude(uid=None).update(uid=self.user)
         
-    @classmethod
-    def tearDownClass(cls):
-        User.objects.all().delete()
-        super(TestViews2, cls).tearDownClass()
+    def tearDown(self):
+        self.client.logout()
 
     def test_findloc(self):
         r = views.findloc('Melantrichova 504/5, Praha 1')

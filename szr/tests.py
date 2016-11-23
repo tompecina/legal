@@ -138,15 +138,12 @@ class TestModels(SimpleTestCase):
 class TestViews(TestCase):
     fixtures = ['szr_test.json']
     
-    @classmethod
-    def setUpClass(cls):
-        super(TestViews, cls).setUpClass()
+    def setUp(self):
         User.objects.create_user('user', 'user@' + localdomain, 'none')
-        
-    @classmethod
-    def tearDownClass(cls):
-        User.objects.all().delete()
-        super(TestViews, cls).tearDownClass()
+        self.user = User.objects.get(username='user')
+
+    def tearDown(self):
+        self.client.logout()
         
     def test_mainpage(self):
         res = self.client.get('/szr')
@@ -167,9 +164,8 @@ class TestViews(TestCase):
              'submit': 'Změnit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(
-            User.objects.get(username='user').email,
-            'alt@' + localdomain)
+        self.user = User.objects.get(username='user')
+        self.assertEqual(self.user.email, 'alt@' + localdomain)
         res = self.client.get('/szr/')
         try:
             soup = BeautifulSoup(res.content, 'html.parser')

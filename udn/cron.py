@@ -169,5 +169,5 @@ def cron_find():
             dec.anonfilename = fn
             dec.save()
             return
-    except:
+    except:  # pragma: no cover
         pass

@@ -124,6 +124,7 @@ class TestViews1(TestCase):
     
     def setUp(self):
         User.objects.create_user('user', 'user@' + localdomain, 'none')
+        self.user = User.objects.first()
 
     def tearDown(self):
         self.client.logout()
@@ -155,14 +156,13 @@ class TestViews1(TestCase):
              'submit': 'Změnit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(
-            User.objects.get(username='user').email,
-            'alt@' + localdomain)
+        self.user = User.objects.first()
+        self.assertEqual(self.user.email, 'alt@' + localdomain)
         res = self.client.get('/dir/')
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertFalse(soup.select('table#list'))
         models.Debtor(
-            uid=User.objects.first(),
+            uid=self.user,
             name_opt=0,
             first_name_opt=0,
             desc='Test').save()
@@ -171,7 +171,7 @@ class TestViews1(TestCase):
         self.assertEqual(len(soup.select('table#list tbody tr')), 1)
         for number in range(200, 437):
             models.Debtor(
-                uid=User.objects.first(),
+                uid=self.user,
                 name_opt=0,
                 first_name_opt=0,
                 desc=('Test %d' % number)).save()
@@ -266,7 +266,6 @@ class TestViews1(TestCase):
         res = self.client.get('/dir/debtorform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
-        user = User.objects.first()
         res = self.client.get('/dir/debtorform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
@@ -410,7 +409,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
         debtor_id = models.Debtor.objects.create(
-            uid=user,
+            uid=self.user,
             name_opt=0,
             first_name_opt=0,
             birthid='7001011234',
@@ -458,14 +457,14 @@ class TestViews2(TestCase):
     
     def setUp(self):
         User.objects.create_user('user', 'user@' + localdomain, 'none')
+        self.user = User.objects.first()
 
     def tearDown(self):
         self.client.logout()
         
     def test_debtordel(self):
-        user = User.objects.first()
         debtor_id = models.Debtor.objects.create(
-            uid=user,
+            uid=self.user,
             name_opt=0,
             first_name_opt=0,
             desc='Test').id
@@ -496,14 +495,13 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
     def test_debtordelall(self):
-        user = User.objects.first()
         models.Debtor.objects.create(
-            uid=user,
+            uid=self.user,
             name_opt=0,
             first_name_opt=0,
             desc='Test 1')
         models.Debtor.objects.create(
-            uid=user,
+            uid=self.user,
             name_opt=0,
             first_name_opt=0,
             desc='Test 2')
@@ -549,20 +547,19 @@ class TestViews2(TestCase):
         self.assertFalse(models.Debtor.objects.exists())
 
     def test_debtorbatchform(self):
-        user = User.objects.first()
         models.Debtor.objects.create(
-            uid=user,
+            uid=self.user,
             name='Název 1',
             name_opt=0,
             first_name_opt=0,
             desc='Test 1')
         models.Debtor.objects.create(
-            uid=user,
+            uid=self.user,
             name_opt=0,
             first_name_opt=0,
             desc='Test 21')
         models.Debtor.objects.create(
-            uid=user,
+            uid=self.user,
             name_opt=0,
             first_name_opt=0,
             desc='Test 21')
@@ -647,14 +644,14 @@ class TestViews3(TransactionTestCase):
     
     def setUp(self):
         User.objects.create_user('user', 'user@' + localdomain, 'none')
+        self.user = User.objects.first()
 
     def tearDown(self):
         self.client.logout()
         
     def test_debtorexport(self):
-        user = User.objects.first()
         models.Debtor.objects.create(
-            uid=user,
+            uid=self.user,
             desc='Test 1',
             court='MSPHAAB',
             name='Název',
@@ -668,14 +665,14 @@ class TestViews3(TransactionTestCase):
             year_birth_from=1965,
             year_birth_to=1966)
         models.Debtor.objects.create(
-            uid=user,
+            uid=self.user,
             desc='Test 2',
             name='Název',
             name_opt=2,
             first_name='Jméno',
             first_name_opt=3)
         models.Debtor.objects.create(
-            uid=user,
+            uid=self.user,
             desc='Test 3',
             name_opt=0,
             first_name_opt=0)

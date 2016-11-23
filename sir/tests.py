@@ -195,15 +195,9 @@ class TestModels(TestCase):
 
 class TestViews1(TestCase):
     
-    @classmethod
-    def setUpClass(cls):
-        super(TestViews1, cls).setUpClass()
+    def setUp(self):
         User.objects.create_user('user', 'user@' + localdomain, 'none')
-        
-    @classmethod
-    def tearDownClass(cls):
-        User.objects.all().delete()
-        super(TestViews1, cls).tearDownClass()
+        self.user = User.objects.first()
 
     def tearDown(self):
         self.client.logout()
@@ -235,14 +229,13 @@ class TestViews1(TestCase):
              'submit': 'Změnit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(
-            User.objects.get(username='user').email,
-            'alt@' + localdomain)
+        self.user = User.objects.first()
+        self.assertEqual(self.user.email, 'alt@' + localdomain)
         res = self.client.get('/sir/')
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertFalse(soup.select('table#list'))
         models.Insolvency(
-            uid=User.objects.first(),
+            uid=self.user,
             number=13287,
             year=2016,
             desc='Test').save()
@@ -251,7 +244,7 @@ class TestViews1(TestCase):
         self.assertEqual(len(soup.select('table#list tbody tr')), 1)
         for number in range(200, 437):
             models.Insolvency(
-                uid=User.objects.first(),
+                uid=self.user,
                 number=number,
                 year=2016,
                 desc=('Test %d' % number)).save()
@@ -346,7 +339,6 @@ class TestViews1(TestCase):
         res = self.client.get('/sir/insform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
-        user = User.objects.first()
         res = self.client.get('/sir/insform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
@@ -419,7 +411,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
         ins_id = models.Insolvency.objects.create(
-            uid=user,
+            uid=self.user,
             number=1,
             year=2016,
             desc='Test 2').id
@@ -449,9 +441,8 @@ class TestViews1(TestCase):
         self.assertTrue(ins.detailed)
 
     def test_insdel(self):
-        user = User.objects.first()
         ins_id = models.Insolvency.objects.create(
-            uid=user,
+            uid=self.user,
             number=1,
             year=2016,
             desc='Test').id
@@ -482,14 +473,13 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
     def test_insdelall(self):
-        user = User.objects.first()
         models.Insolvency.objects.create(
-            uid=user,
+            uid=self.user,
             number=1,
             year=2016,
             desc='Test 1')
         models.Insolvency.objects.create(
-            uid=user,
+            uid=self.user,
             number=2,
             year=2016,
             desc='Test 2')
@@ -535,19 +525,18 @@ class TestViews1(TestCase):
         self.assertFalse(models.Insolvency.objects.exists())
 
     def test_insbatchform(self):
-        user = User.objects.first()
         models.Insolvency.objects.create(
-            uid=user,
+            uid=self.user,
             number=1,
             year=2016,
             desc='Test 1')
         models.Insolvency.objects.create(
-            uid=user,
+            uid=self.user,
             number=4,
             year=2011,
             desc='Test 4')
         models.Insolvency.objects.create(
-            uid=user,
+            uid=self.user,
             number=5,
             year=2012,
             desc='Test 4')
@@ -586,14 +575,13 @@ class TestViews1(TestCase):
              [8, 'Popisu "Test 4" odpovídá více než jedno řízení']])
             
     def test_insexport(self):
-        user = User.objects.first()
         models.Insolvency.objects.create(
-            uid=user,
+            uid=self.user,
             number=1,
             year=2016,
             desc='Test 1')
         models.Insolvency.objects.create(
-            uid=user,
+            uid=self.user,
             number=2,
             year=2011,
             detailed=True,
