@@ -111,11 +111,3 @@ class Rate(models.Model):
 
     def __str__(self):
         return '%s/%s' % (self.formula.abbr, self.fuel)
-    
-class VATrate(models.Model):
-    rate = models.FloatField()
-    valid = models.DateField(
-        db_index=True)
-
-    def __str__(self):
-        return str(self.valid)

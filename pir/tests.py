@@ -474,8 +474,10 @@ x2 = '<?xml version="1.0" encoding="utf-8"?>\n' \
 c0 = 'Soud,Spisová značka,Stav řízení\n'
 
 c1 = c0 + 'Krajský soud v Praze,KSPH 36 INS 16046/2011,(není známo)\n' \
-     '"Krajský soud v Hradci Králové, pobočka v Pardubicích",KSPA 56 INS 47/2015,Povoleno oddlužení\n' \
-     'Krajský soud v Českých Budějovicích,KSCB 27 INS 19124/2016,Před rozhodnutím o úpadku\n'
+     '"Krajský soud v Hradci Králové, pobočka v Pardubicích",KSPA 56 ' \
+     'INS 47/2015,Povoleno oddlužení\n' \
+     'Krajský soud v Českých Budějovicích,KSCB 27 INS 19124/2016,Před ' \
+     'rozhodnutím o úpadku\n'
 
 j0 = '[]'
 
@@ -1361,7 +1363,8 @@ class TestViews2(TestCase):
         res = self.client.get('/pir/xmllist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertXMLEqual(stripxml(res.content), stripxml(x0.encode('utf-8')))
-        res = self.client.get('/pir/xmllist/?name=Bártová&name_opt=iexact&role_debtor=on')
+        res = self.client.get(
+            '/pir/xmllist/?name=Bártová&name_opt=iexact&role_debtor=on')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertXMLEqual(stripxml(res.content), stripxml(x1.encode('utf-8')))
         res = self.client.get('/pir/xmllist/?creditors=on')

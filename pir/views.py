@@ -529,7 +529,8 @@ def jsonlist(request):
             'trustees': json_addparties(getosoby(v, 'trustee')),
         }
         if 'creditors' in rd:
-            p['creditors'] = json_addparties(getosoby(v, 'motioner', 'creditor'))
+            p['creditors'] = \
+                json_addparties(getosoby(v, 'motioner', 'creditor'))
         r.append(p)
     dump(r, response)
     return response

@@ -30,7 +30,7 @@ class CommonConfig(AppConfig):
 
     def stat(self):
         from django.contrib.auth.models import User
-        from .models import PwResetLink
+        from .models import PwResetLink, Preset
         now = datetime.now()
         return [
             [
@@ -51,4 +51,7 @@ class CommonConfig(AppConfig):
             [
                 'Počet dočasných linků pro obnovení hesla',
                 PwResetLink.objects.count()],
+            [
+                'Počet záznamů v tabulce Preset',
+                Preset.objects.count()],
         ]

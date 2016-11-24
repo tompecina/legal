@@ -224,8 +224,9 @@ def debtorbatchform(request):
                                     if ':' in value:
                                         name, name_opt = value.split(':', 1)
                                         if name_opt not in text_opts_abbr:
-                                            errors.append([i, 'Chybná zkratka ' \
-                                                'pro posici v poli <q>název</q>'])
+                                            errors.append([i, 'Chybná ' \
+                                                'zkratka pro posici v poli ' \
+                                                '<q>název</q>'])
                                             continue
                                         name_opt = text_opts_ai[name_opt]
                                     else:
@@ -240,8 +241,9 @@ def debtorbatchform(request):
                                         first_name, first_name_opt = \
                                             value.split(':', 1)
                                         if first_name_opt not in text_opts_abbr:
-                                            errors.append([i, 'Chybná zkratka ' \
-                                                'pro posici v poli <q>jméno</q>'])
+                                            errors.append([i, 'Chybná ' \
+                                                'zkratka pro posici v poli ' \
+                                                '<q>jméno</q>'])
                                             continue
                                         first_name_opt = \
                                             text_opts_ai[first_name_opt]

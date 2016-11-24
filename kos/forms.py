@@ -20,16 +20,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from datetime import date
 from common import forms, fields, widgets
-from .models import Preset
-
-def getpreset(id):
-    try:
-        return Preset.objects.filter(id=id, valid__lte=date.today()) \
-            .order_by('-valid')[0].value
-    except:
-        return 0
+from common.utils import getpreset
 
 class MainForm(forms.Form):
     netincome = fields.AmountField(
@@ -77,14 +69,14 @@ class MainForm(forms.Form):
     apt.rounding = 0
     fee = fields.AmountField(
         widget=widgets.saw(),
-        min_value=1.0,
+        min_value=0,
         label='Měsíční odměna správce',
         localize=True,
         initial=getpreset(id='FEE'))
     fee.rounding = 0
     fee2 = fields.AmountField(
         widget=widgets.saw(),
-        min_value=1.0,
+        min_value=0,
         localize=True,
         initial=getpreset(id='FEE2'))
     fee2.rounding = 0

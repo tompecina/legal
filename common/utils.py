@@ -37,6 +37,7 @@ from cache.models import Cache
 from .settings import TEST
 from .glob import (
     hd, odp, ydconvs, mdconvs, registers, localsubdomain, localemail)
+from .models import Preset
 
 def easter(dt):
     y = dt.year
@@ -464,3 +465,10 @@ def icmp(x, y):
     if x and y:
         return x.lower() == y.lower()
     return x == y
+
+def getpreset(id):
+    try:
+        return Preset.objects.filter(name=id, valid__lte=date.today()) \
+            .latest('valid').value
+    except:
+        return 0

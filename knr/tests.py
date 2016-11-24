@@ -154,11 +154,6 @@ class TestModels(SimpleTestCase):
                 fuel='test_fuel',
                 rate=34.90)),
             'test_abbr/test_fuel')
-        self.assertEqual(
-            str(models.VATrate(
-                rate=25,
-                valid=date(2015, 12, 8))),
-            '2015-12-08')
 
 class T(views.Calculation, views.Item):
     pass

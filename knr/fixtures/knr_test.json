@@ -1,9 +1,10 @@
 [
 {
-    "model": "knr.vatrate",
+    "model": "common.preset",
     "pk": 1,
     "fields": {
-        "rate": 25.0,
+        "name": "VAT",
+        "value": 25.0,
         "valid": "2016-01-01"
     }
 },

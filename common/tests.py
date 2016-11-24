@@ -35,7 +35,7 @@ from cache.tests import DummyRequest
 from sir.models import Counter
 from .settings import BASE_DIR
 from .glob import localdomain, localsubdomain, localemail
-from . import fields, forms, models, utils, views
+from . import fields, forms, glob, models, utils, views
 
 TEST_STRING = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské kódy'
 
@@ -90,15 +90,8 @@ def link_equal(a, b):
     if a[0] != b[0]:  # pragma: no cover
         return False
     a = a[1].split('&')
-    a.sort()
     b = b[1].split('&')
-    b.sort()
-    if len(a) != len(b):  # pragma: no cover
-        return False
-    for i in range(len(a)):
-        if a[i] != b[i]:  # pragma: no cover
-            return False
-    return True
+    return sorted(a) == sorted(b)
 
 def setcounter(k, n):
     Counter.objects.update_or_create(id=k, defaults={'number': n})
@@ -187,13 +180,8 @@ class TestFields(SimpleTestCase):
 
 class TestForms(TestCase):
 
-    def setUp(self):
-        User.objects.create_user('existing', 'existing@' + localdomain, 'none')
-
-    def tearDown(self):
-        User.objects.get(username='existing').delete()
-
     def test_UserAddForm(self):
+        User.objects.create_user('existing', 'existing@' + localdomain, 'none')
         s = {'first_name': 'New',
              'last_name': 'User',
              'username': 'new',
@@ -222,11 +210,7 @@ class TestForms(TestCase):
 class TestModels(TestCase):
 
     def test_models(self):
-        User.objects.create_user(
-            'user',
-            'user@' + localdomain,
-            'none'
-        )
+        User.objects.create_user('user', 'user@' + localdomain, 'none')
         uid = User.objects.all()[0].id
         p = models.PwResetLink(
             user_id=uid,
@@ -238,7 +222,7 @@ def proc_link(l):
         return -1
     return int(l.split('=')[-1])
         
-class TestUtils(SimpleTestCase):
+class TestUtils1(SimpleTestCase):
 
     def test_easter(self):
         es = [
@@ -766,6 +750,21 @@ class TestUtils(SimpleTestCase):
         self.assertFalse(utils.icmp('a', ''))
         self.assertFalse(utils.icmp('', 'a'))
 
+class TestUtils2(TestCase):
+
+    def test_getpreset(self):
+        today = date.today()
+        models.Preset.objects.get_or_create(
+            name='Test',
+            value=15,
+            valid=today)
+        models.Preset.objects.get_or_create(
+            name='Test',
+            value=16,
+            valid=(today + glob.odp))
+        self.assertEqual(utils.getpreset('XXX'), 0)
+        self.assertEqual(utils.getpreset('Test'), 15)
+
 class TestViews(TestCase):
 
     def setUp(self):
@@ -780,9 +779,6 @@ class TestViews(TestCase):
             'none'
         )
         
-    def tearDown(self):
-        User.objects.all().delete()
-
     def test_login(self):
         res = self.client.get('/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -841,8 +837,9 @@ class TestViews(TestCase):
         res = self.client.get('/knr/presets/')
         self.assertEqual(res.status_code, HTTPStatus.UNAUTHORIZED)
         self.assertTemplateUsed(res, 'unauth.html')
-        self.assertTrue(self.client.login(username='superuser',
-                                          password='none'))
+        self.assertTrue(self.client.login(
+            username='superuser',
+            password='none'))
         res = self.client.get('/knr/presets/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_mainpage.html')

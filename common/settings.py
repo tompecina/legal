@@ -37,8 +37,6 @@ ADMINS = (
     ('Tomas Pecina', 'tomas@pecina.cz'),
 )
 
-MANAGERS = ADMINS
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

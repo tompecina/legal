@@ -29,7 +29,7 @@ class KnrConfig(AppConfig):
 
     def stat(self):
         from cache.models import Asset
-        from .models import Place, Car, Formula, Rate, VATrate
+        from .models import Place, Car, Formula, Rate
         return [
             [
                 'Počet míst',
@@ -43,9 +43,6 @@ class KnrConfig(AppConfig):
             [
                 'Počet sazeb',
                 Rate.objects.count()],
-            [
-                'Počet historických sazeb DPH',
-                VATrate.objects.count()],
             [
                 'Počet položek v tabulce Asset',
                 Asset.objects.filter(assetid__startswith= \

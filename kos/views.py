@@ -27,9 +27,9 @@ from datetime import date
 from math import floor, ceil
 from common.utils import getbutton, formam, p2c
 from common.glob import inerr_short
+from common.models import Preset
 from cnb.main import getFXrate
 from .forms import MainForm
-from .models import Preset
 
 APP = __package__
 

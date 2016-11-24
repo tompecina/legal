@@ -36,3 +36,15 @@ class PwResetLink(models.Model):
 
     def __str__(self):
         return self.link
+
+class Preset(models.Model):
+    name = models.CharField(
+        max_length=30,
+        db_index=True,
+        unique_for_date='valid')
+    value = models.FloatField()
+    valid = models.DateField(
+        db_index=True)
+
+    def __str__(self):
+        return '%s, %s' % (self.name, str(self.valid))

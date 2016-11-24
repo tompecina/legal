@@ -21,14 +21,7 @@
 #
 
 from datetime import date
-from .models import VATrate
+from common.utils import getpreset
 
 def getVAT():
-    try:
-        return VATrate \
-            .objects \
-            .filter(valid__lte=date.today()) \
-            .latest('valid') \
-            .rate
-    except:
-        return 0
+    return getpreset('VAT')
