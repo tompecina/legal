@@ -592,8 +592,8 @@ class TestViews2(TestCase):
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorbatchresult.html')
-        self.assertEqual(models.Debtor.objects.count(), 8)
-        self.assertEqual(res.context['count'], 6)
+        self.assertEqual(models.Debtor.objects.count(), 9)
+        self.assertEqual(res.context['count'], 7)
         self.assertEqual(
             res.context['errors'],
             [[3, 'Prázdný popis'],
@@ -614,7 +614,8 @@ class TestViews2(TestCase):
              [18, 'Chybný interval pro rok narození'],
              [19, 'Chybný formát'],
              [20, 'Chybný parametr: "xxx"'],
-             [21, 'Popisu "Test 21" odpovídá více než jeden dlužník']])
+             [21, 'Popisu "Test 21" odpovídá více než jeden dlužník'],
+             [28, 'Příliš dlouhý popis']])
         res = self.client.get('/dir/debtorexport/')
         self.assertEqual(
             res.content.decode('utf-8'),
@@ -635,7 +636,8 @@ class TestViews2(TestCase):
             'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n' \
             'Test 26,soud=KSOS,název=Název:*,jméno=Jméno:*,IČO=12345678,' \
             'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,' \
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n')
+            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n' + \
+            ('T' * 255) + '\r\n')
         
 class TestViews3(TransactionTestCase):
     

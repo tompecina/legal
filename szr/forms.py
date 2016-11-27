@@ -21,8 +21,10 @@
 #
 
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 from common import forms, fields, widgets
 from common.glob import register_regex
+from szr.models import Court
 from .glob import supreme_court
 
 class EmailForm(forms.Form):
@@ -31,12 +33,17 @@ class EmailForm(forms.Form):
         max_length=60,
         label='E-mail')
 
+def courtval(c):
+    if not Court.objects.filter(id=c).exists():
+        raise ValidationError('Court does not exist')
+
 class ProcForm(forms.Form):
     court = fields.CharField(
         widget=widgets.abbrw(),
         max_length=30,
         label='Soud',
-        initial=supreme_court)
+        initial=supreme_court,
+        validators=[courtval])
     senate = fields.IntegerField(
         widget=widgets.saw(),
         min_value=0,

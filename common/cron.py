@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# common/management/commands/cron.py
+# common/cron.py
 #
 # Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -20,23 +20,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.core.management.base import BaseCommand
-from importlib import import_module
-import common.cron
-import szr.cron
-import sir.cron
-import psj.cron
-import udn.cron
+from django.contrib.auth.models import User
+from .utils import send_mail
+from .glob import localsubdomain, localurl
+from szr.cron import szr_notice
+from sur.cron import sur_notice
+from sir.cron import sir_notice
+from dir.cron import dir_notice
 
-class Command(BaseCommand):
-
-    def add_arguments(self, parser):
-        parser.add_argument('module', type=str)
-        parser.add_argument('method', type=str)
-        parser.add_argument('custargs', nargs='*', type=str)
-    
-    def handle(self, *args, **options):
-        module = options['module']
-        method = 'cron_' + options['method']
-        custargs = options['custargs']
-        getattr(import_module(module).cron, method)(*custargs)
+def cron_notify():
+    for u in User.objects.all():
+        uid = u.id;
+        text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) + \
+               dir_notice(uid)
+        if text and u.email:
+            text += 'Server ' + localsubdomain + ' (' + localurl + ')\n'
+            send_mail(
+                'Zprava ze serveru ' + localsubdomain,
+                text,
+                [u.email])

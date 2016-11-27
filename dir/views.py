@@ -209,6 +209,9 @@ def debtorbatchform(request):
                             if not desc:
                                 errors.append([i, 'Prázdný popis'])
                                 continue
+                            if len(desc) > 255:
+                                errors.append([i, 'Příliš dlouhý popis'])
+                                continue
                             for term in line[1:]:
                                 if '=' not in term:
                                     errors.append([i, 'Chybný formát'])

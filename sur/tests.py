@@ -482,8 +482,8 @@ class TestViews(TestCase):
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partybatchresult.html')
-        self.assertEqual(models.Party.objects.count(), 8)
-        self.assertEqual(res.context['count'], 5)
+        self.assertEqual(models.Party.objects.count(), 9)
+        self.assertEqual(res.context['count'], 6)
         self.assertEqual(
             res.context['errors'],
             [[1, 'Chybná délka řetězce'],
@@ -500,7 +500,8 @@ class TestViews(TestCase):
             'Test 07:*\r\n' \
             'Test 08:<\r\n' \
             'Test 09:>\r\n' \
-            'Test 10:=\r\n')
+            'Test 10:=\r\n' + \
+            ('T' * 80) + ':*\r\n')
 
     def test_partyexport(self):
         models.Party.objects.create(

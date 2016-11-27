@@ -26,11 +26,7 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from hashlib import md5
 from urllib.parse import quote
-from common.utils import get, post, send_mail, sleep
-from common.glob import localsubdomain, localurl
-from sur.cron import sur_notice
-from sir.cron import sir_notice
-from dir.cron import dir_notice
+from common.utils import get, post, sleep
 from .models import Court, Proceedings
 from .glob import supreme_court, supreme_administrative_court
 
@@ -66,6 +62,38 @@ def addauxid(p):
         except:
             pass
 
+def isreg(c):
+    s = c.pk
+    return (s[:2] == 'KS') or (s == 'MSPHAAB')
+    
+def cron_courts():
+    try:
+        res = get(root_url + list_courts)
+        soup = BeautifulSoup(res.text, 'html.parser')
+        Court.objects.get_or_create(id=supreme_court, name='Nejvyšší soud')
+        Court.objects.get_or_create(
+            id=supreme_administrative_court,
+            name='Nejvyšší správní soud')
+        upper = soup.find(id='kraj').find_all('option')[1:]
+        lower = soup.find(id='soudy').find_all('option')[1:]
+        for court in upper + lower:
+            Court.objects.get_or_create(
+                id=court['value'],
+                name=court.string.encode('utf-8'))
+    except:  # pragma: no cover
+        pass
+    Court.objects.all().update(reports=None)
+    for c in Court.objects.all():
+        if isreg(c):
+            try:
+                sleep(1)
+                res = get(root_url + (list_reports % c.pk))
+                soup = BeautifulSoup(res.text, 'xml')
+                for r in soup.find_all('okresniSoud'):
+                    Court.objects.filter(pk=r.id.string).update(reports=c)
+            except:  # pragma: no cover
+                pass
+
 def updateproc(p):
     notnew = bool(p.updated)
     p.updated = datetime.now()
@@ -96,19 +124,19 @@ def updateproc(p):
             res = get(url)
             soup = BeautifulSoup(res.text, 'html.parser')
             table = soup.find('tr', 'AAAA')
-            assert table
-    except:
+        assert table
+    except:  # pragma: no cover
         return False
     hash = md5(str(table).encode()).hexdigest()
     if court != supreme_administrative_court:
         changed = None
         try:
             t = table.find_next_sibling().find_next_sibling().table \
-                    .tr.td.find_next_sibling().text.split()
+                .tr.td.find_next_sibling().text.split()
             if len(t) == 4:
                 changed = datetime(*map(int, list(reversed(t[0].split('.'))) + \
-                                        t[1].split(':')))
-        except:
+                    t[1].split(':')))
+        except:  # pragma: no cover
             pass
         if (changed != p.changed) or (hash != p.hash):
             p.notify |= notnew
@@ -121,43 +149,11 @@ def updateproc(p):
     p.hash = hash
     return True
 
-def isreg(c):
-    s = c.pk
-    return (s[:2] == 'KS') or (s == 'MSPHAAB')
-    
-def cron_courts():
-    try:
-        res = get(root_url + list_courts)
-        soup = BeautifulSoup(res.text, 'html.parser')
-        Court.objects.get_or_create(id=supreme_court, name='Nejvyšší soud')
-        Court.objects.get_or_create(
-            id=supreme_administrative_court,
-            name='Nejvyšší správní soud')
-        upper = soup.find(id='kraj').find_all('option')[1:]
-        lower = soup.find(id='soudy').find_all('option')[1:]
-        for court in upper + lower:
-            Court.objects.get_or_create(
-                id=court['value'],
-                name=court.string.encode('utf-8'))
-    except:
-        pass
-    Court.objects.all().update(reports=None)
-    for c in Court.objects.all():
-        if isreg(c):
-            try:
-                sleep(1)
-                res = get(root_url + (list_reports % c.pk))
-                soup = BeautifulSoup(res.text, 'xml')
-                for r in soup.find_all('okresniSoud'):
-                    Court.objects.filter(pk=r.id.string).update(reports=c)
-            except:
-                pass
-
 def cron_update():
     p = Proceedings.objects.filter(Q(updated__lte=datetime.now()-update_delay) \
-            | Q(updated__isnull=True)).order_by('updated')
+        | Q(updated__isnull=True))
     if p:
-        p = p[0]
+        p = p.earliest('updated')
         if updateproc(p):
             p.save()
     
@@ -174,7 +170,7 @@ def szr_notice(uid):
             else:
                 desc = ''
             text += ' - %s, sp. zn. %d %s %d/%d%s\n' % \
-                    (p.court, p.senate, p.register, p.number, p.year, desc)
+                (p.court, p.senate, p.register, p.number, p.year, desc)
             if p.court_id != supreme_administrative_court:
                 if p.court_id == supreme_court:
                     court_type = 'ns'
@@ -193,15 +189,3 @@ def szr_notice(uid):
             p.notify = False
             p.save()
     return text
-
-def cron_notify():
-    for u in User.objects.all():
-        uid = u.id;
-        text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) + \
-               dir_notice(uid)
-        if text and u.email:
-            text += 'Server ' + localsubdomain + ' (' + localurl + ')\n'
-            send_mail(
-                'Zprava ze serveru ' + localsubdomain,
-                text,
-                [u.email])

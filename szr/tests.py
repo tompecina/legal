@@ -22,100 +22,132 @@
 
 from django.test import SimpleTestCase, TestCase, Client
 from django.contrib.auth.models import User
-from django.core import mail
+from django.core.exceptions import ValidationError
 from http import HTTPStatus
-from datetime import datetime, timedelta
+from datetime import datetime
 from bs4 import BeautifulSoup
-from re import compile
-from common.glob import (
-    registers, register_regex, localdomain, localsubdomain, localurl,
-    localemail)
-from . import cron, forms, glob, models, views
+from common.settings import BASE_DIR
+from common.glob import localdomain
+from common.tests import link_equal
+from . import cron, forms, models, views
 
 class TestCron(TestCase):
     fixtures = ['szr_test.json']
     
+    def test_addauxid(self):
+        cron.addauxid(models.Proceedings.objects.get(pk=1))
+        p = models.Proceedings.objects.get(pk=1)
+        cron.addauxid(p)
+        self.assertEqual(p.auxid, 0)
+        p = models.Proceedings.objects.get(pk=6)
+        cron.addauxid(p)
+        self.assertEqual(p.auxid, 173442)
+        p.auxid = 0
+        p.senate = 0
+        cron.addauxid(p)
+        self.assertEqual(p.auxid, 173443)
+        p.auxid = 0
+        p.year = 2014
+        cron.addauxid(p)
+        self.assertEqual(p.auxid, 0)
+
+    def test_isreg(self):
+        self.assertEqual(
+            list(map(cron.isreg, models.Court.objects.order_by('pk'))),
+            [True, False, False, False])
+
     def test_courts(self):
         cron.cron_courts()
-        c = models.Court.objects.all()
-        self.assertEqual(len(c), 98)
-        c = models.Court.objects.exclude(reports=None)
-        self.assertEqual(len(c), 86)
+        c = models.Court.objects
+        self.assertEqual(c.count(), 98)
+        self.assertEqual(c.exclude(reports__isnull=True).count(), 86)
         
     def test_update(self):
         self.assertEqual(models.Proceedings.objects.filter(
-            court_id='NSS', auxid=0).count(), 2)
+            court_id='NSS', auxid=0).count(), 3)
         st = datetime.now()
-        for i in range(6):
+        for i in range(models.Proceedings.objects.count()):
             cron.cron_update()
-        self.assertFalse(models.Proceedings.objects.filter(
-            court_id='NSS', auxid=0))
+        self.assertEquals(models.Proceedings.objects.filter(
+            court_id='NSS', auxid=0).count(), 1)
         ch6 = models.Proceedings.objects.get(pk=6).changed
         self.assertGreaterEqual(ch6, st)
         p = models.Proceedings.objects.all().order_by('pk')
         self.assertEqual(
-            tuple(p.values_list('pk', 'changed', 'hash', 'notify')),
-            ((1,
-              datetime(2016, 7, 8, 12, 25, 19),
-              '487dba55ef6843d7a99c75799563e50a',
-              False),
-             (2,
-              datetime(2016, 5, 21, 6, 12, 33),
-              'bb8b743a7cce90ebfc06eb3d7ebf88dd',
-              False),
-             (3,
-              datetime(2016, 5, 28, 9, 18, 55),
-              '5b40f8705599e6f2dada0af88aa759bb',
-              False),
-             (4,
-              None,
-              '9dd13c91a9eb4795c1ac3a1c0678d482',
-              False),
-             (5,
-              None,
-              'b8096f084f58c5ae4bec1cf5effdaf6b',
-              False),
-             (6,
-              ch6,
-              '7091c453e984b1e4180442964e023b2e',
-              True),
-            ))
+            list(p.values_list('pk', 'changed', 'hash', 'notify')),
+            [
+                (1,
+                 datetime(2016, 10, 20, 12, 39, 6),
+                 '1430516cb2a0c99c351869a97ac77ee0',
+                 True),
+            (
+                2,
+                datetime(2016, 10, 2, 5, 56, 30),
+                '3afc76b6d364063ccad6441a7c756d18',
+                True),
+            (
+                3,
+                datetime(2016, 11, 8, 4, 45, 31),
+                '7a17be9501909362bb42af331d06878e',
+                True),
+            (
+                4,
+                None,
+                'c7f58d99f53bebd007202c9644323909',
+                True),
+            (
+                5,
+                None,
+                'b8096f084f58c5ae4bec1cf5effdaf6b',
+                False),
+            (
+                6,
+                ch6,
+                '7091c453e984b1e4180442964e023b2e',
+                True),
+            (
+                7,
+                None,
+                '33e51a9e60a51f4595a5bc5ed5f2a4aa',
+                False),
+            ])
 
-    def test_notify(self):
-        self.maxDiff = None
-        for i in range(6):
+    def test_szr_notice(self):
+        self.assertEqual(cron.szr_notice(1), '')
+        for i in range(models.Proceedings.objects.count()):
             cron.cron_update()
-        cron.cron_notify()
-        m = mail.outbox
-        self.assertEqual(len(m), 1)
-        m = m[0]
         self.assertEqual(
-            m.from_email,
-            'Server ' + localsubdomain + ' <' + localemail + '>')
-        self.assertEqual(
-            m.to,
-            ['tomas@' + localdomain])
-        self.assertEqual(
-            m.subject,
-            'Zprava ze serveru ' + localsubdomain)
-        self.assertEqual(
-            m.body,
+            cron.szr_notice(1),
             'V těchto soudních řízeních, která sledujete, došlo ke změně:\n\n' \
+            ' - Nejvyšší soud, sp. zn. 8 Tdo 819/2015\n' \
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
+            'org=NSJIMBM&krajOrg=NSJIMBM&cisloSenatu=8&druhVec=TDO&' \
+            'bcVec=819&rocnik=2015&typSoudu=ns&autoFill=true&type=spzn\n\n' \
+            ' - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)\n' \
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
+            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=41&druhVec=T' \
+            '&bcVec=3&rocnik=2016&typSoudu=os&autoFill=true&type=spzn\n\n' \
             ' - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 ' \
             '(Miloš Zbránek)\n' \
             '   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&' \
             'kau_id=173442\n\n' \
-            'Server ' + localsubdomain + ' (' + localurl + ')\n')
+            ' - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)\n' \
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
+            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=10&druhVec=T' \
+            '&bcVec=8&rocnik=2014&typSoudu=os&autoFill=true&type=spzn\n\n' \
+            ' - Obvodní soud Praha 2, sp. zn. 6 T 136/2013 (RWU)\n' \
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
+            'org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T' \
+            '&bcVec=136&rocnik=2013&typSoudu=os&autoFill=true&type=spzn\n\n')
 
-class TestGlob(SimpleTestCase):
+class TestForms(TestCase):
+    fixtures = ['szr_test.json']
 
-    def test_register_regex(self):
-        rr = compile(register_regex)
-        for p in registers:
-            self.assertIsNotNone(rr.match(p), msg=p)
-        for p in ['X', '']:
-            self.assertIsNone(rr.match(p), msg=p)
-
+    def test_courtval(self):
+        with self.assertRaises(ValidationError):
+            forms.courtval('XXX')
+        forms.courtval('NSS')
+    
 class TestModels(SimpleTestCase):
 
     def test_models(self):
@@ -160,6 +192,14 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         res = self.client.post(
             '/szr/',
+            {'email': 'xxx',
+             'submit': 'Změnit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/',
             {'email': 'alt@' + localdomain,
              'submit': 'Změnit'},
             follow=True)
@@ -167,18 +207,114 @@ class TestViews(TestCase):
         self.user = User.objects.get(username='user')
         self.assertEqual(self.user.email, 'alt@' + localdomain)
         res = self.client.get('/szr/')
-        try:
-            soup = BeautifulSoup(res.content, 'html.parser')
-        except:
-            self.fail()
+        soup = BeautifulSoup(res.content, 'html.parser')
         self.assertFalse(soup.select('table#list'))
         self.client.force_login(User.objects.get(pk=1))
         res = self.client.get('/szr/')
-        try:
-            soup = BeautifulSoup(res.content, 'html.parser')
-        except:
-            self.fail()
-        self.assertEqual(len(soup.select('table#list tbody tr')), 6)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        self.assertEqual(len(soup.select('table#list tbody tr')), 7)
+        models.Proceedings(
+            uid_id=1,
+            court_id='OSPHA02',
+            senate=15,
+            register='C',
+            number=13287,
+            year=2016,
+            desc='Test').save()
+        res = self.client.get('/szr/')
+        soup = BeautifulSoup(res.content, 'html.parser')
+        self.assertEqual(len(soup.select('table#list tbody tr')), 8)
+        for number in range(200, 437):
+            models.Proceedings(
+                uid_id=1,
+                court_id='OSPHA02',
+                senate=15,
+                register='C',
+                number=number,
+                year=2016,
+                desc=('Test %d' % number)).save()
+        res = self.client.get('/szr/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertEqual(len(res.context['rows']), 50)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 3)
+        self.assertEqual(links[0]['href'], '/szr/procform/')
+        self.assertTrue(link_equal(
+            links[1]['href'],
+            '/szr/?start=50'))
+        self.assertTrue(link_equal(
+            links[2]['href'],
+            '/szr/?start=200'))
+        res = self.client.get('/szr/?start=50')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertEqual(len(res.context['rows']), 50)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 5)
+        self.assertEqual(links[0]['href'], '/szr/procform/')
+        self.assertTrue(link_equal(
+            links[1]['href'],
+            '/szr/?start=0'))
+        self.assertTrue(link_equal(
+            links[2]['href'],
+            '/szr/?start=0'))
+        self.assertTrue(link_equal(
+            links[3]['href'],
+            '/szr/?start=100'))
+        self.assertTrue(link_equal(
+            links[4]['href'],
+            '/szr/?start=200'))
+        res = self.client.get('/szr/?start=100')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertEqual(len(res.context['rows']), 50)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 5)
+        self.assertEqual(links[0]['href'], '/szr/procform/')
+        self.assertTrue(link_equal(
+            links[1]['href'],
+            '/szr/?start=0'))
+        self.assertTrue(link_equal(
+            links[2]['href'],
+            '/szr/?start=50'))
+        self.assertTrue(link_equal(
+            links[3]['href'],
+            '/szr/?start=150'))
+        self.assertTrue(link_equal(
+            links[4]['href'],
+            '/szr/?start=200'))
+        res = self.client.get('/szr/?start=200')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertEqual(len(res.context['rows']), 45)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 3)
+        self.assertEqual(links[0]['href'], '/szr/procform/')
+        self.assertTrue(link_equal(
+            links[1]['href'],
+            '/szr/?start=0'))
+        self.assertTrue(link_equal(
+            links[2]['href'],
+            '/szr/?start=150'))
+        res = self.client.get('/szr/?start=500')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertEqual(len(res.context['rows']), 1)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 3)
+        self.assertEqual(links[0]['href'], '/szr/procform/')
+        self.assertTrue(link_equal(
+            links[1]['href'],
+            '/szr/?start=0'))
+        self.assertTrue(link_equal(
+            links[2]['href'],
+            '/szr/?start=194'))
 
     def test_procform(self):
         res = self.client.get('/szr/procform')
@@ -188,16 +324,473 @@ class TestViews(TestCase):
         res = self.client.get('/szr/procform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.client.force_login(User.objects.get(pk=1))
-        res = self.client.get('/szr/procform/1/')
+        res = self.client.get('/szr/procform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'szr_procform.html')
-        try:
-            soup = BeautifulSoup(res.content, 'html.parser')
-        except:
-            self.fail()
+        soup = BeautifulSoup(res.content, 'html.parser')
+        p = soup.select('h1')
+        self.assertEqual(len(p), 1)
+        self.assertEqual(p[0].text, 'Nové řízení')
+        res = self.client.post(
+            '/szr/procform/',
+            {'register': 'C',
+             'number': '110',
+             'year': '2016',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'XXX',
+             'register': 'C',
+             'number': '110',
+             'year': '2016',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'senate': '-1',
+             'register': 'C',
+             'number': '110',
+             'year': '2016',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'senate': 'XXX',
+             'register': 'C',
+             'number': '110',
+             'year': '2016',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'senate': '52',
+             'number': '110',
+             'year': '2016',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'senate': '52',
+             'register': 'XXX',
+             'number': '110',
+             'year': '2016',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'senate': '52',
+             'register': 'C',
+             'year': '2016',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'senate': '52',
+             'register': 'C',
+             'number': '0',
+             'year': '2016',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'senate': '52',
+             'register': 'C',
+             'number': 'XXX',
+             'year': '2016',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'senate': '52',
+             'register': 'C',
+             'number': '110',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'senate': '52',
+             'register': 'C',
+             'number': '110',
+             'year': '1989',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'senate': '52',
+             'register': 'C',
+             'number': '110',
+             'year': 'XXX',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        res = self.client.post(
+            '/szr/procform/',
+            {'submit_back': 'Zpět bez uložení'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'senate': '52',
+             'register': 'C',
+             'number': '110',
+             'year': '2016',
+             'desc': 'Test 6',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'senate': '52',
+             'register': 'C',
+             'number': '110',
+             'year': '2016',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        res = self.client.post(
+            '/szr/procform/',
+            {'court': 'MSPHAAB',
+             'register': 'C',
+             'number': '110',
+             'year': '2016',
+             'desc': 'Test',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        proc_id = models.Proceedings.objects.create(
+            uid_id=1,
+            court_id='MSPHAAB',
+            senate=52,
+            register='C',
+            number=1,
+            year=2016,
+            desc='Test 2').id
+        res = self.client.get('/szr/procform/%d/' % proc_id)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTrue(res.has_header('content-type'))
+        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
+        self.assertTemplateUsed(res, 'szr_procform.html')
+        soup = BeautifulSoup(res.content, 'html.parser')
         p = soup.select('h1')
         self.assertEqual(len(p), 1)
         self.assertEqual(p[0].text, 'Úprava řízení')
-        self.client.logout()
+        res = self.client.post(
+            ('/szr/procform/%d/' % proc_id),
+            {'court': 'MSPHAAB',
+             'senate': '52',
+             'register': 'C',
+             'number': '110',
+             'year': '2016',
+             'desc': 'Test 8',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        proc = models.Proceedings.objects.get(pk=proc_id)
+        self.assertEqual(proc.senate, 52)
+        self.assertEqual(proc.register, 'C')
+        self.assertEqual(proc.number, 110)
+        self.assertEqual(proc.year, 2016)
+        self.assertEqual(proc.desc, 'Test 8')
+        res = self.client.post(
+            ('/szr/procform/%d/' % proc_id),
+            {'court': 'MSPHAAB',
+             'senate': '52',
+             'register': 'C',
+             'number': '110',
+             'year': '2016',
+             'desc': 'Test 9',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        proc = models.Proceedings.objects.get(pk=proc_id)
+        self.assertEqual(proc.senate, 52)
+        self.assertEqual(proc.register, 'C')
+        self.assertEqual(proc.number, 110)
+        self.assertEqual(proc.year, 2016)
+        self.assertEqual(proc.desc, 'Test 9')
+
+    def test_procdel(self):
+        proc_id = models.Proceedings.objects.create(
+            uid=self.user,
+            court_id='MSPHAAB',
+            senate=52,
+            register='C',
+            number=1,
+            year=2016,
+            desc='Test').id
+        res = self.client.get('/szr/procdel/%d' % proc_id)
+        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+        res = self.client.get('/szr/procdel/%d/' % proc_id)
+        self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        res = self.client.get(('/szr/procdel/%d/' % proc_id), follow=True)
+        self.assertTemplateUsed(res, 'login.html')
+        self.assertTrue(self.client.login(username='user', password='none'))
+        res = self.client.get('/szr/procdel/%d/' % proc_id)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procdel.html')
+        res = self.client.post(
+            '/szr/procdel/%d/' % proc_id,
+            {'submit_no': 'Ne'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        res = self.client.post(
+            '/szr/procdel/%d/' % proc_id,
+            {'submit_yes': 'Ano'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procdeleted.html')
+        self.assertFalse(models.Proceedings.objects.filter(pk=proc_id).exists())
+        res = self.client.post('/szr/procdel/%d/' % proc_id)
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+    def test_procdelall(self):
+        models.Proceedings.objects.create(
+            uid=self.user,
+            court_id='MSPHAAB',
+            senate=52,
+            register='C',
+            number=1,
+            year=2016,
+            desc='Test 1')
+        models.Proceedings.objects.create(
+            uid=self.user,
+            court_id='MSPHAAB',
+            senate=52,
+            register='C',
+            number=2,
+            year=2016,
+            desc='Test 2')
+        self.assertEqual(models.Proceedings.objects \
+            .filter(uid=self.user).count(), 2)
+        res = self.client.get('/szr/procdelall')
+        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+        res = self.client.get('/szr/procdelall/')
+        self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        res = self.client.get('/szr/procdelall/', follow=True)
+        self.assertTemplateUsed(res, 'login.html')
+        self.assertTrue(self.client.login(username='user', password='none'))
+        res = self.client.get('/szr/procdelall/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procdelall.html')
+        res = self.client.post(
+            '/szr/procdelall/',
+            {'submit_no': 'Ne'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        res = self.client.post(
+            '/szr/procdelall/',
+            {'submit_yes': 'Ano'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertEqual(models.Proceedings.objects \
+            .filter(uid=self.user).count(), 2)
+        res = self.client.post(
+            '/szr/procdelall/',
+            {'submit_yes': 'Ano',
+             'conf': 'ano'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertEqual(models.Proceedings.objects \
+            .filter(uid=self.user).count(), 2)
+        res = self.client.post(
+            '/szr/procdelall/',
+            {'submit_yes': 'Ano',
+             'conf': 'Ano'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertFalse(models.Proceedings.objects \
+            .filter(uid=self.user).exists())
+
+    def test_procbatchform(self):
+        models.Proceedings.objects.create(
+            uid=self.user,
+            court_id='MSPHAAB',
+            senate=52,
+            register='C',
+            number=1,
+            year=2016,
+            desc='Test 01')
+        models.Proceedings.objects.create(
+            uid=self.user,
+            court_id='MSPHAAB',
+            senate=52,
+            register='C',
+            number=4,
+            year=2011,
+            desc='Test 13')
+        models.Proceedings.objects.create(
+            uid=self.user,
+            court_id='MSPHAAB',
+            senate=52,
+            register='C',
+            number=5,
+            year=2012,
+            desc='Test 13')
+        res = self.client.get('/szr/procbatchform')
+        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+        res = self.client.get('/szr/procbatchform/')
+        self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        res = self.client.get('/szr/procbatchform/', follow=True)
+        self.assertTemplateUsed(res, 'login.html')
+        self.assertTrue(self.client.login(username='user', password='none'))
+        res = self.client.get('/szr/procbatchform/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procbatchform.html')
+        res = self.client.post(
+            '/szr/procbatchform/',
+            {'submit_load': 'Načíst'})
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procbatchform.html')
+        self.assertContains(res, 'Nejprve zvolte soubor k načtení')
+        with open(BASE_DIR + '/szr/testdata/import.csv', 'rb') as fi:
+            res = self.client.post(
+                '/szr/procbatchform/',
+                {'submit_load': 'Načíst',
+                 'load': fi},
+                follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'szr_procbatchresult.html')
+        self.assertEqual(models.Proceedings.objects.count(), 13)
+        self.assertEqual(res.context['count'], 4)
+        self.assertEqual(
+            res.context['errors'],
+            [[3, 'Chybná zkratka soudu'],
+             [4, 'Chybná zkratka soudu'],
+             [5, 'Chybný formát'],
+             [8, 'Chybná spisová značka'],
+             [9, 'Chybná spisová značka'],
+             [10, 'Chybná spisová značka'],
+             [11, 'Chybná spisová značka'],
+             [12, 'Chybná spisová značka'],
+             [13, 'Popisu "Test 13" odpovídá více než jedno řízení'],
+             [14, 'Prázdný popis'],
+             [16, 'Příliš dlouhý popis']])
+        res = self.client.get('/szr/procexport/')
+        self.assertEqual(
+            res.content.decode('utf-8'),
+            'Test 01,MSPHAAB,45 A 27/2014\r\n' \
+            'Test 06,MSPHAAB,Nc 1070/2016\r\n' \
+            'Test 07,MSPHAAB,Nc 1071/2016\r\n' \
+            'Test 13,MSPHAAB,52 C 4/2011\r\n' \
+            'Test 13,MSPHAAB,52 C 5/2012\r\n' + \
+            ('T' * 255) + ',MSPHAAB,45 A 27/2014\r\n')
+
+    def test_procexport(self):
+        models.Proceedings.objects.create(
+            uid=self.user,
+            court_id='MSPHAAB',
+            senate=52,
+            register='C',
+            number=1,
+            year=2016,
+            desc='Test 1')
+        models.Proceedings.objects.create(
+            uid=self.user,
+            court_id='MSPHAAB',
+            senate=0,
+            register='Nc',
+            number=512,
+            year=2009,
+            desc='Test 2')
+        res = self.client.get('/szr/procexport')
+        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+        res = self.client.get('/szr/procexport/')
+        self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        res = self.client.get('/szr/procexport/', follow=True)
+        self.assertTemplateUsed(res, 'login.html')
+        self.assertTrue(self.client.login(username='user', password='none'))
+        res = self.client.get('/szr/procexport/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTrue(res.has_header('content-type'))
+        self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
+        self.assertEqual(
+            res.content.decode('utf-8'),
+            'Test 1,MSPHAAB,52 C 1/2016\r\nTest 2,MSPHAAB,Nc 512/2009\r\n')
+
+    def test_courts(self):
+        res = self.client.get('/szr/courts')
+        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+        res = self.client.get('/szr/courts/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTrue(res.has_header('content-type'))
+        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
+        self.assertTemplateUsed(res, 'szr_courts.html')
+        self.assertEqual(
+            list(res.context['rows']),
+            [{'id': 'MSPHAAB', 'name': 'Městský soud Praha'},
+             {'id': 'NSJIMBM', 'name': 'Nejvyšší soud'},
+             {'id': 'NSS', 'name': 'Nejvyšší správní soud'},
+             {'id': 'OSPHA02', 'name': 'Obvodní soud Praha 2'}])

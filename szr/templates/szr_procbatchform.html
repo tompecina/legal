@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+	<form method="post" enctype="multipart/form-data" id="id_procbatchform">
+	  <h1 style="margin-bottom: 8px;">{{ page_title }}</h1>
+	  <table style="margin: 15px auto 25px;">
+{% if err_message %}            <tr><td class="warning">
+              {% include "formwarning.html" %}            </td></tr>
+{% endif %}	    </tr>
+	    <tr>
+	      <td>
+		<p>Zvolte soubor CSV pro načtení sledovaných řízení.</p>
+		<p>Soubor musí být v kodu UTF-8 a jeho formát musí přesně odpovídat následujícímu popisu.</p>
+		<p>V prvním poli na každém řádku je uveden řetězec, který se použije pro Popis.<br />Dále následuje soud a spisová značka. Soud se zadává zkratkou podle <a href="{% url 'szr:courts' %}">seznamu</a>.</p>
+		<p>Soubor CSV v požadovaném formátu, který můžete ručně editovat, získáte funkcí Export.</p>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td><input type="file" name="load" accept="text/csv" id="id_load" /></td>
+	    </tr>
+	    <tr>
+	      <td><input type="submit" name="submit_load" value="Načíst" id="id_load_button" /></td>
+	    </tr>
+	  </table>
+          <p style="text-align: center;">
+	    <a href="{% url 'szr:mainpage' %}">
+	      Zpět na seznam sledovaných řízení
+	    </a>
+	  </p>
+	  {% csrf_token %}
+	</form>
+{% endblock %}

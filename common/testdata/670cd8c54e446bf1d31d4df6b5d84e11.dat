@@ -1,0 +1,2977 @@
+
+
+
+
+
+  
+  
+  
+  
+  
+
+
+
+
+
+
+ <!-- IDS002F -->
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Výpis událostí v řízení</title>
+    <link rel='stylesheet' type='text/css' href='../common/css/infoSoud.css'/>
+    
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-store, no-cache, must-revalidate, post-check=0, pre-check=0">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
+
+    <meta name="robots" content="noindex, nofollow">
+  </head>
+  <body>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
+      <tbody>
+      <tr>
+<!-- menu bar - begin -->
+	      
+
+
+
+
+
+
+
+
+
+
+<!-- menu bar - begin -->
+<td valign="top" width="321px">
+          <table border="0" cellpadding="0" cellspacing="0" width="321px" height="100%">
+            <tbody>
+            <tr>
+              <td class="menu-left" width="275px">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" >
+                <tr ><td height="10px">&nbsp;</td></tr>
+                <tr>   
+                  <td  style="padding-top: 6pt; padding-left: 0pt; padding-right: 0pt;" valign="top" align="center" height="20px">
+                        
+                        <a href="../public/search.jsp" ><img src="../common/images/nadpis.png"  class="undecore" /></a>
+                        
+                  </td>
+                </tr>
+                <tr ><td height="15px">&nbsp;</td></tr>
+                <tr>
+                  <td  style="padding-top: 6pt; padding-left: 0pt; padding-right: 0pt; " valign="top" align="center" height="20px">
+                       
+                        <span class="title_text">informace o průběhu řízení</span>
+                        
+                  </td>
+                </tr>
+                <tr>
+                  <td  style="padding-top: 6pt; padding-left: 0pt; padding-right: 0pt; " valign="top" align="center" height="20px">
+                    <span class="title_info_text">Zobrazovaná data mají pouze informativní charakter</span>
+                    <br/>&nbsp;
+                  </td>
+                </tr>
+                <!-- tr>
+                  <td style="padding-top: 6pt; padding-left: 10pt; padding-right: 10pt;" valign="top" height="20px">
+                    <a href="../public/search.jsp"><span class="title_info">Info</span><span class="title_soud">Soud</span></a><br/>
+                    <br/>
+                    <span class="title_text">informace o průběhu řízení</span>
+                    <br/>&nbsp;
+                  </td>
+                </tr-->
+                <tr>
+                  <td style="padding-left: 6pt; padding-right: 10pt;" valign="top" height="20px">
+
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <col width="5%">
+                      <col width="95%">
+                      <tbody>
+                      <tr>
+                        <td colspan="2" bgcolor="white"><img src="../common/images/white_pixel.gif" border="0"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td class="menu"><img src="../common/images/white_box.gif" alt="-" border="0"></td>
+                        <td class="menu"><a href="/InfoSoud/public/search.jsp;jsessionid=6d7f5301b9041debaad7496e9481" class="menu">Informace o řízení</a></td>
+                      </tr>
+                      <tr>
+                        <td class="menu">&nbsp;</td>
+                        <td class="menu-popis">Informace o průběhu řízení. Přehled událostí, které nastaly v průběhu řízení ve formě přehledné tabulky a podrobného zobrazení</td>
+                      </tr>
+                      <tr>
+                        <td class="menu"><img src="../common/images/white_box.gif" alt="-" border="0"></td>
+                        <td class="menu"><a href="/InfoSoud/public/searchJednani.jsp;jsessionid=6d7f5301b9041debaad7496e9481" class="menu">Informace o jednání</a></td>
+                      </tr>
+                      <tr>
+                        <td class="menu">&nbsp;</td>
+                        <td class="menu-popis">Informace o nařízených jednání. Přehled nařízených jednání v jednacích síních soudů zobrazených podle místnosti a data.</td>
+                      </tr>
+                      <tr>
+                        <td class="menu"><img src="../common/images/white_box.gif" alt="-" border="0"></td>
+                        <td class="menu"><a href="/InfoSoud/public/help.jsp;jsessionid=6d7f5301b9041debaad7496e9481#faq" class="menu">Nejčastější dotazy</a></td>
+                      </tr>
+                      <tr>
+                        <td class="menu"><img src="../common/images/white_box.gif" alt="-" border="0"></td>
+                        <td class="menu"><a href="/InfoSoud/public/help.jsp;jsessionid=6d7f5301b9041debaad7496e9481#conceptions" class="menu">Vysvětlení pojmů</a></td>
+                      </tr>
+
+                      <tr>
+                        <td colspan="2" bgcolor="white"><img src="../common/images/white_pixel.gif" border="0"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu" height="5px"><img src="../common/images/white_pixel.gif" border="0"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu">
+                            Důležité informace
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu">
+                            V aplikaci infoSoud se zobrazují pouze spisové značky okresních soudů, které mají ročník starší než 2006 a spisové značky krajských soudů s ročníkem starším než 2007. 
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu">
+                            Průběh řízení vedených u Nejvyššího správního soudu lze sledovat na <a href="http://www.nssoud.cz" class="menu">internetových stránkách organizace</a>.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="menu">
+                            Průběh insolvenčního řízení (včetně incidenčních sporů) lze sledovat v <a href="https://isir.justice.cz" class="menu">insolvenčním rejstříku</a>.
+                        </td>
+                      </tr>
+                    </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-left: 6pt; padding-right: 10pt;" valign="top" height="20px">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td colspan="2" bgcolor="white"><img src="../common/images/white_pixel.gif" border="0"></td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                        <a class="menu" href="http://www.justice.cz/" target="_blank">www.justice.cz</a></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                </table>
+              </td>
+              <td width="9px" bgcolor="white">&nbsp;</td>
+              <td class="menu-right" width="37px">&nbsp;</td>
+            </tr>
+          </tbody>
+          </table>
+        </td>
+<!-- menu bar - end -->
+
+
+
+  <!-- body cell start -->
+        <td class="body" valign="top" width="100%">
+          <table border="0" cellpadding="6pt" cellspacing="0pt" width="100%">
+
+<!-- global errors and messages start -->
+					
+					
+					
+<!-- global errors and messages end -->
+
+<!-- body cell data - start -->
+            <tr>
+            	<td>
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="../common/js/tooltip.js" type="text/javascript"></script>
+
+
+
+
+
+ <table border="0" cellpadding="6pt" cellspacing="0pt" width="100%">
+   <tr>
+     <td class="body-banner" height="91px" valign="bottom">
+       <span class="body-banner-label">Spisová značka:&nbsp;&nbsp;</span>
+       <span class="body-banner-data">10 T 8 / 2014</span>
+     </td>
+   </tr>
+   <tr>
+     <td height="1px">&nbsp;</td>
+   </tr>
+   <tr>
+     <td valign="top">
+       <table border="0" cellpadding="0pt" cellspacing="0pt" width="100%">
+         <tr>
+           <td style="padding-bottom: 12pt;" width="100%"><span class="body-vyrazny-text">Městský soud Praha
+</span></td>
+		   <td style="padding-bottom: 12pt;">
+			  <a href="javascript:history.go(-1)">zpět</a>
+		   </td>
+         </tr>
+         <tr>
+           <td bgcolor="#2c2c2c" height="1px"></td>
+         </tr>
+       </table>
+     </td>
+   </tr>
+   <!-- tr>
+     <td style="padding-top: 6pt;"><span class="body-vyrazny-text">Předmět řízení</span>: <=predmetRizeni ></td>
+   </tr -->
+   <tr>
+
+    <td style="padding-top: 0pt;"><span class="body-vyrazny-text">Stav řízení</span>: Vyřízená věc - po vyhlášení konečného rozhodnutí (od 08.09.2016)</td>
+    
+   </tr>
+	   
+   <tr>
+     <td height="1px"><img src="../common/images/transparent_pixel.gif" border="0"/></td>
+   </tr>
+   <tr>
+     <td style="padding-top: 0pt;">
+     	<span class="body-vyrazny-text">Průběh řízení</span>
+     </td>
+   </tr>
+   <tr class="AAAA">
+     <td>
+       <table width="50%" border="1">
+         <tr>
+           <th>Událost v řízení</th>
+           <th>Datum</th>
+         </tr>
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=1&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=ZAHAJ_RIZ&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost1MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost1MSPHAABT2014108', 'udalost1MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost1MSPHAABT2014108');"
+	                class="data"> 
+	                     Zahájení řízení
+
+	                </a>
+	             <div id="tooltip_udalost1MSPHAABT2014108" class="xstooltip">
+	               <b>Zahájení řízení</b> je zápis spisové značky do příslušného rejstříku
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		20.06.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=4&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost4MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost4MSPHAABT2014108', 'udalost4MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost4MSPHAABT2014108');"
+	                class="data"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost4MSPHAABT2014108" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		19.12.2014
+	             
+
+				 
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=3&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=VYD_ROZH&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost3MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost3MSPHAABT2014108', 'udalost3MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost3MSPHAABT2014108');"
+	                class="data"> 
+	                     Vydání rozhodnutí
+
+	                </a>
+	             <div id="tooltip_udalost3MSPHAABT2014108" class="xstooltip">
+	               <b>Vydání rozhodnutí</b> je rozhodnutí soudce nebo vyšší soudní úřednice
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		19.12.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=340&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=ST_VEC_VYR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost340MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost340MSPHAABT2014108', 'udalost340MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost340MSPHAABT2014108');"
+	                class="data"> 
+	                     Vyřízení věci
+
+	                </a>
+	             <div id="tooltip_udalost340MSPHAABT2014108" class="xstooltip">
+	               <b>Vyřízením věci</b> se myslí vyřízení věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		19.12.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=5&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost5MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost5MSPHAABT2014108', 'udalost5MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost5MSPHAABT2014108');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost5MSPHAABT2014108" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		23.12.2014
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=6&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=ODES_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost6MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost6MSPHAABT2014108', 'udalost6MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost6MSPHAABT2014108');"
+	                class="data"> 
+	                     Odeslání spisu
+
+	                </a>
+	             <div id="tooltip_udalost6MSPHAABT2014108" class="xstooltip">
+	               <b>Odesláním spisu</b> se rozumí: např.: odeslání nadřízenému soudu k prostudování
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		17.03.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=1&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=ODVOLANI&idUdalosti=null&druhVecId=TO&rocnikId=2015&cisloSenatuId=5&bcVecId=19&orgId=VSPHAAB"
+	                id="udalost1VSPHAABTO2015519" 
+	                onmouseover="xstooltip_show('tooltip_udalost1VSPHAABTO2015519', 'udalost1VSPHAABTO2015519', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost1VSPHAABTO2015519');"
+	                class="data"> 
+	                     Řízení o opravném prostředku u krajského a vrchního soudu
+
+	                </a>
+	             <div id="tooltip_udalost1VSPHAABTO2015519" class="xstooltip">
+	               <b>Řízení o opraveném prostředku u krajského a vrchního soudu</b> se myslí zahájení odvolacího řízení
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		19.03.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=9&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=VYR_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost9MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost9MSPHAABT2014108', 'udalost9MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost9MSPHAABT2014108');"
+	                class="data"> 
+	                     Vyřízení opravného prostředku
+
+	                </a>
+	             <div id="tooltip_udalost9MSPHAABT2014108" class="xstooltip">
+	               <b>Opravný prostředek</b> je vyřízen např. nadřízeným krajským soudem, kde je vydáno nové rozhodnutí
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		29.06.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=7&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=ST_VEC_OBZ&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost7MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost7MSPHAABT2014108', 'udalost7MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost7MSPHAABT2014108');"
+	                class="data"> 
+	                     Obživnutí věci
+
+	                </a>
+	             <div id="tooltip_udalost7MSPHAABT2014108" class="xstooltip">
+	               <b>Obživnutím věci</b> se myslí zrušení původního vyřizujícího rozhodnutí a v soudním řízení se pokračuje
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		07.07.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=8&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=VRAC_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost8MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost8MSPHAABT2014108', 'udalost8MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost8MSPHAABT2014108');"
+	                class="data"> 
+	                     Vrácení spisu
+
+	                </a>
+	             <div id="tooltip_udalost8MSPHAABT2014108" class="xstooltip">
+	               <b>Vrácením spisu</b> se rozumí: např.: na vrácení spisu od nadřízeného soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		07.07.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="dataSediva">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=16&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost16MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost16MSPHAABT2014108', 'udalost16MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost16MSPHAABT2014108');"
+	                class="dataSediva"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost16MSPHAABT2014108" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="dataSediva">
+	           		01.09.2015
+	             
+
+				 
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=42&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci42">  
+				 	  01.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=105&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci105">  
+				 	  01.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=13&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci13">  
+				 	  02.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=117&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci117">  
+				 	  02.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=61&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci61">  
+				 	  02.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=91&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci91">  
+				 	  03.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=46&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci46">  
+				 	  03.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=20&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci20">  
+				 	  03.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=28&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci28">  
+				 	  04.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=100&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci100">  
+				 	  04.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=57&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci57">  
+				 	  04.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=31&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci31">  
+				 	  07.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=110&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci110">  
+				 	  07.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=55&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci55">  
+				 	  07.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=59&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci59">  
+				 	  08.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=114&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci114">  
+				 	  08.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=23&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci23">  
+				 	  08.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=64&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci64">  
+				 	  21.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=18&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci18">  
+				 	  21.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=102&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci102">  
+				 	  21.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=112&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci112">  
+				 	  14.10.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=67&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci67">  
+				 	  14.10.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=96&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci96">  
+				 	  15.10.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=50&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci50">  
+				 	  15.10.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=98&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci98">  
+				 	  16.10.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=44&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci44">  
+				 	  16.10.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=108&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci108">  
+				 	  26.10.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=39&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci39">  
+				 	  26.10.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=52&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci52">  
+				 	  27.10.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=119&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci119">  
+				 	  27.10.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=95&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci95">  
+				 	  23.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=93&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci93">  
+				 	  24.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=104&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci104">  
+				 	  25.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=107&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci107">  
+				 	  26.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=116&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci116">  
+				 	  27.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=94&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci94">  
+				 	  21.12.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=127&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci127">  
+				 	  25.01.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=121&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci121">  
+				 	  26.01.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=123&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci123">  
+				 	  27.01.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=147&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci147">  
+				 	  28.01.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=122&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci122">  
+				 	  11.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=148&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci148">  
+				 	  12.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=141&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci141">  
+				 	  16.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=137&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci137">  
+				 	  17.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=132&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci132">  
+				 	  18.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=124&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci124">  
+				 	  19.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=143&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci143">  
+				 	  15.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=125&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci125">  
+				 	  16.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=126&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci126">  
+				 	  17.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=133&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci133">  
+				 	  18.03.2016
+		            </a>
+		         
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="dataSediva">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=14&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=ZRUS_JED&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost14MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost14MSPHAABT2014108', 'udalost14MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost14MSPHAABT2014108');"
+	                class="dataSediva"> 
+	                     Zrušení jednání
+
+	                </a>
+	             <div id="tooltip_udalost14MSPHAABT2014108" class="xstooltip">
+	               Zrušení nařízeného jednání
+
+	             </div> 
+	           </td>
+	           <td class="dataSediva">
+	           		22.09.2015
+	             
+
+				 
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=19&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci19">  
+				 	  22.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=17&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci17">  
+				 	  22.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=32&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci32">  
+				 	  22.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=29&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci29">  
+				 	  22.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=24&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci24">  
+				 	  22.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=21&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci21">  
+				 	  22.09.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=56&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci56">  
+				 	  04.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=58&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci58">  
+				 	  04.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=53&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci53">  
+				 	  04.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=51&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci51">  
+				 	  04.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=47&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci47">  
+				 	  04.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=45&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci45">  
+				 	  04.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=43&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci43">  
+				 	  04.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=40&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci40">  
+				 	  04.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=60&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci60">  
+				 	  04.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=68&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci68">  
+				 	  04.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=65&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci65">  
+				 	  04.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=62&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci62">  
+				 	  04.11.2015
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=92&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci92">  
+				 	  11.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=97&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci97">  
+				 	  11.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=99&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci99">  
+				 	  11.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=101&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci101">  
+				 	  11.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=103&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci103">  
+				 	  11.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=120&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci120">  
+				 	  11.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=109&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci109">  
+				 	  11.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=111&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci111">  
+				 	  11.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=118&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci118">  
+				 	  11.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=115&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci115">  
+				 	  11.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=113&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci113">  
+				 	  11.02.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=106&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci106">  
+				 	  11.02.2016
+		            </a>
+		         
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=38&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost38MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost38MSPHAABT2014108', 'udalost38MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost38MSPHAABT2014108');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost38MSPHAABT2014108" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		24.09.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=37&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost37MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost37MSPHAABT2014108', 'udalost37MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost37MSPHAABT2014108');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost37MSPHAABT2014108" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		24.09.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=35&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost35MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost35MSPHAABT2014108', 'udalost35MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost35MSPHAABT2014108');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost35MSPHAABT2014108" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		24.09.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=34&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost34MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost34MSPHAABT2014108', 'udalost34MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost34MSPHAABT2014108');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost34MSPHAABT2014108" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		24.09.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=36&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost36MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost36MSPHAABT2014108', 'udalost36MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost36MSPHAABT2014108');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost36MSPHAABT2014108" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		24.09.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=83&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=ODES_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost83MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost83MSPHAABT2014108', 'udalost83MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost83MSPHAABT2014108');"
+	                class="data"> 
+	                     Odeslání spisu
+
+	                </a>
+	             <div id="tooltip_udalost83MSPHAABT2014108" class="xstooltip">
+	               <b>Odesláním spisu</b> se rozumí: např.: odeslání nadřízenému soudu k prostudování
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		30.11.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=1&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=ODVOLANI&idUdalosti=null&druhVecId=TO&rocnikId=2015&cisloSenatuId=5&bcVecId=92&orgId=VSPHAAB"
+	                id="udalost1VSPHAABTO2015592" 
+	                onmouseover="xstooltip_show('tooltip_udalost1VSPHAABTO2015592', 'udalost1VSPHAABTO2015592', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost1VSPHAABTO2015592');"
+	                class="data"> 
+	                     Řízení o opravném prostředku u krajského a vrchního soudu
+
+	                </a>
+	             <div id="tooltip_udalost1VSPHAABTO2015592" class="xstooltip">
+	               <b>Řízení o opraveném prostředku u krajského a vrchního soudu</b> se myslí zahájení odvolacího řízení
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		01.12.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=87&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=VYR_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost87MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost87MSPHAABT2014108', 'udalost87MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost87MSPHAABT2014108');"
+	                class="data"> 
+	                     Vyřízení opravného prostředku
+
+	                </a>
+	             <div id="tooltip_udalost87MSPHAABT2014108" class="xstooltip">
+	               <b>Opravný prostředek</b> je vyřízen např. nadřízeným krajským soudem, kde je vydáno nové rozhodnutí
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		09.12.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=88&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=VYR_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost88MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost88MSPHAABT2014108', 'udalost88MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost88MSPHAABT2014108');"
+	                class="data"> 
+	                     Vyřízení opravného prostředku
+
+	                </a>
+	             <div id="tooltip_udalost88MSPHAABT2014108" class="xstooltip">
+	               <b>Opravný prostředek</b> je vyřízen např. nadřízeným krajským soudem, kde je vydáno nové rozhodnutí
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		09.12.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=89&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=VYR_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost89MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost89MSPHAABT2014108', 'udalost89MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost89MSPHAABT2014108');"
+	                class="data"> 
+	                     Vyřízení opravného prostředku
+
+	                </a>
+	             <div id="tooltip_udalost89MSPHAABT2014108" class="xstooltip">
+	               <b>Opravný prostředek</b> je vyřízen např. nadřízeným krajským soudem, kde je vydáno nové rozhodnutí
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		09.12.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=86&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=VYR_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost86MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost86MSPHAABT2014108', 'udalost86MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost86MSPHAABT2014108');"
+	                class="data"> 
+	                     Vyřízení opravného prostředku
+
+	                </a>
+	             <div id="tooltip_udalost86MSPHAABT2014108" class="xstooltip">
+	               <b>Opravný prostředek</b> je vyřízen např. nadřízeným krajským soudem, kde je vydáno nové rozhodnutí
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		09.12.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=85&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=VYR_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost85MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost85MSPHAABT2014108', 'udalost85MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost85MSPHAABT2014108');"
+	                class="data"> 
+	                     Vyřízení opravného prostředku
+
+	                </a>
+	             <div id="tooltip_udalost85MSPHAABT2014108" class="xstooltip">
+	               <b>Opravný prostředek</b> je vyřízen např. nadřízeným krajským soudem, kde je vydáno nové rozhodnutí
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		09.12.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=84&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=VRAC_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost84MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost84MSPHAABT2014108', 'udalost84MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost84MSPHAABT2014108');"
+	                class="data"> 
+	                     Vrácení spisu
+
+	                </a>
+	             <div id="tooltip_udalost84MSPHAABT2014108" class="xstooltip">
+	               <b>Vrácením spisu</b> se rozumí: např.: na vrácení spisu od nadřízeného soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		17.12.2015
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=90&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=ODES_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost90MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost90MSPHAABT2014108', 'udalost90MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost90MSPHAABT2014108');"
+	                class="data"> 
+	                     Odeslání spisu
+
+	                </a>
+	             <div id="tooltip_udalost90MSPHAABT2014108" class="xstooltip">
+	               <b>Odesláním spisu</b> se rozumí: např.: odeslání nadřízenému soudu k prostudování
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		11.01.2016
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="dataSediva">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=164&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost164MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost164MSPHAABT2014108', 'udalost164MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost164MSPHAABT2014108');"
+	                class="dataSediva"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost164MSPHAABT2014108" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="dataSediva">
+	           		19.02.2016
+	             
+
+				 
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=169&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci169">  
+				 	  16.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=323&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci323">  
+				 	  16.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=285&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci285">  
+				 	  16.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=211&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci211">  
+				 	  16.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=187&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci187">  
+				 	  16.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=275&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci275">  
+				 	  17.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=209&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci209">  
+				 	  17.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=226&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci226">  
+				 	  17.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=312&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci312">  
+				 	  17.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=171&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci171">  
+				 	  17.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=288&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci288">  
+				 	  18.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=180&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci180">  
+				 	  18.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=282&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci282">  
+				 	  18.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=234&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci234">  
+				 	  18.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=202&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci202">  
+				 	  18.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=305&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci305">  
+				 	  18.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=263&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci263">  
+				 	  18.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=195&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci195">  
+				 	  18.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=230&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci230">  
+				 	  18.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=189&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci189">  
+				 	  19.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=245&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci245">  
+				 	  19.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=325&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci325">  
+				 	  19.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=248&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci248">  
+				 	  19.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=167&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci167">  
+				 	  19.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=215&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci215">  
+				 	  20.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=290&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci290">  
+				 	  20.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=197&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci197">  
+				 	  20.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=175&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci175">  
+				 	  20.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=280&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci280">  
+				 	  20.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=236&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci236">  
+				 	  26.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=178&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci178">  
+				 	  26.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=307&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci307">  
+				 	  26.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=205&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci205">  
+				 	  26.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=256&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci256">  
+				 	  26.04.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=293&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci293">  
+				 	  09.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=252&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci252">  
+				 	  09.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=191&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci191">  
+				 	  09.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=242&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci242">  
+				 	  09.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=317&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci317">  
+				 	  10.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=200&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci200">  
+				 	  10.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=277&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci277">  
+				 	  10.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=213&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci213">  
+				 	  10.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=310&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci310">  
+				 	  11.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=224&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci224">  
+				 	  11.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=261&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci261">  
+				 	  11.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=193&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci193">  
+				 	  11.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=296&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci296">  
+				 	  12.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=207&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci207">  
+				 	  12.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=268&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci268">  
+				 	  12.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=217&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci217">  
+				 	  12.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=149&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci149">  
+				 	  19.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=266&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci266">  
+				 	  24.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=300&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci300">  
+				 	  24.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=272&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci272">  
+				 	  25.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=314&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci314">  
+				 	  25.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=298&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci298">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=320&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci320">  
+				 	  28.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=287&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci287">  
+				 	  15.08.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=295&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci295">  
+				 	  16.08.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=299&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci299">  
+				 	  17.08.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=321&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci321">  
+				 	  18.08.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=316&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci316">  
+				 	  19.08.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=302&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci302">  
+				 	  22.08.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=304&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci304">  
+				 	  23.08.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=322&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci322">  
+				 	  24.08.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=303&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci303">  
+				 	  05.09.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=319&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci319">  
+				 	  06.09.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=292&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci292">  
+				 	  07.09.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=309&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci309">  
+				 	  08.09.2016
+		            </a>
+		         
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="dataSediva">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=150&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=ZRUS_JED&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost150MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost150MSPHAABT2014108', 'udalost150MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost150MSPHAABT2014108');"
+	                class="dataSediva"> 
+	                     Zrušení jednání
+
+	                </a>
+	             <div id="tooltip_udalost150MSPHAABT2014108" class="xstooltip">
+	               Zrušení nařízeného jednání
+
+	             </div> 
+	           </td>
+	           <td class="dataSediva">
+	           		14.03.2016
+	             
+
+				 
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=165&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci165">  
+				 	  14.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=181&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci181">  
+				 	  21.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=168&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci168">  
+				 	  21.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=170&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci170">  
+				 	  21.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=172&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci172">  
+				 	  21.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=176&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci176">  
+				 	  21.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=179&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci179">  
+				 	  21.03.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=203&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci203">  
+				 	  18.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=206&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci206">  
+				 	  18.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=208&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci208">  
+				 	  18.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=201&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci201">  
+				 	  18.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=198&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci198">  
+				 	  18.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=196&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci196">  
+				 	  18.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=194&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci194">  
+				 	  18.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=192&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci192">  
+				 	  18.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=210&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci210">  
+				 	  18.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=190&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci190">  
+				 	  18.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=188&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci188">  
+				 	  18.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=237&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci237">  
+				 	  20.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=235&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci235">  
+				 	  20.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=231&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci231">  
+				 	  20.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=227&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci227">  
+				 	  20.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=225&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci225">  
+				 	  20.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=218&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci218">  
+				 	  20.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=216&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci216">  
+				 	  20.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=214&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci214">  
+				 	  20.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=212&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci212">  
+				 	  20.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=243&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci243">  
+				 	  20.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=246&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci246">  
+				 	  20.05.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=249&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci249">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=253&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci253">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=286&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci286">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=283&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci283">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=281&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci281">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=278&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci278">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=276&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci276">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=273&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci273">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=269&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci269">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=267&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci267">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=264&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci264">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=262&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci262">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=257&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci257">  
+				 	  21.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=289&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci289">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=324&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci324">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=318&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci318">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=315&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci315">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=313&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci313">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=311&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci311">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=326&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci326">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=306&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci306">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=301&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci301">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=297&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci297">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=294&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci294">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=291&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci291">  
+				 	  26.07.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=308&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci308">  
+				 	  26.07.2016
+		            </a>
+		         
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=185&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=VRAC_SPIS&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost185MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost185MSPHAABT2014108', 'udalost185MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost185MSPHAABT2014108');"
+	                class="data"> 
+	                     Vrácení spisu
+
+	                </a>
+	             <div id="tooltip_udalost185MSPHAABT2014108" class="xstooltip">
+	               <b>Vrácením spisu</b> se rozumí: např.: na vrácení spisu od nadřízeného soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		22.03.2016
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=352&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=NAR_JED&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost352MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost352MSPHAABT2014108', 'udalost352MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost352MSPHAABT2014108');"
+	                class="data"> 
+	                     Nařízení jednání
+
+	                </a>
+	             <div id="tooltip_udalost352MSPHAABT2014108" class="xstooltip">
+	               <b>Nařízení jednání</b> je naplánování jednání do jednacího kalendáře soudu
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		05.09.2016
+	             
+
+				 
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=350&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci350">  
+				 	  06.09.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=343&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci343">  
+				 	  07.09.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=349&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci349">  
+				 	  08.09.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=345&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci345">  
+				 	  31.10.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=353&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci353">  
+				 	  01.11.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=346&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci346">  
+				 	  02.11.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=351&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci351">  
+				 	  03.11.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=342&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci342">  
+				 	  04.11.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=348&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci348">  
+				 	  08.11.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=354&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci354">  
+				 	  09.11.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=344&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci344">  
+				 	  10.11.2016
+		            </a>
+		         
+				    <br>
+		             
+		            <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=347&typSoudu=os&agendaNc=null"
+		                id="odskrtnuti_veci347">  
+				 	  11.11.2016
+		            </a>
+		         
+
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=341&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=VYD_ROZH&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost341MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost341MSPHAABT2014108', 'udalost341MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost341MSPHAABT2014108');"
+	                class="data"> 
+	                     Vydání rozhodnutí
+
+	                </a>
+	             <div id="tooltip_udalost341MSPHAABT2014108" class="xstooltip">
+	               <b>Vydání rozhodnutí</b> je rozhodnutí soudce nebo vyšší soudní úřednice
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		05.09.2016
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=359&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost359MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost359MSPHAABT2014108', 'udalost359MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost359MSPHAABT2014108');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost359MSPHAABT2014108" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		08.09.2016
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=358&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost358MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost358MSPHAABT2014108', 'udalost358MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost358MSPHAABT2014108');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost358MSPHAABT2014108" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		08.09.2016
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=357&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost357MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost357MSPHAABT2014108', 'udalost357MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost357MSPHAABT2014108');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost357MSPHAABT2014108" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		08.09.2016
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=355&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost355MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost355MSPHAABT2014108', 'udalost355MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost355MSPHAABT2014108');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost355MSPHAABT2014108" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		08.09.2016
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+	         <tr>
+
+              
+
+	           <td class="data">
+	             
+                 
+                 
+	             
+	             <a href="../public/list.do?druhVec=T&rocnik=2014&cisloSenatu=10&bcVec=8&kraj=MSPHAAB&org=MSPHAAB&poradiUdalosti=356&cisloSenatuLabel=10&typSoudu=os&agendaNc=null&druhUdalosti=POD_OP_PR&idUdalosti=null&druhVecId=T&rocnikId=2014&cisloSenatuId=10&bcVecId=8&orgId=MSPHAAB"
+	                id="udalost356MSPHAABT2014108" 
+	                onmouseover="xstooltip_show('tooltip_udalost356MSPHAABT2014108', 'udalost356MSPHAABT2014108', 60, 20);" 
+	                onmouseout="xstooltip_hide('tooltip_udalost356MSPHAABT2014108');"
+	                class="data"> 
+	                     Podán opravný prostředek
+
+	                </a>
+	             <div id="tooltip_udalost356MSPHAABT2014108" class="xstooltip">
+	               <b>Podání opravného prostředku</b> je např. odvolání některého z účastníků řízení k vydanému rozhodnutí ve věci
+
+	             </div> 
+	           </td>
+	           <td class="data">
+	           		08.09.2016
+
+	           </td>
+	         </tr>
+	         
+         
+         
+         
+         
+	              
+       </table>
+     </td>
+   </tr>
+   <tr>
+   	<td>
+   		<table>
+   		</table>
+   	</td>
+   </tr>
+	<tr>
+		<td>
+		   <table width="100%">
+		  	  <tr>
+	    		<td align="right" nowrap="nowrap">
+   
+		    		Poslední změna ve spisu:&nbsp;<br>
+		    		
+		  			Údaje platné k:&nbsp;
+	    		</td>
+			    <td width="100%"> 
+   
+	    	  		02.10.2016 05:56:30<br>
+		    		
+			        27.11.2016 17:14:56
+		    	</td>
+			    <td>
+				   <a href="javascript:history.go(-1)">zpět</a>
+			    </td>
+			  </tr>
+			</table>
+		</td>	    
+	 </tr>
+   <tr>
+     <td class="data">
+       <a href="/InfoSoud/public/help.jsp;jsessionid=6d7f5301b9041debaad7496e9481#list" target="_blank">Nápověda</a>
+     </td>
+   </tr>
+ </table>
+ 
+
+
+
+              </td>
+            </tr>
+<!-- body cell data - end -->
+            <tr>
+               <td height="130px"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+    </table>
+  </body>
+</html>
+
+
+

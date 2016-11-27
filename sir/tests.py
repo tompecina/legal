@@ -564,16 +564,26 @@ class TestViews1(TestCase):
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insbatchresult.html')
-        self.assertEqual(models.Insolvency.objects.count(), 5)
-        self.assertEqual(res.context['count'], 3)
+        self.assertEqual(models.Insolvency.objects.count(), 6)
+        self.assertEqual(res.context['count'], 4)
         self.assertEqual(
             res.context['errors'],
             [[3, 'Chybné běžné číslo'],
              [4, 'Chybný ročník'],
              [6, 'Chybný údaj pro pole Vše'],
              [7, 'Prázdný popis'],
-             [8, 'Popisu "Test 4" odpovídá více než jedno řízení']])
-            
+             [8, 'Popisu "Test 4" odpovídá více než jedno řízení'],
+             [11, 'Příliš dlouhý popis']])
+        res = self.client.get('/sir/insexport/')
+        self.assertEqual(
+            res.content.decode('utf-8'),
+            'Test 1,3,2010,ne\r\n' \
+            'Test 2,2,2013,ano\r\n' \
+            'Test 3,3,2014,ano\r\n' \
+            'Test 4,4,2011,ne\r\n' \
+            'Test 4,5,2012,ne\r\n' + \
+            ('T' * 255) + ',57,2012,ano\r\n')
+
     def test_insexport(self):
         models.Insolvency.objects.create(
             uid=self.user,

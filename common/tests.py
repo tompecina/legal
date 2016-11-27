@@ -31,11 +31,13 @@ from copy import copy
 from http import HTTPStatus
 from re import compile
 from hashlib import md5
+from django.core import mail
 from cache.tests import DummyRequest
+from szr.cron import cron_update
+from szr.models import Proceedings
 from sir.models import Counter
 from .settings import BASE_DIR
-from .glob import localdomain, localsubdomain, localemail
-from . import fields, forms, glob, models, utils, views
+from . import cron, glob, fields, forms, glob, models, utils, views
 
 TEST_STRING = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské kódy'
 
@@ -111,6 +113,50 @@ def getdl():
 def getpr():
     return getcounter('PR')
 
+class TestCron(TestCase):
+    fixtures = ['common_test.json']
+
+    def test_szr_notice(self):
+        for i in range(Proceedings.objects.count()):
+            cron_update()
+        cron.cron_notify()
+        m = mail.outbox
+        self.assertEqual(len(m), 1)
+        m = m[0]
+        self.assertEqual(
+            m.from_email,
+            'Server ' + glob.localsubdomain + ' <' + glob.localemail + '>')
+        self.assertEqual(
+            m.to,
+            ['tomas@' + glob.localdomain])
+        self.assertEqual(
+            m.subject,
+            'Zprava ze serveru ' + glob.localsubdomain)
+        self.assertEqual(
+            m.body,
+            'V těchto soudních řízeních, která sledujete, došlo ke změně:\n\n' \
+            ' - Nejvyšší soud, sp. zn. 8 Tdo 819/2015\n' \
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
+            'org=NSJIMBM&krajOrg=NSJIMBM&cisloSenatu=8&druhVec=TDO&' \
+            'bcVec=819&rocnik=2015&typSoudu=ns&autoFill=true&type=spzn\n\n' \
+            ' - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)\n' \
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
+            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=41&druhVec=T' \
+            '&bcVec=3&rocnik=2016&typSoudu=os&autoFill=true&type=spzn\n\n' \
+            ' - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 ' \
+            '(Miloš Zbránek)\n' \
+            '   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&' \
+            'kau_id=173442\n\n' \
+            ' - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)\n' \
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
+            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=10&druhVec=T' \
+            '&bcVec=8&rocnik=2014&typSoudu=os&autoFill=true&type=spzn\n\n' \
+            ' - Obvodní soud Praha 2, sp. zn. 6 T 136/2013 (RWU)\n' \
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
+            'org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T' \
+            '&bcVec=136&rocnik=2013&typSoudu=os&autoFill=true&type=spzn\n\n' \
+            'Server ' + glob.localsubdomain + ' (' + glob.localurl + ')\n')
+
 class TestFields(SimpleTestCase):
 
     def test_prnum(self):
@@ -181,7 +227,9 @@ class TestFields(SimpleTestCase):
 class TestForms(TestCase):
 
     def test_UserAddForm(self):
-        User.objects.create_user('existing', 'existing@' + localdomain, 'none')
+        User.objects.create_user(
+            'existing',
+            'existing@' + glob.localdomain, 'none')
         s = {'first_name': 'New',
              'last_name': 'User',
              'username': 'new',
@@ -207,10 +255,19 @@ class TestForms(TestCase):
         d['username'] = 'existing'
         self.assertFalse(forms.UserAddForm(d).is_valid())
 
+class TestGlob(SimpleTestCase):
+
+    def test_register_regex(self):
+        rr = compile(glob.register_regex)
+        for p in glob.registers:
+            self.assertIsNotNone(rr.match(p), msg=p)
+        for p in ['X', '']:
+            self.assertIsNone(rr.match(p), msg=p)
+
 class TestModels(TestCase):
 
     def test_models(self):
-        User.objects.create_user('user', 'user@' + localdomain, 'none')
+        User.objects.create_user('user', 'user@' + glob.localdomain, 'none')
         uid = User.objects.all()[0].id
         p = models.PwResetLink(
             user_id=uid,
@@ -775,12 +832,12 @@ class TestViews(TestCase):
     def setUp(self):
         User.objects.create_user(
             'user',
-            'user@' + localdomain,
+            'user@' + glob.localdomain,
             'none'
         )
         User.objects.create_superuser(
             'superuser',
-            'superuser@' + localdomain,
+            'superuser@' + glob.localdomain,
             'none'
         )
         
@@ -942,10 +999,10 @@ class TestViews(TestCase):
         m = m[0]
         self.assertEqual(
             m.from_email,
-            'Server ' + localsubdomain + ' <' + localemail + '>')
+            'Server ' + glob.localsubdomain + ' <' + glob.localemail + '>')
         self.assertEqual(
             m.to,
-            ['user@' + localdomain])
+            ['user@' + glob.localdomain])
         self.assertEqual(
             m.subject,
             'Link pro obnoveni hesla')
@@ -995,7 +1052,7 @@ class TestViews(TestCase):
              'username': 'newuser',
              'password1': 'newpass',
              'password2': 'newpass',
-             'email': 'tomas@' + localdomain,
+             'email': 'tomas@' + glob.localdomain,
              'captcha': 'Praha'
         }
         d = copy(s)

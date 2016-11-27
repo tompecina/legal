@@ -33,6 +33,14 @@
 	  </tbody>
 	</table>
         <p style="text-align: center;">
+	  <a href="{% url 'szr:procbatchform' %}">
+	    Import
+	  </a>
+	  /
+	  <a href="{% url 'szr:procexport' %}">
+	    Export
+	  </a>
+	  /
 	  <a href="{% url 'szr:procdelall' %}">
 	    Smazat vše
 	  </a>
@@ -44,6 +52,10 @@
 	    <a href="{% url 'szr:procform' %}">
 	      Přidat řízení
 	    </a>
+	  /
+	  <a href="{% url 'szr:procbatchform' %}">
+	    Import
+	  </a>
 	  </p>{% endif %}
     <form method="post" enctype="multipart/form-data">
       <table style="margin: 20px auto 15px auto;">

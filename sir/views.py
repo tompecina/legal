@@ -177,6 +177,9 @@ def insbatchform(request):
                             if not desc:
                                 errors.append([i, 'Prázdný popis'])
                                 continue
+                            if len(desc) > 255:
+                                errors.append([i, 'Příliš dlouhý popis'])
+                                continue
                             try:
                                 number = int(line[1])
                                 assert number > 0

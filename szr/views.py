@@ -20,15 +20,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.apps import apps
 from django.urls import reverse
-from common.utils import getbutton, Pager
-from common.glob import inerr
+from datetime import date
+from csv import reader as csvreader, writer as csvwriter
+from io import StringIO
+from common.utils import getbutton, Pager, composeref, decomposeref
+from common.glob import registers, inerr
 from .forms import EmailForm, ProcForm
 from .models import Court, Proceedings
 from .cron import addauxid, updateproc
@@ -38,6 +41,43 @@ APP = __package__
 APPVERSION = apps.get_app_config(APP).version
 
 BATCH = 50
+
+@require_http_methods(['GET', 'POST'])
+@login_required
+def mainpage(request):
+    err_message = ''
+    uid = request.user.id
+    page_title = 'Sledování změn v řízení'
+    rd = request.GET.copy()
+    start = int(rd['start']) if ('start' in rd) else 0
+    btn = getbutton(request)
+    if request.method == 'GET':
+        f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
+    else:
+        f = EmailForm(request.POST)
+        if f.is_valid():
+            cd = f.cleaned_data
+            p = get_object_or_404(User, pk=uid)
+            p.email = cd['email']
+            p.save()
+            return redirect('szr:mainpage')
+        else:
+            err_message = inerr
+    p = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk')
+    total = p.count()
+    if (start >= total) and (total > 0):
+        start = total - 1
+    rows = p[start:(start + BATCH)]
+    return render(
+        request,
+        'szr_mainpage.html',
+        {'app': APP,
+         'f': f,
+         'page_title': page_title,
+         'err_message': err_message,
+         'rows': rows,
+         'pager': Pager(start, total, reverse('szr:mainpage'), rd, BATCH),
+         'total': total})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -83,7 +123,7 @@ def procform(request, id=0):
                 updateproc(p)
             p.save()
             return redirect('szr:mainpage')
-        else:
+        else:  # pragma: no cover
             err_message = inerr
     return render(
         request,
@@ -130,37 +170,133 @@ def procdelall(request):
 
 @require_http_methods(['GET', 'POST'])
 @login_required
-def mainpage(request):
+def procbatchform(request):
+
     err_message = ''
     uid = request.user.id
-    page_title = 'Sledování změn v řízení'
-    rd = request.GET.copy()
-    start = int(rd['start']) if ('start' in rd) else 0
-    btn = getbutton(request)
-    if request.method == 'GET':
-        f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
-    else:
-        f = EmailForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            p = get_object_or_404(User, pk=uid)
-            p.email = cd['email']
-            p.save()
-            return redirect('szr:mainpage')
-        else:
-            err_message = inerr
-    p = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk')
-    total = p.count()
-    if (start >= total) and (total > 0):
-        start = total - 1
-    rows = p[start:(start + BATCH)]
+    today = date.today()
+
+    if (request.method == 'POST'):
+        btn = getbutton(request)
+
+        if btn == 'load':
+            f = request.FILES.get('load')
+            if not f:
+                err_message = 'Nejprve zvolte soubor k načtení'
+            else:
+                errors = []
+                try:
+                    count = 0
+                    with f:
+                        i = 0
+                        for line in csvreader(StringIO(f.read().decode())):
+                            i += 1
+                            errlen = len(errors)
+                            if not line:
+                                continue
+                            if len(line) != 3:
+                                errors.append([i, 'Chybný formát'])
+                                continue
+                            desc = line[0].strip()
+                            if not desc:
+                                errors.append([i, 'Prázdný popis'])
+                                continue
+                            if len(desc) > 255:
+                                errors.append([i, 'Příliš dlouhý popis'])
+                                continue
+                            try:
+                                court = line[1]
+                                assert Court.objects.get(id=court)
+                            except:
+                                errors.append([i, 'Chybná zkratka soudu'])
+                                continue
+                            try:
+                                senate, register, number, year = \
+                                    decomposeref(line[2])
+                                assert senate >= 0
+                                assert register in registers
+                                assert number > 0
+                                assert (year >= 1990) and (year <= today.year)
+                            except:
+                                errors.append([i, 'Chybná spisová značka'])
+                                continue
+                            if len(errors) == errlen:
+                                p = Proceedings.objects.filter(
+                                    uid_id=uid,
+                                    desc=desc,
+                                    court=court,
+                                    senate=senate,
+                                    register=register,
+                                    number=number,
+                                    year=year)
+                                if not p.exists():
+                                    try:
+                                        p, pc = Proceedings.objects.update_or_create(
+                                            uid_id=uid,
+                                            desc=desc,
+                                            defaults={
+                                                'court_id': court,
+                                                'senate': senate,
+                                                'register': register,
+                                                'number': number,
+                                                'year': year,
+                                                'changed': None,
+                                                'updated': None,
+                                                'hash': '',
+                                                'auxid': 0,
+                                                'notify': False})
+                                        updateproc(p)
+                                        p.save()
+                                    except:
+                                        errors.append([i, 'Popisu "' + desc + \
+                                            '" odpovídá více než jedno řízení'])
+                                        continue
+                                count += 1
+                    return render(
+                        request,
+                        'szr_procbatchresult.html',
+                        {'app': APP,
+                         'page_title': 'Import řízení ze souboru',
+                         'count': count,
+                         'errors': errors})
+
+                except:  # pragma: no cover
+                    err_message = 'Chyba při načtení souboru'
+
     return render(
         request,
-        'szr_mainpage.html',
+        'szr_procbatchform.html',
         {'app': APP,
-         'f': f,
-         'page_title': page_title,
-         'err_message': err_message,
-         'rows': rows,
-         'pager': Pager(start, total, reverse('szr:mainpage'), rd, BATCH),
-         'total': total})
+         'page_title': 'Import řízení ze souboru',
+         'err_message': err_message})
+
+@require_http_methods(['GET'])
+@login_required
+def procexport(request):
+    uid = request.user.id
+    pp = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk') \
+        .distinct()
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = \
+        'attachment; filename=szr.csv'
+    writer = csvwriter(response)
+    for p in pp:
+        dat = [
+            p.desc,
+            p.court.id,
+            composeref(
+                p.senate,
+                p.register,
+                p.number,
+                p.year)
+        ]
+        writer.writerow(dat)
+    return response
+
+@require_http_methods(['GET'])
+def courts(request):
+    return render(
+        request,
+        'szr_courts.html',
+        {'page_title': 'Přehled soudů',
+         'rows': Court.objects.order_by('name').values('id', 'name')})
