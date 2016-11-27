@@ -216,6 +216,11 @@ class TestModels(TestCase):
             user_id=uid,
             link=('0' * 32))
         self.assertEqual(str(p), ('0' * 32))
+        p = models.Preset(
+            name='Test',
+            value=15,
+            valid=date(2016, 5, 18))
+        self.assertEqual(str(p), 'Test, 2016-05-18')
 
 def proc_link(l):
     if not l:

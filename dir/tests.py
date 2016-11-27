@@ -85,24 +85,21 @@ class TestForms(SimpleTestCase):
              'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'year_birth_from': '1965',
-             'year_birth_to': '1964',
-             'format': 'html'})
+             'year_birth_to': '1964'})
         self.assertFalse(f.is_valid())
         f = forms.DebtorForm(
             {'desc': 'Test',
              'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'year_birth_from': '1965',
-             'year_birth_to': '1965',
-             'format': 'html'})
+             'year_birth_to': '1965'})
         self.assertTrue(f.is_valid())
         f = forms.DebtorForm(
             {'desc': 'Test',
              'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'year_birth_from': '1965',
-             'year_birth_to': '1966',
-             'format': 'html'})
+             'year_birth_to': '1966'})
         self.assertTrue(f.is_valid())
 
 class TestModels(TransactionTestCase):

@@ -31,7 +31,7 @@ def sur_notice(uid):
                'které sledujete:\n\n'
         for f in ff:
             text += ' - %s, %s, sp. zn. %d %s %d/%d\n' % \
-                    (f.name, f.court, f.senate, f.register, f.number, f.year)
+                (f.name, f.court, f.senate, f.register, f.number, f.year)
             text += '   %s\n\n' % f.url
         Found.objects.filter(uid=uid).delete()
     return text

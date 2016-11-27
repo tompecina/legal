@@ -34,7 +34,7 @@ from common.glob import (
     inerr, GR_C, text_opts, text_opts_keys, text_opts_abbr, text_opts_ca,
     text_opts_ai)
 from szr.forms import EmailForm
-from .forms import PartyForm, PartyBatchForm
+from .forms import PartyForm
 from .models import Party
 from .glob import MIN_LENGTH, MAX_LENGTH
 
@@ -43,6 +43,46 @@ APP = __package__
 APPVERSION = apps.get_app_config(APP).version
 
 BATCH = 50
+
+@require_http_methods(['GET', 'POST'])
+@login_required
+def mainpage(request):
+    err_message = ''
+    uid = request.user.id
+    page_title = 'Sledování účastníků řízení'
+    rd = request.GET.copy()
+    start = int(rd['start']) if ('start' in rd) else 0
+    btn = getbutton(request)
+    if request.method == 'GET':
+        f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
+    else:
+        f = EmailForm(request.POST)
+        if f.is_valid():
+            cd = f.cleaned_data
+            p = get_object_or_404(User, pk=uid)
+            p.email = cd['email']
+            p.save()
+            return redirect('sur:mainpage')
+        else:
+            err_message = inerr
+    p = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'pk') \
+        .values()
+    total = p.count()
+    if (start >= total) and (total > 0):
+        start = total - 1
+    rows = p[start:(start + BATCH)]
+    for row in rows:
+        row['party_opt_text'] = text_opts[row['party_opt']][1]
+    return render(
+        request,
+        'sur_mainpage.html',
+        {'app': APP,
+         'f': f,
+         'page_title': page_title,
+         'err_message': err_message,
+         'rows': rows,
+         'pager': Pager(start, total, reverse('sur:mainpage'), rd, BATCH),
+         'total': total})
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -125,10 +165,7 @@ def partybatchform(request):
     err_message = ''
     uid = request.user.id
 
-    if (request.method == 'GET'):
-        f = PartyBatchForm()
-
-    else:
+    if (request.method == 'POST'):
         btn = getbutton(request)
 
         if btn == 'load':
@@ -142,11 +179,11 @@ def partybatchform(request):
                     with f:
                         i = 0
                         for line in csvreader(StringIO(f.read().decode())):
-                            line = line[0]
                             i += 1
-                            if not line.strip():
+                            errlen = len(errors)
+                            if not line:
                                 continue
-                            line = line.strip()
+                            line = line[0].strip()
                             if ':' in line:
                                line, party_opt = line.split(':', 1)
                             else:
@@ -157,18 +194,19 @@ def partybatchform(request):
                             if party_opt not in text_opts_abbr:
                                 errors.append([i, 'Chybná zkratka pro posici'])
                                 continue
-                            try:
-                                Party.objects.update_or_create(
-                                    uid_id=uid,
-                                    party=line,
-                                    defaults={'party_opt': \
-                                        text_opts_ai[party_opt]}
-                                )
-                            except:
-                                errors.append([i, 'Řetězci "' + line + \
-                                    '" odpovídá více než jeden účastník'])
-                                continue
-                            count += 1
+                            if len(errors) == errlen:
+                                try:
+                                    Party.objects.update_or_create(
+                                        uid_id=uid,
+                                        party=line,
+                                        defaults={'party_opt': \
+                                            text_opts_ai[party_opt]}
+                                    )
+                                except:
+                                    errors.append([i, 'Řetězci "' + line + \
+                                        '" odpovídá více než jeden účastník'])
+                                    continue
+                                count += 1
                     return render(
                         request,
                         'sur_partybatchresult.html',
@@ -176,16 +214,9 @@ def partybatchform(request):
                          'page_title': 'Import účastníků řízení ze souboru',
                          'count': count,
                          'errors': errors})
-                except:
+
+                except:  # pragma: no cover
                     err_message = 'Chyba při načtení souboru'
-
-        f = PartyBatchForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            
-            if (not btn) and cd['next']:
-                return redirect(cd['next'])
-
         else:
             err_message = inerr
 
@@ -194,50 +225,9 @@ def partybatchform(request):
         'sur_partybatchform.html',
         {'app': APP,
          'page_title': 'Import účastníků řízení ze souboru',
-         'f': f,
          'err_message': err_message,
          'min_length': MIN_LENGTH,
          'max_length': MAX_LENGTH})
-
-@require_http_methods(['GET', 'POST'])
-@login_required
-def mainpage(request):
-    err_message = ''
-    uid = request.user.id
-    page_title = 'Sledování účastníků řízení'
-    rd = request.GET.copy()
-    start = int(rd['start']) if ('start' in rd) else 0
-    btn = getbutton(request)
-    if request.method == 'GET':
-        f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
-    else:
-        f = EmailForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            p = get_object_or_404(User, pk=uid)
-            p.email = cd['email']
-            p.save()
-            return redirect('sur:mainpage')
-        else:
-            err_message = inerr
-    p = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'pk') \
-        .values()
-    total = p.count()
-    if (start >= total) and (total > 0):
-        start = total - 1
-    rows = p[start:(start + BATCH)]
-    for row in rows:
-        row['party_opt_text'] = text_opts[row['party_opt']][1]
-    return render(
-        request,
-        'sur_mainpage.html',
-        {'app': APP,
-         'f': f,
-         'page_title': page_title,
-         'err_message': err_message,
-         'rows': rows,
-         'pager': Pager(start, total, reverse('sur:mainpage'), rd, BATCH),
-         'total': total})
 
 @require_http_methods(['GET'])
 @login_required

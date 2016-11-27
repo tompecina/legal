@@ -3,7 +3,7 @@ $(function() {
     function submit_click(event) {
 	submit = event.target.name;
     }
-    function mainform_validate(event) {
+    function partyform_validate(event) {
 	var p = $('#id_party');
 	if ((submit != 'submit_back') &&
 	    (p.val().trim().length < p.attr('data-minLen'))) {
@@ -12,11 +12,6 @@ $(function() {
 	    return false;
 	}
 	return true;
-    }
-    function submit_partybatchform() {
-	$('#id_next').val(this);
-	$('#id_partybatchform').submit();
-	return false;
     }
     function partybatchform_load_button_onclick() {
 	if ($('#id_load').val()) {
@@ -31,11 +26,10 @@ $(function() {
 	return true;
     }
     if ($('#id_partyform').length) {
-	$('#id_partyform').submit(mainform_validate);
+	$('#id_partyform').submit(partyform_validate);
 	$('input[type=submit]').click(submit_click);
     }
     if ($('#id_partybatchform').length) {
-	$('#id_next').r();
 	$('#id_load_button').click(partybatchform_load_button_onclick);
 	$('#id_load').change(partybatchform_load_onchange);
     }

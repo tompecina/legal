@@ -1,0 +1,78 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$NgPs7J5tOUtD$5kUebN1O9+krlAxuIa6mNq3QYspsREzBekzQcf1IhBY=",
+        "last_login": "2016-07-07T15:42:24.712",
+        "is_superuser": true,
+        "username": "tompecina",
+        "first_name": "Tom\u00e1\u0161",
+        "last_name": "Pecina",
+        "email": "tomas@pecina.cz",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2012-04-07T03:02:21",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "szr.court",
+    "pk": "KSJIMBM",
+    "fields": {
+        "name": "Krajsk\u00fd soud Brno",
+        "reports": null,
+        "timestamp_add": "2016-08-01T01:05:38.299"
+    }
+},
+{
+    "model": "szr.court",
+    "pk": "NSS",
+    "fields": {
+        "name": "Nejvy\u0161\u0161\u00ed spr\u00e1vn\u00ed soud",
+        "reports": null,
+        "timestamp_add": "2016-06-24T00:00:03.089"
+    }
+},
+{
+    "model": "psj.courtroom",
+    "pk": 1,
+    "fields": {
+        "court": "KSJIMBM",
+        "desc": "010, Rooseveltova ul. p\u0159\u00edzem\u00ed",
+        "timestamp_add": "2016-06-21T22:11:56.176",
+        "timestamp_update": "2016-11-17T13:59:03.102"
+    }
+},
+{
+    "model": "psj.courtroom",
+    "pk": 2,
+    "fields": {
+        "court": "KSJIMBM",
+        "desc": "318, Rooseveltova ul. III. patro",
+        "timestamp_add": "2016-06-21T22:11:57.891",
+        "timestamp_update": "2016-11-17T13:59:03.102"
+    }
+},
+{
+    "model": "psj.courtroom",
+    "pk": 3,
+    "fields": {
+        "court": "KSJIMBM",
+        "desc": "338, Rooseveltova ul. III. patro",
+        "timestamp_add": "2016-06-21T22:11:57.991",
+        "timestamp_update": "2016-11-17T13:59:03.102"
+    }
+},
+{
+    "model": "psj.courtroom",
+    "pk": 4,
+    "fields": {
+        "court": "KSJIMBM",
+        "desc": "358, Husova ul. III. patro",
+        "timestamp_add": "2016-06-21T22:11:58.041",
+        "timestamp_update": "2016-11-17T13:59:03.102"
+    }
+}
+]

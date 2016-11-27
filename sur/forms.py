@@ -39,8 +39,3 @@ class PartyForm(forms.Form):
         choices=text_opts,
         label='Posice',
         initial='icontains')
-
-class PartyBatchForm(forms.Form):
-    next = fields.CharField(
-        widget=widgets.hw(),
-        required=False)
