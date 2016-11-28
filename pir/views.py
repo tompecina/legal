@@ -439,7 +439,8 @@ def csvlist(request):
             '%s%s INS %d/%d' % (
                 l2s[v.idOsobyPuvodce],
                 ((' %d' % v.senat) if v.senat else ''), v.bc, v.rocnik),
-            (s2d[v.druhStavRizeni.desc] if v.druhStavRizeni else '(není známo)'),
+            (s2d[v.druhStavRizeni.desc] \
+             if v.druhStavRizeni else '(není známo)'),
         ]
         writer.writerow(dat)
     return response

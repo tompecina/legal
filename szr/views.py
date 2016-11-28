@@ -231,7 +231,8 @@ def procbatchform(request):
                                     year=year)
                                 if not p.exists():
                                     try:
-                                        p, pc = Proceedings.objects.update_or_create(
+                                        p, pc = Proceedings.objects. \
+                                            update_or_create(
                                             uid_id=uid,
                                             desc=desc,
                                             defaults={
