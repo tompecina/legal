@@ -26,6 +26,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.apps import apps
+from django.http import QueryDict
 from django.urls import reverse
 from csv import reader as csvreader, writer as csvwriter
 from io import StringIO
@@ -73,6 +74,10 @@ def mainpage(request):
     rows = p[start:(start + BATCH)]
     for row in rows:
         row['party_opt_text'] = text_opts[row['party_opt']][1]
+        q = QueryDict(mutable=True)
+        q['party']= row['party']
+        q['party_opt'] = text_opts_keys[row['party_opt']]
+        row['search'] = q.urlencode()
     return render(
         request,
         'sur_mainpage.html',

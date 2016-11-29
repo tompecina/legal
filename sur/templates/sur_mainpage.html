@@ -24,7 +24,11 @@
 	    <tr class="{% cycle "odd" "even" %}">
 	      <td>{{ row.party }}</td>
 	      <td style="white-space: nowrap;">{{ row.party_opt_text }}</td>
-	      <td style="word-spacing: 5px; white-space: nowrap;"><a href="{% url 'sur:partyform' row.id %}">upravit</a> <a href="{% url 'sur:partydel' row.id %}">smazat</a></td>
+	      <td style="word-spacing: 5px; white-space: nowrap;">
+		<a href="{% url 'sur:partyform' row.id %}">upravit</a>
+		<a href="{% url 'sur:partydel' row.id %}">smazat</a>
+		<a href="{% url 'psj:htmllist' %}?{{ row.search }}">vyhledat</a>
+	      </td>
 	    </tr>{% endfor %}
 	  </tbody>
 	</table>

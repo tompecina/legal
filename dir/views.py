@@ -26,6 +26,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.apps import apps
+from django.http import QueryDict
 from django.urls import reverse
 from datetime import date
 from locale import strxfrm
@@ -79,6 +80,30 @@ def mainpage(request):
     if (start >= total) and (total > 0):
         start = total - 1
     rows = d[start:(start + BATCH)]
+    for row in rows:
+        q = QueryDict(mutable=True)
+        q['role_debtor'] = q['deleted'] = 'on'
+        if row['court']:
+            q['court']= row['court']
+        if row['name']:
+            q['name']= row['name']
+            q['name_opt'] = text_opts_keys[row['name_opt']]
+        if row['first_name']:
+            q['first_name']= row['first_name']
+            q['first_name_opt'] = text_opts_keys[row['first_name_opt']]
+        if row['genid']:
+            q['genid']= row['genid']
+        if row['taxid']:
+            q['taxid']= row['taxid']
+        if row['birthid']:
+            q['birthid']= row['birthid']
+        if row['date_birth']:
+            q['date_birth']= row['date_birth']
+        if row['year_birth_from']:
+            q['year_birth_from']= row['year_birth_from']
+        if row['year_birth_to']:
+            q['year_birth_to']= row['year_birth_to']
+        row['search'] = q.urlencode()
     return render(
         request,
         'dir_mainpage.html',

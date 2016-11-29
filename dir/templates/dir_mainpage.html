@@ -22,7 +22,11 @@
 	  <tbody>{% for row in rows %}
 	    <tr class="{% cycle "odd" "even" %}">
 	      <td>{{ row.desc }}</td>
-	      <td style="word-spacing: 5px; white-space: nowrap;"><a href="{% url 'dir:debtorform' row.id %}">upravit</a> <a href="{% url 'dir:debtordel' row.id %}">smazat</a></td>
+	      <td style="word-spacing: 5px; white-space: nowrap;">
+		<a href="{% url 'dir:debtorform' row.id %}">upravit</a>
+		<a href="{% url 'dir:debtordel' row.id %}">smazat</a>
+		<a href="{% url 'pir:htmllist' %}?{{ row.search }}">vyhledat</a>
+	      </td>
 	    </tr>{% endfor %}
 	  </tbody>
 	</table>
