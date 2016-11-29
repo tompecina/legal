@@ -27,7 +27,8 @@
 	      <td style="word-spacing: 5px; white-space: nowrap;">
 		<a href="{% url 'sur:partyform' row.id %}">upravit</a>
 		<a href="{% url 'sur:partydel' row.id %}">smazat</a>
-		<a href="{% url 'psj:htmllist' %}?{{ row.search }}">vyhledat</a>
+		<a href="{% url 'psj:htmllist' %}?{{ row.search }}">vyhledat/IS</a>
+		<a href="{% url 'udn:htmllist' %}?{{ row.search }}">vyhledat/NSS</a>
 	      </td>
 	    </tr>{% endfor %}
 	  </tbody>
