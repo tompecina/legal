@@ -55,7 +55,9 @@ class TestForms(SimpleTestCase):
              'major_number': '1',
              'rate': '1500',
              'minor_number': '2',
-             'multiple_number': '1'}
+             'multiple_number': '1',
+             'numerator': '2',
+             'denominator': '3'}
         f = forms.ServiceForm(s)
         self.assertTrue(f.is_valid())
         d = copy(s)
@@ -90,7 +92,11 @@ class TestForms(SimpleTestCase):
     def test_FlatForm(self):
         f = forms.FlatForm({})
         self.assertFalse(f.is_valid())
-        s = {'idx': '1', 'description': 'Popis', 'rate': '1500'}
+        s = {'idx': '1',
+             'description': 'Popis',
+             'rate': '1500',
+             'numerator': '2',
+             'denominator': '3'}
         f = forms.FlatForm(s)
         self.assertTrue(f.is_valid())
         d = copy(s)
@@ -310,7 +316,7 @@ class TestViews1(SimpleTestCase):
         while True:
             try:
                 with open(BASE_DIR + '/knr/testdata/calc%d.xml' % i, 'rb') \
-                     as fi:
+                    as fi:
                     d = fi.read()
             except:
                 self.assertGreater(i, 1)
@@ -993,6 +999,8 @@ class TestViews2(TestCase):
              'minor_number': '2',
              'multiple_number': '1',
              'off10_flag': 'on',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1007,6 +1015,8 @@ class TestViews2(TestCase):
              'minor_number': '0',
              'multiple_number': '2',
              'off30_flag': 'on',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1021,6 +1031,8 @@ class TestViews2(TestCase):
              'minor_number': '1',
              'multiple_number': '1',
              'off30limit5000_flag': 'on',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1029,6 +1041,8 @@ class TestViews2(TestCase):
             '/knr/itemform/',
             {'type': 'service',
              'idx': '0',
+             'numerator': '2',
+             'denominator': '3',
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1057,6 +1071,8 @@ class TestViews2(TestCase):
                     {'type': 'service',
                      'idx': '0',
                      'basis': str(p),
+                     'numerator': '2',
+                     'denominator': '3',
                      'submit_calc%d' % i: 'on'},
                     follow=True)
                 self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1068,6 +1084,8 @@ class TestViews2(TestCase):
             {'type': 'service',
              'idx': '1',
              'basis': '2000',
+             'numerator': '2',
+             'denominator': '3',
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1083,6 +1101,8 @@ class TestViews2(TestCase):
              'major_number': '8',
              'minor_number': '2',
              'multiple_number': '1',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1095,6 +1115,8 @@ class TestViews2(TestCase):
              'description': TEST_STRING,
              'rate': '1000',
              'multiple_flag': 'on',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1106,6 +1128,8 @@ class TestViews2(TestCase):
              'description': TEST_STRING,
              'rate': '5400',
              'multiple50_flag': 'on',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1117,6 +1141,8 @@ class TestViews2(TestCase):
              'description': TEST_STRING,
              'rate': '300',
              'single_flag': 'on',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1128,6 +1154,8 @@ class TestViews2(TestCase):
              'description': TEST_STRING,
              'rate': '2600',
              'halved_flag': 'on',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1139,6 +1167,8 @@ class TestViews2(TestCase):
              'description': TEST_STRING,
              'rate': '800',
              'halved_appeal_flag': 'on',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1150,6 +1180,8 @@ class TestViews2(TestCase):
              'description': TEST_STRING,
              'rate': '1900',
              'collection_flag': 'on',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1158,6 +1190,8 @@ class TestViews2(TestCase):
             '/knr/itemform/',
             {'type': 'flat',
              'idx': '0',
+             'numerator': '2',
+             'denominator': '3',
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1195,6 +1229,8 @@ class TestViews2(TestCase):
                     {'type': 'flat',
                      'idx': '0',
                      'basis': str(p),
+                     'numerator': '2',
+                     'denominator': '3',
                      'submit_calc%d' % i: 'on'},
                     follow=True)
                 self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1206,6 +1242,8 @@ class TestViews2(TestCase):
             {'type': 'flat',
              'idx': '1',
              'basis': '2000',
+             'numerator': '2',
+             'denominator': '3',
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1218,6 +1256,8 @@ class TestViews2(TestCase):
              'idx': '0',
              'description': TEST_STRING,
              'rate': '-1000',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1230,6 +1270,8 @@ class TestViews2(TestCase):
              'description': TEST_STRING,
              'rate': '300',
              'number': '8',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1241,6 +1283,8 @@ class TestViews2(TestCase):
              'description': TEST_STRING,
              'rate': '75',
              'number': '1',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1252,6 +1296,8 @@ class TestViews2(TestCase):
                 '/knr/itemform/',
                 {'type': 'administrative',
                  'idx': '0',
+                 'numerator': '2',
+                 'denominator': '3',
                  'submit_calc%d' % i: 'on'},
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1262,6 +1308,8 @@ class TestViews2(TestCase):
             '/knr/itemform/',
             {'type': 'administrative',
              'idx': '1',
+             'numerator': '2',
+             'denominator': '3',
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1274,6 +1322,8 @@ class TestViews2(TestCase):
              'idx': '0',
              'description': TEST_STRING,
              'rate': '-100',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1286,6 +1336,8 @@ class TestViews2(TestCase):
              'description': TEST_STRING,
              'time_rate': '100',
              'time_number': '8',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1297,6 +1349,8 @@ class TestViews2(TestCase):
              'description': TEST_STRING,
              'time_rate': '50',
              'time_number': '1',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1308,6 +1362,8 @@ class TestViews2(TestCase):
                 '/knr/itemform/',
                 {'type': 'time',
                  'idx': '0',
+                 'numerator': '2',
+                 'denominator': '3',
                  'submit_calc%d' % i: 'on'},
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1318,6 +1374,8 @@ class TestViews2(TestCase):
             '/knr/itemform/',
             {'type': 'time',
              'idx': '1',
+             'numerator': '2',
+             'denominator': '3',
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1330,6 +1388,8 @@ class TestViews2(TestCase):
              'idx': '0',
              'description': TEST_STRING,
              'time_rate': '-100',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1360,6 +1420,8 @@ class TestViews2(TestCase):
              'formula_name': 'Test formula',
              'flat_rate': '3,90',
              'fuel_price': '24,50',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1389,6 +1451,8 @@ class TestViews2(TestCase):
              'formula_name': 'Test formula',
              'flat_rate': '4,90',
              'fuel_price': '34,50',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1418,6 +1482,8 @@ class TestViews2(TestCase):
              'formula_name': 'Test formula',
              'flat_rate': '5,90',
              'fuel_price': '14,00',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1428,6 +1494,8 @@ class TestViews2(TestCase):
                 {'type': 'travel',
                  'idx': '0',
                  t + '_address': 'Melantrichova 504/5, Praha 1',
+                 'numerator': '2',
+                 'denominator': '3',
                  'submit_' + t + '_search': 'Vyhledat'})
             self.assertAlmostEqual(res.context[t + '_lat'], 51.0852574)
             self.assertAlmostEqual(res.context[t + '_lon'], 13.4211651)
@@ -1437,6 +1505,8 @@ class TestViews2(TestCase):
                 {'type': 'travel',
                  'idx': '0',
                  t + '_sel': '1',
+                 'numerator': '2',
+                 'denominator': '3',
                  'submit_' + t + '_apply': 'Použít'})
             self.assertEqual(res.context[t + '_name'], 'Test name')
             self.assertEqual(res.context[t + '_address'], 'Test address')
@@ -1447,6 +1517,8 @@ class TestViews2(TestCase):
                 {'type': 'travel',
                  'idx': '0',
                  t + '_address': 'XXX',
+                 'numerator': '2',
+                 'denominator': '3',
                  'submit_' + t + '_search': 'Vyhledat'})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'knr_itemform.html')
@@ -1461,6 +1533,8 @@ class TestViews2(TestCase):
              'from_lon': '15',
              'to_lat': '51',
              'to_lon': '16',
+             'numerator': '2',
+             'denominator': '3',
              'submit_calc': 'Vypočítat'})
         self.assertAlmostEqual(res.context['trip_distance'], 183)
         res = self.client.post(
@@ -1468,6 +1542,8 @@ class TestViews2(TestCase):
             {'type': 'travel',
              'idx': '0',
              'car_sel': '1',
+             'numerator': '2',
+             'denominator': '3',
              'submit_car_apply': 'Použít'})
         self.assertEqual(res.context['car_name'], 'Test car')
         self.assertEqual(res.context['fuel_name'], 'BA95')
@@ -1480,6 +1556,8 @@ class TestViews2(TestCase):
              'idx': '0',
              'formula_sel': '1',
              'fuel_name': 'NM',
+             'numerator': '2',
+             'denominator': '3',
              'submit_formula_apply': 'Použít'})
         self.assertEqual(res.context['formula_name'], 'Test formula')
         self.assertAlmostEqual(res.context['flat_rate'], 3.70)
@@ -1490,6 +1568,8 @@ class TestViews2(TestCase):
              'idx': '0',
              'formula_sel': '1',
              'fuel_name': 'BA91',
+             'numerator': '2',
+             'denominator': '3',
              'submit_formula_apply': 'Použít'})
         self.assertEqual(res.context['formula_name'], 'Test formula')
         self.assertAlmostEqual(res.context['flat_rate'], 3.70)
@@ -1501,6 +1581,8 @@ class TestViews2(TestCase):
                 '/knr/itemform/',
                 {'type': 'travel',
                  'idx': '0',
+                 'numerator': '2',
+                 'denominator': '3',
                  'submit_calc%d' % i: 'on'},
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1511,6 +1593,8 @@ class TestViews2(TestCase):
             '/knr/itemform/',
             {'type': 'travel',
              'idx': '1',
+             'numerator': '2',
+             'denominator': '3',
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1521,6 +1605,8 @@ class TestViews2(TestCase):
             '/knr/itemform/',
             {'type': 'travel',
              'idx': '0',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1529,6 +1615,8 @@ class TestViews2(TestCase):
         res = self.client.post(
             '/knr/itemform/',
             {'type': 'general',
+             'numerator': '2',
+             'denominator': '3',
              'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1543,6 +1631,8 @@ class TestViews2(TestCase):
         res = self.client.post(
             '/knr/itemform/',
             {'type': 'XXX',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.post(
@@ -1554,6 +1644,8 @@ class TestViews2(TestCase):
              'to_sel': '1',
              'car_sel': '1',
              'formula_sel': '1',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_itemform.html')
@@ -1572,6 +1664,8 @@ class TestViews2(TestCase):
              'to_lon': '16',
              'car_sel': '1',
              'formula_sel': '1',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_itemform.html')
@@ -1584,6 +1678,8 @@ class TestViews2(TestCase):
              'to_sel': '1',
              'car_sel': '1',
              'formula_sel': '1',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_itemform.html')
@@ -1612,6 +1708,8 @@ class TestViews2(TestCase):
              'formula_name': 'Test formula',
              'flat_rate': '5,90',
              'fuel_price': '14,00',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.post(
@@ -1639,6 +1737,8 @@ class TestViews2(TestCase):
              'formula_name': 'Test formula',
              'flat_rate': '5,90',
              'fuel_price': '14,00',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1648,6 +1748,8 @@ class TestViews2(TestCase):
             {'type': 'travel',
              'idx': '0',
              'fuel_price': 'XXX',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_itemform.html')
@@ -1658,6 +1760,8 @@ class TestViews2(TestCase):
             {'type': 'travel',
              'idx': '1',
              'fuel_price': 'XXX',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_itemform.html')
@@ -1666,6 +1770,8 @@ class TestViews2(TestCase):
         res = self.client.post(
             '/knr/itemform/',
             {'type': 'travel',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.post(
@@ -1675,6 +1781,8 @@ class TestViews2(TestCase):
              'description': TEST_STRING,
              'time_rate': '50',
              'time_number': '1',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1686,6 +1794,8 @@ class TestViews2(TestCase):
              'description': TEST_STRING,
              'time_rate': '50',
              'time_number': '1',
+             'numerator': '2',
+             'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.post(
@@ -1693,6 +1803,8 @@ class TestViews2(TestCase):
             {'type': 'flat',
              'idx': '1',
              'basis': '-5',
+             'numerator': '2',
+             'denominator': '3',
              'submit_calc1': 'Do 31.08.2006'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_itemform.html')

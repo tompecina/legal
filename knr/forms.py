@@ -122,6 +122,12 @@ class GeneralForm(forms.Form):
         localize=True)
     vat = fields.BooleanField(
         required=False)
+    numerator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
+    denominator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
     item_note = fields.CharField(
         required=False)
     
@@ -132,6 +138,12 @@ class ServiceForm(forms.Form):
         max_length=255)
     vat = fields.BooleanField(
         required=False)
+    numerator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
+    denominator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
     item_note = fields.CharField(
         required=False)
     major_number = fields.IntegerField(
@@ -183,6 +195,12 @@ class ServiceSubform(forms.Form):
         required=False)
     vat = fields.BooleanField(
         required=False)
+    numerator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
+    denominator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
     item_note = fields.CharField(
         required=False)
     major_number = fields.CharField(
@@ -210,6 +228,12 @@ class FlatForm(forms.Form):
         max_length=255)
     vat = fields.BooleanField(
         required=False)
+    numerator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
+    denominator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
     item_note = fields.CharField(
         required=False)
     rate = fields.AmountField(
@@ -265,6 +289,12 @@ class FlatSubform(forms.Form):
         required=False)
     vat = fields.BooleanField(
         required=False)
+    numerator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
+    denominator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
     item_note = fields.CharField(
         required=False)
     rate = fields.CharField(
@@ -292,6 +322,12 @@ class AdministrativeForm(forms.Form):
         max_length=255)
     vat = fields.BooleanField(
         required=False)
+    numerator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
+    denominator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
     item_note = fields.CharField(
         required=False)
     number = fields.IntegerField(
@@ -321,6 +357,12 @@ class TimeForm(forms.Form):
         max_length=255)
     vat = fields.BooleanField(
         required=False)
+    numerator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
+    denominator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
     item_note = fields.CharField(
         required=False)
     time_number = fields.IntegerField(
@@ -418,6 +460,12 @@ class TravelForm(forms.Form):
         localize=True)
     vat = fields.BooleanField(
         required=False)
+    numerator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
+    denominator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
     item_note = fields.CharField(
         required=False)
 
@@ -468,5 +516,11 @@ class TravelSubform(forms.Form):
         required=False)
     vat = fields.BooleanField(
         required=False)
+    numerator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
+    denominator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.shw())
     item_note = fields.CharField(
         required=False)

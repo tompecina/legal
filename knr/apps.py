@@ -25,7 +25,7 @@ from django.apps import AppConfig
 class KnrConfig(AppConfig):
     name = 'knr'
     verbose_name = 'Náklady řízení'
-    version = '1.6'
+    version = '1.7'
 
     def stat(self):
         from cache.models import Asset

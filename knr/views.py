@@ -355,6 +355,8 @@ gd = {'title': S,
       'calculation_note': S,
       'internal_note': S,
       'vat_rate': F2,
+      'numerator': I,
+      'denominator': I,
       'type': S,
       'description': S,
       'amount': I,
@@ -412,39 +414,48 @@ ga = {'vat_rate': {'unit': 'percentage'},
       'flat_rate': {'currency': 'CZK', 'unit': 'per km'},
       'fuel_price': {'currency': 'CZK', 'unit': 'per l'}}
 
-gt = {'general' : ['description', 'amount', 'vat', 'item_note'],
-      'service' : ['description', 'amount', 'vat', 'item_note', 'major_number',
-                   'rate', 'minor_number', 'multiple_number', 'off10_flag',
+gt = {'general' : ['description', 'amount', 'vat', 'numerator',
+                   'denominator', 'item_note'],
+      'service' : ['description', 'amount', 'vat', 'numerator',
+                   'denominator', 'item_note', 'major_number', 'rate',
+                   'minor_number', 'multiple_number', 'off10_flag',
                    'off30_flag', 'off30limit5000_flag'],
-      'flat' : ['description', 'amount', 'vat', 'rate',  'multiple_flag',
+      'flat' : ['description', 'amount', 'vat', 'numerator',
+                'denominator', 'rate',  'multiple_flag',
                 'multiple50_flag', 'item_note', 'single_flag', 'halved_flag',
                 'halved_appeal_flag', 'collection_flag'],
-      'administrative' : ['description', 'amount', 'vat', 'item_note',
-                          'number', 'rate'],
-      'time' : ['description', 'amount', 'vat', 'item_note', 'time_number',
-                'time_rate'],
-      'travel' : ['description', 'amount', 'vat', 'item_note', 'from_name',
-                  'from_address', 'from_lat', 'from_lon', 'to_name',
-                  'to_address', 'to_lat', 'to_lon', 'trip_number',
-                  'trip_distance', 'time_rate', 'time_number', 'car_name',
-                  'fuel_name', 'cons1', 'cons2', 'cons3', 'formula_name',
-                  'flat_rate', 'fuel_price']}
+      'administrative' : ['description', 'amount', 'vat', 'numerator',
+                          'denominator', 'item_note', 'number', 'rate'],
+      'time' : ['description', 'amount', 'vat', 'numerator',
+                'denominator', 'item_note', 'time_number', 'time_rate'],
+      'travel' : ['description', 'amount', 'vat', 'numerator',
+                   'denominator', 'item_note', 'from_name', 'from_address',
+                  'from_lat', 'from_lon', 'to_name', 'to_address',
+                  'to_lat', 'to_lon', 'trip_number', 'trip_distance',
+                  'time_rate', 'time_number', 'car_name', 'fuel_name',
+                  'cons1', 'cons2', 'cons3', 'formula_name', 'flat_rate',
+                  'fuel_price']}
 
-gf = {'general' : ['description', 'amount', 'vat', 'item_note'],
-      'service' : ['description', 'vat', 'item_note', 'major_number',
-                   'rate', 'minor_number', 'multiple_number', 'off10_flag',
-                   'off30_flag', 'off30limit5000_flag', 'basis'],
-      'flat' : ['description', 'vat', 'rate', 'multiple_flag',
-                'multiple50_flag', 'basis', 'item_note', 'single_flag',
-                'halved_flag', 'halved_appeal_flag', 'collection_flag'],
-      'administrative' : ['description', 'vat', 'item_note', 'number', 'rate'],
-      'time' : ['description', 'vat', 'item_note', 'time_number', 'time_rate'],
-      'travel' : ['description', 'vat', 'item_note', 'from_name',
-                  'from_address', 'from_lat', 'from_lon', 'to_name',
-                  'to_address', 'to_lat', 'to_lon', 'trip_number',
-                  'trip_distance', 'time_rate', 'time_number', 'car_name',
-                  'fuel_name', 'cons1', 'cons2', 'cons3', 'formula_name',
-                  'flat_rate', 'fuel_price']}
+gf = {'general' : ['description', 'amount', 'vat', 'numerator',
+                   'denominator', 'item_note'],
+      'service' : ['description', 'vat', 'numerator', 'denominator',
+                   'item_note', 'major_number', 'rate', 'minor_number',
+                   'multiple_number', 'off10_flag', 'off30_flag',
+                   'off30limit5000_flag', 'basis'],
+      'flat' : ['description', 'vat', 'numerator', 'denominator', 'rate',
+                'multiple_flag', 'multiple50_flag', 'basis', 'item_note',
+                'single_flag', 'halved_flag', 'halved_appeal_flag',
+                'collection_flag'],
+      'administrative' : ['description', 'vat', 'numerator', 'denominator',
+                          'item_note', 'number', 'rate'],
+      'time' : ['description', 'vat', 'numerator', 'denominator',
+                'item_note', 'time_number', 'time_rate'],
+      'travel' : ['description', 'vat', 'numerator', 'denominator',
+                  'item_note', 'from_name', 'from_address', 'from_lat',
+                  'from_lon', 'to_name', 'to_address', 'to_lat', 'to_lon',
+                  'trip_number', 'trip_distance', 'time_rate', 'time_number',
+                  'car_name', 'fuel_name', 'cons1', 'cons2', 'cons3',
+                  'formula_name', 'flat_rate', 'fuel_price']}
 
 TEXT = 'text'
 TYPE = 'type'
@@ -459,17 +470,23 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
       {TEXT: 'Soudní poplatek',
        TYPE: 'general',
        PRESEL: {'description': 'Zaplacený soudní poplatek',
-                'vat': False}},
+                'vat': False,
+                'numerator': 1,
+                'denominator': 1}},
 
       {TEXT: 'Záloha na znalecký posudek',
        TYPE: 'general',
        PRESEL: {'description': 'Zaplacená záloha na znalecký posudek',
-                'vat': False}},
+                'vat': False,
+                'numerator': 1,
+                'denominator': 1}},
 
       {TEXT: 'Záloha na svědečné',
        TYPE: 'general',
        PRESEL: {'description': 'Zaplacená záloha na svědečné',
-                'vat': False}},
+                'vat': False,
+                'numerator': 1,
+                'denominator': 1}},
 
       {TEXT: 'Použití motorového vozidla klient',
        TYPE: 'travel',
@@ -477,12 +494,16 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
                 'trip_number': 2,
                 'time_rate': 0,
                 'fuel_name': 'BA95',
-                'vat': False}},
+                'vat': False,
+                'numerator': 1,
+                'denominator': 1}},
 
       {TEXT: 'Další hotové výdaje klient',
        TYPE: 'general',
        PRESEL: {'description': 'Další hotové výdaje (klient)',
-                'vat': False}},
+                'vat': False,
+                'numerator': 1,
+                'denominator': 1}},
 
       {TEXT: SEP, TYPE: None},
 
@@ -497,7 +518,9 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
            'off10_flag': False,
            'off30_flag': False,
            'off30limit5000_flag': False,
-           'vat': False}},
+           'vat': False,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Paušální odměna podle vyhlášky (neplátce DPH)',
        TYPE: 'flat',
@@ -507,14 +530,18 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
            'č. 484/2000 Sb.',
            'multiple_flag': False,
            'multiple50_flag': False,
-           'vat': False}},
+           'vat': False,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Paušální odměna stanovená pevnou částkou (neplátce DPH)',
        TYPE: 'general',
        PRESEL: {
            'description':
            'Paušální odměna za zastupování účastníka stanovená pevnou částkou',
-           'vat': False}},
+           'vat': False,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Použití motorového vozidla advokát (neplátce DPH)',
        TYPE: 'travel',
@@ -523,14 +550,18 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
            'trip_number': 2,
            'time_rate': 100,
            'fuel_name': 'BA95',
-           'vat': False}},
+           'vat': False,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Další promeškaný čas (neplátce DPH)',
        TYPE: 'time',
        PRESEL: {
            'description': 'Náhrada za promeškaný čas podle advokátního tarifu',
            'time_rate': 100,
-           'vat': False}},
+           'vat': False,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Režijní paušál za úkony podle AdvT (neplátce DPH)',
        TYPE: 'administrative',
@@ -538,12 +569,16 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
            'description':
            'Paušální náhrada za úkony právní služby podle advokátního tarifu',
            'rate': 300,
-           'vat': False}},
+           'vat': False,
+                'numerator': 1,
+                'denominator': 1}},
 
       {TEXT: 'Další hotové výdaje advokát (neplátce DPH)',
        TYPE: 'general',
        PRESEL: {'description': 'Další hotové výdaje (advokát)',
-                'vat': False}},
+                'vat': False,
+                'numerator': 1,
+                'denominator': 1}},
 
       {TEXT: SEP, TYPE: None},
 
@@ -558,7 +593,9 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
            'off10_flag': False,
            'off30_flag': False,
            'off30limit5000_flag': False,
-           'vat': True}},
+           'vat': True,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Paušální odměna podle vyhlášky (plátce DPH)',
        TYPE: 'flat',
@@ -568,14 +605,18 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
            'č. 484/2000 Sb.',
            'multiple_flag': False,
            'multiple50_flag': False,
-           'vat': True}},
+           'vat': True,
+           'numerator': 1,
+           'denominator': 1}},
       
       {TEXT: 'Paušální odměna stanovená pevnou částkou (plátce DPH)',
        TYPE: 'general',
        PRESEL: {
            'description':
            'Paušální odměna za zastupování účastníka stanovená pevnou částkou',
-           'vat': True}},
+           'vat': True,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Použití motorového vozidla advokát (plátce DPH)',
        TYPE: 'travel',
@@ -584,14 +625,18 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
            'trip_number': 2,
            'time_rate': 100,
            'fuel_name': 'BA95',
-           'vat': True}},
+           'vat': True,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Další promeškaný čas (plátce DPH)',
        TYPE: 'time',
        PRESEL: {
            'description': 'Náhrada za promeškaný čas podle advokátního tarifu',
            'time_rate': 100,
-           'vat': True}},
+           'vat': True,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Režijní paušál za úkony podle AdvT (plátce DPH)',
        TYPE: 'administrative',
@@ -599,12 +644,16 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
            'description':
            'Paušální náhrada za úkony právní služby podle advokátního tarifu',
            'rate': 300,
-           'vat': True}},
+           'vat': True,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Další hotové výdaje advokát (plátce DPH)',
        TYPE: 'general',
        PRESEL: {'description': 'Další hotové výdaje (advokát)',
-                'vat': True}}
+                'vat': True,
+                'numerator': 1,
+                'denominator': 1}}
       ]
 
 fields = ['title', 'calculation_note', 'internal_note', 'vat_rate']
@@ -627,6 +676,8 @@ class Item:
         self.description = ''
         self.amount = 0
         self.vat = False
+        self.numerator = 1
+        self.denominator = 1
         self.item_note = ''
         self.major_number = 0
         self.rate = 0
@@ -1123,6 +1174,11 @@ def mainpage(request):
                                      (convf(item.flat_rate, 2),
                                       convf(item.fuel_price, 2))),
                                     s6))
+                            if (item.numerator > 1) or (item.denominator > 1):
+                                q.append(Paragraph(
+                                    ('<b>Zlomek:</b> %u/%u' % \
+                                     (item.numerator, item.denominator)),
+                                    s6))
                             if item.item_note:
                                 for s in filter(bool, item.item_note.strip() \
                                                 .split('\n')):
@@ -1429,6 +1485,11 @@ def itemform(request, idx=0):
                                     300.0) + float(cd['flat_rate'])) + \
                                     (cd['time_number'] * cd['time_rate'])) * \
                                     cd['trip_number']))
+                                if (cd['numerator'] > 1) or \
+                                   (cd['denominator'] > 1):
+                                    cd['amount'] = \
+                                        (cd['amount'] * cd['numerator']) / \
+                                        cd['denominator']
                                 d2i(gt[type], cd, i)
                                 i.type = type
                                 idx = cd['idx']
@@ -1505,6 +1566,9 @@ def itemform(request, idx=0):
                             cd['amount'] = (cd['number'] * cd['rate'])
                         elif type == 'time':
                             cd['amount'] = (cd['time_number'] * cd['time_rate'])
+                        if (cd['numerator'] > 1) or (cd['denominator'] > 1):
+                            cd['amount'] = (cd['amount'] * cd['numerator']) / \
+                                cd['denominator']
                         d2i(gt[type], cd, i)
                         i.type = type
                         idx = cd['idx']
@@ -1530,6 +1594,11 @@ def itemform(request, idx=0):
                                 var[t + '_error'] = 'err'
                             else:
                                 var[t + '_error'] = 'ok'
+                        var['fraction_error'] = \
+                            'err' if ( \
+                                f['numerator'].errors or \
+                                f['denominator'].errors) \
+                            else 'ok'
             else:
                 f = eval(type.title() + 'Subform(request.POST)')
                 if f.is_valid():
