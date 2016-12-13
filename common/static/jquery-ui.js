@@ -1,4 +1,4 @@
-/*! jQuery UI - v1.12.0 - 2016-07-27
+/*! jQuery UI - v1.12.1 - 2016-12-12
 * http://jqueryui.com
 * Includes: keycode.js, widgets/datepicker.js
 * Copyright jQuery Foundation and other contributors; Licensed MIT */
@@ -17,11 +17,11 @@
 
 $.ui = $.ui || {};
 
-var version = $.ui.version = "1.12.0";
+var version = $.ui.version = "1.12.1";
 
 
 /*!
- * jQuery UI Keycode 1.12.0
+ * jQuery UI Keycode 1.12.1
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -58,7 +58,7 @@ var keycode = $.ui.keyCode = {
 // jscs:disable maximumLineLength
 /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
 /*!
- * jQuery UI Datepicker 1.12.0
+ * jQuery UI Datepicker 1.12.1
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -77,7 +77,7 @@ var keycode = $.ui.keyCode = {
 
 
 
-$.extend( $.ui, { datepicker: { version: "1.12.0" } } );
+$.extend( $.ui, { datepicker: { version: "1.12.1" } } );
 
 var datepicker_instActive;
 
@@ -2156,7 +2156,7 @@ $.fn.datepicker = function( options ) {
 $.datepicker = new Datepicker(); // singleton instance
 $.datepicker.initialized = false;
 $.datepicker.uuid = new Date().getTime();
-$.datepicker.version = "1.12.0";
+$.datepicker.version = "1.12.1";
 
 var widgetsDatepicker = $.datepicker;
 
