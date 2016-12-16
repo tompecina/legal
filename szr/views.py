@@ -97,7 +97,7 @@ def procform(request, id=0):
         if f.is_valid():
             cd = f.cleaned_data
             if not cd['senate']:
-                cd['senate'] = '0'
+                cd['senate'] = 0
             if id:
                 p = get_object_or_404(Proceedings, pk=id, uid=uid)
                 cd['pk'] = id
