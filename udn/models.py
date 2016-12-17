@@ -62,7 +62,8 @@ class Decision(models.Model):
         on_delete=models.CASCADE)
     parties = models.ManyToManyField(
         Party)
-    date = models.DateField()
+    date = models.DateField(
+        db_index=True)
     filename = models.CharField(
         max_length=255,
         validators=[RegexValidator(regex=filename_regex)])
@@ -78,9 +79,6 @@ class Decision(models.Model):
         db_index=True)
     timestamp_update = models.DateTimeField(
         auto_now=True)
-
-    class Meta:
-        unique_together = ('date', 'id')
 
     def __str__(self):
         return composeref(

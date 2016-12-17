@@ -91,15 +91,13 @@ class Discovered(models.Model):
         on_delete=models.CASCADE)
     desc = models.CharField(
         max_length=255,
-        blank=False)
+        blank=False,
+        db_index=True)
     vec = models.ForeignKey(
         Vec,
         on_delete=models.CASCADE)
     timestamp_add = models.DateTimeField(
         auto_now_add=True)
 
-    class Meta:
-        unique_together = ('desc', 'id')
-    
     def __str__(self):
         return self.desc

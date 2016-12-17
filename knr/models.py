@@ -98,7 +98,8 @@ class Formula(models.Model):
 class Rate(models.Model):
     formula = models.ForeignKey(
         Formula,
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+        db_index=False)
     fuel = models.CharField(
         max_length=30)
     rate = models.DecimalField(

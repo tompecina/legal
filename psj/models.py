@@ -76,7 +76,8 @@ class Hearing(models.Model):
     courtroom = models.ForeignKey(
         Courtroom,
         on_delete=models.CASCADE)
-    time = models.DateTimeField()
+    time = models.DateTimeField(
+        db_index=True)
     senate = models.IntegerField(
         validators=[MinValueValidator(0)])
     register = models.CharField(
@@ -103,9 +104,6 @@ class Hearing(models.Model):
     timestamp_update = models.DateTimeField(
         auto_now=True)
 
-    class Meta:
-        unique_together = ('time', 'id')
-    
     def __str__(self):
         return '%s, %s' % (self.courtroom.court.name,
             composeref(self.senate, self.register, self.number, self.year))
