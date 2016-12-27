@@ -394,9 +394,9 @@ td.ui-datepicker-other-month a {
 div.ui-datepicker div.ui-widget-header a:hover {
     color: $red;
 }
-.ui-state-default {
+table.ui-datepicker-calendar a.ui-state-default {
     color: $very-dark-blue;
-    background: $white;
+    background-color: $white;
     border: none;
 }
 .ui-widget-content .ui-state-default {
@@ -407,7 +407,8 @@ td.ui-datepicker-today a {
 }
 .ui-priority-secondary,
 .ui-widget-content .ui-priority-secondary,
-.ui-widget-header .ui-priority-secondary {
+.ui-widget-header .ui-priority-secondary,
+td.ui-datepicker-other-month a.ui-priority-secondary {
     opacity: 1;
     filter: Alpha(Opacity=100);
     color: $neutral-gray;
@@ -427,20 +428,21 @@ table.ui-datepicker-calendar tr:last-child td {
     color: $very-dark-blue;
 }
 td.ui-datepicker-current-day a,
-td.ui-datepicker-current-day.ui-datepicker-today a,
+td.ui-datepicker-current-day.ui-datepicker-today a.ui-state-active,
 td.ui-datepicker-current-day a.ui-state-active {
     background-color: $dark-blue;
     color: $white;
 }
-td.ui-datepicker-today a {
+table.ui-datepicker-calendar td.ui-datepicker-today a.ui-state-default {
     background-color: $medium-blue;
+    color: $very-dark-blue;
 }
-.ui-widget-content .ui-state-active.ui-state-highlight:hover,
-td.ui-datepicker-current-day a.ui-state-active:hover,
-.ui-widget-content a.ui-state-hover {
+table.ui-datepicker-calendar .ui-state-active.ui-state-highlight:hover,
+table.ui-datepicker-calendar td.ui-datepicker-current-day a.ui-state-active:hover,
+table.ui-datepicker-calendar a.ui-state-hover {
     background-color: $red;
     color: $white;
 }
-td.ui-datepicker-week-end a.ui-state-default {
+table.ui-datepicker-calendar td.ui-datepicker-week-end a.ui-state-default {
     font-weight: bold;
 }
