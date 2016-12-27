@@ -435,10 +435,8 @@ td.ui-datepicker-current-day a.ui-state-active {
 td.ui-datepicker-today a {
     background-color: $medium-blue;
 }
-.ui-widget-content .ui-state-active.ui-state-highlight:hover {
-    background-color: $red;
-    color: $white;
-}
+.ui-widget-content .ui-state-active.ui-state-highlight:hover,
+td.ui-datepicker-current-day a.ui-state-active:hover,
 .ui-widget-content a.ui-state-hover {
     background-color: $red;
     color: $white;
