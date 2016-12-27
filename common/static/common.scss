@@ -441,3 +441,6 @@ td.ui-datepicker-current-day a.ui-state-active:hover,
     background-color: $red;
     color: $white;
 }
+td.ui-datepicker-week-end a.ui-state-default {
+    font-weight: bold;
+}
