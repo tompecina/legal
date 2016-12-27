@@ -427,7 +427,8 @@ table.ui-datepicker-calendar tr:last-child td {
     color: $very-dark-blue;
 }
 td.ui-datepicker-current-day a,
-td.ui-datepicker-current-day.ui-datepicker-today a {
+td.ui-datepicker-current-day.ui-datepicker-today a,
+td.ui-datepicker-current-day a.ui-state-active {
     background-color: $dark-blue;
     color: $white;
 }
