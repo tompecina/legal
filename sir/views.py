@@ -36,6 +36,7 @@ from szr.forms import EmailForm
 from .glob import l2n, l2s
 from .models import Vec, Insolvency
 from .forms import InsForm
+from .cron import p2s
 
 APP = __package__
 
@@ -107,11 +108,11 @@ def insform(request, id=0):
             if id:
                 logger.info(
                     'User "' + uname + '" updated proceedings "' + \
-                    p.desc + '"')
+                    p.desc + '" (' + p2s(p) + ')')
             else:
                 logger.info(
                     'User "' + uname + '" added proceedings "' + \
-                    p.desc + '"')
+                    p.desc + '" (' + p2s(p) + ')')
             return redirect('sir:mainpage')
         else:
             err_message = inerr
@@ -139,7 +140,7 @@ def insdel(request, id=0):
         if (getbutton(request) == 'yes'):
             logger.info(
                 'User "' + uname + '" deleted proceedings "' + \
-                ins.desc + '"')
+                ins.desc + '" (' + p2s(ins) + ')')
             ins.delete()
             return redirect('sir:insdeleted')
         return redirect('sir:mainpage')

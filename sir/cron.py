@@ -99,6 +99,9 @@ def cron_gettr():
         Transaction.objects.bulk_create(l)
         logger.debug('Read %d transaction(s)' % len(l))
 
+def p2s(p):
+    return 'INS %d/%d' % (p.number, p.year)
+
 def cron_proctr():
     id = Counter.objects.get(id='DL').number
     debtor = DruhRoleVRizeni.objects.get_or_create(desc='DLUŽNÍK')[0]
@@ -156,7 +159,7 @@ def cron_proctr():
                                     vec=vec)[1]:
                                 logger.info(
                                     'Change detected in proceedings "' + \
-                                    i.desc + '"')
+                                    i.desc + '" (' + p2s(i) + ')')
 
             if t_osoba:
                 idOsoby = t_osoba.idosoby.string.strip()
