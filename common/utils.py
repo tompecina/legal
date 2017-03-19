@@ -22,6 +22,7 @@
 
 from django.http import QueryDict
 from django.core import mail
+from logging import getLogger
 from decimal import Decimal
 import time
 from datetime import date, timedelta
@@ -38,6 +39,8 @@ from .settings import TEST
 from .glob import (
     hd, odp, ydconvs, mdconvs, registers, localsubdomain, localemail)
 from .models import Preset
+
+logger = getLogger('logger')
 
 def easter(dt):
     y = dt.year
@@ -365,7 +368,7 @@ def send_mail(subject, text, recipients):
             recipients,
             fail_silently=True)
     except:  # pragma: no cover
-        pass
+        logger.warning('Failed to send mail')
 
 class Pager:
 

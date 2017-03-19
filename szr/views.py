@@ -30,7 +30,7 @@ from django.urls import reverse
 from datetime import date
 from csv import reader as csvreader, writer as csvwriter
 from io import StringIO
-from common.utils import getbutton, Pager, composeref, decomposeref
+from common.utils import getbutton, Pager, composeref, decomposeref, logger
 from common.glob import registers, inerr
 from .forms import EmailForm, ProcForm
 from .models import Court, Proceedings
@@ -84,6 +84,7 @@ def mainpage(request):
 def procform(request, id=0):
     err_message = ''
     uid = request.user.id
+    uname = request.user.username
     page_title = ('Úprava řízení' if id else 'Nové řízení')
     btn = getbutton(request)
     courts = Court.objects.order_by('name')
@@ -122,6 +123,12 @@ def procform(request, id=0):
             if not onlydesc:
                 updateproc(p)
             p.save()
+            if id:
+                logger.info(
+                    'User "' + uname + '" updated proceedings "' + p.desc + '"')
+            else:
+                logger.info(
+                    'User "' + uname + '" added proceedings "' + p.desc + '"')
             return redirect('szr:mainpage')
         else:  # pragma: no cover
             err_message = inerr
@@ -138,6 +145,7 @@ def procform(request, id=0):
 @login_required
 def procdel(request, id=0):
     uid = request.user.id
+    uname = request.user.username
     if request.method == 'GET':
         return render(
             request,
@@ -147,6 +155,9 @@ def procdel(request, id=0):
     else:
         proc = get_object_or_404(Proceedings, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
+            logger.info(
+                'User "' + uname + '" deleted proceedings "' + \
+                proc.desc + '"')
             proc.delete()
             return redirect('szr:procdeleted')
         return redirect('szr:mainpage')
@@ -155,6 +166,7 @@ def procdel(request, id=0):
 @login_required
 def procdelall(request):
     uid = request.user.id
+    uname = request.user.username
     if request.method == 'GET':
         return render(
             request,
@@ -166,6 +178,7 @@ def procdelall(request):
            ('conf' in request.POST) and \
            (request.POST['conf'] == 'Ano'):
             Proceedings.objects.filter(uid=uid).delete()
+            logger.info('User "' + uname + '" deleted all proceedings')
         return redirect('szr:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -174,6 +187,7 @@ def procbatchform(request):
 
     err_message = ''
     uid = request.user.id
+    uname = request.user.username
     today = date.today()
 
     if (request.method == 'POST'):
@@ -253,6 +267,8 @@ def procbatchform(request):
                                             '" odpovídá více než jedno řízení'])
                                         continue
                                 count += 1
+                    logger.info(
+                        'User "%s" imported %d proceedings' % (uname, count))
                     return render(
                         request,
                         'szr_procbatchresult.html',
@@ -262,6 +278,7 @@ def procbatchform(request):
                          'errors': errors})
 
                 except:  # pragma: no cover
+                    logger.error('Error reading file')
                     err_message = 'Chyba při načtení souboru'
 
     return render(
@@ -275,6 +292,7 @@ def procbatchform(request):
 @login_required
 def procexport(request):
     uid = request.user.id
+    uname = request.user.username
     pp = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk') \
         .distinct()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
@@ -292,6 +310,7 @@ def procexport(request):
                 p.year)
         ]
         writer.writerow(dat)
+    logger.info('User "' + uname + '" exported proceedings')
     return response
 
 @require_http_methods(['GET'])

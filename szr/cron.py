@@ -26,7 +26,7 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from hashlib import md5
 from urllib.parse import quote
-from common.utils import get, post, sleep
+from common.utils import get, post, sleep, logger
 from .models import Court, Proceedings
 from .glob import supreme_court, supreme_administrative_court
 
@@ -81,7 +81,7 @@ def cron_courts():
                 id=court['value'],
                 name=court.string.encode('utf-8'))
     except:  # pragma: no cover
-        pass
+        logger.warning('Error importing courts')
     Court.objects.all().update(reports=None)
     for c in Court.objects.all():
         if isreg(c):
@@ -92,7 +92,10 @@ def cron_courts():
                 for r in soup.find_all('okresniSoud'):
                     Court.objects.filter(pk=r.id.string).update(reports=c)
             except:  # pragma: no cover
-                pass
+                logger.warning(
+                    'Error while setting hierarchy for court: ' + \
+                    c.name)
+    logger.info('Courts imported')
 
 def updateproc(p):
     notnew = bool(p.updated)
@@ -126,6 +129,7 @@ def updateproc(p):
             table = soup.find('tr', 'AAAA')
         assert table
     except:  # pragma: no cover
+        logger.warning('Failed to check proceedings "' + p.desc + '"')
         return False
     hash = md5(str(table).encode()).hexdigest()
     if court != supreme_administrative_court:
@@ -137,16 +141,20 @@ def updateproc(p):
                 changed = datetime(*map(int, list(reversed(t[0].split('.'))) + \
                     t[1].split(':')))
         except:  # pragma: no cover
-            pass
+            logger.warning('Failed to check proceedings "' + p.desc + '"')
         if (changed != p.changed) or (hash != p.hash):
             p.notify |= notnew
             if changed:
                 p.changed = changed
+                logger.info('Change in proceedings "' + p.desc + '"')
     elif hash != p.hash:
         p.notify |= notnew
         if notnew:
             p.changed = p.updated
+            if p.changed:
+                logger.info('Change in proceedings "' + p.desc + '"')
     p.hash = hash
+    logger.debug('Proceedings updated "' + p.desc + '"')
     return True
 
 def cron_update():
@@ -188,4 +196,5 @@ def szr_notice(uid):
                 text += '   %s\n\n' % (nss_get_proc % p.auxid)
             p.notify = False
             p.save()
+        logger.debug('Non-empty notice prepared for uid: %d' % uid)
     return text

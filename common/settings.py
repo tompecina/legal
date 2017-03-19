@@ -23,15 +23,17 @@
 import os.path
 import locale
 from sys import argv
+from logging import Filter
 from .secrets import DBPASSWD, SECKEY
 
-LOCAL = ((len(argv) > 1) and  (argv[1] == 'runserver'))
-TEST = ((len(argv) > 1) and  (argv[1] == 'test'))
+LOCAL = ((len(argv) > 1) and (argv[1] == 'runserver'))
+TEST = ((len(argv) > 1) and (argv[1] == 'test'))
 
 DEBUG = LOCAL
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCAL_ROOT = os.path.dirname(__file__)
+LOG_DIR = os.path.join(BASE_DIR, 'log')
 
 ADMINS = (
     ('Tomas Pecina', 'tomas@pecina.cz'),
@@ -134,6 +136,13 @@ INSTALLED_APPS = [
     'django.contrib.admin',
 ] + [(x + '.apps.' + x.capitalize() + 'Config') for x in APPS]
 
+class AddFields(Filter):
+    def filter(self, record):
+        record.app = os.path.split(os.path.dirname(record.pathname))[1].upper()
+        return True
+
+LOGGING_BC = 5
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -143,19 +152,67 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'logger': {
+            'handlers': ['error_file', 'warning_file', 'info_file'],
+            'level': 'INFO',
+        },
     },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
-        }
+        },
+        'add_fields': {
+            '()': 'common.settings.AddFields'
+        },
     },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
-    }
+        },
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'error.log'),
+            'encoding': 'utf-8',
+            'when': 'D',
+            'interval': 30,
+            'backupCount': LOGGING_BC,
+            'formatter': 'verbose',
+            'filters': ['add_fields'],
+        },
+        'warning_file': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'warning.log'),
+            'encoding': 'utf-8',
+            'when': 'D',
+            'interval': 30,
+            'backupCount': LOGGING_BC,
+            'formatter': 'verbose',
+            'filters': ['add_fields'],
+        },
+        'info_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'info.log'),
+            'encoding': 'utf-8',
+            'when': 'D',
+            'interval': 10,
+            'backupCount': LOGGING_BC,
+            'formatter': 'verbose',
+            'filters': ['add_fields'],
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)-7s %(asctime)s %(app)s %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)-7s %(message)s'
+        },
+    },
 }
 
 if not (LOCAL or TEST):  # pragma: no cover

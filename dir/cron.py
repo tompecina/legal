@@ -20,7 +20,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from common.utils import text_opt, icmp
+from django.contrib.auth.models import User
+from common.utils import text_opt, icmp, logger
 from sir.glob import l2s
 from .models import Debtor, Discovered
 
@@ -40,6 +41,9 @@ def dir_notice(uid):
                      d.vec.rocnik)
             text += '   %s\n\n' % d.vec.link
         Discovered.objects.filter(uid=uid, vec__link__isnull=False).delete()
+        logger.info(
+            'Non-empty notice prepared for user "' + \
+            User.objects.get(pk=uid).username + '"')
     return text
 
 def dir_check(osoba, vec):
@@ -56,7 +60,8 @@ def dir_check(osoba, vec):
            ((not d.date_birth) or (d.date_birth == od)) and \
            ((not d.year_birth_from) or (d.year_birth_from <= od.year)) and \
            ((not d.year_birth_to) or (d.year_birth_to >= od.year)):
-            Discovered.objects.update_or_create(
-                uid_id=d.uid_id,
-                desc=d.desc,
-                vec=vec)
+            if Discovered.objects.update_or_create(
+                    uid_id=d.uid_id,
+                    desc=d.desc,
+                    vec=vec)[1]:
+                logger.info('New debtor detected: "' + d.desc + '"')

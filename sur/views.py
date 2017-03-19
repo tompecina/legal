@@ -30,7 +30,7 @@ from django.http import QueryDict
 from django.urls import reverse
 from csv import reader as csvreader, writer as csvwriter
 from io import StringIO
-from common.utils import getbutton, grammar, between, Pager
+from common.utils import getbutton, grammar, between, Pager, logger
 from common.glob import (
     inerr, GR_C, text_opts, text_opts_keys, text_opts_abbr, text_opts_ca,
     text_opts_ai)
@@ -94,6 +94,7 @@ def mainpage(request):
 def partyform(request, id=0):
     err_message = ''
     uid = request.user.id
+    uname = request.user.username
     page_title = ('Úprava účastníka' if id else 'Nový účastník')
     btn = getbutton(request)
     if request.method == 'GET':
@@ -116,6 +117,12 @@ def partyform(request, id=0):
                 cd['timestamp_update'] = p.timestamp_update
             p = Party(uid_id=uid, **cd)
             p.party_opt = text_opts_keys.index(cd['party_opt'])
+            if id:
+                logger.info(
+                    'User "' + uname + '" updated party "' + p.party + '"')
+            else:
+                logger.info(
+                    'User "' + uname + '" added party "' + p.party + '"')
             p.save()
             return redirect('sur:mainpage')
         else:
@@ -133,6 +140,7 @@ def partyform(request, id=0):
 @login_required
 def partydel(request, id=0):
     uid = request.user.id
+    uname = request.user.username
     if request.method == 'GET':
         return render(
             request,
@@ -142,6 +150,9 @@ def partydel(request, id=0):
     else:
         party = get_object_or_404(Party, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
+            logger.info(
+                'User "' + uname + '" deleted party "' + \
+                party.party + '"')
             party.delete()
             return redirect('sur:partydeleted')
         return redirect('sur:mainpage')
@@ -150,6 +161,7 @@ def partydel(request, id=0):
 @login_required
 def partydelall(request):
     uid = request.user.id
+    uname = request.user.username
     if request.method == 'GET':
         return render(
             request,
@@ -161,6 +173,7 @@ def partydelall(request):
            ('conf' in request.POST) and \
            (request.POST['conf'] == 'Ano'):
             Party.objects.filter(uid=uid).delete()
+            logger.info('User "' + uname + '" deleted all parties')
         return redirect('sur:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -169,6 +182,7 @@ def partybatchform(request):
 
     err_message = ''
     uid = request.user.id
+    uname = request.user.username
 
     if (request.method == 'POST'):
         btn = getbutton(request)
@@ -212,6 +226,8 @@ def partybatchform(request):
                                         '" odpovídá více než jeden účastník'])
                                     continue
                                 count += 1
+                    logger.info(
+                        'User "%s" imported %d party/ies' % (uname, count))
                     return render(
                         request,
                         'sur_partybatchresult.html',
@@ -221,6 +237,7 @@ def partybatchform(request):
                          'errors': errors})
 
                 except:  # pragma: no cover
+                    logger.error('Error reading file')
                     err_message = 'Chyba při načtení souboru'
         else:
             err_message = inerr
@@ -238,6 +255,7 @@ def partybatchform(request):
 @login_required
 def partyexport(request):
     uid = request.user.id
+    uname = request.user.username
     pp = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'id') \
         .distinct()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
@@ -247,4 +265,5 @@ def partyexport(request):
     for p in pp:
         dat = [p.party + text_opts_ca[p.party_opt]]
         writer.writerow(dat)
+    logger.info('User "' + uname + '" exported parties')
     return response

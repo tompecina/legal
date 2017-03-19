@@ -22,7 +22,7 @@
 
 from datetime import date, datetime, timedelta
 from cache.main import getcache
-from common.utils import newXML
+from common.utils import newXML, logger
 from .models import FXrate, MPIrate, MPIstat
 
 sd = timedelta(days=10)
@@ -162,6 +162,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
             (dt.day, dt.month, dt.year))
         tx = getcache(surl, cd)[0]
         if not tx:
+            logger.warning('No connection to CNB server')
             return (None, None, None, 'Chyba spojení se serverem ČNB')
     try:
         soup = newXML(tx)
@@ -171,6 +172,8 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         dr = soup.find('kurzy', {'banka': 'CNB'})['datum']            
         dr = date(int(dr[6:]), int(dr[3:5]), int(dr[:2]))
     except:
+        logger.error('Invalid FX table structure for %d-%02d-%02d' % \
+                     (dt.year, dt.month, dt.day))
         return (None, None, None, 'Chyba struktury kursové tabulky')
     if (not p) and ((dr == dt) or ((today - dt) > sd)):
         FXrate(date=dt, text=tx).save()
@@ -202,6 +205,8 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
             rate = ln['pomer']
         rate = float(rate.replace(',', '.'))
     except:
+        logger.error('Invalid FX table line for %d-%02d-%02d' % \
+                     (dt.year, dt.month, dt.day))
         return (None, None, dr, 'Chyba řádku kursové tabulky')
     if log != None:
         log.append(
@@ -235,10 +240,12 @@ def getMPIrate(tp, dt, log=None):
         surl = prefix + types[tp][0] + suffix
         tx = getcache(surl, cd)[0]
         if not tx:
+            logger.warning('No connection to CNB server')
             return (None, 'Chyba spojení se serverem ČNB')
 
         tx = tx.replace('\r', '').split('\n')
         if tx[0] != types[tp][1]:
+            logger.error('Error in rate table for ' + types[tp][0])
             return (None, 'Chyba tabulky sazeb (1)')
 
         rates = []
@@ -248,19 +255,23 @@ def getMPIrate(tp, dt, log=None):
                 rates.append([float(l[9:].replace(',', '.')),
                               date(int(l[0:4]), int(l[4:6]), int(l[6:8]))])
         except:
+            logger.error('Error in rate table for ' + types[tp][0])
             return (None, 'Chyba tabulky sazeb (2)')
 
         try:
             for r in rates:
                 if st[1] or ((updated - r[1]) < sd):
-                    MPIrate.objects.get_or_create(type=tp,
-                                                  rate=r[0],
-                                                  valid=r[1])
+                    MPIrate.objects.get_or_create(
+                        type=tp,
+                        rate=r[0],
+                        valid=r[1])
         except:  # pragma: no cover
+            logger.error('Error writing in database')
             return (None, 'Chyba zápisu do database (1)')
         try:
             MPIstat.objects.get_or_create(type=tp)[0].save()
         except:  # pragma: no cover
+            logger.error('Error writing in database')
             return (None, 'Chyba zápisu do database (2)')
         
     d = MPIrate.objects.filter(type=tp, valid__lte=dt).order_by('-valid')

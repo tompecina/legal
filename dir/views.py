@@ -33,7 +33,7 @@ from locale import strxfrm
 from csv import reader as csvreader, writer as csvwriter
 from io import StringIO
 from re import compile
-from common.utils import getbutton, grammar, between, Pager
+from common.utils import getbutton, grammar, between, Pager, logger
 from common.glob import (
     inerr, GR_C, text_opts, text_opts_keys, text_opts_abbr, text_opts_ca,
     text_opts_ai, ic_regex, rc_full_regex)
@@ -120,6 +120,7 @@ def mainpage(request):
 def debtorform(request, id=0):
     err_message = ''
     uid = request.user.id
+    uname = request.user.username
     page_title = ('Úprava dlužníka' if id else 'Nový dlužník')
     btn = getbutton(request)
 
@@ -155,6 +156,12 @@ def debtorform(request, id=0):
             for o in OPTS:
                 p.__setattr__(o, text_opts_keys.index(cd[o]))
             p.save()
+            if id:
+                logger.info(
+                    'User "' + uname + '" updated debtor "' + p.desc + '"')
+            else:
+                logger.info(
+                    'User "' + uname + '" added debtor "' + p.desc + '"')
             return redirect('dir:mainpage')
         else:
             err_message = inerr
@@ -171,6 +178,7 @@ def debtorform(request, id=0):
 @login_required
 def debtordel(request, id=0):
     uid = request.user.id
+    uname = request.user.username
     if request.method == 'GET':
         return render(
             request,
@@ -180,6 +188,9 @@ def debtordel(request, id=0):
     else:
         debtor = get_object_or_404(Debtor, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
+            logger.info(
+                'User "' + uname + '" deleted debtor "' + \
+                debtor.desc + '"')
             debtor.delete()
             return redirect('dir:debtordeleted')
         return redirect('dir:mainpage')
@@ -188,6 +199,7 @@ def debtordel(request, id=0):
 @login_required
 def debtordelall(request, id=0):
     uid = request.user.id
+    uname = request.user.username
     if request.method == 'GET':
         return render(
             request,
@@ -199,6 +211,7 @@ def debtordelall(request, id=0):
            ('conf' in request.POST) and \
            (request.POST['conf'] == 'Ano'):
             Debtor.objects.filter(uid=uid).delete()
+            logger.info('User "' + uname + '" deleted all debtors')
         return redirect('dir:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -207,6 +220,7 @@ def debtorbatchform(request):
 
     err_message = ''
     uid = request.user.id
+    uname = request.user.username
 
     if (request.method == 'POST'):
         btn = getbutton(request)
@@ -359,6 +373,8 @@ def debtorbatchform(request):
                                         '" odpovídá více než jeden dlužník'])
                                     continue
                                 count += 1
+                    logger.info(
+                        'User "%s" imported %d debtor(s)' % (uname, count))
                     return render(
                         request,
                         'dir_debtorbatchresult.html',
@@ -368,6 +384,7 @@ def debtorbatchform(request):
                          'errors': errors})
 
                 except:  # pragma: no cover
+                    logger.error('Error reading file')
                     err_message = 'Chyba při načtení souboru'
         else:
             err_message = inerr
@@ -383,6 +400,7 @@ def debtorbatchform(request):
 @login_required
 def debtorexport(request):
     uid = request.user.id
+    uname = request.user.username
     pp = Debtor.objects.filter(uid=uid).order_by('desc', 'pk') \
         .distinct()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
@@ -411,4 +429,5 @@ def debtorexport(request):
         if p.year_birth_to:
             dat.append('rokNarozeníDo=' + str(p.year_birth_to))
         writer.writerow(dat)
+    logger.info('User "' + uname + '" exported debtors')
     return response

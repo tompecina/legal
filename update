@@ -23,8 +23,9 @@ rsync -avhHzx \
       --exclude '/test/' \
       --exclude '/htmlcov/' \
       --exclude '/dosass' \
-      --exclude 'scss.map' \
       --exclude '*.map' \
+      --exclude '*.log' \
+      --exclude '*.log.*' \
       --exclude '#*' \
       --exclude '/nohup.out' \
       --delete \

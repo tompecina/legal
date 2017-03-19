@@ -24,7 +24,7 @@ from django.http import QueryDict
 from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
 from urllib.parse import quote
-from common.utils import get, decomposeref, normreg, sleep
+from common.utils import get, decomposeref, normreg, sleep, logger
 from common.glob import localurl
 from szr.models import Court
 from szr.glob import supreme_court, supreme_administrative_court
@@ -50,7 +50,8 @@ def cron_courtrooms():
                 if not crc:
                     cr.save()
         except:  # pragma: no cover
-            pass
+            logger.warning('Error importing courtrooms')
+    logger.info('Courtrooms imported')
 
 def cron_schedule(*args):
     dd = []
@@ -65,6 +66,7 @@ def cron_schedule(*args):
             continue
         for d in dd:
             Task.objects.get_or_create(court=court, date=d)
+    logger.info('Tasks scheduled')
 
 root_url = 'http://infosoud.justice.cz/'
 get_hear = 'InfoSoud/public/searchJednani.do?'

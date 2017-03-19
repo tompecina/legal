@@ -22,7 +22,7 @@
 
 from bs4 import BeautifulSoup
 from datetime import datetime
-from common.utils import normalize, get, post, sleep
+from common.utils import normalize, get, post, sleep, logger
 from dir.cron import dir_check
 from .glob import COURTS, l2n, l2r, l2s, SELIST, BELIST
 from .models import (
@@ -96,6 +96,7 @@ def cron_gettr():
                 error=False))
 
         Transaction.objects.bulk_create(l)
+        logger.debug('Read %d transaction(s)' % len(l))
 
 def cron_proctr():
     id = Counter.objects.get(id='DL').number
@@ -148,10 +149,13 @@ def cron_proctr():
                 if typUdalosti not in SELIST:
                     for i in Insolvency.objects.filter(number=bc, year=rocnik):
                         if i.detailed or (typUdalosti in BELIST):
-                            Tracked.objects.get_or_create(
-                                uid=i.uid,
-                                desc=i.desc,
-                                vec=vec)
+                            if Tracked.objects.get_or_create(
+                                    uid=i.uid,
+                                    desc=i.desc,
+                                    vec=vec)[1]:
+                                logger.info(
+                                    'Change detected in proceedings "' + \
+                                    i.desc + '"')
 
             if t_osoba:
                 idOsoby = t_osoba.idosoby.string.strip()
@@ -291,9 +295,11 @@ def cron_proctr():
             tr.save()
 
     Counter.objects.update_or_create(id='DL', defaults={'number': id})
+    logger.debug('Transactions processed')
 
 def cron_deltr():
     Transaction.objects.filter(error=False).delete()
+    logger.debug('Transactions deleted')
 
 def cron_getws2():
     id = Counter.objects.get(id='PR').number
@@ -347,11 +353,13 @@ def cron_getws2():
         id = vec.id
 
     Counter.objects.update_or_create(id='PR', defaults={'number': id})
+    logger.debug('WS2 information added')
 
 def cron_delerr():
     Vec.objects \
        .filter(druhStavRizeni=DruhStavRizeni.objects.get(desc='MYLNÝ ZÁP.')) \
        .delete()
+    logger.debug('Erroneous proceedings deleted')
 
 def cron_update():
     cron_getws2()
@@ -359,6 +367,7 @@ def cron_update():
     cron_proctr()
     cron_deltr()
     cron_delerr()
+    logger.info('Batch processed')
 
 def sir_notice(uid):
     text = ''
@@ -376,4 +385,5 @@ def sir_notice(uid):
                      t.vec.rocnik)
             text += '   %s\n\n' % t.vec.link
         Tracked.objects.filter(uid=uid, vec__link__isnull=False).delete()
+        logger.debug('Non-empty notice prepared for uid: %d' % uid)
     return text

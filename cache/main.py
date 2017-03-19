@@ -23,7 +23,7 @@
 from django.db.transaction import atomic
 from datetime import datetime
 from base64 import b64encode, b64decode
-from common.utils import get
+from common.utils import get, logger
 from common.settings import TEST
 from .models import Cache, Asset
 
@@ -34,6 +34,7 @@ def getcache(url, lifespan):  # pragma: no cover
         return (c[0].text, None)
     u = get(url)
     if not u.ok:
+        logger.error('Server communication error')
         return (None, 'Chyba při komunikaci se serverem')
     t = u.text
     Cache(

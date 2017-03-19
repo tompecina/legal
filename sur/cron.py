@@ -20,7 +20,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from common.utils import text_opt
+from django.contrib.auth.models import User
+from common.utils import text_opt, logger
 from .models import Party, Found
 
 def sur_notice(uid):
@@ -34,17 +35,21 @@ def sur_notice(uid):
                 (f.name, f.court, f.senate, f.register, f.number, f.year)
             text += '   %s\n\n' % f.url
         Found.objects.filter(uid=uid).delete()
+        logger.info(
+            'Non-empty notice prepared for user "' + \
+            User.objects.get(pk=uid).username + '"')
     return text
 
 def sur_check(name, court, senate, register, number, year, url):
     for p in Party.objects.all():
         if text_opt(p.party, name, p.party_opt):
-            Found.objects.update_or_create(
-                uid_id=p.uid_id,
-                name=name,
-                court=court,
-                senate=senate,
-                register=register,
-                number=number,
-                year=year,
-                url=url)
+            if Found.objects.update_or_create(
+                    uid_id=p.uid_id,
+                    name=name,
+                    court=court,
+                    senate=senate,
+                    register=register,
+                    number=number,
+                    year=year,
+                    url=url)[1]:
+                logger.info('New party detected: "' + name + '"')

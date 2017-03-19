@@ -49,7 +49,8 @@ from io import BytesIO
 import os.path
 from cache.main import getcache, getasset, setasset
 from common.utils import (
-    getbutton, unrequire, formam, c2p, getXML, newXML, getint, CanvasXML, lim)
+    getbutton, unrequire, formam, c2p, getXML, newXML, getint, CanvasXML, lim,
+    logger)
 from common.glob import inerr, localsubdomain, localurl
 from common.views import error, unauth
 from .glob import fuels
@@ -111,6 +112,7 @@ def convf(n, p):
 def placeform(request, id=0):
     err_message = ''
     uid = request.user.id
+    uname = request.user.username
     page_title = ('Úprava místa' if id else 'Nové místo')
     btn = getbutton(request)
     if request.method == 'GET':
@@ -135,6 +137,12 @@ def placeform(request, id=0):
                 p = get_object_or_404(Place, pk=id, uid=uid)
                 cd['pk'] = id
             Place(uid_id=uid, **cd).save()
+            if id:
+                logger.info(
+                    'User "' + uname + '" updated place "' + cd['name'] + '"')
+            else:
+                logger.info(
+                    'User "' + uname + '" added place "' + cd['name'] + '"')
             return redirect('knr:placelist')
         else:
             err_message = inerr
@@ -167,6 +175,7 @@ def placelist(request):
 @login_required
 def placedel(request, id=0):
     uid = request.user.id
+    uname = request.user.username
     if request.method == 'GET':
         return render(
             request,
@@ -177,6 +186,9 @@ def placedel(request, id=0):
     else:
         place = get_object_or_404(Place, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
+            logger.info(
+                'User "' + uname + '" deleted place "' + \
+                place.name + '"')
             place.delete()
             return redirect('knr:placedeleted')
         return redirect('knr:placelist')
@@ -186,6 +198,7 @@ def placedel(request, id=0):
 def carform(request, id=0):
     err_message = ''
     uid = request.user.id
+    uname = request.user.username
     page_title = ('Úprava vozidla' if id else 'Nové vozidlo')
     btn = getbutton(request)
     if request.method == 'GET':
@@ -201,6 +214,12 @@ def carform(request, id=0):
                 p = get_object_or_404(Car, pk=id, uid=uid)
                 cd['pk'] = id
             Car(uid_id=uid, **cd).save()
+            if id:
+                logger.info(
+                    'User "' + uname + '" updated car "' + cd['name'] + '"')
+            else:
+                logger.info(
+                    'User "' + uname + '" added car "' + cd['name'] + '"')
             return redirect('knr:carlist')
         else:
             err_message = inerr
@@ -228,6 +247,7 @@ def carlist(request):
 @login_required
 def cardel(request, id=0):
     uid = request.user.id
+    uname = request.user.username
     if request.method == 'GET':
         return render(
             request,
@@ -239,6 +259,9 @@ def cardel(request, id=0):
     else:
         car = get_object_or_404(Car, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
+            logger.info(
+                'User "' + uname + '" deleted car "' + \
+                car.name + '"')
             car.delete()
             return redirect('knr:cardeleted')
         return redirect('knr:carlist')
@@ -248,6 +271,7 @@ def cardel(request, id=0):
 def formulaform(request, id=0):
     err_message = ''
     uid = request.user.id
+    uname = request.user.username
     page_title = ('Úprava předpisu' if id else 'Nový předpis')
     btn = getbutton(request)
     if request.method == 'GET':
@@ -275,6 +299,12 @@ def formulaform(request, id=0):
                     d[k] = v
             p = Formula(uid_id=uid, **d)
             p.save()
+            if id:
+                logger.info(
+                    'User "' + uname + '" updated formula "' + p.name + '"')
+            else:
+                logger.info(
+                    'User "' + uname + '" added formula "' + p.name + '"')
             for fuel in fuels:
                 r = Rate.objects.filter(formula=p, fuel=fuel)
                 if  r:
@@ -329,6 +359,7 @@ def formulalist(request):
 @login_required
 def formuladel(request, id=0):
     uid = request.user.id
+    uname = request.user.username
     if request.method == 'GET':
         return render(
             request,
@@ -339,6 +370,9 @@ def formuladel(request, id=0):
     else:
         formula = get_object_or_404(Formula, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
+            logger.info(
+                'User "' + uname + '" deleted formula "' + \
+                formula.name + '"')
             formula.delete()
             return redirect('knr:formuladeleted')
         return redirect('knr:formulalist')

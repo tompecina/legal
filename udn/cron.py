@@ -26,7 +26,7 @@ from re import compile
 from os.path import join
 from urllib.parse import quote
 from common.settings import BASE_DIR, TEST
-from common.utils import get, post, decomposeref
+from common.utils import get, post, composeref, decomposeref, logger
 from common.glob import localurl
 from szr.glob import supreme_administrative_court
 from szr.models import Court
@@ -82,8 +82,15 @@ def cron_update():
                     res = get(root_url + furl)
                     if not res.ok:
                         continue
+                    logger.info(
+                        'Writing abridged decision "' + \
+                        composeref(senate, register, number, year) + '"')
                     with open(repo_pref + '/' + fn, 'wb') as fo:
                         if not fo.write(res.content):  # pragma: no cover
+                            logger.error(
+                                'Failed to write abridged decision "' + \
+                                composeref(senate, register, number, year) + \
+                                '"')
                             continue
                     a = Agenda.objects.get_or_create( \
                         desc=r[2].td.text.strip())[0]
@@ -130,7 +137,7 @@ def cron_update():
             d['__EVENTTARGET'] = p[cp - 1]['href'][70:-34]
             d['__EVENTARGUMENT'] = ''
     except:  # pragma: no cover
-        pass
+        logger.warning('Update failed')
 
 def cron_find():
     now = datetime.now()
@@ -163,11 +170,20 @@ def cron_find():
             res = get(root_url + furl)
             if not res.ok:
                 continue
+            logger.info(
+                'Writing anonymized decision "' + \
+                composeref(dec.senate, dec.register, dec.number, dec.year) + \
+                '"')
             with open(repo_pref + '/' + fn, 'wb') as fo:
                 if not fo.write(res.content):  # pragma: no cover
+                    logger.error(
+                        'Failed to write anonymized decision "' + \
+                        composeref(
+                            dec.senate, dec.register, dec.number, dec.year) + \
+                        '"')
                     return
             dec.anonfilename = fn
             dec.save()
             return
     except:  # pragma: no cover
-        pass
+        logger.warning('Find failed')

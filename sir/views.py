@@ -30,7 +30,7 @@ from django.urls import reverse
 from locale import strxfrm
 from csv import reader as csvreader, writer as csvwriter
 from io import StringIO
-from common.utils import getbutton, grammar, between, Pager
+from common.utils import getbutton, grammar, between, Pager, logger
 from common.glob import inerr, GR_C, text_opts, text_opts_keys
 from szr.forms import EmailForm
 from .glob import l2n, l2s
@@ -85,6 +85,7 @@ def mainpage(request):
 def insform(request, id=0):
     err_message = ''
     uid = request.user.id
+    uname = request.user.username
     page_title = ('Úprava řízení' if id else 'Nové řízení')
     btn = getbutton(request)
     if request.method == 'GET':
@@ -103,6 +104,14 @@ def insform(request, id=0):
                 cd['timestamp_update'] = p.timestamp_update
             p = Insolvency(uid_id=uid, **cd)
             p.save()
+            if id:
+                logger.info(
+                    'User "' + uname + '" updated proceedings "' + \
+                    p.desc + '"')
+            else:
+                logger.info(
+                    'User "' + uname + '" added proceedings "' + \
+                    p.desc + '"')
             return redirect('sir:mainpage')
         else:
             err_message = inerr
@@ -118,6 +127,7 @@ def insform(request, id=0):
 @login_required
 def insdel(request, id=0):
     uid = request.user.id
+    uname = request.user.username
     if request.method == 'GET':
         return render(
             request,
@@ -127,6 +137,9 @@ def insdel(request, id=0):
     else:
         ins = get_object_or_404(Insolvency, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
+            logger.info(
+                'User "' + uname + '" deleted proceedings "' + \
+                ins.desc + '"')
             ins.delete()
             return redirect('sir:insdeleted')
         return redirect('sir:mainpage')
@@ -135,6 +148,7 @@ def insdel(request, id=0):
 @login_required
 def insdelall(request, id=0):
     uid = request.user.id
+    uname = request.user.username
     if request.method == 'GET':
         return render(
             request,
@@ -146,6 +160,7 @@ def insdelall(request, id=0):
            ('conf' in request.POST) and \
            (request.POST['conf'] == 'Ano'):
             Insolvency.objects.filter(uid=uid).delete()
+            logger.info('User "' + uname + '" deleted all proceedings')
         return redirect('sir:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -154,6 +169,7 @@ def insbatchform(request):
 
     err_message = ''
     uid = request.user.id
+    uname = request.user.username
 
     if (request.method == 'POST'):
         btn = getbutton(request)
@@ -216,6 +232,8 @@ def insbatchform(request):
                                         '" odpovídá více než jedno řízení'])
                                     continue
                                 count += 1
+                    logger.info(
+                        'User "%s" imported %d proceedings' % (uname, count))
                     return render(
                         request,
                         'sir_insbatchresult.html',
@@ -225,6 +243,7 @@ def insbatchform(request):
                          'errors': errors})
 
                 except:  # pragma: no cover
+                    logger.error('Error reading file')
                     err_message = 'Chyba při načtení souboru'
 
     return render(
@@ -238,6 +257,7 @@ def insbatchform(request):
 @login_required
 def insexport(request):
     uid = request.user.id
+    uname = request.user.username
     ii = Insolvency.objects.filter(uid=uid).order_by('desc', 'pk') \
         .distinct()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
@@ -252,6 +272,7 @@ def insexport(request):
             ('ano' if i.detailed else 'ne'),
         ]
         writer.writerow(dat)
+    logger.info('User "' + uname + '" exported proceedings')
     return response
 
 @require_http_methods(['GET'])
