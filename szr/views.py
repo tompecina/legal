@@ -34,7 +34,7 @@ from common.utils import getbutton, Pager, composeref, decomposeref, logger
 from common.glob import registers, inerr
 from .forms import EmailForm, ProcForm
 from .models import Court, Proceedings
-from .cron import addauxid, updateproc
+from .cron import addauxid, updateproc, p2s
 
 APP = __package__
 
@@ -125,10 +125,12 @@ def procform(request, id=0):
             p.save()
             if id:
                 logger.info(
-                    'User "' + uname + '" updated proceedings "' + p.desc + '"')
+                    'User "' + uname + '" updated proceedings "' + \
+                    p.desc + '" (' + p2s(p) + ')')
             else:
                 logger.info(
-                    'User "' + uname + '" added proceedings "' + p.desc + '"')
+                    'User "' + uname + '" added proceedings "' + p.desc + \
+                    '" (' + p2s(p) + ')')
             return redirect('szr:mainpage')
         else:  # pragma: no cover
             err_message = inerr
@@ -157,7 +159,7 @@ def procdel(request, id=0):
         if (getbutton(request) == 'yes'):
             logger.info(
                 'User "' + uname + '" deleted proceedings "' + \
-                proc.desc + '"')
+                proc.desc + '" (' + p2s(proc) + ')')
             proc.delete()
             return redirect('szr:procdeleted')
         return redirect('szr:mainpage')

@@ -26,7 +26,7 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from hashlib import md5
 from urllib.parse import quote
-from common.utils import get, post, sleep, logger
+from common.utils import get, post, sleep, logger, composeref
 from .models import Court, Proceedings
 from .glob import supreme_court, supreme_administrative_court
 
@@ -93,8 +93,11 @@ def cron_courts():
                     Court.objects.filter(pk=r.id.string).update(reports=c)
             except:  # pragma: no cover
                 logger.warning(
-                    'Error setting hierarchy for "' + c.name + '"')
+                    'Error setting hierarchy for ' + c.id)
     logger.info('Courts imported')
+
+def p2s(p):
+    return p.court_id + ', ' + composeref(p.senate, p.register, p.number, p.year)
 
 def updateproc(p):
     notnew = bool(p.updated)
@@ -128,7 +131,8 @@ def updateproc(p):
             table = soup.find('tr', 'AAAA')
         assert table
     except:  # pragma: no cover
-        logger.warning('Failed to check proceedings "' + p.desc + '"')
+        logger.warning(
+            'Failed to check proceedings "' + p.desc + '" (' + p2s(p) + ')')
         return False
     hash = md5(str(table).encode()).hexdigest()
     if court != supreme_administrative_court:
@@ -140,20 +144,23 @@ def updateproc(p):
                 changed = datetime(*map(int, list(reversed(t[0].split('.'))) + \
                     t[1].split(':')))
         except:  # pragma: no cover
-            logger.warning('Failed to check proceedings "' + p.desc + '"')
+            logger.warning(
+                'Failed to check proceedings "' + p.desc + '" (' + p2s(p) + ')')
         if (changed != p.changed) or (hash != p.hash):
             p.notify |= notnew
             if changed:
                 p.changed = changed
-                logger.info('Change in proceedings "' + p.desc + '"')
+                logger.info(
+                    'Change in proceedings "' + p.desc + '" (' + p2s(p) + ')')
     elif hash != p.hash:
         p.notify |= notnew
         if notnew:
             p.changed = p.updated
             if p.changed:
-                logger.info('Change in proceedings "' + p.desc + '"')
+                logger.info(
+                    'Change in proceedings "' + p.desc + '" (' + p2s(p) + ')')
     p.hash = hash
-    logger.debug('Proceedings updated "' + p.desc + '"')
+    logger.debug('Proceedings updated "' + p.desc + '" (' + p2s(p) + ')')
     return True
 
 def cron_update():
