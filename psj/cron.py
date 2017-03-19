@@ -166,4 +166,6 @@ def cron_update():
                     pass
         t.delete()
     except:
-        pass
+        logger.warning(
+            'Failed to get hearings for %s, %d-%02d-%02d' % \
+            (t.court_id, t.date.year, t.date.month, t.date.day))
