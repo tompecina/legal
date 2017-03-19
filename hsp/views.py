@@ -2,7 +2,7 @@
 #
 # hsp/views.py
 #
-# Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
+# Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
 # This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
 #

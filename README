@@ -2,7 +2,7 @@
 LEGAL.PECINA.CZ
 ===============
 
-(C) 2011-16 Tomáš Pecina <tomas@pecina.cz>, GNU General Public License Version 3
+(C) 2011-17 Tomáš Pecina <tomas@pecina.cz>, GNU General Public License Version 3
 
 
 LEGAL.PECINA.CZ je webová aplikace v Pythonu/Djangu realisující soubor pomůcek
@@ -18,13 +18,6 @@ Rovněž budete pravděpodobně muset upravit soubor common/wsgi.py, jehož obsa
 závislý na konkrétních podmínkách instalace na vašem serveru, případně změnit
 nastavení v souboru common/settings.py.
 
-Pro správnou funkci systému je nutné volat cron joby podle následujícího
-seznamu; na serveru by přístup na jejich adresy měl být omezen na localhost:
-
- - /szr/cron/courts/ aktualisace seznamu soudů, např. jednou týdně
- - /szr/cron/notify/ notifikační e-maily, např. čtyřikrát denně
- - /szr/cron/update/ průběžné sledování řízení, např. každou minutu
- - /udn/cron/update/ aktualisace stavu úřední desky NSS, např. čtyřikrát denně
- - /udn/cron/find/   hledání anonymisovaných rozhodnutí, např. každých 15 minut
+Pro správnou funkci systému je nutné volat ve vhodných intervalech cron joby.
 
 Živá instalace aplikace je k disposici na adrese <https://legal.pecina.cz/>.

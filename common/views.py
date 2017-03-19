@@ -2,7 +2,7 @@
 #
 # common/views.py
 #
-# Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
+# Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
 # This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
 #
@@ -34,12 +34,13 @@ from random import getrandbits, choice
 from datetime import datetime, timedelta
 from .settings import APPS
 from .forms import UserAddForm, LostPwForm, MIN_PWLEN
-from .utils import send_mail, getbutton
+from .utils import send_mail, getbutton, logger
 from .glob import inerr, localsubdomain, localurl
 from .models import PwResetLink
 
 @require_http_methods(['GET'])
 def robots(request):
+    logger.debug('robots.txt requested')
     return render(
         request,
         'robots.txt',
@@ -47,6 +48,7 @@ def robots(request):
 
 @require_http_methods(['GET', 'POST'])
 def unauth(request):
+    logger.debug('Unauthorized access')
     var = {'page_title': 'Neoprávněný přístup'}
     return render(
         request,
@@ -56,6 +58,7 @@ def unauth(request):
 
 @require_http_methods(['GET', 'POST'])
 def error(request):
+    logger.debug('Internal server error page generated')
     var = {
         'page_title': 'Interní chyba aplikace',
         'suppress_topline': True,
@@ -68,7 +71,10 @@ def error(request):
 
 @require_http_methods(['GET', 'POST'])
 def logout(request):
+    uname = request.user.username
     auth.logout(request)
+    if uname:
+        logger.info('User "' + uname + '" logged out')
     return redirect('home')
 
 @require_http_methods(['GET', 'POST'])
@@ -77,6 +83,7 @@ def pwchange(request):
     var = {'page_title': 'Změna hesla'}
     u = request.user
     uid = u.id
+    uname = request.user.username
     if request.method == 'POST':
         if request.POST.get('back'):
             return redirect('home')
@@ -95,6 +102,7 @@ def pwchange(request):
         else:
             u.set_password(var['newpw1'])
             u.save()
+            logger.info('User "' + uname + '" changed password')
             return redirect('/accounts/pwchanged/')
     return render(request, 'pwchange.html', var)
 
@@ -126,6 +134,9 @@ def lostpw(request):
                     'Server ' + localsubdomain + ' (' + localurl + ')\n') % \
                     (u[0].username, reverse('resetpw', args=[link]))
                 send_mail('Link pro obnoveni hesla', text, [u[0].email])
+                logger.info(
+                    'Password recovery link for user "' + u[0].username + \
+                    '" sent')
             return redirect('/accounts/pwlinksent/')
         else:
             err_message = 'Prosím, opravte označená pole ve formuláři'
@@ -153,6 +164,7 @@ def resetpw(request, link):
     u.set_password(newpw)
     u.save()
     p.delete()
+    logger.info('Password for user "' + u.username + '" reset')
     return render(
         request,
         'pwreset.html',
@@ -227,7 +239,9 @@ def useradd(request):
                 user.last_name = cd['last_name']
                 user.save()
                 logout(request)
+                logger.info('New user "' + user.username + '" created')
                 return redirect('useradded')
+            logger.error('Failed to create user')
             return error(request)  # pragma: no cover
         else:
             err_message = inerr

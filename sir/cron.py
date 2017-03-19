@@ -2,7 +2,7 @@
 #
 # sir/cron.py
 #
-# Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
+# Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
 # This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
 #
@@ -20,6 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from django.contrib.auth.models import User
 from bs4 import BeautifulSoup
 from datetime import datetime
 from common.utils import normalize, get, post, sleep, logger
@@ -385,5 +386,7 @@ def sir_notice(uid):
                      t.vec.rocnik)
             text += '   %s\n\n' % t.vec.link
         Tracked.objects.filter(uid=uid, vec__link__isnull=False).delete()
-        logger.debug('Non-empty notice prepared for uid: %d' % uid)
+        logger.info(
+            'Non-empty notice prepared for user "' + \
+            User.objects.get(pk=uid).username + '"')
     return text

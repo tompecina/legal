@@ -2,7 +2,7 @@
 #
 # szr/cron.py
 #
-# Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
+# Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
 # This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
 #
@@ -93,8 +93,7 @@ def cron_courts():
                     Court.objects.filter(pk=r.id.string).update(reports=c)
             except:  # pragma: no cover
                 logger.warning(
-                    'Error while setting hierarchy for court: ' + \
-                    c.name)
+                    'Error setting hierarchy for "' + c.name + '"')
     logger.info('Courts imported')
 
 def updateproc(p):
@@ -196,5 +195,7 @@ def szr_notice(uid):
                 text += '   %s\n\n' % (nss_get_proc % p.auxid)
             p.notify = False
             p.save()
-        logger.debug('Non-empty notice prepared for uid: %d' % uid)
+        logger.info(
+            'Non-empty notice prepared for user "' + \
+            User.objects.get(pk=uid).username + '"')
     return text

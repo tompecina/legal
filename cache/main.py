@@ -2,7 +2,7 @@
 #
 # cache/main.py
 #
-# Copyright (C) 2011-16 Tomáš Pecina <tomas@pecina.cz>
+# Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
 # This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
 #
@@ -27,14 +27,14 @@ from common.utils import get, logger
 from common.settings import TEST
 from .models import Cache, Asset
 
-def getcache(url, lifespan):  # pragma: no cover
+def getcache(url, lifespan):
     Cache.objects.filter(expire__lt=datetime.now()).delete()
     c = Cache.objects.filter(url=url)
     if c:
         return (c[0].text, None)
     u = get(url)
     if not u.ok:
-        logger.error('Server communication error')
+        logger.error('Server communication error, URL: "' + url + '"')
         return (None, 'Chyba při komunikaci se serverem')
     t = u.text
     Cache(
