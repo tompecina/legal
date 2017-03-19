@@ -107,12 +107,12 @@ def insform(request, id=0):
             p.save()
             if id:
                 logger.info(
-                    'User "' + uname + '" updated proceedings "' + \
-                    p.desc + '" (' + p2s(p) + ')')
+                    'User "%s" (%d) updated proceedings "%s" (%s)' % \
+                    (uname, uid, p.desc, p2s(p)))
             else:
                 logger.info(
-                    'User "' + uname + '" added proceedings "' + \
-                    p.desc + '" (' + p2s(p) + ')')
+                    'User "%s" (%d) added proceedings "%s" (%s)' % \
+                    (uname, uid, p.desc, p2s(p)))
             return redirect('sir:mainpage')
         else:
             err_message = inerr
@@ -139,8 +139,8 @@ def insdel(request, id=0):
         ins = get_object_or_404(Insolvency, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "' + uname + '" deleted proceedings "' + \
-                ins.desc + '" (' + p2s(ins) + ')')
+                'User "%s" (%d) deleted proceedings "%s" (%s)' % \
+                (uname, uid, ins.desc, p2s(ins)))
             ins.delete()
             return redirect('sir:insdeleted')
         return redirect('sir:mainpage')
@@ -161,7 +161,7 @@ def insdelall(request, id=0):
            ('conf' in request.POST) and \
            (request.POST['conf'] == 'Ano'):
             Insolvency.objects.filter(uid=uid).delete()
-            logger.info('User "' + uname + '" deleted all proceedings')
+            logger.info('User "%s" (%d) deleted all proceedings' % (uname, uid))
         return redirect('sir:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -234,7 +234,8 @@ def insbatchform(request):
                                     continue
                                 count += 1
                     logger.info(
-                        'User "%s" imported %d proceedings' % (uname, count))
+                        'User "%s" (%d) imported %d proceedings' % \
+                        (uname, uid, count))
                     return render(
                         request,
                         'sir_insbatchresult.html',
@@ -273,7 +274,7 @@ def insexport(request):
             ('ano' if i.detailed else 'ne'),
         ]
         writer.writerow(dat)
-    logger.info('User "' + uname + '" exported proceedings')
+    logger.info('User "%s" (%d) exported proceedings' % (uname, uid))
     return response
 
 @require_http_methods(['GET'])

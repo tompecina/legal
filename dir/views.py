@@ -158,10 +158,10 @@ def debtorform(request, id=0):
             p.save()
             if id:
                 logger.info(
-                    'User "' + uname + '" updated debtor "' + p.desc + '"')
+                    'User "%s" (%d) updated debtor "%s"' % (uname, uid, p.desc))
             else:
                 logger.info(
-                    'User "' + uname + '" added debtor "' + p.desc + '"')
+                    'User "%s" (%d) added debtor "%s"' % (uname, uid, p.desc))
             return redirect('dir:mainpage')
         else:
             err_message = inerr
@@ -189,8 +189,7 @@ def debtordel(request, id=0):
         debtor = get_object_or_404(Debtor, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "' + uname + '" deleted debtor "' + \
-                debtor.desc + '"')
+                'User "%s" (%d) deleted debtor "%s"' % (uname, uid, debtor.desc))
             debtor.delete()
             return redirect('dir:debtordeleted')
         return redirect('dir:mainpage')
@@ -211,7 +210,7 @@ def debtordelall(request, id=0):
            ('conf' in request.POST) and \
            (request.POST['conf'] == 'Ano'):
             Debtor.objects.filter(uid=uid).delete()
-            logger.info('User "' + uname + '" deleted all debtors')
+            logger.info('User "%s" (%d) deleted all debtors' % (uname, uid))
         return redirect('dir:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -374,7 +373,8 @@ def debtorbatchform(request):
                                     continue
                                 count += 1
                     logger.info(
-                        'User "%s" imported %d debtor(s)' % (uname, count))
+                        'User "%s" (%d) imported %d debtor(s)' % \
+                        (uname, uid, count))
                     return render(
                         request,
                         'dir_debtorbatchresult.html',
@@ -429,5 +429,5 @@ def debtorexport(request):
         if p.year_birth_to:
             dat.append('rokNarozeníDo=' + str(p.year_birth_to))
         writer.writerow(dat)
-    logger.info('User "' + uname + '" exported debtors')
+    logger.info('User "%s" (%d) exported debtors' % (uname, uid))
     return response

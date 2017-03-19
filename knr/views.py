@@ -139,10 +139,12 @@ def placeform(request, id=0):
             Place(uid_id=uid, **cd).save()
             if id:
                 logger.info(
-                    'User "' + uname + '" updated place "' + cd['name'] + '"')
+                    'User "%s" (%d) updated place "%s"' % \
+                    (uname, uid, cd['name']))
             else:
                 logger.info(
-                    'User "' + uname + '" added place "' + cd['name'] + '"')
+                    'User "%s" (%d) added place "%s"' % \
+                    (uname, uid, cd['name']))
             return redirect('knr:placelist')
         else:
             err_message = inerr
@@ -187,8 +189,7 @@ def placedel(request, id=0):
         place = get_object_or_404(Place, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "' + uname + '" deleted place "' + \
-                place.name + '"')
+                'User "%s" (%d) deleted place "%s"' % (uname, uid, place.name))
             place.delete()
             return redirect('knr:placedeleted')
         return redirect('knr:placelist')
@@ -216,10 +217,10 @@ def carform(request, id=0):
             Car(uid_id=uid, **cd).save()
             if id:
                 logger.info(
-                    'User "' + uname + '" updated car "' + cd['name'] + '"')
+                    'User "%s" (%d) updated car "%s"' % (uname, uid, cd['name']))
             else:
                 logger.info(
-                    'User "' + uname + '" added car "' + cd['name'] + '"')
+                    'User "%s" (%d) added car "%s"' % (uname, uid, cd['name']))
             return redirect('knr:carlist')
         else:
             err_message = inerr
@@ -260,8 +261,7 @@ def cardel(request, id=0):
         car = get_object_or_404(Car, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "' + uname + '" deleted car "' + \
-                car.name + '"')
+                'User "%s" (%d) deleted car "%s"' % (uname, uid, car.name))
             car.delete()
             return redirect('knr:cardeleted')
         return redirect('knr:carlist')
@@ -301,10 +301,10 @@ def formulaform(request, id=0):
             p.save()
             if id:
                 logger.info(
-                    'User "' + uname + '" updated formula "' + p.name + '"')
+                    'User "%s" (%d) updated formula "%s"' % (uname, uid, p.name))
             else:
                 logger.info(
-                    'User "' + uname + '" added formula "' + p.name + '"')
+                    'User "%s" (%d) added formula "%s"' % (uname, uid, p.name))
             for fuel in fuels:
                 r = Rate.objects.filter(formula=p, fuel=fuel)
                 if  r:
@@ -371,8 +371,8 @@ def formuladel(request, id=0):
         formula = get_object_or_404(Formula, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "' + uname + '" deleted formula "' + \
-                formula.name + '"')
+                'User "%s" (%d) deleted formula "%s"' % \
+                (uname, uid, formula.name))
             formula.delete()
             return redirect('knr:formuladeleted')
         return redirect('knr:formulalist')

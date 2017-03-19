@@ -119,10 +119,10 @@ def partyform(request, id=0):
             p.party_opt = text_opts_keys.index(cd['party_opt'])
             if id:
                 logger.info(
-                    'User "' + uname + '" updated party "' + p.party + '"')
+                    'User "%s" (%d) updated party "%s"' % (uname, uid, p.party))
             else:
                 logger.info(
-                    'User "' + uname + '" added party "' + p.party + '"')
+                    'User "%s" (%d) added party "%s"' % (uname, uid, p.party))
             p.save()
             return redirect('sur:mainpage')
         else:
@@ -151,8 +151,7 @@ def partydel(request, id=0):
         party = get_object_or_404(Party, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "' + uname + '" deleted party "' + \
-                party.party + '"')
+                'User "%s" (%d) deleted party "%s"' % (uname, uid, party.party))
             party.delete()
             return redirect('sur:partydeleted')
         return redirect('sur:mainpage')
@@ -173,7 +172,7 @@ def partydelall(request):
            ('conf' in request.POST) and \
            (request.POST['conf'] == 'Ano'):
             Party.objects.filter(uid=uid).delete()
-            logger.info('User "' + uname + '" deleted all parties')
+            logger.info('User "%s" (%d) deleted all parties' % (uname, uid))
         return redirect('sur:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -227,7 +226,8 @@ def partybatchform(request):
                                     continue
                                 count += 1
                     logger.info(
-                        'User "%s" imported %d party/ies' % (uname, count))
+                        'User "%s" (%d) imported %d party/ies' % \
+                        (uname, uid, count))
                     return render(
                         request,
                         'sur_partybatchresult.html',
@@ -265,5 +265,5 @@ def partyexport(request):
     for p in pp:
         dat = [p.party + text_opts_ca[p.party_opt]]
         writer.writerow(dat)
-    logger.info('User "' + uname + '" exported parties')
+    logger.info('User "%s" (%d) exported parties' % (uname, uid))
     return response

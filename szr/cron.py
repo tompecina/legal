@@ -203,6 +203,6 @@ def szr_notice(uid):
             p.notify = False
             p.save()
         logger.info(
-            'Non-empty notice prepared for user "' + \
-            User.objects.get(pk=uid).username + '"')
+            'Non-empty notice prepared for user "%s" (%d)' % \
+            (User.objects.get(pk=uid).username, uid))
     return text

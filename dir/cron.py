@@ -42,8 +42,8 @@ def dir_notice(uid):
             text += '   %s\n\n' % d.vec.link
         Discovered.objects.filter(uid=uid, vec__link__isnull=False).delete()
         logger.info(
-            'Non-empty notice prepared for user "' + \
-            User.objects.get(pk=uid).username + '"')
+            'Non-empty notice prepared for user "%s" (%d)' % \
+            (User.objects.get(pk=uid).username, uid))
     return text
 
 def dir_check(osoba, vec):

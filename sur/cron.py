@@ -36,8 +36,8 @@ def sur_notice(uid):
             text += '   %s\n\n' % f.url
         Found.objects.filter(uid=uid).delete()
         logger.info(
-            'Non-empty notice prepared for user "' + \
-            User.objects.get(pk=uid).username + '"')
+            'Non-empty notice prepared for user "%s" (%d)' % \
+            (User.objects.get(pk=uid).username, uid))
     return text
 
 def sur_check(name, court, senate, register, number, year, url):

@@ -390,6 +390,6 @@ def sir_notice(uid):
             text += '   %s\n\n' % t.vec.link
         Tracked.objects.filter(uid=uid, vec__link__isnull=False).delete()
         logger.info(
-            'Non-empty notice prepared for user "' + \
-            User.objects.get(pk=uid).username + '"')
+            'Non-empty notice prepared for user "%s" (%d)' % \
+            (User.objects.get(pk=uid).username, uid))
     return text

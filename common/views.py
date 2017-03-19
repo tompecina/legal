@@ -71,10 +71,11 @@ def error(request):
 
 @require_http_methods(['GET', 'POST'])
 def logout(request):
+    uid = request.user.id
     uname = request.user.username
     auth.logout(request)
     if uname:
-        logger.info('User "' + uname + '" logged out')
+        logger.info('User "%s" (%d) logged out' % (uname, uid))
     return redirect('home')
 
 @require_http_methods(['GET', 'POST'])
@@ -102,7 +103,7 @@ def pwchange(request):
         else:
             u.set_password(var['newpw1'])
             u.save()
-            logger.info('User "' + uname + '" changed password')
+            logger.info('User "%s" (%d) changed password' % (uname, uid))
             return redirect('/accounts/pwchanged/')
     return render(request, 'pwchange.html', var)
 
@@ -135,8 +136,8 @@ def lostpw(request):
                     (u[0].username, reverse('resetpw', args=[link]))
                 send_mail('Link pro obnoveni hesla', text, [u[0].email])
                 logger.info(
-                    'Password recovery link for user "' + u[0].username + \
-                    '" sent')
+                    'Password recovery link for user "%s" (%d) sent' % \
+                    (u[0].username, u[0].id))
             return redirect('/accounts/pwlinksent/')
         else:
             err_message = 'Prosím, opravte označená pole ve formuláři'
@@ -164,7 +165,7 @@ def resetpw(request, link):
     u.set_password(newpw)
     u.save()
     p.delete()
-    logger.info('Password for user "' + u.username + '" reset')
+    logger.info('Password for user "%s" (%d) reset' % (u.username, u.id))
     return render(
         request,
         'pwreset.html',
@@ -239,7 +240,8 @@ def useradd(request):
                 user.last_name = cd['last_name']
                 user.save()
                 logout(request)
-                logger.info('New user "' + user.username + '" created')
+                logger.info(
+                    'New user "%s" (%d) created' % (user.username, user.id))
                 return redirect('useradded')
             logger.error('Failed to create user')
             return error(request)  # pragma: no cover

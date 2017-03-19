@@ -125,12 +125,12 @@ def procform(request, id=0):
             p.save()
             if id:
                 logger.info(
-                    'User "' + uname + '" updated proceedings "' + \
-                    p.desc + '" (' + p2s(p) + ')')
+                    'User "%s" (%d) updated proceedings "%s" (%s)' % \
+                    (uname, uid, p.desc, p2s(p)))
             else:
                 logger.info(
-                    'User "' + uname + '" added proceedings "' + p.desc + \
-                    '" (' + p2s(p) + ')')
+                    'User "%s" (%d) added proceedings "%s" (%s)' % \
+                    (uname, uid, p.desc, p2s(p)))
             return redirect('szr:mainpage')
         else:  # pragma: no cover
             err_message = inerr
@@ -158,8 +158,8 @@ def procdel(request, id=0):
         proc = get_object_or_404(Proceedings, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "' + uname + '" deleted proceedings "' + \
-                proc.desc + '" (' + p2s(proc) + ')')
+                'User "%s" (%d) deleted proceedings "%s" (%s)' % \
+                (uname, uid, proc.desc, p2s(proc)))
             proc.delete()
             return redirect('szr:procdeleted')
         return redirect('szr:mainpage')
@@ -180,7 +180,7 @@ def procdelall(request):
            ('conf' in request.POST) and \
            (request.POST['conf'] == 'Ano'):
             Proceedings.objects.filter(uid=uid).delete()
-            logger.info('User "' + uname + '" deleted all proceedings')
+            logger.info('User "%s" (%d) deleted all proceedings' % (uname, uid))
         return redirect('szr:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -270,7 +270,8 @@ def procbatchform(request):
                                         continue
                                 count += 1
                     logger.info(
-                        'User "%s" imported %d proceedings' % (uname, count))
+                        'User "%s" (%d) imported %d proceedings' % \
+                        (uname, uid, count))
                     return render(
                         request,
                         'szr_procbatchresult.html',
@@ -312,7 +313,7 @@ def procexport(request):
                 p.year)
         ]
         writer.writerow(dat)
-    logger.info('User "' + uname + '" exported proceedings')
+    logger.info('User "%s" (%d) exported proceedings' % (uname, uid))
     return response
 
 @require_http_methods(['GET'])
