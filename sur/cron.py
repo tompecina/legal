@@ -52,4 +52,6 @@ def sur_check(name, court, senate, register, number, year, url):
                     number=number,
                     year=year,
                     url=url)[1]:
-                logger.info('New party detected: "' + name + '"')
+                logger.info(
+                    'New party "%s" detected for user "%s" (%d)' % \
+                    (name, User.objects.get(pk=p.uid_id).username, p.uid_id))

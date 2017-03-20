@@ -151,16 +151,28 @@ def updateproc(p):
             if changed:
                 p.changed = changed
                 logger.info(
-                    'Change in proceedings "' + p.desc + '" (' + p2s(p) + ')')
+                    'Change detected in proceedings "%s" (%s) ' \
+                    'for user "%s" (%d)' % \
+                    (p.desc,
+                     p2s(p),
+                     User.objects.get(pk=p.uid_id).username,
+                     p.uid_id))
     elif hash != p.hash:
         p.notify |= notnew
         if notnew:
             p.changed = p.updated
             if p.changed:
                 logger.info(
-                    'Change in proceedings "' + p.desc + '" (' + p2s(p) + ')')
+                    'Change detected in proceedings "%s" (%s) ' \
+                    'for user "%s" (%d)' % \
+                    (p.desc,
+                     p2s(p),
+                     User.objects.get(pk=p.uid_id).username,
+                     p.uid_id))
     p.hash = hash
-    logger.debug('Proceedings updated "' + p.desc + '" (' + p2s(p) + ')')
+    logger.debug(
+        'Proceedings "%s" (%s) updated for user "%s" (%d)' % \
+        (p.desc, p2s(p), User.objects.get(pk=p.uid_id).username, p.uid_id))
     return True
 
 def cron_update():

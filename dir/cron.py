@@ -64,4 +64,6 @@ def dir_check(osoba, vec):
                     uid_id=d.uid_id,
                     desc=d.desc,
                     vec=vec)[1]:
-                logger.info('New debtor detected: "' + d.desc + '"')
+                logger.info(
+                    'New debtor "%s" detected for user "%s" (%d)' % \
+                    (d.desc, User.objects.get(pk=d.uid_id).username, d.uid_id))

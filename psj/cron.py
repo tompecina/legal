@@ -50,8 +50,8 @@ def cron_courtrooms():
                 if not crc:
                     cr.save()
         except:  # pragma: no cover
-            logger.warning('Error importing courtrooms')
-    logger.info('Courtrooms imported')
+            logger.warning('Error downloading courtrooms')
+    logger.info('Courtrooms downloaded')
 
 def cron_schedule(*args):
     dd = []
@@ -167,5 +167,9 @@ def cron_update():
         t.delete()
     except:
         logger.warning(
-            'Failed to get hearings for %s, %d-%02d-%02d' % \
+            'Failed to download hearings for %s, %d-%02d-%02d' % \
             (t.court_id, t.date.year, t.date.month, t.date.day))
+        return
+    logger.debug(
+        'Downloaded hearings for %s, %d-%02d-%02d' % \
+        (t.court_id, t.date.year, t.date.month, t.date.day))
