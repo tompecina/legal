@@ -25,7 +25,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from datetime import date, timedelta
 from calendar import monthrange
-from common.utils import pd
+from common.utils import pd, logger
 from common.glob import inerr_short
 from .forms import MainForm
 
@@ -46,6 +46,9 @@ def calc(beg_date, years, months, days):
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
+
+    logger.debug('Main page accessed using method ' + request.method)
+
     messages = []
 
     if request.method == 'GET':
@@ -87,6 +90,7 @@ def mainpage(request):
 
 
         else:
+            logger.debug('Invalid form')
             messages = [[inerr_short, None]]
 
     return render(request,

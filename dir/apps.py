@@ -29,8 +29,10 @@ class DirConfig(AppConfig):
     version = '1.0'
 
     def stat(self):
+        from common.utils import logger
         from .models import Debtor, Discovered
         now = datetime.now()
+        logger.debug('Partial statistics generated')
         return [
             [
                 'Počet dlužníků',

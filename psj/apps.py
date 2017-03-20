@@ -29,8 +29,10 @@ class PsjConfig(AppConfig):
     version = '1.1'
 
     def stat(self):
+        from common.utils import logger
         from .models import Courtroom, Party, Judge, Form, Hearing, Task
         now = datetime.now()
+        logger.debug('Partial statistics generated')
         return [
             [
                 'Počet jednacích síní',

@@ -29,6 +29,8 @@ class CnbConfig(AppConfig):
 
     def stat(self):
         from .models import FXrate, MPIrate, MPIstat
+        from common.utils import logger
+        logger.debug('Partial statistics generated')
         return [
             [
                 'Počet kursových tabulek',

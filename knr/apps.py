@@ -28,8 +28,10 @@ class KnrConfig(AppConfig):
     version = '1.7'
 
     def stat(self):
+        from common.utils import logger
         from cache.models import Asset
         from .models import Place, Car, Formula, Rate
+        logger.debug('Partial statistics generated')
         return [
             [
                 'Počet míst',

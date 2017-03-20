@@ -29,8 +29,10 @@ class SzrConfig(AppConfig):
     version = '1.0'
 
     def stat(self):
+        from common.utils import logger
         from .models import Court, Proceedings
         now = datetime.now()
+        logger.debug('Partial statistics generated')
         return [
             [
                 'Počet soudů',

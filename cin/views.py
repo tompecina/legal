@@ -26,7 +26,7 @@ from django.apps import apps
 from datetime import date
 from common.utils import (
     pd, tod, ply, plm, ydconvs, mdconvs, yfactor, mfactor, odp, grammar,
-    getbutton, unrequire, p2c)
+    getbutton, unrequire, p2c, logger)
 from common.glob import inerr_short, GR_D, GR_B, GR_M, GR_Y
 from .forms import MainForm
 
@@ -36,6 +36,9 @@ APPVERSION = apps.get_app_config(APP).version
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
+
+    logger.debug('Main page accessed using method ' + request.method)
+
     today = date.today()
     messages = []
 
@@ -115,6 +118,7 @@ def mainpage(request):
                              'text-align: left; margin-left: 2em;'])
 
         else:
+            logger.debug('Invalid form')
             messages = [[inerr_short, None]]
 
     return render(request, 'cin_main.html',

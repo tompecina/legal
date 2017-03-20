@@ -56,9 +56,13 @@ OPTS = [x + '_opt' for x in OFIELDS]
 @require_http_methods(['GET', 'POST'])
 @login_required
 def mainpage(request):
+
+    logger.debug('Main page accessed using method ' + request.method)
+
     err_message = ''
     uid = request.user.id
     page_title = 'Sledování nových dlužníků v insolvenci'
+
     rd = request.GET.copy()
     start = int(rd['start']) if ('start' in rd) else 0
     btn = getbutton(request)
@@ -73,6 +77,7 @@ def mainpage(request):
             p.save()
             return redirect('dir:mainpage')
         else:
+            logger.debug('Invalid form')
             err_message = inerr
     d = Debtor.objects.filter(uid=uid).order_by('desc', 'pk') \
         .values()
@@ -118,12 +123,15 @@ def mainpage(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def debtorform(request, id=0):
+
+    logger.debug('Debtor form accessed using method ' + request.method)
+
     err_message = ''
     uid = request.user.id
     uname = request.user.username
     page_title = ('Úprava dlužníka' if id else 'Nový dlužník')
-    btn = getbutton(request)
 
+    btn = getbutton(request)
     courts = sorted([{'id': x, 'name': l2n[x]} for x in \
         Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()], \
         key=(lambda x: strxfrm(x['name'])))
@@ -164,6 +172,7 @@ def debtorform(request, id=0):
                     'User "%s" (%d) added debtor "%s"' % (uname, uid, p.desc))
             return redirect('dir:mainpage')
         else:
+            logger.debug('Invalid form')
             err_message = inerr
     return render(
         request,
@@ -177,6 +186,7 @@ def debtorform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def debtordel(request, id=0):
+    logger.debug('Debtor delete page accessed using method ' + request.method)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -189,7 +199,8 @@ def debtordel(request, id=0):
         debtor = get_object_or_404(Debtor, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "%s" (%d) deleted debtor "%s"' % (uname, uid, debtor.desc))
+                'User "%s" (%d) deleted debtor "%s"' % \
+                (uname, uid, debtor.desc))
             debtor.delete()
             return redirect('dir:debtordeleted')
         return redirect('dir:mainpage')
@@ -197,6 +208,8 @@ def debtordel(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def debtordelall(request, id=0):
+    logger.debug(
+        'Delete all debtors page accessed using method ' + request.method)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -216,6 +229,8 @@ def debtordelall(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def debtorbatchform(request):
+
+    logger.debug('Debtor import page accessed using method ' + request.method)
 
     err_message = ''
     uid = request.user.id
@@ -387,6 +402,7 @@ def debtorbatchform(request):
                     logger.error('Error reading file')
                     err_message = 'Chyba při načtení souboru'
         else:
+            logger.debug('Invalid form')
             err_message = inerr
 
     return render(
@@ -399,6 +415,7 @@ def debtorbatchform(request):
 @require_http_methods(['GET'])
 @login_required
 def debtorexport(request):
+    logger.debug('Debtor export page accessed')
     uid = request.user.id
     uname = request.user.username
     pp = Debtor.objects.filter(uid=uid).order_by('desc', 'pk') \

@@ -42,7 +42,7 @@ from io import BytesIO
 import os.path
 from common.utils import (
     getbutton, yfactor, mfactor, odp, formam, xmldecorate, xmlescape,
-    xmlunescape, p2c, getXML, newXML, iso2date, CanvasXML)
+    xmlunescape, p2c, getXML, newXML, iso2date, CanvasXML, logger)
 from common.glob import ydconvs, mdconvs, LIM, inerr, localsubdomain, localurl
 from common.views import error
 from cache.main import getasset, setasset
@@ -544,6 +544,8 @@ def fromxml(d):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def mainpage(request):
+
+    logger.debug('Main page accessed using method ' + request.method)
 
     def cellam(a, slb=False):
         a = (float(a) if debt.rounding else int(round(a)))
@@ -1192,6 +1194,7 @@ def mainpage(request):
                 return response
 
         else:
+            logger.debug('Invalid form')
             err_message = inerr
 
     for row in rows:
@@ -1221,7 +1224,7 @@ def mainpage(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def transform(request, id=0):
-
+    logger.debug('Transaction form accessed using method ' + request.method)
     page_title = ('Úprava transakce' if id else 'Nová transakce')
     err_message = ''
     debt = getdebt(request)
@@ -1274,6 +1277,7 @@ def transform(request, id=0):
             return redirect('hjp:mainpage')
 
         else:
+            logger.debug('Invalid form')
             err_message = inerr
         
     return render(request,
@@ -1287,7 +1291,8 @@ def transform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def transdel(request, id=0):
-
+    logger.debug(
+        'Transaction delete page accessed using method ' + request.method)
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover

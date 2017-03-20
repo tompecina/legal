@@ -24,7 +24,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from datetime import date
 from django.apps import apps
-from common.utils import getbutton, pd, formam, unrequire, p2c
+from common.utils import getbutton, pd, formam, unrequire, p2c, logger
 from common.glob import inerr_short
 from common.fields import AmountField
 from .main import getFXrate, getMPIrate
@@ -36,6 +36,9 @@ APPVERSION = apps.get_app_config(APP).version
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
+
+    logger.debug('Main page accessed using method ' + request.method)
+
     rate_desc = {'DISC': 'Diskontní sazba',
                  'LOMB': 'Lombardní sazba',
                  'REPO': 'Repo sazba pro dvoutýdenní operace'}
@@ -118,6 +121,7 @@ def mainpage(request):
                             [p2c('%.2f %%' % rate),
                              'font-weight: bold; font-size: 110%;'])
             else:
+                logger.debug('Invalid form')
                 messages = [[inerr_short, None]]
 
     return render(request,

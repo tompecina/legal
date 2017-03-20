@@ -28,7 +28,9 @@ class HspConfig(AppConfig):
     version = '1.6'
 
     def stat(self):
+        from common.utils import logger
         from cache.models import Asset
+        logger.debug('Partial statistics generated')
         return [
             [
                 'Počet položek v tabulce Asset',

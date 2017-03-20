@@ -29,10 +29,12 @@ class SirConfig(AppConfig):
     version = '1.0'
 
     def stat(self):
+        from common.utils import logger
         from .models import (
             DruhAdresy, Adresa, DruhRoleVRizeni, Osoba, Role, DruhStavRizeni,
             Vec, Counter, Transaction, Insolvency, Tracked)
         now = datetime.now()
+        logger.debug('Partial statistics generated')
         return [
             [
                 'Počet druhů adresy',

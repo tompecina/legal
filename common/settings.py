@@ -30,6 +30,7 @@ LOCAL = ((len(argv) > 1) and (argv[1] == 'runserver'))
 TEST = ((len(argv) > 1) and (argv[1] == 'test'))
 
 DEBUG = LOCAL
+DEBUG_LOG = True
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCAL_ROOT = os.path.dirname(__file__)
@@ -153,8 +154,10 @@ LOGGING = {
             'propagate': True,
         },
         'logger': {
-            'handlers': ['error_file', 'info_file'],
-            'level': 'INFO',
+            'handlers':
+                ['error_file', 'info_file'] + \
+                (['debug_file'] if DEBUG_LOG else []),
+            'level': 'DEBUG',
         },
     },
     'filters': {
@@ -177,7 +180,7 @@ LOGGING = {
             'filename': os.path.join(LOG_DIR, 'error.log'),
             'encoding': 'utf-8',
             'when': 'D',
-            'interval': 30,
+            'interval': 100,
             'backupCount': LOGGING_BC,
             'formatter': 'verbose',
             'filters': ['add_fields'],
@@ -186,6 +189,17 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': os.path.join(LOG_DIR, 'info.log'),
+            'encoding': 'utf-8',
+            'when': 'D',
+            'interval': 30,
+            'backupCount': LOGGING_BC,
+            'formatter': 'verbose',
+            'filters': ['add_fields'],
+        },
+        'debug_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'debug.log'),
             'encoding': 'utf-8',
             'when': 'D',
             'interval': 10,

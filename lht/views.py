@@ -25,7 +25,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from datetime import date, timedelta
 from calendar import monthrange
-from common.utils import pd, tod, odp, getbutton
+from common.utils import pd, tod, odp, getbutton, logger
 from common.glob import wn, inerr_short
 from .forms import MainForm
 
@@ -35,6 +35,9 @@ APPVERSION = apps.get_app_config(APP).version
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
+
+    logger.debug('Main page accessed using method ' + request.method)
+
     today = date.today()
     messages = []
 
@@ -112,6 +115,7 @@ def mainpage(request):
                          'font-size: 80%;'])
            
         else:
+            logger.debug('Invalid form')
             messages = [[inerr_short, None]]
 
     return render(request,

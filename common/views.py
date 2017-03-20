@@ -71,6 +71,7 @@ def error(request):
 
 @require_http_methods(['GET', 'POST'])
 def logout(request):
+    logger.debug('Logout page accessed using method ' + request.method)
     uid = request.user.id
     uname = request.user.username
     auth.logout(request)
@@ -81,6 +82,7 @@ def logout(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def pwchange(request):
+    logger.debug('Password change page accessed using method ' + request.method)
     var = {'page_title': 'Změna hesla'}
     u = request.user
     uid = u.id
@@ -109,6 +111,7 @@ def pwchange(request):
 
 @require_http_methods(['GET', 'POST'])
 def lostpw(request):
+    logger.debug('Lost password page accessed using method ' + request.method)
     err_message = None
     page_title = 'Ztracené heslo'
     if request.method == 'GET':
@@ -140,6 +143,7 @@ def lostpw(request):
                     (u[0].username, u[0].id))
             return redirect('/accounts/pwlinksent/')
         else:
+            logger.debug('Invalid form')
             err_message = 'Prosím, opravte označená pole ve formuláři'
     return render(
         request,
@@ -155,6 +159,7 @@ PWLEN = 10
 
 @require_http_methods(['GET'])
 def resetpw(request, link):
+    logger.debug('Password reset page accessed')
     PwResetLink.objects \
         .filter(timestamp_add__lt=(datetime.now() - LINKLIFE)).delete()
     p = get_object_or_404(PwResetLink, link=link)
@@ -184,10 +189,12 @@ def getappinfo():
                  'name': c.verbose_name,
                  'version': version,
                  'url': (id + ':mainpage')})
+    logger.debug('Application information generated')
     return appinfo
 
 @require_http_methods(['GET'])
 def home(request):
+    logger.debug('Home page accessed')
     return render(
         request,
         'home.html',
@@ -196,6 +203,7 @@ def home(request):
 
 @require_http_methods(['GET'])
 def about(request):
+    logger.debug('About page accessed')
     return render(
         request,
         'about.html',
@@ -211,10 +219,12 @@ def getappstat():
                  'name': c.verbose_name,
                  'stat': c.stat(),
                 })
+    logger.debug('Statistics combined')
     return appstat
 
 @require_http_methods(['GET'])
 def stat(request):
+    logger.debug('Statistics page accessed')
     return render(
         request,
         'stat.html',
@@ -224,6 +234,7 @@ def stat(request):
 
 @require_http_methods(['GET', 'POST'])
 def useradd(request):
+    logger.debug('User add page accessed using method ' + request.method)
     err_message = None
     if request.method == 'GET':
         f = UserAddForm()
@@ -246,9 +257,11 @@ def useradd(request):
             logger.error('Failed to create user')
             return error(request)  # pragma: no cover
         else:
+            logger.debug('Invalid form')
             err_message = inerr
             if 'Duplicate username' in f['username'].errors.as_text():
                 err_message = 'Toto uživatelské jméno se již používá'
+                logger.debug('Duplicate user name')
     return render(
         request,
         'useradd.html',
@@ -260,4 +273,5 @@ def useradd(request):
 
 @require_http_methods(['GET'])
 def genrender(request, template=None, **kwargs):
+    logger.debug('Generic page rendered using template "' + template + '"')
     return render(request, template, kwargs)

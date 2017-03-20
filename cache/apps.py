@@ -28,7 +28,9 @@ class CacheConfig(AppConfig):
     version = None
 
     def stat(self):
+        from common.utils import logger
         from .models import Cache, Asset
+        logger.debug('Partial statistics generated')
         return [
             [
                 'Počet položek v tabulce Cache',

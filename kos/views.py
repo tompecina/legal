@@ -25,7 +25,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from datetime import date
 from math import floor, ceil
-from common.utils import getbutton, formam, p2c
+from common.utils import getbutton, formam, p2c, logger
 from common.glob import inerr_short
 from common.models import Preset
 from cnb.main import getFXrate
@@ -37,6 +37,9 @@ APPVERSION = apps.get_app_config(APP).version
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
+
+    logger.debug('Main page accessed using method ' + request.method)
+
     messages = []
 
     if request.method == 'GET':
@@ -137,6 +140,7 @@ def mainpage(request):
                 ('%s Kč' % formam(round(tot / 0.3))),
                 'font-size: 110%; font-weight: bold; margin-top: 2px;'])
         else:
+            logger.debug('Invalid form')
             messages = [[inerr_short, None]]
 
     return render(request,

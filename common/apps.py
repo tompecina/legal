@@ -30,8 +30,10 @@ class CommonConfig(AppConfig):
 
     def stat(self):
         from django.contrib.auth.models import User
+        from .utils import logger
         from .models import PwResetLink, Preset
         now = datetime.now()
+        logger.debug('Partial statistics generated')
         return [
             [
                 'Počet uživatelů',

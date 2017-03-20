@@ -32,7 +32,7 @@ from json import dump
 from re import compile
 from locale import strxfrm
 from common.utils import (
-    formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool)
+    formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool, logger)
 from common.glob import (
     registers, inerr, text_opts, text_opts_keys, odp, exlim_title,
     localsubdomain, localurl, DTF)
@@ -52,6 +52,9 @@ EXLIM = 1000
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
+
+    logger.debug('Main page accessed using method ' + request.method)
+
     err_message = ''
     messages = []
     page_title = apps.get_app_config(APP).verbose_name
@@ -83,6 +86,7 @@ def mainpage(request):
             return redirect(reverse('psj:' + cd['format'] + 'list') + \
                 '?' + q.urlencode())
         else:
+            logger.debug('Invalid form')
             err_message = inerr
             return render(
                 request,
@@ -117,6 +121,7 @@ def g2p(rd):
         
 @require_http_methods(['GET'])
 def htmllist(request):
+    logger.debug('HTML list accessed')
     page_title = apps.get_app_config(APP).verbose_name
     rd = request.GET.copy()
     try:
@@ -141,6 +146,7 @@ def htmllist(request):
 
 @require_http_methods(['GET'])
 def xmllist(request):
+    logger.debug('XML list accessed')
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -225,6 +231,7 @@ def xmllist(request):
 
 @require_http_methods(['GET'])
 def csvlist(request):
+    logger.debug('CSV list accessed')
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -276,6 +283,7 @@ def csvlist(request):
 
 @require_http_methods(['GET'])
 def jsonlist(request):
+    logger.debug('JSON list accessed')
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -327,6 +335,7 @@ def stripjudge(name):
 
 @require_http_methods(['GET'])
 def courtinfo(request, court):
+    logger.debug('Court information accessed')
     courtrooms = Hearing.objects.filter(courtroom__court_id=court) \
         .values('courtroom_id', 'courtroom__desc').distinct() \
         .order_by('courtroom__desc')

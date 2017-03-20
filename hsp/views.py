@@ -43,7 +43,7 @@ import os.path
 from common import fields
 from common.utils import (
     getbutton, yfactor, mfactor, formam, xmldecorate, xmlescape, xmlunescape,
-    p2c, rmdsl, getXML, newXML, iso2date, CanvasXML)
+    p2c, rmdsl, getXML, newXML, iso2date, CanvasXML, logger)
 from common.glob import (
     ydconvs, odp,  mdconvs, LIM, inerr, localsubdomain, localurl)
 from common.views import error
@@ -847,6 +847,8 @@ def fromxml(d):
 @login_required
 def mainpage(request):
 
+    logger.debug('Main page accessed using method ' + request.method)
+
     def ft(a):
         a = (round(a, debt.rounding) if debt.rounding else int(round(a)))
         if abs(a) < LIM:
@@ -1570,6 +1572,8 @@ def mainpage(request):
 @login_required
 def debitform(request, id=0):
 
+    logger.debug('Debit form accessed using method ' + request.method)
+
     page_title = ('Úprava závazku' if id else 'Nový závazek')
     var = {}
     err_message = ''
@@ -1681,7 +1685,9 @@ def debitform(request, id=0):
                     return error(request)
                 return redirect('hsp:mainpage')
 
-            elif not err_message:
+            else: 
+                logger.debug('Invalid form')
+                if not err_message:
                     err_message = inerr
         
     return render(
@@ -1698,6 +1704,7 @@ def debitform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def debitdel(request, id=0):
+    logger.debug('Debit delete page accessed using method ' + request.method)
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
@@ -1735,6 +1742,8 @@ def debitdel(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def creditform(request, id=0):
+
+    logger.debug('Credit form accessed using method ' + request.method)
 
     page_title = ('Úprava splátky' if id else 'Nová splátka')
     err_message = ''
@@ -1817,6 +1826,7 @@ def creditform(request, id=0):
                 return redirect('hsp:mainpage')
 
             else:
+                logger.debug('Invalid form')
                 err_message = inerr
                 if nd > 1:
                     for n in range(nd):
@@ -1835,6 +1845,7 @@ def creditform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def creditdel(request, id=0):
+    logger.debug('Credit delete page accessed using method ' + request.method)
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
@@ -1860,6 +1871,8 @@ def creditdel(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def balanceform(request, id=0):
+
+    logger.debug('Balance form accessed using method ' + request.method)
 
     page_title = ('Úprava kontrolního bodu' if id else 'Nový kontrolní bod')
     err_message = ''
@@ -1900,6 +1913,7 @@ def balanceform(request, id=0):
             return redirect('hsp:mainpage')
 
         else:
+            logger.debug('Invalid form')
             err_message = inerr
         
     return render(
@@ -1913,6 +1927,7 @@ def balanceform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def balancedel(request, id=0):
+    logger.debug('Balance delete page accessed using method ' + request.method)
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
@@ -1938,6 +1953,9 @@ def balancedel(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def fxrateform(request, id=0):
+
+    logger.debug('FX rate form accessed using method ' + request.method)
+
     page_title = ('Úprava kursu' if id else 'Nový kurs')
     err_message = ''
     debt = getdebt(request)
@@ -1986,6 +2004,7 @@ def fxrateform(request, id=0):
             return redirect('hsp:mainpage')
 
         else:
+            logger.debug('Invalid form')
             err_message = inerr
         
     return render(
@@ -2000,6 +2019,7 @@ def fxrateform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def fxratedel(request, id=0):
+    logger.debug('FX rate delete page accessed using method ' + request.method)
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover

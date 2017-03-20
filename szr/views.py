@@ -45,9 +45,13 @@ BATCH = 50
 @require_http_methods(['GET', 'POST'])
 @login_required
 def mainpage(request):
+
+    logger.debug('Main page accessed using method ' + request.method)
+
     err_message = ''
     uid = request.user.id
     page_title = 'Sledování změn v řízení'
+
     rd = request.GET.copy()
     start = int(rd['start']) if ('start' in rd) else 0
     btn = getbutton(request)
@@ -62,6 +66,7 @@ def mainpage(request):
             p.save()
             return redirect('szr:mainpage')
         else:
+            logger.debug('Invalid form')
             err_message = inerr
     p = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk')
     total = p.count()
@@ -82,6 +87,7 @@ def mainpage(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def procform(request, id=0):
+    logger.debug('Proceedings form accessed using method ' + request.method)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -133,6 +139,7 @@ def procform(request, id=0):
                     (uname, uid, p.desc, p2s(p)))
             return redirect('szr:mainpage')
         else:  # pragma: no cover
+            logger.debug('Invalid form')
             err_message = inerr
     return render(
         request,
@@ -146,6 +153,8 @@ def procform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def procdel(request, id=0):
+    logger.debug(
+        'Proceedings delete page accessed using method ' + request.method)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -167,6 +176,8 @@ def procdel(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def procdelall(request):
+    logger.debug(
+        'Delete all proceedings page accessed using method ' + request.method)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -186,6 +197,9 @@ def procdelall(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def procbatchform(request):
+
+    logger.debug(
+        'Proceedings import page accessed using method ' + request.method)
 
     err_message = ''
     uid = request.user.id
@@ -294,6 +308,7 @@ def procbatchform(request):
 @require_http_methods(['GET'])
 @login_required
 def procexport(request):
+    logger.debug('Proceedings export page accessed')
     uid = request.user.id
     uname = request.user.username
     pp = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk') \
@@ -318,6 +333,7 @@ def procexport(request):
 
 @require_http_methods(['GET'])
 def courts(request):
+    logger.debug('List of courts accessed')
     return render(
         request,
         'szr_courts.html',

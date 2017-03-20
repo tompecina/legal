@@ -31,7 +31,7 @@ from datetime import datetime
 from locale import strxfrm
 from csv import writer as csvwriter
 from json import dump
-from common.utils import between, Pager, newXML, xmldecorate
+from common.utils import between, Pager, newXML, xmldecorate, logger
 from common.glob import (
     inerr, text_opts, text_opts_keys, exlim_title, localsubdomain, localurl,
     DTF)
@@ -47,6 +47,9 @@ EXLIM = 1000
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
+
+    logger.debug('Main page accessed using method ' + request.method)
+
     err_message = ''
     messages = []
     page_title = apps.get_app_config(APP).verbose_name
@@ -89,6 +92,7 @@ def mainpage(request):
             return redirect(reverse('pir:' + cd['format'] + 'list') + \
                 '?' + q.urlencode())
         else:
+            logger.debug('Invalid form')
             err_message = inerr
             return render(
                 request,
@@ -181,6 +185,7 @@ def getosoby(v, *d):
 
 @require_http_methods(['GET'])
 def htmllist(request):
+    logger.debug('HTML list accessed')
     page_title = apps.get_app_config(APP).verbose_name
     rd = request.GET.copy()
     try:
@@ -314,6 +319,7 @@ def xml_addparties(osoby, xml, tag, tagname):
 
 @require_http_methods(['GET'])
 def xmllist(request):
+    logger.debug('XML list accessed')
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -405,6 +411,7 @@ def xmllist(request):
 
 @require_http_methods(['GET'])
 def csvlist(request):
+    logger.debug('CSV list accessed')
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -493,6 +500,7 @@ def json_addparties(osoby):
 
 @require_http_methods(['GET'])
 def jsonlist(request):
+    logger.debug('JSON list accessed')
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -538,6 +546,7 @@ def jsonlist(request):
 
 @require_http_methods(['GET'])
 def party(request, id=0):
+    logger.debug('Party information page accessed')
     osoba = get_object_or_404(Osoba, id=id)
     adresy = osoba.adresy.order_by('-id')
     i = 0

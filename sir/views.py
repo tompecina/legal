@@ -47,6 +47,7 @@ BATCH = 50
 @require_http_methods(['GET', 'POST'])
 @login_required
 def mainpage(request):
+    logger.debug('Main page accessed using method ' + request.method)
     err_message = ''
     uid = request.user.id
     page_title = 'Sledování změn v insolvenčních řízeních'
@@ -64,6 +65,7 @@ def mainpage(request):
             p.save()
             return redirect('sir:mainpage')
         else:
+            logger.debug('Invalid form')
             err_message = inerr
     p = Insolvency.objects.filter(uid=uid).order_by('desc', 'pk')
     total = p.count()
@@ -84,6 +86,7 @@ def mainpage(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def insform(request, id=0):
+    logger.debug('Proceedings form accessed using method ' + request.method)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -115,6 +118,7 @@ def insform(request, id=0):
                     (uname, uid, p.desc, p2s(p)))
             return redirect('sir:mainpage')
         else:
+            logger.debug('Invalid form')
             err_message = inerr
     return render(
         request,
@@ -127,6 +131,8 @@ def insform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def insdel(request, id=0):
+    logger.debug(
+        'Proceedings delete page accessed using method ' + request.method)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -148,6 +154,8 @@ def insdel(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def insdelall(request, id=0):
+    logger.debug(
+        'Delete all proceedings page accessed using method ' + request.method)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -167,6 +175,9 @@ def insdelall(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def insbatchform(request):
+
+    logger.debug(
+        'Proceedings import page accessed using method ' + request.method)
 
     err_message = ''
     uid = request.user.id
@@ -258,6 +269,7 @@ def insbatchform(request):
 @require_http_methods(['GET'])
 @login_required
 def insexport(request):
+    logger.debug('Proceedings export page accessed')
     uid = request.user.id
     uname = request.user.username
     ii = Insolvency.objects.filter(uid=uid).order_by('desc', 'pk') \
@@ -279,6 +291,7 @@ def insexport(request):
 
 @require_http_methods(['GET'])
 def courts(request):
+    logger.debug('List of courts accessed')
     courts = sorted([{'short': l2s[x], 'name': l2n[x]} for x in \
         Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()], \
         key=(lambda x: strxfrm(x['name'])))

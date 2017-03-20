@@ -34,7 +34,7 @@ def getcache(url, lifespan):
         return (c[0].text, None)
     u = get(url)
     if not u.ok:
-        logger.error('Server communication error, URL: "' + url + '"')
+        logger.warning('Failed to access URL: "' + url + '"')
         return (None, 'Chyba při komunikaci se serverem')
     t = u.text
     Cache(

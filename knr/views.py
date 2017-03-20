@@ -110,6 +110,7 @@ def convf(n, p):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def placeform(request, id=0):
+    logger.debug('Place form accessed using method ' + request.method)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -147,6 +148,7 @@ def placeform(request, id=0):
                     (uname, uid, cd['name']))
             return redirect('knr:placelist')
         else:
+            logger.debug('Invalid form')
             err_message = inerr
     return render(
         request,
@@ -159,6 +161,7 @@ def placeform(request, id=0):
 @require_http_methods(['GET'])
 @login_required
 def placelist(request):
+    logger.debug('Place list accessed')
     rows = Place.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
                         .order_by('uid', 'abbr', 'name')
     for row in rows:
@@ -176,6 +179,7 @@ def placelist(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def placedel(request, id=0):
+    logger.debug('Place delete page accessed using method ' + request.method)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -197,6 +201,7 @@ def placedel(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def carform(request, id=0):
+    logger.debug('Car form accessed using method ' + request.method)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -217,12 +222,14 @@ def carform(request, id=0):
             Car(uid_id=uid, **cd).save()
             if id:
                 logger.info(
-                    'User "%s" (%d) updated car "%s"' % (uname, uid, cd['name']))
+                    'User "%s" (%d) updated car "%s"' % \
+                    (uname, uid, cd['name']))
             else:
                 logger.info(
                     'User "%s" (%d) added car "%s"' % (uname, uid, cd['name']))
             return redirect('knr:carlist')
         else:
+            logger.debug('Invalid form')
             err_message = inerr
     return render(
         request,
@@ -236,6 +243,7 @@ def carform(request, id=0):
 @require_http_methods(['GET'])
 @login_required
 def carlist(request):
+    logger.debug('Car list accessed')
     rows = Car.objects.filter(uid=request.user.id).order_by('abbr', 'name')
     return render(
         request,
@@ -247,6 +255,7 @@ def carlist(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def cardel(request, id=0):
+    logger.debug('Car delete page accessed using method ' + request.method)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -269,6 +278,7 @@ def cardel(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def formulaform(request, id=0):
+    logger.debug('Formula form accessed using method ' + request.method)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -301,7 +311,8 @@ def formulaform(request, id=0):
             p.save()
             if id:
                 logger.info(
-                    'User "%s" (%d) updated formula "%s"' % (uname, uid, p.name))
+                    'User "%s" (%d) updated formula "%s"' % \
+                    (uname, uid, p.name))
             else:
                 logger.info(
                     'User "%s" (%d) added formula "%s"' % (uname, uid, p.name))
@@ -317,6 +328,7 @@ def formulaform(request, id=0):
                 r.save()
             return redirect('knr:formulalist')
         else:
+            logger.debug('Invalid form')
             err_message = inerr
     rates = []
     for fuel in fuels:
@@ -334,6 +346,7 @@ def formulaform(request, id=0):
 @require_http_methods(['GET'])
 @login_required
 def formulalist(request):
+    logger.debug('Formula list accessed')
     rows = Formula.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
                           .order_by('uid', 'abbr', 'name')
     for row in rows:
@@ -358,6 +371,7 @@ def formulalist(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def formuladel(request, id=0):
+    logger.debug('Formula delete page accessed using method ' + request.method)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -911,6 +925,8 @@ def fromxml(d):
 @login_required
 def mainpage(request):
     
+    logger.debug('Main page accessed using method ' + request.method)
+
     c = getcalc(request)
     if not c:  # pragma: no cover
         return error(request)
@@ -1424,6 +1440,7 @@ def itemform(request, idx=0):
             if dur:
                 cd['time_number'] = int(ceil(dur / 1800.0))
 
+    logger.debug('Item form accessed using method ' + request.method)
     uid = request.user.id
     c = getcalc(request)
     if not c:  # pragma: no cover
@@ -1855,6 +1872,7 @@ def itemform(request, idx=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def itemlist(request):
+    logger.debug('Item list accessed using method ' + request.method)
     c = getcalc(request)
     if not c:  # pragma: no cover
         return error(request)
@@ -1882,6 +1900,7 @@ def itemlist(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def itemdel(request, idx=0):
+    logger.debug('Item delete page accessed using method ' + request.method)
     idx = (int(idx) - 1)
     var = {'app': APP, 'page_title': 'Smazání položky'}
     c = getcalc(request)
@@ -1897,6 +1916,7 @@ def itemdel(request, idx=0):
         btn = getbutton(request)
         if btn == 'yes':
             del c.items[idx]
+            logger.debug('Item deleted')
             if not setcalc(request, c):  # pragma: no cover
                 return error(request)
             return redirect('knr:itemdeleted')
@@ -1905,6 +1925,7 @@ def itemdel(request, idx=0):
 @require_http_methods(['GET'])
 @login_required
 def itemmove(request, dir, idx):
+    logger.debug('Item move requested')
     idx = int(idx)
     c = getcalc(request)
     if not c:  # pragma: no cover
@@ -1921,6 +1942,7 @@ def itemmove(request, dir, idx):
 @require_http_methods(['GET'])
 @login_required
 def presets(request):
+    logger.debug('Presets requested')
     if not request.user.is_superuser:
         return unauth(request)
     from .presets import pl, fo
@@ -1943,4 +1965,5 @@ def presets(request):
         fid = ff.id
         for r in f[3]:
             Rate(formula_id=fid, fuel=r[0], rate=r[1]).save()
+    logger.info('Presets restored')
     return redirect('knr:mainpage')

@@ -29,8 +29,10 @@ class UdnConfig(AppConfig):
     version = '1.1'
 
     def stat(self):
+        from common.utils import logger
         from .models import Agenda, Party, Decision
         now = datetime.now()
+        logger.debug('Partial statistics generated')
         return [
             [
                 'Počet oblastí',

@@ -30,6 +30,10 @@ cd = timedelta(hours=1)
 
 def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
 
+    logger.debug(
+        'FX rate requested, currency "%s" for %d-%02d-%02d, fixed "%s"' % \
+        (curr, dt.year, dt.month, dt.day, use_fixed))
+    
     fixed_list = {
         'XEU': {'currency_to': 'EUR',
                 'fixed_rate': 1.0,
@@ -218,6 +222,11 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
     return ((rate / fr), qty, dr, None)
 
 def getMPIrate(tp, dt, log=None):
+
+    logger.debug(
+        'MPI rate of type "%s" requested for %d-%02d-%02d' % \
+        (tp, dt.year, dt.month, dt.day))
+
     now = datetime.now()
 
     prefix = 'https://www.cnb.cz/cs/faq/vyvoj_'

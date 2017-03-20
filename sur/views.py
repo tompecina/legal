@@ -48,9 +48,13 @@ BATCH = 50
 @require_http_methods(['GET', 'POST'])
 @login_required
 def mainpage(request):
+
+    logger.debug('Main page accessed using method ' + request.method)
+
     err_message = ''
     uid = request.user.id
     page_title = 'Sledování účastníků řízení'
+
     rd = request.GET.copy()
     start = int(rd['start']) if ('start' in rd) else 0
     btn = getbutton(request)
@@ -65,6 +69,7 @@ def mainpage(request):
             p.save()
             return redirect('sur:mainpage')
         else:
+            logger.debug('Invalid form')
             err_message = inerr
     p = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'pk') \
         .values()
@@ -92,10 +97,14 @@ def mainpage(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def partyform(request, id=0):
+
+    logger.debug('Party form accessed using method ' + request.method)
+
     err_message = ''
     uid = request.user.id
     uname = request.user.username
     page_title = ('Úprava účastníka' if id else 'Nový účastník')
+
     btn = getbutton(request)
     if request.method == 'GET':
         if id:
@@ -126,6 +135,7 @@ def partyform(request, id=0):
             p.save()
             return redirect('sur:mainpage')
         else:
+            logger.debug('Invalid form')
             err_message = inerr
     return render(
         request,
@@ -139,6 +149,7 @@ def partyform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def partydel(request, id=0):
+    logger.debug('Party delete page accessed using method ' + request.method)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -159,6 +170,8 @@ def partydel(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def partydelall(request):
+    logger.debug(
+        'Delete all parties page accessed using method ' + request.method)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -178,6 +191,8 @@ def partydelall(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def partybatchform(request):
+
+    logger.debug('Party import page accessed using method ' + request.method)
 
     err_message = ''
     uid = request.user.id
@@ -240,6 +255,7 @@ def partybatchform(request):
                     logger.error('Error reading file')
                     err_message = 'Chyba při načtení souboru'
         else:
+            logger.debug('Invalid form')
             err_message = inerr
 
     return render(
@@ -254,6 +270,7 @@ def partybatchform(request):
 @require_http_methods(['GET'])
 @login_required
 def partyexport(request):
+    logger.debug('Party export page accessed')
     uid = request.user.id
     uname = request.user.username
     pp = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'id') \

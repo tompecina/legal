@@ -39,4 +39,7 @@ def cron_notify():
                 'Zprava ze serveru ' + localsubdomain,
                 text,
                 [u.email])
+            logger.debug(
+                'Email sent to user "%s" (%d)' %\
+                (User.objects.get(pk=uid).username, uid))
     logger.info('Emails sent')
