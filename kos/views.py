@@ -38,7 +38,9 @@ APPVERSION = apps.get_app_config(APP).version
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
 
-    logger.debug('Main page accessed using method ' + request.method)
+    logger.debug(
+        'Main page accessed using method ' + request.method,
+        extra={'request': request})
 
     messages = []
 
@@ -140,7 +142,7 @@ def mainpage(request):
                 ('%s Kč' % formam(round(tot / 0.3))),
                 'font-size: 110%; font-weight: bold; margin-top: 2px;'])
         else:
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             messages = [[inerr_short, None]]
 
     return render(request,

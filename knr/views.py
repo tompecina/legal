@@ -110,7 +110,9 @@ def convf(n, p):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def placeform(request, id=0):
-    logger.debug('Place form accessed using method ' + request.method)
+    logger.debug(
+        'Place form accessed using method ' + request.method,
+        extra={'request': request})
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -141,14 +143,16 @@ def placeform(request, id=0):
             if id:
                 logger.info(
                     'User "%s" (%d) updated place "%s"' % \
-                    (uname, uid, cd['name']))
+                    (uname, uid, cd['name']),
+                    extra={'request': request})
             else:
                 logger.info(
                     'User "%s" (%d) added place "%s"' % \
-                    (uname, uid, cd['name']))
+                    (uname, uid, cd['name']),
+                    extra={'request': request})
             return redirect('knr:placelist')
         else:
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             err_message = inerr
     return render(
         request,
@@ -161,7 +165,7 @@ def placeform(request, id=0):
 @require_http_methods(['GET'])
 @login_required
 def placelist(request):
-    logger.debug('Place list accessed')
+    logger.debug('Place list accessed', extra={'request': request})
     rows = Place.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
                         .order_by('uid', 'abbr', 'name')
     for row in rows:
@@ -179,7 +183,9 @@ def placelist(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def placedel(request, id=0):
-    logger.debug('Place delete page accessed using method ' + request.method)
+    logger.debug(
+        'Place delete page accessed using method ' + request.method,
+        extra={'request': request})
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -193,7 +199,8 @@ def placedel(request, id=0):
         place = get_object_or_404(Place, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "%s" (%d) deleted place "%s"' % (uname, uid, place.name))
+                'User "%s" (%d) deleted place "%s"' % (uname, uid, place.name),
+                extra={'request': request})
             place.delete()
             return redirect('knr:placedeleted')
         return redirect('knr:placelist')
@@ -201,7 +208,9 @@ def placedel(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def carform(request, id=0):
-    logger.debug('Car form accessed using method ' + request.method)
+    logger.debug(
+        'Car form accessed using method ' + request.method,
+        extra={'request': request})
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -223,13 +232,15 @@ def carform(request, id=0):
             if id:
                 logger.info(
                     'User "%s" (%d) updated car "%s"' % \
-                    (uname, uid, cd['name']))
+                    (uname, uid, cd['name']),
+                    extra={'request': request})
             else:
                 logger.info(
-                    'User "%s" (%d) added car "%s"' % (uname, uid, cd['name']))
+                    'User "%s" (%d) added car "%s"' % (uname, uid, cd['name']),
+                    extra={'request': request})
             return redirect('knr:carlist')
         else:
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             err_message = inerr
     return render(
         request,
@@ -243,7 +254,7 @@ def carform(request, id=0):
 @require_http_methods(['GET'])
 @login_required
 def carlist(request):
-    logger.debug('Car list accessed')
+    logger.debug('Car list accessed', extra={'request': request})
     rows = Car.objects.filter(uid=request.user.id).order_by('abbr', 'name')
     return render(
         request,
@@ -255,7 +266,9 @@ def carlist(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def cardel(request, id=0):
-    logger.debug('Car delete page accessed using method ' + request.method)
+    logger.debug(
+        'Car delete page accessed using method ' + request.method,
+        extra={'request': request})
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -270,7 +283,8 @@ def cardel(request, id=0):
         car = get_object_or_404(Car, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "%s" (%d) deleted car "%s"' % (uname, uid, car.name))
+                'User "%s" (%d) deleted car "%s"' % (uname, uid, car.name),
+                extra={'request': request})
             car.delete()
             return redirect('knr:cardeleted')
         return redirect('knr:carlist')
@@ -278,7 +292,9 @@ def cardel(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def formulaform(request, id=0):
-    logger.debug('Formula form accessed using method ' + request.method)
+    logger.debug(
+        'Formula form accessed using method ' + request.method,
+        extra={'request': request})
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -312,10 +328,12 @@ def formulaform(request, id=0):
             if id:
                 logger.info(
                     'User "%s" (%d) updated formula "%s"' % \
-                    (uname, uid, p.name))
+                    (uname, uid, p.name),
+                    extra={'request': request})
             else:
                 logger.info(
-                    'User "%s" (%d) added formula "%s"' % (uname, uid, p.name))
+                    'User "%s" (%d) added formula "%s"' % (uname, uid, p.name),
+                    extra={'request': request})
             for fuel in fuels:
                 r = Rate.objects.filter(formula=p, fuel=fuel)
                 if  r:
@@ -328,7 +346,7 @@ def formulaform(request, id=0):
                 r.save()
             return redirect('knr:formulalist')
         else:
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             err_message = inerr
     rates = []
     for fuel in fuels:
@@ -346,7 +364,7 @@ def formulaform(request, id=0):
 @require_http_methods(['GET'])
 @login_required
 def formulalist(request):
-    logger.debug('Formula list accessed')
+    logger.debug('Formula list accessed', extra={'request': request})
     rows = Formula.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
                           .order_by('uid', 'abbr', 'name')
     for row in rows:
@@ -371,7 +389,9 @@ def formulalist(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def formuladel(request, id=0):
-    logger.debug('Formula delete page accessed using method ' + request.method)
+    logger.debug(
+        'Formula delete page accessed using method ' + request.method,
+        extra={'request': request})
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -386,7 +406,8 @@ def formuladel(request, id=0):
         if (getbutton(request) == 'yes'):
             logger.info(
                 'User "%s" (%d) deleted formula "%s"' % \
-                (uname, uid, formula.name))
+                (uname, uid, formula.name),
+                extra={'request': request})
             formula.delete()
             return redirect('knr:formuladeleted')
         return redirect('knr:formulalist')
@@ -925,7 +946,9 @@ def fromxml(d):
 @login_required
 def mainpage(request):
     
-    logger.debug('Main page accessed using method ' + request.method)
+    logger.debug(
+        'Main page accessed using method ' + request.method,
+        extra={'request': request})
 
     c = getcalc(request)
     if not c:  # pragma: no cover
@@ -1440,7 +1463,9 @@ def itemform(request, idx=0):
             if dur:
                 cd['time_number'] = int(ceil(dur / 1800.0))
 
-    logger.debug('Item form accessed using method ' + request.method)
+    logger.debug(
+        'Item form accessed using method ' + request.method,
+        extra={'request': request})
     uid = request.user.id
     c = getcalc(request)
     if not c:  # pragma: no cover
@@ -1872,7 +1897,9 @@ def itemform(request, idx=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def itemlist(request):
-    logger.debug('Item list accessed using method ' + request.method)
+    logger.debug(
+        'Item list accessed using method ' + request.method,
+        extra={'request': request})
     c = getcalc(request)
     if not c:  # pragma: no cover
         return error(request)
@@ -1900,7 +1927,9 @@ def itemlist(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def itemdel(request, idx=0):
-    logger.debug('Item delete page accessed using method ' + request.method)
+    logger.debug(
+        'Item delete page accessed using method ' + request.method,
+        extra={'request': request})
     idx = (int(idx) - 1)
     var = {'app': APP, 'page_title': 'Smazání položky'}
     c = getcalc(request)
@@ -1916,7 +1945,7 @@ def itemdel(request, idx=0):
         btn = getbutton(request)
         if btn == 'yes':
             del c.items[idx]
-            logger.debug('Item deleted')
+            logger.debug('Item deleted', extra={'request': request})
             if not setcalc(request, c):  # pragma: no cover
                 return error(request)
             return redirect('knr:itemdeleted')
@@ -1925,7 +1954,7 @@ def itemdel(request, idx=0):
 @require_http_methods(['GET'])
 @login_required
 def itemmove(request, dir, idx):
-    logger.debug('Item move requested')
+    logger.debug('Item move requested', extra={'request': request})
     idx = int(idx)
     c = getcalc(request)
     if not c:  # pragma: no cover
@@ -1942,7 +1971,7 @@ def itemmove(request, dir, idx):
 @require_http_methods(['GET'])
 @login_required
 def presets(request):
-    logger.debug('Presets requested')
+    logger.debug('Presets requested', extra={'request': request})
     if not request.user.is_superuser:
         return unauth(request)
     from .presets import pl, fo
@@ -1965,5 +1994,5 @@ def presets(request):
         fid = ff.id
         for r in f[3]:
             Rate(formula_id=fid, fuel=r[0], rate=r[1]).save()
-    logger.info('Presets restored')
+    logger.info('Presets restored', extra={'request': request})
     return redirect('knr:mainpage')

@@ -37,7 +37,9 @@ APPVERSION = apps.get_app_config(APP).version
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
 
-    logger.debug('Main page accessed using method ' + request.method)
+    logger.debug(
+        'Main page accessed using method ' + request.method,
+        extra={'request': request})
 
     rate_desc = {'DISC': 'Diskontní sazba',
                  'LOMB': 'Lombardní sazba',
@@ -121,7 +123,7 @@ def mainpage(request):
                             [p2c('%.2f %%' % rate),
                              'font-weight: bold; font-size: 110%;'])
             else:
-                logger.debug('Invalid form')
+                logger.debug('Invalid form', extra={'request': request})
                 messages = [[inerr_short, None]]
 
     return render(request,

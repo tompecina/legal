@@ -36,7 +36,9 @@ APPVERSION = apps.get_app_config(APP).version
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
 
-    logger.debug('Main page accessed using method ' + request.method)
+    logger.debug(
+        'Main page accessed using method ' + request.method,
+        extra={'request': request})
 
     today = date.today()
     messages = []
@@ -115,7 +117,7 @@ def mainpage(request):
                          'font-size: 80%;'])
            
         else:
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             messages = [[inerr_short, None]]
 
     return render(request,

@@ -97,7 +97,8 @@ def cron_courts():
     logger.info('Courts imported')
 
 def p2s(p):
-    return p.court_id + ', ' + composeref(p.senate, p.register, p.number, p.year)
+    return p.court_id + ', ' + \
+        composeref(p.senate, p.register, p.number, p.year)
 
 def updateproc(p):
     notnew = bool(p.updated)

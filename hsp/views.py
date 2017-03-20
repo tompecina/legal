@@ -847,7 +847,9 @@ def fromxml(d):
 @login_required
 def mainpage(request):
 
-    logger.debug('Main page accessed using method ' + request.method)
+    logger.debug(
+        'Main page accessed using method ' + request.method,
+        extra={'request': request})
 
     def ft(a):
         a = (round(a, debt.rounding) if debt.rounding else int(round(a)))
@@ -1572,7 +1574,9 @@ def mainpage(request):
 @login_required
 def debitform(request, id=0):
 
-    logger.debug('Debit form accessed using method ' + request.method)
+    logger.debug(
+        'Debit form accessed using method ' + request.method,
+        extra={'request': request})
 
     page_title = ('Úprava závazku' if id else 'Nový závazek')
     var = {}
@@ -1686,7 +1690,7 @@ def debitform(request, id=0):
                 return redirect('hsp:mainpage')
 
             else: 
-                logger.debug('Invalid form')
+                logger.debug('Invalid form', extra={'request': request})
                 if not err_message:
                     err_message = inerr
         
@@ -1704,7 +1708,9 @@ def debitform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def debitdel(request, id=0):
-    logger.debug('Debit delete page accessed using method ' + request.method)
+    logger.debug(
+        'Debit delete page accessed using method ' + request.method,
+        extra={'request': request})
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
@@ -1743,7 +1749,9 @@ def debitdel(request, id=0):
 @login_required
 def creditform(request, id=0):
 
-    logger.debug('Credit form accessed using method ' + request.method)
+    logger.debug(
+        'Credit form accessed using method ' + request.method,
+        extra={'request': request})
 
     page_title = ('Úprava splátky' if id else 'Nová splátka')
     err_message = ''
@@ -1826,7 +1834,7 @@ def creditform(request, id=0):
                 return redirect('hsp:mainpage')
 
             else:
-                logger.debug('Invalid form')
+                logger.debug('Invalid form', extra={'request': request})
                 err_message = inerr
                 if nd > 1:
                     for n in range(nd):
@@ -1845,7 +1853,9 @@ def creditform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def creditdel(request, id=0):
-    logger.debug('Credit delete page accessed using method ' + request.method)
+    logger.debug(
+        'Credit delete page accessed using method ' + request.method,
+        extra={'request': request})
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
@@ -1872,7 +1882,9 @@ def creditdel(request, id=0):
 @login_required
 def balanceform(request, id=0):
 
-    logger.debug('Balance form accessed using method ' + request.method)
+    logger.debug(
+        'Balance form accessed using method ' + request.method,
+        extra={'request': request})
 
     page_title = ('Úprava kontrolního bodu' if id else 'Nový kontrolní bod')
     err_message = ''
@@ -1913,7 +1925,7 @@ def balanceform(request, id=0):
             return redirect('hsp:mainpage')
 
         else:
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             err_message = inerr
         
     return render(
@@ -1927,7 +1939,9 @@ def balanceform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def balancedel(request, id=0):
-    logger.debug('Balance delete page accessed using method ' + request.method)
+    logger.debug(
+        'Balance delete page accessed using method ' + request.method,
+        extra={'request': request})
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
@@ -1954,7 +1968,9 @@ def balancedel(request, id=0):
 @login_required
 def fxrateform(request, id=0):
 
-    logger.debug('FX rate form accessed using method ' + request.method)
+    logger.debug(
+        'FX rate form accessed using method ' + request.method,
+        extra={'request': request})
 
     page_title = ('Úprava kursu' if id else 'Nový kurs')
     err_message = ''
@@ -2004,7 +2020,7 @@ def fxrateform(request, id=0):
             return redirect('hsp:mainpage')
 
         else:
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             err_message = inerr
         
     return render(
@@ -2019,7 +2035,9 @@ def fxrateform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def fxratedel(request, id=0):
-    logger.debug('FX rate delete page accessed using method ' + request.method)
+    logger.debug(
+        'FX rate delete page accessed using method ' + request.method,
+        extra={'request': request})
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover

@@ -49,7 +49,9 @@ BATCH = 50
 @login_required
 def mainpage(request):
 
-    logger.debug('Main page accessed using method ' + request.method)
+    logger.debug(
+        'Main page accessed using method ' + request.method,
+        extra={'request': request})
 
     err_message = ''
     uid = request.user.id
@@ -69,7 +71,7 @@ def mainpage(request):
             p.save()
             return redirect('sur:mainpage')
         else:
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             err_message = inerr
     p = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'pk') \
         .values()
@@ -98,7 +100,9 @@ def mainpage(request):
 @login_required
 def partyform(request, id=0):
 
-    logger.debug('Party form accessed using method ' + request.method)
+    logger.debug(
+        'Party form accessed using method ' + request.method,
+        extra={'request': request})
 
     err_message = ''
     uid = request.user.id
@@ -128,14 +132,16 @@ def partyform(request, id=0):
             p.party_opt = text_opts_keys.index(cd['party_opt'])
             if id:
                 logger.info(
-                    'User "%s" (%d) updated party "%s"' % (uname, uid, p.party))
+                    'User "%s" (%d) updated party "%s"' % (uname, uid, p.party),
+                    extra={'request': request})
             else:
                 logger.info(
-                    'User "%s" (%d) added party "%s"' % (uname, uid, p.party))
+                    'User "%s" (%d) added party "%s"' % (uname, uid, p.party),
+                    extra={'request': request})
             p.save()
             return redirect('sur:mainpage')
         else:
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             err_message = inerr
     return render(
         request,
@@ -149,7 +155,9 @@ def partyform(request, id=0):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def partydel(request, id=0):
-    logger.debug('Party delete page accessed using method ' + request.method)
+    logger.debug(
+        'Party delete page accessed using method ' + request.method,
+        extra={'request': request})
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -162,7 +170,8 @@ def partydel(request, id=0):
         party = get_object_or_404(Party, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "%s" (%d) deleted party "%s"' % (uname, uid, party.party))
+                'User "%s" (%d) deleted party "%s"' % (uname, uid, party.party),
+                extra={'request': request})
             party.delete()
             return redirect('sur:partydeleted')
         return redirect('sur:mainpage')
@@ -171,7 +180,8 @@ def partydel(request, id=0):
 @login_required
 def partydelall(request):
     logger.debug(
-        'Delete all parties page accessed using method ' + request.method)
+        'Delete all parties page accessed using method ' + request.method,
+        extra={'request': request})
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -185,14 +195,18 @@ def partydelall(request):
            ('conf' in request.POST) and \
            (request.POST['conf'] == 'Ano'):
             Party.objects.filter(uid=uid).delete()
-            logger.info('User "%s" (%d) deleted all parties' % (uname, uid))
+            logger.info(
+                'User "%s" (%d) deleted all parties' % (uname, uid),
+                extra={'request': request})
         return redirect('sur:mainpage')
 
 @require_http_methods(['GET', 'POST'])
 @login_required
 def partybatchform(request):
 
-    logger.debug('Party import page accessed using method ' + request.method)
+    logger.debug(
+        'Party import page accessed using method ' + request.method,
+        extra={'request': request})
 
     err_message = ''
     uid = request.user.id
@@ -242,7 +256,8 @@ def partybatchform(request):
                                 count += 1
                     logger.info(
                         'User "%s" (%d) imported %d party/ies' % \
-                        (uname, uid, count))
+                        (uname, uid, count),
+                        extra={'request': request})
                     return render(
                         request,
                         'sur_partybatchresult.html',
@@ -252,10 +267,12 @@ def partybatchform(request):
                          'errors': errors})
 
                 except:  # pragma: no cover
-                    logger.error('Error reading file')
+                    logger.error(
+                        'Error reading file',
+                        extra={'request': request})
                     err_message = 'Chyba při načtení souboru'
         else:
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             err_message = inerr
 
     return render(
@@ -270,7 +287,9 @@ def partybatchform(request):
 @require_http_methods(['GET'])
 @login_required
 def partyexport(request):
-    logger.debug('Party export page accessed')
+    logger.debug(
+        'Party export page accessed',
+        extra={'request': request})
     uid = request.user.id
     uname = request.user.username
     pp = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'id') \
@@ -282,5 +301,7 @@ def partyexport(request):
     for p in pp:
         dat = [p.party + text_opts_ca[p.party_opt]]
         writer.writerow(dat)
-    logger.info('User "%s" (%d) exported parties' % (uname, uid))
+    logger.info(
+        'User "%s" (%d) exported parties' % (uname, uid),
+        extra={'request': request})
     return response

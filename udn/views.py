@@ -53,7 +53,9 @@ EXLIM = 1000
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
 
-    logger.debug('Main page accessed using method ' + request.method)
+    logger.debug(
+        'Main page accessed using method ' + request.method,
+        extra={'request': request})
 
     err_message = ''
     messages = []
@@ -86,7 +88,7 @@ def mainpage(request):
                 '?' + q.urlencode())
         else:
             err_message = inerr
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             return render(
                 request,
                 'udn_mainpage.html',
@@ -119,7 +121,7 @@ def g2p(rd):
         
 @require_http_methods(['GET'])
 def htmllist(request):
-    logger.debug('HTML list accessed')
+    logger.debug('HTML list accessed', extra={'request': request})
     page_title = apps.get_app_config(APP).verbose_name
     rd = request.GET.copy()
     try:
@@ -143,7 +145,7 @@ def htmllist(request):
 
 @require_http_methods(['GET'])
 def xmllist(request):
-    logger.debug('XML list accessed')
+    logger.debug('XML list accessed', extra={'request': request})
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -230,7 +232,7 @@ def xmllist(request):
 
 @require_http_methods(['GET'])
 def csvlist(request):
-    logger.debug('CSV list accessed')
+    logger.debug('CSV list accessed', extra={'request': request})
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -276,7 +278,7 @@ def csvlist(request):
 
 @require_http_methods(['GET'])
 def jsonlist(request):
-    logger.debug('JSON list accessed')
+    logger.debug('JSON list accessed', extra={'request': request})
     rd = request.GET.copy()
     try:
         p = g2p(rd)

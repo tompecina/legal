@@ -47,7 +47,9 @@ def calc(beg_date, years, months, days):
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
 
-    logger.debug('Main page accessed using method ' + request.method)
+    logger.debug(
+        'Main page accessed using method ' + request.method,
+        extra={'request': request})
 
     messages = []
 
@@ -90,7 +92,7 @@ def mainpage(request):
 
 
         else:
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             messages = [[inerr_short, None]]
 
     return render(request,

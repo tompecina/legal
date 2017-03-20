@@ -46,7 +46,9 @@ BATCH = 50
 @login_required
 def mainpage(request):
 
-    logger.debug('Main page accessed using method ' + request.method)
+    logger.debug(
+        'Main page accessed using method ' + request.method,
+        extra={'request': request})
 
     err_message = ''
     uid = request.user.id
@@ -66,7 +68,7 @@ def mainpage(request):
             p.save()
             return redirect('szr:mainpage')
         else:
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             err_message = inerr
     p = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk')
     total = p.count()
@@ -87,7 +89,9 @@ def mainpage(request):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def procform(request, id=0):
-    logger.debug('Proceedings form accessed using method ' + request.method)
+    logger.debug(
+        'Proceedings form accessed using method ' + request.method,
+        extra={'request': request})
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -132,14 +136,16 @@ def procform(request, id=0):
             if id:
                 logger.info(
                     'User "%s" (%d) updated proceedings "%s" (%s)' % \
-                    (uname, uid, p.desc, p2s(p)))
+                    (uname, uid, p.desc, p2s(p)),
+                    extra={'request': request})
             else:
                 logger.info(
                     'User "%s" (%d) added proceedings "%s" (%s)' % \
-                    (uname, uid, p.desc, p2s(p)))
+                    (uname, uid, p.desc, p2s(p)),
+                    extra={'request': request})
             return redirect('szr:mainpage')
         else:  # pragma: no cover
-            logger.debug('Invalid form')
+            logger.debug('Invalid form', extra={'request': request})
             err_message = inerr
     return render(
         request,
@@ -154,7 +160,8 @@ def procform(request, id=0):
 @login_required
 def procdel(request, id=0):
     logger.debug(
-        'Proceedings delete page accessed using method ' + request.method)
+        'Proceedings delete page accessed using method ' + request.method,
+        extra={'request': request})
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -168,7 +175,8 @@ def procdel(request, id=0):
         if (getbutton(request) == 'yes'):
             logger.info(
                 'User "%s" (%d) deleted proceedings "%s" (%s)' % \
-                (uname, uid, proc.desc, p2s(proc)))
+                (uname, uid, proc.desc, p2s(proc)),
+                extra={'request': request})
             proc.delete()
             return redirect('szr:procdeleted')
         return redirect('szr:mainpage')
@@ -177,7 +185,8 @@ def procdel(request, id=0):
 @login_required
 def procdelall(request):
     logger.debug(
-        'Delete all proceedings page accessed using method ' + request.method)
+        'Delete all proceedings page accessed using method ' + request.method,
+        extra={'request': request})
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -191,7 +200,9 @@ def procdelall(request):
            ('conf' in request.POST) and \
            (request.POST['conf'] == 'Ano'):
             Proceedings.objects.filter(uid=uid).delete()
-            logger.info('User "%s" (%d) deleted all proceedings' % (uname, uid))
+            logger.info(
+                'User "%s" (%d) deleted all proceedings' % (uname, uid),
+                extra={'request': request})
         return redirect('szr:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -199,7 +210,8 @@ def procdelall(request):
 def procbatchform(request):
 
     logger.debug(
-        'Proceedings import page accessed using method ' + request.method)
+        'Proceedings import page accessed using method ' + request.method,
+        extra={'request': request})
 
     err_message = ''
     uid = request.user.id
@@ -285,7 +297,8 @@ def procbatchform(request):
                                 count += 1
                     logger.info(
                         'User "%s" (%d) imported %d proceedings' % \
-                        (uname, uid, count))
+                        (uname, uid, count),
+                        extra={'request': request})
                     return render(
                         request,
                         'szr_procbatchresult.html',
@@ -295,7 +308,9 @@ def procbatchform(request):
                          'errors': errors})
 
                 except:  # pragma: no cover
-                    logger.error('Error reading file')
+                    logger.error(
+                        'Error reading file',
+                        extra={'request': request})
                     err_message = 'Chyba při načtení souboru'
 
     return render(
@@ -308,7 +323,9 @@ def procbatchform(request):
 @require_http_methods(['GET'])
 @login_required
 def procexport(request):
-    logger.debug('Proceedings export page accessed')
+    logger.debug(
+        'Proceedings export page accessed',
+        extra={'request': request})
     uid = request.user.id
     uname = request.user.username
     pp = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk') \
@@ -328,12 +345,14 @@ def procexport(request):
                 p.year)
         ]
         writer.writerow(dat)
-    logger.info('User "%s" (%d) exported proceedings' % (uname, uid))
+    logger.info(
+        'User "%s" (%d) exported proceedings' % (uname, uid),
+        extra={'request': request})
     return response
 
 @require_http_methods(['GET'])
 def courts(request):
-    logger.debug('List of courts accessed')
+    logger.debug('List of courts accessed', extra={'request': request})
     return render(
         request,
         'szr_courts.html',

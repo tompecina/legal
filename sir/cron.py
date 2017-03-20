@@ -158,8 +158,8 @@ def cron_proctr():
                                     desc=i.desc,
                                     vec=vec)[1]:
                                 logger.info(
-                                    'Change detected in proceedings "%s" (%s) ' \
-                                    'for user "%s" (%d)' % \
+                                    'Change detected in proceedings "%s" ' \
+                                    '(%s) for user "%s" (%d)' % \
                                     (i.desc,
                                      p2s(i),
                                      User.objects.get(pk=i.uid).username,
