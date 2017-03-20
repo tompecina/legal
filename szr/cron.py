@@ -132,7 +132,8 @@ def updateproc(p):
         assert table
     except:  # pragma: no cover
         logger.warning(
-            'Failed to check proceedings "' + p.desc + '" (' + p2s(p) + ')')
+            'Failed to check proceedings "%s" (%s) for user "%s" (%d)' % \
+            (p.desc, p2s(p), User.objects.get(pk=p.uid_id).username, p.uid_id))
         return False
     hash = md5(str(table).encode()).hexdigest()
     if court != supreme_administrative_court:
@@ -145,7 +146,11 @@ def updateproc(p):
                     t[1].split(':')))
         except:  # pragma: no cover
             logger.warning(
-                'Failed to check proceedings "' + p.desc + '" (' + p2s(p) + ')')
+                'Failed to check proceedings "%s" (%s) for user "%s" (%d)' % \
+                (p.desc,
+                 p2s(p),
+                 User.objects.get(pk=p.uid_id).username,
+                 p.uid_id))
         if (changed != p.changed) or (hash != p.hash):
             p.notify |= notnew
             if changed:
