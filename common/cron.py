@@ -21,7 +21,7 @@
 #
 
 from django.contrib.auth.models import User
-from .utils import send_mail
+from .utils import send_mail, logger
 from .glob import localsubdomain, localurl
 from szr.cron import szr_notice
 from sur.cron import sur_notice
@@ -39,3 +39,4 @@ def cron_notify():
                 'Zprava ze serveru ' + localsubdomain,
                 text,
                 [u.email])
+    logger.info('Emails sent')
