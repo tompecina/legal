@@ -144,6 +144,8 @@ class AddFields(Filter):
         if hasattr(record, 'request'):
             if hasattr(record,'params'):
                 for k in record.params:
+                    if k == 'csrfmiddlewaretoken':
+                        continue
                     if 'password' in k:
                         v = '?'
                     else:
