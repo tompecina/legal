@@ -162,8 +162,8 @@ def cron_proctr():
                                     '(%s) for user "%s" (%d)' % \
                                     (i.desc,
                                      p2s(i),
-                                     User.objects.get(pk=i.uid).username,
-                                     i.uid))
+                                     User.objects.get(pk=i.uid_id).username,
+                                     i.uid_id))
 
             if t_osoba:
                 idOsoby = t_osoba.idosoby.string.strip()
