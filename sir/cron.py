@@ -154,7 +154,7 @@ def cron_proctr():
                     for i in Insolvency.objects.filter(number=bc, year=rocnik):
                         if i.detailed or (typUdalosti in BELIST):
                             if Tracked.objects.get_or_create(
-                                    uid=i.uid,
+                                    uid_id=i.uid_id,
                                     desc=i.desc,
                                     vec=vec)[1]:
                                 logger.info(
