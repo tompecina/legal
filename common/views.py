@@ -40,7 +40,7 @@ from .models import PwResetLink
 
 @require_http_methods(['GET'])
 def robots(request):
-    logger.debug('robots.txt requested', extra={'request': request})
+    logger.debug('robots.txt requested', request)
     return render(
         request,
         'robots.txt',
@@ -48,7 +48,7 @@ def robots(request):
 
 @require_http_methods(['GET', 'POST'])
 def unauth(request):
-    logger.debug('Unauthorized access', extra={'request': request})
+    logger.debug('Unauthorized access', request)
     var = {'page_title': 'Neoprávněný přístup'}
     return render(
         request,
@@ -60,7 +60,7 @@ def unauth(request):
 def error(request):
     logger.debug(
         'Internal server error page generated',
-        extra={'request': request})
+        request)
     var = {
         'page_title': 'Interní chyba aplikace',
         'suppress_topline': True,
@@ -75,14 +75,14 @@ def error(request):
 def logout(request):
     logger.debug(
         'Logout page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
     uid = request.user.id
     uname = request.user.username
     auth.logout(request)
     if uname:
         logger.info(
             'User "%s" (%d) logged out' % (uname, uid),
-            extra={'request': request})
+            request)
     return redirect('home')
 
 @require_http_methods(['GET', 'POST'])
@@ -90,7 +90,7 @@ def logout(request):
 def pwchange(request):
     logger.debug(
         'Password change page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
     var = {'page_title': 'Změna hesla'}
     u = request.user
     uid = u.id
@@ -115,7 +115,7 @@ def pwchange(request):
             u.save()
             logger.info(
                 'User "%s" (%d) changed password' % (uname, uid),
-                extra={'request': request})
+                request)
             return redirect('/accounts/pwchanged/')
     return render(request, 'pwchange.html', var)
 
@@ -123,7 +123,7 @@ def pwchange(request):
 def lostpw(request):
     logger.debug(
         'Lost password page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
     err_message = None
     page_title = 'Ztracené heslo'
     if request.method == 'GET':
@@ -153,10 +153,10 @@ def lostpw(request):
                 logger.info(
                     'Password recovery link for user "%s" (%d) sent' % \
                     (u[0].username, u[0].id),
-                    extra={'request': request})
+                    request)
             return redirect('/accounts/pwlinksent/')
         else:
-            logger.debug('Invalid form', extra={'request': request})
+            logger.debug('Invalid form', request)
             err_message = 'Prosím, opravte označená pole ve formuláři'
     return render(
         request,
@@ -172,7 +172,7 @@ PWLEN = 10
 
 @require_http_methods(['GET'])
 def resetpw(request, link):
-    logger.debug('Password reset page accessed', extra={'request': request})
+    logger.debug('Password reset page accessed', request)
     PwResetLink.objects \
         .filter(timestamp_add__lt=(datetime.now() - LINKLIFE)).delete()
     p = get_object_or_404(PwResetLink, link=link)
@@ -185,7 +185,7 @@ def resetpw(request, link):
     p.delete()
     logger.info(
         'Password for user "%s" (%d) reset' % (u.username, u.id),
-        extra={'request': request})
+        request)
     return render(
         request,
         'pwreset.html',
@@ -208,7 +208,7 @@ def getappinfo():
 
 @require_http_methods(['GET'])
 def home(request):
-    logger.debug('Home page accessed', extra={'request': request})
+    logger.debug('Home page accessed', request)
     return render(
         request,
         'home.html',
@@ -217,7 +217,7 @@ def home(request):
 
 @require_http_methods(['GET'])
 def about(request):
-    logger.debug('About page accessed', extra={'request': request})
+    logger.debug('About page accessed', request)
     return render(
         request,
         'about.html',
@@ -238,7 +238,7 @@ def getappstat():
 
 @require_http_methods(['GET'])
 def stat(request):
-    logger.debug('Statistics page accessed', extra={'request': request})
+    logger.debug('Statistics page accessed', request)
     return render(
         request,
         'stat.html',
@@ -250,7 +250,7 @@ def stat(request):
 def useradd(request):
     logger.debug(
         'User add page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
     err_message = None
     if request.method == 'GET':
         f = UserAddForm()
@@ -269,16 +269,16 @@ def useradd(request):
                 logout(request)
                 logger.info(
                     'New user "%s" (%d) created' % (user.username, user.id),
-                    extra={'request': request})
+                    request)
                 return redirect('useradded')
-            logger.error('Failed to create user', extra={'request': request})
+            logger.error('Failed to create user', request)
             return error(request)  # pragma: no cover
         else:
-            logger.debug('Invalid form', extra={'request': request})
+            logger.debug('Invalid form', request)
             err_message = inerr
             if 'Duplicate username' in f['username'].errors.as_text():
                 err_message = 'Toto uživatelské jméno se již používá'
-                logger.debug('Duplicate user name', extra={'request': request})
+                logger.debug('Duplicate user name', request)
     return render(
         request,
         'useradd.html',
@@ -292,5 +292,5 @@ def useradd(request):
 def genrender(request, template=None, **kwargs):
     logger.debug(
         'Generic page rendered using template "' + template + '"',
-        extra={'request': request})
+        request)
     return render(request, template, kwargs)

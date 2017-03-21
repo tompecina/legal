@@ -39,7 +39,7 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
 
     messages = []
 
@@ -181,7 +181,7 @@ def mainpage(request):
                         messages.append([fx_info,
                                          'font-size: 80%; padding-top: 3px;'])
         else:
-            logger.debug('Invalid form', extra={'request': request})
+            logger.debug('Invalid form', request)
             messages = [[inerr_short, None]]
 
     return render(request,

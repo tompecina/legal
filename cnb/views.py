@@ -39,7 +39,7 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
 
     rate_desc = {'DISC': 'Diskontní sazba',
                  'LOMB': 'Lombardní sazba',
@@ -123,7 +123,7 @@ def mainpage(request):
                             [p2c('%.2f %%' % rate),
                              'font-weight: bold; font-size: 110%;'])
             else:
-                logger.debug('Invalid form', extra={'request': request})
+                logger.debug('Invalid form', request)
                 messages = [[inerr_short, None]]
 
     return render(request,

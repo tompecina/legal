@@ -23,6 +23,7 @@
 from django.http import QueryDict
 from django.core import mail
 from logging import getLogger
+from inspect import stack
 from decimal import Decimal
 import time
 from datetime import date, timedelta
@@ -40,8 +41,35 @@ from .glob import (
     hd, odp, ydconvs, mdconvs, registers, localsubdomain, localemail)
 from .models import Preset
 
-logger = getLogger('logger')
+class Logger:
 
+    _logger = getLogger('logger')
+
+    def _proc(self, meth, args, kwargs):
+        if 'extra' not in kwargs:
+            kwargs['extra'] = {}
+        kwargs['extra']['package'] = \
+            stack()[2].frame.f_globals['__package__'].upper()
+        if len(args) > 1:
+            kwargs['extra']['request'] = args[1]
+            args = list(args)
+            del args[1]
+        meth(*args, **kwargs)
+    
+    def error(self, *args, **kwargs):
+        self._proc(self._logger.error, args, kwargs)
+
+    def warning(self, *args, **kwargs):
+        self._proc(self._logger.warning, args, kwargs)
+
+    def info(self, *args, **kwargs):
+        self._proc(self._logger.info, args, kwargs)
+
+    def debug(self, *args, **kwargs):
+        self._proc(self._logger.debug, args, kwargs)
+
+logger = Logger()
+        
 def easter(dt):
     y = dt.year
     g = y % 19

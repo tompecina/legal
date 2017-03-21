@@ -547,7 +547,7 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
 
     def cellam(a, slb=False):
         a = (float(a) if debt.rounding else int(round(a)))
@@ -1196,7 +1196,7 @@ def mainpage(request):
                 return response
 
         else:
-            logger.debug('Invalid form', extra={'request': request})
+            logger.debug('Invalid form', request)
             err_message = inerr
 
     for row in rows:
@@ -1228,7 +1228,7 @@ def mainpage(request):
 def transform(request, id=0):
     logger.debug(
         'Transaction form accessed using method ' + request.method,
-        extra={'request': request})
+        request)
     page_title = ('Úprava transakce' if id else 'Nová transakce')
     err_message = ''
     debt = getdebt(request)
@@ -1281,7 +1281,7 @@ def transform(request, id=0):
             return redirect('hjp:mainpage')
 
         else:
-            logger.debug('Invalid form', extra={'request': request})
+            logger.debug('Invalid form', request)
             err_message = inerr
         
     return render(request,
@@ -1297,7 +1297,7 @@ def transform(request, id=0):
 def transdel(request, id=0):
     logger.debug(
         'Transaction delete page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover

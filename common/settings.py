@@ -138,8 +138,8 @@ INSTALLED_APPS = [
 ] + [(x + '.apps.' + x.capitalize() + 'Config') for x in APPS]
 
 class AddFields(Filter):
+
     def filter(self, record):
-        record.app = os.path.split(os.path.dirname(record.pathname))[1].upper()
         try:
             record.append = ' [' + record.request.META['REMOTE_ADDR'] + ']'
         except:
@@ -215,7 +215,7 @@ LOGGING = {
     'formatters': {
         'verbose': {
             'format':
-                '%(levelname)-7s %(asctime)s %(app)s %(message)s%(append)s'
+                '%(levelname)-7s %(asctime)s %(package)s %(message)s%(append)s'
         },
         'simple': {
             'format': '%(levelname)-7s %(message)s'

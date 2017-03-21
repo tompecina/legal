@@ -59,7 +59,7 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
 
     err_message = ''
     uid = request.user.id
@@ -79,7 +79,7 @@ def mainpage(request):
             p.save()
             return redirect('dir:mainpage')
         else:
-            logger.debug('Invalid form', extra={'request': request})
+            logger.debug('Invalid form', request)
             err_message = inerr
     d = Debtor.objects.filter(uid=uid).order_by('desc', 'pk') \
         .values()
@@ -128,7 +128,7 @@ def debtorform(request, id=0):
 
     logger.debug(
         'Debtor form accessed using method ' + request.method,
-        extra={'request': request})
+        request)
 
     err_message = ''
     uid = request.user.id
@@ -171,14 +171,14 @@ def debtorform(request, id=0):
             if id:
                 logger.info(
                     'User "%s" (%d) updated debtor "%s"' % (uname, uid, p.desc),
-                    extra={'request': request})
+                    request)
             else:
                 logger.info(
                     'User "%s" (%d) added debtor "%s"' % (uname, uid, p.desc),
-                    extra={'request': request})
+                    request)
             return redirect('dir:mainpage')
         else:
-            logger.debug('Invalid form', extra={'request': request})
+            logger.debug('Invalid form', request)
             err_message = inerr
     return render(
         request,
@@ -194,7 +194,7 @@ def debtorform(request, id=0):
 def debtordel(request, id=0):
     logger.debug(
         'Debtor delete page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -209,7 +209,7 @@ def debtordel(request, id=0):
             logger.info(
                 'User "%s" (%d) deleted debtor "%s"' % \
                 (uname, uid, debtor.desc),
-                extra={'request': request})
+                request)
             debtor.delete()
             return redirect('dir:debtordeleted')
         return redirect('dir:mainpage')
@@ -219,7 +219,7 @@ def debtordel(request, id=0):
 def debtordelall(request, id=0):
     logger.debug(
         'Delete all debtors page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -235,7 +235,7 @@ def debtordelall(request, id=0):
             Debtor.objects.filter(uid=uid).delete()
             logger.info(
                 'User "%s" (%d) deleted all debtors' % (uname, uid),
-                extra={'request': request})
+                request)
         return redirect('dir:mainpage')
 
 @require_http_methods(['GET', 'POST'])
@@ -244,7 +244,7 @@ def debtorbatchform(request):
 
     logger.debug(
         'Debtor import page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
 
     err_message = ''
     uid = request.user.id
@@ -404,7 +404,7 @@ def debtorbatchform(request):
                     logger.info(
                         'User "%s" (%d) imported %d debtor(s)' % \
                         (uname, uid, count),
-                        extra={'request': request})
+                        request)
                     return render(
                         request,
                         'dir_debtorbatchresult.html',
@@ -414,12 +414,10 @@ def debtorbatchform(request):
                          'errors': errors})
 
                 except:  # pragma: no cover
-                    logger.error(
-                        'Error reading file',
-                        extra={'request': request})
+                    logger.error('Error reading file', request)
                     err_message = 'Chyba při načtení souboru'
         else:
-            logger.debug('Invalid form', extra={'request': request})
+            logger.debug('Invalid form', request)
             err_message = inerr
 
     return render(
@@ -432,7 +430,7 @@ def debtorbatchform(request):
 @require_http_methods(['GET'])
 @login_required
 def debtorexport(request):
-    logger.debug('Debtor export page accessed', extra={'request': request})
+    logger.debug('Debtor export page accessed', request)
     uid = request.user.id
     uname = request.user.username
     pp = Debtor.objects.filter(uid=uid).order_by('desc', 'pk') \
@@ -465,5 +463,5 @@ def debtorexport(request):
         writer.writerow(dat)
     logger.info(
         'User "%s" (%d) exported debtors' % (uname, uid),
-        extra={'request': request})
+        request)
     return response

@@ -40,7 +40,7 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        extra={'request': request})
+        request)
 
     messages = []
 
@@ -142,7 +142,7 @@ def mainpage(request):
                 ('%s Kč' % formam(round(tot / 0.3))),
                 'font-size: 110%; font-weight: bold; margin-top: 2px;'])
         else:
-            logger.debug('Invalid form', extra={'request': request})
+            logger.debug('Invalid form', request)
             messages = [[inerr_short, None]]
 
     return render(request,
