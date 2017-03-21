@@ -51,7 +51,8 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
 
     err_message = ''
     uid = request.user.id
@@ -101,8 +102,10 @@ def mainpage(request):
 def partyform(request, id=0):
 
     logger.debug(
-        'Party form accessed using method ' + request.method,
-        request)
+        'Party form accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
 
     err_message = ''
     uid = request.user.id
@@ -156,8 +159,10 @@ def partyform(request, id=0):
 @login_required
 def partydel(request, id=0):
     logger.debug(
-        'Party delete page accessed using method ' + request.method,
-        request)
+        'Party delete page accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':

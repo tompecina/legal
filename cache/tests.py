@@ -27,6 +27,7 @@ from . import main, models
 class DummyRequest:
     def __init__(self, session_id):
         self.COOKIES = {'sessionid': session_id}
+        self.META = {'REMOTE_ADDR': ''}
 
 class TestMain(TestCase):
     fixtures = ['cache_test.json']

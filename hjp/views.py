@@ -547,7 +547,8 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
 
     def cellam(a, slb=False):
         a = (float(a) if debt.rounding else int(round(a)))
@@ -1227,8 +1228,10 @@ def mainpage(request):
 @login_required
 def transform(request, id=0):
     logger.debug(
-        'Transaction form accessed using method ' + request.method,
-        request)
+        'Transaction form accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     page_title = ('Úprava transakce' if id else 'Nová transakce')
     err_message = ''
     debt = getdebt(request)
@@ -1296,8 +1299,10 @@ def transform(request, id=0):
 @login_required
 def transdel(request, id=0):
     logger.debug(
-        'Transaction delete page accessed using method ' + request.method,
-        request)
+        'Transaction delete page accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover

@@ -59,7 +59,8 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
 
     err_message = ''
     uid = request.user.id
@@ -127,8 +128,9 @@ def mainpage(request):
 def debtorform(request, id=0):
 
     logger.debug(
-        'Debtor form accessed using method ' + request.method,
-        request)
+        'Debtor form accessed using method %s, id=%s' % (request.method, id),
+        request,
+        request.POST)
 
     err_message = ''
     uid = request.user.id
@@ -193,8 +195,10 @@ def debtorform(request, id=0):
 @login_required
 def debtordel(request, id=0):
     logger.debug(
-        'Debtor delete page accessed using method ' + request.method,
-        request)
+        'Debtor delete page accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -216,7 +220,7 @@ def debtordel(request, id=0):
 
 @require_http_methods(['GET', 'POST'])
 @login_required
-def debtordelall(request, id=0):
+def debtordelall(request):
     logger.debug(
         'Delete all debtors page accessed using method ' + request.method,
         request)

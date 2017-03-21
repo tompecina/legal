@@ -90,7 +90,8 @@ def logout(request):
 def pwchange(request):
     logger.debug(
         'Password change page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
     var = {'page_title': 'Změna hesla'}
     u = request.user
     uid = u.id
@@ -98,20 +99,20 @@ def pwchange(request):
     if request.method == 'POST':
         if request.POST.get('back'):
             return redirect('home')
-        fields = ['oldpw', 'newpw1', 'newpw2']
+        fields = ['oldpassword', 'newpassword1', 'newpassword2']
         for f in fields:
             var[f] = request.POST.get(f, '')
-        if not u.check_password(var['oldpw']):
+        if not u.check_password(var['oldpassword']):
             var['error_message'] = 'Nesprávné heslo'
-            var['oldpw'] = ''
-        elif var['newpw1'] != var['newpw2']:
+            var['oldpassword'] = ''
+        elif var['newpassword1'] != var['newpassword2']:
             var['error_message'] = 'Zadaná hesla se neshodují'
-            var['newpw1'] = var['newpw2'] = ''
-        elif len(var['newpw1']) < MIN_PWLEN:
+            var['newpassword1'] = var['newpassword2'] = ''
+        elif len(var['newpassword1']) < MIN_PWLEN:
             var['error_message'] = 'Nové heslo je příliš krátké'
-            var['newpw1'] = var['newpw2'] = ''
+            var['newpassword1'] = var['newpassword2'] = ''
         else:
-            u.set_password(var['newpw1'])
+            u.set_password(var['newpassword1'])
             u.save()
             logger.info(
                 'User "%s" (%d) changed password' % (uname, uid),
@@ -123,7 +124,8 @@ def pwchange(request):
 def lostpw(request):
     logger.debug(
         'Lost password page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
     err_message = None
     page_title = 'Ztracené heslo'
     if request.method == 'GET':
@@ -177,10 +179,10 @@ def resetpw(request, link):
         .filter(timestamp_add__lt=(datetime.now() - LINKLIFE)).delete()
     p = get_object_or_404(PwResetLink, link=link)
     u = p.user
-    newpw = ''
+    newpassword = ''
     for i in range(PWLEN):
-        newpw += choice(PWCHARS)
-    u.set_password(newpw)
+        newpassword += choice(PWCHARS)
+    u.set_password(newpassword)
     u.save()
     p.delete()
     logger.info(
@@ -190,7 +192,7 @@ def resetpw(request, link):
         request,
         'pwreset.html',
         {'page_title': 'Heslo bylo obnoveno',
-         'newpw': newpw,
+         'newpassword': newpassword,
         })
     
 def getappinfo():
@@ -250,7 +252,8 @@ def stat(request):
 def useradd(request):
     logger.debug(
         'User add page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
     err_message = None
     if request.method == 'GET':
         f = UserAddForm()

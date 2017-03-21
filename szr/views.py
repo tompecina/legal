@@ -48,7 +48,8 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
 
     err_message = ''
     uid = request.user.id
@@ -90,8 +91,10 @@ def mainpage(request):
 @login_required
 def procform(request, id=0):
     logger.debug(
-        'Proceedings form accessed using method ' + request.method,
-        request)
+        'Proceedings form accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -160,8 +163,10 @@ def procform(request, id=0):
 @login_required
 def procdel(request, id=0):
     logger.debug(
-        'Proceedings delete page accessed using method ' + request.method,
-        request)
+        'Proceedings delete page accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':

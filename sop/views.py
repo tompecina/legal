@@ -39,7 +39,8 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
 
     messages = []
 

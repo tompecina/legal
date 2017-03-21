@@ -939,18 +939,18 @@ class TestViews(TestCase):
         res = self.client.get('/accounts/pwchange/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
-        s = {'oldpw': 'none',
-             'newpw1': 'newpass',
-             'newpw2': 'newpass',
+        s = {'oldpassword': 'none',
+             'newpassword1': 'newpass',
+             'newpassword2': 'newpass',
              'submit': 'Změnit'}
         d = copy(s)
-        d['oldpw'] = 'wrong'
+        d['oldpassword'] = 'wrong'
         res = self.client.post('/accounts/pwchange/', d)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
         self.assertEqual(res.context['error_message'], 'Nesprávné heslo')
         d = copy(s)
-        d['newpw1'] = 'different'
+        d['newpassword1'] = 'different'
         res = self.client.post('/accounts/pwchange/', d)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
@@ -958,7 +958,7 @@ class TestViews(TestCase):
             res.context['error_message'],
             'Zadaná hesla se neshodují')
         d = copy(s)
-        d['newpw1'] = d['newpw2'] = 'short'
+        d['newpassword1'] = d['newpassword2'] = 'short'
         res = self.client.post('/accounts/pwchange/', d)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
@@ -1011,10 +1011,10 @@ class TestViews(TestCase):
         link = match.group(1)
         res = self.client.get('/accounts/resetpw/%s/' % link)
         self.assertTemplateUsed(res, 'pwreset.html')
-        newpw = res.context['newpw']
-        self.assertEqual(len(newpw), 10)
+        newpassword = res.context['newpassword']
+        self.assertEqual(len(newpassword), 10)
         self.assertFalse(self.client.login(username='user', password='none'))
-        self.assertTrue(self.client.login(username='user', password=newpw))
+        self.assertTrue(self.client.login(username='user', password=newpassword))
         
     def test_resetpw(self):
         res = self.client.get('/accounts/resetpw/%s/' % ('0' * 32))

@@ -54,6 +54,9 @@ class Logger:
             kwargs['extra']['request'] = args[1]
             args = list(args)
             del args[1]
+            if len(args) > 1:
+                kwargs['extra']['params'] = args[1]
+                del args[1]
         meth(*args, **kwargs)
     
     def error(self, *args, **kwargs):

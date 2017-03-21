@@ -49,7 +49,8 @@ BATCH = 50
 def mainpage(request):
     logger.debug(
         'Main page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
     err_message = ''
     uid = request.user.id
     page_title = 'Sledování změn v insolvenčních řízeních'
@@ -89,8 +90,10 @@ def mainpage(request):
 @login_required
 def insform(request, id=0):
     logger.debug(
-        'Proceedings form accessed using method ' + request.method,
-        request)
+        'Proceedings form accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -138,8 +141,10 @@ def insform(request, id=0):
 @login_required
 def insdel(request, id=0):
     logger.debug(
-        'Proceedings delete page accessed using method ' + request.method,
-        request)
+        'Proceedings delete page accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -161,7 +166,7 @@ def insdel(request, id=0):
 
 @require_http_methods(['GET', 'POST'])
 @login_required
-def insdelall(request, id=0):
+def insdelall(request):
     logger.debug(
         'Delete all proceedings page accessed using method ' + request.method,
         request)

@@ -849,7 +849,8 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
 
     def ft(a):
         a = (round(a, debt.rounding) if debt.rounding else int(round(a)))
@@ -1575,8 +1576,10 @@ def mainpage(request):
 def debitform(request, id=0):
 
     logger.debug(
-        'Debit form accessed using method ' + request.method,
-        request)
+        'Debit form accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
 
     page_title = ('Úprava závazku' if id else 'Nový závazek')
     var = {}
@@ -1709,8 +1712,10 @@ def debitform(request, id=0):
 @login_required
 def debitdel(request, id=0):
     logger.debug(
-        'Debit delete page accessed using method ' + request.method,
-        request)
+        'Debit delete page accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
@@ -1750,8 +1755,10 @@ def debitdel(request, id=0):
 def creditform(request, id=0):
 
     logger.debug(
-        'Credit form accessed using method ' + request.method,
-        request)
+        'Credit form accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
 
     page_title = ('Úprava splátky' if id else 'Nová splátka')
     err_message = ''
@@ -1854,8 +1861,10 @@ def creditform(request, id=0):
 @login_required
 def creditdel(request, id=0):
     logger.debug(
-        'Credit delete page accessed using method ' + request.method,
-        request)
+        'Credit delete page accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
@@ -1883,8 +1892,10 @@ def creditdel(request, id=0):
 def balanceform(request, id=0):
 
     logger.debug(
-        'Balance form accessed using method ' + request.method,
-        request)
+        'Balance form accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
 
     page_title = ('Úprava kontrolního bodu' if id else 'Nový kontrolní bod')
     err_message = ''
@@ -1940,8 +1951,10 @@ def balanceform(request, id=0):
 @login_required
 def balancedel(request, id=0):
     logger.debug(
-        'Balance delete page accessed using method ' + request.method,
-        request)
+        'Balance delete page accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
@@ -1969,8 +1982,10 @@ def balancedel(request, id=0):
 def fxrateform(request, id=0):
 
     logger.debug(
-        'FX rate form accessed using method ' + request.method,
-        request)
+        'FX rate form accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
 
     page_title = ('Úprava kursu' if id else 'Nový kurs')
     err_message = ''
@@ -2036,8 +2051,10 @@ def fxrateform(request, id=0):
 @login_required
 def fxratedel(request, id=0):
     logger.debug(
-        'FX rate delete page accessed using method ' + request.method,
-        request)
+        'FX rate delete page accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     id = int(id) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover

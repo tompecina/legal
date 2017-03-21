@@ -50,7 +50,8 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
 
     err_message = ''
     messages = []
@@ -187,7 +188,7 @@ def getosoby(v, *d):
 
 @require_http_methods(['GET'])
 def htmllist(request):
-    logger.debug('HTML list accessed', request)
+    logger.debug('HTML list accessed', request, request.GET)
     page_title = apps.get_app_config(APP).verbose_name
     rd = request.GET.copy()
     try:
@@ -321,7 +322,7 @@ def xml_addparties(osoby, xml, tag, tagname):
 
 @require_http_methods(['GET'])
 def xmllist(request):
-    logger.debug('XML list accessed', request)
+    logger.debug('XML list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -413,7 +414,7 @@ def xmllist(request):
 
 @require_http_methods(['GET'])
 def csvlist(request):
-    logger.debug('CSV list accessed', request)
+    logger.debug('CSV list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -502,7 +503,7 @@ def json_addparties(osoby):
 
 @require_http_methods(['GET'])
 def jsonlist(request):
-    logger.debug('JSON list accessed', request)
+    logger.debug('JSON list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -548,7 +549,7 @@ def jsonlist(request):
 
 @require_http_methods(['GET'])
 def party(request, id=0):
-    logger.debug('Party information page accessed', request)
+    logger.debug('Party information page accessed, id=%s' % id, request)
     osoba = get_object_or_404(Osoba, id=id)
     adresy = osoba.adresy.order_by('-id')
     i = 0

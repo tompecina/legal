@@ -111,8 +111,10 @@ def convf(n, p):
 @login_required
 def placeform(request, id=0):
     logger.debug(
-        'Place form accessed using method ' + request.method,
-        request)
+        'Place form accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -184,8 +186,10 @@ def placelist(request):
 @login_required
 def placedel(request, id=0):
     logger.debug(
-        'Place delete page accessed using method ' + request.method,
-        request)
+        'Place delete page accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -209,8 +213,10 @@ def placedel(request, id=0):
 @login_required
 def carform(request, id=0):
     logger.debug(
-        'Car form accessed using method ' + request.method,
-        request)
+        'Car form accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -267,8 +273,10 @@ def carlist(request):
 @login_required
 def cardel(request, id=0):
     logger.debug(
-        'Car delete page accessed using method ' + request.method,
-        request)
+        'Car delete page accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -293,8 +301,10 @@ def cardel(request, id=0):
 @login_required
 def formulaform(request, id=0):
     logger.debug(
-        'Formula form accessed using method ' + request.method,
-        request)
+        'Formula form accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -390,8 +400,10 @@ def formulalist(request):
 @login_required
 def formuladel(request, id=0):
     logger.debug(
-        'Formula delete page accessed using method ' + request.method,
-        request)
+        'Formula delete page accessed using method %s, id=%s' % \
+            (request.method, id),
+        request,
+        request.POST)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -948,7 +960,8 @@ def mainpage(request):
     
     logger.debug(
         'Main page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
 
     c = getcalc(request)
     if not c:  # pragma: no cover
@@ -1464,8 +1477,10 @@ def itemform(request, idx=0):
                 cd['time_number'] = int(ceil(dur / 1800.0))
 
     logger.debug(
-        'Item form accessed using method ' + request.method,
-        request)
+        'Item form accessed using method %s, idx=%s' % \
+            (request.method, idx),
+        request,
+        request.POST)
     uid = request.user.id
     c = getcalc(request)
     if not c:  # pragma: no cover
@@ -1899,7 +1914,8 @@ def itemform(request, idx=0):
 def itemlist(request):
     logger.debug(
         'Item list accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
     c = getcalc(request)
     if not c:  # pragma: no cover
         return error(request)
@@ -1928,8 +1944,10 @@ def itemlist(request):
 @login_required
 def itemdel(request, idx=0):
     logger.debug(
-        'Item delete page accessed using method ' + request.method,
-        request)
+        'Item delete page accessed using method %s, idx=%s' % \
+            (request.method, idx),
+        request,
+        request.POST)
     idx = (int(idx) - 1)
     var = {'app': APP, 'page_title': 'Smazání položky'}
     c = getcalc(request)

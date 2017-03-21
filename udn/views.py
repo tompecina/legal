@@ -55,7 +55,8 @@ def mainpage(request):
 
     logger.debug(
         'Main page accessed using method ' + request.method,
-        request)
+        request,
+        request.POST)
 
     err_message = ''
     messages = []
@@ -121,7 +122,7 @@ def g2p(rd):
         
 @require_http_methods(['GET'])
 def htmllist(request):
-    logger.debug('HTML list accessed', request)
+    logger.debug('HTML list accessed', request, request.GET)
     page_title = apps.get_app_config(APP).verbose_name
     rd = request.GET.copy()
     try:
@@ -145,7 +146,7 @@ def htmllist(request):
 
 @require_http_methods(['GET'])
 def xmllist(request):
-    logger.debug('XML list accessed', request)
+    logger.debug('XML list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -232,7 +233,7 @@ def xmllist(request):
 
 @require_http_methods(['GET'])
 def csvlist(request):
-    logger.debug('CSV list accessed', request)
+    logger.debug('CSV list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
         p = g2p(rd)
@@ -278,7 +279,7 @@ def csvlist(request):
 
 @require_http_methods(['GET'])
 def jsonlist(request):
-    logger.debug('JSON list accessed', request)
+    logger.debug('JSON list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
         p = g2p(rd)

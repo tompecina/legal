@@ -140,10 +140,17 @@ INSTALLED_APPS = [
 class AddFields(Filter):
 
     def filter(self, record):
-        try:
-            record.append = ' [' + record.request.META['REMOTE_ADDR'] + ']'
-        except:
-            record.append = ''
+        a = ''
+        if hasattr(record, 'request'):
+            if hasattr(record,'params'):
+                for k in record.params:
+                    if 'password' in k:
+                        v = '?'
+                    else:
+                        v = '"' + record.params[k] + '"'
+                    a += ', ' + k + '=' + v + ''
+            a += ' [' + record.request.META['REMOTE_ADDR'] + ']'
+        record.append = a
         return True
 
 LOGGING_BC = 5
