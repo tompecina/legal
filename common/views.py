@@ -80,7 +80,9 @@ def logout(request):
     uname = request.user.username
     auth.logout(request)
     if uname:
-        logger.info('User "%s" (%d) logged out' % (uname, uid))
+        logger.info(
+            'User "%s" (%d) logged out' % (uname, uid),
+            extra={'request': request})
     return redirect('home')
 
 @require_http_methods(['GET', 'POST'])
