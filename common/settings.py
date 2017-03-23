@@ -168,7 +168,7 @@ LOGGING = {
         },
         'logger': {
             'handlers':
-                ['error_file', 'info_file'] + \
+                ['error_mail', 'error_file', 'info_file'] + \
                 (['debug_file'] if DEBUG_LOG else []),
             'level': 'DEBUG',
         },
@@ -186,6 +186,12 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'error_mail': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false', 'add_fields'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'verbose',
         },
         'error_file': {
             'level': 'ERROR',
