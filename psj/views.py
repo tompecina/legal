@@ -101,7 +101,7 @@ def mainpage(request):
                  'f': f})
 def g2p(rd):
     p = {}
-    for f, l in [['senate', 0], ['number', 1], ['year', 1990],
+    for f, l in [['senate', 0], ['number', 1], ['year', 1],
                  ['courtroom', 1], ['judge', 1]]:
         if f in rd:
             p[f] = int(rd[f])

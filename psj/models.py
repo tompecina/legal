@@ -84,8 +84,7 @@ class Hearing(models.Model):
         max_length=30,
         validators=[RegexValidator(regex=register_regex)])
     number = models.PositiveIntegerField()
-    year = models.IntegerField(
-        validators=[MinValueValidator(1990)])
+    year = models.PositiveIntegerField()
     form = models.ForeignKey(
         Form,
         on_delete=models.CASCADE)
