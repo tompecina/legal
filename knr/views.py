@@ -129,6 +129,7 @@ def placeform(request, id=0):
         f = PlaceForm(request.POST)
         unrequire(f, ['abbr', 'name', 'addr', 'lat', 'lon'])
         loc = findloc(request.POST.get('addr'))
+        f.data = f.data.copy()
         if loc:
             f.data['addr'], f.data['lat'], f.data['lon'] = loc
         else:

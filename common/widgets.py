@@ -95,7 +95,7 @@ class taw(forms.Textarea):
 
     def render(self, *args, **kwargs):
         return mark_safe(super(taw, self)
-            .render(*args, **kwargs).replace('>\r\n', '>', 1))
+            .render(*args, **kwargs).replace('>\n', '>', 1))
 
 class currw(forms.TextInput):
     def __init__(self, **kwargs):

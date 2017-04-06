@@ -56,6 +56,7 @@ def mainpage(request):
         b = getbutton(request)
         if b in ['set_fx_date', 'set_mpi_date']:
             unrequire(f, ['fx_date', 'basis', 'mpi_date'])
+            f.data = f.data.copy()
             if b == 'set_fx_date':
                 f.data['fx_date'] = today
             else:

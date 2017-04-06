@@ -52,6 +52,7 @@ def mainpage(request):
         b = getbutton(request)
         if b in ['set_beg_date', 'set_end_date']:
             unrequire(f, ['beg_date', 'end_date'])
+            f.data = f.data.copy()
             if b == 'set_beg_date':
                 f.data['beg_date'] = today
             else:

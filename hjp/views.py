@@ -1262,6 +1262,7 @@ def transform(request, id=0):
         if btn == 'back':
             return redirect('hjp:mainpage')
         if btn == 'set_date':
+            f.data = f.data.copy()
             f.data['date'] = date.today()
         elif f.is_valid():
             cd = f.cleaned_data

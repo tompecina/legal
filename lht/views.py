@@ -50,6 +50,7 @@ def mainpage(request):
         f = MainForm(request.POST)
         b = getbutton(request)
         if b == 'set_beg_date':
+            f.data = f.data.copy()
             f.data['beg_date'] = today
         elif f.is_valid():
             cd = f.cleaned_data

@@ -21,7 +21,7 @@
 #
 
 from django.conf.urls import include, url
-from django.contrib.auth.views import login, settings
+from django.contrib.auth.views import LoginView, settings
 from django.contrib import admin
 from .views import (
     home, robots, pwchange, logout, useradd, lostpw, resetpw, about,
@@ -40,8 +40,7 @@ urlpatterns = [
             'page_title': 'Změna hesla'},
         name='pwchanged'),
     url(r'^accounts/login/$',
-        login,
-        {'template_name': 'login.html'},
+        LoginView.as_view(template_name='login.html'),
         name='login'),
     url(r'^accounts/logout/$', logout, name='logout'),
     url(r'^accounts/useradd/$', useradd, name='useradd'),
