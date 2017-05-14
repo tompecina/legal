@@ -83,12 +83,12 @@ class TestCron(TestCase):
             (
                 2,
                 datetime(2016, 10, 2, 5, 56, 30),
-                '3afc76b6d364063ccad6441a7c756d18',
+                '30e2cfb4b4a19805d5030e6783af917b',
                 True),
             (
                 3,
                 datetime(2016, 11, 8, 4, 45, 31),
-                '7a17be9501909362bb42af331d06878e',
+                '42e595591fb37402c7675c2413fae7ab',
                 True),
             (
                 4,
