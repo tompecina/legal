@@ -40,7 +40,7 @@ registers = [
     'Aos', 'Aprk', 'Aprn', 'Aps', 'Ars', 'As', 'Asz', 'Azs', 'Komp',
     'Konf', 'Kse', 'Kseo', 'Kss', 'Ksz', 'Na', 'Nad', 'Nao', 'Ncn',
     'Nk', 'Ntn', 'Obn', 'Plen', 'Plsn', 'Pst', 'Rozk', 'Rs', 'S',
-    'Spr', 'Sst', 'Vol'
+    'Spr', 'Sst', 'Vol', 'Tm', 'Tmo', 'Ntm'
 ]
 register_regex = '^(' + ('|'.join(registers)) + ')$'
 
