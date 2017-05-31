@@ -161,6 +161,8 @@ class ServiceForm(forms.Form):
         required=False)
     off30limit5000_flag = fields.BooleanField(
         required=False)
+    off20limit5000_flag = fields.BooleanField(
+        required=False)
     basis = fields.CharField(
         required=False)
 
@@ -168,7 +170,9 @@ class ServiceForm(forms.Form):
         off10_flag = 'off10_flag' in self.data
         off30_flag = 'off30_flag' in self.data
         off30limit5000_flag = 'off30limit5000_flag' in self.data
-        if ((off10_flag + off30_flag + off30limit5000_flag) > 1):
+        off20limit5000_flag = 'off20limit5000_flag' in self.data
+        if ((off10_flag + off30_flag + off30limit5000_flag + \
+             off20limit5000_flag) > 1):
             raise forms.ValidationError("Incompatible flags")
         return off10_flag
 
@@ -176,7 +180,9 @@ class ServiceForm(forms.Form):
         off10_flag = 'off10_flag' in self.data
         off30_flag = 'off30_flag' in self.data
         off30limit5000_flag = 'off30limit5000_flag' in self.data
-        if ((off10_flag + off30_flag + off30limit5000_flag) > 1):
+        off20limit5000_flag = 'off20limit5000_flag' in self.data
+        if ((off10_flag + off30_flag + off30limit5000_flag + \
+             off20limit5000_flag) > 1):
             raise forms.ValidationError("Incompatible flags")
         return off30_flag
 
@@ -184,9 +190,21 @@ class ServiceForm(forms.Form):
         off10_flag = 'off10_flag' in self.data
         off30_flag = 'off30_flag' in self.data
         off30limit5000_flag = 'off30limit5000_flag' in self.data
-        if ((off10_flag + off30_flag + off30limit5000_flag) > 1):
+        off20limit5000_flag = 'off20limit5000_flag' in self.data
+        if ((off10_flag + off30_flag + off30limit5000_flag + \
+             off20limit5000_flag) > 1):
             raise forms.ValidationError("Incompatible flags")
         return off30limit5000_flag
+
+    def clean_off20limit5000_flag(self):
+        off10_flag = 'off10_flag' in self.data
+        off30_flag = 'off30_flag' in self.data
+        off30limit5000_flag = 'off30limit5000_flag' in self.data
+        off20limit5000_flag = 'off20limit5000_flag' in self.data
+        if ((off10_flag + off30_flag + off30limit5000_flag + \
+             off20limit5000_flag) > 1):
+            raise forms.ValidationError("Incompatible flags")
+        return off20limit5000_flag
 
 class ServiceSubform(forms.Form):
     idx = fields.IntegerField(
@@ -216,6 +234,8 @@ class ServiceSubform(forms.Form):
     off30_flag = fields.BooleanField(
         required=False)
     off30limit5000_flag = fields.BooleanField(
+        required=False)
+    off20limit5000_flag = fields.BooleanField(
         required=False)
     basis = fields.AmountField(
         min_value=0,

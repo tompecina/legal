@@ -61,7 +61,8 @@ class TestForms(SimpleTestCase):
         f = forms.ServiceForm(s)
         self.assertTrue(f.is_valid())
         d = copy(s)
-        d['off10_flag'] = d['off30_flag'] = d['off30limit5000_flag'] = 'on'
+        d['off10_flag'] = d['off30_flag'] = d['off30limit5000_flag'] = \
+            d['off20limit5000_flag'] = 'on'
         f = forms.ServiceForm(d)
         self.assertFalse(f.is_valid())
         d = copy(s)
@@ -77,11 +78,17 @@ class TestForms(SimpleTestCase):
         f = forms.ServiceForm(d)
         self.assertTrue(f.is_valid())
         d = copy(s)
-        d['off30_flag'] = d['off30limit5000_flag'] = 'on'
+        d['off20limit5000_flag'] = 'on'
+        f = forms.ServiceForm(d)
+        self.assertTrue(f.is_valid())
+        d = copy(s)
+        d['off30_flag'] = d['off30limit5000_flag'] = \
+            d['off20limit5000_flag'] = 'on'
         f = forms.ServiceForm(d)
         self.assertFalse(f.is_valid())
         d = copy(s)
-        d['off10_flag'] = d['off30limit5000_flag'] = 'on'
+        d['off10_flag'] = d['off30limit5000_flag'] = \
+            d['off20limit5000_flag'] = 'on'
         f = forms.ServiceForm(d)
         self.assertFalse(f.is_valid())
         d = copy(s)
@@ -239,6 +246,7 @@ class TestViews1(SimpleTestCase):
              'off10_flag': True,
              'off30_flag': True,
              'off30limit5000_flag': True,
+             'off20limit5000_flag': True,
              'basis': 6500,
              'number': 16,
              'from_name': 'Z jméno',
@@ -1041,6 +1049,22 @@ class TestViews2(TestCase):
             '/knr/itemform/',
             {'type': 'service',
              'idx': '0',
+             'description': TEST_STRING,
+             'rate': '300',
+             'major_number': '0',
+             'minor_number': '1',
+             'multiple_number': '1',
+             'off20limit5000_flag': 'on',
+             'numerator': '2',
+             'denominator': '3',
+             'submit': 'Uložit'},
+            follow=True)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        res = self.client.post(
+            '/knr/itemform/',
+            {'type': 'service',
+             'idx': '0',
              'numerator': '2',
              'denominator': '3',
              'submit_calc1': 'Do 31.08.2006'},
@@ -1822,7 +1846,7 @@ class TestViews2(TestCase):
         res = self.client.get('/knr/itemdel/2/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_itemdel.html')
-        last = 16
+        last = 17
         res = self.client.post(
             '/knr/itemdel/%d/' % last,
             {'submit_no': 'Ne'},

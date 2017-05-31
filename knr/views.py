@@ -457,6 +457,7 @@ gd = {'title': S,
       'off10_flag': B,
       'off30_flag': B,
       'off30limit5000_flag': B,
+      'off20limit5000_flag': B,
       'basis': I,
       'number': I,
       'from_name': S,
@@ -501,7 +502,7 @@ gt = {'general' : ['description', 'amount', 'vat', 'numerator',
       'service' : ['description', 'amount', 'vat', 'numerator',
                    'denominator', 'item_note', 'major_number', 'rate',
                    'minor_number', 'multiple_number', 'off10_flag',
-                   'off30_flag', 'off30limit5000_flag'],
+                   'off30_flag', 'off30limit5000_flag', 'off20limit5000_flag'],
       'flat' : ['description', 'amount', 'vat', 'numerator',
                 'denominator', 'rate',  'multiple_flag',
                 'multiple50_flag', 'item_note', 'single_flag', 'halved_flag',
@@ -523,7 +524,7 @@ gf = {'general' : ['description', 'amount', 'vat', 'numerator',
       'service' : ['description', 'vat', 'numerator', 'denominator',
                    'item_note', 'major_number', 'rate', 'minor_number',
                    'multiple_number', 'off10_flag', 'off30_flag',
-                   'off30limit5000_flag', 'basis'],
+                   'off30limit5000_flag', 'off20limit5000_flag', 'basis'],
       'flat' : ['description', 'vat', 'numerator', 'denominator', 'rate',
                 'multiple_flag', 'multiple50_flag', 'basis', 'item_note',
                 'single_flag', 'halved_flag', 'halved_appeal_flag',
@@ -600,6 +601,7 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
            'off10_flag': False,
            'off30_flag': False,
            'off30limit5000_flag': False,
+           'off20limit5000_flag': False,
            'vat': False,
            'numerator': 1,
            'denominator': 1}},
@@ -675,6 +677,7 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
            'off10_flag': False,
            'off30_flag': False,
            'off30limit5000_flag': False,
+           'off20limit5000_flag': False,
            'vat': True,
            'numerator': 1,
            'denominator': 1}},
@@ -768,6 +771,7 @@ class Item:
         self.off10_flag = False
         self.off30_flag = False
         self.off30limit5000_flag = False
+        self.off20limit5000_flag = False
         self.multiple_flag = False
         self.multiple50_flag = False
         self.single_flag = False
@@ -1632,6 +1636,9 @@ def itemform(request, idx=0):
                             if cd['off30limit5000_flag']:
                                 cd['amount'] = \
                                     min(int(round(0.7 * cd['amount'])), 5000)
+                            if cd['off20limit5000_flag']:
+                                cd['amount'] = \
+                                    min(int(round(0.8 * cd['amount'])), 5000)
                             if cd['multiple_number'] > 1:
                                 cd['amount'] = int(round(0.8 * \
                                     cd['multiple_number'] * cd['amount']))

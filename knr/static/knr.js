@@ -48,9 +48,11 @@ $(function() {
 	o1 = $('#id_off10_flag');
 	o3 = $('#id_off30_flag');
 	o3l5 = $('#id_off30limit5000_flag');
+	o2l5 = $('#id_off20limit5000_flag');
 	if (o1.c()) {
 	    o3.c(false);
 	    o3l5.c(false);
+	    o2l5.c(false);
 	}
 	return true;
     }
@@ -58,9 +60,11 @@ $(function() {
 	o1 = $('#id_off10_flag');
 	o3 = $('#id_off30_flag');
 	o3l5 = $('#id_off30limit5000_flag');
+	o2l5 = $('#id_off20limit5000_flag');
 	if (o3.c()) {
 	    o1.c(false);
 	    o3l5.c(false);
+	    o2l5.c(false);
 	}
 	return true;
     }
@@ -68,9 +72,23 @@ $(function() {
 	o1 = $('#id_off10_flag');
 	o3 = $('#id_off30_flag');
 	o3l5 = $('#id_off30limit5000_flag');
+	o2l5 = $('#id_off20limit5000_flag');
 	if (o3l5.c()) {
 	    o1.c(false);
 	    o3.c(false);
+	    o2l5.c(false);
+	}
+	return true;
+    }
+    function itemform_off20limit5000_flag_onclick() {
+	o1 = $('#id_off10_flag');
+	o3 = $('#id_off30_flag');
+	o3l5 = $('#id_off30limit5000_flag');
+	o2l5 = $('#id_off20limit5000_flag');
+	if (o2l5.c()) {
+	    o1.c(false);
+	    o3.c(false);
+	    o3l5.c(false);
 	}
 	return true;
     }
@@ -206,6 +224,8 @@ $(function() {
 	    $('#id_off30_flag').click(itemform_off30_flag_onclick);
 	    $('#id_off30limit5000_flag')
 	        .click(itemform_off30limit5000_flag_onclick);
+	    $('#id_off20limit5000_flag')
+	        .click(itemform_off20limit5000_flag_onclick);
 	    break;
 	case 'flat':
 	    $('#id_halved_flag').click(itemform_halved_flag_onclick);
