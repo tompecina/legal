@@ -1,8 +1,8 @@
 {% extends "knr_list.html" %}
 
-{% block table_header %}<th style="text-align: left;">Zkratka</th><th>Název</th><th>Adresa</th><th>Lat</th><th>Lon</th><th>Akce</th>{% endblock %}
+{% block table_header %}<th class="left">Zkratka</th><th>Název</th><th>Adresa</th><th>Lat</th><th>Lon</th><th>Akce</th>{% endblock %}
 {% block table_footer %}<td colspan="6"><a href="{% url 'knr:placeform' %}">Přidat místo</a></td>{% endblock %}
-{% block table_row %}<td>{{ row.abbr }}</td><td>{{ row.name }}</td><td>{{ row.addr }}</td><td>{{ row.lat|floatformat:"7" }}</td><td>{{ row.lon|floatformat:"7" }}</td><td style="word-spacing: 5px; white-space: nowrap;">{% if row.user %}<a href="{% url 'knr:placeform' row.id %}">upravit</a> <a href="{% url 'knr:placedel' row.id %}">smazat</a>{% endif %}</td>{% endblock %}
+{% block table_row %}<td>{{ row.abbr }}</td><td>{{ row.name }}</td><td>{{ row.addr }}</td><td>{{ row.lat|floatformat:"7" }}</td><td>{{ row.lon|floatformat:"7" }}</td><td class="links">{% if row.user %}<a href="{% url 'knr:placeform' row.id %}">upravit</a> <a href="{% url 'knr:placedel' row.id %}">smazat</a>{% endif %}</td>{% endblock %}
 {% block empty %}
-          <p style="text-align: center;">(nejsou zadána žádná místa)</p>
-          <p style="text-align: center;"><a href="{% url 'knr:placeform' %}">Vytvořit nové místo</a></p>{% endblock %}
+          <p class="center">(nejsou zadána žádná místa)</p>
+          <p class="center"><a href="{% url 'knr:placeform' %}">Vytvořit nové místo</a></p>{% endblock %}

@@ -1,10 +1,10 @@
 {% extends "main.html" %}
 
 {% block page_contents %}
-	  <h1 style="text-align: center;">{{ page_title }}</h1>
-          <p style="text-align: center;">Opravdu chcete toto řízení smazat?</p>
+	  <h1 class="center">{{ page_title }}</h1>
+          <p class="center">Opravdu chcete toto řízení smazat?</p>
           <form method="post" enctype="multipart/form-data">
-	    <p style="text-align: center;"><input type="submit" name="submit_yes" value="Ano" /><input type="submit" name="submit_no" value="Ne" style="margin-left: 15px;" /></p>
+	    <p class="center"><input type="submit" name="submit_yes" value="Ano" /><input type="submit" name="submit_no" value="Ne" style="margin-left: 15px;" /></p>
 	    {% csrf_token %}
 	  </form>
 {% endblock %}

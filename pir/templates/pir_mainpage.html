@@ -2,11 +2,11 @@
 
 {% block page_contents %}
         <form method="post" enctype="multipart/form-data">
-	  <table style="margin: auto auto 30px auto;">
+	  <table class="basic">
 	    <tr>
 	      <td></td>
 	      <td colspan="2">
-		<h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1>
+		<h1 class="left" style="margin-bottom: 8px;">{{ page_title }}</h1>
 	      </td>
 	    </tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
@@ -24,7 +24,7 @@
 	      <th class="{% if f.senate.errors or f.register.errors or f.number.errors or f.year.errors or f.page.errors %}err{% endif %}">
 		Spisová značka:
 	      </th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<input id="id_senate" size="4" type="text" name="senate" maxlength="8" value="{{ f.senate.value }}" class="{{ f.senate.css_classes }}" />
 		INS
 		<input id="id_number" size="4" type="text" name="number" maxlength="8" value="{{ f.number.value }}" class="{{ f.number.css_classes }}" />
@@ -36,7 +36,7 @@
 	      <th class="{% if f.date_first_from.errors or f.date_first_to.errors %}err{% endif %}">
 		Datum prvního záznamu:
 	      </th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<span class="{{ f.date_first_from.css_classes }}" id="id_date_first_from_span">{{ f.date_first_from }}</span>
 		–
 		<span class="{{ f.date_first_to.css_classes }}" id="id_date_first_to_span">{{ f.date_first_to }}</span>
@@ -46,7 +46,7 @@
 	      <th class="{% if f.date_last_from.errors or f.date_last_to.errors %}err{% endif %}">
 		Datum posledního záznamu:
 	      </th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<span class="{{ f.date_last_from.css_classes }}" id="id_date_last_from_span">{{ f.date_last_from }}</span>
 		–
 		<span class="{{ f.date_last_to.css_classes }}" id="id_date_last_to_span">{{ f.date_last_to }}</span>
@@ -54,21 +54,21 @@
 	    </tr>
 	    <tr>
 	      <th>{{ f.name.label_tag }}</th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<span>{{ f.name }}</span>
 {% for p in f.name_opt %}		  {{ p }}
 {% endfor %}	      </td>
 	    </tr>
 	    <tr>
 	      <th>{{ f.first_name.label_tag }}</th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<span>{{ f.first_name }}</span>
 {% for p in f.first_name_opt %}		  {{ p }}
 {% endfor %}	      </td>
 	    </tr>
 	    <tr>
 	      <th>{{ f.city.label_tag }}</th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<span>{{ f.city }}</span>
 {% for p in f.city_opt %}		  {{ p }}
 {% endfor %}	      </td>
@@ -102,7 +102,7 @@
 	      <th class="{% if f.year_birth_from.errors or f.year_birth_to.errors %}err{% endif %}">
 		Rok narození:
 	      </th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<span class="{{ f.year_birth_from.css_classes }}" id="id_year_birth_from_span">{{ f.year_birth_from }}</span>
 		–
 		<span class="{{ f.year_birth_to.css_classes }}" id="id_year_birth_to_span">{{ f.year_birth_to }}</span>
@@ -112,7 +112,7 @@
 	      <th>
 		Procesní postavení:
 	      </th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		{{ f.role_debtor }}
 		<span>{{ f.role_debtor.label_tag }}</span>
 		{{ f.role_trustee }}
@@ -127,7 +127,7 @@
 	      <th>
 		Výpis:
 	      </th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		{{ f.deleted }}
 		<span>{{ f.deleted.label_tag }}</span>
 		{{ f.creditors }}
@@ -143,7 +143,7 @@
 	      <td>
 		<input type="submit" name="submit" value="Hledat" />
 	      </td>
-	      <td style="text-align: right;">
+	      <td class="right">
 		<input type="reset" name="reset" value="Vymazat" />
 		{% csrf_token %}
 	      </td>

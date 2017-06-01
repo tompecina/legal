@@ -2,10 +2,10 @@
 
 {% block page_contents %}
         <h1>{{ page_title }}</h1>{% if rows %}
-	<table id="list" style="border-collapse: collapse; margin: auto;">
+	<table id="list" class="margin-auto">
 	  <thead>
 	    <tr class="header">
-	      <th style="text-align: left;">Popis</th>
+	      <th class="left">Popis</th>
 	      <th>Akce</th>
 	    </tr>
 	  </thead>{% if not suppress_table_footer %}
@@ -14,7 +14,7 @@
 	      <td>
 		<a href="{% url 'dir:debtorform' %}">Přidat dlužníka</a>
 	      </td>
-	      <td colspan="2" style="text-align: right;">
+	      <td colspan="2" class="right">
 		{% include "pager.html" %}
 	      </td>
 	    </tr>
@@ -22,7 +22,7 @@
 	  <tbody>{% for row in rows %}
 	    <tr class="{% cycle "odd" "even" %}">
 	      <td>{{ row.desc }}</td>
-	      <td style="word-spacing: 5px; white-space: nowrap;">
+	      <td class="links">
 		<a href="{% url 'dir:debtorform' row.id %}">upravit</a>
 		<a href="{% url 'dir:debtordel' row.id %}">smazat</a>
 		<a href="{% url 'pir:htmllist' %}?{{ row.search }}">vyhledat</a>
@@ -30,7 +30,7 @@
 	    </tr>{% endfor %}
 	  </tbody>
 	</table>
-        <p style="text-align: center;">
+        <p class="center">
 	  <a href="{% url 'dir:debtorbatchform' %}">
 	    Import
 	  </a>
@@ -43,10 +43,10 @@
 	    Smazat vše
 	  </a>
 	</p>{% else %}
-        <p style="text-align: center;">
+        <p class="center">
 	  (nesledujete žádné dlužníky)
 	</p>
-        <p style="text-align: center;">
+        <p class="center">
 	  <a href="{% url 'dir:debtorform' %}">
 	    Přidat dlužníka
 	  </a>

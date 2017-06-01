@@ -3,7 +3,7 @@
 {% block page_contents %}
         <h1 style="margin-bottom: 3px;">{{ page_title }}</h1>{% if rows %}
 	<div class="res">Počet výsledků: {{ total }}</div>
-	<table style="border-collapse: collapse; margin: auto;">
+	<table class="margin-auto">
 	  <thead>
 	    <tr class="header">
 	      <th>
@@ -35,7 +35,7 @@
 	  </thead>{% if not suppress_table_footer %}
           <tfoot>
 	    <tr class="footer">
-	      <td colspan="{% if creditors %}4{% else %}3{% endif %}" style="text-align: right;">
+	      <td colspan="{% if creditors %}4{% else %}3{% endif %}" class="right">
 		{% include "pager.html" %}
 	      </td>
 	    </tr>
@@ -46,10 +46,10 @@
 		<div>
 		  {{ row.court }}
 		</div>
-		<div style="white-space: nowrap;">
+		<div class="nowrap">
 		  {{ row.court_short }} {% if row.senat %}{{ row.senat }} {% endif %}INS {{ row.bc }}/{{ row.rocnik }}
 		</div>
-		<div style="white-space: nowrap;">
+		<div class="nowrap">
 		  {{ row.state }}
 		</div>
 	      </td>
@@ -68,7 +68,7 @@
 		  {{ creditor.text|safe }}&nbsp;<a href="{% url 'pir:party' creditor.id %}">[O]</a>
 		</div>{% endfor %}
 	      </td>
-{% endif %}	      <td style="text-align: center; white-space: nowrap;">
+{% endif %}	      <td class="center nowrap">
 		{% if row.link and not row.datumVyskrtnuti %}<a href="{{ row.link }}" target="_blank">
 		  [I]
 		</a>{% endif %}{% if row.senat %}		<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.court_reg }}&amp;krajOrg={{ row.court_reg }}&amp;cisloSenatu={{ row.senat }}&amp;druhVec=INS&amp;bcVec={{ row.bc }}&amp;rocnik={{ row.rocnik }}&amp;typSoudu=os&amp;autoFill=true&amp;type=spzn" target="_blank">
@@ -77,5 +77,5 @@
 	      </td>
 	    </tr>{% endfor %}
 	  </tbody>
-	</table>{% else %}        <p style="text-align: center;">(žádné výsledky)</p>{% endif %}
-        <p style="text-align: center;"><a href="{% url 'pir:mainpage' %}">Zpět na vyhledávací formulář</a></p>{% endblock %}
+	</table>{% else %}        <p class="center">(žádné výsledky)</p>{% endif %}
+        <p class="center"><a href="{% url 'pir:mainpage' %}">Zpět na vyhledávací formulář</a></p>{% endblock %}

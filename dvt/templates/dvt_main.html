@@ -2,8 +2,8 @@
 
 {% block page_contents %}
         <form method="post" enctype="multipart/form-data" id="id_maintform">
-	  <table style="margin: auto auto 30px auto;">
-	    <tr><td colspan="3"><h1 style="text-align: center; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+	  <table class="basic">
+	    <tr><td colspan="3"><h1 class="center" style="margin-bottom: 8px;">{{ page_title }}</h1></td></tr>
             <tr class="{{ f.beg_date.css_classes }}">
 	      <th>
 		{{ f.beg_date.label_tag }}
@@ -23,7 +23,7 @@
 	      </td>
 	    </tr>
 	    <tr>
-	      <td colspan="2" style="text-align: center;">
+	      <td colspan="2" class="center">
 		<input type="submit" name="submit" value="Vypočítat" />
 		{% csrf_token %}
 	      </td>

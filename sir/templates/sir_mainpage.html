@@ -2,10 +2,10 @@
 
 {% block page_contents %}
         <h1>{{ page_title }}</h1>{% if rows %}
-	<table id="list" style="border-collapse: collapse; margin: auto;">
+	<table id="list" class="margin-auto">
 	  <thead>
 	    <tr class="header">
-	      <th style="text-align: left;">Spisová značka</th>
+	      <th class="left">Spisová značka</th>
 	      <th>Popis</th>
 	      <th>Vše</th>
 	      <th>Akce</th>
@@ -16,21 +16,21 @@
 	      <td>
 		<a href="{% url 'sir:insform' %}">Přidat řízení</a>
 	      </td>
-	      <td colspan="3" style="text-align: right;">
+	      <td colspan="3" class="right">
 		{% include "pager.html" %}
 	      </td>
 	    </tr>
 	  </tfoot>{% endif %}
 	  <tbody>{% for row in rows %}
 	    <tr class="{% cycle "odd" "even" %}">
-	      <td style="white-space: nowrap;"><a href="{% url 'pir:htmllist' %}?number={{ row.number }}&amp;year={{ row.year }}">INS {{ row.number }}/{{ row.year }}</a></td>
+	      <td class="nowrap"><a href="{% url 'pir:htmllist' %}?number={{ row.number }}&amp;year={{ row.year }}">INS {{ row.number }}/{{ row.year }}</a></td>
 	      <td>{{ row.desc }}</td>
-	      <td style="text-align: center;">{% if row.detailed %}ano{% else %}ne{% endif %}</td>
-	      <td style="word-spacing: 5px; white-space: nowrap;"><a href="{% url 'sir:insform' row.id %}">upravit</a> <a href="{% url 'sir:insdel' row.id %}">smazat</a></td>
+	      <td class="center">{% if row.detailed %}ano{% else %}ne{% endif %}</td>
+	      <td class="links"><a href="{% url 'sir:insform' row.id %}">upravit</a> <a href="{% url 'sir:insdel' row.id %}">smazat</a></td>
 	    </tr>{% endfor %}
 	  </tbody>
 	</table>
-        <p style="text-align: center;">
+        <p class="center">
 	  <a href="{% url 'sir:insbatchform' %}">
 	    Import
 	  </a>
@@ -43,10 +43,10 @@
 	    Smazat vše
 	  </a>
 	</p>	{% else %}
-        <p style="text-align: center;">
+        <p class="center">
 	  (nesledujete žádná řízení)
 	</p>
-        <p style="text-align: center;">
+        <p class="center">
 	  <a href="{% url 'sir:insform' %}">
 	    Přidat řízení
 	  </a>

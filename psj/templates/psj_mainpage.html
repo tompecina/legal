@@ -2,11 +2,11 @@
 
 {% block page_contents %}
         <form method="post" enctype="multipart/form-data">
-	  <table style="margin: auto auto 30px auto;">
+	  <table class="basic">
 	    <tr>
 	      <td></td>
 	      <td colspan="2">
-		<h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1>
+		<h1 class="left" style="margin-bottom: 8px;">{{ page_title }}</h1>
 	      </td>
 	    </tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
@@ -15,7 +15,7 @@
 	      <th class="{% if f.date_from.errors or f.date_to.errors %}err{% endif %}">
 		Datum:
 	      </th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<span class="{{ f.date_from.css_classes }}" id="id_date_from_span">{{ f.date_from }}</span>
 		–
 		<span class="{{ f.date_to.css_classes }}" id="id_date_to_span">{{ f.date_to }}</span>
@@ -24,7 +24,7 @@
 	    <tr>
 	      <th>{{ f.court.label_tag }}</th>
 	      <td colspan="2">
-		<select name="court" id="id_court" style="width: 100%;">
+		<select name="court" id="id_court" class="width-full">
 		  <option value="">(všechny)</option>
 {% for court in courts %}		  <option value="{{ court.id }}">{{ court.name }}</option>
 {% endfor %}	        </select>
@@ -34,7 +34,7 @@
 	      <th class="{% if f.senate.errors or f.register.errors or f.number.errors or f.year.errors or f.page.errors %}err{% endif %}">
 		Spisová značka:
 	      </th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<input id="id_senate" size="4" type="text" name="senate" maxlength="8" value="{{ f.senate.value }}" class="{{ f.senate.css_classes }}" />
 		<input id="id_register" size="4" type="text" name="register" maxlength="8" value="{{ f.register.value }}" class="{{ f.register.css_classes }}" />
 		<input id="id_number" size="4" type="text" name="number" maxlength="8" value="{{ f.number.value }}" class="{{ f.number.css_classes }}" />
@@ -45,7 +45,7 @@
 	    <tr>
 	      <th>{{ f.courtroom.label_tag }}</th>
 	      <td colspan="2">
-		<select name="courtroom" id="id_courtroom" style="width: 100%;">
+		<select name="courtroom" id="id_courtroom" class="width-full">
 		  <option value="">(všechny)</option>
 	        </select>
 	      </td>
@@ -53,14 +53,14 @@
 	    <tr>
 	      <th>{{ f.judge.label_tag }}</th>
 	      <td colspan="2">
-		<select name="judge" id="id_judge" style="width: 100%;">
+		<select name="judge" id="id_judge" class="width-full">
 		  <option value="">(všichni)</option>
 	        </select>
 	      </td>
 	    </tr>
 	    <tr>
 	      <th>{{ f.party.label_tag }}</th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<span>{{ f.party }}</span>
 {% for p in f.party_opt %}		  {{ p }}
 {% endfor %}	      </td>
@@ -76,7 +76,7 @@
 	      <td>
 		<input type="submit" name="submit" value="Hledat" />
 	      </td>
-	      <td style="text-align: right;">
+	      <td class="right">
 		<input type="reset" name="reset" value="Vymazat" />
 		{% csrf_token %}
 	      </td>

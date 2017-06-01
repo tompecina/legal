@@ -18,7 +18,7 @@
 		</thead>
                 <tbody>
 {% for row in rows %}		  <tr class="{% cycle 'odd' 'even' %}">
-		    <td style="text-align: center;">{{ row.short }}</td>
+		    <td class="center">{{ row.short }}</td>
 		    <td>{{ row.name }}</td>
                   </tr>
 {% endfor %}		</tbody>

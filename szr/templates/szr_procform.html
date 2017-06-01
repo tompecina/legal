@@ -2,20 +2,20 @@
 
 {% block page_contents %}
 	<form method="post" enctype="multipart/form-data">
-	  <table style="margin: auto auto 15px auto;">	    <tr><td></td><td colspan="2"><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+	  <table style="margin: auto auto 15px auto;">	    <tr><td></td><td colspan="2"><h1 class="left" style="margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
               {% include "formwarning.html" %}            </td></tr>
 {% endif %}	    <tr>
 	      <th>{{ f.court.label_tag }}</th>
 	      <td colspan="2">
-		<select name="court" id="id_court" style="width: 100%;">
+		<select name="court" id="id_court" class="width-full">
 {% for court in courts %}		  <option value="{{ court.id }}"{% if f.court.value == court.id %} selected="selected"{% endif %}>{{ court.name }}</option>
 {% endfor %}	        </select>
 	      </td>
 	    </tr>
 	    <tr>
 	      <th class="{% if f.senate.errors or f.register.errors or f.number.errors or f.year.errors %}err{% endif %}">Spisová značka:</th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<input id="id_senate" size="4" type="text" name="senate" maxlength="8" value="{{ f.senate.value }}" class="{{ f.senate.css_classes }}" />
 		<input id="id_register" size="4" type="text" name="register" maxlength="8" value="{{ f.register.value }}" class="{{ f.register.css_classes }}" />
 		<input id="id_number" size="4" type="text" name="number" maxlength="8" value="{{ f.number.value }}" class="{{ f.number.css_classes }}" />

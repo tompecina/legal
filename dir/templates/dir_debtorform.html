@@ -2,12 +2,12 @@
 
 {% block page_contents %}
 	<form id="id_partyform" method="post" enctype="multipart/form-data">
-	  <table style="margin: auto auto 15px auto;">	    <tr><td></td><td colspan="2"><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+	  <table style="margin: auto auto 15px auto;">	    <tr><td></td><td colspan="2"><h1 class="left" style="margin-bottom: 8px;">{{ page_title }}</h1></td></tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
               {% include "formwarning.html" %}            </td></tr>
 {% endif %}	    <tr class="{{ f.desc.css_classes }}">
 	      <th>{{ f.desc.label_tag }}</th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		{{ f.desc }}
 	      </td>
 	    </tr>
@@ -18,7 +18,7 @@
 	    <tr>
 	      <th>{{ f.court.label_tag }}</th>
 	      <td colspan="2">
-		<select name="court" id="id_court" style="width: 100%;">
+		<select name="court" id="id_court" class="width-full">
 		  <option value="">(všechny)</option>
 {% for court in courts %}		  <option value="{{ court.id }}"{% if f.court.value == court.id %} selected="selected"{% endif %}>{{ court.name }}</option>
 {% endfor %}	        </select>
@@ -26,14 +26,14 @@
 	    </tr>
 	    <tr class="{{ f.name.css_classes }}">
 	      <th>{{ f.name.label_tag }}</th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<span>{{ f.name }}</span>
 {% for p in f.name_opt %}		  {{ p }}
 {% endfor %}	      </td>
 	    </tr>
 	    <tr class="{{ f.first_name.css_classes }}">
 	      <th>{{ f.first_name.label_tag }}</th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<span>{{ f.first_name }}</span>
 {% for p in f.first_name_opt %}		  {{ p }}
 {% endfor %}	      </td>
@@ -67,7 +67,7 @@
 	      <th class="{% if f.year_birth_from.errors or f.year_birth_to.errors %}err{% endif %}">
 		Rok narození:
 	      </th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		<span class="{{ f.year_birth_from.css_classes }}" id="id_year_birth_from_span">{{ f.year_birth_from }}</span>
 		–
 		<span class="{{ f.year_birth_to.css_classes }}" id="id_year_birth_to_span">{{ f.year_birth_to }}</span>

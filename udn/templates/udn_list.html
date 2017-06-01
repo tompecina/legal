@@ -3,11 +3,11 @@
 {% block page_contents %}
         <h1 style="margin-bottom: 3px;">{{ page_title }}</h1>{% if rows %}
 	<div class="res">Počet výsledků: {{ total }}</div>
-	<table style="border-collapse: collapse; margin: auto;">
+	<table class="margin-auto">
 	  <thead><tr class="header"><th>Datum</th><th>Jednací číslo</th><th>Oblast</th><th>Účastníci řízení</th><th>Rozhodnutí</th></tr></thead>{% if not suppress_table_footer %}
           <tfoot>
 	    <tr class="footer">
-	      <td colspan="5" style="text-align: right;">
+	      <td colspan="5" class="right">
 		{% include "pager.html" %}
 	      </td>
 	    </tr>
@@ -15,12 +15,12 @@
 	  <tbody>{% for row in rows %}
 	    <tr class="{% cycle "odd" "even" %}">
 	      <td>{{ row.date|date:'d.m.Y' }}</td>
-	      <td style="white-space: nowrap;">{% if row.senate %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}-{{ row.page }}</td>
+	      <td class="nowrap">{% if row.senate %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}-{{ row.page }}</td>
 	      <td>{{ row.agenda }}</td>
 	      <td>{% for party in row.parties.all %}
 		<div>{{ party.name }}</div>{% endfor %}
 	      </td>
-	      <td style="text-align: center; white-space: nowrap;">
+	      <td class="center nowrap">
 		<a href="/repo/udn/{{ row.filename }}" target="_blank">
 		  [Z]
 		</a>{% if row.anonfilename %}
@@ -30,5 +30,5 @@
 	      </td>
 	    </tr>{% endfor %}
 	  </tbody>
-	</table>{% else %}        <p style="text-align: center;">(žádné výsledky)</p>{% endif %}
-        <p style="text-align: center;"><a href="{% url 'udn:mainpage' %}">Zpět na vyhledávací formulář</a></p>{% endblock %}
+	</table>{% else %}        <p class="center">(žádné výsledky)</p>{% endif %}
+        <p class="center"><a href="{% url 'udn:mainpage' %}">Zpět na vyhledávací formulář</a></p>{% endblock %}

@@ -2,8 +2,8 @@
 
 {% block page_contents %}
         <form method="post" enctype="multipart/form-data">
-	  <table style="margin: auto auto 30px auto;">
-	    <tr><td></td><td><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+	  <table class="basic">
+	    <tr><td></td><td><h1 class="left" style="margin-bottom: 8px;">{{ page_title }}</h1></td></tr>
 	    <tr class="{{ f.basis.css_classes }}">
 	      <th>{{ f.basis.label_tag }}</th>
 	      <td>{{ f.basis }}</td>
@@ -38,7 +38,7 @@
 	    </tr>
 	    <tr>
 	      <td></td>
-	      <td style="text-align: center;">
+	      <td class="center">
 		<input type="submit" name="submit" value="Vypočítat" />
 		{% csrf_token %}
 	      </td>

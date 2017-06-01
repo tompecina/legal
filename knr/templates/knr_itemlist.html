@@ -1,8 +1,8 @@
 {% extends "knr_list.html" %}
 
-{% block table_header %}<th>Pořadí</th><th>Popis</th><th style="text-align: right;">Částka</th><th colspan="3">Akce</th>{% endblock %}
+{% block table_header %}<th>Pořadí</th><th>Popis</th><th class="right">Částka</th><th colspan="3">Akce</th>{% endblock %}
 {% block table_footer %}
-            <td colspan="6" style="white-space: nowrap;">
+            <td colspan="6" class="nowrap">
 	      <form action="{% url 'knr:itemform' %}" method="post" enctype="multipart/form-data">
 		<div>
 		  <input type="submit" name="submit_new" value="Přidat položku:" id="id_apply" />
@@ -14,11 +14,11 @@
 		{% csrf_token %}
 	      </form>
 	    </td>{% endblock %}
-{% block table_row %}<td style="text-align: center;">{{ forloop.counter }}</td><td>{{ row.description }}</td><td style="text-align: right; white-space: nowrap;">{{ row.amount|safe }} Kč</td><td style="padding-right: 8px; word-spacing: 5px; white-space: nowrap;"><a href="{% url 'knr:itemform' row.idx %}">upravit</a> <a href="{% url 'knr:itemdel' row.idx %}">smazat</a></td><td style="padding-left: 4px; padding-right: 4px;">{% if row.up %}<a href="{% url 'knr:itemup' "u" row.idx %}">↑</a>{% endif %}</td><td style="padding-left: 4px;">{% if row.down %}<a href="{% url 'knr:itemdown' "d" row.idx %}">↓</a>{% endif %}</td>{% endblock %}
+{% block table_row %}<td class="center">{{ forloop.counter }}</td><td>{{ row.description }}</td><td class="right nowrap">{{ row.amount|safe }} Kč</td><td class="links" style="padding-right: 8px;"><a href="{% url 'knr:itemform' row.idx %}">upravit</a> <a href="{% url 'knr:itemdel' row.idx %}">smazat</a></td><td style="padding-left: 4px; padding-right: 4px;">{% if row.up %}<a href="{% url 'knr:itemup' "u" row.idx %}">↑</a>{% endif %}</td><td style="padding-left: 4px;">{% if row.down %}<a href="{% url 'knr:itemdown' "d" row.idx %}">↓</a>{% endif %}</td>{% endblock %}
 {% block empty %}
-	<p style="text-align: center;">(nejsou zadány žádné položky)</p>
+	<p class="center">(nejsou zadány žádné položky)</p>
 	<form action="{% url 'knr:itemform' %}" method="post" enctype="multipart/form-data">
-	  <p style="text-align: center; white-space: nowrap;">
+	  <p class="center nowrap">
 	    <input type="submit" name="submit_new" value="Přidat položku:" id="id_apply" />
 	    <select name="presel" id="id_new">
 	    {% for p in presel %}  <option value="{{ p.idx }}">{{ p.text }}</option>

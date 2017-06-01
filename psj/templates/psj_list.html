@@ -3,7 +3,7 @@
 {% block page_contents %}
         <h1 style="margin-bottom: 3px;">{{ page_title }}</h1>{% if rows %}
 	<div class="res">Počet výsledků: {{ total }}</div>
-	<table style="border-collapse: collapse; margin: auto;">
+	<table class="margin-auto">
 	  <thead>
 	    <tr class="header">
 	      <th>
@@ -43,7 +43,7 @@
 	  </thead>{% if not suppress_table_footer %}
           <tfoot>
 	    <tr class="footer">
-	      <td colspan="6" style="text-align: right;">
+	      <td colspan="6" class="right">
 		{% include "pager.html" %}
 	      </td>
 	    </tr>
@@ -58,7 +58,7 @@
 		  {{ row.courtroom.desc }}
 		</div>
 	      </td>
-	      <td style="white-space: nowrap;">
+	      <td class="nowrap">
 		<div>
 		  {{ row.time|date:'d.m.Y H:i' }}
 		</div>
@@ -79,11 +79,11 @@
 		  {{ party.name }}
 		</div>{% endfor %}
 	      </td>
-	      <td style="text-align: center;">
+	      <td class="center">
 		{% if row.closed %}<div>neveřejné</div>{% endif %}
 		{% if row.cancelled %}<div>zrušeno</div>{% endif %}
 	      </td>
-	      <td style="text-align: center; white-space: nowrap;">
+	      <td class="center nowrap">
 		{% if row.time|date:'U' >= today|date:'U' %}<a href="http://infosoud.justice.cz/InfoSoud/public/searchJednani.do?type=spzn&amp;typSoudu=os&amp;krajOrg={% if row.courtroom.court.reports %}{{ row.courtroom.court.reports_id }}{% else %}{{ row.courtroom.court_id }}{% endif %}&amp;org={{ row.courtroom.court_id }}&amp;cisloSenatu={{ row.senate }}&amp;druhVec={{ row.register|upper|urlencode }}&amp;bcVec={{ row.number }}&amp;rocnik={{ row.year }}&amp;spamQuestion=23" target="_blank">
 		  [J]
 		</a>{% endif %}		<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.courtroom.court_id }}&amp;krajOrg={% if row.courtroom.court.reports %}{{ row.courtroom.court.reports_id }}{% else %}{{ row.courtroom.court_id }}{% endif %}&amp;cisloSenatu={{ row.senate }}&amp;druhVec={{ row.register|urlencode }}&amp;bcVec={{ row.number }}&amp;rocnik={{ row.year }}&amp;typSoudu={% if row.court_id == 'NSJIMBM' %}ns{% else %}os{% endif %}&amp;autoFill=true&amp;type=spzn" target="_blank">
@@ -92,5 +92,5 @@
 	      </td>
 	    </tr>{% endfor %}
 	  </tbody>
-	</table>{% else %}        <p style="text-align: center;">(žádné výsledky)</p>{% endif %}
-        <p style="text-align: center;"><a href="{% url 'psj:mainpage' %}">Zpět na vyhledávací formulář</a></p>{% endblock %}
+	</table>{% else %}        <p class="center">(žádné výsledky)</p>{% endif %}
+        <p class="center"><a href="{% url 'psj:mainpage' %}">Zpět na vyhledávací formulář</a></p>{% endblock %}

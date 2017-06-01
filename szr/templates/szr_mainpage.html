@@ -2,11 +2,11 @@
 
 {% block page_contents %}
         <h1>{{ page_title }}</h1>{% if rows %}
-	<table id="list" style="border-collapse: collapse; margin: auto;">
+	<table id="list" class="margin-auto">
 	  <thead>
 	    <tr class="header">
-	      <th style="text-align: left;">Soud</th>
-	      <th style="text-align: left;">Spisová značka</th>
+	      <th class="left">Soud</th>
+	      <th class="left">Spisová značka</th>
 	      <th>Popis</th>
 	      <th>Poslední změna</th>
 	      <th>Akce</th>
@@ -17,7 +17,7 @@
 	      <td>
 		<a href="{% url 'szr:procform' %}">Přidat řízení</a>
 	      </td>
-	      <td colspan="4" style="text-align: right;">
+	      <td colspan="4" class="right">
 		{% include "pager.html" %}
 	      </td>
 	    </tr>
@@ -25,14 +25,14 @@
 	  <tbody>{% for row in rows %}
 	    <tr class="{% cycle "odd" "even" %}">
 	      <td>{{ row.court }}</td>
-	      <td style="white-space: nowrap;">{% if row.court_id == 'NSS' %}{% if row.auxid %}<a href="http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&amp;kau_id={{ row.auxid }}" target="_blank">{% endif %}{% else %}<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.court_id }}&amp;krajOrg={% if row.court.reports %}{{ row.court.reports_id }}{% else %}{{ row.court_id }}{% endif %}&amp;cisloSenatu={{ row.senate }}&amp;druhVec={{ row.register|urlencode }}&amp;bcVec={{ row.number }}&amp;rocnik={{ row.year }}&amp;typSoudu={% if row.court_id == 'NSJIMBM' %}ns{% else %}os{% endif %}&amp;autoFill=true&amp;type=spzn" target="_blank">{% endif %}{% if row.senate > 0 %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}{% if row.court_id != 'NSS' or row.auxid %}</a>{% endif %}</td>
+	      <td class="nowrap">{% if row.court_id == 'NSS' %}{% if row.auxid %}<a href="http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&amp;kau_id={{ row.auxid }}" target="_blank">{% endif %}{% else %}<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.court_id }}&amp;krajOrg={% if row.court.reports %}{{ row.court.reports_id }}{% else %}{{ row.court_id }}{% endif %}&amp;cisloSenatu={{ row.senate }}&amp;druhVec={{ row.register|urlencode }}&amp;bcVec={{ row.number }}&amp;rocnik={{ row.year }}&amp;typSoudu={% if row.court_id == 'NSJIMBM' %}ns{% else %}os{% endif %}&amp;autoFill=true&amp;type=spzn" target="_blank">{% endif %}{% if row.senate > 0 %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}{% if row.court_id != 'NSS' or row.auxid %}</a>{% endif %}</td>
 	      <td>{{ row.desc }}</td>
-	      <td{% if row.notify %} class="hl"{% endif %} style="text-align: center;">{{ row.changed|date:'d.m.Y'|default_if_none:'' }}</td>
-	      <td style="word-spacing: 5px; white-space: nowrap;"><a href="{% url 'szr:procform' row.id %}">upravit</a> <a href="{% url 'szr:procdel' row.id %}">smazat</a></td>
+	      <td class="center{% if row.notify %} hl{% endif %}">{{ row.changed|date:'d.m.Y'|default_if_none:'' }}</td>
+	      <td class="links"><a href="{% url 'szr:procform' row.id %}">upravit</a> <a href="{% url 'szr:procdel' row.id %}">smazat</a></td>
 	    </tr>{% endfor %}
 	  </tbody>
 	</table>
-        <p style="text-align: center;">
+        <p class="center">
 	  <a href="{% url 'szr:procbatchform' %}">
 	    Import
 	  </a>
@@ -45,10 +45,10 @@
 	    Smazat vše
 	  </a>
 	</p>	{% else %}
-          <p style="text-align: center;">
+          <p class="center">
 	    (nesledujete žádná řízení)
 	  </p>
-          <p style="text-align: center;">
+          <p class="center">
 	    <a href="{% url 'szr:procform' %}">
 	      Přidat řízení
 	    </a>

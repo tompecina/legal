@@ -19,19 +19,19 @@
 {% if app %}    <script type="text/javascript" src="{% static '' %}{{ app }}.js"></script>
 {% endif %}  </head>
   <body>
-{% if page_title and not suppress_topline %}    <table style="width: 100%;">
+{% if page_title and not suppress_topline %}    <table class="width-full">
       <tr class="topline">
-	<td style="width: 50%;">
+	<td class="width-half">
 	  Uživatel: {% if user.is_authenticated %}{{ user.get_full_name }}{% else %}(nepřihlášen){% endif %}
 	</td>
-{% if not suppress_home %}	<td style="text-align: center;">
+{% if not suppress_home %}	<td class="center">
 	  <a href="{% url 'home' %}">
 	    <svg width="8" height="10">
 	      <path d="M 0,10 8,10 4,0 Z"/>
 	    </svg>
 	  </a>
       </td>
-{% endif %}	<td style="width: 50%; text-align: right;">
+{% endif %}	<td class="width-half right">
 	  {% if user.is_authenticated %}<a href="{% url 'pwchange' %}">
 	    změnit heslo
 	  </a>
@@ -44,7 +44,7 @@
 	</td>
       </tr>
     </table>{% endif %}
-    <table style="width: 85%; margin: auto;">
+    <table class="width-most margin-auto">
       <tr>
 	<td>{% block page_contents %}{% endblock %}        </td>
       </tr>

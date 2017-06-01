@@ -2,11 +2,11 @@
 
 {% block page_contents %}
 <form method="post" enctype="multipart/form-data">
-  <table style="margin: auto;">
+  <table class="margin-auto">
     <tr>
       <td></td>
       <td colspan="2">
-	<h1 style="text-align: left; margin-bottom: 5px;">
+	<h1 class="left" style="margin-bottom: 5px;">
 	  {{ page_title }}
 	</h1>
       </td>
@@ -23,7 +23,7 @@
               {% include "formwarning.html" %}            </td></tr>
 {% endif %}	    <tr>
     <tr class="{{ f.username.css_classes }}">
-      <td style="text-align: right;">
+      <td class="right">
 	{{ f.username.label_tag }}
       </td>
       <td colspan="2">
@@ -31,11 +31,11 @@
       </td>
     </tr>
     <tr>
-      <td style="text-align: right;"></td>
+      <td class="right"></td>
       <td>
 	<input type="submit" name="submit" value="Poslat link" />
       </td>
-      <td style="text-align: right;">
+      <td class="right">
 	<input type="submit" name="back" value="Zpět" />
 	{% csrf_token %}
       </td>

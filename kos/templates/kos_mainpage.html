@@ -2,22 +2,22 @@
 
 {% block page_contents %}
         <form method="post" enctype="multipart/form-data">
-	  <table style="margin: auto auto 30px auto;">
+	  <table class="basic">
 	    <thead>
 	      <tr>
 		<td></td>
 		<th colspan="2" style="padding-left: 2px;">
-		  <h1 style="text-align: left; margin-bottom: 20px">
+		  <h1 class="left" style="margin-bottom: 20px">
 		    {{ page_title }}
 		  </h1>
                 </th>
 	      </tr>
 	      <tr>
 		<th></th>
-		<th style="text-align: left; padding: 3px 35px 5px 3px;">
+		<th class="left" style="padding: 3px 35px 5px 3px;">
 		  Samostatný dlužník
 		</th>
-		<th style="text-align: left; padding: 3px 0 5px 3px;">
+		<th class="left" style="padding: 3px 0 5px 3px;">
 		  Společný návrh manželů
 		</th>
 	      </tr>
@@ -126,7 +126,7 @@
 		<th>
 		  {{ f.vatrate.label_tag }}
 		</th>
-		<td colspan="2" style="white-space: nowrap;">
+		<td colspan="2" class="nowrap">
 		  {{ f.vatrate }} %
 		</td>
 	      </tr>

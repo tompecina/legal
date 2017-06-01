@@ -1,7 +1,7 @@
 {% extends "hsp_form.html" %}
 
 {% block form_contents %}
-	    <tr id="id_creditform"><td></td><td colspan="2"><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+	    <tr id="id_creditform"><td></td><td colspan="2"><h1 class="left" style="margin-bottom: 8px;">{{ page_title }}</h1></td></tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
               {% include "formwarning.html" %}            </td></tr>
 {% endif %}	    <tr class="{{ f.date.css_classes }}">
@@ -15,7 +15,7 @@
 	    <tr>
 	      <th><span class="{{ f.amount.css_classes }}">{{ f.amount.label_tag }}</span></th>
 	      <td><span class="{{ f.amount.css_classes }}">{{ f.amount }}</span></td>
-	      <td style="text-align: right"><span class="{{ f.currency.css_classes }}" style="padding-left: 10px;">{{ f.currency.label_tag }} {{ f.currency }}</span></td>
+	      <td class="right"><span class="{{ f.currency.css_classes }}" style="padding-left: 10px;">{{ f.currency.label_tag }} {{ f.currency }}</span></td>
 	    </tr>
 {% if rows %}	    <tr>
 	      <th style="vertical-align: top; padding-top: 10px;" class="{{ deb_class }}">Pořadí:</th>

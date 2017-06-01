@@ -2,12 +2,12 @@
 
 {% block page_contents %}
 	<form method="post" enctype="multipart/form-data">
-	  <table style="margin: auto auto 15px auto;">	    <tr><td></td><td colspan="2"><h1 style="text-align: left; margin-bottom: 8px; ">{{ page_title }}</h1></td></tr>
+	  <table style="margin: auto auto 15px auto;">	    <tr><td></td><td colspan="2"><h1 class="left" style="margin-bottom: 8px;">{{ page_title }}</h1></td></tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
               {% include "formwarning.html" %}            </td></tr>
 {% endif %}	    <tr>
 	      <th class="{% if f.number.errors or f.year.errors %}err{% endif %}">Spisová značka:</th>
-	      <td colspan="2" style="white-space: nowrap;">
+	      <td colspan="2" class="nowrap">
 		INS
 		<input id="id_number" size="4" type="text" name="number" maxlength="8" value="{{ f.number.value }}" class="{{ f.number.css_classes }}" />
 		/
@@ -17,7 +17,7 @@
 	    <tr class="{{ f.desc.css_classes }}"><th>{{ f.desc.label_tag }}</th><td colspan="2">{{ f.desc }}</td></tr>
 	    <tr>
 	      <th>{{ f.detailed.label_tag }}</th>
-	      <td colspan="2" style="white-space: nowrap;">{{ f.detailed }} (jinak pouze rozhodnutí o úpadku)</td>
+	      <td colspan="2" class="nowrap">{{ f.detailed }} (jinak pouze rozhodnutí o úpadku)</td>
 	    </tr>
 	    {% include "submit.html" %}	  </table>
 {% if type %}          <div class="hidden"><input type="hidden" name="idx" value="{{ idx }}" /><input type="hidden" name="type" id="id_type" value="{{ type }}" /></div>

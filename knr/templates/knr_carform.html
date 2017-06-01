@@ -1,7 +1,7 @@
 {% extends "knr_form.html" %}
 
 {% block form_contents %}
-	    <tr><td></td><td colspan="2"><h1 style="text-align: left; margin-bottom: 8px;">{{ page_title }}</h1></td></tr>
+	    <tr><td></td><td colspan="2"><h1 class="left" style="margin-bottom: 8px;">{{ page_title }}</h1></td></tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
               {% include "formwarning.html" %}            </td></tr>
 {% endif %}	    <tr class="{{ f.abbr.css_classes }}"><th>{{ f.abbr.label_tag }}</th><td colspan="2">{{ f.abbr }}</td></tr>
@@ -14,5 +14,5 @@
 {% endfor %}	        </select>
 	      </td>
 	    </tr>
-	    <tr><th class="{% if f.cons1.errors or f.cons2.errors or f.cons3.errors %}err{% endif %}">Spotřeba:</th><td colspan="2" style="white-space: nowrap;"><input id="id_cons1" size="4" type="text" name="cons1" maxlength="4" value="{{ f.cons1.value }}" class="{{ f.cons1.css_classes }}" /> / <input id="id_cons2" size="4" type="text" name="cons2" maxlength="4" value="{{ f.cons2.value }}" class="{{ f.cons2.css_classes }}" /> / <input id="id_cons3" size="4" type="text" name="cons3" maxlength="4" value="{{ f.cons3.value }}" class="{{ f.cons3.css_classes }}" /> l/100 km</td></tr>
+	    <tr><th class="{% if f.cons1.errors or f.cons2.errors or f.cons3.errors %}err{% endif %}">Spotřeba:</th><td colspan="2" class="nowrap"><input id="id_cons1" size="4" type="text" name="cons1" maxlength="4" value="{{ f.cons1.value }}" class="{{ f.cons1.css_classes }}" /> / <input id="id_cons2" size="4" type="text" name="cons2" maxlength="4" value="{{ f.cons2.value }}" class="{{ f.cons2.css_classes }}" /> / <input id="id_cons3" size="4" type="text" name="cons3" maxlength="4" value="{{ f.cons3.value }}" class="{{ f.cons3.css_classes }}" /> l/100 km</td></tr>
 {% endblock %}
