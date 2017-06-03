@@ -2,9 +2,9 @@
 
 fieldset {
     margin: 10px auto;
-}
-legend div:first-child {
-    font-style: italic;
+    legend + div {
+	font-style: italic;
+    }
 }
 div.msg-amount {
     font-size: 110%;

@@ -98,9 +98,6 @@ th {
 .hidden {
     display: none;
 }
-#detail td, #detail th {
-    padding: 3px 10px;
-}
 .topline * {
     font-size: 12px;
     white-space: nowrap;
@@ -121,11 +118,9 @@ p.foot {
 fieldset {
     border: {
 	style: solid;
+	width: 2px;
 	color: $border-blue;
     }
-}
-fieldset {
-    border-width: 1px;
     padding: 2px 5px;
 }
 legend {
@@ -182,7 +177,7 @@ select {
 }
 td.msg div {
     text-align: center;
-    padding: 0 1em;
+    padding: 0 $hm;
     white-space: nowrap;
 }
 .inlop {
@@ -195,7 +190,7 @@ td.msg div {
     }
 }
 .inlop label {
-    margin-left: 15px;
+    margin-left: $hl;
 }
 .inlop label:first-child {
     margin-left: 0;
@@ -208,30 +203,30 @@ td.msg div {
 }
 .homeitem {
     h1 {
-	margin-bottom: 15px;
+	margin-bottom: $vh;
     }
     div {
 	text-align: center;
-	margin-bottom: 5px;
+	margin-bottom: $vm;
     }
     div:last-child {
-	margin-bottom: 25px;
+	margin-bottom: $vh;
     }
     hr {
-	margin: 10px -10px 8px;
+	margin: $vl (-$hm);
     }
 }
 table.about {
-    margin: 20px auto 30px;
+    margin: $vh auto $vg;
 }
 table.about th {
-    padding: 4px 5px 4px 15px;
+    padding: ($vs+$vt) $hl;
 }
 table.about td {
-    padding: 4px 15px 4px 10px;
+    padding: ($vs+$vt) $hl ($vs+$vt) $hm;
 }
 table.list {
-    margin: 20px auto 30px;
+    margin: $vh auto $vg;
 }
 .hl {
     color: $red;
@@ -248,15 +243,15 @@ a svg:hover {
 }
 span.pager {
     span:first-child {
-	padding-right: 7px;
+	padding-right: $hm;
     }
     span:last-child {
-	padding-left: 7px;
+	padding-left: $hm;
     }
     span.num {
 	padding: {
-	    left: 8px;
-	    right: 8px;
+	    left: $hm;
+	    right: $hm;
 	}
     }
 }
@@ -264,36 +259,36 @@ span.grayed svg {
     fill: $gray;
 }
 .opt {
-    padding: 3px 8px;
+    padding: $vs $hm;
 }
 tr.bgrid td, tr.bgridwg td, tr.bgrid th, tr.bgridwg th {
-    padding: 4px 5px;
+    padding: $vs $hs;
 }
 tr.bgridwg td, tr.bgridwg th {
-    padding-bottom: 40px;
+    padding-bottom: $vg;
 }
 table.detail {
     thead tr {
 	background-color: $medium-blue;
 	th {
 	    font-size: 120%;
-	    padding-bottom: 5px;
+	    padding-bottom: $vm;
 	}
     }
     tbody {
 	tr {
 	    th, td {
 		background-color: $white;
-		padding-top: 2px;
-		padding-bottom: 3px;
+		padding-top: $vt;
+		padding-bottom: $vs;
 	    }
 	    th {
-		padding-left: 20px;
-		padding-right: 2px;
+		padding-left: $hl;
+		padding-right: $ht;
 	    }
 	    td {
-		padding-left: 5px;
-		padding-right: 15px;
+		padding-left: $hs;
+		padding-right: $hl;
 	    }
 	}
 	tr.odd {
@@ -308,12 +303,12 @@ table.detail {
 	}
 	tr.first {
 	    th, td {
-		padding-top: 8px;
+		padding-top: $vm;
 	    }
 	}
 	tr.last {
 	    th, td {
-		padding-bottom: 10px;
+		padding-bottom: $vm;
 	    }
 	}
 	tr.header {
@@ -327,7 +322,7 @@ table.detail {
     }
 }
 tr.submit td {
-    padding-top: 5px;
+    padding-top: $vm;
 }
 .ui-widget-header,
 .ui-widget-content {
@@ -465,7 +460,7 @@ table.ui-datepicker-calendar td.ui-datepicker-week-end a.ui-state-default {
     font-weight: bold;
 }
 table.basic {
-    margin: auto auto 30px auto;
+    margin: auto auto $vh auto;
 }
 .center {
     text-align: center;
@@ -486,7 +481,7 @@ table.basic {
     white-space: nowrap;
 }
 td.links {
-    word-spacing: 5px;
+    word-spacing: $hs;
     white-space: nowrap;
 }
 .margin-auto {
@@ -604,10 +599,10 @@ td.links {
     margin: 0 auto;
 }
 td.msg hr:first-child {
-    margin-top: 35px;
+    margin-top: $vh;
 }
 table.detail {
-    margin: 25px auto 35px;
+    margin: $vh auto $vg;
 }
 .italic {
     font-style: italic;
