@@ -15,11 +15,11 @@
 	    <tr>
 	      <th><span class="{{ f.amount.css_classes }}">{{ f.amount.label_tag }}</span></th>
 	      <td><span class="{{ f.amount.css_classes }}">{{ f.amount }}</span></td>
-	      <td class="right"><span class="{{ f.currency.css_classes }}" style="padding-left: 10px;">{{ f.currency.label_tag }} {{ f.currency }}</span></td>
+	      <td class="right"<span class="{{ f.currency.css_classes }}" style="padding-left: 10px;">{{ f.currency.label_tag }} {{ f.currency }}</span></td>
 	    </tr>
 {% if rows %}	    <tr>
-	      <th style="vertical-align: top; padding-top: 10px;" class="{{ deb_class }}">Pořadí:</th>
-	      <td colspan="2" style="vertical-align: top; padding-top: 8px; padding-bottom: 5px;">
+	      <th class="top" style="padding-top: 10px;" class="{{ deb_class }}">Pořadí:</th>
+	      <td colspan="2" class="top" style="padding-top: 8px; padding-bottom: 5px;">
 {% for row in rows %}		<div class="debord">
 		  <select name="r{{ row.n }}" id="id_r{{ row.n }}">
 {% for col in row.cols %}		    <option value="{{ col.n }}"{% if row.sel == col.n  %} selected="selected"{% endif %}>{{ col.id }} – {{ col.desc|default:'(bez názvu)' }}</option>

@@ -8,7 +8,7 @@
 	      <td>
 		<fieldset>
 		  <legend>Devisové kursy</legend>
-		  <div style="padding-top: 5px;"><span class="{{ f.curr.css_classes }}">{{ f.curr.label_tag }}</span>
+		  <div class="ptm"><span class="{{ f.curr.css_classes }}">{{ f.curr.label_tag }}</span>
 		    {{ f.curr }}
 		    <span class="{{ f.fx_date.css_classes }}">{{ f.fx_date.label_tag }} {{ f.fx_date }}</span>
 		  </div>
@@ -34,8 +34,8 @@
 	    </tr>
 {% if messages %}	    <tr>
 	      <td class="msg">
-		<hr style="margin-top: 35px;" />
-{% for message in messages %}		<div{% if message.1 %} style="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
+		<hr />
+{% for message in messages %}		<div{% if message.1 %} class="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
 {% endfor %}                <hr />
 	      </td>
 	    </tr>

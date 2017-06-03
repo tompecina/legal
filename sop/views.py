@@ -176,11 +176,13 @@ def mainpage(request):
                     elif (opt != 'none') and ((opt != 'vyk') or (model < 3)):
                         sop = min(sop, 2000000)
                     messages.append(['Soudní poplatek:', None])
-                    messages.append([('%s Kč' % formam(round(sop))),
-                                     'font-weight: bold; font-size: 110%;'])
+                    messages.append(
+                        [('%s Kč' % formam(round(sop))),
+                         'msg-amount'])
                     if fx_info:
-                        messages.append([fx_info,
-                                         'font-size: 80%; padding-top: 3px;'])
+                        messages.append(
+                            [fx_info,
+                             'msg-note'])
         else:
             logger.debug('Invalid form', request)
             messages = [[inerr_short, None]]

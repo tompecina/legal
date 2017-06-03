@@ -111,12 +111,12 @@ def mainpage(request):
 
                 messages.append(
                     [(wn[t.weekday()] + ' ' + pd(t)),
-                     'font-weight: bold; font-size: 120%;'])
+                     'msg-res'])
                 if t < date(1991, 1, 1):
                     messages.append(
                         ['(evidence pracovních dnů v tomto období ' \
                          'není úplná)',
-                         'font-size: 80%;'])
+                         'msg-note'])
            
         else:
             logger.debug('Invalid form', request)

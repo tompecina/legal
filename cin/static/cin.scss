@@ -1,0 +1,22 @@
+@import "include";
+
+td.msg {
+    div.msg-header {
+	font-weight: bold;
+	margin-bottom: 5px;
+    }
+    div.msg-ymd {
+	margin-bottom: 12px;
+    }
+    div.msg-y {
+	text-align: left;
+	margin-left: 2em;
+    }
+    div.msg-m1, div.msg-m2 {
+	text-align: left;
+	margin-left: 2em;
+    }
+    div.msg-m1 {
+	margin-top: 8px;
+    }
+}

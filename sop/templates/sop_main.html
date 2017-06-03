@@ -30,9 +30,9 @@
 	    </tr>
 	    <tr><td></td>
 	      <td>
-		<fieldset style="margin: 10px auto;">
+		<fieldset>
 		  <legend>{{ f.opt.label }}</legend>
-{% for p in f.opt %}		  <div class="opt"{% if forloop.first %} style="font-style: italic;"{% endif %}>{{ p }}</div>
+{% for p in f.opt %}		  <div class="opt">{{ p }}</div>
 {% endfor %}		</fieldset>
 	      </td>
 	    </tr>
@@ -46,8 +46,8 @@
 {% if messages %}	    <tr>
 	      <td></td>
 	      <td class="msg">
-		<hr style="margin-top: 35px;" />
-{% for message in messages %}		<div{% if message.1 %} style="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
+		<hr />
+{% for message in messages %}		<div{% if message.1 %} class="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
 {% endfor %}                <hr />
 	      </td>
 	    </tr>

@@ -18,19 +18,18 @@ thead {
 	}
     }
 }
-td.msg hr:first-child {
-    margin-top: 35px;
-}
-div.msg-header {
-    font-size: 125%;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-div.msg-gap {
-    margin-top: 8px;
-}
-div.msg-total {
-    font-size: 110%;
-    font-weight: bold;
-    margin-top: 2px;
+td.msg {
+    div.msg-header {
+	font-size: 125%;
+	font-weight: bold;
+	margin-bottom: 8px;
+    }
+    div.msg-gap {
+	margin-top: 8px;
+    }
+    div.msg-total {
+	font-size: 110%;
+	font-weight: bold;
+	margin-top: 2px;
+    }
 }

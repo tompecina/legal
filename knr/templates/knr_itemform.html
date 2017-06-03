@@ -15,7 +15,7 @@
 	    <tr>
 	      <th class="{{ major_number_error }}"><label for="id_major_number">Hlavních úkonů</label>:</th>
 	      <td class="nowrap"><input type="text" name="major_number" value="{% ifequal major_number_error "ok" %}{{ major_number|stringformat:"u" }}{% else %}{{ major_number }}{% endifequal %}" size="3" maxlength="3" id="id_major_number" class="{{ major_number_error }}" /><label for="id_rate" class="{{ rate_error }}"> à </label><input type="text" name="rate" value="{% ifequal rate_error "ok" %}{{ rate|stringformat:"u" }}{% else %}{{ rate }}{% endifequal %}" size="9" maxlength="12" id="id_rate" class="{{ rate_error }}" /> Kč</td>
-	      <td rowspan="7" class="right">
+	      <td rowspan="7" class="right"
 		<fieldset class="itemfs">
 		  <legend class="center">Vypočítat sazbu</legend>
 		  <div class="center nowrap"><label for="id_basis" class="{{ basis_error }}">TH: </label><input type="text" name="basis" value="{% ifequal basis_error "ok" %}{{ basis|stringformat:"u" }}{% else %}{{ basis }}{% endifequal %}" size="9" maxlength="12" id="id_basis" class="{{ basis_error }}" /> Kč</div>
@@ -38,7 +38,7 @@
 {% endif %}            <tr><th class="{{ description_error }}"><label for="id_description">Popis</label>:</th><td colspan="2"><input type="text" name="description" value="{{ description }}" size="80" maxlength="255" id="id_description" class="{{ description_error }}" /></td></tr>
 	    <tr>
 	      <th class="{{ rate_error }}"><label for="id_rate">Částka</label>:</th>
-	      <td class="nowrap"><input type="text" name="rate" value="{% ifequal rate_error "ok" %}{{ rate|stringformat:"u" }}{% else %}{{ rate }}{% endifequal %}" size="9" maxlength="12" id="id_rate" class="{{ rate_error }}" /> Kč</td><td rowspan="8" class="right">
+	      <td class="nowrap"><input type="text" name="rate" value="{% ifequal rate_error "ok" %}{{ rate|stringformat:"u" }}{% else %}{{ rate }}{% endifequal %}" size="9" maxlength="12" id="id_rate" class="{{ rate_error }}" /> Kč</td><td rowspan="8" class="right"
 		<fieldset class="itemfs">
 		  <legend class="center">Vypočítat</legend>
 		  <div class="center nowrap"><label for="id_basis" class="{{ basis_error }}">Základ: </label><input type="text" name="basis" value="{% ifequal basis_error "ok" %}{{ basis|stringformat:"u" }}{% else %}{{ basis }}{% endifequal %}" size="9" maxlength="12" id="id_basis" class="{{ basis_error }}" /> Kč</div>
@@ -63,7 +63,7 @@
 	    <tr>
 	      <th class="{{ number_error }}"><label for="id_number">Počet úkonů</label>:</th>
 	      <td class="nowrap"><input type="text" name="number" value="{% ifequal number_error "ok" %}{{ number|stringformat:"u" }}{% else %}{{ number }}{% endifequal %}" size="3" maxlength="3" id="id_number" class="{{ number_error }}" /><label for="id_rate" class="{{ rate_error }}"> à </label><input type="text" name="rate" value="{% ifequal rate_error "ok" %}{{ rate|stringformat:"u" }}{% else %}{{ rate }}{% endifequal %}" size="9" maxlength="12" id="id_rate" class="{{ rate_error }}" /> Kč</td>
-	      <td rowspan="2" class="right">
+	      <td rowspan="2" class="right"
 		<fieldset class="itemfs">
 		  <legend class="center">Sazba</legend>
 		  <div class="center" style="margin: 0 inherit 4px;"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
@@ -80,7 +80,7 @@
 	    <tr>
 	      <th class="{{ time_number_error }}"><label for="id_time_number">Počet započatých půlhodin</label>:</th>
 	      <td class="nowrap"><input type="text" name="time_number" value="{% ifequal time_number_error "ok" %}{{ time_number|stringformat:"u" }}{% else %}{{ time_number }}{% endifequal %}" size="3" maxlength="3" id="id_time_number" class="{{ time_number_error }}" /><label for="id_time_rate" class="{{ time_rate_error }}"> à </label><input type="text" name="time_rate" value="{% ifequal time_rate_error "ok" %}{{ time_rate|stringformat:"u" }}{% else %}{{ time_rate }}{% endifequal %}" size="9" maxlength="12" id="id_time_rate" class="{{ time_rate_error }}" /> Kč</td>
-	      <td rowspan="2" class="right">
+	      <td rowspan="2" class="right"
 		<fieldset class="itemfs">
 		  <legend class="center">Sazba</legend>
 		  <div class="center" style="margin: 0 inherit 4px;"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
@@ -130,7 +130,7 @@
 	    <tr>
 	      <th class="{{ trip_distance_error }}"><label for="id_trip_distance">Délka jedné cesty</label>:</th>
 	      <td class="nowrap"><input type="text" name="trip_distance" value="{% ifequal trip_distance_error "ok" %}{{ trip_distance|stringformat:"u" }}{% else %}{{ trip_distance }}{% endifequal %}" size="3" maxlength="6" id="id_trip_distance" class="{{ trip_distance_error }}" /> km <input type="submit" name="submit_calc" id="id_calc" value="Vypočítat" /></td>
-	      <td rowspan="3" class="right">
+	      <td rowspan="3" class="right"
 		<fieldset class="itemfs">
 		  <legend class="center">Sazba</legend>
 		  <div class="center" style="margin: 0 inherit 4px;"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>

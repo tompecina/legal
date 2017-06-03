@@ -1,0 +1,16 @@
+@import "include";
+
+fieldset {
+    margin: 10px auto;
+}
+legend div:first-child {
+    font-style: italic;
+}
+div.msg-amount {
+    font-size: 110%;
+    font-weight: bold;
+}
+div.msg-note {
+    font-size: 80%;
+    padding-top: 3px;
+}

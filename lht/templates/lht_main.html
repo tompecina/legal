@@ -7,10 +7,10 @@
 	    <tr class="{{ f.beg_date.css_classes }}"><td>{{ f.beg_date.label_tag }} {{ f.beg_date }}</td></tr>
 	    <tr>
 	      <td>
-		<fieldset style="margin: 10px auto;">
+		<fieldset>
 		  <legend>{{ f.preset.label }}</legend>
 {% for p in f.preset %}{% if not forloop.last %}		  <div class="opt">{{ p }}</div>
-{% endif %}{% endfor %}		  <div class="opt" style="padding-bottom: 0;">
+{% endif %}{% endfor %}		  <div class="opt pbn">
 		    <label><input type="radio" name="preset" value="none"{% if f.preset.value == "none" %} checked="checked"{% endif %} /> jiná</label>:
 		    <span class="{{ f.dur.css_classes }}">{{ f.dur }}</span>
 		    <select name="unit" id="id_unit">
@@ -21,7 +21,7 @@
 		      <option value="b" id="id_b"{% if f.unit.value == "b" %} selected="selected"{% endif %}>pracovních dnů</option>
 		    </select>
 		  </div>
-		  <div class="center" style="font-size: 80%; padding-bottom: 3px;">(lze zadat i zápornou délku)</div>
+		  <div class="note">(lze zadat i zápornou délku)</div>
 	        </fieldset>
 	      </td>
 	    </tr>
@@ -33,8 +33,8 @@
 	    </tr>
 {% if messages %}	    <tr>
 	      <td class="msg">
-		<hr style="margin-top: 35px;" />
-{% for message in messages %}		<div{% if message.1 %} style="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
+		<hr />
+{% for message in messages %}		<div{% if message.1 %} class="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
 {% endfor %}                <hr />
 	      </td>
 	    </tr>

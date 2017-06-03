@@ -476,6 +476,12 @@ table.basic {
 .right {
     text-align: right;
 }
+.bottom {
+    vertical-align: bottom;
+}
+.top {
+    vertical-align: top;
+}
 .nowrap {
     white-space: nowrap;
 }
@@ -503,4 +509,28 @@ td.links {
 }
 .mbn {
     margin-bottom: 0;
+}
+.pbn {
+    padding-bottom: 0;
+}
+.ptm {
+    padding-top: $medium;
+}
+.ptl {
+    padding-top: $large;
+}
+.pbl {
+    padding-bottom: $large;
+}
+.mtl {
+    margin-top: $large;
+}
+.margin-none-auto {
+    margin: 0 auto;
+}
+td.msg hr:first-child {
+    margin-top: 35px;
+}
+table.detail {
+    margin: 25px auto 35px;
 }

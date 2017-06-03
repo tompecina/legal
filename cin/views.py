@@ -65,7 +65,7 @@ def mainpage(request):
                 messages.append(['Počátek musí předcházet konci', None])
             else:
                 messages.append([('%s → %s' % (pd(beg_date), pd(end_date))),
-                                 'font-weight: bold; margin-bottom: 5px;'])
+                                 'msg-header'])
 
                 messages.append(
                     [grammar((end_date - beg_date).days, GR_D), None])
@@ -97,14 +97,14 @@ def mainpage(request):
                     nd += 1
                 messages.append(['%s %s %s' % \
                     (grammar(ny, GR_Y), grammar(nm, GR_M), grammar(nd, GR_D)),
-                                 'margin-bottom: 12px;'])
+                                 'msg-ymd'])
 
                 for dconv in ydconvs:
                     messages.append(
                         [p2c('%.6f' % \
                              yfactor(beg_date, end_date, dconv)) + \
                          ' let (' + dconv + ')',
-                         'text-align: left; margin-left: 2em;'])
+                         'msg-y'])
 
                 for dconv in mdconvs:
                     if dconv == mdconvs[0]:
@@ -112,14 +112,13 @@ def mainpage(request):
                             [p2c('%.6f' % \
                                  mfactor(beg_date, end_date, dconv)) + \
                              ' měsíců (' + dconv + ')',
-                             'text-align: left; margin-top: 8px; ' \
-                             'margin-left: 2em;'])
+                             'msg-m1'])
                     else:
                         messages.append(
                             [p2c('%.6f' % \
                                  mfactor(beg_date, end_date, dconv)) + \
                              ' měsíců (' + dconv + ')',
-                             'text-align: left; margin-left: 2em;'])
+                             'msg-m2'])
 
         else:
             logger.debug('Invalid form', request)

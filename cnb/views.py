@@ -81,11 +81,10 @@ def mainpage(request):
                         messages.append(
                             [('%d %s = %s CZK' % \
                               (qty, curr, p2c("%.3f" % rate))),
-                             'font-weight: bold; font-size: 110%; ' \
-                             'margin-bottom: 3px;'])
+                             'msg-res1'])
                         messages.append(
                             [('(Kurs vyhlášený ke dni: %s)' % pd(dr)),
-                             'font-size: 85%;'])
+                             'msg-note'])
                     else:
                         basis = cd['basis']
                         if b == 'conv_from':
@@ -94,23 +93,21 @@ def mainpage(request):
                                   (formam(basis),
                                    curr,
                                    formam(basis * rate / qty))),
-                                 'font-weight: bold; font-size: 110%; ' \
-                                 'margin-bottom: 5px;'])
+                                 'msg-res2'])
                         else:
                             messages.append(
                                 [('%s CZK = %s %s' % \
                                   (formam(basis),
                                    formam(basis * qty / rate),
                                    curr)),
-                                 'font-weight: bold; font-size: 110%; ' \
-                                 'margin-bottom: 5px;'])
+                                 'msg-res2'])
                         messages.append(
                             [('%d %s = %s CZK' % \
                               (qty, curr, p2c("%.3f" % rate))),
                              None])
                         messages.append(
                             [('(Kurs vyhlášený ke dni: %s)' % pd(dr)),
-                             'font-size: 85%;'])
+                             'msg-note'])
                 else:
                     mpi_date = cd['mpi_date']
                     rate, msg = getMPIrate(b, mpi_date)
@@ -123,7 +120,7 @@ def mainpage(request):
                              None])
                         messages.append(
                             [p2c('%.2f %%' % rate),
-                             'font-weight: bold; font-size: 110%;'])
+                             'msg-res0'])
             else:
                 logger.debug('Invalid form', request)
                 messages = [[inerr_short, None]]
