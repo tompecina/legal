@@ -3,7 +3,7 @@
 {% block page_contents %}
 	<form method="post" enctype="multipart/form-data" id="id_debtorbatchform">
 	  <h1>{{ page_title }}</h1>
-	  <table style="margin: 15px auto 25px;">
+	  <table class="mth mra mbh mla">
 {% if err_message %}            <tr><td class="warning">
               {% include "formwarning.html" %}            </td></tr>
 {% endif %}	    </tr>
@@ -13,8 +13,8 @@
 		<p>Soubor musí být v kodu UTF-8 a jeho formát musí přesně odpovídat následujícímu popisu.</p>
 		<p>V prvním poli na každém řádku je uveden řetězec, který se použije pro Popis dlužníka.<br />Dále následují vyhledávací parametry. Ty se zadávají ve formátu pole=hodnota; pole<br />může nabývat hodnotu <q>soud</q>, <q>název</q>, <q>jméno</q>, <q>IČO</q>, <q>DIČ</q>, <q>RČ</q>, <q>datumNarození</q>,<br /><q>rokNarozeníOd</q> nebo <q>rokNarozeníDo</q>. Vyhledávací parametry, které se nepoužijí, není<br />třeba zadávat.</p>
 		<p>Insolvenční soud se zadává zkratkou podle <a href="{% url 'sir:courts' %}">seznamu</a>. Datum narození se zadává ve formátu<br />DD.MM.RRRR. Jakou hodnotu bude mít importovaný řetězec pro název, jméno a obec v poli<br />Posice, můžete ovlivnit formátovacím příznakem, který uvedete na konci řetězce za dvojtečkou.</p>
-		<p style="margin-bottom: 0;">Možnosti jsou:</p>
-		<ul style="margin-top: 3px;">
+		<p class="mbn">Možnosti jsou:</p>
+		<ul class="mts">
 		  <li>řetězec:* &ndash; kdekoliv (implicitní hodnota)</li>
 		  <li>řetězec:< &ndash; na začátku</li>
 		  <li>řetězec:> &ndash; na konci</li>

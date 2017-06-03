@@ -29,6 +29,9 @@ fieldset {
     div:first-child {
 	font-weight: bold;
     }
+    tfoot tr td {
+	height: 30px;
+    }
 }
 td.cc {
     white-space: nowrap;
@@ -97,8 +100,11 @@ td.act {
 span.cr {
     color: $red;
 }
-.butbar td {
-    padding: 1px 12px;
+table.butbar {
+    margin: $vh auto;
+    td {
+	padding: 1px 12px;
+    }
 }
 table.nttbl {
     margin: 25px auto 10px;

@@ -3,19 +3,19 @@
 {% block page_contents %}
 	<form method="post" enctype="multipart/form-data" id="id_mainform">
 	  <h1>{{ page_title }}</h1>
-	  <table style="margin: 15px auto 25px;">
+	  <table class="mth mra mbh mla">
 {% if err_message %}            <tr><td class="warning">
               {% include "formwarning.html" %}            </td></tr>
 {% endif %}	    <tr>
 	      <td>
 		<fieldset class="infotbl">
 		  <legend>Údaje o pohledávce</legend>
-		  <table style="margin: 5px 15px;">
+		  <table class="mtm mrl mbm mll">
                     <tr><th class="{{ f.title.css_classes }}">{{ f.title.label_tag }}</th><td>{{ f.title }}</td></tr>
 	            <tr><th class="{{ f.note.css_classes }}">{{ f.note.label_tag }}</th><td>{{ f.note }}</td></tr>
                     <tr><th class="{{ f.internal_note.css_classes }}">{{ f.internal_note.label_tag }}</th><td>{{ f.internal_note }}</td></tr>
                     <tr>
-		      <th style="padding: 3px 8px;">{{ f.rounding.label_tag }}</th>
+		      <th class="pts prm pbs plm">{{ f.rounding.label_tag }}</th>
 		      <td>{{ rt }}
 			<select name="rounding" id="id_rounding">
 			  <option value="0" {% if f.rounding.value == '0' %} selected="selected"{% endif %}>na jednotky</option>
@@ -30,7 +30,7 @@
 		  <table>
 		    <tfoot>
 		      <tr>
-			<td colspan="3" style=" height: 30px;"><a href="{% url 'hsp:debitform' %}">Přidat závazek</a></td>
+			<td colspan="3"><a href="{% url 'hsp:debitform' %}">Přidat závazek</a></td>
 		      </tr>
 		    </tfoot>
 		    <tbody>
@@ -55,7 +55,7 @@
 		  <table>
 		    <tfoot>
 		      <tr>
-			<td colspan="3" style=" height: 30px;"><a href="{% url 'hsp:creditform' %}">Přidat splátku</a></td>
+			<td colspan="3"><a href="{% url 'hsp:creditform' %}">Přidat splátku</a></td>
 		      </tr>
 		    </tfoot>
 		    <tbody>
@@ -80,7 +80,7 @@
 		  <table>
 		    <tfoot>
 		      <tr>
-			<td colspan="3" style=" height: 30px;"><a href="{% url 'hsp:balanceform' %}">Přidat kontrolní bod</a></td>
+			<td colspan="3"><a href="{% url 'hsp:balanceform' %}">Přidat kontrolní bod</a></td>
 		      </tr>
 		    </tfoot>
 		    <tbody>
@@ -104,7 +104,7 @@
 		  <table>
 		    <tfoot>
 		      <tr>
-			<td colspan="3" style=" height: 30px;"><a href="{% url 'hsp:fxrateform' %}">Přidat kurs</a></td>
+			<td colspan="3"><a href="{% url 'hsp:fxrateform' %}">Přidat kurs</a></td>
 		      </tr>
 		    </tfoot>
 		    <tbody>
@@ -127,7 +127,7 @@
 	      </td>
 	    </tr>
 	  </table>
-          <table style="margin: 25px auto 0;" id="id_calc">
+          <table class="mth mra mbn mls" id="id_calc">
 	    <thead>
 	      <tr class="header">
 		<th rowspan="{{ res.c1 }}">Datum</th>
@@ -159,7 +159,7 @@
 {% endif %}	    <tbody>
 {% for row in res.rows %}              <tr class="{% cycle 'odd' 'even' %}">
 		<td class="dt">{{ row.date|date:'d.m.Y' }}</td>
-		<td class="cs"><div>{{ row.description }}</div>{% if row.sps_text %}<div><span style="padding-left: 1em;">(přeplatek:</span> {{ row.sps_text|safe }})</div>{% endif %}</td>
+		<td class="cs"><div>{{ row.description }}</div>{% if row.sps_text %}<div><span class="plm">(přeplatek:</span> {{ row.sps_text|safe }})</div>{% endif %}</td>
 		<td class="ams">{{ row.amount|safe }}</td>
 {% if res.ccol %}		<td class="cus">{{ row.disp_currency }}</td>
 {% endif %}{% for a in row.pre %}		<td class="am{% if forloop.first %}s{% endif %}">{{ a|safe }}</td>
@@ -178,7 +178,7 @@
 	      </tr>
 {% endif %}	    </tbody>
 	  </table>
-	  <table class="butbar" style="margin: 25px auto;">
+	  <table class="butbar">
 	    <tr>
 	      <td><input type="submit" name="submit_update" value="Aktualisovat" /></td>
 	      <td><input type="submit" name="submit_empty" value="Vyprázdnit" id="id_reset" /></td>

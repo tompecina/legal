@@ -56,6 +56,9 @@ td.act {
     word-spacing: 5px;
     white-space: nowrap;
 }
-.butbar td {
-    padding: 1px 12px;
+table.butbar {
+    margin: $vh auto;
+    td {
+	padding: 1px 12px;
+    }
 }

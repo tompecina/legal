@@ -7,6 +7,6 @@
 {% endif %}	    <tr class="{{ f.abbr.css_classes }}"><th>{{ f.abbr.label_tag }}</th><td colspan="2">{{ f.abbr }}</td></tr>
 	    <tr class="{{ f.name.css_classes }}"><th>{{ f.name.label_tag }}</th><td colspan="2">{{ f.name }}</td></tr>
 	    <tr class="{{ f.flat.css_classes }}"><th>{{ f.flat.label_tag }}</th><td colspan="2" class="nowrap">{{ f.flat }} Kč/km</td></tr>
-	    <tr><td></td><td style="padding-left: 6px;">Ceny:</td></tr>
+	    <tr><td></td><td class="plm">Ceny:</td></tr>
 {% for rate in rates %}	    <tr class="{{ rate.css_classes }}"><th>{{ rate.label_tag }}</th><td colspan="2" class="nowrap">{{ rate }} Kč/l</td></tr>
 {% endfor %}{% endblock %}

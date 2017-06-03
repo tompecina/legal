@@ -510,20 +510,95 @@ td.links {
 .mbn {
     margin-bottom: 0;
 }
+.mbh {
+    margin-bottom: $vh;
+}
+.mbl {
+    margin-bottom: $vl;
+}
+.mbm {
+    margin-bottom: $vm;
+}
+.mts {
+    margin-top: $vs;
+}
+.mtm {
+    margin-top: $vm;
+}
+.mtl {
+    margin-top: $vl;
+}
+.mth {
+    margin-top: $vh;
+}
+.mtg {
+    margin-top: $vg;
+}
+.mra {
+    margin-right: auto;
+}
+.mrn {
+    margin-right: 0;
+}
+.mrl {
+    margin-right: $hl;
+}
+.mll {
+    margin-left: $hl;
+}
+.mls {
+    margin-left: $hs;
+}
+.mla {
+    margin-left: auto;
+}
+.mln {
+    margin-left: 0;
+}
+.mri {
+    margin-right: inherit;
+}
+.mli {
+    margin-left: inherit;
+}
+.ptn {
+    padding-top: 0;
+}
+.pts {
+    padding-top: $vs;
+}
+.pbs {
+    padding-bottom: $vs;
+}
 .pbn {
     padding-bottom: 0;
 }
 .ptm {
-    padding-top: $medium;
+    padding-top: $vm;
 }
 .ptl {
-    padding-top: $large;
+    padding-top: $vl;
 }
 .pbl {
-    padding-bottom: $large;
+    padding-bottom: $vl;
 }
-.mtl {
-    margin-top: $large;
+.pbm {
+    padding-bottom: $vm;
+}
+.prm {
+    padding-right: $hm;
+}
+.prs {
+    padding-right: $hs;
+}
+.pls {
+    padding-left: $hs;
+}
+.plm {
+    padding-left: $hm;
+}
+.pln {
+    padding-left: 0;
 }
 .margin-none-auto {
     margin: 0 auto;
@@ -533,4 +608,7 @@ td.msg hr:first-child {
 }
 table.detail {
     margin: 25px auto 35px;
+}
+.italic {
+    font-style: italic;
 }

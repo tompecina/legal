@@ -19,7 +19,7 @@
 		<fieldset class="itemfs">
 		  <legend class="center">Vypočítat sazbu</legend>
 		  <div class="center nowrap"><label for="id_basis" class="{{ basis_error }}">TH: </label><input type="text" name="basis" value="{% ifequal basis_error "ok" %}{{ basis|stringformat:"u" }}{% else %}{{ basis }}{% endifequal %}" size="9" maxlength="12" id="id_basis" class="{{ basis_error }}" /> Kč</div>
-		  <div class="center" style="margin: 4px inherit;"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
+		  <div class="center mts mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
 		  <div class="center"><input type="submit" name="submit_calc2" value="Od 01.09.2006" /></div>
 		</fieldset>
 	      </td>
@@ -42,7 +42,7 @@
 		<fieldset class="itemfs">
 		  <legend class="center">Vypočítat</legend>
 		  <div class="center nowrap"><label for="id_basis" class="{{ basis_error }}">Základ: </label><input type="text" name="basis" value="{% ifequal basis_error "ok" %}{{ basis|stringformat:"u" }}{% else %}{{ basis }}{% endifequal %}" size="9" maxlength="12" id="id_basis" class="{{ basis_error }}" /> Kč</div>
-		  <div class="center" style="margin: 4px inherit;"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
+		  <div class="center mts mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
 		  <div class="center"><input type="submit" name="submit_calc2" value="01.09.2006 až 29.02.2012" /></div>
 		  <div class="center"><input type="submit" name="submit_calc3" value="Od 01.03.2012" /></div>
 		</fieldset>
@@ -50,7 +50,7 @@
 	    </tr>
 	    <tr><th class="ok"><label for="id_collection_flag">Výkon rozhodnutí</label>:</th><td class="nowrap"><input type="checkbox" name="collection_flag" id="id_collection_flag" class="ok"{% if collection_flag %} checked="checked"{% endif %} /> (§ 12/1/a/1)</td></tr>
 	    <tr><th class="{{ halved_flag_error }}"><label for="id_halved_flag">Odmítnuto/zastaveno</label>:</th><td class="nowrap"><input type="checkbox" name="halved_flag" id="id_halved_flag" class="{{ halved_flag_error }}"{% if halved_flag %} checked="checked"{% endif %} /> (§ 13/1)</td></tr>
-	    <tr><th class="{{ halved_appeal_flag_error }}"><label for="id_halved_appeal_flag"><span style="font-style: italic;">Ditto</span> v odvolání/dovolání</label>:</th><td class="nowrap"><input type="checkbox" name="halved_appeal_flag" id="id_halved_appeal_flag" class="{{ halved_appeal_flag_error }}"{% if halved_appeal_flag %} checked="checked"{% endif %} /> (§ 14/1)</td></tr>
+	    <tr><th class="{{ halved_appeal_flag_error }}"><label for="id_halved_appeal_flag"><span class="italic">Ditto</span> v odvolání/dovolání</label>:</th><td class="nowrap"><input type="checkbox" name="halved_appeal_flag" id="id_halved_appeal_flag" class="{{ halved_appeal_flag_error }}"{% if halved_appeal_flag %} checked="checked"{% endif %} /> (§ 14/1)</td></tr>
 	    <tr><th class="ok"><label for="id_single_flag">Pouze jeden úkon</label>:</th><td class="nowrap"><input type="checkbox" name="single_flag" id="id_single_flag" class="ok"{% if single_flag %} checked="checked"{% endif %} /> (§ 18/1)</td></tr>
 	    <tr><th class="{{ multiple_flag_error }}">Více zastupovaných účastníků:</th><td class="nowrap"><input type="checkbox" name="multiple_flag" id="id_multiple_flag" class="ok"{% if multiple_flag %} checked="checked"{% endif %} /> +30 % (§ 19a)</td></tr>
 	    <tr><th class="{{ multiple_flag_error }}"></th><td class="nowrap"><input type="checkbox" name="multiple50_flag" id="id_multiple50_flag" class="ok"{% if multiple50_flag %} checked="checked"{% endif %} /> +50 % (§ 19a)</td></tr>
@@ -66,7 +66,7 @@
 	      <td rowspan="2" class="right"
 		<fieldset class="itemfs">
 		  <legend class="center">Sazba</legend>
-		  <div class="center" style="margin: 0 inherit 4px;"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
+		  <div class="center mtn mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
 		  <div class="center"><input type="submit" name="submit_calc2" value="Od 01.09.2006" /></div>
 	        </fieldset>
 	      </td>
@@ -83,7 +83,7 @@
 	      <td rowspan="2" class="right"
 		<fieldset class="itemfs">
 		  <legend class="center">Sazba</legend>
-		  <div class="center" style="margin: 0 inherit 4px;"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
+		  <div class="center mtn mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
 		  <div class="center"><input type="submit" name="submit_calc2" value="Od 1. 9. 2006" /></div>
 	        </fieldset>
 	      </td>
@@ -133,7 +133,7 @@
 	      <td rowspan="3" class="right"
 		<fieldset class="itemfs">
 		  <legend class="center">Sazba</legend>
-		  <div class="center" style="margin: 0 inherit 4px;"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
+		  <div class="center mtn mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
 		  <div class="center"><input type="submit" name="submit_calc2" value="Od 01.09.2006" /></div>
 	        </fieldset>
 	      </td>

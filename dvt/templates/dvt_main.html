@@ -18,8 +18,8 @@
 	      </th>
 	      <td>
 		<span class="{{ f.years.css_classes }}">{{ f.years }}</span> {{ f.years.label }}
-		<span class="{{ f.months.css_classes }}" style="padding-left: 10px;">{{ f.months }}</span> {{ f.months.label }}
-		<span class="{{ f.days.css_classes }}" style="padding-left: 10px;">{{ f.days }}</span> {{ f.days.label }}
+		<span class="plm {{ f.months.css_classes }}">{{ f.months }}</span> {{ f.months.label }}
+		<span class="plm {{ f.days.css_classes }}">{{ f.days }}</span> {{ f.days.label }}
 	      </td>
 	    </tr>
 	    <tr>
@@ -30,8 +30,8 @@
 	    </tr>
 {% if messages %}	    <tr>
 	      <td colspan="2" class="msg">
-		<hr style="margin-top: 35px;" />
-{% for message in messages %}		<div{% if message.1 %} style="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
+		<hr />
+{% for message in messages %}		<div{% if message.1 %} class="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
 {% endfor %}                <hr />
 	      </td>
 	    </tr>
