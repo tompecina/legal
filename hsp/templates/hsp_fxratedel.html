@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 
 {% block page_contents %}
-          <h1 class="center">{{ page_title }}</h1>
+          <h1>{{ page_title }}</h1>
           <p class="center">Opravdu chcete smazat kurs {{ fxrate.currency_from }} → {{ fxrate.currency_to }}?</p>
           <form method="post" enctype="multipart/form-data">
             <p class="center"><input type="submit" name="submit_yes" value="Ano" /><input type="submit" name="submit_no" value="Ne" style="margin-left: 15px;" /></p>

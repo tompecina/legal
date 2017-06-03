@@ -18,6 +18,7 @@ h1 {
 	weight: bold;
     }
     margin-top: 30px;
+    margin-bottom: 8px;
 }
 h2 {
     font: {
@@ -104,19 +105,20 @@ th {
     font-size: 12px;
     white-space: nowrap;
 }
-.res, .subtitle {
+.subtitle {
     font: {
 	style: italic;
 	size: 15px;
     }
     text-align: center;
+    margin-top: 3px;
     margin-bottom: 15px;
 }
 p.foot {
     font-size: 11px;
     text-align: center;
 }
-fieldset, hr {
+fieldset {
     border: {
 	style: solid;
 	color: $border-blue;
@@ -128,6 +130,11 @@ fieldset {
 }
 legend {
     padding: 0 3px;
+}
+hr {
+    border: none;
+    height: 2px;
+    background-color: $border-blue;
 }
 .err th, .err label, th.err, span.err {
     color: $red;
@@ -199,9 +206,20 @@ td.msg div {
 .toupper {
     text-transform: uppercase;
 }
-.homeitem div {
-    text-align: center;
-    margin-bottom: 5px;
+.homeitem {
+    h1 {
+	margin-bottom: 15px;
+    }
+    div {
+	text-align: center;
+	margin-bottom: 5px;
+    }
+    div:last-child {
+	margin-bottom: 25px;
+    }
+    hr {
+	margin: 10px -10px 8px;
+    }
 }
 table.about {
     margin: 20px auto 30px;
@@ -482,4 +500,7 @@ td.links {
 }
 .float-right {
     float: right;
+}
+.mbn {
+    margin-bottom: 0;
 }

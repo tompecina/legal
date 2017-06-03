@@ -1,0 +1,36 @@
+@import "include";
+
+h1 {
+    text-align: left;
+    margin-bottom: 20px;
+}
+thead {
+    tr:first-child th {
+	padding-left: 2px;
+    }
+    tr:last-child {
+	th {
+	    text-align: left;
+	    padding: 3px 35px 5px 3px;
+	}
+	th:last-child {
+	    padding-right: 0;
+	}
+    }
+}
+td.msg hr:first-child {
+    margin-top: 35px;
+}
+div.msg-header {
+    font-size: 125%;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+div.msg-gap {
+    margin-top: 8px;
+}
+div.msg-total {
+    font-size: 110%;
+    font-weight: bold;
+    margin-top: 2px;
+}

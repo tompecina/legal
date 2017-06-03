@@ -68,13 +68,13 @@ def mainpage(request):
                 exp = cd['exp2']
                 messages.append([
                     'Kalkulace pro společný návrh manželů',
-                    'font-size: 125%; font-weight: bold; margin-bottom: 8px;'])
+                    'msg-header'])
             else:
                 fee = cd['fee']
                 exp = cd['exp']
                 messages.append([
                     'Kalkulace pro samostatného dlužníka',
-                    'font-size: 125%; font-weight: bold; margin-bottom: 8px;'])
+                    'msg-header'])
             lim = subs + apt
             prot = lim * (2.0 / 3.0)
             messages.append([
@@ -116,7 +116,7 @@ def mainpage(request):
                     None])
             messages.append([
                 ('Výše měsíční splátky: %s Kč' % formam(round(rep))),
-                'margin-top: 8px;'])
+                'msg-gap'])
             messages.append([
                 ('Zůstatek ze mzdy: %s Kč' % formam(round(totnetincome - rep))),
                 None])
@@ -138,10 +138,10 @@ def mainpage(request):
                 None])
             messages.append([
                 'Pohledávky uspokojené do výše 30 %:',
-                'margin-top: 8px;'])
+                'msg-gap'])
             messages.append([
                 ('%s Kč' % formam(round(tot / 0.3))),
-                'font-size: 110%; font-weight: bold; margin-top: 2px;'])
+                'msg-total'])
         else:
             logger.debug('Invalid form', request)
             messages = [[inerr_short, None]]

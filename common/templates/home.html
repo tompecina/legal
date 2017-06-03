@@ -1,14 +1,14 @@
 {% extends "main.html" %}
 
 {% block page_contents %}
-        <table style="margin: 0 auto;">
+        <table class="basic">
 	  <tr>
 	    <td class="homeitem">
-              <h1 style="margin-bottom: 15px;">{{ page_title }}</h1>
+              <h1>{{ page_title }}</h1>
 {% for app in apps %}              <div>
 		<a href="{% url app.url %}">{{ app.name }}</a>
 	      </div>
-{% endfor %}	      <hr style="margin: 10px -10px 8px;" />
+{% endfor %}	      <hr />
               <div class="homeitem">
 		<a href="{% url 'about' %}">O aplikaci</a>
 	      </div>

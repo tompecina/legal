@@ -1,12 +1,12 @@
 {% extends "main.html" %}
 
 {% block page_contents %}
-	  <h1 class="center">{{ page_title }}</h1>
+	  <h1>{{ page_title }}</h1>
           <p class="center">Opravdu chcete smazat všechny účastníky?</p>
           <form method="post" enctype="multipart/form-data">
 	    <p class="center">
 	      Pro kontrolu napište <q>Ano</q>:
-	      <input type="text" name="conf" size="8"/>
+	      <input type="text" name="conf" size="8" />
 	    </p>
 	    <p class="center"><input type="submit" name="submit_yes" value="Ano" /><input type="submit" name="submit_no" value="Ne" style="margin-left: 15px;" /></p>
 	    {% csrf_token %}

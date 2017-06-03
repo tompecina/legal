@@ -2,7 +2,7 @@
 
 {% block page_contents %}
 	<form method="post" enctype="multipart/form-data">
-	  <table style="margin: auto auto 15px auto;">{% block form_contents %}{% endblock %}	    {% include "submit.html" %}	  </table>
+	  <table class="basic">{% block form_contents %}{% endblock %}	    {% include "submit.html" %}	  </table>
 {% if display_note %}	  <table class="nttbl">
 	    <tr>
 	      <td>

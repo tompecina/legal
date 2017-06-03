@@ -3,7 +3,7 @@
 {% block page_contents %}
 	<form method="post" enctype="multipart/form-data">
 	  <table class="margin-auto">
-	    <tr><td></td><td><h1 class="left" style="margin-bottom: 8px;">{{ page_title }}</h1></td></tr>
+	    <tr><td></td><td><h1 class="left">{{ page_title }}</h1></td></tr>
 {% if errors %}	    <tr><td></td><td class="warning">
               {% include "formwarning.html" %}            </td></tr>
 {% endif %}	    <tr><th class="{{ title_error }}"><label for="id_title">Popis</label>:</th><td class="nowrap"><input type="text" name="title" value="{{ title }}" size="50" maxlength="255" id="id_title" class="{{ title_error }}" /> (např. označení soudu a sp. zn.)</td></tr>

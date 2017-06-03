@@ -2,7 +2,7 @@
 
 {% block page_contents %}
 	<form id="id_partyform" method="post" enctype="multipart/form-data">
-	  <table style="margin: auto auto 15px auto;">	    <tr><td></td><td colspan="2"><h1 class="left" style="margin-bottom: 8px;">{{ page_title }}</h1></td></tr>
+	  <table class="basic">	    <tr><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
               {% include "formwarning.html" %}            </td></tr>
 {% endif %}	    <tr class="{{ f.party.css_classes }}">
