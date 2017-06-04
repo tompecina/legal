@@ -118,7 +118,7 @@ p.foot {
 fieldset {
     border: {
 	style: solid;
-	width: 2px;
+	width: 1px;
 	color: $border-blue;
     }
     padding: 2px 5px;
@@ -128,7 +128,7 @@ legend {
 }
 hr {
     border: none;
-    height: 2px;
+    height: 1px;
     background-color: $border-blue;
 }
 .err th, .err label, th.err, span.err {
