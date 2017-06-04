@@ -1,0 +1,112 @@
+{% extends "main.html" %}
+
+{% block page_contents %}
+        <h1>{{ page_title }}</h1>
+	<table class="detail mth mra mbg mls">
+	  <thead>
+	    <tr>
+	      <th colspan="2">
+		{{ user.username }}
+	      </th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr class="first">
+	      <th>
+		Uživatelské jméno:
+	      </th>
+	      <td>
+		{{ user.username }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>
+		Jméno:
+	      </th>
+	      <td>
+		{{ user.first_name|default:'' }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>
+		Příjmení:
+	      </th>
+	      <td>
+		{{ user.last_name|default:'' }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>
+		E-mail:
+	      </th>
+	      <td>
+		{% if user.email %}<a href="mailto:{{ user.email }}">{{ user.email }}</a>{% endif %}
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>
+		Datum založení účtu:
+	      </th>
+	      <td class="last">
+		{{ user.date_joined|date:'d.m.Y' }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>
+		Počet míst:
+	      </th>
+	      <td>
+		{{ user.places }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>
+		Počet vozidel:
+	      </th>
+	      <td>
+		{{ user.cars }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>
+		Počet předpisů:
+	      </th>
+	      <td>
+		{{ user.formulas }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>
+		Počet sledovaných řízení:
+	      </th>
+	      <td>
+		{{ user.proceedings }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>
+		Počet sledovaných účastníků:
+	      </th>
+	      <td>
+		{{ user.parties }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>
+		Počet sledovaných insolvencí:
+	      </th>
+	      <td>
+		{{ user.insolvencies }}
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>
+		Počet sledovaných dlužníků:
+	      </th>
+	      <td>
+		{{ user.debtors }}
+	      </td>
+	    </tr>
+	  </tbody>
+	</table>
+{% endblock %}

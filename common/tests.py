@@ -928,6 +928,17 @@ class TestViews(TestCase):
         res = self.client.get('/szr/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
 
+    def test_user(self):
+        res = self.client.get('/accounts/user')
+        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+        res = self.client.get('/accounts/user/')
+        self.assertEqual(res.status_code, HTTPStatus.FOUND)
+        res = self.client.get('/accounts/user/', follow=True)
+        self.assertTemplateUsed(res, 'login.html')
+        self.assertTrue(self.client.login(username='user', password='none'))
+        res = self.client.get('/accounts/user/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+
     def test_pwchange(self):
         self.assertTrue(self.client.login(username='user', password='none'))
         res = self.client.post(

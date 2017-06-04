@@ -32,6 +32,11 @@ from django.apps import apps
 from http import HTTPStatus
 from random import getrandbits, choice
 from datetime import datetime, timedelta
+from knr.models import Place, Car, Formula
+from szr.models import Proceedings
+from sur.models import Party
+from sir.models import Insolvency
+from dir.models import Debtor
 from .settings import APPS
 from .forms import UserAddForm, LostPwForm, MIN_PWLEN
 from .utils import send_mail, getbutton, logger
@@ -247,6 +252,23 @@ def stat(request):
         {'page_title': 'Statistické údaje',
          'apps': getappstat(),
         })
+
+@require_http_methods(['GET'])
+@login_required
+def user(request):
+    logger.debug('User information page accessed', request)
+    user = request.user
+    user.places = Place.objects.filter(uid=user).count()
+    user.cars = Car.objects.filter(uid=user).count()
+    user.formulas = Formula.objects.filter(uid=user).count()
+    user.proceedings = Proceedings.objects.filter(uid=user).count()
+    user.parties = Party.objects.filter(uid=user).count()
+    user.insolvencies = Insolvency.objects.filter(uid=user).count()
+    user.debtors = Debtor.objects.filter(uid=user).count()
+    return render(
+        request,
+        'user.html',
+        {'page_title': 'Informace o uživateli', 'user': user})
 
 @require_http_methods(['GET', 'POST'])
 def useradd(request):
