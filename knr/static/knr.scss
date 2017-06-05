@@ -4,16 +4,16 @@ table.vattbl {
     th, td {
 	text-align: right;
 	white-space: nowrap;
-	padding: 1px 3px;
+	padding: $vn $hs;
     }
     th {
 	width: 100%;
-	padding-right: 5px;
+	padding-right: $hs;
     }
 }
 fieldset {
     float: right;
 }
 fieldset.itemfs {
-    margin: 5px 0 5px auto;
+    margin: $vm 0 $vm auto;
 }

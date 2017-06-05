@@ -1,19 +1,19 @@
 @import "include";
 
 fieldset {
-    margin: 10px auto;
+    margin: $vl auto;
 }
 div.note {
     text-align: center;
-    font-size: 80%;
-    padding-bottom: 3px;
+    font-size: $small;
+    padding-bottom: $vs;
 }
 td.msg {
     div.msg-res {
-	font-size: 120%;
+	font-size: $large;
 	font-weight: bold;
     }
     div.msg-note {
-	font-size: 80%;
+	font-size: $small;
     }
 }

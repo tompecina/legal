@@ -1,24 +1,24 @@
 @import "include";
 
 fieldset {
-    margin: 10px auto;
+    margin: $vl auto;
     div {
-	padding: 3px 8px;
+	padding: $vs $hm;
 	text-align: center;
     }
 }
 td.msg {
     div.msg-res0, div.msg-res1, div.msg-res2 {
 	font-weight: bold;
-	font-size: 110%;
+	font-size: $larger;
     }
     div.msg-res1 {
-        margin-bottom: 3px;
+        margin-bottom: $vt;
     }
     div.msg-res2 {
-	margin-bottom: 5px;
+	margin-bottom: $vm;
     }
     div.msg-note {
-	font-size: 85%;
+	font-size: $smaller;
     }
 }

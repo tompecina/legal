@@ -2,16 +2,16 @@
 
 h1 {
     text-align: left;
-    margin-bottom: 20px;
+    margin-bottom: $vh;
 }
 thead {
     tr:first-child th {
-	padding-left: 2px;
+	padding-left: $ht;
     }
     tr:last-child {
 	th {
 	    text-align: left;
-	    padding: 3px 35px 5px 3px;
+	    padding: $vs $hh $vm $hs;
 	}
 	th:last-child {
 	    padding-right: 0;
@@ -20,16 +20,16 @@ thead {
 }
 td.msg {
     div.msg-header {
-	font-size: 125%;
+	font-size: $large;
 	font-weight: bold;
-	margin-bottom: 8px;
+	margin-bottom: $vl;
     }
     div.msg-gap {
-	margin-top: 8px;
+	margin-top: $vl;
     }
     div.msg-total {
-	font-size: 110%;
+	font-size: $larger;
 	font-weight: bold;
-	margin-top: 2px;
+	margin-top: $vt;
     }
 }

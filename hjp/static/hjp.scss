@@ -1,20 +1,17 @@
 @import "include";
 
-fieldset.infotbl {
-    padding: 5px 15px;
-}
 fieldset.intbl {
-    margin: 20px 0;
-    padding: 0 15px;
+    margin: $vh 0;
+    padding: 0 $hl;
 }
 .intbl {
     table {
-	margin: 5px auto;
+	margin: $vm auto;
 	width: 100%;
     }
     th, td {
 	text-align: left;
-	padding: 4px 0 8px;
+	padding: $vs 0 $hm;
     }
     hr {
 	margin: 0;
@@ -41,10 +38,10 @@ td.taberr {
  	image: url('/static/cb.svg');
 	repeat: repeat;
     }
-    border-top: 1px solid $medium-blue;
+    border-top: $bs solid $medium-blue;
 }
 #id_calc td + td {
-    border-left: 1px solid $medium-blue;
+    border-left: $bs solid $medium-blue;
 }
 #id_calc td + td.crs, #id_calc td + td.drs {
     border-left: none;
@@ -53,12 +50,6 @@ td.dat {
     text-align: center;
 }
 td.act {
-    word-spacing: 5px;
+    word-spacing: $hs;
     white-space: nowrap;
-}
-table.butbar {
-    margin: $vh auto;
-    td {
-	padding: 1px 12px;
-    }
 }

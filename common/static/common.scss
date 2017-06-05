@@ -7,22 +7,24 @@ body, h1, h2, input[type="file"], legend, .immune {
 }
 body {
     margin: 0;
-    font-size: 15px;
+    font-size: $normal;
 }
 h1, h2 {
     text-align: center;
 }
 h1 {
     font: {
-	size: 21px;
+	size: $gigantic;
 	weight: bold;
     }
-    margin-top: 30px;
-    margin-bottom: 8px;
+    margin: {
+	top: $vg;
+	bottom: $vl;
+    }
 }
 h2 {
     font: {
-	size: 17px;
+	size: $large;
 	weight: normal;
     }
 }
@@ -44,21 +46,21 @@ thead th {
 }
 td {
     vertical-align: middle;
-    padding: 1px 3px;
+    padding: $vn ($ht+$hn);
 }
 hr.tablediv {
-    margin-top: 2px;
-    margin-bottom: 1px;
+    margin-top: $vt;
+    margin-bottom: $vn;
     border-bottom: 0;
 }
 div.warning {
     border: {
 	style: solid;
-	width: 2px;
+	width: $bd;
     }
-    padding: 4px 30px;
+    padding: $vm $hh;
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: $vl;
     background-color: $medium-blue;
 }
 a {
@@ -81,54 +83,62 @@ tr.preset.grayed {
     color: $neutral-gray;
 }
 tr.preset + tr:not(.preset) {
-    border-top: 5px solid $medium-blue;
+    border-top: $vm solid $medium-blue;
 }
 tr.even td, tr.odd td, thead th, tr.footer td {
-    padding: 3px 13px;
+    padding: $vs ($hm+$hs);
 }
 tr.even td:first-child, tr.odd td:first-child, thead th:first-child, tr.footer td:first-child {
-    padding-left: 20px;
+    padding-left: ($hl+$hs);
 }
 tr.even td:last-child, tr.odd td:last-child, thead th:last-child {
-    padding-right: 20px;
+    padding-right: ($hl+$hs);
 }
 th {
-    padding: 3px 5px;
+    padding: $vs $hs;
 }
 .hidden {
     display: none;
 }
 .topline * {
-    font-size: 12px;
+    font-size: $small;
     white-space: nowrap;
 }
 .subtitle {
     font: {
 	style: italic;
-	size: 15px;
+	size: $normal;
     }
     text-align: center;
-    margin-top: 3px;
-    margin-bottom: 15px;
+    margin {
+	top: $vs;
+	bottom: $vh;
+    }
 }
 p.foot {
-    font-size: 11px;
+    font-size: $tiny;
     text-align: center;
 }
 fieldset {
     border: {
 	style: solid;
-	width: 1px;
+	width: $bs;
 	color: $border-blue;
     }
-    padding: 2px 5px;
+    padding: $vt $hm $vs;
+    hr {
+	margin: {
+	    right: (-$hm);
+	    left: (-$hm);
+	}
+    }
 }
 legend {
-    padding: 0 3px;
+    padding: 0 $hs;
 }
 hr {
     border: none;
-    height: 1px;
+    height: $bs;
     background-color: $border-blue;
 }
 .err th, .err label, th.err, span.err {
@@ -136,7 +146,7 @@ hr {
     font-weight: bold;
 }
 input[type="text"], input[type="password"], textarea {
-    font-size: 13.5px;
+    font-size: $reduced;
 }
 .err input[type="text"],
 .err input[type="password"],
@@ -145,32 +155,32 @@ input[type="password"].err {
     background: $pink;
 }
 input {
-    margin: 3px 0 2px;
-    padding: 1px 2px;
+    margin: $vs 0 $vt;
+    padding: $vn $ht;
 }
 input[type="submit"], input[type="reset"] {
-    padding: 1px 7px;
+    padding: $vt $hm;
 }
 input[type="file"] {
     padding-left: 0;
 }
 select, input[type="submit"], input[type="reset"] {
-    font-size: 13.5px;
+    font-size: $reduced;
 }
 input[type="radio"] {
-    margin: 3px 3px 0 5px;
+    margin: $vs ($ht+$hn) 0 $hs;
 }
 label input[type=radio] {
-    margin-left: 10px;
+    margin-left: $hm;
 }
 label:first-child input[type="radio"] {
-    margin-left: 3px;
+    margin-left: ($ht+$hn);
 }
 input[type="checkbox"] + span {
-    margin-right: 20px;
+    margin-right: $hl;
 }
 select {
-    padding: 1px 2px;
+    padding: $vn $ht;
 }
 .bold, .bold * {
     font-weight: bold;
@@ -185,8 +195,8 @@ td.msg div {
 }
 .inlop input[type="radio"] {
     margin: {
-	right: 1px;
-	left: 1px;
+	right: $hn;
+	left: $hn;
     }
 }
 .inlop label {
@@ -226,7 +236,7 @@ table.about td {
     padding: ($vs+$vt) $hl ($vs+$vt) $hm;
 }
 table.list {
-    margin: $vh auto $vg;
+    margin: $vh auto $vh;
 }
 .hl {
     color: $red;
@@ -271,7 +281,7 @@ table.detail {
     thead tr {
 	background-color: $medium-blue;
 	th {
-	    font-size: 120%;
+	    font-size: $large;
 	    padding-bottom: $vm;
 	}
     }
@@ -314,7 +324,7 @@ table.detail {
 	tr.header {
 	    th {
 		background-color: $medium-blue;
-		font-size: 120%;
+		font-size: $large;
 		font-weight: bold;
 		text-align: center;
 	    }
@@ -323,6 +333,160 @@ table.detail {
 }
 tr.submit td {
     padding-top: $vm;
+}
+table.butbar {
+    margin: $vh auto;
+    td {
+	padding: $vn $hl;
+    }
+}
+table.basic {
+    margin: auto auto $vh auto;
+}
+.center {
+    text-align: center;
+}
+.left {
+    text-align: left;
+}
+.right {
+    text-align: right;
+}
+.bottom {
+    vertical-align: bottom;
+}
+.top {
+    vertical-align: top;
+}
+.nowrap {
+    white-space: nowrap;
+}
+td.links {
+    word-spacing: $hs;
+    white-space: nowrap;
+}
+.margin-auto {
+    margin: auto;
+}
+.width-full {
+    width: 100%;
+}
+.width-half {
+    width: 50%;
+}
+.width-two-thirds {
+    width: 67%;
+}
+.width-most {
+    width: 85%;
+}
+.float-right {
+    float: right;
+}
+.mbn {
+    margin-bottom: 0;
+}
+.mbh {
+    margin-bottom: $vh;
+}
+.mbl {
+    margin-bottom: $vl;
+}
+.mbm {
+    margin-bottom: $vm;
+}
+.mts {
+    margin-top: $vs;
+}
+.mtm {
+    margin-top: $vm;
+}
+.mtl {
+    margin-top: $vl;
+}
+.mth {
+    margin-top: $vh;
+}
+.mtg {
+    margin-top: $vg;
+}
+.mra {
+    margin-right: auto;
+}
+.mrn {
+    margin-right: 0;
+}
+.mrl {
+    margin-right: $hl;
+}
+.mll {
+    margin-left: $hl;
+}
+.mls {
+    margin-left: $hs;
+}
+.mla {
+    margin-left: auto;
+}
+.mln {
+    margin-left: 0;
+}
+.mri {
+    margin-right: inherit;
+}
+.mli {
+    margin-left: inherit;
+}
+.ptn {
+    padding-top: 0;
+}
+.pts {
+    padding-top: $vs;
+}
+.pbs {
+    padding-bottom: $vs;
+}
+.pbn {
+    padding-bottom: 0;
+}
+.ptm {
+    padding-top: $vm;
+}
+.ptl {
+    padding-top: $vl;
+}
+.pbl {
+    padding-bottom: $vl;
+}
+.pbm {
+    padding-bottom: $vm;
+}
+.prm {
+    padding-right: $hm;
+}
+.prs {
+    padding-right: $hs;
+}
+.pls {
+    padding-left: $hs;
+}
+.plm {
+    padding-left: $hm;
+}
+.pln {
+    padding-left: 0;
+}
+.margin-none-auto {
+    margin: 0 auto;
+}
+td.msg hr:first-child {
+    margin-top: $vh;
+}
+table.detail {
+    margin: $vh auto $vg;
+}
+.italic {
+    font-style: italic;
 }
 .ui-widget-header,
 .ui-widget-content {
@@ -458,152 +622,4 @@ table.ui-datepicker-calendar a.ui-state-hover {
 }
 table.ui-datepicker-calendar td.ui-datepicker-week-end a.ui-state-default {
     font-weight: bold;
-}
-table.basic {
-    margin: auto auto $vh auto;
-}
-.center {
-    text-align: center;
-}
-.left {
-    text-align: left;
-}
-.right {
-    text-align: right;
-}
-.bottom {
-    vertical-align: bottom;
-}
-.top {
-    vertical-align: top;
-}
-.nowrap {
-    white-space: nowrap;
-}
-td.links {
-    word-spacing: $hs;
-    white-space: nowrap;
-}
-.margin-auto {
-    margin: auto;
-}
-.width-full {
-    width: 100%;
-}
-.width-half {
-    width: 50%;
-}
-.width-two-thirds {
-    width: 65%;
-}
-.width-most {
-    width: 85%;
-}
-.float-right {
-    float: right;
-}
-.mbn {
-    margin-bottom: 0;
-}
-.mbh {
-    margin-bottom: $vh;
-}
-.mbl {
-    margin-bottom: $vl;
-}
-.mbm {
-    margin-bottom: $vm;
-}
-.mts {
-    margin-top: $vs;
-}
-.mtm {
-    margin-top: $vm;
-}
-.mtl {
-    margin-top: $vl;
-}
-.mth {
-    margin-top: $vh;
-}
-.mtg {
-    margin-top: $vg;
-}
-.mra {
-    margin-right: auto;
-}
-.mrn {
-    margin-right: 0;
-}
-.mrl {
-    margin-right: $hl;
-}
-.mll {
-    margin-left: $hl;
-}
-.mls {
-    margin-left: $hs;
-}
-.mla {
-    margin-left: auto;
-}
-.mln {
-    margin-left: 0;
-}
-.mri {
-    margin-right: inherit;
-}
-.mli {
-    margin-left: inherit;
-}
-.ptn {
-    padding-top: 0;
-}
-.pts {
-    padding-top: $vs;
-}
-.pbs {
-    padding-bottom: $vs;
-}
-.pbn {
-    padding-bottom: 0;
-}
-.ptm {
-    padding-top: $vm;
-}
-.ptl {
-    padding-top: $vl;
-}
-.pbl {
-    padding-bottom: $vl;
-}
-.pbm {
-    padding-bottom: $vm;
-}
-.prm {
-    padding-right: $hm;
-}
-.prs {
-    padding-right: $hs;
-}
-.pls {
-    padding-left: $hs;
-}
-.plm {
-    padding-left: $hm;
-}
-.pln {
-    padding-left: 0;
-}
-.margin-none-auto {
-    margin: 0 auto;
-}
-td.msg hr:first-child {
-    margin-top: $vh;
-}
-table.detail {
-    margin: $vh auto $vg;
-}
-.italic {
-    font-style: italic;
 }

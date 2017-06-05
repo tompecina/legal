@@ -1,16 +1,16 @@
 @import "include";
 
 fieldset {
-    margin: 10px auto;
+    margin: $vl auto;
     legend + div {
 	font-style: italic;
     }
 }
 div.msg-amount {
-    font-size: 110%;
+    font-size: $larger;
     font-weight: bold;
 }
 div.msg-note {
-    font-size: 80%;
-    padding-top: 3px;
+    font-size: $small;
+    padding-top: $vs;
 }
