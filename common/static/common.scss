@@ -128,8 +128,8 @@ fieldset {
     padding: $vt $hm $vs;
     hr {
 	margin: {
-	    right: (-$hm);
 	    left: (-$hm);
+	    right: (-$hm);
 	}
     }
 }
@@ -289,16 +289,22 @@ table.detail {
 	tr {
 	    th, td {
 		background-color: $white;
-		padding-top: $vt;
-		padding-bottom: $vs;
+		padding: {
+		    top: $vs;
+		    bottom: $vs;
+		}
 	    }
 	    th {
-		padding-left: $hl;
-		padding-right: $ht;
+		padding: {
+		    left: $hl;
+		    right: $ht;
+		}
 	    }
 	    td {
-		padding-left: $hs;
-		padding-right: $hl;
+		padding: {
+		    left: $hs;
+		    right: $hl;
+		}
 	    }
 	}
 	tr.odd {
@@ -488,6 +494,8 @@ table.detail {
 .italic {
     font-style: italic;
 }
+
+// jQuery UI
 .ui-widget-header,
 .ui-widget-content {
     color: $very-dark-blue;
