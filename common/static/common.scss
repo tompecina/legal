@@ -159,7 +159,7 @@ input {
     padding: $vn $ht;
 }
 input[type="submit"], input[type="reset"] {
-    padding: $vt $hm;
+    padding: $vt $hm 0;
 }
 input[type="file"] {
     padding-left: 0;
