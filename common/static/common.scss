@@ -86,7 +86,7 @@ tr.preset + tr:not(.preset) {
     border-top: $vm solid $medium-blue;
 }
 tr.even td, tr.odd td, thead th, tr.footer td {
-    padding: $vs ($hm+$hs);
+    padding: ($vs+$vn) ($hm+$hs);
 }
 tr.even td:first-child, tr.odd td:first-child, thead th:first-child, tr.footer td:first-child {
     padding-left: ($hl+$hs);
