@@ -1222,13 +1222,15 @@ def mainpage(request):
                                     ('<b>Z:</b> %s (%s)' % \
                                      (escape(item.from_name),
                                       escape(item.from_address.replace(
-                                          ', Česká republika', '')))),
+                                          ', Česká republika', '').replace(
+                                          ', Česko', '')))),
                                     s6))
                                 q.append(Paragraph(
                                     ('<b>Do:</b> %s (%s)' % \
                                      (escape(item.to_name),
                                       escape(item.to_address.replace(
-                                          ', Česká republika', '')))),
+                                          ', Česká republika', '').replace(
+                                          ', Česko', '')))),
                                     s6))
                                 q.append(Paragraph(
                                     ('<b>Vzdálenost:</b> %s km &nbsp; ' \
