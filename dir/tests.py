@@ -581,7 +581,7 @@ class TestViews2(TestCase):
             {'submit_xxx': 'XXX'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorbatchform.html')
-        self.assertEquals(
+        self.assertEqual(
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
         with open(BASE_DIR + '/dir/testdata/import.csv', 'rb') as fi:

@@ -471,7 +471,7 @@ class TestViews(TestCase):
             {'submit_xxx': 'XXX'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partybatchform.html')
-        self.assertEquals(
+        self.assertEqual(
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
         with open(BASE_DIR + '/sur/testdata/import.csv', 'rb') as fi:

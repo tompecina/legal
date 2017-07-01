@@ -68,7 +68,7 @@ class TestCron(TestCase):
         st = datetime.now()
         for i in range(models.Proceedings.objects.count()):
             cron.cron_update()
-        self.assertEquals(models.Proceedings.objects.filter(
+        self.assertEqual(models.Proceedings.objects.filter(
             court_id='NSS', auxid=0).count(), 1)
         ch6 = models.Proceedings.objects.get(pk=6).changed
         self.assertGreaterEqual(ch6, st)
