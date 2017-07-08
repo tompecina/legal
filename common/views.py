@@ -33,7 +33,8 @@ from django import forms, get_version
 from http import HTTPStatus
 from random import getrandbits, choice
 from datetime import datetime, timedelta
-from platform import python_version, platform
+from platform import python_version
+from os import uname
 from knr.models import Place, Car, Formula
 from szr.models import Proceedings
 from sur.models import Party
@@ -231,7 +232,7 @@ def about(request):
         {'name': 'Python', 'version' : python_version()},
         {'name': 'Django', 'version' : get_version()},
         {'name': 'MySQL', 'version' : ('%d.%d.%d' % connection.mysql_version)},
-        {'name': 'Platforma', 'version' : platform},
+        {'name': 'Platforma', 'version' : '{0}-{2}'.format(*uname())},
     ]
     return render(
         request,
