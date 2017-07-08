@@ -15,7 +15,7 @@
 		</thead>
                 <tbody>
 {% for app in apps %}		  <tr class="{% cycle 'odd' 'even' %}">
-		    <th>{{ app.id|upper }}</th>
+		    <td>{{ app.id|upper }}</td>
 		    <td>{{ app.name }}</td>
 		    <td>{{ app.version }}</td>
                   </tr>
