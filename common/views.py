@@ -27,11 +27,13 @@ from django.views.decorators.http import require_http_methods
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.urls import reverse
-from django import forms
 from django.apps import apps
+from django.db import connection
+from django import forms, get_version
 from http import HTTPStatus
 from random import getrandbits, choice
 from datetime import datetime, timedelta
+from platform import python_version, platform
 from knr.models import Place, Car, Formula
 from szr.models import Proceedings
 from sur.models import Party
@@ -225,10 +227,16 @@ def home(request):
 @require_http_methods(['GET'])
 def about(request):
     logger.debug('About page accessed', request)
+    env = [
+        {'name': 'Python', 'version' : python_version()},
+        {'name': 'Django', 'version' : get_version()},
+        {'name': 'MySQL', 'version' : ('%d.%d.%d' % connection.mysql_version)},
+        {'name': 'Platforma', 'version' : platform},
+    ]
     return render(
         request,
         'about.html',
-        {'page_title': 'O aplikaci', 'apps': getappinfo()})
+        {'page_title': 'O aplikaci', 'apps': getappinfo(), 'env': env})
 
 def getappstat():
     appstat = []
