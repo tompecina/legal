@@ -39,8 +39,9 @@ from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black
 from io import BytesIO
-from os.path import dirname, join
+from os.path import join
 from common import fields
+from common.settings import FONT_DIR
 from common.utils import (
     getbutton, yfactor, mfactor, formam, xmldecorate, xmlescape, xmlunescape,
     Lf, rmdsl, getXML, newXML, iso2date, CanvasXML, logger)
@@ -994,20 +995,19 @@ def mainpage(request):
                         '– {:d} –'.format(d.page))
                     c.restoreState()
 
-                fontdir = join(dirname(dirname(__file__)), 'common', 'fonts')
                 reportlab.rl_config.warnOnMissingFontGlyphs = 0
                 registerFont(TTFont(
                     'Bookman',
-                    join(fontdir, 'URWBookman-Regular.ttf')))
+                    join(FONT_DIR, 'URWBookman-Regular.ttf')))
                 registerFont(TTFont(
                     'BookmanB',
-                    join(fontdir, 'URWBookman-Bold.ttf')))
+                    join(FONT_DIR, 'URWBookman-Bold.ttf')))
                 registerFont(TTFont(
                     'BookmanI',
-                    join(fontdir, 'URWBookman-Italic.ttf')))
+                    join(FONT_DIR, 'URWBookman-Italic.ttf')))
                 registerFont(TTFont(
                     'BookmanBI',
-                    join(fontdir, 'URWBookman-BoldItalic.ttf')))
+                    join(FONT_DIR, 'URWBookman-BoldItalic.ttf')))
                 registerFontFamily(
                     'Bookman',
                     normal='Bookman',

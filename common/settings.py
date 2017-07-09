@@ -35,6 +35,7 @@ DEBUG_LOG = True
 BASE_DIR = dirname(dirname(abspath(__file__)))
 LOCAL_ROOT = dirname(__file__)
 LOG_DIR = join(BASE_DIR, 'log')
+FONT_DIR = join(dirname(dirname(__file__)), 'common', 'fonts')
 
 ADMINS = (
     ('Tomas Pecina', 'tomas@pecina.cz'),

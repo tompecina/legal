@@ -412,7 +412,7 @@ class Pager:
 
         def link(n):
             p['start'] = n
-            return '?'.join([url, p.urlencode()])
+            return '{}?{}'.format(url, p.urlencode())
 
         self.curr = (start // batch) + 1
         self.total = ((total - 1) // batch) + 1
