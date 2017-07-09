@@ -14,17 +14,16 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.db.transaction import atomic
 from datetime import datetime
 from base64 import b64encode, b64decode
+from django.db.transaction import atomic
 from common.utils import get, logger
-from common.settings import TEST
 from .models import Cache, Asset
 
 def getcache(url, lifespan):
@@ -50,7 +49,7 @@ def getasset(request, asset):
     if not sid:
         return None
     a = Asset.objects.filter(sessionid=sid, assetid=asset)
-    return (b64decode(a[0].data) if a else None)
+    return b64decode(a[0].data) if a else None
 
 @atomic
 def setasset(request, asset, data, lifespan):
@@ -58,9 +57,10 @@ def setasset(request, asset, data, lifespan):
     if not sid:
         return False
     Asset.objects.filter(sessionid=sid, assetid=asset).delete()
-    Asset(sessionid=sid,
-          assetid=asset,
-          data=b64encode(data),
-          expire=((datetime.now() + lifespan) if lifespan else None)
+    Asset(
+        sessionid=sid,
+        assetid=asset,
+        data=b64encode(data),
+        expire=((datetime.now() + lifespan) if lifespan else None)
     ).save()
     return True

@@ -14,17 +14,17 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
 from re import compile
 from os.path import join
 from urllib.parse import quote
+from bs4 import BeautifulSoup
 from common.settings import BASE_DIR, TEST
 from common.utils import get, post, composeref, decomposeref, logger
 from common.glob import localurl

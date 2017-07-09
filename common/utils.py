@@ -14,28 +14,24 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.http import QueryDict
-from django.core import mail
 from logging import getLogger
 from inspect import stack
-from decimal import Decimal
 import time
 from datetime import date, timedelta
 from calendar import monthrange, isleap
 from xml.sax.saxutils import escape, unescape
 from bs4 import BeautifulSoup
 from pdfrw import PdfReader, PdfName
-from http import HTTPStatus
 import requests
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.pdfbase.pdfdoc import PDFName, PDFDictionary, PDFStream
-from cache.models import Cache
+from django.core import mail
 from .settings import TEST
 from .glob import (
     hd, odp, ydconvs, mdconvs, registers, localsubdomain, localemail)
@@ -58,7 +54,7 @@ class Logger:
                 kwargs['extra']['params'] = args[1]
                 del args[1]
         meth(*args, **kwargs)
-    
+
     def error(self, *args, **kwargs):
         self._proc(self._logger.error, args, kwargs)
 
@@ -72,7 +68,7 @@ class Logger:
         self._proc(self._logger.debug, args, kwargs)
 
 logger = Logger()
-        
+
 def easter(dt):
     y = dt.year
     g = y % 19
@@ -107,20 +103,20 @@ def tod(dt):
     if easter(dt):
         return True
 
-    return (dt.weekday() > 4)
+    return dt.weekday() > 4
 
 def ply(t, n):
     y = t.year + n
     m = t.month
     d = min(t.day, monthrange(y, m)[1])
-    return date(y, m, d)    
+    return date(y, m, d)
 
 def plm(t, n):
     m = t.month + n
     y = t.year + ((m - 1) // 12)
     m = ((m - 1) % 12) + 1
     d = min(t.day, monthrange(y, m)[1])
-    return date(y, m, d)    
+    return date(y, m, d)
 
 def yfactor(beg, end, dconv):
     if (end < beg) or (dconv not in ydconvs):
@@ -190,7 +186,7 @@ def yfactor(beg, end, dconv):
 def mfactor(beg, end, dconv):
     if (end < beg) or (dconv not in mdconvs):
         return None
-    
+
     if dconv == 'ACT':
         beg += odp
         y = beg.year
@@ -264,12 +260,11 @@ def c2p(s):
     return s.replace(',', '.')
 
 class Lf(float):
-
     def __format__(self, format):
         return p2c(super(Lf, self).__format__(format))
 
 def formam(x):
-    if type(x) == int:
+    if isinstance(x, int):
         s = '{:d}'.format(x)
     else:
         s = '{:.2f}'.format(Lf(x))
@@ -286,8 +281,7 @@ def formam(x):
 def getint(s):
     if s:
         return int(s)
-    else:
-        return 0
+    return 0
 
 def unrequire(f, flds):
     for fld in flds:
@@ -360,11 +354,12 @@ def iso2date(tag):
 
 class CanvasXML(Canvas):
     def save(self):
-        data = PDFStream(dictionary=PDFDictionary(
-            {'Type': PDFName('Data'),
-             'Subtype': PDFName('XML')}),
-                         content=self.xml,
-                         filters=None)
+        data = PDFStream(
+            dictionary=PDFDictionary(
+                {'Type': PDFName('Data'),
+                 'Subtype': PDFName('XML')}),
+            content=self.xml,
+            filters=None)
         self._doc.Reference(data)
         if 'Data' not in self._doc.Catalog.__NoDefault__:
             self._doc.Catalog.__NoDefault__.append('Data')
@@ -378,7 +373,7 @@ def get(*args, **kwargs):  # pragma: no cover
         from .tests import testreq
         return testreq(False, *args)
     else:
-        if not 'timeout' in kwargs:
+        if 'timeout' not in kwargs:
             kwargs['timeout'] = TIMEOUT
         return requests.get(*args, **kwargs)
 
@@ -387,7 +382,7 @@ def post(*args, **kwargs):  # pragma: no cover
         from .tests import testreq
         return testreq(True, *args)
     else:
-        if not 'timeout' in kwargs:
+        if 'timeout' not in kwargs:
             kwargs['timeout'] = TIMEOUT
         return requests.post(*args, **kwargs)
 
@@ -456,8 +451,7 @@ def decomposeref(ref):
     t = s[1].split('/')
     if page:
         return senate, register, int(t[0]), int(t[1]), page
-    else:
-        return senate, register, int(t[0]), int(t[1])
+    return senate, register, int(t[0]), int(t[1])
 
 def normreg(reg):
     rl = reg.lower()
@@ -469,15 +463,14 @@ def normreg(reg):
 def xmlbool(x):
     if x:
         return 'true'
-    else:
-        return 'false'
+    return 'false'
 
 def icontains(needle, haystack):
     return needle.lower() in haystack.lower()
 
 def istartswith(needle, haystack):
     return haystack.lower().startswith(needle.lower())
-    
+
 def iendswith(needle, haystack):
     return haystack.lower().endswith(needle.lower())
 

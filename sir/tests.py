@@ -14,23 +14,22 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TransactionTestCase, TestCase
-from django.contrib.auth.models import User
 from http import HTTPStatus
 from datetime import datetime
-from bs4 import BeautifulSoup
-from locale import strxfrm
 from os.path import join
+from bs4 import BeautifulSoup
+from django.test import SimpleTestCase, TransactionTestCase, TestCase
+from django.contrib.auth.models import User
 from common.settings import BASE_DIR
 from common.glob import localdomain
 from common.tests import link_equal, setdl, setpr, getdl, getpr
-from . import cron, glob, models, views
+from . import cron, glob, models
 
 APP = __package__
 TEST_DIR = join(BASE_DIR, APP, 'testdata')
@@ -45,12 +44,12 @@ class TestCron1(SimpleTestCase):
         self.assertEqual(
             cron.convdt(DummyTag('2016-01-17T14:16:59.315489')),
             datetime(2016, 1, 17, 14, 16, 59))
-    
+
     def test_convd(self):
         self.assertEqual(
             cron.convd(DummyTag('2016-01-17T14:16:59.315489')),
             datetime(2016, 1, 17))
-    
+
 class TestCron2(TransactionTestCase):
 
     def test_update(self):
@@ -91,21 +90,21 @@ class TestCron2(TransactionTestCase):
         self.assertEqual(models.DruhStavRizeni.objects.count(), 4)
         self.assertEqual(models.Vec.objects.count(), 37)
         self.assertEqual(models.Transaction.objects.count(), 1)
-        
+
 def populate():
-        setdl(472015)
-        cron.cron_gettr()
-        setdl(5772013)
-        cron.cron_gettr()
-        setdl(160462011)
-        cron.cron_gettr()
-        setdl(191242016)
-        cron.cron_gettr()
-        cron.cron_proctr()
+    setdl(472015)
+    cron.cron_gettr()
+    setdl(5772013)
+    cron.cron_gettr()
+    setdl(160462011)
+    cron.cron_gettr()
+    setdl(191242016)
+    cron.cron_gettr()
+    cron.cron_proctr()
 
 class TestCron3(TestCase):
     fixtures = ['sir_test1.json']
-        
+
     def test_sir_notice(self):
         populate()
         self.assertEqual(models.Tracked.objects.count(), 2)
@@ -124,7 +123,7 @@ class TestCron3(TestCase):
             '   https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?' \
             'id=7ba95b84-15ae-4a8e-8339-1918eac00c84\n\n')
         self.assertEqual(models.Tracked.objects.count(), 1)
-        
+
 class TestGlob(SimpleTestCase):
 
     def test_l2n(self):
@@ -142,7 +141,7 @@ class TestGlob(SimpleTestCase):
     def test_selist(self):
         self.assertEqual(len(glob.SERVICE_EVENTS), len(glob.SELIST))
         self.assertTrue(642 in glob.SELIST)
-        
+
     def test_s2d(self):
         self.assertEqual(len(glob.s2d), len(glob.STATES))
         self.assertEqual(glob.s2d['ZRUŠENO VS'], 'Zrušeno vrchním soudem')
@@ -198,14 +197,14 @@ class TestModels(TestCase):
             'Test')
 
 class TestViews1(TestCase):
-    
+
     def setUp(self):
         User.objects.create_user('user', 'user@' + localdomain, 'none')
         self.user = User.objects.first()
 
     def tearDown(self):
         self.client.logout()
-        
+
     def test_mainpage(self):
         res = self.client.get('/sir')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -617,7 +616,7 @@ class TestViews1(TestCase):
 
 class TestViews2(TestCase):
     fixtures = ['sir_test2.json']
-    
+
     def test_courts(self):
         res = self.client.get('/sir/courts')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)

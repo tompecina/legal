@@ -14,24 +14,24 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import TestCase
-from django.contrib.auth.models import User
 from http import HTTPStatus
 from bs4 import BeautifulSoup
+from django.test import TestCase
+from django.contrib.auth.models import User
 from common.settings import BASE_DIR
 from common.glob import localdomain
 from common.tests import link_equal
-from psj.cron import cron_courtrooms, cron_schedule, cron_update as psj_update
+from psj.cron import cron_schedule, cron_update as psj_update
 from psj.models import Task, Hearing
 from udn.cron import cron_update as udn_update
 from udn.models import Decision
-from . import cron, models, views
+from . import cron, models
 
 pp = [
     ['Jč', 0, 261, 166, 166, 166, 234],
@@ -141,14 +141,14 @@ class TestModels(TestCase):
             'Nejvyšší správní soud, 4 Ads 208/2015')
 
 class TestViews(TestCase):
-    
+
     def setUp(self):
         User.objects.create_user('user', 'user@' + localdomain, 'none')
         self.user = User.objects.first()
 
     def tearDown(self):
         self.client.logout()
-        
+
     def test_mainpage(self):
         res = self.client.get('/sur')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -355,7 +355,7 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'sur_mainpage.html')
         party = models.Party.objects.get(pk=party_id)
         self.assertEqual(party.party, 'Test 8')
-        
+
     def test_partydel(self):
         party_id = models.Party.objects.create(
             uid=self.user,

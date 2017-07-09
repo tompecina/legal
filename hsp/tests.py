@@ -14,22 +14,22 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TestCase, Client
-from django.contrib.auth.models import User
 from http import HTTPStatus
 from datetime import date
-from bs4 import BeautifulSoup
 from io import BytesIO
 from os.path import join
+from bs4 import BeautifulSoup
+from django.test import SimpleTestCase, TestCase
+from django.contrib.auth.models import User
 from common.settings import BASE_DIR
-from cache.tests import DummyRequest
 from common.tests import TEST_STRING, stripxml
+from cache.tests import DummyRequest
 from . import forms, views
 
 APP = __package__
@@ -194,13 +194,13 @@ class TestViews1(SimpleTestCase):
 
 class TestViews2(TestCase):
     fixtures = ['hsp_test.json']
-    
+
     def setUp(self):
         User.objects.create_user('user', 'user@pecina.cz', 'none')
-        
+
     def tearDown(self):
         self.client.logout()
-        
+
     def test_main(self):
         res = self.client.get('/hsp')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -458,7 +458,7 @@ class TestViews2(TestCase):
             self.assertEqual(len(p), 1)
             self.assertEqual(p[0].text, b[1])
             self.client.logout()
-            
+
     def test_debit(self):
         res = self.client.get('/hsp/debitform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -624,7 +624,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.post('/hsp/debitdel/6/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-            
+
     def test_credit(self):
         res = self.client.get('/hsp/creditform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -794,7 +794,7 @@ class TestViews2(TestCase):
         self.assertTemplateUsed(res, 'hsp_creditdeleted.html')
         res = self.client.post('/hsp/creditdel/3/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-            
+
     def test_balance(self):
         res = self.client.get('/hsp/balanceform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -885,7 +885,7 @@ class TestViews2(TestCase):
         self.assertTemplateUsed(res, 'hsp_balancedeleted.html')
         res = self.client.post('/hsp/balancedel/2/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-            
+
     def test_fxrate(self):
         res = self.client.get('/hsp/fxrateform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -985,7 +985,7 @@ class TestViews2(TestCase):
         self.assertTemplateUsed(res, 'hsp_fxratedeleted.html')
         res = self.client.post('/hsp/fxratedel/2/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-            
+
     def test_debt(self):
         req = DummyRequest('test-session')
         c = views.Debt()

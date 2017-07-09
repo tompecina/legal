@@ -14,16 +14,15 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase
 from http import HTTPStatus
-from datetime import date
-from . import forms, views
+from django.test import SimpleTestCase
+from . import forms
 
 class TestForms(SimpleTestCase):
 
@@ -543,7 +542,7 @@ pp = [
 ]
 
 class TestViews(SimpleTestCase):
-    
+
     def test_mainpage(self):
         res = self.client.get('/kos')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)

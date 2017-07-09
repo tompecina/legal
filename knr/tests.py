@@ -14,20 +14,19 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TestCase, Client
-from django.contrib.auth.models import User
 from http import HTTPStatus
-from datetime import date
 from copy import copy
-from bs4 import BeautifulSoup
 from io import BytesIO
 from os.path import join
+from bs4 import BeautifulSoup
+from django.test import SimpleTestCase, TestCase
+from django.contrib.auth.models import User
 from common.settings import BASE_DIR
 from common.utils import newXML, p2c, xmlbool
 from common.tests import TEST_STRING, stripxml
@@ -180,9 +179,9 @@ class TestUtils(TestCase):
 
     def test_getVAT(self):
         self.assertAlmostEqual(utils.getVAT(), 25)
-    
+
 class TestViews1(SimpleTestCase):
-    
+
     def test_convi(self):
         self.assertEqual(views.convi(0), '0')
         self.assertEqual(views.convi(1), '1')
@@ -309,7 +308,7 @@ class TestViews1(SimpleTestCase):
         v = {}
         views.d2d(['vat_rate'], {'vat_rate': 'XXX'}, v)
         self.assertEqual(v, {'vat_rate': 'XXX'})
-        
+
     def test_s2i(self):
         s = newXML('<?xml version="1.0" encoding="utf-8"?>\n' \
                    '<vat_rate>22.0</vat_rate>\n')
@@ -356,7 +355,7 @@ class TestViews1(SimpleTestCase):
 
 class TestViews2(TestCase):
     fixtures = ['knr_test.json']
-    
+
     def setUp(self):
         User.objects.create_user('user', 'user@pecina.cz', 'none')
         User.objects.create_superuser('superuser', 'suser@pecina.cz', 'none')
@@ -365,7 +364,7 @@ class TestViews2(TestCase):
         models.Place.objects.exclude(uid=None).update(uid=self.user)
         models.Car.objects.all().update(uid=self.user)
         models.Formula.objects.exclude(uid=None).update(uid=self.user)
-        
+
     def tearDown(self):
         self.client.logout()
 
@@ -379,14 +378,14 @@ class TestViews2(TestCase):
         self.assertFalse(views.findloc(''))
         self.assertFalse(views.findloc('XXX'))
         self.assertFalse(views.findloc('Melantrichova 504/6, Praha 1'))
-        
+
     def test_finddist(self):
         r = views.finddist(50, 15, 51, 16)
         self.assertEqual(r, (182046, 20265))
         self.assertEqual(views.finddist(50, 15, 51, 17), (False, False))
         self.assertEqual(views.finddist(50, 15, 51, 18), (False, False))
         self.assertEqual(views.finddist(50, 15, 51, 19), (False, False))
-        
+
     def test_main(self):
         res = self.client.get('/knr')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -567,7 +566,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_mainpage.html')
         self.assertEqual(res.context['errors'], True)
-            
+
     def test_itemlist(self):
         res = self.client.get('/knr/itemlist')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -602,7 +601,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_itemlist.html')
-        
+
     def test_list(self):
         models.Place.objects.all().delete()
         models.Car.objects.all().delete()
@@ -649,7 +648,7 @@ class TestViews2(TestCase):
             self.assertEqual(len(p), 1)
             self.assertEqual(p[0].text, b[1])
             self.client.logout()
-            
+
     def test_place(self):
         res = self.client.get('/knr/placeform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -770,7 +769,7 @@ class TestViews2(TestCase):
         self.assertTemplateUsed(res, 'knr_placedeleted.html')
         res = self.client.post('/knr/placedel/{}/'.format(pk), follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-            
+
     def test_car(self):
         res = self.client.get('/knr/carform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -881,7 +880,7 @@ class TestViews2(TestCase):
         self.assertTemplateUsed(res, 'knr_cardeleted.html')
         res = self.client.post('/knr/cardel/{}/'.format(pk))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-            
+
     def test_formula(self):
         res = self.client.get('/knr/formulaform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -982,7 +981,7 @@ class TestViews2(TestCase):
         self.assertTemplateUsed(res, 'knr_formuladeleted.html')
         res = self.client.post('/knr/formuladel/{}/'.format(pk))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-            
+
     def test_item(self):
         res = self.client.get('/knr/itemform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -1559,7 +1558,7 @@ class TestViews2(TestCase):
             self.assertTemplateUsed(res, 'knr_itemform.html')
             self.assertEqual(
                 res.context['err_message'],
-                'Hledání neúspěšné, prosím, upřesněte adresu.') 
+                'Hledání neúspěšné, prosím, upřesněte adresu.')
         res = self.client.post(
             '/knr/itemform/',
             {'type': 'travel',
@@ -1886,7 +1885,7 @@ class TestViews2(TestCase):
         self.assertEqual(bef, aft)
         res = self.client.get('/knr/itemup/1/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-            
+
     def test_presets(self):
         res = self.client.get('/knr/presets')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -1903,7 +1902,7 @@ class TestViews2(TestCase):
         res = self.client.get('/knr/presets/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_mainpage.html')
-        
+
     def test_calc(self):
         req = DummyRequest('test_session')
         c = views.Calculation()

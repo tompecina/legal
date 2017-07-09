@@ -14,14 +14,14 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.core.validators import RegexValidator
 from datetime import date
+from django.core.validators import RegexValidator
 from common import forms, fields, widgets
 from common.glob import text_opts, ic_regex, rc_full_regex
 from .glob import MAX_LENGTH
@@ -91,7 +91,7 @@ class DebtorForm(forms.Form):
         max_value=curryear,
         initial='',
         required=False)
-    
+
     def clean(self):
         cleaned_data = super(DebtorForm, self).clean()
         year_birth_from = cleaned_data.get('year_birth_from', None)

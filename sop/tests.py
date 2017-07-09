@@ -14,17 +14,16 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TestCase, Client
 from http import HTTPStatus
 from bs4 import BeautifulSoup
-from . import forms, views
-from cnb.models import FXrate
+from django.test import SimpleTestCase, TestCase
+from . import forms
 
 class TestForms(SimpleTestCase):
 
@@ -241,10 +240,10 @@ ee = [
          ['5690', 'EUR', '', '', '1', 'none'],
          ['5690', 'XXX', '', '1.7.2016', '1', 'none'],
      ]
-       
+
 class TestViews(TestCase):
     fixtures = ['sop_test.json']
-    
+
     def test_main(self):
         res = self.client.get('/sop')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)

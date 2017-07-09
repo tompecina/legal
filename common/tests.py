@@ -14,16 +14,12 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TestCase, Client
-from django.contrib.auth.models import User
-from django.core import mail
-from django.http import QueryDict
 from datetime import date, datetime, timedelta
 from os.path import join
 from decimal import Decimal
@@ -31,13 +27,16 @@ from copy import copy
 from http import HTTPStatus
 from re import compile
 from hashlib import md5
+from django.test import SimpleTestCase, TestCase
+from django.contrib.auth.models import User
 from django.core import mail
+from django.http import QueryDict
 from cache.tests import DummyRequest
 from szr.cron import cron_update
 from szr.models import Proceedings
 from sir.models import Counter
 from .settings import BASE_DIR
-from . import cron, glob, fields, forms, glob, models, utils, views
+from . import cron, glob, fields, forms, models, utils, views
 
 TEST_STRING = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské kódy'
 
@@ -61,7 +60,7 @@ def stripxml(s):
         return ''
 
 testdata_prefix = join(BASE_DIR, 'common', 'testdata')
-        
+
 def testreq(post, *args):
     if post:
         r, d = args
@@ -117,7 +116,7 @@ class TestCron(TestCase):
     fixtures = ['common_test.json']
 
     def test_szr_notice(self):
-        for i in range(Proceedings.objects.count()):
+        for _ in range(Proceedings.objects.count()):
             cron_update()
         cron.cron_notify()
         m = mail.outbox
@@ -199,7 +198,7 @@ class TestFields(SimpleTestCase):
         self.assertIsInstance(f.to_python(-11216530.7), Decimal)
         with self.assertRaises(forms.ValidationError):
             f.to_python('x')
-        
+
     def test_FloatField(self):
         f = fields.FloatField()
         self.assertIsNone(f.to_python([]))
@@ -207,7 +206,7 @@ class TestFields(SimpleTestCase):
         self.assertAlmostEqual(f.to_python(-11216530.7), -11216530.7)
         with self.assertRaises(forms.ValidationError):
             f.to_python('x')
-        
+
     def test_IntegerField(self):
         f = fields.IntegerField()
         self.assertIsNone(f.to_python([]))
@@ -215,7 +214,7 @@ class TestFields(SimpleTestCase):
         self.assertEqual(f.to_python(-11216530.7), -11216530)
         with self.assertRaises(forms.ValidationError):
             f.to_python('x')
-        
+
     def test_CurrencyField(self):
         f = fields.CurrencyField()
         self.assertIsNone(f.compress([]))
@@ -283,7 +282,7 @@ def proc_link(l):
     if not l:
         return -1
     return int(l.split('=')[-1])
-        
+
 class TestUtils1(SimpleTestCase):
 
     def test_easter(self):
@@ -380,11 +379,11 @@ class TestUtils1(SimpleTestCase):
         self.assertTrue(utils.tod(date(1992, 5, 8)))
         self.assertTrue(utils.tod(date(1992, 5, 9)))
             # not testable as 1992-05-09 was Saturday
-                         
+
     def test_ply(self):
         self.assertEqual(utils.ply(date(2016, 7, 5), 1), date(2017, 7, 5))
         self.assertEqual(utils.ply(date(2016, 2, 29), 1), date(2017, 2, 28))
-        
+
     def test_plm(self):
         self.assertEqual(utils.plm(date(2016, 7, 5), 1), date(2016, 8, 5))
         self.assertEqual(utils.plm(date(2015, 1, 31), 1), date(2015, 2, 28))
@@ -465,7 +464,7 @@ class TestUtils1(SimpleTestCase):
                 date(2011, 7, 12),
                 date(2016, 7, 5),
                 'XXX'))
-        
+
     def test_mfactor(self):
         self.assertIsNone(
             utils.mfactor(
@@ -530,7 +529,7 @@ class TestUtils1(SimpleTestCase):
         self.assertEqual(utils.grammar(2, t), '2 koruny')
         self.assertEqual(utils.grammar(4, t), '4 koruny')
         self.assertEqual(utils.grammar(5, t), '5 korun')
-        
+
     def test_formam(self):
         self.assertEqual(utils.formam(0), '0')
         self.assertEqual(utils.formam(1), '1')
@@ -628,7 +627,7 @@ class TestUtils1(SimpleTestCase):
             'EVC', 'EXE', 'EPR', 'PP', 'CM', 'SM', 'CA', 'CAD', 'AZ', 'TO',
             'NT', 'CO', 'NTD', 'CMO', 'KO', 'NCO', 'NCD', 'NCP', 'ECM',
             'ICM', 'INS', 'K', 'KV', 'EVCM', 'A', 'AD', 'AF', 'NA', 'UL',
-            'CDO', 'ODO', 'TDO', 'TZ' , 'NCU', 'ADS', 'AFS', 'ANS', 'AO',
+            'CDO', 'ODO', 'TDO', 'TZ', 'NCU', 'ADS', 'AFS', 'ANS', 'AO',
             'AOS', 'APRK', 'APRN', 'APS', 'ARS', 'AS', 'ASZ', 'AZS', 'KOMP',
             'KONF', 'KSE', 'KSEO', 'KSS', 'KSZ', 'NA', 'NAD', 'NAO', 'NCN',
             'NK', 'NTN', 'OBN', 'PLEN', 'PLSN', 'PST', 'ROZK', 'RS', 'S',
@@ -638,7 +637,7 @@ class TestUtils1(SimpleTestCase):
             'EVC', 'EXE', 'EPR', 'PP', 'Cm', 'Sm', 'Ca', 'Cad', 'Az', 'To',
             'Nt', 'Co', 'Ntd', 'Cmo', 'Ko', 'Nco', 'Ncd', 'Ncp', 'ECm',
             'ICm', 'INS', 'K', 'Kv', 'EVCm', 'A', 'Ad', 'Af', 'Na', 'UL',
-            'Cdo', 'Odo', 'Tdo', 'Tz' , 'Ncu', 'Ads', 'Afs', 'Ans', 'Ao',
+            'Cdo', 'Odo', 'Tdo', 'Tz', 'Ncu', 'Ads', 'Afs', 'Ans', 'Ao',
             'Aos', 'Aprk', 'Aprn', 'Aps', 'Ars', 'As', 'Asz', 'Azs', 'Komp',
             'Konf', 'Kse', 'Kseo', 'Kss', 'Ksz', 'Na', 'Nad', 'Nao', 'Ncn',
             'Nk', 'Ntn', 'Obn', 'Plen', 'Plsn', 'Pst', 'Rozk', 'Rs', 'S',
@@ -682,7 +681,7 @@ class TestUtils1(SimpleTestCase):
         self.assertFalse(utils.istartswith('y', ''))
         self.assertTrue(utils.istartswith('', 'xyzw'))
         self.assertTrue(utils.istartswith('', ''))
-        
+
     def test_iendswith(self):
         self.assertTrue(utils.iendswith('zw', 'xyzw'))
         self.assertFalse(utils.iendswith('y', 'xyzw'))
@@ -699,7 +698,7 @@ class TestUtils1(SimpleTestCase):
         self.assertFalse(utils.iendswith('y', ''))
         self.assertTrue(utils.iendswith('', 'xyzw'))
         self.assertTrue(utils.iendswith('', ''))
-        
+
     def test_iexact(self):
         self.assertTrue(utils.iexact('xyzw', 'xyzw'))
         self.assertFalse(utils.iexact('y', 'xyzw'))
@@ -776,7 +775,7 @@ class TestUtils1(SimpleTestCase):
         self.assertFalse(utils.text_opt('y', '', 3))
         self.assertTrue(utils.text_opt('', 'xyzw', 3))
         self.assertTrue(utils.text_opt('', '', 3))
-        
+
     def test_lim(self):
         self.assertEqual(utils.lim(1, 2, 3), 2)
         self.assertEqual(utils.lim(1, -2, 3), 1)
@@ -840,7 +839,7 @@ class TestViews(TestCase):
             'superuser@' + glob.localdomain,
             'none'
         )
-        
+
     def test_login(self):
         res = self.client.get('/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -889,7 +888,7 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'robots.txt')
         res = self.client.post('/robots.txt')
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
-        
+
     def test_unauth(self):
         res = self.client.get('/knr/presets/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
@@ -905,7 +904,7 @@ class TestViews(TestCase):
         res = self.client.get('/knr/presets/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_mainpage.html')
-        
+
     def test_error(self):
         req = DummyRequest(None)
         req.method = 'GET'
@@ -1028,7 +1027,7 @@ class TestViews(TestCase):
         self.assertTrue(self.client.login(
             username='user',
             password=newpassword))
-        
+
     def test_resetpw(self):
         res = self.client.get('/accounts/resetpw/{}/'.format('0' * 32))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -1046,7 +1045,7 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'about.html')
         res = self.client.post('/about/')
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
-        
+
     def test_stat(self):
         setdl(1)
         setpr(1)
@@ -1055,7 +1054,7 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'stat.html')
         res = self.client.post('/stat/')
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
-        
+
     def test_useradd(self):
         res = self.client.get('/accounts/useradd/')
         self.assertEqual(res.status_code, HTTPStatus.OK)

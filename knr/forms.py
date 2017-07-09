@@ -14,14 +14,13 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 from common import forms, fields, widgets
-from .models import Place, Car, Formula
 from .glob import fuels
 from .utils import getVAT
 
@@ -130,7 +129,7 @@ class GeneralForm(forms.Form):
         widget=widgets.shw())
     item_note = fields.CharField(
         required=False)
-    
+
 class ServiceForm(forms.Form):
     idx = fields.IntegerField(
         widget=widgets.hw())
@@ -171,8 +170,8 @@ class ServiceForm(forms.Form):
         off30_flag = 'off30_flag' in self.data
         off30limit5000_flag = 'off30limit5000_flag' in self.data
         off20limit5000_flag = 'off20limit5000_flag' in self.data
-        if ((off10_flag + off30_flag + off30limit5000_flag + \
-             off20limit5000_flag) > 1):
+        if (off10_flag + off30_flag + off30limit5000_flag + \
+            off20limit5000_flag) > 1:
             raise forms.ValidationError("Incompatible flags")
         return off10_flag
 
@@ -181,8 +180,8 @@ class ServiceForm(forms.Form):
         off30_flag = 'off30_flag' in self.data
         off30limit5000_flag = 'off30limit5000_flag' in self.data
         off20limit5000_flag = 'off20limit5000_flag' in self.data
-        if ((off10_flag + off30_flag + off30limit5000_flag + \
-             off20limit5000_flag) > 1):
+        if (off10_flag + off30_flag + off30limit5000_flag + \
+            off20limit5000_flag) > 1:
             raise forms.ValidationError("Incompatible flags")
         return off30_flag
 
@@ -191,8 +190,8 @@ class ServiceForm(forms.Form):
         off30_flag = 'off30_flag' in self.data
         off30limit5000_flag = 'off30limit5000_flag' in self.data
         off20limit5000_flag = 'off20limit5000_flag' in self.data
-        if ((off10_flag + off30_flag + off30limit5000_flag + \
-             off20limit5000_flag) > 1):
+        if (off10_flag + off30_flag + off30limit5000_flag + \
+            off20limit5000_flag) > 1:
             raise forms.ValidationError("Incompatible flags")
         return off30limit5000_flag
 
@@ -201,8 +200,8 @@ class ServiceForm(forms.Form):
         off30_flag = 'off30_flag' in self.data
         off30limit5000_flag = 'off30limit5000_flag' in self.data
         off20limit5000_flag = 'off20limit5000_flag' in self.data
-        if ((off10_flag + off30_flag + off30limit5000_flag + \
-             off20limit5000_flag) > 1):
+        if (off10_flag + off30_flag + off30limit5000_flag + \
+            off20limit5000_flag) > 1:
             raise forms.ValidationError("Incompatible flags")
         return off20limit5000_flag
 
@@ -277,28 +276,28 @@ class FlatForm(forms.Form):
     def clean_halved_flag(self):
         halved_flag = 'halved_flag' in self.data
         halved_appeal_flag = 'halved_appeal_flag' in self.data
-        if (halved_flag and halved_appeal_flag):
+        if halved_flag and halved_appeal_flag:
             raise forms.ValidationError("Incompatible flags")
         return halved_flag
 
     def clean_halved_appeal_flag(self):
         halved_flag = 'halved_flag' in self.data
         halved_appeal_flag = 'halved_appeal_flag' in self.data
-        if (halved_flag and halved_appeal_flag):
+        if halved_flag and halved_appeal_flag:
             raise forms.ValidationError("Incompatible flags")
         return halved_appeal_flag
 
     def clean_multiple_flag(self):
         multiple_flag = 'multiple_flag' in self.data
         multiple50_flag = 'multiple50_flag' in self.data
-        if (multiple_flag and multiple50_flag):
+        if multiple_flag and multiple50_flag:
             raise forms.ValidationError("Incompatible flags")
         return multiple_flag
 
     def clean_multiple50_flag(self):
         multiple_flag = 'multiple_flag' in self.data
         multiple50_flag = 'multiple50_flag' in self.data
-        if (multiple_flag and multiple50_flag):
+        if multiple_flag and multiple50_flag:
             raise forms.ValidationError("Incompatible flags")
         return multiple50_flag
 

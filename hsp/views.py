@@ -14,21 +14,19 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.shortcuts import render, redirect, HttpResponse, Http404
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
-from django.apps import apps
 from datetime import date, datetime, timedelta
 from calendar import monthrange
 from pickle import dumps, loads
 from xml.sax.saxutils import escape
 import csv
+from io import BytesIO
+from os.path import join
 import reportlab.rl_config
 from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
@@ -38,15 +36,17 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black
-from io import BytesIO
-from os.path import join
+from django.shortcuts import render, redirect, HttpResponse, Http404
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
+from django.apps import apps
 from common import fields
 from common.settings import FONT_DIR
 from common.utils import (
     getbutton, yfactor, mfactor, formam, xmldecorate, xmlescape, xmlunescape,
     Lf, rmdsl, getXML, newXML, iso2date, CanvasXML, logger)
 from common.glob import (
-    ydconvs, odp,  mdconvs, LIM, inerr, localsubdomain, localurl)
+    ydconvs, odp, mdconvs, LIM, inerr, localsubdomain, localurl)
 from common.views import error
 from cache.main import getasset, setasset
 from cnb.main import getMPIrate, getFXrate
@@ -118,13 +118,13 @@ def getdebt(request):
             pass
     setdebt(request, Debt())
     a = getasset(request, aid)
-    return (loads(a) if a else None)
+    return loads(a) if a else None
 
 def setdebt(request, data):
     return setasset(request, aid, dumps(data), timedelta(weeks=10))
 
 def n2l(n):
-    return (chr(ord('A') + n) if (n <= (ord('Z') - ord('A'))) else '?')
+    return chr(ord('A') + n) if (n <= (ord('Z') - ord('A'))) else '?'
 
 DR, CR, BAL = tuple(range(3))
 
@@ -244,7 +244,7 @@ def calcint(interest, pastdate, presdate, debt, res):
         return ((principal * (presdate - pastdate).days * .0025), None)
 
     return (None, 'Neznámý model')
-    
+
 def distr(debt, dt, credit, amount, disarr, res):
     if amount < LIM:
         return (0.0, None)
@@ -298,7 +298,7 @@ def distr(debt, dt, credit, amount, disarr, res):
             amount -= (debit.nb / rt)
             debit.nb = 0.0
     return (amount, None)
-    
+
 def calc(debt, pram=(lambda x: x)):
 
     res = Result()
@@ -341,7 +341,7 @@ def calc(debt, pram=(lambda x: x)):
     res.multicurrency = (len(res.currencies) > 1)
     if res.currencies and (not res.multicurrency):
         res.currency = res.currencies[0]
-        
+
     dr = {}
     cust4 = []
     ncust4 = []
@@ -364,7 +364,7 @@ def calc(debt, pram=(lambda x: x)):
             else:
                 ncust4.append(debit)
     ir = (cust4 + ncust4)
-            
+
     cr = {}
     for i, credit in enumerate(debt.credits):
         credit.sp = 0.0
@@ -509,7 +509,7 @@ def calc(debt, pram=(lambda x: x)):
                     row['change'].append(pram(debit.nb - debit.ob))
             if (tp == DR) and (o.model == 'fixed'):
                 row['disp_currency'] = o.fixed_currency
-            elif (tp == CR):
+            elif tp == CR:
                 row['disp_currency'] = o.currency
             if not res.multicurrency_debit:
                 row['post_total'] = pram(round(row['post_total'],
@@ -532,14 +532,14 @@ def calc(debt, pram=(lambda x: x)):
                          (sp['curr'] if (res.multicurrency or \
                                          (sp['curr'] != 'CZK')) else 'Kč'))
             row['sps_text'] = ', '.join(r)
-                        
+
             if tp != BAL:
                 for debit in debt.debits:
                     debit.balance = debit.nb
                 for credit in debt.credits:
                     credit.sp = credit.nsp
                 cud = dt
-            
+
             res.rows.append(row)
             e += 1
 
@@ -862,20 +862,19 @@ def mainpage(request):
             return '<span class="dr">{}</span>'.format(formam(a))
         elif a:
             return '<span class="cr">{}</span>'.format(formam(-a))
-            
+
     def fa(a, c):
         if (not a) or (abs(a) < LIM):
             return ''
         r = formam(round(a, debt.rounding) \
                    if debt.rounding else int(round(a))).replace('-', '−')
         if res.multicurrency or (c != 'CZK'):
-           return '{}&nbsp;{}'.format(r, c)
-        else:
-            return '{}&nbsp;Kč'.format(r)
+            return '{}&nbsp;{}'.format(r, c)
+        return '{}&nbsp;Kč'.format(r)
 
     err_message = ''
 
-    if (request.method == 'GET'):
+    if request.method == 'GET':
         debt = getdebt(request)
         if not debt:  # pragma: no cover
             return error(request)
@@ -916,7 +915,7 @@ def mainpage(request):
         debt = getdebt(request)
         if not debt:  # pragma: no cover
             return error(request)
-        
+
         f = MainForm(request.POST)
         if f.is_valid():
             cd = f.cleaned_data
@@ -925,7 +924,7 @@ def mainpage(request):
             debt.internal_note = cd['internal_note'].strip()
             debt.rounding = int(cd['rounding'])
             setdebt(request, debt)
-            
+
             if (not btn) and cd['next']:
                 return redirect(cd['next'])
 
@@ -1212,7 +1211,7 @@ def mainpage(request):
 
                 res = calc(debt)
                 tl = 0.5
-                
+
                 r = []
 
                 if debt.debits:
@@ -1308,7 +1307,7 @@ def mainpage(request):
                                 fx['date_required']),
                             s20,
                             bulletText='–'))
-                        
+
                 if res.fix:
                     res.fix.sort(key=(lambda x: x['currency_to']))
                     res.fix.sort(key=(lambda x: x['currency_from']))
@@ -1324,7 +1323,7 @@ def mainpage(request):
                                     fix['date_from']),
                             s20,
                             bulletText='–'))
-                        
+
                 if res.mpi:
                     res.mpi.sort(key=(lambda x: x['date']))
                     res.mpi.sort(key=(lambda x: x['type']))
@@ -1342,7 +1341,7 @@ def mainpage(request):
 
                 r.append(Spacer(0, 50))
                 flow.extend(r)
-                
+
                 for row in res.rows:
 
                     tp = row['type']
@@ -1358,7 +1357,7 @@ def mainpage(request):
                         ln[0] = 1
                         cl[0].append(row['id'])
                         cr[0].append((row['amount'], row['disp_currency']))
-                        
+
                     if tp == CR:
                         hdr[0] = 'Splátka'
                         ln[0] = 1
@@ -1554,21 +1553,21 @@ def mainpage(request):
         if len(debt.debits) > 1:
             credit.text += \
                 ', pořadí: {}'.format(' → '.join(map(n2l, credit.debits)))
-                               
+
     sc = debt.credits[:]
     id = 1
     for cc in sc:
         cc.id = id
         id += 1
     sc.sort(key=(lambda x: x.date))
-    
+
     sb = debt.balances[:]
     id = 1
     for bb in sb:
         bb.id = id
         id += 1
     sb.sort(key=(lambda x: x.date))
-    
+
     return render(
         request,
         'hsp_mainpage.html',
@@ -1651,7 +1650,7 @@ def debitform(request, id=0):
             f = DebitForm()
     else:
         f = DebitForm(request.POST)
-        
+
         btn = getbutton(request)
         if btn == 'back':
             return redirect('hsp:mainpage')
@@ -1659,14 +1658,14 @@ def debitform(request, id=0):
             if request.POST.get('principal_debit'):
                 for row in rows:
                     if row['value'] == int(request.POST['principal_debit']):
-                        row['sel'] = True    
+                        row['sel'] = True
                         break
             if id and (request.POST.get('model') != 'fixed'):
                 for debit in debt.debits:
                     if debit.principal_debit == id:
                         err_message = \
                             'Na závazek se váže úrok, vyžaduje pevnou částku'
-            if ((not err_message) and f.is_valid()):
+            if (not err_message) and f.is_valid():
                 cd = f.cleaned_data
                 debit = Debit()
                 debit.description = cd['description'].strip()
@@ -1703,11 +1702,11 @@ def debitform(request, id=0):
                     return error(request)
                 return redirect('hsp:mainpage')
 
-            else: 
+            else:
                 logger.debug('Invalid form', request)
                 if not err_message:
                     err_message = inerr
-        
+
     return render(
         request,
         'hsp_debitform.html',
@@ -1748,8 +1747,8 @@ def debitdel(request, id=0):
                 if (i == id) or ((debt.debits[i].principal_debit - 1) == id):
                     r[i] = None
                     del debt.debits[i]
-            c = [x for x in r if (x != None)]
-            m = [(None if (x == None) else c.index(x)) for x in r]
+            c = [x for x in r if x != None]
+            m = [(None if x is None else c.index(x)) for x in r]
             for credit in debt.credits:
                 d = []
                 for i in credit.debits:
@@ -1781,12 +1780,13 @@ def creditform(request, id=0):
     nd = len(debt.debits)
     deb_class = ''
     if nd > 1:
-        for n, d in enumerate(debt.debits):
+        for n, _ in enumerate(debt.debits):
             row = {'n': n, 'cols': []}
             for m, c in enumerate(debt.debits):
-                row['cols'].append({'n': m,
-                                    'id': n2l(m),
-                                    'desc': debt.debits[m].description})
+                row['cols'].append(
+                    {'n': m,
+                     'id': n2l(m),
+                     'desc': debt.debits[m].description})
             rows.append(row)
     id = int(id)
     if request.method == 'GET':
@@ -1809,12 +1809,12 @@ def creditform(request, id=0):
                    (len(debt.last_debits) == nd):
                     for n, d in enumerate(debt.debits):
                         rows[n]['sel'] = debt.last_debits[n]
-                else:    
+                else:
                     for n, d in enumerate(debt.debits):
                         rows[n]['sel'] = n
     else:
         f = CreditForm(request.POST)
-        
+
         btn = getbutton(request)
         if btn == 'back':
             return redirect('hsp:mainpage')
@@ -1859,7 +1859,7 @@ def creditform(request, id=0):
                     for n in range(nd):
                         rows[n]['sel'] = int(request.POST['r{:d}' \
                             .format(n)])
-        
+
     return render(
         request,
         'hsp_creditform.html',
@@ -1927,7 +1927,7 @@ def balanceform(request, id=0):
             f = BalanceForm()
     else:
         f = BalanceForm(request.POST)
-        
+
         btn = getbutton(request)
         if btn == 'back':
             return redirect('hsp:mainpage')
@@ -1952,7 +1952,7 @@ def balanceform(request, id=0):
         else:
             logger.debug('Invalid form', request)
             err_message = inerr
-        
+
     return render(
         request,
         'hsp_balanceform.html',
@@ -2025,7 +2025,7 @@ def fxrateform(request, id=0):
             f = FXform()
     else:
         f = FXform(request.POST)
-        
+
         btn = getbutton(request)
         if btn == 'back':
             return redirect('hsp:mainpage')
@@ -2051,7 +2051,7 @@ def fxrateform(request, id=0):
         else:
             logger.debug('Invalid form', request)
             err_message = inerr
-        
+
     return render(
         request,
         'hsp_fxrateform.html',

@@ -14,19 +14,19 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TestCase, Client
 from http import HTTPStatus
 from datetime import date
-from bs4 import BeautifulSoup
 from re import compile
 from os.path import join
 from os import unlink
+from bs4 import BeautifulSoup
+from django.test import SimpleTestCase, TestCase
 from common.settings import BASE_DIR
 from common.tests import stripxml, link_equal
 from common.glob import localsubdomain, localurl, repourl
@@ -47,10 +47,10 @@ class TestCron(TestCase):
             if not fc[:-1].endswith('/' + l):  # pragma: no cover
                 fl.append('C: ' + l)
         self.assertFalse(fl, msg=fl)
-   
+
 class TestCron1(TestCron):
     fixtures = ['udn_test1.json']
-    
+
     def test_update(self):
         cron.cron_update()
         d = models.Decision.objects.all()
@@ -71,10 +71,10 @@ class TestCron1(TestCron):
             '0208_4Ads_1500082S.pdf',
             '0233_5As__1500046S.pdf',
             ])
-        
+
 class TestCron2(TestCron):
     fixtures = ['udn_test2.json']
-    
+
     def test_find(self):
         cron.cron_find()
         d = models.Decision.objects.filter(
@@ -89,7 +89,7 @@ class TestCron2(TestCron):
 
 class TestCron3(TestCron):
     fixtures = ['udn_test3.json']
-    
+
     def test_find(self):
         cron.cron_find()
         d = models.Decision.objects.filter(
@@ -250,7 +250,7 @@ j2 = '[{{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
 
 class TestViews(TestCase):
     fixtures = ['udn_test1.json']
-    
+
     def test_main(self):
         res = self.client.get('/udn')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -451,7 +451,7 @@ class TestViews(TestCase):
         self.assertTrue(link_equal(
             links[1]['href'],
             '/udn/list/?senate=8&start=150'))
-        
+
     def test_xmllist(self):
         res = self.client.get('/udn/xmllist')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -511,7 +511,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
         views.EXLIM = 1000
-     
+
     def test_csvlist(self):
         res = self.client.get('/udn/csvlist')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)

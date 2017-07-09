@@ -14,7 +14,7 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -24,8 +24,8 @@ from django.conf.urls import url
 from common.views import genrender
 from .views import (
     mainpage, placeform, placelist, placedel, carform, carlist, cardel,
-    formulaform, formulalist, formuladel, itemlist, itemform, itemform,
-    itemdel, itemmove, presets)
+    formulaform, formulalist, formuladel, itemlist, itemform, itemdel,
+    itemmove, presets)
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),

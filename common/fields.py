@@ -14,16 +14,16 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django import forms
-from django.core.validators import EMPTY_VALUES
 from decimal import Decimal
 from datetime import datetime, date
+from django import forms
+from django.core.validators import EMPTY_VALUES
 from . import widgets
 from .utils import Lf
 from .forms import ValidationError
@@ -69,7 +69,7 @@ class AmountField(forms.FloatField):
     def prepare_value(self, value):
         if value in EMPTY_VALUES:
             return None
-        if type(value) not in stypes:
+        if not isinstance(value, stypes):
             value = '{:.{prec}f}'.format(
                 Lf(value),
                 prec=self.rounding)
@@ -78,7 +78,7 @@ class AmountField(forms.FloatField):
     def to_python(self, value):
         if value in EMPTY_VALUES:
             return None
-        if type(value) in stypes:
+        if isinstance(value, stypes):
             value = prnum(value)
         try:
             return round(float(value), self.rounding)
@@ -89,7 +89,7 @@ class DecimalField(forms.DecimalField):
     def to_python(self, value):
         if value in EMPTY_VALUES:
             return None
-        if type(value) in stypes:
+        if isinstance(value, stypes):
             value = prnum(value)
         try:
             return Decimal(value)
@@ -100,7 +100,7 @@ class FloatField(forms.FloatField):
     def to_python(self, value):
         if value in EMPTY_VALUES:
             return None
-        if type(value) in stypes:
+        if isinstance(value, stypes):
             value = prnum(value)
         try:
             return float(value)
@@ -111,7 +111,7 @@ class IntegerField(forms.IntegerField):
     def to_python(self, value):
         if value in EMPTY_VALUES:
             return None
-        if type(value) in stypes:
+        if isinstance(value, stypes):
             value = prnum(value)
         try:
             return int(float(value))
@@ -128,11 +128,11 @@ class CurrencyField(forms.MultiValueField):
                       *args,
                       **kwargs)
 
-    def compress(self, dl):
-        if dl:
-            return (dl[1].upper() if (dl[0] == 'OTH') else dl[0])
-        else:
-            return None
+    def compress(self, data_list):
+        if data_list:
+            return data_list[1].upper() if (data_list[0] == 'OTH') \
+                else data_list[0]
+        return None
 
     def validate(self, value):
         if not value:

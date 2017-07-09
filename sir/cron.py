@@ -14,24 +14,24 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.contrib.auth.models import User
-from bs4 import BeautifulSoup
 from datetime import datetime
-from common.utils import normalize, get, post, sleep, logger
+from bs4 import BeautifulSoup
+from django.contrib.auth.models import User
+from common.utils import normalize, post, logger
 from dir.cron import dir_check
-from .glob import COURTS, l2n, l2r, l2s, SELIST, BELIST
+from .glob import l2n, l2s, SELIST, BELIST
 from .models import (
     DruhStavRizeni, Vec, DruhRoleVRizeni, Osoba, Role, DruhAdresy, Adresa,
     Counter, Transaction, Insolvency, Tracked)
 
 PREF = 20
-                
+
 def convdt(s):
     return datetime.strptime(s.string[:19], "%Y-%m-%dT%H:%M:%S")
 
@@ -68,7 +68,7 @@ def cron_gettr():
         res = post(url, soup.renderContents(), headers=headers)
 
         xml = res.content.decode('utf-8')
-        
+
         soup = BeautifulSoup(xml, 'lxml')
         soup.is_xml = True
 
@@ -333,7 +333,7 @@ def cron_getws2():
         rocnik = soup.new_tag('rocnik', None, None)
         rocnik.append(str(vec.rocnik))
         req.append(rocnik)
-        
+
 
         url = 'https://isir.justice.cz:8443/isir_cuzk_ws/IsirWsCuzkService'
 

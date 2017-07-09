@@ -14,16 +14,16 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, Client
 from http import HTTPStatus
 from bs4 import BeautifulSoup
-from . import forms, views
+from django.test import SimpleTestCase
+from . import forms
 
 class TestForms(SimpleTestCase):
 
@@ -76,7 +76,7 @@ ee = [
          ['1.7.2016', '0', '', ''],
          ['1.7.2016', '-1', '', ''],
      ]
-       
+
 class TestViews(SimpleTestCase):
 
     def test_main(self):

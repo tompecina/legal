@@ -14,12 +14,14 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from csv import reader as csvreader, writer as csvwriter
+from io import StringIO
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -28,8 +30,6 @@ from django.forms.models import model_to_dict
 from django.apps import apps
 from django.http import QueryDict
 from django.urls import reverse
-from csv import reader as csvreader, writer as csvwriter
-from io import StringIO
 from common.utils import getbutton, grammar, between, Pager, logger
 from common.glob import (
     inerr, GR_C, text_opts, text_opts_keys, text_opts_abbr, text_opts_ca,
@@ -60,7 +60,6 @@ def mainpage(request):
 
     rd = request.GET.copy()
     start = int(rd['start']) if ('start' in rd) else 0
-    btn = getbutton(request)
     if request.method == 'GET':
         f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
     else:
@@ -175,7 +174,7 @@ def partydel(request, id=0):
              'page_title': 'Smazání účastníka'})
     else:
         party = get_object_or_404(Party, pk=id, uid=uid)
-        if (getbutton(request) == 'yes'):
+        if getbutton(request) == 'yes':
             logger.info(
                 'User "{}" ({:d}) deleted party "{}"' \
                     .format(uname, uid, party.party),
@@ -221,7 +220,7 @@ def partybatchform(request):
     uid = request.user.id
     uname = request.user.username
 
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         btn = getbutton(request)
 
         if btn == 'load':
@@ -241,7 +240,7 @@ def partybatchform(request):
                                 continue
                             line = line[0].strip()
                             if ':' in line:
-                               line, party_opt = line.split(':', 1)
+                                line, party_opt = line.split(':', 1)
                             else:
                                 party_opt = '*'
                             if not between(MIN_LENGTH, len(line), MAX_LENGTH):

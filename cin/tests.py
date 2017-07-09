@@ -14,17 +14,16 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, Client
 from http import HTTPStatus
-from bs4 import BeautifulSoup
 from datetime import date
-from . import forms, views
+from bs4 import BeautifulSoup
+from django.test import SimpleTestCase
 
 pp = [
          ['11.11.2010', '6.7.2016',

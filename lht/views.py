@@ -14,17 +14,17 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from datetime import date, timedelta
+from calendar import monthrange
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
-from datetime import date, timedelta
-from calendar import monthrange
 from common.utils import pd, tod, odp, getbutton, logger
 from common.glob import wn, inerr_short
 from .forms import MainForm
@@ -55,7 +55,7 @@ def mainpage(request):
         elif f.is_valid():
             cd = f.cleaned_data
             beg_date = cd['beg_date']
-            if (beg_date.year < 1991):
+            if beg_date.year < 1991:
                 messages = [['Počátek musí být ≥1.1.1991', None]]
             else:
                 preset = cd['preset']
@@ -80,13 +80,13 @@ def mainpage(request):
                     m = beg_date.month
                     y = beg_date.year
                     if dur > 0:
-                        for i in range(dur):
+                        for _ in range(dur):
                             m += 1
                             if m > 12:
                                 m = 1
                                 y += 1
                     else:
-                        for i in range(-dur):
+                        for _ in range(-dur):
                             m -= 1
                             if not m:
                                 m = 12
@@ -107,7 +107,7 @@ def mainpage(request):
                         ['{} není pracovní den'.format(pd(t)), None])
 
                 while tod(t):
-                        t += o
+                    t += o
 
                 messages.append(
                     ['{} {}'.format(wn[t.weekday()], pd(t)),
@@ -117,7 +117,7 @@ def mainpage(request):
                         ['(evidence pracovních dnů v tomto období ' \
                          'není úplná)',
                          'msg-note'])
-           
+
         else:
             logger.debug('Invalid form', request)
             messages = [[inerr_short, None]]

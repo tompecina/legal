@@ -14,16 +14,16 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TestCase
 from http import HTTPStatus
 from datetime import date
 from bs4 import BeautifulSoup
+from django.test import SimpleTestCase, TestCase
 from common.tests import stripxml, link_equal, setpr, getpr
 from sir.tests import populate
 from sir.cron import cron_getws2
@@ -960,7 +960,7 @@ class TestViews2(TestCase):
                 self.fail(p)  # pragma: no cover
             except:
                 pass
-            
+
     def test_getosoby(self):
         pp = [
             [
@@ -1312,7 +1312,7 @@ class TestViews2(TestCase):
         self.assertTrue(link_equal(
             links[1]['href'],
             '/pir/list/?start=215'))
-        
+
     def test_xmllist(self):
         res = self.client.get('/pir/xmllist')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)

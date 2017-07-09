@@ -14,7 +14,7 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -44,24 +44,24 @@ class MainForm(forms.Form):
 
     def clean_years(self):
         data = self.cleaned_data['years']
-        if ((not data) and \
-            (not self.data['months']) and \
-            (not self.data['days'])):
+        if (not data) and \
+           (not self.data['months']) and \
+           (not self.data['days']):
             raise forms.ValidationError('Missing duration')
         return data
 
     def clean_months(self):
         data = self.cleaned_data['months']
-        if ((not data) and \
-            (not self.data['years']) and \
-            (not self.data['days'])):
+        if (not data) and \
+           (not self.data['years']) and \
+           (not self.data['days']):
             raise forms.ValidationError('Missing duration')
         return data
 
     def clean_days(self):
         data = self.cleaned_data['days']
-        if ((not data) and \
-            (not self.data['years']) and \
-            (not self.data['months'])):
+        if (not data) and \
+           (not self.data['years']) and \
+           (not self.data['months']):
             raise forms.ValidationError('Missing duration')
         return data

@@ -14,19 +14,17 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TestCase
 from http import HTTPStatus
 from datetime import date, datetime
-from bs4 import BeautifulSoup
-from re import compile
-from os.path import join
 from locale import strxfrm
+from bs4 import BeautifulSoup
+from django.test import SimpleTestCase, TestCase
 from common.tests import stripxml, link_equal
 from szr.models import Court
 from . import cron, forms, models, views
@@ -68,7 +66,7 @@ class TestCron(TestCase):
         models.Courtroom.objects.exclude(desc__contains='101/').delete()
         cron.cron_update()
         self.assertEqual(models.Hearing.objects.count(), 2)
-        
+
 class TestForms(SimpleTestCase):
 
     def test_MainForm(self):
@@ -231,7 +229,7 @@ s0 = '<select id="courtroom">' \
 
 class TestViews2(TestCase):
     fixtures = ['psj_test.json']
-    
+
     def test_mainpage(self):
         res = self.client.get('/psj')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -291,7 +289,7 @@ class TestViews2(TestCase):
 
 class TestViews3(TestCase):
     fixtures = ['psj_test.json']
-    
+
     def setUp(self):
         populate()
 
@@ -479,7 +477,7 @@ class TestViews3(TestCase):
         self.assertTrue(link_equal(
             links[1]['href'],
             '/psj/list/?senate=26&start=150'))
-        
+
     def test_xmllist(self):
         res = self.client.get('/psj/xmllist')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)

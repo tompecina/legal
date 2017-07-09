@@ -14,32 +14,29 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from datetime import datetime
+from csv import writer as csvwriter
+from json import dump
+from os.path import join
 from django.shortcuts import render, redirect, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
-from datetime import date, datetime
-from math import floor, ceil
-from csv import writer as csvwriter
-from json import dump
-from os.path import join
-from common.utils import (
-    formam, Pager, newXML, xmldecorate, composeref, xmlbool, logger)
+from common.utils import Pager, newXML, xmldecorate, composeref, logger
 from common.glob import (
-    registers, inerr, text_opts, text_opts_keys, repourl, exlim_title,
+    registers, inerr, text_opts_keys, repourl, exlim_title,
     localsubdomain, localurl, DTF)
-from cnb.main import getFXrate
 from szr.glob import (
     supreme_administrative_court, supreme_administrative_court_name)
 from .forms import MainForm
-from .models import Agenda, Decision, Party
+from .models import Agenda, Decision
 
 APP = __package__
 
@@ -121,7 +118,7 @@ def g2p(rd):
         assert 'party_opt' in rd
         p['parties__name__' + rd['party_opt']] = rd['party']
     return p
-        
+
 @require_http_methods(['GET'])
 def htmllist(request):
     logger.debug('HTML list accessed', request, request.GET)

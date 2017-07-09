@@ -14,14 +14,13 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 from django.core.validators import RegexValidator
-from datetime import date
 from common import forms, fields, widgets
 from common.glob import register_regex, text_opts, format_opts
 
@@ -82,7 +81,7 @@ class MainForm(forms.Form):
         choices=format_opts,
         label='Výstupní formát',
         initial='html')
-    
+
     def clean(self):
         cleaned_data = super(MainForm, self).clean()
         date_from = cleaned_data.get('date_from', None)

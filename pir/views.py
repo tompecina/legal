@@ -14,28 +14,25 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.models import User
-from django.apps import apps
-from django.urls import reverse
-from django.http import QueryDict, Http404
 from datetime import datetime
 from locale import strxfrm
 from csv import writer as csvwriter
 from json import dump
-from common.utils import between, Pager, newXML, xmldecorate, logger
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
+from django.views.decorators.http import require_http_methods
+from django.apps import apps
+from django.urls import reverse
+from django.http import QueryDict, Http404
+from common.utils import Pager, newXML, xmldecorate, logger
 from common.glob import (
-    inerr, text_opts, text_opts_keys, exlim_title, localsubdomain, localurl,
-    DTF)
-from sir.glob import l2n, l2s, l2r, s2d, r2i, r2d, a2d
+    inerr, text_opts_keys, exlim_title, localsubdomain, localurl, DTF)
+from sir.glob import l2n, l2s, l2r, s2d, r2i, a2d
 from sir.models import Vec, Osoba, DruhRoleVRizeni, Counter
 from .forms import MainForm
 
@@ -239,7 +236,7 @@ def htmllist(request):
          'pager': Pager(start, total, reverse('pir:htmllist'), rd, BATCH),
          'total': total})
 
-def xml_addparties(osoby, xml, tag, tagname):            
+def xml_addparties(osoby, xml, tag, tagname):
     for osoba in osoby:
         subtag = xml.new_tag(tagname)
         tag.append(subtag)
@@ -560,7 +557,7 @@ def party(request, id=0):
         adresa.type = a2d[adresa.druhAdresy.desc]
         adresa.psc = ('{} {}'.format(adresa.psc[:3], adresa.psc[3:]) \
             if adresa.psc else '')
-        adresa.cl = ['odd', 'even'][i % 2]
+        adresa.cl = 'even' if i % 2 else 'odd'
         i += 1
     return render(
         request,

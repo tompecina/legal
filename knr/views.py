@@ -14,39 +14,37 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.http import HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
-from django.contrib import auth
-from django.template import Context, Template
-from django.contrib.auth.models import User
-from django.forms.models import model_to_dict
-from django.apps import apps
-from django.db.models import Q
-from math import floor, ceil
+from math import ceil
 from urllib.parse import quote, unquote
 from json import loads as json_loads
 from pickle import dumps, loads
 from xml.sax.saxutils import escape, unescape
 from datetime import datetime, timedelta
+from io import BytesIO
+from os.path import join
 import reportlab.rl_config
 from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     Paragraph, SimpleDocTemplate, LongTable, TableStyle, Spacer, KeepTogether)
 from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.enums import TA_CENTER, TA_RIGHT
+from reportlab.lib.enums import TA_RIGHT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black, gray
-from io import BytesIO
-from os.path import join
+from django.http import HttpResponse, Http404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
+from django.template import Context, Template
+from django.forms.models import model_to_dict
+from django.apps import apps
+from django.db.models import Q
 from cache.main import getcache, getasset, setasset
 from common.settings import FONT_DIR
 from common.utils import (
@@ -106,7 +104,7 @@ def convi(n):
 def convf(n, p):
     tpl = Template('{{{{ v|floatformat:"{:d}" }}}}'.format(p))
     c = Context({'v': n})
-    return tpl.render(c)    
+    return tpl.render(c)
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -141,7 +139,7 @@ def placeform(request, id=0):
         if f.is_valid():
             cd = f.cleaned_data
             if id:
-                p = get_object_or_404(Place, pk=id, uid=uid)
+                get_object_or_404(Place, pk=id, uid=uid)
                 cd['pk'] = id
             Place(uid_id=uid, **cd).save()
             if id:
@@ -203,7 +201,7 @@ def placedel(request, id=0):
              'name': get_object_or_404(Place, pk=id, uid=uid).name})
     else:
         place = get_object_or_404(Place, pk=id, uid=uid)
-        if (getbutton(request) == 'yes'):
+        if getbutton(request) == 'yes':
             logger.info(
                 'User "{}" ({:d}) deleted place "{}"' \
                     .format(uname, uid, place.name),
@@ -235,7 +233,7 @@ def carform(request, id=0):
         if f.is_valid():
             cd = f.cleaned_data
             if id:
-                p = get_object_or_404(Car, pk=id, uid=uid)
+                get_object_or_404(Car, pk=id, uid=uid)
                 cd['pk'] = id
             Car(uid_id=uid, **cd).save()
             if id:
@@ -293,7 +291,7 @@ def cardel(request, id=0):
              'name': get_object_or_404(Car, pk=id, uid=uid).name})
     else:
         car = get_object_or_404(Car, pk=id, uid=uid)
-        if (getbutton(request) == 'yes'):
+        if getbutton(request) == 'yes':
             logger.info(
                 'User "{}" ({:d}) deleted car "{}"' \
                     .format(uname, uid, car.name),
@@ -367,7 +365,6 @@ def formulaform(request, id=0):
     rates = []
     for fuel in fuels:
         rates.append(f['rate_{}'.format(fuel)])
-    q = rates[0].name
     return render(
         request,
         'knr_formulaform.html',
@@ -421,7 +418,7 @@ def formuladel(request, id=0):
              'name': get_object_or_404(Formula, pk=id, uid=uid).name})
     else:
         formula = get_object_or_404(Formula, pk=id, uid=uid)
-        if (getbutton(request) == 'yes'):
+        if getbutton(request) == 'yes':
             logger.info(
                 'User "{}" ({:d}) deleted formula "{}"' \
                     .format(uname, uid, formula.name),
@@ -698,7 +695,7 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
            'vat': True,
            'numerator': 1,
            'denominator': 1}},
-      
+
       {TEXT: 'Paušální odměna stanovená pevnou částkou (plátce DPH)',
        TYPE: 'general',
        PRESEL: {
@@ -883,7 +880,7 @@ def getcalc(request):
             pass
     setcalc(request, Calculation())
     a = getasset(request, aid)
-    return (loads(a) if a else None)
+    return loads(a) if a else None
 
 def setcalc(request, data):
     return setasset(request, aid, dumps(data), timedelta(weeks=10))
@@ -943,7 +940,7 @@ def fromxml(d):
     if not s:
         return None, 'Chybný formát souboru'
     h = s.findChild('calculation')
-    if ((not h) or (h.has_attr('application') and (h['application'] != APP))):
+    if (not h) or (h.has_attr('application') and (h['application'] != APP)):
         return None, 'Soubor nebyl vytvořen touto aplikací'
     c = Calculation()
     s2i(fields, s, c)
@@ -966,7 +963,7 @@ def fromxml(d):
 @require_http_methods(['GET', 'POST'])
 @login_required
 def mainpage(request):
-    
+
     logger.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
@@ -1247,7 +1244,7 @@ def mainpage(request):
                                         convi(item.trip_distance),
                                         item.trip_number),
                                     s6))
-                                if (item.time_number and item.time_rate):
+                                if item.time_number and item.time_rate:
                                     q.append(Paragraph(
                                         '<b>Počet započatých půlhodin:</b> ' \
                                         '{:d} &nbsp; <b>Sazba:</b> {} ' \
@@ -1291,7 +1288,7 @@ def mainpage(request):
                             r.append(q)
                             r.append(Paragraph(
                                 '{} Kč'.format(convi(item.amount)), s5))
-                            d2.append(r)         
+                            d2.append(r)
                         t2 = LongTable(d2, colWidths=[16.15, 400.45, 66.70])
                         t2.setStyle(
                             TableStyle([
@@ -1343,7 +1340,7 @@ def mainpage(request):
                          Paragraph('{} Kč'.format(convi(total)), s10)])
                     if total_vat:
                         t3 = LongTable(d3, colWidths=[346.60, 70.00, 66.70])
-                    else:                      
+                    else:
                         t3 = LongTable(d3, colWidths=[366.60, 50.00, 66.70])
                     l3 = [('LINEABOVE', (1, 0), (-1, 0), 1.0, black),
                           ('LINEABOVE', (1, -1), (-1, -1), 1.0, black),
@@ -1496,7 +1493,7 @@ def itemform(request, idx=0):
         cd['trip_distance'] = cd['time_number'] = ''
         p = {}
         d2d(['from_lat', 'from_lon', 'to_lat', 'to_lon'], cd, p)
-        if (p['from_lat'] and p['from_lon'] and p['to_lat'] and p['to_lon']):
+        if p['from_lat'] and p['from_lon'] and p['to_lat'] and p['to_lon']:
             dist, dur = finddist(
                 p['from_lat'],
                 p['from_lon'],
@@ -1517,7 +1514,7 @@ def itemform(request, idx=0):
     if not c:  # pragma: no cover
         return error(request)
     var = {'app': APP, 'errors': False}
-    if (request.method == 'GET'):
+    if request.method == 'GET':
         if idx:
             idx = int(idx)
             var.update({'idx': idx, 'page_title': 'Úprava položky'})
@@ -1580,9 +1577,9 @@ def itemform(request, idx=0):
                                 int(request.POST.get('formula_sel')),
                                 cd)
                             sel = True
-                        if (not (cd['trip_distance'] and cd['time_number'])):
+                        if not (cd['trip_distance'] and cd['time_number']):
                             proc_dist(cd)
-                            if (cd['trip_distance'] and cd['time_number']):
+                            if cd['trip_distance'] and cd['time_number']:
                                 sel = True
                         if sel:
                             idx = cd['idx']
@@ -1867,12 +1864,12 @@ def itemform(request, idx=0):
                         for t in gf[type]:
                             var['{}_error'.format(t)] = 'ok'
                     elif type == 'travel':
-                        if ((btn == 'from_apply') and \
-                            request.POST.get('from_sel')):
+                        if (btn == 'from_apply') and \
+                           request.POST.get('from_sel'):
                             proc_from(int(request.POST.get('from_sel')), cd)
                             proc_dist(cd)
-                        elif ((btn == 'from_search') and \
-                              request.POST.get('from_address')):
+                        elif (btn == 'from_search') and \
+                             request.POST.get('from_address') :
                             loc = findloc(request.POST.get('from_address'))
                             if loc:
                                 cd['from_address'], \
@@ -1885,12 +1882,11 @@ def itemform(request, idx=0):
                                      'prosím, upřesněte adresu.'})
                                 cd.update({'from_lat': '', 'from_lon': ''})
                             proc_dist(cd)
-                        elif ((btn == 'to_apply') and \
-                              request.POST.get('to_sel')):
+                        elif (btn == 'to_apply') and request.POST.get('to_sel'):
                             proc_to(int(request.POST.get('to_sel')), cd)
                             proc_dist(cd)
-                        elif ((btn == 'to_search') and \
-                              request.POST.get('to_address')):
+                        elif (btn == 'to_search') and \
+                             request.POST.get('to_address'):
                             loc = findloc(request.POST.get('to_address'))
                             if loc:
                                 cd['to_address'], \
@@ -1909,11 +1905,11 @@ def itemform(request, idx=0):
                             cd['time_rate'] = 50
                         elif btn == 'calc2':
                             cd['time_rate'] = 100
-                        elif ((btn == 'car_apply') and \
-                              request.POST.get('car_sel')):
+                        elif (btn == 'car_apply') and \
+                             request.POST.get('car_sel'):
                             proc_car(int(request.POST.get('car_sel')), cd)
-                        elif ((btn == 'formula_apply') and \
-                              request.POST.get('formula_sel')):
+                        elif (btn == 'formula_apply') and \
+                             request.POST.get('formula_sel'):
                             proc_formula(int(request.POST.get('formula_sel')),
                                          cd)
                         idx = cd['idx']

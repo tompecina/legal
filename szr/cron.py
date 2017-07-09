@@ -14,18 +14,18 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.contrib.auth.models import User
-from django.db.models import Q
 from datetime import datetime, timedelta
-from bs4 import BeautifulSoup
 from hashlib import md5
 from urllib.parse import quote
+from bs4 import BeautifulSoup
+from django.contrib.auth.models import User
+from django.db.models import Q
 from common.utils import get, post, sleep, logger, composeref
 from .models import Court, Proceedings
 from .glob import supreme_court, supreme_administrative_court
@@ -66,7 +66,7 @@ def addauxid(p):
 def isreg(c):
     s = c.pk
     return (s[:2] == 'KS') or (s == 'MSPHAAB')
-    
+
 def cron_courts():
     try:
         res = get(root_url + list_courts)
@@ -198,7 +198,7 @@ def cron_update():
         p = p.earliest('updated')
         if updateproc(p):
             p.save()
-    
+
 def szr_notice(uid):
     text = ''
     pp = Proceedings.objects.filter(uid=uid, notify=True) \

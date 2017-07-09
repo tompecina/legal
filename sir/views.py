@@ -14,12 +14,15 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from locale import strxfrm
+from csv import reader as csvreader, writer as csvwriter
+from io import StringIO
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -27,11 +30,8 @@ from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.apps import apps
 from django.urls import reverse
-from locale import strxfrm
-from csv import reader as csvreader, writer as csvwriter
-from io import StringIO
-from common.utils import getbutton, grammar, between, Pager, logger
-from common.glob import inerr, GR_C, text_opts, text_opts_keys
+from common.utils import getbutton, Pager, logger
+from common.glob import inerr
 from szr.forms import EmailForm
 from .glob import l2n, l2s
 from .models import Vec, Insolvency
@@ -56,7 +56,6 @@ def mainpage(request):
     page_title = 'Sledování změn v insolvenčních řízeních'
     rd = request.GET.copy()
     start = int(rd['start']) if ('start' in rd) else 0
-    btn = getbutton(request)
     if request.method == 'GET':
         f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
     else:
@@ -155,7 +154,7 @@ def insdel(request, id=0):
              'page_title': 'Smazání řízení'})
     else:
         ins = get_object_or_404(Insolvency, pk=id, uid=uid)
-        if (getbutton(request) == 'yes'):
+        if getbutton(request) == 'yes':
             logger.info(
                 'User "{}" ({:d}) deleted proceedings "{}" ({})' \
                     .format(uname, uid, ins.desc, p2s(ins)),
@@ -202,7 +201,7 @@ def insbatchform(request):
     uid = request.user.id
     uname = request.user.username
 
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         btn = getbutton(request)
 
         if btn == 'load':

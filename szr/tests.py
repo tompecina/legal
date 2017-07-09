@@ -14,30 +14,30 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.test import SimpleTestCase, TestCase, Client
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from http import HTTPStatus
 from datetime import datetime
-from bs4 import BeautifulSoup
 from os.path import join
+from bs4 import BeautifulSoup
+from django.test import SimpleTestCase, TestCase
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from common.settings import BASE_DIR
 from common.glob import localdomain
 from common.tests import link_equal
-from . import cron, forms, models, views
+from . import cron, forms, models
 
 APP = __package__
 TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 class TestCron(TestCase):
     fixtures = ['szr_test.json']
-    
+
     def test_addauxid(self):
         cron.addauxid(models.Proceedings.objects.get(pk=1))
         p = models.Proceedings.objects.get(pk=1)
@@ -65,12 +65,12 @@ class TestCron(TestCase):
         c = models.Court.objects
         self.assertEqual(c.count(), 98)
         self.assertEqual(c.exclude(reports__isnull=True).count(), 86)
-        
+
     def test_update(self):
         self.assertEqual(models.Proceedings.objects.filter(
             court_id='NSS', auxid=0).count(), 3)
         st = datetime.now()
-        for i in range(models.Proceedings.objects.count()):
+        for _ in range(models.Proceedings.objects.count()):
             cron.cron_update()
         self.assertEqual(models.Proceedings.objects.filter(
             court_id='NSS', auxid=0).count(), 1)
@@ -118,7 +118,7 @@ class TestCron(TestCase):
 
     def test_szr_notice(self):
         self.assertEqual(cron.szr_notice(1), '')
-        for i in range(models.Proceedings.objects.count()):
+        for _ in range(models.Proceedings.objects.count()):
             cron.cron_update()
         self.assertEqual(
             cron.szr_notice(1),
@@ -151,7 +151,7 @@ class TestForms(TestCase):
         with self.assertRaises(ValidationError):
             forms.courtval('XXX')
         forms.courtval('NSS')
-    
+
 class TestModels(SimpleTestCase):
 
     def test_models(self):
@@ -173,14 +173,14 @@ class TestModels(SimpleTestCase):
 
 class TestViews(TestCase):
     fixtures = ['szr_test.json']
-    
+
     def setUp(self):
         User.objects.create_user('user', 'user@' + localdomain, 'none')
         self.user = User.objects.get(username='user')
 
     def tearDown(self):
         self.client.logout()
-        
+
     def test_mainpage(self):
         res = self.client.get('/szr')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)

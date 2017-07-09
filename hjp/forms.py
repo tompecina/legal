@@ -14,7 +14,7 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -60,7 +60,7 @@ class TransForm(forms.Form):
 
     def clean_amount(self):
         data = self.cleaned_data['amount']
-        if ((self.data['transaction_type'] != 'balance') and (not data)):
+        if (self.data['transaction_type'] != 'balance') and (not data):
             raise forms.ValidationError('Amount is required')
         return data
 
@@ -147,24 +147,24 @@ class MainForm(forms.Form):
 
     def clean_fixed_amount(self):
         data = self.cleaned_data['fixed_amount']
-        if ((self.data['model'] == 'fixed') and (not data)):
+        if (self.data['model'] == 'fixed') and (not data):
             raise forms.ValidationError('Amount is required')
         return data
- 
+
     def clean_pa_rate(self):
         data = self.cleaned_data['pa_rate']
-        if ((self.data['model'] == 'per_annum') and (not data)):
+        if (self.data['model'] == 'per_annum') and (not data):
             raise forms.ValidationError('Interest rate is required')
         return data
- 
+
     def clean_pm_rate(self):
         data = self.cleaned_data['pm_rate']
-        if ((self.data['model'] == 'per_mensem') and (not data)):
+        if (self.data['model'] == 'per_mensem') and (not data):
             raise forms.ValidationError('Interest rate is required')
         return data
- 
+
     def clean_pd_rate(self):
         data = self.cleaned_data['pd_rate']
-        if ((self.data['model'] == 'per_diem') and (not data)):
+        if (self.data['model'] == 'per_diem') and (not data):
             raise forms.ValidationError('Interest rate is required')
         return data

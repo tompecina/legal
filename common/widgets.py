@@ -14,7 +14,7 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -28,70 +28,70 @@ class aw(forms.TextInput):
         attrs = {'size': '15', 'maxlength': '25'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(aw, self).__init__(**kwargs)
+        super(aw, self).__init__(**kwargs)
 
 class saw(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '8', 'maxlength': '8'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(saw, self).__init__(**kwargs)
+        super(saw, self).__init__(**kwargs)
 
 class sew(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '50'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(sew, self).__init__(**kwargs)
+        super(sew, self).__init__(**kwargs)
 
 class msew(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '35'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(msew, self).__init__(**kwargs)
+        super(msew, self).__init__(**kwargs)
 
 class ssew(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '20'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(ssew, self).__init__(**kwargs)
+        super(ssew, self).__init__(**kwargs)
 
 class abbrw(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '12'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(abbrw, self).__init__(**kwargs)
+        super(abbrw, self).__init__(**kwargs)
 
 class genw(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '60'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(genw, self).__init__(**kwargs)
+        super(genw, self).__init__(**kwargs)
 
 class gpsw(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '12', 'maxlength': '20'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(gpsw, self).__init__(**kwargs)
+        super(gpsw, self).__init__(**kwargs)
 
 class consw(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '4', 'maxlength': '4'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(consw, self).__init__(**kwargs)
+        super(consw, self).__init__(**kwargs)
 
 class taw(forms.Textarea):
     def __init__(self, **kwargs):
         attrs = {'rows': '8', 'cols': '80'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(taw, self).__init__(**kwargs)
+        super(taw, self).__init__(**kwargs)
 
     def render(self, *args, **kwargs):
         return mark_safe(super(taw, self)
@@ -102,42 +102,42 @@ class currw(forms.TextInput):
         attrs = {'size': '3', 'maxlength': '3', 'class': 'toupper'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(currw, self).__init__(**kwargs)
+        super(currw, self).__init__(**kwargs)
 
 class ratew(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '15', 'maxlength': '25'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(ratew, self).__init__(**kwargs)
+        super(ratew, self).__init__(**kwargs)
 
 class fxw(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '6', 'maxlength': '10'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(fxw, self).__init__(**kwargs)
+        super(fxw, self).__init__(**kwargs)
 
 class sdw(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '50', 'maxlength': '50'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(sdw, self).__init__(**kwargs)
+        super(sdw, self).__init__(**kwargs)
 
 class shw(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '4', 'maxlength': '4'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(shw, self).__init__(**kwargs)
+        super(shw, self).__init__(**kwargs)
 
 class yw(forms.TextInput):
     def __init__(self, **kwargs):
         attrs = {'size': '4'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(yw, self).__init__(**kwargs)
+        super(yw, self).__init__(**kwargs)
 
 class hw(forms.HiddenInput):
     pass
@@ -147,7 +147,7 @@ class emw(forms.TextInput):
         attrs = {'size': '40'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        return super(emw, self).__init__(**kwargs)
+        super(emw, self).__init__(**kwargs)
 
 rs = forms.RadioSelect
 
@@ -167,8 +167,7 @@ class CurrencyWidget(forms.widgets.MultiWidget):
     def decompress(self, value):
         if value in self._currlist:
             return [value, None]
-        else:
-            return ['OTH', value]
+        return ['OTH', value]
 
     def format_output(self, rw):
         return '&nbsp;'.join(rw).replace('\n', '')
@@ -179,8 +178,8 @@ class dw(forms.DateInput):
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
         self._today = kwargs.pop('today', False)
-        return super(dw, self).__init__(**kwargs)
-    
+        super(dw, self).__init__(**kwargs)
+
     def render(self, name, *args, **kwargs):
         r = super(dw, self).render(name, *args, **kwargs)
         if self._today:
@@ -188,5 +187,4 @@ class dw(forms.DateInput):
                 '{0}&nbsp;<input type="submit" name="submit_set_{1}" ' \
                 'value="Dnes" class="today" id="id_set_{1}" />' \
                     .format(r, name))
-        else:
-            return r
+        return r

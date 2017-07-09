@@ -1,5 +1,7 @@
 import os
 import sys
+import site
+from django.core.wsgi import get_wsgi_application
 
 sys.path.append('/var/www/django/legal')
 
@@ -19,7 +21,6 @@ else:
         'python{0.major:d}.{0.minor:d}'.format(sys.version_info),
         'site-packages')
 prev_sys_path = list(sys.path)
-import site
 site.addsitedir(site_packages)
 sys.real_prefix = sys.prefix
 sys.prefix = base
@@ -33,5 +34,4 @@ sys.path[:0] = new_sys_path
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'common.settings'
 
-from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

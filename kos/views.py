@@ -14,21 +14,18 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from math import ceil
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
-from datetime import date
-from math import floor, ceil
 from common.utils import getbutton, formam, logger
 from common.glob import inerr_short
-from common.models import Preset
-from cnb.main import getFXrate
 from .forms import MainForm
 
 APP = __package__

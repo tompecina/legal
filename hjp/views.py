@@ -14,21 +14,19 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.shortcuts import render, redirect, HttpResponse, Http404
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
-from django.apps import apps
 from datetime import date, datetime, timedelta
 from calendar import monthrange
 from pickle import dumps, loads
 from xml.sax.saxutils import escape
 import csv
+from io import BytesIO
+from os.path import join
 import reportlab.rl_config
 from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
@@ -38,8 +36,10 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black
-from io import BytesIO
-from os.path import join
+from django.shortcuts import render, redirect, HttpResponse, Http404
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
+from django.apps import apps
 from common.settings import FONT_DIR
 from common.utils import (
     getbutton, yfactor, mfactor, odp, formam, xmldecorate, xmlescape,
@@ -61,7 +61,7 @@ class Debt(object):
         self.internal_note = ''
         self.currency = 'CZK'
         self.rounding = 0
-        self.interest = Interest();
+        self.interest = Interest()
         self.transactions = []
         self.rates = {}
 
@@ -83,23 +83,23 @@ def getdebt(request):
             pass
     setdebt(request, Debt())
     a = getasset(request, aid)
-    return (loads(a) if a else None)
+    return loads(a) if a else None
 
 def setdebt(request, data):
     return setasset(request, aid, dumps(data), timedelta(weeks=10))
 
 def dispcurr(curr):
-    return ('Kč' if (curr == 'CZK') else curr)
+    return 'Kč' if (curr == 'CZK') else curr
 
 def calcint(pastdate, presdate, principal, debt, default_date):
     interest = debt.interest
 
     if interest.model == 'none':
         return (0.0, None)
-    
+
     if interest.model == 'fixed':
         return ((0.0 if pastdate else interest.fixed_amount), None)
-    
+
     if (not pastdate) or (pastdate > presdate):
         return (None, 'Chybný interval')
 
@@ -128,7 +128,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
         debt.rates[default_date] = r[0]
         return ((principal * yfactor(pastdate, presdate, 'ACT/ACT') * \
                  r[0] / 50.0), None)
-        
+
     if interest.model == 'cust2':
         s = 0.0
         t = pastdate
@@ -161,7 +161,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
                 d2 = presdate.day
                 return ((principal * (s + yfactor((t - odp), date(y2, m2, d2), \
                        'ACT/ACT') * (r[0] + 7.0)) / 100.0), None)
-        
+
     if interest.model == 'cust3':
         y = default_date.year
         m = default_date.month
@@ -179,7 +179,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
         debt.rates[date(y, m, d)] = r[0]
         return ((principal * yfactor(pastdate, presdate, 'ACT/ACT') * \
                (r[0] + 7.0) / 100.0), None)
-        
+
     if interest.model == 'cust5':
         y = default_date.year
         m = default_date.month
@@ -197,7 +197,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
         debt.rates[date(y, m, d)] = r[0]
         return ((principal * yfactor(pastdate, presdate, 'ACT/ACT') * \
                (r[0] + 8.0) / 100.0), None)
-        
+
     if interest.model == 'cust6':
         y = default_date.year
         m = default_date.month
@@ -211,7 +211,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
         debt.rates[date(y, m, 1)] = r[0]
         return ((principal * yfactor(pastdate, presdate, 'ACT/ACT') * \
                (r[0] + 8.0) / 100.0), None)
-        
+
     if interest.model == 'cust4':
         return ((principal * (presdate - pastdate).days * .0025), None)
 
@@ -243,7 +243,7 @@ def getrows(debt):
     else:
         default_date = None
     debt.default_date = default_date
-    
+
     for tt in st:
         row = {}
         am = (round(tt.amount, debt.rounding) if hasattr(tt, 'amount') else 0.0)
@@ -303,7 +303,7 @@ def getrows(debt):
             row['post_principal'] = principal
             row['post_interest'] = interest
             row['post_total'] = (principal + interest)
-            if (trt == 'balance'):
+            if trt == 'balance':
                 principal = op
                 interest = oi
             else:
@@ -558,8 +558,7 @@ def mainpage(request):
             return '<td class="cr{}"></td>'.format(s)
         if a > 0.0:
             return '<td class="cr{}">{}</td>'.format(s, formam(a))
-        else:
-            return '<td class="dr{}">{}</td>'.format(s, formam(-a))
+        return '<td class="dr{}">{}</td>'.format(s, formam(-a))
 
     def fa(a):
         return formam(round(a, debt.rounding) if debt.rounding else \
@@ -569,7 +568,7 @@ def mainpage(request):
     err_message = ''
     rows_err = False
 
-    if (request.method == 'GET'):
+    if request.method == 'GET':
         debt = getdebt(request)
         if not debt:  # pragma: no cover
             return error(request)
@@ -580,7 +579,7 @@ def mainpage(request):
             if row['err']:
                 rows_err = True
                 break
-        
+
         var = {'title': debt.title,
                'note': debt.note,
                'internal_note': debt.internal_note,
@@ -659,7 +658,7 @@ def mainpage(request):
             elif m == 'per_diem':
                 interest.rate = float(cd['pd_rate'])
             setdebt(request, debt)
-            
+
             if (not btn) and cd['next']:
                 return redirect(cd['next'])
 
@@ -864,7 +863,7 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False)
 
-                d1 =[[[Paragraph('Historie peněžité pohledávky'.upper(), s1)]]]
+                d1 = [[[Paragraph('Historie peněžité pohledávky'.upper(), s1)]]]
                 if debt.title:
                     d1[0][0].append(Paragraph(escape(debt.title), s2))
                 t1 = Table(d1, colWidths=[483.30])
@@ -898,59 +897,59 @@ def mainpage(request):
                         s19))
                 i2 = None
                 i3 = []
-                if (debt.interest.model == 'none'):
+                if debt.interest.model == 'none':
                     i1 = 'bez úroku'
-                elif (debt.interest.model == 'fixed'):
+                elif debt.interest.model == 'fixed':
                     i1 = 'pevnou částkou {}' \
                              .format(fa(debt.interest.fixed_amount))
-                elif (debt.interest.model == 'per_annum'):
+                elif debt.interest.model == 'per_annum':
                     i1 = 'pevnou sazbou {:n} % <i>p. a.</i>, ' \
                          'konvence pro počítání dnů: {}' \
                              .format(debt.interest.rate,
                                      debt.interest.day_count_convention)
-                elif (debt.interest.model == 'per_mensem'):
+                elif debt.interest.model == 'per_mensem':
                     i1 = 'pevnou sazbou {:n} % <i>p. m.</i>, ' \
                          'konvence pro počítání dnů: {}' \
                              .format(debt.interest.rate,
                                      debt.interest.day_count_convention)
-                elif (debt.interest.model == 'per_diem'):
+                elif debt.interest.model == 'per_diem':
                     i1 = 'pevnou sazbou {:n} ‰ <i>p. d.</i>' \
                              .format(debt.interest.rate)
-                elif (debt.interest.model == 'cust1'):
+                elif debt.interest.model == 'cust1':
                     i1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
                          '(účinnost do 27.04.2005)'
                     if debt.rates:
                         rt = debt.rates.popitem()
                         i2 = 'Diskontní sazba ČNB ke dni {:%d.%m.%Y}: {:.2f}' \
                              ' % <i>p. a.</i>'.format(rt[0], Lf(rt[1]))
-                elif (debt.interest.model == 'cust2'):
+                elif debt.interest.model == 'cust2':
                     i1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
                          '(účinnost od 28.04.2005 do 30.06.2010)'
-                    if (len(debt.rates) == 1):
+                    if len(debt.rates) == 1:
                         rt = debt.rates.popitem()
                         i2 = 'Použita 2T repo sazba ČNB ke dni {:%d.%m.%Y}:' \
                              ' {:.2f} % <i>p. a.</i>'.format(rt[0], Lf(rt[1]))
-                    elif (len(debt.rates) > 1):
+                    elif len(debt.rates) > 1:
                         i2 = 'Použity následující 2T repo sazby ČNB:'
                         for dt in sorted(debt.rates.keys()):
                             i3.append(
                                 '– ke dni {:%d.%m.%Y}: {:.2f} % <i>p. a.</i>' \
                                     .format(dt, Lf(debt.rates[dt])))
-                elif (debt.interest.model == 'cust3'):
+                elif debt.interest.model == 'cust3':
                     i1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
                          '(účinnost od 01.07.2010 do 30.06.2013)'
                     if debt.rates:
                         rt = debt.rates.popitem()
                         i2 = '2T repo sazba ČNB ke dni {:%d.%m.%Y}:' \
                              ' {:.2f} % <i>p. a.</i>'.format(rt[0], Lf(rt[1]))
-                elif (debt.interest.model == 'cust5'):
+                elif debt.interest.model == 'cust5':
                     i1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
                          '(účinnost od 01.07.2013 do 31.12.2013)'
                     if debt.rates:
                         rt = debt.rates.popitem()
                         i2 = '2T repo sazba ČNB ke dni {:%d.%m.%Y}:' \
                              ' {:.2f} % <i>p. a.</i>'.format(rt[0], Lf(rt[1]))
-                elif (debt.interest.model == 'cust6'):
+                elif debt.interest.model == 'cust6':
                     i1 = 'úrok z prodlení podle nařízení č. 351/2013 Sb.'
                     if debt.rates:
                         rt = debt.rates.popitem()
@@ -958,7 +957,7 @@ def mainpage(request):
                              ' {:.2f} % <i>p. a.</i>'.format(rt[0], Lf(rt[1]))
                 else:
                     i1 = 'poplatek z prodlení podle nařízení č. 142/1994 Sb.'
-                    if (debt.currency != 'CZK'):
+                    if debt.currency != 'CZK':
                         i2 = '<i>(minimální sazba 25 Kč za každý ' \
                              'započatý měsíc prodlení není pro jinou ' \
                              'měnu než CZK podporována)</i>'
@@ -970,7 +969,7 @@ def mainpage(request):
                     r.append(Paragraph(i, s21))
                 r.append(Spacer(0, 50))
                 flow.extend(r)
-                
+
 
                 bst = [('SPAN', (0, 0), (4, 0)),
                        ('SPAN', (5, 0), (33, 0)),
@@ -1034,7 +1033,7 @@ def mainpage(request):
                        'balance': [
                         ('LINEBELOW', (23, 1), (32, 1), tl, black),
                         ('LINEAFTER', (25, 2), (25, 4), tl, black)]}
-                
+
                 for row in rows:
                     if row['err']:
                         flow.extend(
@@ -1252,7 +1251,7 @@ def transform(request, id=0):
             f = TransForm()
     else:
         f = TransForm(request.POST)
-        
+
         btn = getbutton(request)
         if btn == 'back':
             return redirect('hjp:mainpage')
@@ -1282,7 +1281,7 @@ def transform(request, id=0):
         else:
             logger.debug('Invalid form', request)
             err_message = inerr
-        
+
     return render(request,
                   'hjp_transform.html',
                   {'app': APP,

@@ -14,7 +14,7 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -33,7 +33,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
     logger.debug(
         'FX rate requested, currency "{}" for {:d}-{:02d}-{:02d}, fixed "{}"' \
             .format(curr, dt.year, dt.month, dt.day, use_fixed))
-    
+
     fixed_list = {
         'XEU': {'currency_to': 'EUR',
                 'fixed_rate': 1.0,
@@ -78,11 +78,11 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         'MCF': {'currency_to': 'EUR',
                 'fixed_rate': 6.55957,
                 'date_from': date(1998, 12, 31)
-        }, 
+        },
         'PTE': {'currency_to': 'EUR',
                 'fixed_rate': 200.482,
                 'date_from': date(1998, 12, 31)
-        }, 
+        },
         'SML': {'currency_to': 'EUR',
                 'fixed_rate': 1936.27,
                 'date_from': date(1998, 12, 31)
@@ -90,7 +90,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         'ESP': {'currency_to': 'EUR',
                 'fixed_rate': 166.386,
                 'date_from': date(1998, 12, 31)
-        }, 
+        },
         'VAL': {'currency_to': 'EUR',
                 'fixed_rate': 1936.27,
                 'date_from': date(1998, 12, 31)
@@ -156,7 +156,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
     today = date.today()
     if (dt.year < 1991) or (dt > today):
         return (None, None, None, 'Chybné datum, data nejsou k disposici')
-    p = FXrate.objects.filter(date = dt)
+    p = FXrate.objects.filter(date=dt)
     if p:
         tx = p[0].text
     else:
@@ -173,7 +173,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         assert soup
         assert soup.find('tabulka',
                          {'typ': 'XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU'})
-        dr = soup.find('kurzy', {'banka': 'CNB'})['datum']            
+        dr = soup.find('kurzy', {'banka': 'CNB'})['datum']
         dr = date(int(dr[6:]), int(dr[3:5]), int(dr[:2]))
     except:
         logger.error(
@@ -284,7 +284,7 @@ def getMPIrate(tp, dt, log=None):
         except:  # pragma: no cover
             logger.error('Error writing in database')
             return (None, 'Chyba zápisu do database (2)')
-        
+
     d = MPIrate.objects.filter(type=tp, valid__lte=dt).order_by('-valid')
     if not d.exists():
         return (None, 'Sazba není k disposici')

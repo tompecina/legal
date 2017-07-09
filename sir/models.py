@@ -14,7 +14,7 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -22,10 +22,9 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import (
-    MinLengthValidator, MinValueValidator, MaxValueValidator, RegexValidator)
+from django.core.validators import MinValueValidator, RegexValidator
 from common.utils import composeref
-from common.glob import text_opts, ic_regex, rc_regex, psc_regex
+from common.glob import ic_regex, rc_regex, psc_regex
 
 class DruhAdresy(models.Model):
     desc = models.CharField(
@@ -129,7 +128,7 @@ class Osoba(models.Model):
         db_index=True)
     timestamp_update = models.DateTimeField(
         auto_now=True)
-    
+
     class Meta:
         unique_together = ('idOsoby', 'idOsobyPuvodce')
 
@@ -239,7 +238,7 @@ class Transaction(models.Model):
         default=False)
     timestamp_add = models.DateTimeField(
         auto_now_add=True)
-    
+
     def __str__(self):
         return '{}, {}'.format(str(self.id), self.spisovaZnacka)
 

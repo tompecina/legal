@@ -14,27 +14,26 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from http import HTTPStatus
+from random import getrandbits, choice
+from datetime import datetime, timedelta
+from platform import python_version
+from os import uname
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_http_methods
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.apps import apps
 from django.db import connection
-from django import forms, get_version
-from http import HTTPStatus
-from random import getrandbits, choice
-from datetime import datetime, timedelta
-from platform import python_version
-from os import uname
+from django import get_version
 from knr.models import Place, Car, Formula
 from szr.models import Proceedings
 from sur.models import Party
@@ -42,7 +41,7 @@ from sir.models import Insolvency
 from dir.models import Debtor
 from .settings import APPS
 from .forms import UserAddForm, LostPwForm, MIN_PWLEN
-from .utils import send_mail, getbutton, logger
+from .utils import send_mail, logger
 from .glob import inerr, localsubdomain, localurl
 from .models import PwResetLink
 
@@ -85,11 +84,11 @@ def logout(request):
         'Logout page accessed using method {}'.format(request.method),
         request)
     uid = request.user.id
-    uname = request.user.username
+    username = request.user.username
     auth.logout(request)
-    if uname:
+    if username:
         logger.info(
-            'User "{}" ({:d}) logged out'.format(uname, uid),
+            'User "{}" ({:d}) logged out'.format(username, uid),
             request)
     return redirect('home')
 
@@ -103,7 +102,7 @@ def pwchange(request):
     var = {'page_title': 'Změna hesla'}
     u = request.user
     uid = u.id
-    uname = request.user.username
+    username = request.user.username
     if request.method == 'POST':
         if request.POST.get('back'):
             return redirect('home')
@@ -123,7 +122,7 @@ def pwchange(request):
             u.set_password(var['newpassword1'])
             u.save()
             logger.info(
-                'User "{}" ({:d}) changed password'.format(uname, uid),
+                'User "{}" ({:d}) changed password'.format(username, uid),
                 request)
             return redirect('/accounts/pwchanged/')
     return render(request, 'pwchange.html', var)
@@ -191,7 +190,7 @@ def resetpw(request, link):
     p = get_object_or_404(PwResetLink, link=link)
     u = p.user
     newpassword = ''
-    for i in range(PWLEN):
+    for _ in range(PWLEN):
         newpassword += choice(PWCHARS)
     u.set_password(newpassword)
     u.save()
@@ -205,7 +204,7 @@ def resetpw(request, link):
         {'page_title': 'Heslo bylo obnoveno',
          'newpassword': newpassword,
         })
-    
+
 def getappinfo():
     appinfo = []
     for id in APPS:

@@ -14,7 +14,7 @@
 # This application is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.         
+# GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -132,58 +132,58 @@ class DebitForm(forms.Form):
 
     def clean_fixed_amount(self):
         data = self.cleaned_data['fixed_amount']
-        if ((self.data['model'] == 'fixed') and (not data)):
+        if (self.data['model'] == 'fixed') and (not data):
             raise forms.ValidationError('Amount is required')
         return data
- 
+
     def clean_fixed_currency(self):
         data = self.cleaned_data['fixed_currency']
-        if ((self.data['model'] == 'fixed') and (not data)):
+        if (self.data['model'] == 'fixed') and (not data):
             raise forms.ValidationError('Currency is required')
         return data
- 
+
     def clean_fixed_date(self):
         data = self.cleaned_data['fixed_date']
-        if ((self.data['model'] == 'fixed') and (not data)):
+        if (self.data['model'] == 'fixed') and (not data):
             raise forms.ValidationError('Date is required')
         return data
- 
+
     def clean_principal_amount(self):
         data = self.cleaned_data['principal_amount']
-        if ((self.data['model'] != 'fixed') and \
-            (self.cleaned_data['principal_debit'] == 0) and (not data)):
+        if (self.data['model'] != 'fixed') and \
+           (self.cleaned_data['principal_debit'] == 0) and (not data):
             raise forms.ValidationError('Principal amount is required')
         return data
- 
+
     def clean_principal_currency(self):
         data = self.cleaned_data['principal_currency']
-        if ((self.data['model'] != 'fixed') and \
-            (self.cleaned_data['principal_debit'] == 0) and (not data)):
+        if (self.data['model'] != 'fixed') and \
+           (self.cleaned_data['principal_debit'] == 0) and (not data):
             raise forms.ValidationError('Principal currency is required')
         return data
- 
+
     def clean_date_from(self):
         data = self.cleaned_data['date_from']
-        if ((self.data['model'] != 'fixed') and \
-            (self.cleaned_data['principal_debit'] == 0) and (not data)):
+        if (self.data['model'] != 'fixed') and \
+           (self.cleaned_data['principal_debit'] == 0) and (not data):
             raise forms.ValidationError('Starting date is required')
         return data
 
     def clean_pa_rate(self):
         data = self.cleaned_data['pa_rate']
-        if ((self.data['model'] == 'per_annum') and (not data)):
+        if (self.data['model'] == 'per_annum') and (not data):
             raise forms.ValidationError('Interest rate is required')
         return data
- 
+
     def clean_pm_rate(self):
         data = self.cleaned_data['pm_rate']
-        if ((self.data['model'] == 'per_mensem') and (not data)):
+        if (self.data['model'] == 'per_mensem') and (not data):
             raise forms.ValidationError('Interest rate is required')
         return data
- 
+
     def clean_pd_rate(self):
         data = self.cleaned_data['pd_rate']
-        if ((self.data['model'] == 'per_diem') and (not data)):
+        if (self.data['model'] == 'per_diem') and (not data):
             raise forms.ValidationError('Interest rate is required')
         return data
 
@@ -255,16 +255,16 @@ class FXform(forms.Form):
 
     def clean_currency_from(self):
         data = self.cleaned_data['currency_from']
-        if (data == self.data['currency_to']):
+        if data == self.data['currency_to']:
             raise forms.ValidationError('Currencies should be different')
         return data
 
     def clean_currency_to(self):
         data = self.cleaned_data['currency_to']
-        if (data == self.data['currency_from']):
+        if data == self.data['currency_from']:
             raise forms.ValidationError('Currencies should be different')
         return data
-    
+
     def clean(self):
         cleaned_data = super(FXform, self).clean()
         date_from = cleaned_data.get('date_from', None)
