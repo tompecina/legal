@@ -1530,7 +1530,9 @@ class TestViews2(TestCase):
                  'submit_{}_search'.format(t): 'Vyhledat'})
             self.assertAlmostEqual(res.context['{}_lat'.format(t)], 51.0852574)
             self.assertAlmostEqual(res.context['{}_lon'.format(t)], 13.4211651)
-            self.assertIn('Česká republika', res.context['{}_address'.format(t)])
+            self.assertIn(
+                'Česká republika',
+                res.context['{}_address'.format(t)])
             res = self.client.post(
                 '/knr/itemform/',
                 {'type': 'travel',
@@ -1540,7 +1542,9 @@ class TestViews2(TestCase):
                  'denominator': '3',
                  'submit_{}_apply'.format(t): 'Použít'})
             self.assertEqual(res.context['{}_name'.format(t)], 'Test name')
-            self.assertEqual(res.context['{}_address'.format(t)], 'Test address')
+            self.assertEqual(
+                res.context['{}_address'.format(t)],
+                'Test address')
             self.assertAlmostEqual(res.context['{}_lat'.format(t)], 49.1975999)
             self.assertAlmostEqual(res.context['{}_lon'.format(t)], 16.6044449)
             res = self.client.post(

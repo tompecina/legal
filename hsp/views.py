@@ -834,8 +834,9 @@ def fromxml(d):
                 c.amount = float(tt.amount.text.strip())
                 c.currency = currency
                 c.date = iso2date(tt.date)
-                c.debits = (orderp[:] if (tt.repayment_preference.text.strip() \
-                                          == 'principal') else orderi[:])
+                c.debits = \
+                    (orderp[:] if (tt.repayment_preference.text.strip() \
+                        == 'principal') else orderi[:])
             elif tt_type == 'balance':
                 b = Balance()
                 debt.balances.append(b)
@@ -1246,8 +1247,8 @@ def mainpage(request):
                                          .format(debit.rate)
                             elif m in ['cust1', 'cust2', 'cust3', 'cust5']:
                                 t = 'zákonný úrok z prodlení podle nařízení ' \
-                                    'vlády č. 142/1994 Sb. ve znění účinném {}' \
-                                        .format(cust2eff[m])
+                                    'vlády č. 142/1994 Sb. ve znění účinném ' \
+                                    '{}'.format(cust2eff[m])
                             elif m == 'cust6':
                                 t = 'zákonný úrok z prodlení podle nařízení ' \
                                     'vlády č. 351/2013 Sb.'
@@ -1443,8 +1444,9 @@ def mainpage(request):
                         if row['description'] else '<i>(bez názvu)</i>'), s14)
                     if tp == CR:
                         if len(row['debits']) > 1:
-                            q = [q, Paragraph('Pořadí závazků: {}'  \
-                                .format(' – '.join(map(n2l, row['debits']))), s26)]
+                            q = [q,
+                                 Paragraph('Pořadí závazků: {}'.format(
+                                     ' – '.join(map(n2l, row['debits']))), s26)]
                     q = [q] + ([''] * 28)
                     d3.extend([r + q])
 
