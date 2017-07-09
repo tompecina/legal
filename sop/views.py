@@ -38,7 +38,7 @@ APPVERSION = apps.get_app_config(APP).version
 def mainpage(request):
 
     logger.debug(
-        'Main page accessed using method ' + request.method,
+        'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
 
