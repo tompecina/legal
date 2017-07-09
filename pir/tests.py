@@ -1499,11 +1499,11 @@ class TestViews2(TestCase):
 
     def test_party(self):
         party = Osoba.objects.get(nazevOsoby='Hanzlíková').id
-        res = self.client.get('/pir/party/%d' % party)
+        res = self.client.get('/pir/party/{:d}'.format(party))
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
-        res = self.client.post('/pir/party/%d/' % party)
+        res = self.client.post('/pir/party/{:d}/'.format(party))
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
-        res = self.client.get('/pir/party/%d/' % party)
+        res = self.client.get('/pir/party/{:d}/'.format(party))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')

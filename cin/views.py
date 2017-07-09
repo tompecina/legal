@@ -26,7 +26,7 @@ from django.apps import apps
 from datetime import date
 from common.utils import (
     pd, tod, ply, plm, ydconvs, mdconvs, yfactor, mfactor, odp, grammar,
-    getbutton, unrequire, p2c, logger)
+    getbutton, unrequire, Lf, logger)
 from common.glob import inerr_short, GR_D, GR_B, GR_M, GR_Y
 from .forms import MainForm
 
@@ -64,7 +64,7 @@ def mainpage(request):
             if beg_date >= end_date:
                 messages.append(['Počátek musí předcházet konci', None])
             else:
-                messages.append([('%s → %s' % (pd(beg_date), pd(end_date))),
+                messages.append(['{} → {}'.format(pd(beg_date), pd(end_date)),
                                  'msg-header'])
 
                 messages.append(
@@ -95,29 +95,32 @@ def mainpage(request):
                 while r < end_date:
                     r += odp
                     nd += 1
-                messages.append(['%s %s %s' % \
-                    (grammar(ny, GR_Y), grammar(nm, GR_M), grammar(nd, GR_D)),
-                                 'msg-ymd'])
+                messages.append(
+                    ['{} {} {}'.format(
+                        grammar(ny, GR_Y),
+                        grammar(nm, GR_M),
+                        grammar(nd, GR_D)),
+                     'msg-ymd'])
 
                 for dconv in ydconvs:
                     messages.append(
-                        [p2c('%.6f' % \
-                             yfactor(beg_date, end_date, dconv)) + \
-                         ' let (' + dconv + ')',
+                        ['{:.6f} let ({})'.format(
+                            Lf(yfactor(beg_date, end_date, dconv)),
+                            dconv),
                          'msg-y'])
 
                 for dconv in mdconvs:
                     if dconv == mdconvs[0]:
                         messages.append(
-                            [p2c('%.6f' % \
-                                 mfactor(beg_date, end_date, dconv)) + \
-                             ' měsíců (' + dconv + ')',
+                            ['{:.6f} měsíců ({})'.format(
+                                Lf(mfactor(beg_date, end_date, dconv)),
+                                dconv),
                              'msg-m1'])
                     else:
                         messages.append(
-                            [p2c('%.6f' % \
-                                 mfactor(beg_date, end_date, dconv)) + \
-                             ' měsíců (' + dconv + ')',
+                            ['{:.6f} měsíců ({})'.format(
+                                Lf(mfactor(beg_date, end_date, dconv)),
+                                dconv),
                              'msg-m2'])
 
         else:

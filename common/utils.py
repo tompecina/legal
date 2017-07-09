@@ -89,7 +89,7 @@ def easter(dt):
            ((y >= 2016) and (dt2.month == m) and (dt2.day == d))
 
 def pd(d):
-    return '%d. %d. %d' % (d.day, d.month, d.year)
+    return '{:d}. {:d}. {:d}'.format(d.day, d.month, d.year)
 
 def tod(dt):
 
@@ -249,7 +249,7 @@ def grammar(n, t):
         s = t[2]
     else:
         s = t[1]
-    return ('%d %s' % (n, s))
+    return '{:d} {}'.format(n, s)
 
 def getbutton(request):
     for i in request.POST:
@@ -263,11 +263,16 @@ def p2c(s):
 def c2p(s):
     return s.replace(',', '.')
 
+class Lf(float):
+
+    def __format__(self, format):
+        return p2c(super(Lf, self).__format__(format))
+
 def formam(x):
     if type(x) == int:
-        s = ('%d' % x)
+        s = '{:d}'.format(x)
     else:
-        s = p2c(('%.2f' % x))
+        s = '{:.2f}'.format(Lf(x))
     i = s.find(',')
     if i < 0:
         i = len(s)
@@ -424,12 +429,12 @@ class Pager:
 
 def composeref(*args):
     if args[0]:
-        s = '%d ' % args[0]
+        s = '{:d} '.format(args[0])
     else:
         s = ''
-    s += '%s %d/%d' % args[1:4]
+    s += '{} {:d}/{:d}'.format(*args[1:4])
     if len(args) == 5:
-        s += '-%d' % args[4]
+        s += '-{:d}'.format(args[4])
     return s
 
 def decomposeref(ref):

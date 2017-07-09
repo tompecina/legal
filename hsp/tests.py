@@ -175,7 +175,7 @@ class TestViews1(SimpleTestCase):
         i = 1
         while True:
             try:
-                with open(BASE_DIR + '/hsp/testdata/debt%d.xml' % i,
+                with open('{}/hsp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
                           'rb') as fi:
                     d = fi.read()
             except:
@@ -367,7 +367,9 @@ class TestViews2(TestCase):
         i = 1
         while True:
             try:
-                fi = open(BASE_DIR + '/hsp/testdata/debt%d.xml' % i, 'rb')
+                fi = open(
+                    '{}/hsp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
+                    'rb')
             except:
                 self.assertGreater(i, 1)
                 break
@@ -555,7 +557,7 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_debitform.html')
         for i in range(1, 7):
-            res = self.client.get('/hsp/debitform/%d/' % i)
+            res = self.client.get('/hsp/debitform/{:d}/'.format(i))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_debitform.html')
         res = self.client.post(
@@ -748,7 +750,7 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_creditform.html')
         for i in range(1, 4):
-            res = self.client.get('/hsp/creditform/%d/' % i)
+            res = self.client.get('/hsp/creditform/{:d}/'.format(i))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_creditform.html')
         res = self.client.post(
@@ -847,7 +849,7 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_balanceform.html')
         for i in range(1, 3):
-            res = self.client.get('/hsp/balanceform/%d/' % i)
+            res = self.client.get('/hsp/balanceform/{:d}/'.format(i))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_balanceform.html')
         res = self.client.post(
@@ -941,7 +943,7 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_fxrateform.html')
         for i in range(1, 3):
-            res = self.client.get('/hsp/fxrateform/%d/' % i)
+            res = self.client.get('/hsp/fxrateform/{:d}/'.format(i))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_fxrateform.html')
         res = self.client.post(
@@ -1409,8 +1411,9 @@ class TestViews2(TestCase):
         i = 1
         while True:
             try:
-                with open(BASE_DIR + '/hsp/testdata/err_debt%d.xml' % i,
-                          'rb') as fi:
+                with open(
+                        '{}/hsp/testdata/err_debt{:d}.xml'.format(BASE_DIR, i),
+                        'rb') as fi:
                     d = fi.read()
             except:
                 self.assertGreater(i, 1)
@@ -1427,7 +1430,9 @@ class TestViews2(TestCase):
         i = 1
         while True:
             try:
-                fi = open(BASE_DIR + '/hsp/testdata/debt%d.xml' % i, 'rb')
+                fi = open(
+                    '{}/hsp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
+                    'rb')
             except:
                 self.assertGreater(i, 1)
                 break
@@ -1455,7 +1460,9 @@ class TestViews2(TestCase):
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
             s = res.content.decode('utf-8')
-            with open(BASE_DIR + '/hsp/testdata/debt%d.csv' % i, 'rb') as fi:
+            with open(
+                    '{}/hsp/testdata/debt{:d}.csv'.format(BASE_DIR, i),
+                    'rb') as fi:
                 t = fi.read().decode('utf-8')
             self.assertEqual(s, t, msg=str(i))
             i += 1
@@ -1463,12 +1470,15 @@ class TestViews2(TestCase):
     def test_hjp2hsp(self):
         self.assertTrue(self.client.login(username='user', password='none'))
         for i in range(1, 14):
-            with open(BASE_DIR + '/hjp/testdata/debt%d.xml' % i, 'rb') as fi:
-                res = self.client.post('/hsp/',
-                                       {'rounding': '2',
-                                        'submit_load': 'Načíst',
-                                        'load': fi},
-                                       follow=True)
+            with open(
+                    '{}/hjp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
+                    'rb') as fi:
+                res = self.client.post(
+                    '/hsp/',
+                    {'rounding': '2',
+                     'submit_load': 'Načíst',
+                     'load': fi},
+                    follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
             d = {'title': TEST_STRING,
@@ -1486,6 +1496,8 @@ class TestViews2(TestCase):
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
             s = res.content.decode('utf-8')
-            with open(BASE_DIR + '/hsp/testdata/debt%d.csv' % i, 'rb') as fi:
+            with open(
+                    '{}/hsp/testdata/debt{:d}.csv'.format(BASE_DIR, i),
+                    'rb') as fi:
                 t = fi.read().decode('utf-8')
             self.assertEqual(s, t, msg=str(i))

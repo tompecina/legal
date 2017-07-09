@@ -39,7 +39,7 @@ class Courtroom(models.Model):
         auto_now=True)
 
     def __str__(self):
-        return '%s, %s' % (self.court, self.desc)
+        return '{}, {}'.format(self.court, self.desc)
 
 class Party(models.Model):
     name = models.CharField(
@@ -104,7 +104,8 @@ class Hearing(models.Model):
         auto_now=True)
 
     def __str__(self):
-        return '%s, %s' % (self.courtroom.court.name,
+        return '{}, {}'.format(
+            self.courtroom.court.name,
             composeref(self.senate, self.register, self.number, self.year))
 
 class Task(models.Model):
@@ -120,4 +121,4 @@ class Task(models.Model):
         db_index=True)
 
     def __str__(self):
-        return '%s, %s' % (self.court.name, self.date)
+        return '{}, {}'.format(self.court.name, self.date)

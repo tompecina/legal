@@ -25,7 +25,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from datetime import date
 from math import floor, ceil
-from common.utils import formam, p2c, logger
+from common.utils import formam, Lf, logger
 from common.glob import inerr_short
 from cnb.main import getFXrate
 from .forms import MainForm
@@ -62,8 +62,10 @@ def mainpage(request):
                     messages = [[msg, None]]
                 else:
                     basis *= (rate / qty)
-                    fx_info = ('%d %s = %s CZK' % \
-                               (qty, curr, p2c("%.3f" % (rate,))))
+                    fx_info = '{:d} {} = {:.3f} CZK'.format(
+                        qty,
+                        curr,
+                        Lf(rate))
             if not messages:
                 if (opt == 'epr') and (basis > 1000000):
                     messages = [['Nad limit pro EPR', None]]
@@ -177,7 +179,7 @@ def mainpage(request):
                         sop = min(sop, 2000000)
                     messages.append(['Soudní poplatek:', None])
                     messages.append(
-                        [('%s Kč' % formam(round(sop))),
+                        ['{} Kč'.format(formam(round(sop))),
                          'msg-amount'])
                     if fx_info:
                         messages.append(

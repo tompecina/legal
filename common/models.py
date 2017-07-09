@@ -47,4 +47,4 @@ class Preset(models.Model):
         db_index=True)
 
     def __str__(self):
-        return '%s, %s' % (self.name, str(self.valid))
+        return '{}, {}'.format(self.name, str(self.valid))

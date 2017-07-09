@@ -198,13 +198,13 @@ class Vec(models.Model):
         index_together = ('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce')
 
     def __str__(self):
-        return '%s, %s' % \
-            (self.idOsobyPuvodce,
-             composeref(
-                 self.senat,
-                 'INS',
-                 self.bc,
-                 self.rocnik))
+        return '{}, {}'.format(
+            self.idOsobyPuvodce,
+            composeref(
+                self.senat,
+                'INS',
+                self.bc,
+                self.rocnik))
 
 class Counter(models.Model):
     id = models.CharField(
@@ -213,7 +213,7 @@ class Counter(models.Model):
     number = models.IntegerField()
 
     def __str__(self):
-        return '%s: %d' % (self.id, self.number)
+        return '{}: {:d}'.format(self.id, self.number)
 
 class Transaction(models.Model):
     id = models.PositiveIntegerField(
@@ -265,7 +265,7 @@ class Insolvency(models.Model):
         index_together = ('number', 'year')
 
     def __str__(self):
-        return 'INS %d/%d' % (self.number, self.year)
+        return 'INS {:d}/{:d}'.format(self.number, self.year)
 
 class Tracked(models.Model):
     uid = models.ForeignKey(

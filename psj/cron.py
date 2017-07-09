@@ -32,16 +32,16 @@ from sur.cron import sur_check
 from .models import Courtroom, Judge, Form, Hearing, Party, Task
 
 list_courtrooms = \
-    'http://infosoud.justice.cz/InfoSoud/seznamJednacichSini?okres=%s'
+    'http://infosoud.justice.cz/InfoSoud/seznamJednacichSini?okres={}'
 
-hearingurl = localurl + '/psj/list/?court=%s&senate=%d&register=%s&' \
-    'number=%d&year=%d&date_from=%s&date_to=%s'
+hearingurl = localurl + '/psj/list/?court={}&senate={:d}&register={}&' \
+    'number={:d}&year={:d}&date_from={}&date_to={}'
 
 def cron_courtrooms():
     for c in Court.objects.exclude(id=supreme_administrative_court):
         try:
             sleep(1)
-            res = get(list_courtrooms % c.pk)
+            res = get(list_courtrooms.format(c.pk))
             soup = BeautifulSoup(res.text, 'xml')
             for r in soup.find_all('jednaciSin'):
                 cr, crc = Courtroom.objects.get_or_create(
@@ -94,7 +94,8 @@ def cron_update():
             q['krajOrg'] = c1
             q['org'] = c2
             q['sin'] = cr.desc
-            q['datum'] = '%d.%d.%d' % (t.date.day, t.date.month, t.date.year)
+            q['datum'] = '{:d}.{:d}.{:d}' \
+                .format(t.date.day, t.date.month, t.date.year)
             q['spamQuestion'] = '23'
             q['druhVec'] = ''
             url = root_url + get_hear + q.urlencode()
@@ -154,22 +155,22 @@ def cron_update():
                                     register,
                                     number,
                                     year,
-                                    hearingurl % \
-                                        (t.court.id,
-                                         senate,
-                                         quote(register),
-                                         number,
-                                         year,
-                                         tdate,
-                                         tdate))
+                                    hearingurl.format(
+                                        t.court.id,
+                                        senate,
+                                        quote(register),
+                                        number,
+                                        year,
+                                        tdate,
+                                        tdate))
                 except:
                     pass
         t.delete()
     except:
         logger.warning(
-            'Failed to download hearings for %s, %d-%02d-%02d' % \
-            (t.court_id, t.date.year, t.date.month, t.date.day))
+            'Failed to download hearings for {}, {:d}-{:02d}-{:02d}' \
+                .format(t.court_id, t.date.year, t.date.month, t.date.day))
         return
     logger.debug(
-        'Downloaded hearings for %s, %d-%02d-%02d' % \
-        (t.court_id, t.date.year, t.date.month, t.date.day))
+        'Downloaded hearings for {}, {:d}-{:02d}-{:02d}' \
+            .format(t.court_id, t.date.year, t.date.month, t.date.day))

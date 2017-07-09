@@ -28,7 +28,7 @@ class FXrate(models.Model):
     text = models.TextField()
 
     def __str__(self):
-        return "%s" % self.date
+        return '{}'.format(self.date)
 
 class MPIrate(models.Model):
     type = models.CharField(

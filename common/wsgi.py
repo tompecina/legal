@@ -16,7 +16,7 @@ else:
     site_packages = os.path.join(
         base,
         'lib',
-        'python%d.%d' % (sys.version_info.major, sys.version_info.minor),
+        'python{0.major:d}.{0.minor:d}'.format(sys.version_info),
         'site-packages')
 prev_sys_path = list(sys.path)
 import site

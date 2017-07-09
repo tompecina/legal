@@ -128,7 +128,8 @@ def mainpage(request):
 def debtorform(request, id=0):
 
     logger.debug(
-        'Debtor form accessed using method %s, id=%s' % (request.method, id),
+        'Debtor form accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
 
@@ -172,11 +173,13 @@ def debtorform(request, id=0):
             p.save()
             if id:
                 logger.info(
-                    'User "%s" (%d) updated debtor "%s"' % (uname, uid, p.desc),
+                    'User "{}" ({:d}) updated debtor "{}"' \
+                        .format(uname, uid, p.desc),
                     request)
             else:
                 logger.info(
-                    'User "%s" (%d) added debtor "%s"' % (uname, uid, p.desc),
+                    'User "{}" ({:d}) added debtor "{}"' \
+                        .format(uname, uid, p.desc),
                     request)
             return redirect('dir:mainpage')
         else:
@@ -195,8 +198,8 @@ def debtorform(request, id=0):
 @login_required
 def debtordel(request, id=0):
     logger.debug(
-        'Debtor delete page accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Debtor delete page accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     uid = request.user.id
@@ -211,8 +214,8 @@ def debtordel(request, id=0):
         debtor = get_object_or_404(Debtor, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "%s" (%d) deleted debtor "%s"' % \
-                (uname, uid, debtor.desc),
+                'User "{}" ({:d}) deleted debtor "{}"' \
+                    .format(uname, uid, debtor.desc),
                 request)
             debtor.delete()
             return redirect('dir:debtordeleted')
@@ -238,7 +241,7 @@ def debtordelall(request):
            (request.POST['conf'] == 'Ano'):
             Debtor.objects.filter(uid=uid).delete()
             logger.info(
-                'User "%s" (%d) deleted all debtors' % (uname, uid),
+                'User "{}" ({:d}) deleted all debtors'.format(uname, uid),
                 request)
         return redirect('dir:mainpage')
 
@@ -406,8 +409,8 @@ def debtorbatchform(request):
                                     continue
                                 count += 1
                     logger.info(
-                        'User "%s" (%d) imported %d debtor(s)' % \
-                        (uname, uid, count),
+                        'User "{}" ({:d}) imported {:d} debtor(s)' \
+                            .format(uname, uid, count),
                         request)
                     return render(
                         request,
@@ -458,14 +461,16 @@ def debtorexport(request):
         if p.birthid:
             dat.append('RČ=' + p.birthid[:6] + '/' + p.birthid[6:])
         if p.date_birth:
-            dat.append('datumNarození=%02d.%02d.%d' % \
-                (p.date_birth.day, p.date_birth.month, p.date_birth.year))
+            dat.append('datumNarození={:02d}.{:02d}.{:d}' .format(
+                p.date_birth.day,
+                p.date_birth.month,
+                p.date_birth.year))
         if p.year_birth_from:
             dat.append('rokNarozeníOd=' + str(p.year_birth_from))
         if p.year_birth_to:
             dat.append('rokNarozeníDo=' + str(p.year_birth_to))
         writer.writerow(dat)
     logger.info(
-        'User "%s" (%d) exported debtors' % (uname, uid),
+        'User "{}" ({:d}) exported debtors'.format(uname, uid),
         request)
     return response

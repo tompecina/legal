@@ -69,7 +69,9 @@ class AmountField(forms.FloatField):
         if value in EMPTY_VALUES:
             return None
         if type(value) not in stypes:
-            value = ('%.*f' % (self.rounding, float(value))).replace('.', ',')
+            value = '{:.{prec}f}'.format(
+                float(value),
+                prec=self.rounding).replace('.', ',')
         return value
 
     def to_python(self, value):

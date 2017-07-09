@@ -123,7 +123,7 @@ class TestViews1(SimpleTestCase):
         i = 1
         while True:
             try:
-                with open(BASE_DIR + '/hjp/testdata/debt%d.xml' % i,
+                with open('{}/hjp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
                           'rb') as fi:
                     d = fi.read()
             except:
@@ -397,7 +397,9 @@ class TestViews2(TestCase):
         i = 1
         while True:
             try:
-                fi = open(BASE_DIR + '/hjp/testdata/debt%d.xml' % i, 'rb')
+                fi = open(
+                    '{}/hjp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
+                    'rb')
             except:
                 self.assertGreater(i, 1)
                 break
@@ -1013,7 +1015,9 @@ class TestViews2(TestCase):
         i = 1
         while True:
             try:
-                fi = open(BASE_DIR + '/hjp/testdata/debt%d.xml' % i, 'rb')
+                fi = open(
+                    '{}/hjp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
+                    'rb')
             except:
                 self.assertGreater(i, 1)
                 break
@@ -1058,7 +1062,9 @@ class TestViews2(TestCase):
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
             s = res.content.decode('utf-8')
-            with open(BASE_DIR + '/hjp/testdata/debt%d.csv' % i, 'rb') as fi:
+            with open(
+                    '{}/hjp/testdata/debt{:d}.csv'.format(BASE_DIR, i),
+                    'rb') as fi:
                 t = fi.read().decode('utf-8')
             self.assertEqual(s, t, msg=str(i))
             i += 1

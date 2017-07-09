@@ -89,7 +89,7 @@ def logout(request):
     auth.logout(request)
     if uname:
         logger.info(
-            'User "%s" (%d) logged out' % (uname, uid),
+            'User "{}" ({:d}) logged out'.format(uname, uid),
             request)
     return redirect('home')
 
@@ -123,7 +123,7 @@ def pwchange(request):
             u.set_password(var['newpassword1'])
             u.save()
             logger.info(
-                'User "%s" (%d) changed password' % (uname, uid),
+                'User "{}" ({:d}) changed password'.format(uname, uid),
                 request)
             return redirect('/accounts/pwchanged/')
     return render(request, 'pwchange.html', var)
@@ -146,23 +146,26 @@ def lostpw(request):
             cd = f.cleaned_data
             u = User.objects.filter(username=cd['username'])
             if u.exists() and u[0].email:
-                link = '%032x' % getrandbits(16 * 8)
+                link = '{:032x}'.format(getrandbits(16 * 8))
                 PwResetLink(user_id=u[0].id, link=link).save()
                 text = \
-                    ('Vážený uživateli,\n' \
-                    'někdo požádal o obnovení hesla pro Váš účet "%s" na ' \
-                    'serveru ' + localsubdomain + ' (' + localurl + ').\n\n' \
+                    'Vážený uživateli,\n' \
+                    'někdo požádal o obnovení hesla pro Váš účet "{0}" na ' \
+                    'serveru {1} ({2}).\n\n' \
                     'Pokud skutečně chcete své heslo obnovit, použijte, ' \
                     'prosím, následující jednorázový odkaz:\n\n' \
-                    '  ' + localurl + '%s\n\n' \
+                    '  {2}{3}\n\n' \
                     'V případě, že jste o obnovení hesla nežádali, ' \
                     'můžete tuto zprávu ignorovat.\n\n' \
-                    'Server ' + localsubdomain + ' (' + localurl + ')\n') % \
-                    (u[0].username, reverse('resetpw', args=[link]))
+                    'Server {1} ({2})\n'.format(
+                        u[0].username,
+                        localsubdomain,
+                        localurl,
+                        reverse('resetpw', args=[link]))
                 send_mail('Link pro obnoveni hesla', text, [u[0].email])
                 logger.info(
-                    'Password recovery link for user "%s" (%d) sent' % \
-                    (u[0].username, u[0].id),
+                    'Password recovery link for user "{}" ({:d}) sent' \
+                        .format(u[0].username, u[0].id),
                     request)
             return redirect('/accounts/pwlinksent/')
         else:
@@ -194,7 +197,7 @@ def resetpw(request, link):
     u.save()
     p.delete()
     logger.info(
-        'Password for user "%s" (%d) reset' % (u.username, u.id),
+        'Password for user "{}" ({:d}) reset'.format(u.username, u.id),
         request)
     return render(
         request,
@@ -231,7 +234,8 @@ def about(request):
     env = [
         {'name': 'Python', 'version' : python_version()},
         {'name': 'Django', 'version' : get_version()},
-        {'name': 'MySQL', 'version' : ('%d.%d.%d' % connection.mysql_version)},
+        {'name': 'MySQL',
+         'version' : '{:d}.{:d}.{:d}'.format(*connection.mysql_version)},
         {'name': 'Platforma', 'version' : '{0}-{2}'.format(*uname())},
     ]
     return render(
@@ -302,7 +306,8 @@ def useradd(request):
                 user.save()
                 logout(request)
                 logger.info(
-                    'New user "%s" (%d) created' % (user.username, user.id),
+                    'New user "{}" ({:d}) created' \
+                        .format(user.username, user.id),
                     request)
                 return redirect('useradded')
             logger.error('Failed to create user', request)

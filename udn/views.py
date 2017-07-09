@@ -30,7 +30,7 @@ from math import floor, ceil
 from csv import writer as csvwriter
 from json import dump
 from common.utils import (
-    formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool, logger)
+    formam, Pager, newXML, xmldecorate, composeref, xmlbool, logger)
 from common.glob import (
     registers, inerr, text_opts, text_opts_keys, repourl, exlim_title,
     localsubdomain, localurl, DTF)
@@ -167,8 +167,8 @@ def xmllist(request):
         'decisions': {
             'xmlns': 'http://' + localsubdomain,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': ('http://' + localsubdomain + ' ' + \
-            localurl + '/static/%s-%s.xsd') % (APP, APPVERSION),
+            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd' \
+                .format(localsubdomain, localurl, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()
@@ -267,7 +267,7 @@ def csvlist(request):
     for d in dd:
         dat = [
             supreme_administrative_court_name,
-            d.date.strftime('%d.%m.%Y'),
+            '{:%d.%m.%Y}'.format(d.date),
             composeref(d.senate, d.register, d.number, d.year, d.page),
             d.agenda.desc,
             ';'.join([p['name'] for p in d.parties.values()]),

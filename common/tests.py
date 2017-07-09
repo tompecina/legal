@@ -1020,15 +1020,17 @@ class TestViews(TestCase):
         match = pw_regex.search(m.body)
         self.assertTrue(match)
         link = match.group(1)
-        res = self.client.get('/accounts/resetpw/%s/' % link)
+        res = self.client.get('/accounts/resetpw/{}/'.format(link))
         self.assertTemplateUsed(res, 'pwreset.html')
         newpassword = res.context['newpassword']
         self.assertEqual(len(newpassword), 10)
         self.assertFalse(self.client.login(username='user', password='none'))
-        self.assertTrue(self.client.login(username='user', password=newpassword))
+        self.assertTrue(self.client.login(
+            username='user',
+            password=newpassword))
         
     def test_resetpw(self):
-        res = self.client.get('/accounts/resetpw/%s/' % ('0' * 32))
+        res = self.client.get('/accounts/resetpw/{}/'.format('0' * 32))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
     def test_home(self):

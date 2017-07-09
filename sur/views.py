@@ -102,8 +102,8 @@ def mainpage(request):
 def partyform(request, id=0):
 
     logger.debug(
-        'Party form accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Party form accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
 
@@ -135,11 +135,13 @@ def partyform(request, id=0):
             p.party_opt = text_opts_keys.index(cd['party_opt'])
             if id:
                 logger.info(
-                    'User "%s" (%d) updated party "%s"' % (uname, uid, p.party),
+                    'User "{}" ({:d}) updated party "{}"' \
+                        .format(uname, uid, p.party),
                     request)
             else:
                 logger.info(
-                    'User "%s" (%d) added party "%s"' % (uname, uid, p.party),
+                    'User "{}" ({:d}) added party "{}"' \
+                        .format(uname, uid, p.party),
                     request)
             p.save()
             return redirect('sur:mainpage')
@@ -159,8 +161,8 @@ def partyform(request, id=0):
 @login_required
 def partydel(request, id=0):
     logger.debug(
-        'Party delete page accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Party delete page accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     uid = request.user.id
@@ -175,7 +177,8 @@ def partydel(request, id=0):
         party = get_object_or_404(Party, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "%s" (%d) deleted party "%s"' % (uname, uid, party.party),
+                'User "{}" ({:d}) deleted party "{}"' \
+                    .format(uname, uid, party.party),
                 request)
             party.delete()
             return redirect('sur:partydeleted')
@@ -201,7 +204,7 @@ def partydelall(request):
            (request.POST['conf'] == 'Ano'):
             Party.objects.filter(uid=uid).delete()
             logger.info(
-                'User "%s" (%d) deleted all parties' % (uname, uid),
+                'User "{}" ({:d}) deleted all parties'.format(uname, uid),
                 request)
         return redirect('sur:mainpage')
 
@@ -260,8 +263,8 @@ def partybatchform(request):
                                     continue
                                 count += 1
                     logger.info(
-                        'User "%s" (%d) imported %d party/ies' % \
-                        (uname, uid, count),
+                        'User "{}" ({:d}) imported {} party/ies' \
+                            .format(uname, uid, count),
                         request)
                     return render(
                         request,
@@ -303,6 +306,6 @@ def partyexport(request):
         dat = [p.party + text_opts_ca[p.party_opt]]
         writer.writerow(dat)
     logger.info(
-        'User "%s" (%d) exported parties' % (uname, uid),
+        'User "{}" ({:d}) exported parties'.format(uname, uid),
         request)
     return response

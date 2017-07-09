@@ -104,7 +104,7 @@ def mainpage(request):
 
                 if tod(t):
                     messages.append(
-                        [('%s není pracovní den' % pd(t)), None])
+                        ['{} není pracovní den'.format(pd(t)), None])
 
                 while tod(t):
                         t += o

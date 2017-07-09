@@ -39,7 +39,7 @@ form_url = root_url + 'main2Col.aspx?cls=RozhodnutiList&menu=185'
 find_url = root_url + 'main0Col.aspx?cls=JudikaturaBasicSearch&pageSource=0'
 
 decurl = localurl + \
-    '/udn/list/?senate=%d&register=%s&number=%d&year=%d&page=%d'
+    '/udn/list/?senate={:d}&register={}&number={:d}&year={:d}&page={:d}'
 
 if TEST:
     repo_pref = join(BASE_DIR, 'test')
@@ -118,12 +118,12 @@ def cron_update():
                                 register,
                                 number,
                                 year,
-                                decurl % \
-                                    (senate,
-                                     quote(register),
-                                     number,
-                                     year,
-                                     page))
+                                decurl.format(
+                                    senate,
+                                    quote(register),
+                                    number,
+                                    year,
+                                    page))
                 except:  # pragma: no cover
                     pass
             pagers = soup.select('div#PagingBox2')[0]
@@ -152,11 +152,12 @@ def cron_find():
         form = soup.find('form')
         d = {i['name']: i['value'] for i in form.find_all('input') \
              if i['type']=='hidden' and i.has_attr('value')}
-        ref = ('%s ' % dec.senate) if dec.senate else ''
-        ref += '%s %d/%d' % (dec.register, dec.number, dec.year)
+        ref = ('{} '.format(dec.senate) if dec.senate else '')
+        ref += '{} {:d}/{:d}'.format(dec.register, dec.number, dec.year)
         d['_ctl0:ContentPlaceMasterPage:_ctl0:txtDatumOd'] = \
         d['_ctl0:ContentPlaceMasterPage:_ctl0:txtDatumDo'] = \
-            '%02d.%02d.%04d' % (dec.date.day, dec.date.month, dec.date.year) 
+            '{:02d}.{:02d}.{:d}' \
+                .format(dec.date.day, dec.date.month, dec.date.year)
         d['_ctl0:ContentPlaceMasterPage:_ctl0:txtSpisovaZnackaFull'] = ref
         d['_ctl0_ContentPlaceMasterPage__ctl0_rbTypDatum_0'] = 'on'
         res = post(find_url, d)

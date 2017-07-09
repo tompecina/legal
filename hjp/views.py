@@ -42,7 +42,7 @@ from io import BytesIO
 import os.path
 from common.utils import (
     getbutton, yfactor, mfactor, odp, formam, xmldecorate, xmlescape,
-    xmlunescape, p2c, getXML, newXML, iso2date, CanvasXML, logger)
+    xmlunescape, Lf, getXML, newXML, iso2date, CanvasXML, logger)
 from common.glob import ydconvs, mdconvs, LIM, inerr, localsubdomain, localurl
 from common.views import error
 from cache.main import getasset, setasset
@@ -430,8 +430,8 @@ def toxml(debt):
         'debt': {
             'xmlns': 'http://' + localsubdomain,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': ('http://' + localsubdomain + ' ' + \
-            localurl + '/static/%s-%s.xsd') % (APP, APPVERSION),
+            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd' \
+                .format(localsubdomain, localurl, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()
@@ -460,19 +460,19 @@ def toxml(debt):
     i['model'] = m
     if m == 'fixed':
         tag = xml.new_tag('amount')
-        tag.append('%.2f' % interest.fixed_amount)
+        tag.append('{:.2f}'.format(interest.fixed_amount))
         i.append(tag)
     elif m == 'per_annum':
         tag = xmldecorate(xml.new_tag('pa_rate'), xd)
-        tag.append('%.6f' % interest.rate)
+        tag.append('{:.6f}'.format(interest.rate))
         i.append(tag)
     elif m == 'per_mensem':
         tag = xmldecorate(xml.new_tag('pm_rate'), xd)
-        tag.append('%.6f' % interest.rate)
+        tag.append('{:.6f}'.format(interest.rate))
         i.append(tag)
     elif m == 'per_diem':
         tag = xmldecorate(xml.new_tag('pd_rate'), xd)
-        tag.append('%.6f' % interest.rate)
+        tag.append('{:.6f}'.format(interest.rate))
         i.append(tag)
     if m in ['per_annum', 'per_mensem']:
         tag = xml.new_tag('day_count_convention')
@@ -490,7 +490,7 @@ def toxml(debt):
         t.append(tag)
         if hasattr(tt, 'amount'):
             tag = xml.new_tag('amount')
-            tag.append('%.2f' % tt.amount)
+            tag.append('{:.2f}'.format(tt.amount))
             t.append(tag)
         if hasattr(tt, 'repayment_preference'):
             tag = xml.new_tag('repayment_preference')
@@ -554,11 +554,11 @@ def mainpage(request):
         a = (float(a) if debt.rounding else int(round(a)))
         s = ('s' if slb else '')
         if abs(a) < LIM:
-            return ('<td class="cr%s"></td>' % s)
+            return '<td class="cr{}"></td>'.format(s)
         if a > 0.0:
-            return ('<td class="cr%s">%s</td>' % (s, formam(a)))
+            return '<td class="cr{}">{}</td>'.format(s, formam(a))
         else:
-            return ('<td class="dr%s">%s</td>' % (s, formam(-a)))
+            return '<td class="dr{}">{}</td>'.format(s, formam(-a))
 
     def fa(a):
         return formam(round(a, debt.rounding) if debt.rounding else \
@@ -588,7 +588,7 @@ def mainpage(request):
         i = debt.interest
         var['model'] = m = i.model
         if m == 'fixed':
-            var['fixed_amount'] = (p2c('%.2f' % i.fixed_amount) \
+            var['fixed_amount'] = ('{:.2f}'.format(Lf(i.fixed_amount)) \
                 if debt.rounding else int(round(i.fixed_amount)))
         elif m == 'per_annum':
             var['pa_rate'] = i.rate
@@ -694,15 +694,15 @@ def mainpage(request):
                         [row['date'].isoformat(),
                          row['description'],
                          row.get('rep', ''),
-                         ('%.2f' % row['change']),
-                         ('%.2f' % row['pre_principal']),
-                         ('%.2f' % row['pre_interest']),
-                         ('%.2f' % row['pre_total']),
-                         ('%.2f' % row['change_principal']),
-                         ('%.2f' % row['change_interest']),
-                         ('%.2f' % row['post_principal']),
-                         ('%.2f' % row['post_interest']),
-                         ('%.2f' % row['post_total'])])
+                         '{:.2f}'.format(row['change']),
+                         '{:.2f}'.format(row['pre_principal']),
+                         '{:.2f}'.format(row['pre_interest']),
+                         '{:.2f}'.format(row['pre_total']),
+                         '{:.2f}'.format(row['change_principal']),
+                         '{:.2f}'.format(row['change_interest']),
+                         '{:.2f}'.format(row['post_principal']),
+                         '{:.2f}'.format(row['post_interest']),
+                         '{:.2f}'.format(row['post_total'])])
                 return response
 
             if btn == 'pdf':
@@ -713,15 +713,14 @@ def mainpage(request):
                     c.drawString(
                         64.0,
                         48.0,
-                        ('%s V%s' % (APP.upper(), APPVERSION)))
+                        '{} V{}'.format(APP.upper(), APPVERSION))
                     c.setFont('BookmanI', 7)
                     today = date.today()
                     c.drawRightString(
                         (A4[0] - 48.0),
                         48.0,
-                        ('Vytvořeno: %d. %d. %d' % (today.day,
-                                                    today.month,
-                                                    today.year)))
+                        'Vytvořeno: {:d}. {:d}. {:d}' \
+                            .format(today.day, today.month, today.year))
                     c.restoreState()
 
                 def page2(c, d):
@@ -730,7 +729,7 @@ def mainpage(request):
                     c.setFont('Bookman', 8)
                     c.drawCentredString((A4[0] / 2),
                                         (A4[1] - 30),
-                                        ('– %d –' % d.page))
+                                        '– {:d} –'.format(d.page))
                     c.restoreState()
 
                 fontdir = os.path.join(
@@ -895,72 +894,69 @@ def mainpage(request):
 
                 r = [Paragraph(('<b>Měna:</b> ' + debt.currency), s19)]
                 if hasattr(debt, 'default_date') and debt.default_date:
-                    r.append(Paragraph(('<b>První den prodlení:</b> ' + \
-                        debt.default_date.strftime('%d.%m.%Y')), s19))
+                    r.append(Paragraph(
+                        '<b>První den prodlení:</b> {:%d.%m.%Y}' \
+                            .format(debt.default_date),
+                        s19))
                 i2 = None
                 i3 = []
                 if (debt.interest.model == 'none'):
                     i1 = 'bez úroku'
                 elif (debt.interest.model == 'fixed'):
-                    i1 = ('pevnou částkou ' + fa(debt.interest.fixed_amount))
+                    i1 = 'pevnou částkou ' + fa(debt.interest.fixed_amount)
                 elif (debt.interest.model == 'per_annum'):
-                    i1 = ('pevnou sazbou {:n} % <i>p. a.</i>, ' \
-                          'konvence pro počítání dnů: {}' \
-                          .format(debt.interest.rate,
-                                  debt.interest.day_count_convention))
+                    i1 = 'pevnou sazbou {:n} % <i>p. a.</i>, ' \
+                         'konvence pro počítání dnů: {}' \
+                             .format(debt.interest.rate,
+                                     debt.interest.day_count_convention)
                 elif (debt.interest.model == 'per_mensem'):
-                    i1 = ('pevnou sazbou {:n} % <i>p. m.</i>, ' \
-                          'konvence pro počítání dnů: {}' \
-                          .format(debt.interest.rate,
-                                  debt.interest.day_count_convention))
+                    i1 = 'pevnou sazbou {:n} % <i>p. m.</i>, ' \
+                         'konvence pro počítání dnů: {}' \
+                             .format(debt.interest.rate,
+                                     debt.interest.day_count_convention)
                 elif (debt.interest.model == 'per_diem'):
-                    i1 = ('pevnou sazbou {:n} ‰ <i>p. d.</i>' \
-                          .format(debt.interest.rate))
+                    i1 = 'pevnou sazbou {:n} ‰ <i>p. d.</i>' \
+                             .format(debt.interest.rate)
                 elif (debt.interest.model == 'cust1'):
                     i1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
                          '(účinnost do 27.04.2005)'
                     if debt.rates:
                         rt = debt.rates.popitem()
-                        i2 = ('Diskontní sazba ČNB ke dni ' + \
-                              rt[0].strftime('%d.%m.%Y') + \
-                              p2c(': %.2f' % rt[1]) + ' % <i>p. a.</i>')
+                        i2 = 'Diskontní sazba ČNB ke dni {:%d.%m.%Y}: {:.2f}' \
+                             ' % <i>p. a.</i>'.format(rt[0], Lf(rt[1]))
                 elif (debt.interest.model == 'cust2'):
                     i1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
                          '(účinnost od 28.04.2005 do 30.06.2010)'
                     if (len(debt.rates) == 1):
                         rt = debt.rates.popitem()
-                        i2 = ('Použita 2T repo sazba ČNB ke dni ' + \
-                              rt[0].strftime('%d.%m.%Y') + \
-                              p2c(': %.2f' % rt[1]) + ' % <i>p. a.</i>')
+                        i2 = 'Použita 2T repo sazba ČNB ke dni {:%d.%m.%Y}:' \
+                             ' {:.2f} % <i>p. a.</i>'.format(rt[0], Lf(rt[1]))
                     elif (len(debt.rates) > 1):
                         i2 = 'Použity následující 2T repo sazby ČNB:'
                         for dt in sorted(debt.rates.keys()):
-                            i3.append('– ke dni ' + dt.strftime('%d.%m.%Y') + \
-                                      p2c(': %.2f' % debt.rates[dt]) + \
-                                      ' % <i>p. a.</i>')
+                            i3.append(
+                                '– ke dni {:%d.%m.%Y}: {:.2f} % <i>p. a.</i>' \
+                                    .format(dt, Lf(debt.rates[dt])))
                 elif (debt.interest.model == 'cust3'):
                     i1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
                          '(účinnost od 01.07.2010 do 30.06.2013)'
                     if debt.rates:
                         rt = debt.rates.popitem()
-                        i2 = ('2T repo sazba ČNB ke dni ' + \
-                              rt[0].strftime('%d.%m.%Y') + \
-                              p2c(': %.2f' % rt[1]) + ' % <i>p. a.</i>')
+                        i2 = '2T repo sazba ČNB ke dni {:%d.%m.%Y}:' \
+                             ' {:.2f} % <i>p. a.</i>'.format(rt[0], Lf(rt[1]))
                 elif (debt.interest.model == 'cust5'):
                     i1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
                          '(účinnost od 01.07.2013 do 31.12.2013)'
                     if debt.rates:
                         rt = debt.rates.popitem()
-                        i2 = ('2T repo sazba ČNB ke dni ' + \
-                              rt[0].strftime('%d.%m.%Y') + \
-                              p2c(': %.2f' % rt[1]) + ' % <i>p. a.</i>')
+                        i2 = '2T repo sazba ČNB ke dni {:%d.%m.%Y}:' \
+                             ' {:.2f} % <i>p. a.</i>'.format(rt[0], Lf(rt[1]))
                 elif (debt.interest.model == 'cust6'):
                     i1 = 'úrok z prodlení podle nařízení č. 351/2013 Sb.'
                     if debt.rates:
                         rt = debt.rates.popitem()
-                        i2 = ('2T repo sazba ČNB ke dni ' + \
-                              rt[0].strftime('%d.%m.%Y') + \
-                              p2c(': %.2f' % rt[1]) + ' % <i>p. a.</i>')
+                        i2 = '2T repo sazba ČNB ke dni {:%d.%m.%Y}:' \
+                             ' {:.2f} % <i>p. a.</i>'.format(rt[0], Lf(rt[1]))
                 else:
                     i1 = 'poplatek z prodlení podle nařízení č. 142/1994 Sb.'
                     if (debt.currency != 'CZK'):
@@ -1044,13 +1040,13 @@ def mainpage(request):
                     if row['err']:
                         flow.extend(
                             [Spacer(0, 20),
-                             Paragraph('(pro další transakce nejsou ' \
-                                       'k disposici data, při výpočtu ' \
-                                       'došlo k chybě)', s22)])
+                             Paragraph(
+                                 '(pro další transakce nejsou k disposici' \
+                                 ' data, při výpočtu došlo k chybě)', s22)])
                         break
                     trt = row['trt']
                     d3 = []
-                    r = [Paragraph(row['date'].strftime('%d.%m.%Y'), s13)] \
+                    r = [Paragraph('{:%d.%m.%Y}'.format(row['date']), s13)] \
                         + ([''] * 4)
                     q = [Paragraph(escape(row['description']).upper(), s14)] + \
                         ([''] * 28)
@@ -1181,7 +1177,7 @@ def mainpage(request):
                     temp,
                     pagesize=A4,
                     title='Historie peněžité pohledávky',
-                    author=('%s V%s' % (APP.upper(), APPVERSION)),
+                    author='{} V{}'.format(APP.upper(), APPVERSION),
                     leftMargin=64.0,
                     rightMargin=48.0,
                     topMargin=48.0,
@@ -1228,8 +1224,8 @@ def mainpage(request):
 @login_required
 def transform(request, id=0):
     logger.debug(
-        'Transaction form accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Transaction form accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     page_title = ('Úprava transakce' if id else 'Nová transakce')
@@ -1248,8 +1244,8 @@ def transform(request, id=0):
                    'date': transaction.date
             }
             if hasattr(transaction, 'amount'):
-                var['amount'] = (p2c('%.2f' % transaction.amount) \
-                    if debt.rounding else int(round(transaction.amount)))
+                var['amount'] = '{:.2f}'.format(Lf(transaction.amount)) \
+                    if debt.rounding else int(round(transaction.amount))
             if hasattr(transaction, 'repayment_preference'):
                 var['repayment_preference'] = transaction.repayment_preference
             f = TransForm(initial=var)
@@ -1300,8 +1296,8 @@ def transform(request, id=0):
 @login_required
 def transdel(request, id=0):
     logger.debug(
-        'Transaction delete page accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Transaction delete page accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     id = int(id) - 1

@@ -40,6 +40,6 @@ def cron_notify():
                 text,
                 [u.email])
             logger.debug(
-                'Email sent to user "%s" (%d)' %\
-                (User.objects.get(pk=uid).username, uid))
+                'Email sent to user "{}" ({:d})'.format(
+                    User.objects.get(pk=uid).username, uid))
     logger.info('Emails sent')

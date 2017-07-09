@@ -223,10 +223,10 @@ j2 = '[{"court": {"name": "Obvodn\u00ed soud Praha 2", "id": "OSPHA02"}, ' \
      '{"year": 2015, "register": "C", "senate": 26, "number": 94}}]'
 
 s0 = '<select id="courtroom">' \
-     '<option value="%d">č. 101/přízemí - přístavba</option>' \
+     '<option value="{:d}">č. 101/přízemí - přístavba</option>' \
      '</select>' \
      '<select id="judge">' \
-     '<option value="%d">JUDr. Henzlová Šárka</option>' \
+     '<option value="{:d}">JUDr. Henzlová Šárka</option>' \
      '</select>\n'
 
 class TestViews2(TestCase):
@@ -375,8 +375,8 @@ class TestViews3(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 0)
-        res = self.client.get('/psj/list/?courtroom=%d' % \
-            models.Courtroom.objects.first().id)
+        res = self.client.get('/psj/list/?courtroom={:d}' \
+            .format(models.Courtroom.objects.first().id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 2)
@@ -384,8 +384,8 @@ class TestViews3(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 0)
-        res = self.client.get('/psj/list/?judge=%d' % \
-            models.Hearing.objects.first().judge_id)
+        res = self.client.get('/psj/list/?judge={:d}' \
+            .format(models.Hearing.objects.first().judge_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 2)
@@ -639,4 +639,4 @@ class TestViews3(TestCase):
         self.assertTemplateUsed(res, 'psj_court.html')
         cr = models.Courtroom.objects.get(desc__contains='101/').id
         ju = models.Judge.objects.get(name__contains='Hen').id
-        self.assertHTMLEqual(res.content.decode('utf_8'), (s0 % (cr, ju)))
+        self.assertHTMLEqual(res.content.decode('utf_8'), s0.format(cr, ju))

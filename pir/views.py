@@ -176,9 +176,9 @@ def o2s(o, detailed=False):
     r = ', '.join(filter(bool, [r, o.titulZa, o.nazevOsobyObchodni]))
     if detailed:
         if o.datumNarozeni:
-            r += ', nar.&nbsp;' + o.datumNarozeni.strftime('%d.%m.%Y')
+            r += ', nar.&nbsp;{:%d.%m.%Y}'.format(o.datumNarozeni)
         elif o.ic:
-            r += ', IČO:&nbsp;' + o.ic
+            r += ', IČO:&nbsp;{}'.format(o.ic)
     return r
 
 def getosoby(v, *d):
@@ -345,8 +345,8 @@ def xmllist(request):
         'insolvencies': {
             'xmlns': 'http://' + localsubdomain,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': ('http://' + localsubdomain + ' ' + \
-            localurl + '/static/%s-%s.xsd') % (APP, APPVERSION),
+            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd' \
+                .format(localsubdomain, localurl, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()
@@ -446,9 +446,11 @@ def csvlist(request):
     for v in vv:
         dat = [
             l2n[v.idOsobyPuvodce],
-            '%s%s INS %d/%d' % (
+            '{}{} INS {:d}/{:d}'.format(
                 l2s[v.idOsobyPuvodce],
-                ((' %d' % v.senat) if v.senat else ''), v.bc, v.rocnik),
+                (' {:d}'.format(v.senat) if v.senat else ''),
+                v.bc,
+                v.rocnik),
             (s2d[v.druhStavRizeni.desc] \
              if v.druhStavRizeni else '(není známo)'),
         ]
@@ -549,7 +551,7 @@ def jsonlist(request):
 
 @require_http_methods(['GET'])
 def party(request, id=0):
-    logger.debug('Party information page accessed, id=%s' % id, request)
+    logger.debug('Party information page accessed, id={}'.format(id), request)
     osoba = get_object_or_404(Osoba, id=id)
     adresy = osoba.adresy.order_by('-id')
     i = 0

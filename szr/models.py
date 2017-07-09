@@ -82,10 +82,10 @@ class Proceedings(models.Model):
         auto_now=True)
 
     def __str__(self):
-        return '%s, %s' % \
-            (self.court,
-             composeref(
-                 self.senate,
-                 self.register,
-                 self.number,
-                 self.year))
+        return '{}, {}'.format(
+            self.court,
+            composeref(
+                self.senate,
+                self.register,
+                self.number,
+                self.year))

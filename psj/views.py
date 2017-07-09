@@ -32,7 +32,7 @@ from json import dump
 from re import compile
 from locale import strxfrm
 from common.utils import (
-    formam, p2c, Pager, newXML, xmldecorate, composeref, xmlbool, logger)
+    formam, Pager, newXML, xmldecorate, composeref, xmlbool, logger)
 from common.glob import (
     registers, inerr, text_opts, text_opts_keys, odp, exlim_title,
     localsubdomain, localurl, DTF)
@@ -170,8 +170,8 @@ def xmllist(request):
         'hearings': {
             'xmlns': 'http://' + localsubdomain,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': ('http://' + localsubdomain + ' ' + \
-            localurl + '/static/%s-%s.xsd') % (APP, APPVERSION),
+            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd' \
+                .format(localsubdomain, localurl, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()
@@ -272,8 +272,8 @@ def csvlist(request):
         dat = [
             h.courtroom.court.name,
             h.courtroom.desc,
-            h.time.strftime('%d.%m.%Y'),
-            h.time.strftime('%H:%M'),
+            '{:%d.%m.%Y}'.format(h.time),
+            '{:%H:%M}'.format(h.time),
             composeref(h.senate, h.register, h.number, h.year),
             h.judge.name,
             ';'.join([p['name'] for p in h.parties.values()]),
@@ -338,7 +338,9 @@ def stripjudge(name):
 
 @require_http_methods(['GET'])
 def courtinfo(request, court):
-    logger.debug('Court information accessed, court="%s"' % court, request)
+    logger.debug(
+        'Court information accessed, court="{}"'.format(court),
+        request)
     courtrooms = Hearing.objects.filter(courtroom__court_id=court) \
         .values('courtroom_id', 'courtroom__desc').distinct() \
         .order_by('courtroom__desc')

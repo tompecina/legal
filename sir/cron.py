@@ -89,7 +89,7 @@ def cron_gettr():
                 spisovaZnacka=t_data.spisovaznacka.string.strip(),
                 typUdalosti=t_data.typudalosti.string.strip(),
                 popisUdalosti=t_data.popisudalosti.string.strip(),
-                oddil=t_data.oddil.string.strip() if t_data.oddil else None,
+                oddil=(t_data.oddil.string.strip() if t_data.oddil else None),
                 cisloVOddilu=(int(t_data.cislovoddilu.string) \
                     if t_data.cislovoddilu else None),
                 poznamkaText=(t_data.poznamka.string.strip() \
@@ -97,10 +97,10 @@ def cron_gettr():
                 error=False))
 
         Transaction.objects.bulk_create(l)
-        logger.debug('Read %d transaction(s)' % len(l))
+        logger.debug('Read {:d} transaction(s)'.format(len(l)))
 
 def p2s(p):
-    return 'INS %d/%d' % (p.number, p.year)
+    return 'INS {:d}/{:d}'.format(p.number, p.year)
 
 def cron_proctr():
     id = Counter.objects.get(id='DL').number
@@ -158,12 +158,12 @@ def cron_proctr():
                                     desc=i.desc,
                                     vec=vec)[1]:
                                 logger.info(
-                                    'Change detected in proceedings "%s" ' \
-                                    '(%s) for user "%s" (%d)' % \
-                                    (i.desc,
-                                     p2s(i),
-                                     User.objects.get(pk=i.uid_id).username,
-                                     i.uid_id))
+                                    'Change detected in proceedings "{}" ' \
+                                    '({}) for user "{}" ({:d})'.format(
+                                        i.desc,
+                                        p2s(i),
+                                        User.objects.get(pk=i.uid_id).username,
+                                        i.uid_id))
 
             if t_osoba:
                 idOsoby = t_osoba.idosoby.string.strip()
@@ -385,15 +385,15 @@ def sir_notice(uid):
         text = 'Došlo ke změně v těchto insolvenčních řízeních, ' \
                'která sledujete:\n\n'
         for t in tt:
-            text += ' - %ssp. zn. %s %d INS %d/%d\n' % \
-                    ((t.desc + ', ' if t.desc else ''),
-                     l2s[t.vec.idOsobyPuvodce],
-                     t.vec.senat,
-                     t.vec.bc,
-                     t.vec.rocnik)
-            text += '   %s\n\n' % t.vec.link
+            text += ' - {}sp. zn. {} {:d} INS {:d}/{:d}\n'.format(
+                (t.desc + ', ' if t.desc else ''),
+                l2s[t.vec.idOsobyPuvodce],
+                t.vec.senat,
+                t.vec.bc,
+                t.vec.rocnik)
+            text += '   {}\n\n'.format(t.vec.link)
         Tracked.objects.filter(uid=uid, vec__link__isnull=False).delete()
         logger.info(
-            'Non-empty notice prepared for user "%s" (%d)' % \
-            (User.objects.get(pk=uid).username, uid))
+            'Non-empty notice prepared for user "{}" ({:d})' \
+                .format(User.objects.get(pk=uid).username, uid))
     return text

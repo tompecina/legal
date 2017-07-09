@@ -192,7 +192,7 @@ class TestViews(TestCase):
             models.Party(
                 uid=self.user,
                 party_opt=0,
-                party=('Test %d' % number)).save()
+                party='Test {:d}'.format(number)).save()
         res = self.client.get('/sur/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
@@ -336,7 +336,7 @@ class TestViews(TestCase):
             uid=self.user,
             party_opt=0,
             party='Test 2').id
-        res = self.client.get('/sur/partyform/%d/' % party_id)
+        res = self.client.get('/sur/partyform/{:d}/'.format(party_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
@@ -346,7 +346,7 @@ class TestViews(TestCase):
         self.assertEqual(len(p), 1)
         self.assertEqual(p[0].text, 'Úprava účastníka')
         res = self.client.post(
-            ('/sur/partyform/%d/' % party_id),
+            '/sur/partyform/{:d}/'.format(party_id),
             {'party': 'Test 8',
              'party_opt': 'icontains',
              'submit': 'Uložit'},
@@ -361,30 +361,32 @@ class TestViews(TestCase):
             uid=self.user,
             party_opt=0,
             party='Test').id
-        res = self.client.get('/sur/partydel/%d' % party_id)
+        res = self.client.get('/sur/partydel/{:d}'.format(party_id))
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
-        res = self.client.get('/sur/partydel/%d/' % party_id)
+        res = self.client.get('/sur/partydel/{:d}/'.format(party_id))
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
-        res = self.client.get(('/sur/partydel/%d/' % party_id), follow=True)
+        res = self.client.get(
+            '/sur/partydel/{:d}/'.format(party_id),
+            follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
-        res = self.client.get('/sur/partydel/%d/' % party_id)
+        res = self.client.get('/sur/partydel/{:d}/'.format(party_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partydel.html')
         res = self.client.post(
-            '/sur/partydel/%d/' % party_id,
+            '/sur/partydel/{:d}/'.format(party_id),
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
         res = self.client.post(
-            '/sur/partydel/%d/' % party_id,
+            '/sur/partydel/{:d}/'.format(party_id),
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partydeleted.html')
         self.assertFalse(models.Party.objects.filter(pk=party_id).exists())
-        res = self.client.post('/sur/partydel/%d/' % party_id)
+        res = self.client.post('/sur/partydel/{:d}/'.format(party_id))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
     def test_partydelall(self):

@@ -24,7 +24,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from datetime import date
 from django.apps import apps
-from common.utils import getbutton, pd, formam, unrequire, p2c, logger
+from common.utils import getbutton, pd, formam, unrequire, Lf, logger
 from common.glob import inerr_short
 from common.fields import AmountField
 from .main import getFXrate, getMPIrate
@@ -79,34 +79,38 @@ def mainpage(request):
                         messages = [[msg, None]]
                     elif b == 'show_fx':
                         messages.append(
-                            [('%d %s = %s CZK' % \
-                              (qty, curr, p2c("%.3f" % rate))),
+                            ['{:d} {} = {:.3f} CZK'.format(
+                                qty,
+                                curr,
+                                Lf(rate)),
                              'msg-res1'])
                         messages.append(
-                            [('(Kurs vyhlášený ke dni: %s)' % pd(dr)),
+                            ['(Kurs vyhlášený ke dni: {})'.format(pd(dr)),
                              'msg-note'])
                     else:
                         basis = cd['basis']
                         if b == 'conv_from':
                             messages.append(
-                                [('%s %s = %s CZK' % \
-                                  (formam(basis),
-                                   curr,
-                                   formam(basis * rate / qty))),
-                                 'msg-res2'])
+                                ['{} {} = {} CZK'.format(
+                                    formam(basis),
+                                    curr,
+                                    formam(basis * rate / qty)),
+                                'msg-res2'])
                         else:
                             messages.append(
-                                [('%s CZK = %s %s' % \
-                                  (formam(basis),
-                                   formam(basis * qty / rate),
-                                   curr)),
-                                 'msg-res2'])
+                                ['{} CZK = {} {}'.format(
+                                    formam(basis),
+                                    formam(basis * qty / rate),
+                                    curr),
+                                'msg-res2'])
                         messages.append(
-                            [('%d %s = %s CZK' % \
-                              (qty, curr, p2c("%.3f" % rate))),
+                            ['{:d} {} = {:.3f} CZK'.format(
+                                qty,
+                                curr,
+                                Lf(rate)),
                              None])
                         messages.append(
-                            [('(Kurs vyhlášený ke dni: %s)' % pd(dr)),
+                            ['(Kurs vyhlášený ke dni: {})'.format(pd(dr)),
                              'msg-note'])
                 else:
                     mpi_date = cd['mpi_date']
@@ -115,11 +119,11 @@ def mainpage(request):
                         messages = [[msg, None]]
                     else:
                         messages.append(
-                            [('%s platná ke dni %s:' % \
-                              (rate_desc[b], pd(mpi_date))),
+                            ['{} platná ke dni {}:'.format(
+                                rate_desc[b], pd(mpi_date)),
                              None])
                         messages.append(
-                            [p2c('%.2f %%' % rate),
+                            ['{:.2f} %'.format(Lf(rate)),
                              'msg-res0'])
             else:
                 logger.debug('Invalid form', request)

@@ -43,7 +43,7 @@ import os.path
 from common import fields
 from common.utils import (
     getbutton, yfactor, mfactor, formam, xmldecorate, xmlescape, xmlunescape,
-    p2c, rmdsl, getXML, newXML, iso2date, CanvasXML, logger)
+    Lf, rmdsl, getXML, newXML, iso2date, CanvasXML, logger)
 from common.glob import (
     ydconvs, odp,  mdconvs, LIM, inerr, localsubdomain, localurl)
 from common.views import error
@@ -551,8 +551,8 @@ def toxml(debt):
         'debt': {
             'xmlns': 'http://' + localsubdomain,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': ('http://' + localsubdomain + ' ' + \
-            localurl + '/static/%s-%s.xsd') % (APP, APPVERSION),
+            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd' \
+                .format(localsubdomain, localurl, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()
@@ -588,7 +588,7 @@ def toxml(debt):
             tag.append(debit.fixed_date.isoformat())
             t.append(tag)
             tag = xml.new_tag('fixed_amount')
-            tag.append('%.2f' % debit.fixed_amount)
+            tag.append('{:.2f}'.format(debit.fixed_amount))
             t.append(tag)
             tag = xmldecorate(xml.new_tag('fixed_currency'), xd)
             tag.append(debit.fixed_currency)
@@ -596,29 +596,29 @@ def toxml(debt):
         else:
             if m == 'per_annum':
                 tag = xmldecorate(xml.new_tag('pa_rate'), xd)
-                tag.append('%.6f' % debit.rate)
+                tag.append('{:.6f}'.format(debit.rate))
                 t.append(tag)
                 tag = xml.new_tag('day_count_convention')
                 tag.append(debit.day_count_convention)
                 t.append(tag)
             elif m == 'per_mensem':
                 tag = xmldecorate(xml.new_tag('pm_rate'), xd)
-                tag.append('%.6f' % debit.rate)
+                tag.append('{:.6f}'.format(debit.rate))
                 t.append(tag)
                 tag = xml.new_tag('day_count_convention')
                 tag.append(debit.day_count_convention)
                 t.append(tag)
             elif m == 'per_diem':
                 tag = xmldecorate(xml.new_tag('pd_rate'), xd)
-                tag.append('%.6f' % debit.rate)
+                tag.append('{:.6f}'.format(debit.rate))
                 t.append(tag)
             if debit.principal_debit:
                 tag = xml.new_tag('principal_debit')
-                tag['id'] = ('%d' % (debit.principal_debit - 1))
+                tag['id'] = '{:d}'.format(debit.principal_debit - 1)
                 t.append(tag)
             else:
                 tag = xml.new_tag('principal_amount')
-                tag.append('%.2f' % debit.principal_amount)
+                tag.append('{:.2f}'.format(debit.principal_amount))
                 t.append(tag)
                 tag = xmldecorate(xml.new_tag('principal_currency'), xd)
                 tag.append(debit.principal_currency)
@@ -644,7 +644,7 @@ def toxml(debt):
         tag.append(credit.date.isoformat())
         t.append(tag)
         tag = xml.new_tag('amount')
-        tag.append('%.2f' % credit.amount)
+        tag.append('{:.2f}'.format(credit.amount))
         t.append(tag)
         tag = xmldecorate(xml.new_tag('currency'), xd)
         tag.append(credit.currency)
@@ -680,10 +680,10 @@ def toxml(debt):
         tag.append(fxrate.currency_to)
         t.append(tag)
         tag = xml.new_tag('rate_from')
-        tag.append('%.3f' % fxrate.rate_from)
+        tag.append('{:.3f}'.format(fxrate.rate_from))
         t.append(tag)
         tag = xml.new_tag('rate_to')
-        tag.append('%.3f' % fxrate.rate_to)
+        tag.append('{:.3f}'.format(fxrate.rate_to))
         t.append(tag)
         if hasattr(fxrate, 'date_from') and fxrate.date_from:
             tag = xml.new_tag('date_from')
@@ -857,9 +857,9 @@ def mainpage(request):
         if abs(a) < LIM:
             return '<span class="dr"></span>'
         elif a > 0:
-            return '<span class="dr">%s</span>' % formam(a)
+            return '<span class="dr">{}</span>'.format(formam(a))
         elif a:
-            return '<span class="cr">%s</span>' % formam(-a)
+            return '<span class="cr">{}</span>'.format(formam(-a))
             
     def fa(a, c):
         if (not a) or (abs(a) < LIM):
@@ -944,24 +944,24 @@ def mainpage(request):
                 writer = csv.writer(response)
                 hdr = ['Datum', 'Popis', 'Částka', 'Měna']
                 for debit in debt.debits:
-                    hdr.append('Předchozí zůstatek %s (%s)' % \
-                               (debit.id, debit.currency))
+                    hdr.append('Předchozí zůstatek {} ({})' \
+                                   .format(debit.id, debit.currency))
                 for debit in debt.debits:
-                    hdr.append('Změna %s (%s)' % (debit.id, debit.currency))
+                    hdr.append('Změna {} ({})'.format(debit.id, debit.currency))
                 for debit in debt.debits:
-                    hdr.append('Nový zůstatek %s (%s)' % \
-                               (debit.id, debit.currency))
+                    hdr.append('Nový zůstatek {} ({})' \
+                                   .format(debit.id, debit.currency))
                 writer.writerow(hdr)
                 for row in res.rows:
                     dat = [
                         row['date'].isoformat(),
                         row['description'],
-                        ('%.2f' % row['amount']),
+                        '{:.2f}'.format(row['amount']),
                         row['disp_currency']
                     ]
-                    dat.extend([('%.2f' % t) for t in row['pre']])
-                    dat.extend([('%.2f' % t) for t in row['change']])
-                    dat.extend([('%.2f' % t) for t in row['post']])
+                    dat.extend(['{:.2f}'.format(t) for t in row['pre']])
+                    dat.extend(['{:.2f}'.format(t) for t in row['change']])
+                    dat.extend(['{:.2f}'.format(t) for t in row['post']])
                     writer.writerow(dat)
                 return response
 
@@ -973,15 +973,14 @@ def mainpage(request):
                     c.drawString(
                         64.0,
                         48.0,
-                        ('%s V%s' % (APP.upper(), APPVERSION)))
+                        '{} V{}'.format(APP.upper(), APPVERSION))
                     c.setFont('BookmanI', 7)
                     today = date.today()
                     c.drawRightString(
                         (A4[0] - 48.0),
                         48.0,
-                        ('Vytvořeno: %d. %d. %d' % (today.day,
-                                                    today.month,
-                                                    today.year)))
+                        'Vytvořeno: {:d}. {:d}. {:d}' \
+                            .format(today.day, today.month, today.year))
                     c.restoreState()
 
                 def page2(c, d):
@@ -991,7 +990,7 @@ def mainpage(request):
                     c.drawCentredString(
                         (A4[0] / 2),
                         (A4[1] - 30),
-                        ('– %d –' % d.page))
+                        '– {:d} –'.format(d.page))
                     c.restoreState()
 
                 fontdir = os.path.join(
@@ -1227,28 +1226,29 @@ def mainpage(request):
                                            bulletText=(debit.id + '.')))
                         m = debit.model
                         if m == 'fixed':
-                            t = ('pevná částka ' + \
-                                 fa(debit.fixed_amount, debit.fixed_currency) \
-                                 + ', splatná ' + \
-                                 debit.fixed_date.strftime('%d.%m.%Y'))
+                            t = 'pevná částka {}, splatná {:%d.%m.%Y}' \
+                                    .format(
+                                        fa(debit.fixed_amount,
+                                           debit.fixed_currency),
+                                        debit.fixed_date)
                         else:
                             if m == 'per_annum':
-                                t = ('roční úrok {:n} % <i>p. a.</i> ' \
-                                     '(konvence pro počítání dnů: {})' \
-                                     .format(debit.rate,
-                                             debit.day_count_convention))
+                                t = 'roční úrok {:n} % <i>p. a.</i> ' \
+                                    '(konvence pro počítání dnů: {})' \
+                                        .format(debit.rate,
+                                                debit.day_count_convention)
                             elif m == 'per_mensem':
-                                t = ('měsíční úrok {:n} % <i>p. m.</i> ' \
-                                     '(konvence pro počítání dnů: {})' \
-                                     .format(debit.rate,
-                                             debit.day_count_convention))
+                                t = 'měsíční úrok {:n} % <i>p. m.</i> ' \
+                                    '(konvence pro počítání dnů: {})' \
+                                        .format(debit.rate,
+                                                debit.day_count_convention)
                             elif m == 'per_diem':
-                                t = ('denní úrok {:n} ‰ <i>p. d.</i>' \
-                                     .format(debit.rate))
+                                t = 'denní úrok {:n} ‰ <i>p. d.</i>' \
+                                         .format(debit.rate)
                             elif m in ['cust1', 'cust2', 'cust3', 'cust5']:
                                 t = 'zákonný úrok z prodlení podle nařízení ' \
-                                    'vlády č. 142/1994 Sb. ve znění účinném ' \
-                                    + cust2eff[m]
+                                    'vlády č. 142/1994 Sb. ve znění účinném {}' \
+                                        .format(cust2eff[m])
                             elif m == 'cust6':
                                 t = 'zákonný úrok z prodlení podle nařízení ' \
                                     'vlády č. 351/2013 Sb.'
@@ -1256,20 +1256,18 @@ def mainpage(request):
                                 t = 'zákonný poplatek z prodlení podle ' \
                                     'nařízení vlády č. 142/1994 Sb.'
                             if debit.principal_debit:
-                                t += (' ze závazku ' + \
-                                      n2l(debit.principal_debit - 1))
+                                t += ' ze závazku {}'.format(
+                                    n2l(debit.principal_debit - 1))
                             else:
-                                t += (' z&nbsp;částky ' + \
-                                      fa(debit.principal_amount,
-                                         debit.principal_currency))
+                                t += ' z&nbsp;částky {}'.format(
+                                    fa(debit.principal_amount,
+                                       debit.principal_currency))
                             if debit.date_from:
-                                t += (' od ' + \
-                                      debit.date_from.strftime('%d.%m.%Y'))
+                                t += ' od {:%d.%m.%Y}'.format(debit.date_from)
                             elif debit.principal_debit:
                                 t += ' od splatnosti'
                             if debit.date_to:
-                                t += (' do ' + \
-                                      debit.date_to.strftime('%d.%m.%Y'))
+                                t += ' do {:%d.%m.%Y}'.format(debit.date_to)
                             elif debit.principal_debit:
                                 t += ' do zaplacení'
                         r.append(Paragraph(t, s25))
@@ -1279,18 +1277,21 @@ def mainpage(request):
                     for fxrate in debt.fxrates:
                         t = ''
                         if fxrate.date_from:
-                            t += 'od ' + fxrate.date_from.strftime('%d.%m.%Y')
+                            t += 'od {:%d.%m.%Y}'.format(fxrate.date_from)
                         if fxrate.date_to:
-                            t += ' do ' + fxrate.date_to.strftime('%d.%m.%Y')
+                            t += ' do {:%d.%m.%Y}'.format(fxrate.date_to)
                         if t:
-                            t = ' (' + t.strip() + ')'
-                        r.append(Paragraph((p2c('{:n} {} = {:n} {}' \
-                            .format(fxrate.rate_from,
+                            t = ' ({})'.format(t.strip())
+                        r.append(Paragraph(
+                            '{:n} {} = {:n} {}{}' \
+                                .format(
+                                    fxrate.rate_from,
                                     fxrate.currency_from,
                                     fxrate.rate_to,
-                                    fxrate.currency_to)) + t),
-                                           s20,
-                                           bulletText='–'))
+                                    fxrate.currency_to,
+                                    t),
+                            s20,
+                            bulletText='–'))
 
                 if res.fx:
                     res.fx.sort(key=(lambda x: x['date_required']))
@@ -1298,13 +1299,15 @@ def mainpage(request):
                     rmdsl(res.fx)
                     r.append(Paragraph(('Použité směnné kursy ČNB:'), s23))
                     for fx in res.fx:
-                        r.append(Paragraph((p2c('%d %s = %.3f CZK, platný ' \
-                            'ke dni ' % (fx['quantity'],
-                                         fx['currency'],
-                                         fx['rate'])) + fx['date_required'] \
-                                            .strftime('%d.%m.%Y')),
-                                           s20,
-                                           bulletText='–'))
+                        r.append(Paragraph(
+                            '{:d} {} = {:.3f} CZK, platný ' \
+                            'ke dni {:%d.%m.%Y}'.format(
+                                fx['quantity'],
+                                fx['currency'],
+                                Lf(fx['rate']),
+                                fx['date_required']),
+                            s20,
+                            bulletText='–'))
                         
                 if res.fix:
                     res.fix.sort(key=(lambda x: x['currency_to']))
@@ -1312,13 +1315,15 @@ def mainpage(request):
                     rmdsl(res.fix)
                     r.append(Paragraph(('Použité fixní směnné poměry:'), s23))
                     for fix in res.fix:
-                        r.append(Paragraph(('%s %s = 1 %s, platný od ' % \
-                            (formam(fix['rate']),
-                             fix['currency_from'],
-                             fix['currency_to']) + fix['date_from'] \
-                                            .strftime('%d.%m.%Y')),
-                                           s20,
-                                           bulletText='–'))
+                        r.append(Paragraph(
+                            '{} {} = 1 {}, platný od {:%d.%m.%Y}' \
+                                .format(
+                                    formam(fix['rate']),
+                                    fix['currency_from'],
+                                    fix['currency_to'],
+                                    fix['date_from']),
+                            s20,
+                            bulletText='–'))
                         
                 if res.mpi:
                     res.mpi.sort(key=(lambda x: x['date']))
@@ -1326,11 +1331,14 @@ def mainpage(request):
                     rmdsl(res.mpi)
                     r += [Paragraph(('Použité úrokové sazby ČNB:'), s23)]
                     for mpi in res.mpi:
-                        r.append(Paragraph((mpitypes[mpi['type']] + \
-                            ' ke dni ' + mpi['date'].strftime('%d.%m.%Y') + \
-                            p2c(': %.2f' % mpi['rate']) + ' % <i>p. a.</i>'),
-                                           s20,
-                                           bulletText='–'))
+                        r.append(Paragraph(
+                            '{} ke dni {:%d.%m.%Y}: {:.2f} % <i>p. a.</i>' \
+                                .format(
+                                    mpitypes[mpi['type']],
+                                    mpi['date'],
+                                    Lf(mpi['rate'])),
+                            s20,
+                            bulletText='–'))
 
                 r.append(Spacer(0, 50))
                 flow.extend(r)
@@ -1430,7 +1438,7 @@ def mainpage(request):
                                         tl, black))
 
                     d3 = []
-                    r = [Paragraph(row['date'].strftime('%d.%m.%Y'), s13)] \
+                    r = [Paragraph('{:%d.%m.%Y}'.format(row['date']), s13)] \
                         + ([''] * 4)
                     q = Paragraph((escape(row['description']).upper() \
                         if row['description'] else '<i>(bez názvu)</i>'), s14)
@@ -1490,7 +1498,7 @@ def mainpage(request):
                     temp,
                     pagesize=A4,
                     title='Historie peněžité pohledávky',
-                    author=('%s V%s' % (APP.upper(), APPVERSION)),
+                    author='{} V{}'.format(APP.upper(), APPVERSION),
                     leftMargin=64.0,
                     rightMargin=48.0,
                     topMargin=48.0,
@@ -1511,31 +1519,32 @@ def mainpage(request):
         debit.id = n2l(n)
         m = debit.model
         if m == 'fixed':
-            t = ('pevná částka ' + \
-                 fa(debit.fixed_amount, debit.fixed_currency) + \
-                 ', splatná ' + debit.fixed_date.strftime('%d.%m.%Y'))
+            t = 'pevná částka {}, splatná {:%d.%m.%Y}'.format(
+                    fa(debit.fixed_amount,
+                       debit.fixed_currency),
+                    debit.fixed_date)
         else:
             if m == 'per_annum':
-                t = ('roční úrok {:n} % <i>p. a.</i>'.format(debit.rate))
+                t = 'roční úrok {:n} % <i>p. a.</i>'.format(debit.rate)
             elif m == 'per_mensem':
-                t = ('měsíční úrok {:n} % <i>p. m.</i>'.format(debit.rate))
+                t = 'měsíční úrok {:n} % <i>p. m.</i>'.format(debit.rate)
             elif m == 'per_diem':
-                t = ('denní úrok {:n} ‰ <i>p. d.</i>'.format(debit.rate))
+                t = 'denní úrok {:n} ‰ <i>p. d.</i>'.format(debit.rate)
             elif m in ['cust1', 'cust2', 'cust3', 'cust5', 'cust6']:
                 t = 'zákonný úrok z prodlení'
             else:
                 t = 'zákonný poplatek z prodlení'
             if debit.principal_debit:
-                t += (' ze závazku ' + n2l(debit.principal_debit - 1))
+                t += ' ze závazku {}'.format(n2l(debit.principal_debit - 1))
             else:
-                t += (' z&nbsp;částky ' + \
-                      fa(debit.principal_amount, debit.principal_currency))
+                t += ' z&nbsp;částky {}'.format(
+                    fa(debit.principal_amount, debit.principal_currency))
             if debit.date_from:
-                t += (' od ' + debit.date_from.strftime('%d.%m.%Y'))
+                t += ' od {:%d.%m.%Y}'.format(debit.date_from)
             elif debit.principal_debit:
                 t += ' od splatnosti'
             if debit.date_to:
-                t += (' do ' + debit.date_to.strftime('%d.%m.%Y'))
+                t += ' do {:%d.%m.%Y}'.format(debit.date_to)
             elif debit.principal_debit:
                 t += ' do zaplacení'
         debit.text = t
@@ -1576,8 +1585,8 @@ def mainpage(request):
 def debitform(request, id=0):
 
     logger.debug(
-        'Debit form accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Debit form accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
 
@@ -1595,8 +1604,9 @@ def debitform(request, id=0):
     for n, d in enumerate(debt.debits):
         if (d.model == 'fixed') and ((not id) or (n != (id - 1))):
             row = {'value': (n + 1),
-                   'text': ('%s – %s' % (n2l(n), (d.description \
-                        if d.description else '(bez názvu)'))), 'sel': False}
+                   'text': '{} – {}'.format(n2l(n), (d.description \
+                        if d.description else '(bez názvu)')),
+                   'sel': False}
             rows.append(row)
 
     if request.method == 'GET':
@@ -1712,8 +1722,8 @@ def debitform(request, id=0):
 @login_required
 def debitdel(request, id=0):
     logger.debug(
-        'Debit delete page accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Debit delete page accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     id = int(id) - 1
@@ -1755,8 +1765,8 @@ def debitdel(request, id=0):
 def creditform(request, id=0):
 
     logger.debug(
-        'Credit form accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Credit form accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
 
@@ -1811,7 +1821,7 @@ def creditform(request, id=0):
             if nd > 1:
                 r = []
                 for n in range(nd):
-                    c = request.POST['r%d' % n]
+                    c = request.POST['r{:d}'.format(n)]
                     if c in r:
                         deb_class = 'err'
                         break
@@ -1826,7 +1836,8 @@ def creditform(request, id=0):
                 credit.currency = cd['currency'].upper()
                 if nd > 1:
                     for n in range(nd):
-                        credit.debits.append(int(request.POST['r%d' % n]))
+                        credit.debits.append(int(
+                            request.POST['r{:d}'.format(n)]))
                 elif nd:
                     credit.debits = [0]
                 if id:
@@ -1845,7 +1856,8 @@ def creditform(request, id=0):
                 err_message = inerr
                 if nd > 1:
                     for n in range(nd):
-                        rows[n]['sel'] = int(request.POST['r%d' % n])
+                        rows[n]['sel'] = int(request.POST['r{:d}' \
+                            .format(n)])
         
     return render(
         request,
@@ -1861,8 +1873,8 @@ def creditform(request, id=0):
 @login_required
 def creditdel(request, id=0):
     logger.debug(
-        'Credit delete page accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Credit delete page accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     id = int(id) - 1
@@ -1892,8 +1904,8 @@ def creditdel(request, id=0):
 def balanceform(request, id=0):
 
     logger.debug(
-        'Balance form accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Balance form accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
 
@@ -1952,8 +1964,8 @@ def balanceform(request, id=0):
 @login_required
 def balancedel(request, id=0):
     logger.debug(
-        'Balance delete page accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Balance delete page accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     id = int(id) - 1
@@ -1983,8 +1995,8 @@ def balancedel(request, id=0):
 def fxrateform(request, id=0):
 
     logger.debug(
-        'FX rate form accessed using method %s, id=%s' % \
-            (request.method, id),
+        'FX rate form accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
 
@@ -2052,8 +2064,8 @@ def fxrateform(request, id=0):
 @login_required
 def fxratedel(request, id=0):
     logger.debug(
-        'FX rate delete page accessed using method %s, id=%s' % \
-            (request.method, id),
+        'FX rate delete page accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     id = int(id) - 1

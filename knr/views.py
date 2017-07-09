@@ -71,8 +71,8 @@ def findloc(s):
     if not s:
         return False
     s = quote(unquote(s).encode('utf-8'))
-    u = ('https://maps.googleapis.com/maps/api/geocode/' \
-         'json?address=%s&language=cs&sensor=false' % s)
+    u = 'https://maps.googleapis.com/maps/api/geocode/' \
+        'json?address={}&language=cs&sensor=false'.format(s)
     r = getcache(u, timedelta(weeks=1))[0]
     if not r:
         return False
@@ -84,10 +84,10 @@ def findloc(s):
     return (c['formatted_address'], l['lat'], l['lng'])
 
 def finddist(from_lat, from_lon, to_lat, to_lon):
-    u = ('https://maps.googleapis.com/maps/api/distancematrix/' \
-         'json?origins=%f,%f&destinations=%f,%f&mode=driving&' \
-         'units=metric&language=cs&sensor=false' % \
-         (from_lat, from_lon, to_lat, to_lon))
+    u = 'https://maps.googleapis.com/maps/api/distancematrix/' \
+        'json?origins={:f},{:f}&destinations={:f},{:f}&mode=driving&' \
+        'units=metric&language=cs&sensor=false' \
+            .format(from_lat, from_lon, to_lat, to_lon)
     r = getcache(u, timedelta(weeks=1))[0]
     if not r:
         return (False, False)
@@ -103,7 +103,7 @@ def convi(n):
     return formam(int(n))
 
 def convf(n, p):
-    tpl = Template('{{ v|floatformat:"%d" }}' % p)
+    tpl = Template('{{{{ v|floatformat:"{:d}" }}}}'.format(p))
     c = Context({'v': n})
     return tpl.render(c)    
 
@@ -111,8 +111,8 @@ def convf(n, p):
 @login_required
 def placeform(request, id=0):
     logger.debug(
-        'Place form accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Place form accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     err_message = ''
@@ -145,13 +145,13 @@ def placeform(request, id=0):
             Place(uid_id=uid, **cd).save()
             if id:
                 logger.info(
-                    'User "%s" (%d) updated place "%s"' % \
-                    (uname, uid, cd['name']),
+                    'User "{}" ({:d}) updated place "{}"' \
+                        .format(uname, uid, cd['name']),
                     request)
             else:
                 logger.info(
-                    'User "%s" (%d) added place "%s"' % \
-                    (uname, uid, cd['name']),
+                    'User "{}" ({:d}) added place "{}"' \
+                        .format(uname, uid, cd['name']),
                     request)
             return redirect('knr:placelist')
         else:
@@ -187,8 +187,8 @@ def placelist(request):
 @login_required
 def placedel(request, id=0):
     logger.debug(
-        'Place delete page accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Place delete page accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     uid = request.user.id
@@ -204,7 +204,8 @@ def placedel(request, id=0):
         place = get_object_or_404(Place, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "%s" (%d) deleted place "%s"' % (uname, uid, place.name),
+                'User "{}" ({:d}) deleted place "{}"' \
+                    .format(uname, uid, place.name),
                 request)
             place.delete()
             return redirect('knr:placedeleted')
@@ -214,8 +215,8 @@ def placedel(request, id=0):
 @login_required
 def carform(request, id=0):
     logger.debug(
-        'Car form accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Car form accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     err_message = ''
@@ -238,12 +239,13 @@ def carform(request, id=0):
             Car(uid_id=uid, **cd).save()
             if id:
                 logger.info(
-                    'User "%s" (%d) updated car "%s"' % \
-                    (uname, uid, cd['name']),
+                    'User "{}" ({:d}) updated car "{}"' \
+                        .format(uname, uid, cd['name']),
                     request)
             else:
                 logger.info(
-                    'User "%s" (%d) added car "%s"' % (uname, uid, cd['name']),
+                    'User "{}" ({:d}) added car "{}"' \
+                        .format(uname, uid, cd['name']),
                     request)
             return redirect('knr:carlist')
         else:
@@ -274,8 +276,8 @@ def carlist(request):
 @login_required
 def cardel(request, id=0):
     logger.debug(
-        'Car delete page accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Car delete page accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     uid = request.user.id
@@ -292,7 +294,8 @@ def cardel(request, id=0):
         car = get_object_or_404(Car, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "%s" (%d) deleted car "%s"' % (uname, uid, car.name),
+                'User "{}" ({:d}) deleted car "{}"' \
+                    .format(uname, uid, car.name),
                 request)
             car.delete()
             return redirect('knr:cardeleted')
@@ -302,8 +305,8 @@ def cardel(request, id=0):
 @login_required
 def formulaform(request, id=0):
     logger.debug(
-        'Formula form accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Formula form accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     err_message = ''
@@ -338,12 +341,13 @@ def formulaform(request, id=0):
             p.save()
             if id:
                 logger.info(
-                    'User "%s" (%d) updated formula "%s"' % \
-                    (uname, uid, p.name),
+                    'User "{}" ({:d}) updated formula "{}"' \
+                        .format(uname, uid, p.name),
                     request)
             else:
                 logger.info(
-                    'User "%s" (%d) added formula "%s"' % (uname, uid, p.name),
+                    'User "{}" ({:d}) added formula "{}"' \
+                        .format(uname, uid, p.name),
                     request)
             for fuel in fuels:
                 r = Rate.objects.filter(formula=p, fuel=fuel)
@@ -401,8 +405,8 @@ def formulalist(request):
 @login_required
 def formuladel(request, id=0):
     logger.debug(
-        'Formula delete page accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Formula delete page accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     uid = request.user.id
@@ -418,8 +422,8 @@ def formuladel(request, id=0):
         formula = get_object_or_404(Formula, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "%s" (%d) deleted formula "%s"' % \
-                (uname, uid, formula.name),
+                'User "{}" ({:d}) deleted formula "{}"' \
+                    .format(uname, uid, formula.name),
                 request)
             formula.delete()
             return redirect('knr:formuladeleted')
@@ -889,9 +893,8 @@ def toxml(c):
     xml.insert(0, calculation)
     calculation['xmlns'] = 'http://' + localsubdomain
     calculation['xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
-    calculation['xsi:schemaLocation'] = \
-        ('http://' + localsubdomain + ' ' + localurl + '/static/%s-%s.xsd') % \
-        (APP, APPVERSION)
+    calculation['xsi:schemaLocation'] = 'http://{} {}/static/{}-{}.xsd' \
+        .format(localsubdomain, localurl, APP, APPVERSION)
     calculation['application'] = APP
     calculation['version'] = APPVERSION
     calculation['created'] = datetime.now().replace(microsecond=0).isoformat()
@@ -903,7 +906,7 @@ def toxml(c):
             for key, val in ga[tag.name].items():
                 tag[key] = val
     vat_rate = xml.new_tag('vat_rate')
-    vat_rate.insert(0, ('%.2f' % c.vat_rate))
+    vat_rate.insert(0, '{:.2f}'.format(c.vat_rate))
     for key, val in ga['vat_rate'].items():
         vat_rate[key] = val
     calculation.insert(len(calculation), vat_rate)
@@ -928,9 +931,9 @@ def toxml(c):
                 else:
                     r = 'false'
             elif y == I:
-                r = ('%d' % p)
+                r = '{:d}'.format(p)
             elif y[0] == 'F':
-                r = (('%%.%uf' % int(y[1])) % p)
+                r = '{:.{prec}f}'.format(p, prec=int(y[1]))
             tag.insert(0, r.strip())
     return str(xml).encode('utf-8') + b'\n'
 
@@ -1033,14 +1036,17 @@ def mainpage(request):
                     def page1(c, d):
                         c.saveState()
                         c.setFont('Bookman', 7)
-                        c.drawString(64.0, 48.0, ('KNR V%s' % APPVERSION))
+                        c.drawString(
+                            64.0,
+                            48.0,
+                            '{} V{}'.format(APP.upper(), APPVERSION))
                         c.setFont('BookmanI', 7)
                         nw = datetime.now()
                         c.drawRightString(
                             (A4[0] - 48.0),
                             48.0,
-                            ('Vytvořeno: %u. %u. %u' % \
-                             (nw.day, nw.month, nw.year)))
+                            'Vytvořeno: {:d}. {:d}. {:d}' \
+                                .format(nw.day, nw.month, nw.year))
                         c.restoreState()
 
                     fontdir = os.path.join(
@@ -1180,7 +1186,7 @@ def mainpage(request):
                         d2 = []
                         for i in range(len(c.items)):
                             item = c.items[i]
-                            r = [Paragraph(('%u.' % (i + 1)), s3)]
+                            r = [Paragraph('{:d}.'.format(i + 1), s3)]
                             q = [Paragraph(escape(item \
                                                   .description \
                                                   .upper() \
@@ -1190,87 +1196,94 @@ def mainpage(request):
                             if item.type == 'service':
                                 if item.multiple_number < 2:
                                     q.append(Paragraph(
-                                        ('<b>Hlavních úkonů:</b> %u ' \
-                                         '&nbsp; <b>Vedlejších úkonů:</b> ' \
-                                         '%u' % (item.major_number,
-                                                 item.minor_number)),
+                                        '<b>Hlavních úkonů:</b> {:d} ' \
+                                        '&nbsp; <b>Vedlejších úkonů:</b> ' \
+                                        '{:d}'.format(
+                                            item.major_number,
+                                            item.minor_number),
                                         s6))
                                 else:
                                     q.append(Paragraph(
-                                        ('<b>Hlavních úkonů:</b> %u ' \
-                                         '&nbsp; <b>Vedlejších úkonů:</b> ' \
-                                         '%u &nbsp; <b>Zastupovaných ' \
-                                         'účastníků:</b> %u' \
-                                        % (item.major_number,
-                                           item.minor_number,
-                                           item.multiple_number)),
+                                        '<b>Hlavních úkonů:</b> {:d} ' \
+                                        '&nbsp; <b>Vedlejších úkonů:</b> ' \
+                                        '{:d} &nbsp; <b>Zastupovaných ' \
+                                        'účastníků:</b> {:d}'.format(
+                                            item.major_number,
+                                            item.minor_number,
+                                            item.multiple_number),
                                         s6))
                             if item.type == 'administrative':
                                 q.append(Paragraph(
-                                    ('<b>Počet úkonů:</b> %u &nbsp; ' \
-                                     '<b>Sazba:</b> %s Kč' % \
-                                     (item.number, convi(item.rate))),
+                                    '<b>Počet úkonů:</b> {:d} &nbsp; ' \
+                                    '<b>Sazba:</b> {} Kč'.format(
+                                        item.number,
+                                        convi(item.rate)),
                                     s6))
                             if item.type == 'time':
                                 q.append(Paragraph(
-                                    ('<b>Počet započatých půlhodin:</b> %u ' \
-                                     '&nbsp; <b>Sazba:</b> %s Kč/půlhodinu' % \
-                                     (item.time_number, convi(item.time_rate))),
+                                    '<b>Počet započatých půlhodin:</b> {:d} ' \
+                                    '&nbsp; <b>Sazba:</b> {} Kč/půlhodinu' \
+                                        .format(
+                                            item.time_number,
+                                            convi(item.time_rate)),
                                     s6))
                             if item.type == 'travel':
                                 q.append(Paragraph(
-                                    ('<b>Z:</b> %s (%s)' % \
-                                     (escape(item.from_name),
-                                      escape(item.from_address.replace(
-                                          ', Česká republika', '').replace(
-                                          ', Česko', '')))),
+                                    '<b>Z:</b> {} ({})'.format(
+                                        escape(item.from_name),
+                                        escape(item.from_address.replace(
+                                            ', Česká republika', '').replace(
+                                            ', Česko', ''))),
                                     s6))
                                 q.append(Paragraph(
-                                    ('<b>Do:</b> %s (%s)' % \
-                                     (escape(item.to_name),
-                                      escape(item.to_address.replace(
-                                          ', Česká republika', '').replace(
-                                          ', Česko', '')))),
+                                    '<b>Do:</b> {} ({})'.format(
+                                        escape(item.to_name),
+                                        escape(item.to_address.replace(
+                                            ', Česká republika', '').replace(
+                                            ', Česko', ''))),
                                     s6))
                                 q.append(Paragraph(
-                                    ('<b>Vzdálenost:</b> %s km &nbsp; ' \
-                                     '<b>Počet cest:</b> %u' % \
-                                     (convi(item.trip_distance),
-                                      item.trip_number)),
+                                    '<b>Vzdálenost:</b> {} km &nbsp; ' \
+                                    '<b>Počet cest:</b> {:d}'.format(
+                                        convi(item.trip_distance),
+                                        item.trip_number),
                                     s6))
                                 if (item.time_number and item.time_rate):
                                     q.append(Paragraph(
-                                        ('<b>Počet započatých půlhodin:</b> ' \
-                                         '%u &nbsp; <b>Sazba:</b> %s ' \
-                                         'Kč/půlhodinu' % \
-                                         ((item.time_number * item.trip_number),
-                                          convi(item.time_rate))),
+                                        '<b>Počet započatých půlhodin:</b> ' \
+                                        '{:d} &nbsp; <b>Sazba:</b> {} ' \
+                                        'Kč/půlhodinu'.format(
+                                            (item.time_number * \
+                                             item.trip_number),
+                                            convi(item.time_rate)),
                                         s6))
                                 q.append(Paragraph(
-                                    ('<b>Vozidlo</b> %s' % \
-                                     escape(item.car_name)),
+                                    '<b>Vozidlo</b> {}'.format(
+                                        escape(item.car_name)),
                                     s6))
                                 q.append(Paragraph(
-                                    ('<b>Palivo:</b> %s &nbsp; ' \
-                                     '<b>Průměrná spotřeba:</b> %s l/100 km' % \
-                                     (item.fuel_name,
-                                      convf(((item.cons1 + item.cons2 + \
-                                              item.cons3) / 3.0), 3))),
+                                    '<b>Palivo:</b> {} &nbsp; ' \
+                                    '<b>Průměrná spotřeba:</b> {} l/100 km' \
+                                        .format(
+                                            item.fuel_name,
+                                            convf(((item.cons1 + item.cons2 + \
+                                                    item.cons3) / 3.0), 3)),
                                     s6))
                                 q.append(Paragraph(
-                                    ('<b>Předpis:</b> %s' % \
-                                     escape(item.formula_name)),
+                                    '<b>Předpis:</b> {}'.format(
+                                        escape(item.formula_name)),
                                     s6))
                                 q.append(Paragraph(
-                                    ('<b>Paušál:</b> %s Kč/km &nbsp; ' \
-                                     '<b>Cena paliva:</b> %s Kč/l' % \
-                                     (convf(item.flat_rate, 2),
-                                      convf(item.fuel_price, 2))),
+                                    '<b>Paušál:</b> {} Kč/km &nbsp; ' \
+                                    '<b>Cena paliva:</b> {} Kč/l'.format(
+                                        convf(item.flat_rate, 2),
+                                        convf(item.fuel_price, 2)),
                                     s6))
                             if (item.numerator > 1) or (item.denominator > 1):
                                 q.append(Paragraph(
-                                    ('<b>Zlomek:</b> %u/%u' % \
-                                     (item.numerator, item.denominator)),
+                                    '<b>Zlomek:</b> {:d}/{:d}'.format(
+                                        item.numerator,
+                                        item.denominator),
                                     s6))
                             if item.item_note:
                                 for s in filter(bool, item.item_note.strip() \
@@ -1278,7 +1291,7 @@ def mainpage(request):
                                     q.append(Paragraph(escape(s), s7))
                             r.append(q)
                             r.append(Paragraph(
-                                ('%s Kč' % convi(item.amount)), s5))
+                                '{} Kč'.format(convi(item.amount)), s5))
                             d2.append(r)         
                         t2 = LongTable(d2, colWidths=[16.15, 400.45, 66.70])
                         t2.setStyle(
@@ -1309,20 +1322,26 @@ def mainpage(request):
                         d3.append(
                             [None,
                              Paragraph('Základ bez DPH', s8),
-                             Paragraph(('%s Kč' % convi(total_ex)), s11)])
+                             Paragraph('{} Kč'.format(convi(total_ex)), s11)
+                            ])
                         d3.append(
                             [None,
                              Paragraph('Základ s DPH', s8),
-                             Paragraph(('%s Kč' % convi(total_net)), s11)])
+                             Paragraph('{} Kč'.format(convi(total_net)), s11)
+                            ])
                         d3.append(
                             [None,
-                             Paragraph(('DPH %s %%' % convf(c.vat_rate, 0)),
-                                       s8),
-                             Paragraph(('%s Kč' % convi(total_vat)), s11)])
+                             Paragraph(
+                                 'DPH {} %'.format(convf(c.vat_rate, 0)),
+                                 s8),
+                             Paragraph(
+                                 '{} Kč'.format(convi(total_vat)),
+                                 s11)
+                            ])
                     d3.append(
                         [None,
                          Paragraph('Celkem'.upper(), s9),
-                         Paragraph(('%s Kč' % convi(total)), s10)])
+                         Paragraph('{} Kč'.format(convi(total)), s10)])
                     if total_vat:
                         t3 = LongTable(d3, colWidths=[346.60, 70.00, 66.70])
                     else:                      
@@ -1358,7 +1377,7 @@ def mainpage(request):
                         temp,
                         pagesize=A4,
                         title='Kalkulace nákladů řízení',
-                        author=('KNR V%s' % APPVERSION),
+                        author='{} V{}'.format(APP.upper(), APPVERSION),
                         leftMargin=64.0,
                         rightMargin=48.0,
                         topMargin=48.0,
@@ -1484,8 +1503,8 @@ def itemform(request, idx=0):
                 cd['time_number'] = int(ceil(dur / 1800.0))
 
     logger.debug(
-        'Item form accessed using method %s, idx=%s' % \
-            (request.method, idx),
+        'Item form accessed using method {}, idx={}' \
+            .format(request.method, idx),
         request,
         request.POST)
     uid = request.user.id
@@ -1954,8 +1973,8 @@ def itemlist(request):
 @login_required
 def itemdel(request, idx=0):
     logger.debug(
-        'Item delete page accessed using method %s, idx=%s' % \
-            (request.method, idx),
+        'Item delete page accessed using method {}, idx={}' \
+            .format(request.method, idx),
         request,
         request.POST)
     idx = (int(idx) - 1)

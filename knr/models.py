@@ -111,4 +111,4 @@ class Rate(models.Model):
         unique_together = ('formula', 'fuel')
 
     def __str__(self):
-        return '%s/%s' % (self.formula.abbr, self.fuel)
+        return '{}/{}'.format(self.formula.abbr, self.fuel)

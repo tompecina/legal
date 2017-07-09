@@ -32,7 +32,7 @@ class DebtorForm(forms.Form):
     desc = fields.CharField(
         max_length=255,
         label='Popis',
-        widget=widgets.sew(attrs={'style': 'width: 100%;'}))
+        widget=widgets.sew(attrs={'class': 'width-full'}))
     court = fields.CharField(
         max_length=255,
         required=False,

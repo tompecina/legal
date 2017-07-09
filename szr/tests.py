@@ -232,7 +232,7 @@ class TestViews(TestCase):
                 register='C',
                 number=number,
                 year=2016,
-                desc=('Test %d' % number)).save()
+                desc='Test {:d}'.format(number)).save()
         res = self.client.get('/szr/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
@@ -531,7 +531,7 @@ class TestViews(TestCase):
             number=1,
             year=2016,
             desc='Test 2').id
-        res = self.client.get('/szr/procform/%d/' % proc_id)
+        res = self.client.get('/szr/procform/{:d}/'.format(proc_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
@@ -541,7 +541,7 @@ class TestViews(TestCase):
         self.assertEqual(len(p), 1)
         self.assertEqual(p[0].text, 'Úprava řízení')
         res = self.client.post(
-            ('/szr/procform/%d/' % proc_id),
+            '/szr/procform/{:d}/'.format(proc_id),
             {'court': 'MSPHAAB',
              'senate': '52',
              'register': 'C',
@@ -559,7 +559,7 @@ class TestViews(TestCase):
         self.assertEqual(proc.year, 2016)
         self.assertEqual(proc.desc, 'Test 8')
         res = self.client.post(
-            ('/szr/procform/%d/' % proc_id),
+            '/szr/procform/{:d}/'.format(proc_id),
             {'court': 'MSPHAAB',
              'senate': '52',
              'register': 'C',
@@ -586,30 +586,30 @@ class TestViews(TestCase):
             number=1,
             year=2016,
             desc='Test').id
-        res = self.client.get('/szr/procdel/%d' % proc_id)
+        res = self.client.get('/szr/procdel/{:d}'.format(proc_id))
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
-        res = self.client.get('/szr/procdel/%d/' % proc_id)
+        res = self.client.get('/szr/procdel/{:d}/'.format(proc_id))
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
-        res = self.client.get(('/szr/procdel/%d/' % proc_id), follow=True)
+        res = self.client.get('/szr/procdel/{:d}/'.format(proc_id), follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
-        res = self.client.get('/szr/procdel/%d/' % proc_id)
+        res = self.client.get('/szr/procdel/{:d}/'.format(proc_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procdel.html')
         res = self.client.post(
-            '/szr/procdel/%d/' % proc_id,
+            '/szr/procdel/{:d}/'.format(proc_id),
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         res = self.client.post(
-            '/szr/procdel/%d/' % proc_id,
+            '/szr/procdel/{:d}/'.format(proc_id),
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procdeleted.html')
         self.assertFalse(models.Proceedings.objects.filter(pk=proc_id).exists())
-        res = self.client.post('/szr/procdel/%d/' % proc_id)
+        res = self.client.post('/szr/procdel/{:d}/'.format(proc_id))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
     def test_procdelall(self):

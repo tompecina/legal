@@ -33,17 +33,17 @@ def dir_notice(uid):
         text = 'Byli nově zaznamenáni tito dlužníci, ' \
                'které sledujete:\n\n'
         for d in dd:
-            text += ' - %s, sp. zn. %s %d INS %d/%d\n' % \
-                    (d.desc,
-                     l2s[d.vec.idOsobyPuvodce],
-                     d.vec.senat,
-                     d.vec.bc,
-                     d.vec.rocnik)
-            text += '   %s\n\n' % d.vec.link
+            text += ' - {}, sp. zn. {} {:d} INS {:d}/{:d}\n'.format(
+                d.desc,
+                l2s[d.vec.idOsobyPuvodce],
+                d.vec.senat,
+                d.vec.bc,
+                d.vec.rocnik)
+            text += '   {}\n\n'.format(d.vec.link)
         Discovered.objects.filter(uid=uid, vec__link__isnull=False).delete()
         logger.info(
-            'Non-empty notice prepared for user "%s" (%d)' % \
-            (User.objects.get(pk=uid).username, uid))
+            'Non-empty notice prepared for user "{}" ({:d})'.format(
+                User.objects.get(pk=uid).username, uid))
     return text
 
 def dir_check(osoba, vec):
@@ -65,5 +65,7 @@ def dir_check(osoba, vec):
                     desc=d.desc,
                     vec=vec)[1]:
                 logger.info(
-                    'New debtor "%s" detected for user "%s" (%d)' % \
-                    (d.desc, User.objects.get(pk=d.uid_id).username, d.uid_id))
+                    'New debtor "{}" detected for user "{}" ({:d})'.format(
+                        d.desc,
+                        User.objects.get(pk=d.uid_id).username,
+                        d.uid_id))

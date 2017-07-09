@@ -31,13 +31,14 @@ from .models import Court, Proceedings
 from .glob import supreme_court, supreme_administrative_court
 
 list_courts = 'public/search.jsp'
-list_reports = 'InfoSoud/seznamOkresnichSoudu?kraj=%s'
+list_reports = 'InfoSoud/seznamOkresnichSoudu?kraj={}'
 root_url = 'http://infosoud.justice.cz/'
-get_proc = 'InfoSoud/public/search.do?org=%s&krajOrg=%s&cisloSenatu=%d' \
-           '&druhVec=%s&bcVec=%d&rocnik=%d&typSoudu=%s&autoFill=true&type=spzn'
+get_proc = 'InfoSoud/public/search.do?org={}&krajOrg={}&cisloSenatu={:d}' \
+           '&druhVec={}&bcVec={:d}&rocnik={:d}&typSoudu={}&autoFill=true' \
+           '&type=spzn'
 nss_url = 'http://www.nssoud.cz/main0Col.aspx?cls=JudikaturaSimpleSearch' \
           '&pageSource=1&menu=187'
-nss_get_proc = 'http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&kau_id=%d'
+nss_get_proc = 'http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&kau_id={:d}'
 update_delay = timedelta(hours=6)
 
 def addauxid(p):
@@ -49,10 +50,10 @@ def addauxid(p):
             d = {i['name']: i['value'] for i in form.find_all('input') \
                  if i['type']=='hidden' and i.has_attr('value')}
             if int(p.senate):
-                ref = '%s ' % p.senate
+                ref = '{} '.format(p.senate)
             else:
                 ref = ''
-            ref += '%s %d/%d' % (p.register, p.number, p.year)
+            ref += '{} {:d}/{:d}'.format(p.register, p.number, p.year)
             d['_ctl0:ContentPlaceMasterPage:_ctl0:txtSpisovaZnackaFull'] = ref
             res = post(nss_url, d)
             soup = BeautifulSoup(res.text, 'html.parser')
@@ -87,7 +88,7 @@ def cron_courts():
         if isreg(c):
             try:
                 sleep(1)
-                res = get(root_url + (list_reports % c.pk))
+                res = get(root_url + list_reports.format(c.pk))
                 soup = BeautifulSoup(res.text, 'xml')
                 for r in soup.find_all('okresniSoud'):
                     Court.objects.filter(pk=r.id.string).update(reports=c)
@@ -110,7 +111,7 @@ def updateproc(p):
             addauxid(p)
             if not p.auxid:
                 return
-            url = nss_get_proc % p.auxid
+            url = nss_get_proc.format(p.auxid)
             res = get(url)
             soup = BeautifulSoup(res.text, 'html.parser')
             table = soup.find('table', 'frm')
@@ -119,22 +120,26 @@ def updateproc(p):
                 court_type = 'ns'
             else:
                 court_type = 'os'
-            url = root_url + (get_proc % \
-                (court,
-                 (p.court.reports.id if p.court.reports else p.court.id),
-                 p.senate,
-                 quote(p.register.upper()),
-                 p.number,
-                 p.year,
-                 court_type))
+            url = root_url + get_proc.format(
+                court,
+                (p.court.reports.id if p.court.reports else p.court.id),
+                p.senate,
+                quote(p.register.upper()),
+                p.number,
+                p.year,
+                court_type)
             res = get(url)
             soup = BeautifulSoup(res.text, 'html.parser')
             table = soup.find('tr', 'AAAA')
         assert table
     except:  # pragma: no cover
         logger.warning(
-            'Failed to check proceedings "%s" (%s) for user "%s" (%d)' % \
-            (p.desc, p2s(p), User.objects.get(pk=p.uid_id).username, p.uid_id))
+            'Failed to check proceedings "{}" ({}) for user "{}" ({:d})' \
+                .format(
+                    p.desc,
+                    p2s(p),
+                    User.objects.get(pk=p.uid_id).username,
+                    p.uid_id))
         return False
     hash = md5(str(table).encode()).hexdigest()
     if court != supreme_administrative_court:
@@ -147,38 +152,42 @@ def updateproc(p):
                     t[1].split(':')))
         except:  # pragma: no cover
             logger.warning(
-                'Failed to check proceedings "%s" (%s) for user "%s" (%d)' % \
-                (p.desc,
-                 p2s(p),
-                 User.objects.get(pk=p.uid_id).username,
-                 p.uid_id))
+                'Failed to check proceedings "{}" ({}) for user "{}" ({:d})' \
+                    .format(
+                        p.desc,
+                        p2s(p),
+                        User.objects.get(pk=p.uid_id).username,
+                        p.uid_id))
         if (changed != p.changed) or (hash != p.hash):
             p.notify |= notnew
             if changed:
                 p.changed = changed
                 logger.info(
-                    'Change detected in proceedings "%s" (%s) ' \
-                    'for user "%s" (%d)' % \
-                    (p.desc,
-                     p2s(p),
-                     User.objects.get(pk=p.uid_id).username,
-                     p.uid_id))
+                    'Change detected in proceedings "{}" ({}) ' \
+                    'for user "{}" ({:d})'.format(
+                        p.desc,
+                        p2s(p),
+                        User.objects.get(pk=p.uid_id).username,
+                        p.uid_id))
     elif hash != p.hash:
         p.notify |= notnew
         if notnew:
             p.changed = p.updated
             if p.changed:
                 logger.info(
-                    'Change detected in proceedings "%s" (%s) ' \
-                    'for user "%s" (%d)' % \
-                    (p.desc,
-                     p2s(p),
-                     User.objects.get(pk=p.uid_id).username,
-                     p.uid_id))
+                    'Change detected in proceedings "{}" ({}) ' \
+                    'for user "{}" ({:d})'.format(
+                        p.desc,
+                        p2s(p),
+                        User.objects.get(pk=p.uid_id).username,
+                        p.uid_id))
     p.hash = hash
     logger.debug(
-        'Proceedings "%s" (%s) updated for user "%s" (%d)' % \
-        (p.desc, p2s(p), User.objects.get(pk=p.uid_id).username, p.uid_id))
+        'Proceedings "{}" ({}) updated for user "{}" ({:d})'.format(
+            p.desc,
+            p2s(p),
+            User.objects.get(pk=p.uid_id).username,
+            p.uid_id))
     return True
 
 def cron_update():
@@ -198,29 +207,34 @@ def szr_notice(uid):
                'došlo ke změně:\n\n'
         for p in pp:
             if p.desc:
-                desc = ' (%s)' % p.desc
+                desc = ' ({})'.format(p.desc)
             else:
                 desc = ''
-            text += ' - %s, sp. zn. %d %s %d/%d%s\n' % \
-                (p.court, p.senate, p.register, p.number, p.year, desc)
+            text += ' - {}, sp. zn. {:d} {} {:d}/{:d}{}\n'.format(
+                p.court,
+                p.senate,
+                p.register,
+                p.number,
+                p.year,
+                desc)
             if p.court_id != supreme_administrative_court:
                 if p.court_id == supreme_court:
                     court_type = 'ns'
                 else:
                     court_type = 'os'
-                text += '   %s\n\n' % (root_url + (get_proc % \
-                    (p.court.id,
-                     (p.court.reports.id if p.court.reports else p.court.id),
-                     p.senate,
-                     quote(p.register.upper()),
-                     p.number,
-                     p.year,
-                     court_type)))
+                text += '   {}\n\n'.format(root_url + get_proc.format(
+                    p.court.id,
+                    (p.court.reports.id if p.court.reports else p.court.id),
+                    p.senate,
+                    quote(p.register.upper()),
+                    p.number,
+                    p.year,
+                    court_type))
             elif p.auxid:
-                text += '   %s\n\n' % (nss_get_proc % p.auxid)
+                text += '   {}\n\n'.format(nss_get_proc.format(p.auxid))
             p.notify = False
             p.save()
         logger.info(
-            'Non-empty notice prepared for user "%s" (%d)' % \
-            (User.objects.get(pk=uid).username, uid))
+            'Non-empty notice prepared for user "{}" ({:d})' \
+                .format(User.objects.get(pk=uid).username, uid))
     return text

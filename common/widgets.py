@@ -185,8 +185,8 @@ class dw(forms.DateInput):
         r = super(dw, self).render(name, *args, **kwargs)
         if self._today:
             return mark_safe(
-                '%s&nbsp;<input type="submit" name="submit_set_%s" ' \
-                'value="Dnes" class="today" id="id_set_%s" />' % \
-                (r, name, name))
+                '{0}&nbsp;<input type="submit" name="submit_set_{1}" ' \
+                'value="Dnes" class="today" id="id_set_{1}" />' \
+                    .format(r, name))
         else:
             return r

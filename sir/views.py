@@ -90,8 +90,8 @@ def mainpage(request):
 @login_required
 def insform(request, id=0):
     logger.debug(
-        'Proceedings form accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Proceedings form accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     err_message = ''
@@ -117,13 +117,13 @@ def insform(request, id=0):
             p.save()
             if id:
                 logger.info(
-                    'User "%s" (%d) updated proceedings "%s" (%s)' % \
-                    (uname, uid, p.desc, p2s(p)),
+                    'User "{}" ({:d}) updated proceedings "{}" ({})' \
+                        .format(uname, uid, p.desc, p2s(p)),
                     request)
             else:
                 logger.info(
-                    'User "%s" (%d) added proceedings "%s" (%s)' % \
-                    (uname, uid, p.desc, p2s(p)),
+                    'User "{}" ({:d}) added proceedings "{}" ({})' \
+                        .format(uname, uid, p.desc, p2s(p)),
                     request)
             return redirect('sir:mainpage')
         else:
@@ -141,8 +141,8 @@ def insform(request, id=0):
 @login_required
 def insdel(request, id=0):
     logger.debug(
-        'Proceedings delete page accessed using method %s, id=%s' % \
-            (request.method, id),
+        'Proceedings delete page accessed using method {}, id={}' \
+            .format(request.method, id),
         request,
         request.POST)
     uid = request.user.id
@@ -157,8 +157,8 @@ def insdel(request, id=0):
         ins = get_object_or_404(Insolvency, pk=id, uid=uid)
         if (getbutton(request) == 'yes'):
             logger.info(
-                'User "%s" (%d) deleted proceedings "%s" (%s)' % \
-                (uname, uid, ins.desc, p2s(ins)),
+                'User "{}" ({:d}) deleted proceedings "{}" ({})' \
+                    .format(uname, uid, ins.desc, p2s(ins)),
                 request)
             ins.delete()
             return redirect('sir:insdeleted')
@@ -184,7 +184,7 @@ def insdelall(request):
            (request.POST['conf'] == 'Ano'):
             Insolvency.objects.filter(uid=uid).delete()
             logger.info(
-                'User "%s" (%d) deleted all proceedings' % (uname, uid),
+                'User "{}" ({:d}) deleted all proceedings'.format(uname, uid),
                 request)
         return redirect('sir:mainpage')
 
@@ -262,8 +262,8 @@ def insbatchform(request):
                                     continue
                                 count += 1
                     logger.info(
-                        'User "%s" (%d) imported %d proceedings' % \
-                        (uname, uid, count),
+                        'User "{}" ({:d}) imported {:d} proceedings' \
+                            .format(uname, uid, count),
                         request)
                     return render(
                         request,
@@ -305,7 +305,7 @@ def insexport(request):
         ]
         writer.writerow(dat)
     logger.info(
-        'User "%s" (%d) exported proceedings' % (uname, uid),
+        'User "{}" ({:d}) exported proceedings'.format(uname, uid),
         request)
     return response
 

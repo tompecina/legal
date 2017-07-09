@@ -25,7 +25,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from datetime import date
 from math import floor, ceil
-from common.utils import getbutton, formam, p2c, logger
+from common.utils import getbutton, formam, logger
 from common.glob import inerr_short
 from common.models import Preset
 from cnb.main import getFXrate
@@ -78,7 +78,7 @@ def mainpage(request):
             lim = subs + apt
             prot = lim * (2.0 / 3.0)
             messages.append([
-                ('Nezabavitelná částka: %s Kč' % formam(round(prot))),
+                'Nezabavitelná částka: {} Kč'.format(formam(round(prot))),
                 None])
             basis1 = ceil(prot * (1.0 + (deps / 4.0)))
             rem = max((netincome - basis1), 0.0)
@@ -93,12 +93,12 @@ def mainpage(request):
                 totnetincome = netincome + netincome2
                 basis2 = ceil(prot * (1.0 + (deps2 / 4.0)))
                 messages.append([
-                    ('Celková základní částka pro 1. manžela: %s Kč' % \
-                     formam(round(basis1))),
+                    'Celková základní částka pro 1. manžela: {} Kč' \
+                        .format(formam(round(basis1))),
                     None])
                 messages.append([
-                    ('Celková základní částka pro 2. manžela: %s Kč' % \
-                     formam(round(basis2))),
+                    'Celková základní částka pro 2. manžela: {} Kč' \
+                        .format(formam(round(basis2))),
                     None])
                 rem2 = max((netincome2 - basis2), 0.0)
                 if rem2 > lim:
@@ -112,35 +112,37 @@ def mainpage(request):
             else:
                 totnetincome = netincome
                 messages.append([
-                    ('Celková základní částka: %s Kč' % formam(round(basis1))),
+                    'Celková základní částka: {} Kč' \
+                        .format(formam(round(basis1))),
                     None])
             messages.append([
-                ('Výše měsíční splátky: %s Kč' % formam(round(rep))),
+                'Výše měsíční splátky: {} Kč'.format(formam(round(rep))),
                 'msg-gap'])
             messages.append([
-                ('Zůstatek ze mzdy: %s Kč' % formam(round(totnetincome - rep))),
+                'Zůstatek ze mzdy: {} Kč' \
+                    .format(formam(round(totnetincome - rep))),
                 None])
             tru = fee + exp
             if vat:
                 tru *= 1.0 + (vatrate / 100.0)
             messages.append([
-                ('Měsíční poplatky insolvenčnímu správci: %s Kč' % \
-                 formam(round(tru))),
+                'Měsíční poplatky insolvenčnímu správci: {} Kč' \
+                    .format(formam(round(tru))),
                 None])
             rep = max((rep - tru), 0.0)
             messages.append([
-                ('Měsíční splátka věřitelům: %s Kč' % formam(round(rep))),
+                'Měsíční splátka věřitelům: {} Kč'.format(formam(round(rep))),
                 None])
             tot = 5 * 12 * rep
             messages.append([
-                ('Celková výše splátek věřitelům za 5 let: %s Kč' % \
-                 formam(round(tot))),
+                'Celková výše splátek věřitelům za 5 let: {} Kč' \
+                    .format(formam(round(tot))),
                 None])
             messages.append([
                 'Pohledávky uspokojené do výše 30 %:',
                 'msg-gap'])
             messages.append([
-                ('%s Kč' % formam(round(tot / 0.3))),
+                '{} Kč'.format(formam(round(tot / 0.3))),
                 'msg-total'])
         else:
             logger.debug('Invalid form', request)
