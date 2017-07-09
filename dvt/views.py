@@ -48,7 +48,7 @@ def calc(beg_date, years, months, days):
 def mainpage(request):
 
     logger.debug(
-        'Main page accessed using method ' + request.method,
+        'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
 
@@ -67,28 +67,28 @@ def mainpage(request):
             days = (cd['days'] if cd['days'] else 0)
 
             messages.append(
-                [('Trest skončí: ' + calc(beg_date, years, months, days)),
+                ['Trest skončí: {}'.format(calc(beg_date, years, months, days)),
                  'msg-res'])
             messages.append(
-                [('Třetina trestu: ' + \
-                  calc(beg_date,
-                       (years // 3),
-                       (((years % 3) * 4) + (months // 3)),
-                       (((months % 3) * 10) + (days // 3)))),
+                ['Třetina trestu: {}'.format(calc(
+                    beg_date,
+                    (years // 3),
+                    (((years % 3) * 4) + (months // 3)),
+                    (((months % 3) * 10) + (days // 3)))),
                  'msg-normal'])
             messages.append(
-                [('Polovina trestu: ' + \
-                  calc(beg_date,
-                       (years // 2),
-                       (((years % 2) * 6) + (months // 2)),
-                       (((months % 2) * 15) + (days // 2)))),
+                ['Polovina trestu: {}'.format(calc(
+                    beg_date,
+                    (years // 2),
+                    (((years % 2) * 6) + (months // 2)),
+                    (((months % 2) * 15) + (days // 2)))),
                  'msg-normal'])
             messages.append(
-                [('Dvě třetiny trestu: ' + \
-                  calc(beg_date,
-                       ((years * 2) // 3),
-                       ((((years * 2) % 3) * 4) + ((months * 2) // 3)),
-                       ((((months * 2) % 3) * 10) + ((days * 2) // 3)))),
+                ['Dvě třetiny trestu: {}'.format(calc(
+                    beg_date,
+                    ((years * 2) // 3),
+                    ((((years * 2) % 3) * 4) + ((months * 2) // 3)),
+                    ((((months * 2) % 3) * 10) + ((days * 2) // 3)))),
                  None])
 
 

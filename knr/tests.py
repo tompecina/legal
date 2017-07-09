@@ -27,11 +27,15 @@ from datetime import date
 from copy import copy
 from bs4 import BeautifulSoup
 from io import BytesIO
+from os.path import join
 from common.settings import BASE_DIR
 from common.utils import newXML, p2c, xmlbool
 from common.tests import TEST_STRING, stripxml
 from cache.tests import DummyRequest
 from . import forms, models, views, utils
+
+APP = __package__
+TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 class TestForms(SimpleTestCase):
 
@@ -290,7 +294,7 @@ class TestViews1(SimpleTestCase):
                 x = xmlbool(d[n])
             else:
                 x = str(d[n])
-            s += '<' + n + '>' + x + '</' + n + '>'
+            s += '<{0}>{1}</{0}>'.format(n, x)
         s += '</calculation>'
         o = T()
         views.s2i(f, BeautifulSoup(s, 'xml'), o)
@@ -439,8 +443,7 @@ class TestViews2(TestCase):
         self.assertEqual(vat_rate[0]['value'], '25,00')
         for suffix in [['xml', 'Uložit kalkulaci', 'text/xml; charset=utf-8'],
                        ['pdf', 'Export do PDF', 'application/pdf']]:
-            with open(BASE_DIR + '/knr/testdata/calc1.' + suffix[0], 'rb') \
-                 as fi:
+            with open(join(TEST_DIR, 'calc1.' + suffix[0]), 'rb') as fi:
                 res = self.client.post(
                     '/knr/',
                     {'submit_load': 'Načíst kalkulaci',
@@ -503,7 +506,7 @@ class TestViews2(TestCase):
                  'Upravit ' + b[1]},
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'knr_' + b[0] + 'list.html')
+            self.assertTemplateUsed(res, 'knr_{}list.html'.format(b[0]))
         res = self.client.post(
             '/knr/',
             {'vat_rate': '22,00',
@@ -515,7 +518,7 @@ class TestViews2(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Nejprve zvolte soubor k načtení')
-        with open(BASE_DIR + '/knr/testdata/err_calc1.xml', 'rb') as fi:
+        with open(join(TEST_DIR, 'err_calc1.xml'), 'rb') as fi:
             res = self.client.post(
                 '/knr/',
                 {'submit_load': 'Načíst kalkulaci',
@@ -607,40 +610,40 @@ class TestViews2(TestCase):
         for b in [['place', 'zadána žádná místa'],
                   ['car', 'zadána žádná vozidla'],
                   ['formula', 'zadány žádné předpisy']]:
-            res = self.client.get('/knr/' + b[0] + 'list')
+            res = self.client.get('/knr/{}list'.format(b[0]))
             self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
-            res = self.client.get('/knr/' + b[0] + 'list/')
+            res = self.client.get('/knr/{}list/'.format(b[0]))
             self.assertEqual(res.status_code, HTTPStatus.FOUND)
-            res = self.client.get('/knr/' + b[0] + 'list/', follow=True)
+            res = self.client.get('/knr/{}list/'.format(b[0]), follow=True)
             self.assertTemplateUsed(res, 'login.html')
             self.assertTrue(self.client.login(username='user', password='none'))
-            res = self.client.get('/knr/' + b[0] + 'list/')
+            res = self.client.get('/knr/{}list/'.format(b[0]))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTrue(res.has_header('content-type'))
             self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-            self.assertTemplateUsed(res, 'knr_' + b[0] + 'list.html')
+            self.assertTemplateUsed(res, 'knr_{}list.html'.format(b[0]))
             soup = BeautifulSoup(res.content, 'html.parser')
             p = soup.select('h1 + p')
             self.assertEqual(len(p), 1)
-            self.assertEqual(p[0].text, '(nejsou ' + b[1] + ')')
+            self.assertEqual(p[0].text, '(nejsou {})'.format(b[1]))
             self.client.logout()
 
     def test_form(self):
         for b in [['place', 'Nové místo'],
                   ['car', 'Nové vozidlo'],
                   ['formula', 'Nový předpis']]:
-            res = self.client.get('/knr/' + b[0] + 'form')
+            res = self.client.get('/knr/{}form'.format(b[0]))
             self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
-            res = self.client.get('/knr/' + b[0] + 'form/')
+            res = self.client.get('/knr/{}form/'.format(b[0]))
             self.assertEqual(res.status_code, HTTPStatus.FOUND)
-            res = self.client.get('/knr/' + b[0] + 'form/', follow=True)
+            res = self.client.get('/knr/{}form/'.format(b[0]), follow=True)
             self.assertTemplateUsed(res, 'login.html')
             self.assertTrue(self.client.login(username='user', password='none'))
-            res = self.client.get('/knr/' + b[0] + 'form/')
+            res = self.client.get('/knr/{}form/'.format(b[0]))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTrue(res.has_header('content-type'))
             self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-            self.assertTemplateUsed(res, 'knr_' + b[0] + 'form.html')
+            self.assertTemplateUsed(res, 'knr_{}form.html'.format(b[0]))
             soup = BeautifulSoup(res.content, 'html.parser')
             p = soup.select('h1')
             self.assertEqual(len(p), 1)
@@ -1521,33 +1524,33 @@ class TestViews2(TestCase):
                 '/knr/itemform/',
                 {'type': 'travel',
                  'idx': '0',
-                 t + '_address': 'Melantrichova 504/5, Praha 1',
+                 '{}_address'.format(t): 'Melantrichova 504/5, Praha 1',
                  'numerator': '2',
                  'denominator': '3',
-                 'submit_' + t + '_search': 'Vyhledat'})
-            self.assertAlmostEqual(res.context[t + '_lat'], 51.0852574)
-            self.assertAlmostEqual(res.context[t + '_lon'], 13.4211651)
-            self.assertIn('Česká republika', res.context[t + '_address'])
+                 'submit_{}_search'.format(t): 'Vyhledat'})
+            self.assertAlmostEqual(res.context['{}_lat'.format(t)], 51.0852574)
+            self.assertAlmostEqual(res.context['{}_lon'.format(t)], 13.4211651)
+            self.assertIn('Česká republika', res.context['{}_address'.format(t)])
             res = self.client.post(
                 '/knr/itemform/',
                 {'type': 'travel',
                  'idx': '0',
-                 t + '_sel': '1',
+                 '{}_sel'.format(t): '1',
                  'numerator': '2',
                  'denominator': '3',
-                 'submit_' + t + '_apply': 'Použít'})
-            self.assertEqual(res.context[t + '_name'], 'Test name')
-            self.assertEqual(res.context[t + '_address'], 'Test address')
-            self.assertAlmostEqual(res.context[t + '_lat'], 49.1975999)
-            self.assertAlmostEqual(res.context[t + '_lon'], 16.6044449)
+                 'submit_{}_apply'.format(t): 'Použít'})
+            self.assertEqual(res.context['{}_name'.format(t)], 'Test name')
+            self.assertEqual(res.context['{}_address'.format(t)], 'Test address')
+            self.assertAlmostEqual(res.context['{}_lat'.format(t)], 49.1975999)
+            self.assertAlmostEqual(res.context['{}_lon'.format(t)], 16.6044449)
             res = self.client.post(
                 '/knr/itemform/',
                 {'type': 'travel',
                  'idx': '0',
-                 t + '_address': 'XXX',
+                 '{}_address'.format(t): 'XXX',
                  'numerator': '2',
                  'denominator': '3',
-                 'submit_' + t + '_search': 'Vyhledat'})
+                 'submit_{}_search'.format(t): 'Vyhledat'})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'knr_itemform.html')
             self.assertEqual(
@@ -1912,8 +1915,7 @@ class TestViews2(TestCase):
               ['4', [20000, 4200, 420, 24620]],
         ]
         for r in rr:
-            with open(BASE_DIR + '/knr/testdata/calc' + r[0] + '.xml', 'rb') \
-                 as fi:
+            with open(join(TEST_DIR, 'calc{}.xml'.format(r[0])), 'rb') as fi:
                 res = self.client.post(
                     '/knr/',
                     {'submit_load': 'Načíst kalkulaci',
@@ -1925,4 +1927,6 @@ class TestViews2(TestCase):
             s = soup.select('table.vattbl td')
             self.assertEqual(len(s), 4)
             for i in range(4):
-                self.assertEqual(s[i].text, views.convi(r[1][i]) + ' Kč')
+                self.assertEqual(
+                    s[i].text,
+                    '{} Kč'.format(views.convi(r[1][i])))

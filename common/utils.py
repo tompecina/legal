@@ -400,7 +400,7 @@ def send_mail(subject, text, recipients):
         mail.send_mail(
             subject,
             text,
-            'Server ' + localsubdomain + ' <' + localemail + '>',
+            'Server {} <{}>'.format(localsubdomain, localemail),
             recipients,
             fail_silently=True)
     except:  # pragma: no cover
@@ -412,7 +412,7 @@ class Pager:
 
         def link(n):
             p['start'] = n
-            return url + '?' + p.urlencode()
+            return '?'.join([url, p.urlencode()])
 
         self.curr = (start // batch) + 1
         self.total = ((total - 1) // batch) + 1
@@ -450,7 +450,7 @@ def decomposeref(ref):
     else:
         senate = 0
     while not s[1][0].isdigit():
-        s[1] = s[0] + ' ' + s[1]
+        s[1] = ' '.join(s[:2])
         del s[0]
     register = s[0]
     t = s[1].split('/')

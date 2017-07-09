@@ -25,6 +25,7 @@ from django.contrib.auth.models import User
 from http import HTTPStatus
 from datetime import date
 from bs4 import BeautifulSoup
+from os.path import join
 from common.settings import BASE_DIR
 from common.glob import localdomain
 from common.tests import link_equal, setdl
@@ -586,7 +587,7 @@ class TestViews2(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
-        with open(BASE_DIR + '/dir/testdata/import.csv', 'rb') as fi:
+        with open(join(BASE_DIR, 'dir', 'testdata', 'import.csv'), 'rb') as fi:
             res = self.client.post(
                 '/dir/debtorbatchform/',
                 {'submit_load': 'Načíst',
@@ -638,9 +639,8 @@ class TestViews2(TestCase):
             'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n' \
             'Test 26,soud=KSOS,název=Název:*,jméno=Jméno:*,IČO=12345678,' \
             'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,' \
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n' + \
-            ('T' * 255) + '\r\n')
-        
+            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n{}\r\n'.format('T' * 255))
+
 class TestViews3(TransactionTestCase):
     
     def setUp(self):

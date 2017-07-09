@@ -37,7 +37,7 @@ APPVERSION = apps.get_app_config(APP).version
 def mainpage(request):
 
     logger.debug(
-        'Main page accessed using method ' + request.method,
+        'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
 
@@ -110,7 +110,7 @@ def mainpage(request):
                         t += o
 
                 messages.append(
-                    [(wn[t.weekday()] + ' ' + pd(t)),
+                    ['{} {}'.format(wn[t.weekday()], pd(t)),
                      'msg-res'])
                 if t < date(1991, 1, 1):
                     messages.append(

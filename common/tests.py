@@ -81,7 +81,7 @@ def testreq(post, *args):
         m.update(d[k].encode())
     fn = m.hexdigest() + '.dat'
     try:
-        with open(testdata_prefix + '/' + fn, 'rb') as fi:
+        with open(join(testdata_prefix, fn), 'rb') as fi:
             return DummyResponse(fi.read().decode())
     except:
         return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
@@ -125,7 +125,7 @@ class TestCron(TestCase):
         m = m[0]
         self.assertEqual(
             m.from_email,
-            'Server ' + glob.localsubdomain + ' <' + glob.localemail + '>')
+            'Server {} <{}>'.format(glob.localsubdomain, glob.localemail))
         self.assertEqual(
             m.to,
             ['tomas@' + glob.localdomain])
@@ -155,7 +155,7 @@ class TestCron(TestCase):
             '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
             'org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T' \
             '&bcVec=136&rocnik=2013&typSoudu=os&autoFill=true&type=spzn\n\n' \
-            'Server ' + glob.localsubdomain + ' (' + glob.localurl + ')\n')
+            'Server {} ({})\n'.format(glob.localsubdomain, glob.localurl))
 
 class TestFields(SimpleTestCase):
 
@@ -1010,7 +1010,7 @@ class TestViews(TestCase):
         m = m[0]
         self.assertEqual(
             m.from_email,
-            'Server ' + glob.localsubdomain + ' <' + glob.localemail + '>')
+            'Server {} <{}>'.format(glob.localsubdomain, glob.localemail))
         self.assertEqual(
             m.to,
             ['user@' + glob.localdomain])

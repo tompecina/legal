@@ -54,7 +54,7 @@ EXLIM = 1000
 def mainpage(request):
 
     logger.debug(
-        'Main page accessed using method ' + request.method,
+        'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
 
@@ -86,8 +86,9 @@ def mainpage(request):
                     q[p] = cd[p]
             q['start'] = 0
             del q['format']
-            return redirect(reverse('psj:' + cd['format'] + 'list') + \
-                '?' + q.urlencode())
+            return redirect('{}?{}'.format(
+                reverse('{}:{}list'.format(APP, cd['format'])),
+                q.urlencode()))
         else:
             logger.debug('Invalid form', request)
             err_message = inerr

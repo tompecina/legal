@@ -29,6 +29,7 @@ from datetime import date, datetime
 from math import floor, ceil
 from csv import writer as csvwriter
 from json import dump
+from os.path import join
 from common.utils import (
     formam, Pager, newXML, xmldecorate, composeref, xmlbool, logger)
 from common.glob import (
@@ -46,7 +47,7 @@ APPVERSION = apps.get_app_config(APP).version
 
 BATCH = 50
 
-repoprefix = repourl + APP + '/'
+repoprefix = join(repourl, APP)
 
 EXLIM = 1000
 
@@ -85,8 +86,9 @@ def mainpage(request):
                     q[p] = cd[p]
             q['start'] = 0
             del q['format']
-            return redirect(reverse('udn:' + cd['format'] + 'list') + \
-                '?' + q.urlencode())
+            return redirect('{}?{}'.format(
+                reverse('{}:{}list'.format(APP, cd['format'])),
+                q.urlencode()))
         else:
             err_message = inerr
             logger.debug('Invalid form', request)
@@ -218,12 +220,12 @@ def xmllist(request):
         tag_file = xml.new_tag('file')
         tag_files.append(tag_file)
         tag_file['type'] = 'abridged'
-        tag_file.append(repoprefix + d.filename)
+        tag_file.append(join(repoprefix, d.filename))
         if d.anonfilename:
             tag_file = xml.new_tag('file')
             tag_files.append(tag_file)
             tag_file['type'] = 'anonymized'
-            tag_file.append(repoprefix + d.anonfilename)
+            tag_file.append(join(repoprefix, d.anonfilename))
     response = HttpResponse(
         str(xml).encode('utf-8') + b'\n',
         content_type='text/xml; charset=utf-8')
@@ -271,8 +273,8 @@ def csvlist(request):
             composeref(d.senate, d.register, d.number, d.year, d.page),
             d.agenda.desc,
             ';'.join([p['name'] for p in d.parties.values()]),
-            repoprefix + d.filename,
-            (repoprefix + d.anonfilename) if d.anonfilename else '',
+            join(repoprefix, d.filename),
+            join(repoprefix, d.anonfilename) if d.anonfilename else '',
         ]
         writer.writerow(dat)
     return response
@@ -305,9 +307,9 @@ def jsonlist(request):
         'name': supreme_administrative_court_name,
     }
     for d in dd:
-        files = {'abridged': repoprefix + d.filename}
+        files = {'abridged': join(repoprefix, d.filename)}
         if d.anonfilename:
-            files['anonymized'] = repoprefix + d.anonfilename
+            files['anonymized'] = join(repoprefix, d.anonfilename)
         r.append({
             'court': court,
             'date': d.date.isoformat(),

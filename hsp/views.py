@@ -39,7 +39,7 @@ from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black
 from io import BytesIO
-import os.path
+from os.path import dirname, join
 from common import fields
 from common.utils import (
     getbutton, yfactor, mfactor, formam, xmldecorate, xmlescape, xmlunescape,
@@ -106,7 +106,7 @@ class FXrate(object):
 class Result(object):
     pass
 
-aid = (APP.upper() + ' ' + APPVERSION)
+aid = '{} {}'.format(APP.upper(), APPVERSION)
 
 def getdebt(request):
     a = getasset(request, aid)
@@ -848,7 +848,7 @@ def fromxml(d):
 def mainpage(request):
 
     logger.debug(
-        'Main page accessed using method ' + request.method,
+        'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
 
@@ -867,9 +867,9 @@ def mainpage(request):
         r = formam(round(a, debt.rounding) \
                    if debt.rounding else int(round(a))).replace('-', '−')
         if res.multicurrency or (c != 'CZK'):
-           return (r + '&nbsp;' + c) 
+           return '{}&nbsp;{}'.format(r, c)
         else:
-            return (r + '&nbsp;Kč')
+            return '{}&nbsp;Kč'.format(r)
 
     err_message = ''
 
@@ -993,22 +993,20 @@ def mainpage(request):
                         '– {:d} –'.format(d.page))
                     c.restoreState()
 
-                fontdir = os.path.join(
-                    os.path.dirname(os.path.dirname(__file__)),
-                    'common/fonts/').replace('\\','/')
+                fontdir = join(dirname(dirname(__file__)), 'common', 'fonts')
                 reportlab.rl_config.warnOnMissingFontGlyphs = 0
                 registerFont(TTFont(
                     'Bookman',
-                    (fontdir + 'URWBookman-Regular.ttf')))
+                    join(fontdir, 'URWBookman-Regular.ttf')))
                 registerFont(TTFont(
                     'BookmanB',
-                    (fontdir + 'URWBookman-Bold.ttf')))
+                    join(fontdir, 'URWBookman-Bold.ttf')))
                 registerFont(TTFont(
                     'BookmanI',
-                    (fontdir + 'URWBookman-Italic.ttf')))
+                    join(fontdir, 'URWBookman-Italic.ttf')))
                 registerFont(TTFont(
                     'BookmanBI',
-                    (fontdir + 'URWBookman-BoldItalic.ttf')))
+                    join(fontdir, 'URWBookman-BoldItalic.ttf')))
                 registerFontFamily(
                     'Bookman',
                     normal='Bookman',
@@ -1219,11 +1217,12 @@ def mainpage(request):
                 if debt.debits:
                     r.append(Paragraph('Závazky:', s23))
                     for debit in debt.debits:
-                        r.append(Paragraph((('<b>' + debit.description + \
-                            '</b>') if debit.description else \
-                            '<i>(bez názvu)</i>'),
-                                           s24,
-                                           bulletText=(debit.id + '.')))
+                        r.append(Paragraph(
+                            ('<b>{}</b>'.format(debit.description) \
+                             if debit.description else \
+                             '<i>(bez názvu)</i>'),
+                            s24,
+                            bulletText=(debit.id + '.')))
                         m = debit.model
                         if m == 'fixed':
                             t = 'pevná částka {}, splatná {:%d.%m.%Y}' \
@@ -1277,7 +1276,7 @@ def mainpage(request):
                     for fxrate in debt.fxrates:
                         t = ''
                         if fxrate.date_from:
-                            t += 'od {:%d.%m.%Y}'.format(fxrate.date_from)
+                            t += ' od {:%d.%m.%Y}'.format(fxrate.date_from)
                         if fxrate.date_to:
                             t += ' do {:%d.%m.%Y}'.format(fxrate.date_to)
                         if t:
@@ -1444,10 +1443,9 @@ def mainpage(request):
                         if row['description'] else '<i>(bez názvu)</i>'), s14)
                     if tp == CR:
                         if len(row['debits']) > 1:
-                            q = [q, Paragraph(('Pořadí závazků: ' + \
-                                ' – '.join(map(n2l, row['debits']))), s26)]
-                    q = [q] + \
-                        ([''] * 28)
+                            q = [q, Paragraph('Pořadí závazků: {}'  \
+                                .format(' – '.join(map(n2l, row['debits']))), s26)]
+                    q = [q] + ([''] * 28)
                     d3.extend([r + q])
 
                     r = ['', Paragraph(hdr[0], s15)] \
@@ -1550,9 +1548,10 @@ def mainpage(request):
         debit.text = t
 
     for credit in debt.credits:
-        credit.text = ('částka ' + fa(credit.amount, credit.currency))
+        credit.text = 'částka {}'.format(fa(credit.amount, credit.currency))
         if len(debt.debits) > 1:
-            credit.text += (', pořadí: ' + ' → '.join(map(n2l, credit.debits)))
+            credit.text += \
+                ', pořadí: {}'.format(' → '.join(map(n2l, credit.debits)))
                                
     sc = debt.credits[:]
     id = 1

@@ -47,7 +47,7 @@ BATCH = 50
 def mainpage(request):
 
     logger.debug(
-        'Main page accessed using method ' + request.method,
+        'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
 
@@ -190,7 +190,8 @@ def procdel(request, id=0):
 @login_required
 def procdelall(request):
     logger.debug(
-        'Delete all proceedings page accessed using method ' + request.method,
+        'Delete all proceedings page accessed using method {}' \
+            .format(request.method),
         request)
     uid = request.user.id
     uname = request.user.username
@@ -215,7 +216,8 @@ def procdelall(request):
 def procbatchform(request):
 
     logger.debug(
-        'Proceedings import page accessed using method ' + request.method,
+        'Proceedings import page accessed using method {}' \
+            .format(request.method),
         request)
 
     err_message = ''
@@ -296,8 +298,10 @@ def procbatchform(request):
                                         updateproc(p)
                                         p.save()
                                     except:
-                                        errors.append([i, 'Popisu "' + desc + \
-                                            '" odpovídá více než jedno řízení'])
+                                        errors.append(
+                                            [i,
+                                             'Popisu "{}" odpovídá více než ' \
+                                             'jedno řízení'.format(desc)])
                                         continue
                                 count += 1
                     logger.info(

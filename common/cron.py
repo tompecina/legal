@@ -34,9 +34,9 @@ def cron_notify():
         text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) + \
                dir_notice(uid)
         if text and u.email:
-            text += 'Server ' + localsubdomain + ' (' + localurl + ')\n'
+            text += 'Server {} ({})\n'.format(localsubdomain, localurl)
             send_mail(
-                'Zprava ze serveru ' + localsubdomain,
+                'Zprava ze serveru {}'.format(localsubdomain),
                 text,
                 [u.email])
             logger.debug(

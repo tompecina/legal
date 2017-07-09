@@ -386,7 +386,7 @@ def sir_notice(uid):
                'která sledujete:\n\n'
         for t in tt:
             text += ' - {}sp. zn. {} {:d} INS {:d}/{:d}\n'.format(
-                (t.desc + ', ' if t.desc else ''),
+                ('{}, '.format(t.desc) if t.desc else ''),
                 l2s[t.vec.idOsobyPuvodce],
                 t.vec.senat,
                 t.vec.bc,

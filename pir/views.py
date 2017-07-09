@@ -49,7 +49,7 @@ EXLIM = 1000
 def mainpage(request):
 
     logger.debug(
-        'Main page accessed using method ' + request.method,
+        'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
 
@@ -92,8 +92,9 @@ def mainpage(request):
                     q[p] = 'on'
             q['start'] = 0
             del q['format']
-            return redirect(reverse('pir:' + cd['format'] + 'list') + \
-                '?' + q.urlencode())
+            return redirect('{}?{}'.format(
+                reverse('{}:{}list'.format(APP, cd['format'])),
+                q.urlencode()))
         else:
             logger.debug('Invalid form', request)
             err_message = inerr
@@ -275,7 +276,7 @@ def xml_addparties(osoby, xml, tag, tagname):
             subtag.append(tag_birth_date)
         if osoba.rc:
             tag_birth_id = xml.new_tag('birth_id')
-            tag_birth_id.append(osoba.rc[:6] + '/' + osoba.rc[6:])
+            tag_birth_id.append('{}/{}'.format(osoba.rc[:6], osoba.rc[6:]))
             subtag.append(tag_birth_id)
         tag_addresses = xml.new_tag('addresses')
         for adresa in osoba.adresy.all():
@@ -304,7 +305,7 @@ def xml_addparties(osoby, xml, tag, tagname):
                 tag_address.append(tag_country)
             if adresa.psc:
                 tag_zip = xml.new_tag('zip')
-                tag_zip.append(adresa.psc[:3] + ' ' + adresa.psc[3:])
+                tag_zip.append('{} {}'.format(adresa.psc[:3], adresa.psc[3:]))
                 tag_address.append(tag_zip)
             if adresa.telefon:
                 tag_phone = xml.new_tag('phone')
@@ -476,7 +477,7 @@ def json_addparties(osoby):
         if osoba.datumNarozeni:
             o['birth_date'] = osoba.datumNarozeni.isoformat()
         if osoba.rc:
-            o['birth_id'] = (osoba.rc[:6] + '/' + osoba.rc[6:])
+            o['birth_id'] = '{}/{}'.format(osoba.rc[:6], osoba.rc[6:])
         aa = []
         for adresa in osoba.adresy.all():
             a = {'type': a2d[adresa.druhAdresy.desc]}
@@ -491,7 +492,7 @@ def json_addparties(osoby):
             if adresa.zeme:
                 a['country'] = adresa.zeme
             if adresa.psc:
-                a['zip'] = (adresa.psc[:3] + ' ' + adresa.psc[3:])
+                a['zip'] = '{} {}'.format(adresa.psc[:3], adresa.psc[3:])
             if adresa.telefon:
                 a['phone'] = adresa.telefon
             if adresa.fax:
@@ -557,7 +558,7 @@ def party(request, id=0):
     i = 0
     for adresa in adresy:
         adresa.type = a2d[adresa.druhAdresy.desc]
-        adresa.psc = ((adresa.psc[:3] + ' ' + adresa.psc[3:]) \
+        adresa.psc = ('{} {}'.format(adresa.psc[:3], adresa.psc[3:]) \
             if adresa.psc else '')
         adresa.cl = ['odd', 'even'][i % 2]
         i += 1
@@ -568,5 +569,6 @@ def party(request, id=0):
          'page_title': 'Informace o osobě',
          'subtitle': o2s(osoba),
          'osoba': osoba,
-         'birthid': ((osoba.rc[:6] + '/' + osoba.rc[6:]) if osoba.rc else ''),
+         'birthid': ('{}/{}'.format(osoba.rc[:6], osoba.rc[6:]) \
+            if osoba.rc else ''),
          'adresy': adresy})

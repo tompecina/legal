@@ -26,10 +26,14 @@ from django.core.exceptions import ValidationError
 from http import HTTPStatus
 from datetime import datetime
 from bs4 import BeautifulSoup
+from os.path import join
 from common.settings import BASE_DIR
 from common.glob import localdomain
 from common.tests import link_equal
 from . import cron, forms, models, views
+
+APP = __package__
+TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 class TestCron(TestCase):
     fixtures = ['szr_test.json']
@@ -715,7 +719,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procbatchform.html')
         self.assertContains(res, 'Nejprve zvolte soubor k načtení')
-        with open(BASE_DIR + '/szr/testdata/import.csv', 'rb') as fi:
+        with open(join(TEST_DIR, 'import.csv'), 'rb') as fi:
             res = self.client.post(
                 '/szr/procbatchform/',
                 {'submit_load': 'Načíst',
@@ -745,8 +749,8 @@ class TestViews(TestCase):
             'Test 06,MSPHAAB,Nc 1070/2016\r\n' \
             'Test 07,MSPHAAB,Nc 1071/2016\r\n' \
             'Test 13,MSPHAAB,52 C 4/2011\r\n' \
-            'Test 13,MSPHAAB,52 C 5/2012\r\n' + \
-            ('T' * 255) + ',MSPHAAB,45 A 27/2014\r\n')
+            'Test 13,MSPHAAB,52 C 5/2012\r\n' \
+            '{},MSPHAAB,45 A 27/2014\r\n'.format('T' * 255))
 
     def test_procexport(self):
         models.Proceedings.objects.create(

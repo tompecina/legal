@@ -66,8 +66,8 @@ class CarForm(forms.Form):
         label='Palivo',
         initial='BA95')
     for i in range(3):
-        exec(("cons{:d} = fields.DecimalField(widget=widgets.consw(), " + \
-              "max_digits=3, decimal_places=1, min_value=0, initial='', " + \
+        exec(("cons{:d} = fields.DecimalField(widget=widgets.consw(), " \
+              "max_digits=3, decimal_places=1, min_value=0, initial='', " \
               "localize=True)").format(i + 1))
 
 class FormulaForm(forms.Form):
@@ -87,8 +87,8 @@ class FormulaForm(forms.Form):
         label='Paušální náhrada',
         localize=True)
     for f in fuels:
-        exec(("rate_{0} = fields.DecimalField(widget=widgets.saw(), " + \
-              "max_digits=5, decimal_places=2, min_value=0, " + \
+        exec(("rate_{0} = fields.DecimalField(widget=widgets.saw(), " \
+              "max_digits=5, decimal_places=2, min_value=0, " \
               "required=False, label='{0}', localize=True)").format(f))
 
 class CalcForm(forms.Form):

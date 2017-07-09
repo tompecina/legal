@@ -25,6 +25,7 @@ from django.core.validators import EMPTY_VALUES
 from decimal import Decimal
 from datetime import datetime, date
 from . import widgets
+from .utils import Lf
 from .forms import ValidationError
 
 def prnum(x):
@@ -70,8 +71,8 @@ class AmountField(forms.FloatField):
             return None
         if type(value) not in stypes:
             value = '{:.{prec}f}'.format(
-                float(value),
-                prec=self.rounding).replace('.', ',')
+                Lf(value),
+                prec=self.rounding)
         return value
 
     def to_python(self, value):

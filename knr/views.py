@@ -46,7 +46,7 @@ from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black, gray
 from io import BytesIO
-import os.path
+from os.path import dirname, join
 from cache.main import getcache, getasset, setasset
 from common.utils import (
     getbutton, unrequire, formam, c2p, getXML, newXML, getint, CanvasXML, lim,
@@ -320,7 +320,7 @@ def formulaform(request, id=0):
             for fuel in fuels:
                 r = Rate.objects.filter(formula=id, fuel=fuel)
                 if r and r[0].rate:
-                    p['rate_' + fuel] = r[0].rate
+                    p['rate_{}'.format(fuel)] = r[0].rate
             f = FormulaForm(initial=p)
         else:
             f = FormulaForm()
@@ -355,7 +355,7 @@ def formulaform(request, id=0):
                     r = r[0]
                 else:
                     r = Rate(formula=p, fuel=fuel)
-                r.rate = cd['rate_' + fuel]
+                r.rate = cd['rate_{}'.format(fuel)]
                 if not r.rate:
                     r.rate = 0
                 r.save()
@@ -365,7 +365,7 @@ def formulaform(request, id=0):
             err_message = inerr
     rates = []
     for fuel in fuels:
-        rates.append(f['rate_' + fuel])
+        rates.append(f['rate_{}'.format(fuel)])
     q = rates[0].name
     return render(
         request,
@@ -871,7 +871,7 @@ def d2i(f, d, c):
                 r = float(c2p(str(p)))
             c.__setattr__(t, r)
 
-aid = (APP.upper() + ' ' + APPVERSION)
+aid = '{} {}'.format(APP.upper(), APPVERSION)
 
 def getcalc(request):
     a = getasset(request, aid)
@@ -967,7 +967,7 @@ def fromxml(d):
 def mainpage(request):
     
     logger.debug(
-        'Main page accessed using method ' + request.method,
+        'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
 
@@ -981,11 +981,11 @@ def mainpage(request):
     if request.method == 'GET':
         i2d(fields, c, var)
         for t in fields:
-            var[t + '_error'] = 'ok'
+            var['{}_error'.format(t)] = 'ok'
     else:
         f = CalcForm(request.POST)
         for t in fields:
-            var[t + '_error'] = 'ok'
+            var['{}_error'.format(t)] = 'ok'
         d2d(fields, f.data, var)
         btn = getbutton(request)
         if btn == 'empty':
@@ -1021,7 +1021,7 @@ def mainpage(request):
                     return error(request)
                 var.update(cd)
                 for t in fields:
-                    var[t + '_error'] = 'ok'
+                    var['{}_error'.format(t)] = 'ok'
                 if btn == 'edit':
                     return redirect('knr:itemlist')
                 if btn == 'xml':
@@ -1049,22 +1049,22 @@ def mainpage(request):
                                 .format(nw.day, nw.month, nw.year))
                         c.restoreState()
 
-                    fontdir = os.path.join(
-                        os.path.dirname(os.path.dirname(__file__)),
-                        'common/fonts/').replace('\\','/')
+                    fontdir = \
+                        join(dirname(dirname(__file__)), 'common', 'fonts')
                     reportlab.rl_config.warnOnMissingFontGlyphs = 0
                     registerFont(TTFont(
                         'Bookman',
-                        (fontdir + 'URWBookman-Regular.ttf')))
+                        join(fontdir, 'URWBookman-Regular.ttf')))
                     registerFont(TTFont(
                         'BookmanB',
-                        (fontdir + 'URWBookman-Bold.ttf')))
+                        join(fontdir, 'URWBookman-Bold.ttf')))
                     registerFont(TTFont(
                         'BookmanI',
-                        (fontdir + 'URWBookman-Italic.ttf')))
+                        join(fontdir, 'URWBookman-Italic.ttf')))
                     registerFont(
-                        TTFont('BookmanBI',
-                               (fontdir + 'URWBookman-BoldItalic.ttf')))
+                        TTFont(
+                            'BookmanBI',
+                            join(fontdir, 'URWBookman-BoldItalic.ttf')))
                     registerFontFamily(
                         'Bookman',
                         normal='Bookman',
@@ -1402,9 +1402,9 @@ def mainpage(request):
                 d2d(fields, f.data, var)
                 for t in fields:
                     if f[t].errors:
-                        var[t + '_error'] = 'err'
+                        var['{}_error'.format(t)] = 'err'
                     else:
-                        var[t + '_error'] = 'ok'
+                        var['{}_error'.format(t)] = 'ok'
         else:  # pragma: no cover
             i2d(fields, c, var)
     var['total_net'] = var['total_ex'] = var['num_items'] = 0
@@ -1430,17 +1430,23 @@ def itemform(request, idx=0):
         l1 = []
         for t in p:
             if t.uid or (not p.filter(abbr=t.abbr, uid=uid)):
-                l1.append({'idx': t.id, 'text': t.abbr + ' – ' + t.name})
+                l1.append(
+                    {'idx': t.id,
+                     'text': '{} – {}'.format(t.abbr, t.name)})
         p = Car.objects.filter(uid=uid).order_by('abbr', 'name')
         l2 = []
         for t in p:
-            l2.append({'idx': t.id, 'text': t.abbr + ' – ' + t.name})
+            l2.append(
+                {'idx': t.id,
+                 'text': '{} – {}'.format(t.abbr, t.name)})
         p = Formula.objects.filter(Q(uid=None) | Q(uid=uid)) \
                            .order_by('abbr', 'name')
         l3 = []
         for t in p:
             if t.uid or (not p.filter(abbr=t.abbr, uid=uid)):
-                l3.append({'idx': t.id, 'text': t.abbr + ' – ' + t.name})
+                l3.append(
+                    {'idx': t.id,
+                     'text': '{} – {}'.format(t.abbr, t.name)})
         var.update(
             {'sep': ('-' * 110),
              'from_sels': l1,
@@ -1522,7 +1528,7 @@ def itemform(request, idx=0):
             i2d(gt[c.type], c, var)
             var['type'] = c.type
             for t in gf[c.type]:
-                var[t + '_error'] = 'ok'
+                var['{}_error'.format(t)] = 'ok'
             if var['type'] == 'travel':
                 addtravellists(var)
                 var['cons_error'] = 'ok'
@@ -1543,7 +1549,7 @@ def itemform(request, idx=0):
                 var.update(ps[int(presel)][PRESEL])
                 var['type'] = ps[int(presel)][TYPE]
                 for t in gf[var['type']]:
-                    var[t + '_error'] = 'ok'
+                    var['{}_error'.format(t)] = 'ok'
                 if var['type'] == 'travel':
                     addtravellists(var)
                     var['cons_error'] = 'ok'
@@ -1588,7 +1594,7 @@ def itemform(request, idx=0):
                                 var['page_title'] = 'Nová položka'
                             d2d(gf[type], cd, var)
                             for t in gf[type]:
-                                var[t + '_error'] = 'ok'
+                                var['{}_error'.format(t)] = 'ok'
                             var['cons_error'] = 'ok'
                         else:
                             f = TravelForm(request.POST)
@@ -1631,9 +1637,9 @@ def itemform(request, idx=0):
                                 d2d(gf[type], f.data, var)
                                 for t in gf[type]:
                                     if f[t].errors:
-                                        var[t + '_error'] = 'err'
+                                        var['{}_error'.format(t)] = 'err'
                                     else:
-                                        var[t + '_error'] = 'ok'
+                                        var['{}_error'.format(t)] = 'ok'
                                 var['cons_error'] = 'ok'
                                 for t in ctrip:
                                     if f[t].errors:
@@ -1711,9 +1717,9 @@ def itemform(request, idx=0):
                         d2d(gf[type], f.data, var)
                         for t in gf[type]:
                             if f[t].errors:
-                                var[t + '_error'] = 'err'
+                                var['{}_error'.format(t)] = 'err'
                             else:
-                                var[t + '_error'] = 'ok'
+                                var['{}_error'.format(t)] = 'ok'
                         var['fraction_error'] = \
                             'err' if ( \
                                 f['numerator'].errors or \
@@ -1770,7 +1776,7 @@ def itemform(request, idx=0):
                         d2d(gf[type], cd, var)
                         var['rate'] = r
                         for t in gf[type]:
-                            var[t + '_error'] = 'ok'
+                            var['{}_error'.format(t)] = 'ok'
                     elif type == 'flat':
                         b = cd['basis']
                         if btn == 'calc1':
@@ -1830,7 +1836,7 @@ def itemform(request, idx=0):
                         d2d(gf[type], cd, var)
                         var['rate'] = r
                         for t in gf[type]:
-                            var[t + '_error'] = 'ok'
+                            var['{}_error'.format(t)] = 'ok'
                     elif type == 'administrative':
                         if btn == 'calc1':
                             r = 75
@@ -1845,7 +1851,7 @@ def itemform(request, idx=0):
                         d2d(gf[type], cd, var)
                         var['rate'] = r
                         for t in gf[type]:
-                            var[t + '_error'] = 'ok'
+                            var['{}_error'.format(t)] = 'ok'
                     elif type == 'time':
                         if btn == 'calc1':
                             r = 50
@@ -1860,7 +1866,7 @@ def itemform(request, idx=0):
                         d2d(gf[type], cd, var)
                         var['time_rate'] = r
                         for t in gf[type]:
-                            var[t + '_error'] = 'ok'
+                            var['{}_error'.format(t)] = 'ok'
                     elif type == 'travel':
                         if ((btn == 'from_apply') and \
                             request.POST.get('from_sel')):
@@ -1921,7 +1927,7 @@ def itemform(request, idx=0):
                         if not var['fuel_price']:
                             var['fuel_price'] = ''
                         for t in gf[type]:
-                            var[t + '_error'] = 'ok'
+                            var['{}_error'.format(t)] = 'ok'
                         var['cons_error'] = 'ok'
                 else:
                     idx = getint(request.POST.get('idx'))
@@ -1933,16 +1939,16 @@ def itemform(request, idx=0):
                     d2d(gf[type], f.data, var)
                     for t in gf[type]:
                         if f[t].errors:
-                            var[t + '_error'] = 'err'
+                            var['{}_error'.format(t)] = 'err'
                         else:
-                            var[t + '_error'] = 'ok'
+                            var['{}_error'.format(t)] = 'ok'
     return render(request, 'knr_itemform.html', var)
 
 @require_http_methods(['GET', 'POST'])
 @login_required
 def itemlist(request):
     logger.debug(
-        'Item list accessed using method ' + request.method,
+        'Item list accessed using method {}'.format(request.method),
         request,
         request.POST)
     c = getcalc(request)

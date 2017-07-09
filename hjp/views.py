@@ -39,7 +39,7 @@ from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black
 from io import BytesIO
-import os.path
+from os.path import dirname, join
 from common.utils import (
     getbutton, yfactor, mfactor, odp, formam, xmldecorate, xmlescape,
     xmlunescape, Lf, getXML, newXML, iso2date, CanvasXML, logger)
@@ -71,7 +71,7 @@ class Interest(object):
 class Transaction(object):
     pass
 
-aid = (APP.upper() + ' ' + APPVERSION)
+aid = '{} {}'.format(APP.upper(), APPVERSION)
 
 def getdebt(request):
     a = getasset(request, aid)
@@ -546,7 +546,7 @@ def fromxml(d):
 def mainpage(request):
 
     logger.debug(
-        'Main page accessed using method ' + request.method,
+        'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
 
@@ -732,22 +732,20 @@ def mainpage(request):
                                         '– {:d} –'.format(d.page))
                     c.restoreState()
 
-                fontdir = os.path.join(
-                    os.path.dirname(os.path.dirname(__file__)),
-                    'common/fonts/').replace('\\','/')
+                fontdir = join(dirname(dirname(__file__)), 'common', 'fonts')
                 reportlab.rl_config.warnOnMissingFontGlyphs = 0
                 registerFont(TTFont(
                     'Bookman',
-                    (fontdir + 'URWBookman-Regular.ttf')))
+                    join(fontdir, 'URWBookman-Regular.ttf')))
                 registerFont(TTFont(
                     'BookmanB',
-                    (fontdir + 'URWBookman-Bold.ttf')))
+                    join(fontdir, 'URWBookman-Bold.ttf')))
                 registerFont(TTFont(
                     'BookmanI',
-                    (fontdir + 'URWBookman-Italic.ttf')))
+                    join(fontdir, 'URWBookman-Italic.ttf')))
                 registerFont(TTFont(
                     'BookmanBI',
-                    (fontdir + 'URWBookman-BoldItalic.ttf')))
+                    join(fontdir, 'URWBookman-BoldItalic.ttf')))
                 registerFontFamily(
                     'Bookman',
                     normal='Bookman',
@@ -892,7 +890,7 @@ def mainpage(request):
 
                 tl = 0.5
 
-                r = [Paragraph(('<b>Měna:</b> ' + debt.currency), s19)]
+                r = [Paragraph(('<b>Měna:</b> {}'.format(debt.currency)), s19)]
                 if hasattr(debt, 'default_date') and debt.default_date:
                     r.append(Paragraph(
                         '<b>První den prodlení:</b> {:%d.%m.%Y}' \
@@ -903,7 +901,8 @@ def mainpage(request):
                 if (debt.interest.model == 'none'):
                     i1 = 'bez úroku'
                 elif (debt.interest.model == 'fixed'):
-                    i1 = 'pevnou částkou ' + fa(debt.interest.fixed_amount)
+                    i1 = 'pevnou částkou {}' \
+                             .format(fa(debt.interest.fixed_amount))
                 elif (debt.interest.model == 'per_annum'):
                     i1 = 'pevnou sazbou {:n} % <i>p. a.</i>, ' \
                          'konvence pro počítání dnů: {}' \
@@ -964,7 +963,7 @@ def mainpage(request):
                              'započatý měsíc prodlení není pro jinou ' \
                              'měnu než CZK podporována)</i>'
 
-                r.append(Paragraph(('<b>Úročení:</b> ' + i1), s19))
+                r.append(Paragraph('<b>Úročení:</b> {}'.format(i1), s19))
                 if i2:
                     r.append(Paragraph(i2, s20))
                 for i in i3:
@@ -1059,8 +1058,8 @@ def mainpage(request):
                             + ([''] * 10) \
                             + [Paragraph('Nový zůstatek', s15), '']
                     elif trt == 'credit':
-                        r = ['', Paragraph('<b>Splátka</b> (přednost ' \
-                            + row['rep'] + ')', s16)] \
+                        r = ['', Paragraph('<b>Splátka</b> (přednost {}' \
+                                    .format(row['rep']), s16)] \
                             + ([''] * 10) \
                             + [Paragraph('Předchozí zůstatek', s15)] \
                             + ([''] * 10) \

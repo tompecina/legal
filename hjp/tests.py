@@ -26,11 +26,15 @@ from http import HTTPStatus
 from datetime import date
 from bs4 import BeautifulSoup
 from io import BytesIO
+from os.path import join
 from common.settings import BASE_DIR
 from cache.tests import DummyRequest
 from common.tests import TEST_STRING, stripxml
 from common.utils import p2c
 from . import forms, views
+
+APP = __package__
+TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 class TestForms(SimpleTestCase):
 
@@ -218,8 +222,7 @@ class TestViews2(TestCase):
         self.assertEqual(internal_note[0].text, '')
         for suffix in [['xml', 'Uložit', 'text/xml; charset=utf-8'],
                        ['pdf', 'Export do PDF', 'application/pdf']]:
-            with open(BASE_DIR + '/hjp/testdata/debt1.' + suffix[0],
-                      'rb') as fi:
+            with open(join(TEST_DIR, 'debt1.' + suffix[0]), 'rb') as fi:
                 res = self.client.post(
                     '/hjp/',
                     {'currency_0': 'EUR',
@@ -288,7 +291,7 @@ class TestViews2(TestCase):
             rounding = soup.select('#id_rounding option[value=2]')
             self.assertEqual(len(rounding), 1)
             self.assertTrue(rounding[0].has_attr('selected'))
-        with open(BASE_DIR + '/hjp/testdata/debt1.xml', 'rb') as fi:
+        with open(join(TEST_DIR, 'debt1.xml'), 'rb') as fi:
             res = self.client.post(
                 '/hjp/',
                 {'currency_0': 'EUR',
@@ -314,10 +317,10 @@ class TestViews2(TestCase):
         self.assertIn('content-type', res)
         self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
         s = res.content.decode('utf-8')
-        with open(BASE_DIR + '/hjp/testdata/debt1.csv', 'rb') as fi:
+        with open(join(TEST_DIR, 'debt1.csv'), 'rb') as fi:
             t = fi.read().decode('utf-8')
         self.assertEqual(s, t)
-        with open(BASE_DIR + '/hjp/testdata/err_debt1.xml', 'rb') as fi:
+        with open(join(TEST_DIR, 'err_debt1.xml'), 'rb') as fi:
             res = self.client.post(
                 '/hjp/',
                 {'currency_0': 'CZK',
@@ -359,7 +362,7 @@ class TestViews2(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Nejprve zvolte soubor k načtení')
-        with open(BASE_DIR + '/hjp/testdata/err_debt2.xml', 'rb') as fi:
+        with open(join(TEST_DIR, 'err_debt2.xml'), 'rb') as fi:
             res = self.client.post(
                 '/hjp/',
                 {'currency_0': 'CZK',
@@ -373,7 +376,7 @@ class TestViews2(TestCase):
             self.assertEqual(
                 res.context['err_message'],
                 'Chyba při načtení souboru')
-        with open(BASE_DIR + '/hjp/testdata/err_debt3.xml', 'rb') as fi:
+        with open(join(TEST_DIR, 'err_debt3.xml'), 'rb') as fi:
             res = self.client.post(
                 '/hjp/',
                 {'currency_0': 'CZK',

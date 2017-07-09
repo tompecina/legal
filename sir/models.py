@@ -153,7 +153,7 @@ class Role(models.Model):
         unique_together = ('osoba', 'druhRoleVRizeni')
 
     def __str__(self):
-        return str(self.osoba) + ', ' + str(self.druhRoleVRizeni)
+        return '{}, {}'.format(str(self.osoba), str(self.druhRoleVRizeni))
 
 class DruhStavRizeni(models.Model):
     desc = models.CharField(
@@ -241,7 +241,7 @@ class Transaction(models.Model):
         auto_now_add=True)
     
     def __str__(self):
-        return str(self.id) + ', ' + self.spisovaZnacka
+        return '{}, {}'.format(str(self.id), self.spisovaZnacka)
 
 class Insolvency(models.Model):
     uid = models.ForeignKey(

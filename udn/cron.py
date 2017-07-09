@@ -44,7 +44,7 @@ decurl = localurl + \
 if TEST:
     repo_pref = join(BASE_DIR, 'test')
 else:  # pragma: no cover
-    repo_pref = join(BASE_DIR, 'repo/udn')
+    repo_pref = join(BASE_DIR, 'repo', 'udn')
 
 fr = compile(filename_regex)
 
@@ -83,14 +83,23 @@ def cron_update():
                     if not res.ok:
                         continue
                     logger.info(
-                        'Writing abridged decision "' + \
-                        composeref(senate, register, number, year) + '"')
-                    with open(repo_pref + '/' + fn, 'wb') as fo:
+                        'Writing abridged decision "{}"' \
+                            .format(
+                                composeref(
+                                    senate,
+                                    register,
+                                    number,
+                                    year)))
+                    with open(join(repo_pref, fn), 'wb') as fo:
                         if not fo.write(res.content):  # pragma: no cover
                             logger.error(
-                                'Failed to write abridged decision "' + \
-                                composeref(senate, register, number, year) + \
-                                '"')
+                                'Failed to write abridged decision "{}"' \
+                                    .format(
+                                        composeref(
+                                            senate,
+                                            register,
+                                            number,
+                                            year)))
                             continue
                     a = Agenda.objects.get_or_create( \
                         desc=r[2].td.text.strip())[0]
@@ -172,16 +181,23 @@ def cron_find():
             if not res.ok:
                 continue
             logger.info(
-                'Writing anonymized decision "' + \
-                composeref(dec.senate, dec.register, dec.number, dec.year) + \
-                '"')
-            with open(repo_pref + '/' + fn, 'wb') as fo:
+                'Writing anonymized decision "{}"' \
+                    .format(
+                        composeref(
+                            dec.senate,
+                            dec.register,
+                            dec.number,
+                            dec.year)))
+            with open(join(repo_pref, fn), 'wb') as fo:
                 if not fo.write(res.content):  # pragma: no cover
                     logger.error(
-                        'Failed to write anonymized decision "' + \
-                        composeref(
-                            dec.senate, dec.register, dec.number, dec.year) + \
-                        '"')
+                        'Failed to write anonymized decision "{}"' \
+                            .format(
+                                composeref(
+                                    dec.senate,
+                                    dec.register,
+                                    dec.number,
+                                    dec.year)))
                     return
             dec.anonfilename = fn
             dec.save()

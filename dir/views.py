@@ -51,14 +51,14 @@ APPVERSION = apps.get_app_config(APP).version
 BATCH = 50
 
 OFIELDS = ['name', 'first_name']
-OPTS = [x + '_opt' for x in OFIELDS]
+OPTS = [(x + '_opt') for x in OFIELDS]
 
 @require_http_methods(['GET', 'POST'])
 @login_required
 def mainpage(request):
 
     logger.debug(
-        'Main page accessed using method ' + request.method,
+        'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
 
@@ -148,7 +148,8 @@ def debtorform(request, id=0):
             for o in OPTS:
                 d[o] = text_opts_keys[d[o]]
             if d['birthid']:
-                d['birthid'] = d['birthid'][:6] + '/' + d['birthid'][6:]
+                d['birthid'] = \
+                    '{}/{}'.format(d['birthid'][:6], d['birthid'][6:])
             f = DebtorForm(initial=d)
         else:
             f = DebtorForm()
@@ -225,7 +226,8 @@ def debtordel(request, id=0):
 @login_required
 def debtordelall(request):
     logger.debug(
-        'Delete all debtors page accessed using method ' + request.method,
+        'Delete all debtors page accessed using method {}' \
+            .format(request.method),
         request)
     uid = request.user.id
     uname = request.user.username
@@ -250,7 +252,7 @@ def debtordelall(request):
 def debtorbatchform(request):
 
     logger.debug(
-        'Debtor import page accessed using method ' + request.method,
+        'Debtor import page accessed using method {}'.format(request.method),
         request)
 
     err_message = ''
@@ -376,8 +378,9 @@ def debtorbatchform(request):
                                             'pro pole <q>rokNarozeníDo</q>'])
                                         continue
                                 else:
-                                    errors.append([i, 'Chybný parametr: "' \
-                                        + key + '"'])
+                                    errors.append(
+                                        [i,
+                                         'Chybný parametr: "{}"'.format(key)])
                                     continue
                                 if year_birth_from and year_birth_to and \
                                    (year_birth_from > year_birth_to):
@@ -404,8 +407,10 @@ def debtorbatchform(request):
                                             'year_birth_to': year_birth_to}
                                     )
                                 except:
-                                    errors.append([i, 'Popisu "' + desc + \
-                                        '" odpovídá více než jeden dlužník'])
+                                    errors.append(
+                                        [i,
+                                         'Popisu "{}" odpovídá více než ' \
+                                         'jeden dlužník'.format(desc)])
                                     continue
                                 count += 1
                     logger.info(
@@ -443,8 +448,7 @@ def debtorexport(request):
     pp = Debtor.objects.filter(uid=uid).order_by('desc', 'pk') \
         .distinct()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
-    response['Content-Disposition'] = \
-        'attachment; filename=dir.csv'
+    response['Content-Disposition'] = 'attachment; filename=dir.csv'
     writer = csvwriter(response)
     for p in pp:
         dat = [p.desc]
@@ -459,7 +463,7 @@ def debtorexport(request):
         if p.taxid:
             dat.append('DIČ=' + p.taxid)
         if p.birthid:
-            dat.append('RČ=' + p.birthid[:6] + '/' + p.birthid[6:])
+            dat.append('RČ={}/{}'.format(p.birthid[:6], p.birthid[6:]))
         if p.date_birth:
             dat.append('datumNarození={:02d}.{:02d}.{:d}' .format(
                 p.date_birth.day,

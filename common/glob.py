@@ -42,7 +42,7 @@ registers = [
     'Nk', 'Ntn', 'Obn', 'Plen', 'Plsn', 'Pst', 'Rozk', 'Rs', 'S',
     'Spr', 'Sst', 'Vol', 'Tm', 'Tmo', 'Ntm'
 ]
-register_regex = '^(' + ('|'.join(registers)) + ')$'
+register_regex = '^({})$'.format('|'.join(registers))
 
 hd = (
     {'f': None, 't': None, 'd':  1, 'm':  1},
@@ -103,7 +103,7 @@ text_opts = [[x['sql'], x['desc']] for x in TEXTOPTS]
 text_opts_keys = [x['sql'] for x in TEXTOPTS]
 text_opts_abbr = [x['abbr'] for x in TEXTOPTS]
 text_opts_ai = {x: text_opts_abbr.index(x) for x in text_opts_abbr}
-text_opts_ca = [':' + x for x in text_opts_abbr]
+text_opts_ca = [(':' + x) for x in text_opts_abbr]
 
 localdomain = 'pecina.cz'
 localsubdomain = 'legal.' + localdomain

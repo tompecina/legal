@@ -267,7 +267,7 @@ class TestViews(TestCase):
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertGreater(len(msg), 1)
-            self.assertEqual(msg[1].text, p[6] + ' Kč')
+            self.assertEqual(msg[1].text, '{} Kč'.format(p[6]))
         for p in ee:
             res = self.client.post(
                 '/sop/',

@@ -175,77 +175,78 @@ class TestModels(SimpleTestCase):
 
 x0 = '<?xml version="1.0" encoding="utf-8"?>\n' \
      '<decisions application="udn" created="2016-08-04T00:20:47" ' \
-     'version="1.1" xmlns="http://' + localsubdomain + '" xmlns:xsi="http:' \
+     'version="1.1" xmlns="http://{0}" xmlns:xsi="http:' \
      '//www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:' \
-     '//' + localsubdomain + ' ' + localurl + '/static/udn-1.0.xsd">' \
-     '</decisions>\n'
+     '//{0} {1}/static/udn-1.0.xsd"></decisions>\n' \
+         .format(localsubdomain, localurl)
 
 x1 = '<?xml version="1.0" encoding="utf-8"?>\n' \
      '<decisions application="udn" created="2016-08-04T00:20:47" ' \
-     'version="1.1" xmlns="http://' + localsubdomain + '" xmlns:xsi="http:' \
+     'version="1.1" xmlns="http://{0}" xmlns:xsi="http:' \
      '//www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:' \
-     '//' + localsubdomain + ' ' + localurl + '/static/udn-1.0.xsd">' \
+     '//{0} {1}/static/udn-1.0.xsd">' \
      '<decision><court id="NSS">Nejvyšší správní soud</court><date>' \
      '2199-07-01</date><ref><senate>8</senate><register>As</register>' \
      '<number>158</number><year>2015</year><page>33</page></ref><agenda>' \
      'Ochrana hospodářské soutěže a veřejné zakázky</agenda><parties><party>' \
      'Úřad pro ochranu hospodářské soutěže</party><party>BUREAU VERITAS ' \
      'CZECH REPUBLIC, spol. s r.o.</party><party>Zlínský kraj</party>' \
-     '</parties><files><file type="abridged">' + repourl + \
-     'udn/0158_8As__1500033S.pdf</file></files></decision></decisions>\n'
+     '</parties><files><file type="abridged">{2}' \
+     'udn/0158_8As__1500033S.pdf</file></files></decision></decisions>\n' \
+         .format(localsubdomain, localurl, repourl)
 
 x2 = '<?xml version="1.0" encoding="utf-8"?>\n' \
      '<decisions application="udn" created="2016-08-04T00:20:47" ' \
-     'version="1.1" xmlns="http://' + localsubdomain + '" xmlns:xsi="http:' \
+     'version="1.1" xmlns="http://{0}" xmlns:xsi="http:' \
      '//www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:' \
-     '//' + localsubdomain + ' ' + localurl + '/static/udn-1.0.xsd">' \
+     '//{0} {1}/static/udn-1.0.xsd">' \
      '<decision><court id="NSS">Nejvyšší správní soud</court><date>' \
      '2199-07-01</date><ref><senate>8</senate><register>As</register>' \
      '<number>158</number><year>2015</year><page>33</page></ref><agenda>' \
      'Ochrana hospodářské soutěže a veřejné zakázky</agenda><parties><party>' \
      'Úřad pro ochranu hospodářské soutěže</party><party>BUREAU VERITAS ' \
      'CZECH REPUBLIC, spol. s r.o.</party><party>Zlínský kraj</party>' \
-     '</parties><files><file type="abridged">' + repourl + \
-     'udn/0158_8As__1500033S.pdf</file><file type="anonymized">' + repourl + \
+     '</parties><files><file type="abridged">{2}' \
+     'udn/0158_8As__1500033S.pdf</file><file type="anonymized">{2}' \
      'udn/0067_5As__1500054_20151119130217_prevedeno.pdf</file></files>' \
-     '</decision></decisions>\n'
+     '</decision></decisions>\n'.format(localsubdomain, localurl, repourl)
 
 c0 = 'Soud,Datum,Číslo jednací,Oblast,Účastníci řízení,Zkrácené znění,' \
      'Anonymisované znění\n'
 
-c1 = c0 + 'Nejvyšší správní soud,01.07.2199,8 As 158/2015-33,Ochrana ' \
+c1 = '{}Nejvyšší správní soud,01.07.2199,8 As 158/2015-33,Ochrana ' \
      'hospodářské soutěže a veřejné zakázky,"Úřad pro ochranu hospodářské ' \
-     'soutěže;BUREAU VERITAS CZECH REPUBLIC, spol. s r.o.;Zlínský kraj",' + \
-     repourl + 'udn/0158_8As__1500033S.pdf,\n'
+     'soutěže;BUREAU VERITAS CZECH REPUBLIC, spol. s r.o.;Zlínský kraj",' \
+     '{}udn/0158_8As__1500033S.pdf,\n'.format(c0, repourl)
 
-c2 = c0 + 'Nejvyšší správní soud,01.07.2199,8 As 158/2015-33,Ochrana ' \
+c2 = '{0}Nejvyšší správní soud,01.07.2199,8 As 158/2015-33,Ochrana ' \
      'hospodářské soutěže a veřejné zakázky,"Úřad pro ochranu hospodářské ' \
-     'soutěže;BUREAU VERITAS CZECH REPUBLIC, spol. s r.o.;Zlínský kraj",' + \
-     repourl + 'udn/0158_8As__1500033S.pdf,' + repourl + \
-     'udn/0067_5As__1500054_20151119130217_prevedeno.pdf\n'
+     'soutěže;BUREAU VERITAS CZECH REPUBLIC, spol. s r.o.;Zlínský kraj",{1}' \
+     'udn/0158_8As__1500033S.pdf,{1}' \
+     'udn/0067_5As__1500054_20151119130217_prevedeno.pdf\n'.format(c0, repourl)
 
 j0 = '[]'
 
-j1 = '[{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
+j1 = '[{{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
      '\u00e9 sout\u011b\u017ee", "BUREAU VERITAS CZECH REPUBLIC, spol. ' \
-     's r.o.", "Zl\u00ednsk\u00fd kraj"], "files": {"abridged": "' + \
-     repourl + 'udn/0158_8As__1500033S.pdf"}, "date": "2199-07-01", ' \
-     '"court": {"name": "Nejvy\u0161\u0161\u00ed spr\u00e1vn\u00ed ' \
-     'soud", "id": "NSS"}, "ref": {"senate": 8, "register": "As", ' \
-     '"number": 158, "year": 2015, "page": 33}, "agenda": "Ochrana ' \
+     's r.o.", "Zl\u00ednsk\u00fd kraj"], "files": {{"abridged": "' \
+     '{}udn/0158_8As__1500033S.pdf"}}, "date": "2199-07-01", ' \
+     '"court": {{"name": "Nejvy\u0161\u0161\u00ed spr\u00e1vn\u00ed ' \
+     'soud", "id": "NSS"}}, "ref": {{"senate": 8, "register": "As", ' \
+     '"number": 158, "year": 2015, "page": 33}}, "agenda": "Ochrana ' \
      'hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee a ve\u0159ejn\u00e9 ' \
-     'zak\u00e1zky"}]'
+     'zak\u00e1zky"}}]'.format(repourl)
 
-j2 = '[{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
+j2 = '[{{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
      '\u00e9 sout\u011b\u017ee", "BUREAU VERITAS CZECH REPUBLIC, spol. ' \
-     's r.o.", "Zl\u00ednsk\u00fd kraj"], "files": {"abridged": "' + \
-     repourl + 'udn/0158_8As__1500033S.pdf", "anonymized": "' + repourl + \
-     'udn/0067_5As__1500054_20151119130217_prevedeno.pdf"}, "date": ' \
-     '"2199-07-01", "court": {"name": "Nejvy\u0161\u0161\u00ed ' \
-     'spr\u00e1vn\u00ed soud", "id": "NSS"}, "ref": {"senate": 8, ' \
-     '"register": "As", "number": 158, "year": 2015, "page": 33}, ' \
+     's r.o.", "Zl\u00ednsk\u00fd kraj"], "files": {{"abridged": "' \
+     '{0}udn/0158_8As__1500033S.pdf", "anonymized": "{0}' \
+     'udn/0067_5As__1500054_20151119130217_prevedeno.pdf"}}, "date": ' \
+     '"2199-07-01", "court": {{"name": "Nejvy\u0161\u0161\u00ed ' \
+     'spr\u00e1vn\u00ed soud", "id": "NSS"}}, "ref": {{"senate": 8, ' \
+     '"register": "As", "number": 158, "year": 2015, "page": 33}}, ' \
      '"agenda": "Ochrana hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee ' \
-     'a ve\u0159ejn\u00e9 zak\u00e1zky"}]'
+     'a ve\u0159ejn\u00e9 zak\u00e1zky"}}]'.format(repourl)
 
 class TestViews(TestCase):
     fixtures = ['udn_test1.json']
@@ -484,7 +485,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/udn/xmllist/?agenda=XXX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-        res = self.client.get( '/udn/xmllist/?date_from=2015-X-01')
+        res = self.client.get('/udn/xmllist/?date_from=2015-X-01')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/udn/xmllist/?date_to=2015-X-01')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)

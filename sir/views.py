@@ -48,7 +48,7 @@ BATCH = 50
 @login_required
 def mainpage(request):
     logger.debug(
-        'Main page accessed using method ' + request.method,
+        'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
     err_message = ''
@@ -168,7 +168,8 @@ def insdel(request, id=0):
 @login_required
 def insdelall(request):
     logger.debug(
-        'Delete all proceedings page accessed using method ' + request.method,
+        'Delete all proceedings page accessed using method {}' \
+            .format(request.method),
         request)
     uid = request.user.id
     uname = request.user.username
@@ -193,7 +194,8 @@ def insdelall(request):
 def insbatchform(request):
 
     logger.debug(
-        'Proceedings import page accessed using method ' + request.method,
+        'Proceedings import page accessed using method {}' \
+            .format(request.method),
         request)
 
     err_message = ''
@@ -257,8 +259,10 @@ def insbatchform(request):
                                             'detailed': detailed}
                                     )
                                 except:
-                                    errors.append([i, 'Popisu "' + desc + \
-                                        '" odpovídá více než jedno řízení'])
+                                    errors.append(
+                                        [i,
+                                         'Popisu "{}" odpovídá více než ' \
+                                         'jedno řízení'.format(desc)])
                                     continue
                                 count += 1
                     logger.info(

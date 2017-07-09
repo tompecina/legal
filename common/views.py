@@ -82,7 +82,7 @@ def error(request):
 @require_http_methods(['GET', 'POST'])
 def logout(request):
     logger.debug(
-        'Logout page accessed using method ' + request.method,
+        'Logout page accessed using method {}'.format(request.method),
         request)
     uid = request.user.id
     uname = request.user.username
@@ -97,7 +97,7 @@ def logout(request):
 @login_required
 def pwchange(request):
     logger.debug(
-        'Password change page accessed using method ' + request.method,
+        'Password change page accessed using method {}'.format(request.method),
         request,
         request.POST)
     var = {'page_title': 'Změna hesla'}
@@ -131,7 +131,7 @@ def pwchange(request):
 @require_http_methods(['GET', 'POST'])
 def lostpw(request):
     logger.debug(
-        'Lost password page accessed using method ' + request.method,
+        'Lost password page accessed using method {}'.format(request.method),
         request,
         request.POST)
     err_message = None
@@ -286,7 +286,7 @@ def user(request):
 @require_http_methods(['GET', 'POST'])
 def useradd(request):
     logger.debug(
-        'User add page accessed using method ' + request.method,
+        'User add page accessed using method {}'.format(request.method),
         request,
         request.POST)
     err_message = None
@@ -330,6 +330,6 @@ def useradd(request):
 @require_http_methods(['GET'])
 def genrender(request, template=None, **kwargs):
     logger.debug(
-        'Generic page rendered using template "' + template + '"',
+        'Generic page rendered using template "{}"'.format(template),
         request)
     return render(request, template, kwargs)

@@ -94,12 +94,13 @@ def cron_courts():
                     Court.objects.filter(pk=r.id.string).update(reports=c)
             except:  # pragma: no cover
                 logger.warning(
-                    'Error setting hierarchy for ' + c.id)
+                    'Error setting hierarchy for {}'.format(c.id))
     logger.info('Courts imported')
 
 def p2s(p):
-    return p.court_id + ', ' + \
-        composeref(p.senate, p.register, p.number, p.year)
+    return '{}, {}'.format(
+        p.court_id,
+        composeref(p.senate, p.register, p.number, p.year))
 
 def updateproc(p):
     notnew = bool(p.updated)

@@ -50,7 +50,7 @@ BATCH = 50
 def mainpage(request):
 
     logger.debug(
-        'Main page accessed using method ' + request.method,
+        'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
 
@@ -188,7 +188,8 @@ def partydel(request, id=0):
 @login_required
 def partydelall(request):
     logger.debug(
-        'Delete all parties page accessed using method ' + request.method,
+        'Delete all parties page accessed using method {}' \
+            .format(request.method),
         request)
     uid = request.user.id
     uname = request.user.username
@@ -213,7 +214,7 @@ def partydelall(request):
 def partybatchform(request):
 
     logger.debug(
-        'Party import page accessed using method ' + request.method,
+        'Party import page accessed using method {}'.format(request.method),
         request)
 
     err_message = ''
@@ -258,8 +259,10 @@ def partybatchform(request):
                                             text_opts_ai[party_opt]}
                                     )
                                 except:
-                                    errors.append([i, 'Řetězci "' + line + \
-                                        '" odpovídá více než jeden účastník'])
+                                    errors.append(
+                                        [i,
+                                         'Řetězci "{}" odpovídá více než ' \
+                                         'jeden účastník'.format(line)])
                                     continue
                                 count += 1
                     logger.info(

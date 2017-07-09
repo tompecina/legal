@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import os.path
+from os.path import dirname, abspath, join
 import locale
 from sys import argv
 from logging import Filter
@@ -32,9 +32,9 @@ TEST = ((len(argv) > 1) and (argv[1] == 'test'))
 DEBUG = LOCAL
 DEBUG_LOG = True
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOCAL_ROOT = os.path.dirname(__file__)
-LOG_DIR = os.path.join(BASE_DIR, 'log')
+BASE_DIR = dirname(dirname(abspath(__file__)))
+LOCAL_ROOT = dirname(__file__)
+LOG_DIR = join(BASE_DIR, 'log')
 
 ADMINS = (
     ('Tomas Pecina', 'tomas@pecina.cz'),
@@ -65,7 +65,7 @@ USE_I18N = True
 USE_L10N = True
 MEDIA_ROOT = ''
 MEDIA_URL = ''
-STATIC_ROOT = os.path.join(LOCAL_ROOT, 'collect').replace('\\','/')
+STATIC_ROOT = join(LOCAL_ROOT, 'collect')
 STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
@@ -149,9 +149,9 @@ class AddFields(Filter):
                     if 'password' in k:
                         v = '?'
                     else:
-                        v = '"' + record.params[k] + '"'
-                    a += ', ' + k + '=' + v + ''
-            a += ' [' + record.request.META['REMOTE_ADDR'] + ']'
+                        v = '"{}"'.format(record.params[k])
+                    a += ', {}={}'.format(k, v)
+            a += ' [{}]'.format(record.request.META['REMOTE_ADDR'])
         record.append = a
         return True
 
@@ -196,7 +196,7 @@ LOGGING = {
         'error_file': {
             'level': 'ERROR',
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': os.path.join(LOG_DIR, 'error.log'),
+            'filename': join(LOG_DIR, 'error.log'),
             'encoding': 'utf-8',
             'when': 'D',
             'interval': 100,
@@ -207,7 +207,7 @@ LOGGING = {
         'info_file': {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': os.path.join(LOG_DIR, 'info.log'),
+            'filename': join(LOG_DIR, 'info.log'),
             'encoding': 'utf-8',
             'when': 'D',
             'interval': 30,
@@ -218,7 +218,7 @@ LOGGING = {
         'debug_file': {
             'level': 'DEBUG',
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': os.path.join(LOG_DIR, 'debug.log'),
+            'filename': join(LOG_DIR, 'debug.log'),
             'encoding': 'utf-8',
             'when': 'D',
             'interval': 10,

@@ -26,10 +26,14 @@ from http import HTTPStatus
 from datetime import datetime
 from bs4 import BeautifulSoup
 from locale import strxfrm
+from os.path import join
 from common.settings import BASE_DIR
 from common.glob import localdomain
 from common.tests import link_equal, setdl, setpr, getdl, getpr
 from . import cron, glob, models, views
+
+APP = __package__
+TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 class DummyTag:
     def __init__(self, s):
@@ -556,7 +560,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insbatchform.html')
         self.assertContains(res, 'Nejprve zvolte soubor k načtení')
-        with open(BASE_DIR + '/sir/testdata/import.csv', 'rb') as fi:
+        with open(join(TEST_DIR, 'import.csv'), 'rb') as fi:
             res = self.client.post(
                 '/sir/insbatchform/',
                 {'submit_load': 'Načíst',
@@ -581,8 +585,8 @@ class TestViews1(TestCase):
             'Test 2,2,2013,ano\r\n' \
             'Test 3,3,2014,ano\r\n' \
             'Test 4,4,2011,ne\r\n' \
-            'Test 4,5,2012,ne\r\n' + \
-            ('T' * 255) + ',57,2012,ano\r\n')
+            'Test 4,5,2012,ne\r\n' \
+            '{},57,2012,ano\r\n'.format('T' * 255))
 
     def test_insexport(self):
         models.Insolvency.objects.create(

@@ -572,7 +572,7 @@ class TestViews(SimpleTestCase):
                 q['partner'] = 'on'
             if p[11]:
                 q['vat'] = 'on'
-            q['submit_' + ('dual' if p[13] else 'single')] = 'Vypočítat'
+            q['submit_{}'.format('dual' if p[13] else 'single')] = 'Vypočítat'
             res = self.client.post('/kos/', q)
             c = res.context['messages']
             self.assertEqual(
