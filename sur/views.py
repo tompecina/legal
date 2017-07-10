@@ -82,7 +82,7 @@ def mainpage(request):
     for row in rows:
         row['party_opt_text'] = text_opts[row['party_opt']][1]
         q = QueryDict(mutable=True)
-        q['party']= row['party']
+        q['party'] = row['party']
         q['party_opt'] = text_opts_keys[row['party_opt']]
         row['search'] = q.urlencode()
     return render(

@@ -22,11 +22,11 @@
 
 from common import forms, fields, widgets
 
-tr_opts = (('debit',   'závazek'),
-           ('credit',  'splátka'),
+tr_opts = (('debit', 'závazek'),
+           ('credit', 'splátka'),
            ('balance', 'zůstatek'))
 
-rep_opts = (('interest',  'napřed úrok'),
+rep_opts = (('interest', 'napřed úrok'),
             ('principal', 'napřed jistina'))
 
 class TransForm(forms.Form):

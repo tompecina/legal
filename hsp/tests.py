@@ -1415,8 +1415,8 @@ class TestViews2(TestCase):
         while True:
             try:
                 with open(
-                        '{}/hsp/testdata/err_debt{:d}.xml'.format(BASE_DIR, i),
-                        'rb') as fi:
+                    '{}/hsp/testdata/err_debt{:d}.xml'.format(BASE_DIR, i),
+                    'rb') as fi:
                     d = fi.read()
             except:
                 self.assertGreater(i, 1)
@@ -1451,8 +1451,7 @@ class TestViews2(TestCase):
             d = {'title': TEST_STRING,
                  'note': 'nn',
                  'internal_note': 'in',
-                 'submit_csv': 'Export do CSV'
-            }
+                 'submit_csv': 'Export do CSV'}
             soup = BeautifulSoup(res.content, 'html.parser')
             for o in soup.select('#id_rounding option'):
                 if o.has_attr('selected'):
@@ -1464,8 +1463,8 @@ class TestViews2(TestCase):
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
             s = res.content.decode('utf-8')
             with open(
-                    '{}/hsp/testdata/debt{:d}.csv'.format(BASE_DIR, i),
-                    'rb') as fi:
+                '{}/hsp/testdata/debt{:d}.csv'.format(BASE_DIR, i),
+                'rb') as fi:
                 t = fi.read().decode('utf-8')
             self.assertEqual(s, t, msg=str(i))
             i += 1
@@ -1474,8 +1473,8 @@ class TestViews2(TestCase):
         self.assertTrue(self.client.login(username='user', password='none'))
         for i in range(1, 14):
             with open(
-                    '{}/hjp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
-                    'rb') as fi:
+                '{}/hjp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
+                'rb') as fi:
                 res = self.client.post(
                     '/hsp/',
                     {'rounding': '2',
@@ -1487,8 +1486,7 @@ class TestViews2(TestCase):
             d = {'title': TEST_STRING,
                  'note': 'nn',
                  'internal_note': 'in',
-                 'submit_csv': 'Export do CSV'
-            }
+                 'submit_csv': 'Export do CSV'}
             soup = BeautifulSoup(res.content, 'html.parser')
             for o in soup.select('#id_rounding option'):
                 if o.has_attr('selected'):
@@ -1500,7 +1498,7 @@ class TestViews2(TestCase):
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
             s = res.content.decode('utf-8')
             with open(
-                    '{}/hsp/testdata/debt{:d}.csv'.format(BASE_DIR, i),
-                    'rb') as fi:
+                '{}/hsp/testdata/debt{:d}.csv'.format(BASE_DIR, i),
+                'rb') as fi:
                 t = fi.read().decode('utf-8')
             self.assertEqual(s, t, msg=str(i))

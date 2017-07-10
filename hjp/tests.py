@@ -1038,8 +1038,7 @@ class TestViews2(TestCase):
             d = {'title': TEST_STRING,
                  'note': 'nn',
                  'internal_note': 'in',
-                 'submit_csv': 'Export do CSV'
-            }
+                 'submit_csv': 'Export do CSV'}
             soup = BeautifulSoup(res.content, 'html.parser')
             for f in ['currency_0', 'rounding', 'ydconv', 'mdconv']:
                 for o in soup.select('#id_' + f + ' option'):
@@ -1066,8 +1065,8 @@ class TestViews2(TestCase):
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
             s = res.content.decode('utf-8')
             with open(
-                    '{}/hjp/testdata/debt{:d}.csv'.format(BASE_DIR, i),
-                    'rb') as fi:
+                '{}/hjp/testdata/debt{:d}.csv'.format(BASE_DIR, i),
+                'rb') as fi:
                 t = fi.read().decode('utf-8')
             self.assertEqual(s, t, msg=str(i))
             i += 1

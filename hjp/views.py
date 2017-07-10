@@ -1014,23 +1014,24 @@ def mainpage(request):
                        ('BOTTOMPADDING', (0, 1), (-1, 1), 1.5),
                        ('BOTTOMPADDING', (0, 2), (-1, 4), 0),
                        ('BOTTOMPADDING', (0, -1), (-1, -1), 18),
-                       ]
+                      ]
 
-                ast = {'debit': [
+                ast = {
+                    'debit': [
                         ('LINEBELOW', (1, 1), (10, 1), tl, black),
                         ('LINEAFTER', (3, 2), (3, 2), tl, black),
                         ('LINEBELOW', (12, 1), (21, 1), tl, black),
                         ('LINEAFTER', (14, 2), (14, 4), tl, black),
                         ('LINEBELOW', (23, 1), (32, 1), tl, black),
                         ('LINEAFTER', (25, 2), (25, 4), tl, black)],
-                       'credit': [
+                    'credit': [
                         ('LINEBELOW', (1, 1), (10, 1), tl, black),
                         ('LINEAFTER', (3, 2), (3, 4), tl, black),
                         ('LINEBELOW', (12, 1), (21, 1), tl, black),
                         ('LINEAFTER', (14, 2), (14, 4), tl, black),
                         ('LINEBELOW', (23, 1), (32, 1), tl, black),
                         ('LINEAFTER', (25, 2), (25, 4), tl, black)],
-                       'balance': [
+                    'balance': [
                         ('LINEBELOW', (23, 1), (32, 1), tl, black),
                         ('LINEAFTER', (25, 2), (25, 4), tl, black)]}
 
@@ -1239,8 +1240,7 @@ def transform(request, id=0):
             transaction = debt.transactions[id - 1]
             var = {'description': transaction.description,
                    'transaction_type': transaction.transaction_type,
-                   'date': transaction.date
-            }
+                   'date': transaction.date}
             if hasattr(transaction, 'amount'):
                 var['amount'] = '{:.2f}'.format(Lf(transaction.amount)) \
                     if debt.rounding else int(round(transaction.amount))

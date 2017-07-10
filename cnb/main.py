@@ -37,120 +37,91 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
     fixed_list = {
         'XEU': {'currency_to': 'EUR',
                 'fixed_rate': 1.0,
-                'date_from': date(1999,  1,  1)
-        },
+                'date_from': date(1999, 1, 1)},
         'ATS': {'currency_to': 'EUR',
                 'fixed_rate': 13.7603,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'BEF': {'currency_to': 'EUR',
                 'fixed_rate': 40.3399,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'NLG': {'currency_to': 'EUR',
                 'fixed_rate': 2.20371,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'FIM': {'currency_to': 'EUR',
                 'fixed_rate': 5.94573,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'FRF': {'currency_to': 'EUR',
                 'fixed_rate': 6.55957,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'DEM': {'currency_to': 'EUR',
                 'fixed_rate': 1.95583,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'IEP': {'currency_to': 'EUR',
                 'fixed_rate': 0.787564,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'ITL': {'currency_to': 'EUR',
                 'fixed_rate': 1936.27,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'LUF': {'currency_to': 'EUR',
                 'fixed_rate': 40.3399,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'MCF': {'currency_to': 'EUR',
                 'fixed_rate': 6.55957,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'PTE': {'currency_to': 'EUR',
                 'fixed_rate': 200.482,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'SML': {'currency_to': 'EUR',
                 'fixed_rate': 1936.27,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'ESP': {'currency_to': 'EUR',
                 'fixed_rate': 166.386,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'VAL': {'currency_to': 'EUR',
                 'fixed_rate': 1936.27,
-                'date_from': date(1998, 12, 31)
-        },
+                'date_from': date(1998, 12, 31)},
         'GRD': {'currency_to': 'EUR',
                 'fixed_rate': 340.75,
-                'date_from': date(2000,  6, 19)
-        },
+                'date_from': date(2000, 6, 19)},
         'SIT': {'currency_to': 'EUR',
                 'fixed_rate': 239.64,
-                'date_from': date(2006,  7, 11)
-        },
+                'date_from': date(2006, 7, 11)},
         'CYP': {'currency_to': 'EUR',
                 'fixed_rate': 0.585274,
-                'date_from': date(2007,  7, 10)
-        },
+                'date_from': date(2007, 7, 10)},
         'MTL': {'currency_to': 'EUR',
                 'fixed_rate': 0.4293,
-                'date_from': date(2007,  7, 10)
-        },
+                'date_from': date(2007, 7, 10)},
         'SKK': {'currency_to': 'EUR',
                 'fixed_rate': 30.126,
-                'date_from': date(2008,  7,  8)
-        },
+                'date_from': date(2008, 7, 8)},
         'EEK': {'currency_to': 'EUR',
                 'fixed_rate': 15.6466,
-                'date_from': date(2010,  7, 13)
-        },
+                'date_from': date(2010, 7, 13)},
         'ROL': {'currency_to': 'RON',
                 'fixed_rate': 10000.0,
-                'date_from': date(2005,  7,  1)
-        },
+                'date_from': date(2005, 7, 1)},
         'RUR': {'currency_to': 'RUB',
                 'fixed_rate': 1000.0,
-                'date_from': date(1998,  1,  1)
-        },
+                'date_from': date(1998, 1, 1)},
         'MXP': {'currency_to': 'MXN',
                 'fixed_rate': 1000.0,
-                'date_from': date(1993,  1,  1)
-        },
+                'date_from': date(1993, 1, 1)},
         'UAK': {'currency_to': 'UAH',
                 'fixed_rate': 100000.0,
-                'date_from': date(1996,  9,  2)
-        },
+                'date_from': date(1996, 9, 2)},
         'TRL': {'currency_to': 'TRY',
                 'fixed_rate': 1000000.0,
-                'date_from': date(2005,  1,  1)
-        },
+                'date_from': date(2005, 1, 1)},
         'BGL': {'currency_to': 'BGN',
                 'fixed_rate': 1000.0,
-                'date_from': date(1999,  7,  5)
-        },
+                'date_from': date(1999, 7, 5)},
         'PLZ': {'currency_to': 'PLN',
                 'fixed_rate': 10000.0,
-                'date_from': date(1995,  1,  1)
-        },
+                'date_from': date(1995, 1, 1)},
         'CSD': {'currency_to': 'RSD',
                 'fixed_rate': 1.0,
-                'date_from': date(2003,  1,  1)
-        },
+                'date_from': date(2003, 1, 1)},
         }
 
     today = date.today()

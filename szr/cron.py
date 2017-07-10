@@ -48,7 +48,7 @@ def addauxid(p):
             soup = BeautifulSoup(res.text, 'html.parser')
             form = soup.find('form')
             d = {i['name']: i['value'] for i in form.find_all('input') \
-                 if i['type']=='hidden' and i.has_attr('value')}
+                 if i['type'] == 'hidden' and i.has_attr('value')}
             if int(p.senate):
                 ref = '{} '.format(p.senate)
             else:

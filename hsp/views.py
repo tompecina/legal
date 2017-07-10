@@ -471,8 +471,7 @@ def calc(debt, pram=(lambda x: x)):
                    'sp_distr': ([0.0] * res.nd),
                    'sps': [],
                    'currency': '',
-                   'disp_currency': ''
-            }
+                   'disp_currency': ''}
             tp = row['type'] = tt['tp']
             for debit in debt.debits:
                 debit.ob = debit.nb = round(debit.nb, debt.rounding)
@@ -556,16 +555,15 @@ def toxml(debt):
                 .format(localsubdomain, localurl, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
-            'created': datetime.now().replace(microsecond=0).isoformat()
-        },
-          'currency': {'standard': 'ISO 4217'},
-          'fixed_currency': {'standard': 'ISO 4217'},
-          'principal_currency': {'standard': 'ISO 4217'},
-          'currency_from': {'standard': 'ISO 4217'},
-          'currency_to': {'standard': 'ISO 4217'},
-          'pa_rate': {'unit': 'percent per annum'},
-          'pm_rate': {'unit': 'percent per month'},
-          'pd_rate': {'unit': 'per mil per day'}}
+            'created': datetime.now().replace(microsecond=0).isoformat()},
+        'currency': {'standard': 'ISO 4217'},
+        'fixed_currency': {'standard': 'ISO 4217'},
+        'principal_currency': {'standard': 'ISO 4217'},
+        'currency_from': {'standard': 'ISO 4217'},
+        'currency_to': {'standard': 'ISO 4217'},
+        'pa_rate': {'unit': 'percent per annum'},
+        'pm_rate': {'unit': 'percent per month'},
+        'pd_rate': {'unit': 'per mil per day'}}
     xml = newXML('')
     d = xmldecorate(xml.new_tag('debt'), xd)
     xml.append(d)
@@ -1152,7 +1150,7 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False)
 
-                d1 =[[[Paragraph('Historie peněžité pohledávky'.upper(), s1)]]]
+                d1 = [[[Paragraph('Historie peněžité pohledávky'.upper(), s1)]]]
                 if debt.title:
                     d1[0][0].append(Paragraph(escape(debt.title), s2))
                 t1 = Table(d1, colWidths=[483.30])
@@ -1191,7 +1189,7 @@ def mainpage(request):
                        ('BOTTOMPADDING', (0, 0), (-1, 0), 0.5),
                        ('BOTTOMPADDING', (0, 1), (-1, 1), 1.5),
                        ('BOTTOMPADDING', (0, -1), (-1, -1), 18),
-                       ]
+                      ]
 
                 cust2eff = {'cust1': 'do 27.04.2005',
                             'cust2': 'od 28.04.2005 do 30.06.2010',
@@ -1418,14 +1416,14 @@ def mainpage(request):
                            ('RIGHTPADDING', (13, 2), (21, (1 + lm)), 0),
                            ('RIGHTPADDING', (24, 2), (32, (1 + lm)), 0),
                            ('BOTTOMPADDING', (0, 2), (-1, (1 + lm)), 0),
-                           ]
+                          ]
 
                     for i in range(lm):
                         ast.extend([
-                           ('SPAN', (2, (2 + i)), (10, (2 + i))),
-                           ('SPAN', (13, (2 + i)), (21, (2 + i))),
-                           ('SPAN', (24, (2 + i)), (32, (2 + i))),
-                           ])
+                            ('SPAN', (2, (2 + i)), (10, (2 + i))),
+                            ('SPAN', (13, (2 + i)), (21, (2 + i))),
+                            ('SPAN', (24, (2 + i)), (32, (2 + i))),
+                        ])
 
                     for i in range(3):
                         if hdr[i]:
@@ -1519,9 +1517,9 @@ def mainpage(request):
         m = debit.model
         if m == 'fixed':
             t = 'pevná částka {}, splatná {:%d.%m.%Y}'.format(
-                    fa(debit.fixed_amount,
-                       debit.fixed_currency),
-                    debit.fixed_date)
+                fa(debit.fixed_amount,
+                   debit.fixed_currency),
+                debit.fixed_date)
         else:
             if m == 'per_annum':
                 t = 'roční úrok {:n} % <i>p. a.</i>'.format(debit.rate)

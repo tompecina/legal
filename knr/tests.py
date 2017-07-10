@@ -1916,7 +1916,7 @@ class TestViews2(TestCase):
               ['2', [0, 0, 0, 0]],
               ['3', [1000, 1000, 100, 2100]],
               ['4', [20000, 4200, 420, 24620]],
-        ]
+             ]
         for r in rr:
             with open(join(TEST_DIR, 'calc{}.xml'.format(r[0])), 'rb') as fi:
                 res = self.client.post(

@@ -70,9 +70,9 @@ def mainpage(request):
                 else:
                     o = -odp
                 if unit == 'd':
-                    t = beg_date + timedelta(days = dur)
+                    t = beg_date + timedelta(days=dur)
                 elif unit == 'w':
-                    t = beg_date + timedelta(weeks = dur)
+                    t = beg_date + timedelta(weeks=dur)
                 elif unit in ['m', 'y']:
                     if unit == 'y':
                         dur *= 12
@@ -97,7 +97,7 @@ def mainpage(request):
                     t = date(y, m, d)
                 else:
                     t = beg_date
-                    for i in range(abs(dur)):
+                    for _ in range(abs(dur)):
                         t += o
                         while tod(t):
                             t += o

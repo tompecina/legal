@@ -110,7 +110,7 @@ APPS = ['common',
         'pir',
         'kos',
         'cache',
-]
+       ]
 
 TEMPLATES = [
     {
@@ -143,7 +143,7 @@ class AddFields(Filter):
     def filter(self, record):
         a = ''
         if hasattr(record, 'request'):
-            if hasattr(record,'params'):
+            if hasattr(record, 'params'):
                 for k in record.params:
                     if k == 'csrfmiddlewaretoken':
                         continue

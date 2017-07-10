@@ -20,7 +20,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from datetime import date
 from math import floor, ceil
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods

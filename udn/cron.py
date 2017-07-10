@@ -57,7 +57,7 @@ def cron_update():
         soup = BeautifulSoup(res.text, 'html.parser')
         form = soup.find('form')
         d = {i['name']: i['value'] for i in form.find_all('input') \
-             if i['type']=='hidden' and i.has_attr('value')}
+             if i['type'] == 'hidden' and i.has_attr('value')}
         while True:
             d['_ctl0:ContentPlaceMasterPage:_ctl0:ddlSortName'] = '5'
             d['_ctl0:ContentPlaceMasterPage:_ctl0:ddlSortDirection'] = '1'
@@ -142,7 +142,7 @@ def cron_update():
                 break
             form = soup.find('form')
             d = {i['name']: i['value'] for i in form.find_all('input') \
-                 if i['type']=='hidden' and i.has_attr('value')}
+                 if i['type'] == 'hidden' and i.has_attr('value')}
             d['__EVENTTARGET'] = p[cp - 1]['href'][70:-34]
             d['__EVENTARGUMENT'] = ''
     except:  # pragma: no cover
@@ -160,7 +160,7 @@ def cron_find():
         soup = BeautifulSoup(res.text, 'html.parser')
         form = soup.find('form')
         d = {i['name']: i['value'] for i in form.find_all('input') \
-             if i['type']=='hidden' and i.has_attr('value')}
+             if i['type'] == 'hidden' and i.has_attr('value')}
         ref = ('{} '.format(dec.senate) if dec.senate else '')
         ref += '{} {:d}/{:d}'.format(dec.register, dec.number, dec.year)
         d['_ctl0:ContentPlaceMasterPage:_ctl0:txtDatumOd'] = \

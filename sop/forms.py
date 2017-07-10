@@ -24,12 +24,12 @@ from datetime import date
 from common import forms, fields, widgets
 
 opts = (('none', 'sine'),
-        ('epr',  'EPR'),
-        ('nmu',  'nemajetková újma'),
-        ('vyz',  'výživné'),
-        ('vyk',  'výkon rozhodnutí'),
-        ('sm',   'smír'),
-        ('inc',  'incidence'),
+        ('epr', 'EPR'),
+        ('nmu', 'nemajetková újma'),
+        ('vyz', 'výživné'),
+        ('vyk', 'výkon rozhodnutí'),
+        ('sm', 'smír'),
+        ('inc', 'incidence'),
         ('usch', 'úschova'))
 
 class MainForm(forms.Form):

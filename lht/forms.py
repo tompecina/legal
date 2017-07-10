@@ -23,19 +23,20 @@
 from datetime import date
 from common import forms, fields, widgets
 
-presets = (('d3',  '3 dny'),
-           ('w1',  '1 týden'),
-           ('d8',  '8 dnů'),
-           ('w2',  '2 týdny'),
-           ('d15', '15 dnů'),
-           ('d30', '30 dnů'),
-           ('m1',  '1 měsíc'),
-           ('d60', '60 dnů'),
-           ('m2',  '2 měsíce'),
-           ('m3',  '3 měsíce'),
-           ('m6',  '6 měsíců'),
-           ('y1',  '1 rok'),
-           ('none', 'jiná'))
+presets = (
+    ('d3', '3 dny'),
+    ('w1', '1 týden'),
+    ('d8', '8 dnů'),
+    ('w2', '2 týdny'),
+    ('d15', '15 dnů'),
+    ('d30', '30 dnů'),
+    ('m1', '1 měsíc'),
+    ('d60', '60 dnů'),
+    ('m2', '2 měsíce'),
+    ('m3', '3 měsíce'),
+    ('m6', '6 měsíců'),
+    ('y1', '1 rok'),
+    ('none', 'jiná'))
 
 class MainForm(forms.Form):
     beg_date = fields.DateField(

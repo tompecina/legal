@@ -338,8 +338,8 @@ def getXML(d):
         except:
             try:
                 return newXML(d.encode('latin-1')
-                               .split('endstream')[0]
-                               .split('stream')[1])
+                              .split('endstream')[0]
+                              .split('stream')[1])
             except:
                 try:
                     return newXML(d.encode('latin-1'))

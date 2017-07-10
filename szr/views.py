@@ -281,19 +281,19 @@ def procbatchform(request):
                                     try:
                                         p, pc = Proceedings.objects. \
                                             update_or_create(
-                                            uid_id=uid,
-                                            desc=desc,
-                                            defaults={
-                                                'court_id': court,
-                                                'senate': senate,
-                                                'register': register,
-                                                'number': number,
-                                                'year': year,
-                                                'changed': None,
-                                                'updated': None,
-                                                'hash': '',
-                                                'auxid': 0,
-                                                'notify': False})
+                                                uid_id=uid,
+                                                desc=desc,
+                                                defaults={
+                                                    'court_id': court,
+                                                    'senate': senate,
+                                                    'register': register,
+                                                    'number': number,
+                                                    'year': year,
+                                                    'changed': None,
+                                                    'updated': None,
+                                                    'hash': '',
+                                                    'auxid': 0,
+                                                    'notify': False})
                                         updateproc(p)
                                         p.save()
                                     except:

@@ -67,42 +67,40 @@ def mainpage(request):
              'err_message': err_message,
              'courts': courts,
              'f': f})
-    else:
-        f = MainForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            for n in ['name', 'first_name', 'city']:
-                if not cd[n]:
-                    del cd[n + '_opt']
-            cd['birthid'] = cd['birthid'].replace('/', '')
-            q = QueryDict(mutable=True)
-            for p in cd:
-                if cd[p]:
-                    q[p] = cd[p]
-            for p in \
-                ['role_debtor',
-                 'role_trustee',
-                 'role_creditor',
-                 'deleted',
-                 'creditors']:
-                if cd[p]:
-                    q[p] = 'on'
-            q['start'] = 0
-            del q['format']
-            return redirect('{}?{}'.format(
-                reverse('{}:{}list'.format(APP, cd['format'])),
-                q.urlencode()))
-        else:
-            logger.debug('Invalid form', request)
-            err_message = inerr
-            return render(
-                request,
-                'pir_mainpage.html',
-                {'app': APP,
-                 'page_title': page_title,
-                 'err_message': err_message,
-                 'courts': courts,
-                 'f': f})
+    f = MainForm(request.POST)
+    if f.is_valid():
+        cd = f.cleaned_data
+        for n in ['name', 'first_name', 'city']:
+            if not cd[n]:
+                del cd[n + '_opt']
+        cd['birthid'] = cd['birthid'].replace('/', '')
+        q = QueryDict(mutable=True)
+        for p in cd:
+            if cd[p]:
+                q[p] = cd[p]
+        for p in \
+            ['role_debtor',
+             'role_trustee',
+             'role_creditor',
+             'deleted',
+             'creditors']:
+            if cd[p]:
+                q[p] = 'on'
+        q['start'] = 0
+        del q['format']
+        return redirect('{}?{}'.format(
+            reverse('{}:{}list'.format(APP, cd['format'])),
+            q.urlencode()))
+    logger.debug('Invalid form', request)
+    err_message = inerr
+    return render(
+        request,
+        'pir_mainpage.html',
+        {'app': APP,
+         'page_title': page_title,
+         'err_message': err_message,
+         'courts': courts,
+         'f': f})
 
 def g2p(rd):
     p = {'id__lte': Counter.objects.get(id='PR').number}
@@ -161,7 +159,7 @@ def g2p(rd):
        ('year_birth_to' in rd):
         role = [DruhRoleVRizeni.objects.get(desc=r2i[f]).id \
             for f in ['debtor', 'trustee', 'creditor'] \
-            if ('role_' + f) in rd]
+            if 'role_' + f in rd]
         if 'role_creditor' in rd:
             role.append(DruhRoleVRizeni.objects.get(desc=r2i['motioner']).id)
         p['roles__druhRoleVRizeni__in'] = role

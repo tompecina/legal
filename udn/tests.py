@@ -136,7 +136,7 @@ class TestGlob(SimpleTestCase):
               'a_b.pdf',
               '0185_6Afs_1500040S.pdf',
               '0067_5As__1500054_20151119130217_prevedeno.pdf',
-        ]
+             ]
         ee = ['a b.pdf',
               'a+b.pdf',
               'a-b.pdf',
@@ -144,7 +144,7 @@ class TestGlob(SimpleTestCase):
               'a%b.pdf',
               'a#b.pdf',
               '.pdf',
-        ]
+             ]
         for p in pp:
             self.assertIsNotNone(fr.match(p), msg=p)
         for p in ee:
@@ -344,7 +344,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/udn/list/?agenda=XXX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-        res = self.client.get( '/udn/list/?date_from=2015-X-01')
+        res = self.client.get('/udn/list/?date_from=2015-X-01')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/udn/list/?date_to=2015-X-01')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -545,7 +545,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/udn/csvlist/?agenda=XXX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-        res = self.client.get( '/udn/csvlist/?date_from=2015-X-01')
+        res = self.client.get('/udn/csvlist/?date_from=2015-X-01')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/udn/csvlist/?date_to=2015-X-01')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -605,7 +605,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/udn/jsonlist/?agenda=XXX')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-        res = self.client.get( '/udn/jsonlist/?date_from=2015-X-01')
+        res = self.client.get('/udn/jsonlist/?date_from=2015-X-01')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get('/udn/jsonlist/?date_to=2015-X-01')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)

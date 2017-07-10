@@ -95,14 +95,14 @@ def mainpage(request):
                                     formam(basis),
                                     curr,
                                     formam(basis * rate / qty)),
-                                'msg-res2'])
+                                 'msg-res2'])
                         else:
                             messages.append(
                                 ['{} CZK = {} {}'.format(
                                     formam(basis),
                                     formam(basis * qty / rate),
                                     curr),
-                                'msg-res2'])
+                                 'msg-res2'])
                         messages.append(
                             ['{:d} {} = {:.3f} CZK'.format(
                                 qty,

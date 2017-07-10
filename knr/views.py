@@ -506,7 +506,7 @@ gt = {'general' : ['description', 'amount', 'vat', 'numerator',
                    'minor_number', 'multiple_number', 'off10_flag',
                    'off30_flag', 'off30limit5000_flag', 'off20limit5000_flag'],
       'flat' : ['description', 'amount', 'vat', 'numerator',
-                'denominator', 'rate',  'multiple_flag',
+                'denominator', 'rate', 'multiple_flag',
                 'multiple50_flag', 'item_note', 'single_flag', 'halved_flag',
                 'halved_appeal_flag', 'collection_flag'],
       'administrative' : ['description', 'amount', 'vat', 'numerator',
@@ -514,7 +514,7 @@ gt = {'general' : ['description', 'amount', 'vat', 'numerator',
       'time' : ['description', 'amount', 'vat', 'numerator',
                 'denominator', 'item_note', 'time_number', 'time_rate'],
       'travel' : ['description', 'amount', 'vat', 'numerator',
-                   'denominator', 'item_note', 'from_name', 'from_address',
+                  'denominator', 'item_note', 'from_name', 'from_address',
                   'from_lat', 'from_lon', 'to_name', 'to_address',
                   'to_lat', 'to_lon', 'trip_number', 'trip_distance',
                   'time_rate', 'time_number', 'car_name', 'fuel_name',
@@ -656,8 +656,8 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
            'Paušální náhrada za úkony právní služby podle advokátního tarifu',
            'rate': 300,
            'vat': False,
-                'numerator': 1,
-                'denominator': 1}},
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Další hotové výdaje advokát (neplátce DPH)',
        TYPE: 'general',
@@ -740,8 +740,7 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
        PRESEL: {'description': 'Další hotové výdaje (advokát)',
                 'vat': True,
                 'numerator': 1,
-                'denominator': 1}}
-      ]
+                'denominator': 1}}]
 
 fields = ['title', 'calculation_note', 'internal_note', 'vat_rate']
 
@@ -974,8 +973,7 @@ def mainpage(request):
         return error(request)
     var = {'app': APP,
            'page_title': 'Kalkulace nákladů řízení',
-           'errors': False, 'rows': []
-    }
+           'errors': False, 'rows': []}
     if request.method == 'GET':
         i2d(fields, c, var)
         for t in fields:
@@ -1164,7 +1162,7 @@ def mainpage(request):
                         leftIndent=8,
                         allowWidows=False,
                         allowOrphans=False)
-                    d1 =[[[Paragraph('Kalkulace nákladů řízení'.upper(), s1)]]]
+                    d1 = [[[Paragraph('Kalkulace nákladů řízení'.upper(), s1)]]]
                     if c.title:
                         d1[0][0].append(Paragraph(escape(c.title), s2))
                     t1 = LongTable(d1, colWidths=[483.30])
@@ -1229,14 +1227,14 @@ def mainpage(request):
                                         escape(item.from_name),
                                         escape(item.from_address.replace(
                                             ', Česká republika', '').replace(
-                                            ', Česko', ''))),
+                                                ', Česko', ''))),
                                     s6))
                                 q.append(Paragraph(
                                     '<b>Do:</b> {} ({})'.format(
                                         escape(item.to_name),
                                         escape(item.to_address.replace(
                                             ', Česká republika', '').replace(
-                                            ', Česko', ''))),
+                                                ', Česko', ''))),
                                     s6))
                                 q.append(Paragraph(
                                     '<b>Vzdálenost:</b> {} km &nbsp; ' \
@@ -1351,7 +1349,7 @@ def mainpage(request):
                           ('LEFTPADDING', (1, 0), (1, -1), 6),
                           ('TOPPADDING', (0, 0), (-1, -1), -1),
                           ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
-                          ]
+                         ]
                     if total_vat:
                         l3.append(('TOPPADDING', (0, 1), (-1, 2), -3))
                     t3.setStyle(TableStyle(l3))
@@ -1412,7 +1410,7 @@ def mainpage(request):
         var['num_items'] += 1
     var['total_vat'] = int(round(float(var['total_net'] * c.vat_rate) / 100.0))
     var['total'] = int(var['total_net'] + var['total_ex'] + var['total_vat'])
-    for i in ['total_net', 'total_ex',  'total_vat', 'total']:
+    for i in ['total_net', 'total_ex', 'total_vat', 'total']:
         var[i] = formam(var[i])
     return render(request, 'knr_mainpage.html', var)
 
@@ -1869,7 +1867,7 @@ def itemform(request, idx=0):
                             proc_from(int(request.POST.get('from_sel')), cd)
                             proc_dist(cd)
                         elif (btn == 'from_search') and \
-                             request.POST.get('from_address') :
+                             request.POST.get('from_address'):
                             loc = findloc(request.POST.get('from_address'))
                             if loc:
                                 cd['from_address'], \
@@ -2012,7 +2010,7 @@ def itemmove(request, dir, idx):
     if (idx >= len(c.items)) or (idx < 1):
         raise Http404
     c.items[idx - 1], c.items[idx] = c.items[idx], c.items[idx - 1]
-    if not setcalc(request,  c):  # pragma: no cover
+    if not setcalc(request, c):  # pragma: no cover
         return error(request)
     return redirect('knr:itemlist')
 
