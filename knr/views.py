@@ -1642,7 +1642,7 @@ def itemform(request, idx=0):
                     else:
                         raise Http404
                 else:
-                    f = eval(type.title() + 'Form(request.POST)')
+                    f = globals()[type.title() + 'Form'](request.POST)
                     if f.is_valid():
                         cd = f.cleaned_data
                         i = Item()
@@ -1720,7 +1720,7 @@ def itemform(request, idx=0):
                                 f['denominator'].errors) \
                             else 'ok'
             else:
-                f = eval(type.title() + 'Subform(request.POST)')
+                f = globals()[type.title() + 'Subform'](request.POST)
                 if f.is_valid():
                     cd = f.cleaned_data
                     if type == 'service':
