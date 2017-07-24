@@ -22,25 +22,25 @@
 
 from os.path import join, getmtime
 from django.template import Library
-from common.settings import BASE_DIR
+from common.settings import STATIC_ROOT
 
 register = Library()
 
-def ver(*args):
-    return "?v={:.0f}".format(getmtime(join(BASE_DIR, *args)))
+def ver(filename):
+    return "?v={:.0f}".format(getmtime(join(STATIC_ROOT, filename)))
 
 @register.simple_tag
 def ts_common_css():
-    return ver('common', 'static', 'common.css')
+    return ver('common.css')
 
 @register.simple_tag
 def ts_common_js():
-    return ver('common', 'static', 'common.js')
+    return ver('common.js')
 
 @register.simple_tag(takes_context=True)
 def ts_app_css(context):
-    return ver(context['app'], 'static', (context['app'] + '.css'))
+    return ver(context['app'] + '.css')
 
 @register.simple_tag(takes_context=True)
 def ts_app_js(context):
-    return ver(context['app'], 'static', (context['app'] + '.js'))
+    return ver(context['app'] + '.js')
