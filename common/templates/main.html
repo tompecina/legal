@@ -40,7 +40,7 @@
 	  /
 	  <a href="{% url 'logout' %}">
 	    odhlásit
-	  </a>{% else %}<a href="{% url 'login' %}?next=/{% if app %}{{ app }}/{% endif %}">
+	  </a>{% else %}<a href="{% url 'login' %}?next={{ request.get_full_path }}">
 	    přihlásit
 	  </a>{% endif %}
 	</td>
