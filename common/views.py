@@ -241,7 +241,7 @@ def getappstat():
     appstat = []
     for id in APPS:
         c = apps.get_app_config(id)
-        if c.stat:
+        if hasattr(c, 'stat'):
             appstat.append(
                 {'abbr': c.name,
                  'name': c.verbose_name,

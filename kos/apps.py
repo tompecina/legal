@@ -26,4 +26,3 @@ class KosConfig(AppConfig):
     name = 'kos'
     verbose_name = 'Kalkulace splátek při oddlužení'
     version = '1.0'
-    stat = None
