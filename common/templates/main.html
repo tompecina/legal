@@ -1,4 +1,4 @@
-{% load static from staticfiles %}<!DOCTYPE html>
+{% load static %}{% load static_version %}<!DOCTYPE html>
 <html lang="cs">
   <head>
     <title>
@@ -10,13 +10,13 @@
     <meta name="GENERATOR" content="Quanta Plus" />
     <meta name="AUTHOR" content="Tomáš Pecina" />
     <link rel="stylesheet" type="text/css" href="{% static 'jquery-ui-1.12.1.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'common.css' %}" />
-{% if app %}    <link rel="stylesheet" type="text/css" href="{% static '' %}{{ app }}.css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'common.css' %}{% ts_common_css %}" />
+{% if app %}    <link rel="stylesheet" type="text/css" href="{% static '' %}{{ app }}.css{% ts_app_css %}" />
 {% endif %}    <script type="text/javascript" src="{% static 'jquery-3.2.1.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'jquery-ui-1.12.1.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'datepicker-cs.js' %}"></script>
-    <script type="text/javascript" src="{% static 'common.js' %}"></script>
-{% if app %}    <script type="text/javascript" src="{% static '' %}{{ app }}.js"></script>
+    <script type="text/javascript" src="{% static 'common.js' %}{% ts_common_js %}"></script>
+{% if app %}    <script type="text/javascript" src="{% static '' %}{{ app }}.js{% ts_app_js %}"></script>
 {% endif %}  </head>
   <body>
 {% if page_title and not suppress_topline %}    <table class="width-full">

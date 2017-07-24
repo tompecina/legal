@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+#
+# common/templatetags/static_version.py
+#
+# Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+#
+# This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+#
+# This application is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This application is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+from os.path import join, getmtime
+from django.template import Library
+from common.settings import BASE_DIR
+
+register = Library()
+
+def ver(*args):
+    return "?v={:.0f}".format(getmtime(join(BASE_DIR, *args)))
+
+@register.simple_tag
+def ts_common_css():
+    return ver('common', 'static', 'common.css')
+
+@register.simple_tag
+def ts_common_js():
+    return ver('common', 'static', 'common.js')
+
+@register.simple_tag(takes_context=True)
+def ts_app_css(context):
+    return ver(context['app'], 'static', (context['app'] + '.css'))
+
+@register.simple_tag(takes_context=True)
+def ts_app_js(context):
+    return ver(context['app'], 'static', (context['app'] + '.js'))
