@@ -290,8 +290,8 @@ table.detail {
 	    th, td {
 		background-color: $white;
 		padding: {
-		    top: $vs;
-		    bottom: $vs;
+		    top: 0;
+		    bottom: $vm;
 		}
 	    }
 	    th {
@@ -317,14 +317,10 @@ table.detail {
 		background-color: $gray;
 	    }
 	}
-	tr.first {
+	tr.header + tr,	tr:not(.header):first-child,
+	tr.odd + tr.even, tr.even + tr.odd {
 	    th, td {
 		padding-top: $vm;
-	    }
-	}
-	tr.last {
-	    th, td {
-		padding-bottom: $vm;
 	    }
 	}
 	tr.header {
