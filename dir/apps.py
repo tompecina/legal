@@ -53,3 +53,13 @@ class DirConfig(AppConfig):
                 'Počet dlužníků pro příští notifikaci',
                 Discovered.objects.count()],
         ]
+
+    def userinfo(self, user):
+        from common.utils import logger
+        from .models import Debtor
+        logger.debug('Partial user information generated')
+        return [
+            [
+                'Počet sledovaných dlužníků',
+                Debtor.objects.filter(uid=user).count()],
+        ]

@@ -11,102 +11,14 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr class="first">
+{% for ui in userinfo %}	    <tr{% if forloop.first %} class="first"{% endif %}{% if forloop.last %} class="last"{% endif %}>
 	      <th>
-		Uživatelské jméno:
+		{{ ui.0 }}:
 	      </th>
 	      <td>
-		{{ user.username }}
+		{{ ui.1|safe }}
 	      </td>
 	    </tr>
-	    <tr>
-	      <th>
-		Jméno:
-	      </th>
-	      <td>
-		{{ user.first_name|default:'' }}
-	      </td>
-	    </tr>
-	    <tr>
-	      <th>
-		Příjmení:
-	      </th>
-	      <td>
-		{{ user.last_name|default:'' }}
-	      </td>
-	    </tr>
-	    <tr>
-	      <th>
-		E-mail:
-	      </th>
-	      <td>
-		{% if user.email %}<a href="mailto:{{ user.email }}">{{ user.email }}</a>{% endif %}
-	      </td>
-	    </tr>
-	    <tr>
-	      <th>
-		Datum založení účtu:
-	      </th>
-	      <td>
-		{{ user.date_joined|date:'d.m.Y' }}
-	      </td>
-	    </tr>
-	    <tr>
-	      <th>
-		Počet míst:
-	      </th>
-	      <td>
-		{{ user.places }}
-	      </td>
-	    </tr>
-	    <tr>
-	      <th>
-		Počet vozidel:
-	      </th>
-	      <td>
-		{{ user.cars }}
-	      </td>
-	    </tr>
-	    <tr>
-	      <th>
-		Počet předpisů:
-	      </th>
-	      <td>
-		{{ user.formulas }}
-	      </td>
-	    </tr>
-	    <tr>
-	      <th>
-		Počet sledovaných řízení:
-	      </th>
-	      <td>
-		{{ user.proceedings }}
-	      </td>
-	    </tr>
-	    <tr>
-	      <th>
-		Počet sledovaných účastníků:
-	      </th>
-	      <td>
-		{{ user.parties }}
-	      </td>
-	    </tr>
-	    <tr>
-	      <th>
-		Počet sledovaných insolvencí:
-	      </th>
-	      <td>
-		{{ user.insolvencies }}
-	      </td>
-	    </tr>
-	    <tr class="last">
-	      <th>
-		Počet sledovaných dlužníků:
-	      </th>
-	      <td>
-		{{ user.debtors }}
-	      </td>
-	    </tr>
-	  </tbody>
+{% endfor %}	  </tbody>
 	</table>
 {% endblock %}

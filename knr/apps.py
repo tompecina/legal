@@ -50,3 +50,19 @@ class KnrConfig(AppConfig):
                 Asset.objects.filter(assetid__startswith= \
                     self.name.upper()).count()],
         ]
+
+    def userinfo(self, user):
+        from common.utils import logger
+        from .models import Place, Car, Formula
+        logger.debug('Partial user information generated')
+        return [
+            [
+                'Počet míst',
+                Place.objects.filter(uid=user).count()],
+            [
+                'Počet vozidel',
+                Car.objects.filter(uid=user).count()],
+            [
+                'Počet předpisů',
+                Formula.objects.filter(uid=user).count()],
+        ]

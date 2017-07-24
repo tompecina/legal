@@ -59,3 +59,13 @@ class SzrConfig(AppConfig):
                 'Počet sledovaných řízení pro příští notifikaci',
                 Proceedings.objects.filter(notify=1).count()],
         ]
+
+    def userinfo(self, user):
+        from common.utils import logger
+        from .models import Proceedings
+        logger.debug('Partial user information generated')
+        return [
+            [
+                'Počet sledovaných řízení',
+                Proceedings.objects.filter(uid=user).count()],
+        ]

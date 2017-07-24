@@ -53,3 +53,13 @@ class SurConfig(AppConfig):
                 'Počet účastníků řízení pro příští notifikaci',
                 Found.objects.count()],
         ]
+
+    def userinfo(self, user):
+        from common.utils import logger
+        from .models import Party
+        logger.debug('Partial user information generated')
+        return [
+            [
+                'Počet sledovaných účastníků',
+                Party.objects.filter(uid=user).count()],
+        ]

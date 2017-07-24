@@ -34,11 +34,6 @@ from django.urls import reverse
 from django.apps import apps
 from django.db import connection
 from django import get_version
-from knr.models import Place, Car, Formula
-from szr.models import Proceedings
-from sur.models import Party
-from sir.models import Insolvency
-from dir.models import Debtor
 from .settings import APPS
 from .forms import UserAddForm, LostPwForm, MIN_PWLEN
 from .utils import send_mail, logger
@@ -265,22 +260,25 @@ def stat(request):
          'apps': getappstat(),
         })
 
+def getuserinfo(user):
+    userinfo = []
+    for id in APPS:
+        c = apps.get_app_config(id)
+        if hasattr(c, 'userinfo'):
+            userinfo.extend(c.userinfo(user))
+    logger.debug('User information combined')
+    return userinfo
+
 @require_http_methods(['GET'])
 @login_required
 def user(request):
     logger.debug('User information page accessed', request)
-    user = request.user
-    user.places = Place.objects.filter(uid=user).count()
-    user.cars = Car.objects.filter(uid=user).count()
-    user.formulas = Formula.objects.filter(uid=user).count()
-    user.proceedings = Proceedings.objects.filter(uid=user).count()
-    user.parties = Party.objects.filter(uid=user).count()
-    user.insolvencies = Insolvency.objects.filter(uid=user).count()
-    user.debtors = Debtor.objects.filter(uid=user).count()
     return render(
         request,
         'user.html',
-        {'page_title': 'Informace o uživateli', 'user': user})
+        {'page_title': 'Informace o uživateli',
+         'userinfo': getuserinfo(request.user),
+        })
 
 @require_http_methods(['GET', 'POST'])
 def useradd(request):

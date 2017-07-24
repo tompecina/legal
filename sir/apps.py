@@ -139,3 +139,13 @@ class SirConfig(AppConfig):
                 'Stav počitadla zpracovaných řízení',
                 Counter.objects.get(id='PR').number],
         ]
+
+    def userinfo(self, user):
+        from common.utils import logger
+        from .models import Insolvency
+        logger.debug('Partial user information generated')
+        return [
+            [
+                'Počet sledovaných insolvencí',
+                Insolvency.objects.filter(uid=user).count()],
+        ]

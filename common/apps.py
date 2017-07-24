@@ -57,3 +57,25 @@ class CommonConfig(AppConfig):
                 'Počet záznamů v tabulce Preset',
                 Preset.objects.count()],
         ]
+
+    def userinfo(self, user):
+        from common.utils import logger
+        logger.debug('Partial user information generated')
+        return [
+            [
+                'Uživatelské jméno',
+                user.username],
+            [
+                'Jméno',
+                user.first_name if user.first_name else ''],
+            [
+                'Příjmení',
+                user.last_name if user.last_name else ''],
+            [
+                'E-mail',
+                '<a href="mailto:{0}">{0}</a>'.format(user.email) \
+                    if user.email else ''],
+            [
+                'Datum založení účtu',
+                '{:%d.%m.%Y}'.format(user.date_joined)],
+        ]
