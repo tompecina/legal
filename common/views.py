@@ -266,7 +266,9 @@ def getuserinfo(user):
         c = apps.get_app_config(id)
         if hasattr(c, 'userinfo'):
             userinfo.extend(c.userinfo(user))
-    logger.debug('User information combined')
+    logger.debug(
+        'User information combined for user "{}" ({:d})' \
+            .format(user.username, user.id))
     return userinfo
 
 @require_http_methods(['GET'])
