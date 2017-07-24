@@ -27,7 +27,7 @@ from common.settings import STATIC_ROOT
 register = Library()
 
 def ver(filename):
-    return "?v={:.0f}".format(getmtime(join(STATIC_ROOT, filename)))
+    return "?v={:08x}".format(int(getmtime(join(STATIC_ROOT, filename))))
 
 @register.simple_tag
 def ts_common_css():
