@@ -282,7 +282,6 @@ table.detail {
 	background-color: $medium-blue;
 	th {
 	    font-size: $large;
-	    padding-bottom: $vm;
 	}
     }
     tbody {
@@ -305,6 +304,12 @@ table.detail {
 		    left: $hs;
 		    right: $hl;
 		}
+	    }
+	}
+	tr.header th {
+	    padding: {
+		top: $vs;
+		bottom: $vs;
 	    }
 	}
 	tr.odd {
