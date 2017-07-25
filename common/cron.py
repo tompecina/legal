@@ -20,13 +20,36 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from datetime import datetime, timedelta
+from tempfile import gettempdir
 from django.contrib.auth.models import User
-from szr.cron import szr_notice
+from szr.cron import (
+    szr_notice, cron_courts as szr_courts, cron_update as szr_update)
+from psj.cron import (
+    cron_courtrooms as psj_courtrooms, cron_schedule as psj_schedule,
+    cron_update as psj_update)
+from udn.cron import cron_update as udn_update, cron_find as udn_find
 from sur.cron import sur_notice
-from sir.cron import sir_notice
+from sir.cron import sir_notice, cron_update as sir_update
 from dir.cron import dir_notice
+from .settings import TEST
 from .utils import send_mail, logger
 from .glob import localsubdomain, localurl
+from .models import Pending, Lock
+
+if TEST:
+    def test_func(*args):
+        global test_result
+        global test_lock
+        global test_pending
+        test_lock = list(Lock.objects.all())
+        test_pending = list(Pending.objects.all())
+        if len(args) == 0:
+            test_result =  6
+        elif len(args) == 1:
+            test_result =  int(args[0]) * 2
+        else:
+            test_result = int(args[0]) - int(args[1])
 
 def cron_notify():
     for u in User.objects.all():
@@ -43,3 +66,90 @@ def cron_notify():
                 'Email sent to user "{}" ({:d})'.format(
                     User.objects.get(pk=uid).username, uid))
     logger.info('Emails sent')
+
+SCHEDULE = [
+    {'name': 'cron_notify',
+     'when': lambda t: (t.hour % 6) == 0,
+     },
+    {'name': 'szr_courts',
+     'when': lambda t: (t.weekday() == 1) and (t.hour == 1) and (t.minute == 5),
+     },
+    {'name': 'szr_update',
+     'when': lambda t: True,
+     'lock': 'szr',
+     'blocking': False,
+     },
+    {'name': 'psj_courtrooms',
+     'when': lambda t: (t.weekday() == 0) and (t.hour == 4) and (t.minute == 10),
+     'lock': 'psj',
+     'blocking': True,
+     },
+    {'name': 'psj_schedule',
+     'args': '15 22 29',
+     'when': lambda t: (t.weekday() < 5) and (t.hour == 18) and (t.minute == 31),
+     'lock': 'psj',
+     'blocking': True,
+     },
+    {'name': 'psj_schedule',
+     'args': '3 4 5 6 7',
+     'when': lambda t: (t.weekday() == 5) and (t.hour == 20) and (t.minute == 1),
+     'lock': 'psj',
+     'blocking': True,
+     },
+    {'name': 'psj_update',
+     'when': lambda t: (t.minute % 2) == 0,
+     'lock': 'psj',
+     'blocking': False,
+     },
+    {'name': 'udn_update',
+     'when': lambda t: (t.minute == 10) and ((t.hour % 4) == 0),
+     },
+    {'name': 'udn_find',
+     'when': lambda t: (t.minute % 15) == 0,
+     },
+    {'name': 'sir_update',
+     'when': lambda t: (t.minute == 5) and (t.hour in list(range(4, 23, 6))),
+     'lock': 'sir',
+     'blocking': False,
+     },
+]
+
+EXPIRE = timedelta(minutes=30)
+
+def run(name, args):
+    globals()[name](*args.split())
+
+def cron_run():
+    now = datetime.now()
+    Lock.objects.filter(timestamp_add__lt=(now - EXPIRE)).delete()
+    for job in Pending.objects.order_by('timestamp_add'):
+        lock = job.lock
+        if not Lock.objects.filter(name=lock).exists():
+            Lock.objects.get_or_create(name=lock)
+            run(job.name, getattr(job, 'args', ''))
+            job.delete()
+            Lock.objects.filter(name=lock).delete()
+    for job in SCHEDULE:
+        if job['when'](now):
+            args = job.get('args', '')
+            if 'lock' in job:
+                lock = job['lock']
+                if Lock.objects.filter(name=lock).exists():
+                    if job['blocking']:
+                        Pending(
+                            name=job['name'],
+                            args=args,
+                            lock=lock
+                        ).save()
+                    continue
+                Lock.objects.get_or_create(name=lock)
+            run(job['name'], args)
+            if 'lock' in job:
+                Lock.objects.filter(name=lock).delete()
+
+def cron_unlock():
+    Lock.objects.all().delete()
+
+def cron_clean():
+    Pending.objects.all().delete()
+    cron_unlock()

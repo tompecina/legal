@@ -156,6 +156,141 @@ class TestCron(TestCase):
             '&bcVec=136&rocnik=2013&typSoudu=os&autoFill=true&type=spzn\n\n' \
             'Server {} ({})\n'.format(glob.localsubdomain, glob.localurl))
 
+    def test_run(self):
+        cron.test_result = 0
+        cron.run('test_func', '')
+        self.assertEqual(cron.test_result, 6)
+        cron.run('test_func', '1')
+        self.assertEqual(cron.test_result, 2)
+        cron.run('test_func', '5 2')
+        self.assertEqual(cron.test_result, 3)
+
+    def test_cron_run(self):
+        cron.cron_clean()
+        cron.SCHEDULE = [
+            {'name': 'test_func',
+             'when': lambda t: True,
+            }]
+        cron.test_result = 0
+        cron.cron_run()
+        self.assertEqual(cron.test_result, 6)
+        self.assertFalse(models.Lock.objects.exists())
+        self.assertFalse(models.Pending.objects.exists())
+        self.assertFalse(cron.test_lock)
+        self.assertFalse(cron.test_pending)
+        cron.SCHEDULE = [
+            {'name': 'test_func',
+             'when': lambda t: True,
+             'lock': 'test',
+             'blocking': False,
+            }]
+        cron.test_result = 0
+        cron.cron_run()
+        self.assertEqual(cron.test_result, 6)
+        self.assertFalse(models.Lock.objects.exists())
+        self.assertFalse(models.Pending.objects.exists())
+        self.assertEqual(len(cron.test_lock), 1)
+        self.assertFalse(cron.test_pending)
+        self.assertEqual(cron.test_lock[0].name, 'test')
+        cron.SCHEDULE = [
+            {'name': 'test_func',
+             'when': lambda t: True,
+             'lock': 'test',
+             'blocking': True,
+            }]
+        cron.test_result = 0
+        cron.cron_run()
+        self.assertEqual(cron.test_result, 6)
+        self.assertFalse(models.Lock.objects.exists())
+        self.assertFalse(models.Pending.objects.exists())
+        self.assertEqual(len(cron.test_lock), 1)
+        self.assertFalse(cron.test_pending)
+        self.assertEqual(cron.test_lock[0].name, 'test')
+        models.Lock(name='test').save()
+        cron.SCHEDULE = [
+            {'name': 'test_func',
+             'when': lambda t: True,
+             'lock': 'test',
+             'blocking': False,
+            }]
+        cron.test_result = 0
+        cron.cron_run()
+        self.assertEqual(cron.test_result, 0)
+        self.assertEqual(models.Lock.objects.count(), 1)
+        self.assertFalse(models.Pending.objects.exists())
+        cron.SCHEDULE = [
+            {'name': 'test_func',
+             'when': lambda t: True,
+             'lock': 'test',
+             'blocking': True,
+            }]
+        cron.test_result = 0
+        cron.cron_run()
+        self.assertEqual(cron.test_result, 0)
+        self.assertEqual(models.Lock.objects.count(), 1)
+        self.assertEqual(models.Pending.objects.count(), 1)
+        cron.SCHEDULE = [
+            {'name': 'test_func',
+             'args': '1',
+             'when': lambda t: True,
+             'lock': 'test',
+             'blocking': True,
+            }]
+        cron.test_result = 0
+        cron.cron_run()
+        self.assertEqual(cron.test_result, 0)
+        self.assertEqual(models.Lock.objects.count(), 1)
+        self.assertEqual(models.Pending.objects.count(), 2)
+        p = models.Pending.objects.latest('timestamp_add')
+        self.assertEqual(p.name, 'test_func')
+        self.assertEqual(p.args, '1')
+        self.assertEqual(p.lock, 'test')
+        cron.cron_unlock()
+        cron.SCHEDULE = []
+        cron.test_result = 0
+        cron.cron_run()
+        self.assertEqual(cron.test_result, 2)
+        self.assertFalse(models.Lock.objects.exists())
+        self.assertFalse(models.Pending.objects.exists())
+        models.Lock(name='another').save()
+        cron.SCHEDULE = [
+            {'name': 'test_func',
+             'args': '4',
+             'when': lambda t: True,
+             'lock': 'test',
+             'blocking': True,
+            }]
+        cron.test_result = 0
+        cron.cron_run()
+        self.assertEqual(cron.test_result, 8)
+        self.assertEqual(models.Lock.objects.count(), 1)
+        self.assertFalse(models.Pending.objects.exists())
+        models.Lock(name='test').save()
+        models.Lock.objects.filter(name='test').update(
+            timestamp_add=(datetime.now() - cron.EXPIRE - timedelta(days=1)))
+        self.assertEqual(models.Lock.objects.count(), 2)
+        cron.SCHEDULE = []
+        cron.test_result = 0
+        cron.cron_run()
+        self.assertEqual(cron.test_result, 0)
+        self.assertEqual(models.Lock.objects.count(), 1)
+        self.assertFalse(models.Pending.objects.exists())
+
+    def test_cron_unlock(self):
+        models.Lock(name='test').save()
+        self.assertTrue(models.Lock.objects.exists())
+        cron.cron_unlock()
+        self.assertFalse(models.Lock.objects.exists())
+        
+    def test_cron_clean(self):
+        models.Lock(name='test').save()
+        models.Pending(name='test', args='', lock='test').save()
+        self.assertTrue(models.Lock.objects.exists())
+        self.assertTrue(models.Pending.objects.exists())
+        cron.cron_clean()
+        self.assertFalse(models.Lock.objects.exists())
+        self.assertFalse(models.Pending.objects.exists())
+        
 class TestFields(SimpleTestCase):
 
     def test_prnum(self):

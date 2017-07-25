@@ -48,3 +48,27 @@ class Preset(models.Model):
 
     def __str__(self):
         return '{}, {}'.format(self.name, str(self.valid))
+
+class Lock(models.Model):
+    name = models.CharField(
+        max_length=30,
+        primary_key=True)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True)
+
+    def __str__(self):
+        return '{}, {}'.format(self.name, str(self.timestamp_add))
+
+class Pending(models.Model):
+    name = models.CharField(
+        max_length=30)
+    args = models.CharField(
+        max_length=255)
+    lock = models.CharField(
+        max_length=30)
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True)
+
+    def __str__(self):
+        return '{}, {}'.format(self.name, str(self.timestamp_add))

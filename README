@@ -11,13 +11,15 @@ pro právnickou praxi.
 Pro instalaci musíte vytvořit soubor common/secrets.py, obsahujcí tyto dva
 řádky:
 
-DBPASSWD = <heslo k vaší databasi>
-SECKEY = <tajný klíč pro aplikaci>
+	DBPASSWD = <heslo k vaší databasi>
+	SECKEY = <tajný klíč pro aplikaci>
 
 Rovněž budete pravděpodobně muset upravit soubor common/wsgi.py, jehož obsah je
 závislý na konkrétních podmínkách instalace na vašem serveru, případně změnit
 nastavení v souboru common/settings.py.
 
-Pro správnou funkci systému je nutné volat ve vhodných intervalech cron joby.
+Pro správnou funkci systému je nutné volat každou minutu cron job:
+
+        ./manage.py cron common run
 
 Živá instalace aplikace je k disposici na adrese <https://legal.pecina.cz/>.
