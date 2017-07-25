@@ -21,7 +21,6 @@
 #
 
 from datetime import datetime, timedelta
-from tempfile import gettempdir
 from django.contrib.auth.models import User
 from szr.cron import (
     szr_notice, cron_courts as szr_courts, cron_update as szr_update)
@@ -44,10 +43,10 @@ if TEST:
         global test_pending
         test_lock = list(Lock.objects.all())
         test_pending = list(Pending.objects.all())
-        if len(args) == 0:
-            test_result =  6
+        if not args:
+            test_result = 6
         elif len(args) == 1:
-            test_result =  int(args[0]) * 2
+            test_result = int(args[0]) * 2
         else:
             test_result = int(args[0]) - int(args[1])
 
@@ -70,48 +69,48 @@ def cron_notify():
 SCHEDULE = [
     {'name': 'cron_notify',
      'when': lambda t: (t.hour % 6) == 0,
-     },
+    },
     {'name': 'szr_courts',
-     'when': lambda t: (t.weekday() == 1) and (t.hour == 1) and (t.minute == 5),
-     },
+     'when': lambda t: t.weekday() == 1 and t.hour == 1 and t.minute == 5,
+    },
     {'name': 'szr_update',
      'when': lambda t: True,
      'lock': 'szr',
      'blocking': False,
-     },
+    },
     {'name': 'psj_courtrooms',
-     'when': lambda t: (t.weekday() == 0) and (t.hour == 4) and (t.minute == 10),
+     'when': lambda t: t.weekday() == 0 and t.hour == 4 and t.minute == 10,
      'lock': 'psj',
      'blocking': True,
-     },
+    },
     {'name': 'psj_schedule',
      'args': '15 22 29',
-     'when': lambda t: (t.weekday() < 5) and (t.hour == 18) and (t.minute == 31),
+     'when': lambda t: t.weekday() < 5 and t.hour == 18 and t.minute == 31,
      'lock': 'psj',
      'blocking': True,
-     },
+    },
     {'name': 'psj_schedule',
      'args': '3 4 5 6 7',
-     'when': lambda t: (t.weekday() == 5) and (t.hour == 20) and (t.minute == 1),
+     'when': lambda t: t.weekday() == 5 and t.hour == 20 and t.minute == 1,
      'lock': 'psj',
      'blocking': True,
-     },
+    },
     {'name': 'psj_update',
      'when': lambda t: (t.minute % 2) == 0,
      'lock': 'psj',
      'blocking': False,
-     },
+    },
     {'name': 'udn_update',
-     'when': lambda t: (t.minute == 10) and ((t.hour % 4) == 0),
-     },
+     'when': lambda t: t.minute == 10 and (t.hour % 4) == 0,
+    },
     {'name': 'udn_find',
      'when': lambda t: (t.minute % 15) == 0,
-     },
+    },
     {'name': 'sir_update',
-     'when': lambda t: (t.minute == 5) and (t.hour in list(range(4, 23, 6))),
+     'when': lambda t: t.minute == 5 and t.hour in list(range(4, 23, 6)),
      'lock': 'sir',
      'blocking': False,
-     },
+    },
 ]
 
 EXPIRE = timedelta(minutes=30)

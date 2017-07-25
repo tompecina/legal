@@ -281,7 +281,7 @@ class TestCron(TestCase):
         self.assertTrue(models.Lock.objects.exists())
         cron.cron_unlock()
         self.assertFalse(models.Lock.objects.exists())
-        
+
     def test_cron_clean(self):
         models.Lock(name='test').save()
         models.Pending(name='test', args='', lock='test').save()
@@ -290,7 +290,7 @@ class TestCron(TestCase):
         cron.cron_clean()
         self.assertFalse(models.Lock.objects.exists())
         self.assertFalse(models.Pending.objects.exists())
-        
+
 class TestFields(SimpleTestCase):
 
     def test_prnum(self):
