@@ -122,11 +122,13 @@ def cron_run():
     now = datetime.now()
     Lock.objects.filter(timestamp_add__lt=(now - EXPIRE)).delete()
     for job in Pending.objects.order_by('timestamp_add'):
+        if not Pending.objects.filter(pk=job.id).exists():
+            continue
         lock = job.lock
         if not Lock.objects.filter(name=lock).exists():
+            job.delete()
             Lock.objects.get_or_create(name=lock)
             run(job.name, getattr(job, 'args', ''))
-            job.delete()
             Lock.objects.filter(name=lock).delete()
     for job in SCHEDULE:
         if job['when'](now):
