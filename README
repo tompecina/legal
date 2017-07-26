@@ -22,4 +22,8 @@ Pro správnou funkci systému je nutné volat každou minutu cron job:
 
         ./manage.py cron common run
 
+Po rebootu (např. pomocí @reboot v crontab) je vhodné hromadně zrušit zámky:
+
+        ./manage.py cron common unlock
+
 Živá instalace aplikace je k disposici na adrese <https://legal.pecina.cz/>.
