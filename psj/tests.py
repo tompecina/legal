@@ -27,9 +27,11 @@ from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 from common.tests import stripxml, link_equal
 from szr.models import Court
-from . import cron, forms, models, views
+from psj import cron, forms, models, views
+
 
 class TestCron(TestCase):
+
     fixtures = ['psj_test.json']
 
     def test_courtrooms(self):
@@ -67,6 +69,7 @@ class TestCron(TestCase):
         cron.cron_update()
         self.assertEqual(models.Hearing.objects.count(), 2)
 
+
 class TestForms(SimpleTestCase):
 
     def test_MainForm(self):
@@ -93,7 +96,9 @@ class TestForms(SimpleTestCase):
              'format': 'html'})
         self.assertTrue(f.is_valid())
 
+
 class TestModels(TestCase):
+
     fixtures = ['psj_test.json']
 
     def test_models(self):
@@ -141,12 +146,16 @@ class TestViews1(SimpleTestCase):
             self.assertTrue(
                 j[0],
                 views.stripjudge({'judge__name': j[0]}) == strxfrm(j[1]))
+
+
 def populate():
+
     cron.cron_courtrooms()
     Court.objects.exclude(id='OSPHA02').delete()
     models.Courtroom.objects.exclude(desc__contains='101/').delete()
     cron.cron_schedule('1.12.2016')
     cron.cron_update()
+
 
 x0 = '<?xml version="1.0" encoding="utf-8"?>\n' \
      '<hearings application="psj" created="2016-11-18T15:43:27" ' \
@@ -227,7 +236,9 @@ s0 = '<select id="courtroom">' \
      '<option value="{:d}">JUDr. Henzlová Šárka</option>' \
      '</select>\n'
 
+
 class TestViews2(TestCase):
+
     fixtures = ['psj_test.json']
 
     def test_mainpage(self):
@@ -287,7 +298,9 @@ class TestViews2(TestCase):
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
 
+
 class TestViews3(TestCase):
+
     fixtures = ['psj_test.json']
 
     def setUp(self):

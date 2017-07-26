@@ -52,13 +52,14 @@ from common.utils import (
     logger)
 from common.glob import inerr, localsubdomain, localurl
 from common.views import error, unauth
-from .glob import fuels
-from .utils import getVAT
-from .forms import (
+from knr.glob import fuels
+from knr.utils import getVAT
+from knr.forms import (
     PlaceForm, CarForm, FormulaForm, CalcForm, GeneralForm, ServiceForm,
     ServiceSubform, FlatForm, FlatSubform, AdministrativeForm,
     AdministrativeSubform, TimeForm, TimeSubform, TravelForm, TravelSubform)
 from .models import Place, Car, Formula, Rate
+
 
 APP = __package__
 
@@ -66,7 +67,9 @@ APPVERSION = apps.get_app_config(APP).version
 
 ctrip = ['cons1', 'cons2', 'cons3']
 
+
 def findloc(s):
+
     if not s:
         return False
     s = quote(unquote(s).encode('utf-8'))
@@ -82,7 +85,9 @@ def findloc(s):
     l = c['geometry']['location']
     return (c['formatted_address'], l['lat'], l['lng'])
 
+
 def finddist(from_lat, from_lon, to_lat, to_lon):
+
     u = 'https://maps.googleapis.com/maps/api/distancematrix/' \
         'json?origins={:f},{:f}&destinations={:f},{:f}&mode=driving&' \
         'units=metric&language=cs&sensor=false' \
@@ -98,17 +103,23 @@ def finddist(from_lat, from_lon, to_lat, to_lon):
         return (False, False)
     return (c['distance']['value'], c['duration']['value'])
 
+
 def convi(n):
+
     return formam(int(n))
 
+
 def convf(n, p):
+
     tpl = Template('{{{{ v|floatformat:"{:d}" }}}}'.format(p))
     c = Context({'v': n})
     return tpl.render(c)
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def placeform(request, id=0):
+
     logger.debug(
         'Place form accessed using method {}, id={}' \
             .format(request.method, id),
@@ -164,9 +175,11 @@ def placeform(request, id=0):
          'page_title': page_title,
          'err_message': err_message})
 
+
 @require_http_methods(['GET'])
 @login_required
 def placelist(request):
+
     logger.debug('Place list accessed', request)
     rows = Place.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
                         .order_by('uid', 'abbr', 'name')
@@ -182,9 +195,11 @@ def placelist(request):
          'page_title': 'Přehled míst',
          'rows': rows})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def placedel(request, id=0):
+
     logger.debug(
         'Place delete page accessed using method {}, id={}' \
             .format(request.method, id),
@@ -210,9 +225,11 @@ def placedel(request, id=0):
             return redirect('knr:placedeleted')
         return redirect('knr:placelist')
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def carform(request, id=0):
+
     logger.debug(
         'Car form accessed using method {}, id={}' \
             .format(request.method, id),
@@ -259,9 +276,11 @@ def carform(request, id=0):
          'err_message': err_message,
          'fuels': fuels})
 
+
 @require_http_methods(['GET'])
 @login_required
 def carlist(request):
+
     logger.debug('Car list accessed', request)
     rows = Car.objects.filter(uid=request.user.id).order_by('abbr', 'name')
     return render(
@@ -271,9 +290,11 @@ def carlist(request):
          'page_title': 'Přehled vozidel',
          'rows': rows})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def cardel(request, id=0):
+
     logger.debug(
         'Car delete page accessed using method {}, id={}' \
             .format(request.method, id),
@@ -300,9 +321,11 @@ def cardel(request, id=0):
             return redirect('knr:cardeleted')
         return redirect('knr:carlist')
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def formulaform(request, id=0):
+
     logger.debug(
         'Formula form accessed using method {}, id={}' \
             .format(request.method, id),
@@ -374,9 +397,11 @@ def formulaform(request, id=0):
          'err_message': err_message,
          'rates': rates})
 
+
 @require_http_methods(['GET'])
 @login_required
 def formulalist(request):
+
     logger.debug('Formula list accessed', request)
     rows = Formula.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
                           .order_by('uid', 'abbr', 'name')
@@ -399,9 +424,11 @@ def formulalist(request):
          'colspan': (len(fuels) + 4),
          'rows': rows})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def formuladel(request, id=0):
+
     logger.debug(
         'Formula delete page accessed using method {}, id={}' \
             .format(request.method, id),
@@ -426,6 +453,7 @@ def formuladel(request, id=0):
             formula.delete()
             return redirect('knr:formuladeleted')
         return redirect('knr:formulalist')
+
 
 B = 'B'
 S = 'S'
@@ -554,41 +582,46 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
 
       {TEXT: 'Soudní poplatek',
        TYPE: 'general',
-       PRESEL: {'description': 'Zaplacený soudní poplatek',
-                'vat': False,
-                'numerator': 1,
-                'denominator': 1}},
+       PRESEL: {
+           'description': 'Zaplacený soudní poplatek',
+           'vat': False,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Záloha na znalecký posudek',
        TYPE: 'general',
-       PRESEL: {'description': 'Zaplacená záloha na znalecký posudek',
-                'vat': False,
-                'numerator': 1,
-                'denominator': 1}},
+       PRESEL: {
+           'description': 'Zaplacená záloha na znalecký posudek',
+           'vat': False,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Záloha na svědečné',
        TYPE: 'general',
-       PRESEL: {'description': 'Zaplacená záloha na svědečné',
-                'vat': False,
-                'numerator': 1,
-                'denominator': 1}},
+       PRESEL: {
+           'description': 'Zaplacená záloha na svědečné',
+           'vat': False,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Použití motorového vozidla klient',
        TYPE: 'travel',
-       PRESEL: {'description': 'Náhrada za použití motorového vozidla (klient)',
-                'trip_number': 2,
-                'time_rate': 0,
-                'fuel_name': 'BA95',
-                'vat': False,
-                'numerator': 1,
-                'denominator': 1}},
+       PRESEL: {
+           'description': 'Náhrada za použití motorového vozidla (klient)',
+           'trip_number': 2,
+           'time_rate': 0,
+           'fuel_name': 'BA95',
+           'vat': False,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: 'Další hotové výdaje klient',
        TYPE: 'general',
-       PRESEL: {'description': 'Další hotové výdaje (klient)',
-                'vat': False,
-                'numerator': 1,
-                'denominator': 1}},
+       PRESEL: {
+           'description': 'Další hotové výdaje (klient)',
+           'vat': False,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: SEP, TYPE: None},
 
@@ -661,10 +694,11 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
 
       {TEXT: 'Další hotové výdaje advokát (neplátce DPH)',
        TYPE: 'general',
-       PRESEL: {'description': 'Další hotové výdaje (advokát)',
-                'vat': False,
-                'numerator': 1,
-                'denominator': 1}},
+       PRESEL: {
+           'description': 'Další hotové výdaje (advokát)',
+           'vat': False,
+           'numerator': 1,
+           'denominator': 1}},
 
       {TEXT: SEP, TYPE: None},
 
@@ -737,18 +771,22 @@ ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
 
       {TEXT: 'Další hotové výdaje advokát (plátce DPH)',
        TYPE: 'general',
-       PRESEL: {'description': 'Další hotové výdaje (advokát)',
-                'vat': True,
-                'numerator': 1,
-                'denominator': 1}}]
+       PRESEL: {
+           'description': 'Další hotové výdaje (advokát)',
+           'vat': True,
+           'numerator': 1,
+           'denominator': 1}}]
 
 fields = ['title', 'calculation_note', 'internal_note', 'vat_rate']
 
 ifields = list(gd.keys())
+
 for t in ['title', 'calculation_note', 'internal_note', 'vat_rate', 'type']:
     ifields.remove(t)
 
+
 class Calculation:
+
     def __init__(self):
         self.title = ''
         self.calculation_note = ''
@@ -756,7 +794,9 @@ class Calculation:
         self.vat_rate = getVAT()
         self.items = []
 
+
 class Item:
+
     def __init__(self):
         self.type = 'general'
         self.description = ''
@@ -801,7 +841,9 @@ class Item:
         self.flat_rate = 0.0
         self.fuel_price = 0.0
 
+
 def i2d(f, c, d):
+
     for t in f:
         p = c.__getattribute__(t)
         y = gd[t]
@@ -815,7 +857,9 @@ def i2d(f, c, d):
             r = float(c2p(str(p)))
         d[t] = r
 
+
 def d2d(f, d, v):
+
     for t in f:
         if t in d:
             p = d[t]
@@ -833,7 +877,9 @@ def d2d(f, d, v):
                 r = str(p)
             v[t] = r
 
+
 def s2i(f, s, c):
+
     for t in f:
         q = s.find(t)
         if q:
@@ -853,7 +899,9 @@ def s2i(f, s, c):
                 except:
                     pass
 
+
 def d2i(f, d, c):
+
     for t in f:
         if t in d:
             p = d[t]
@@ -868,9 +916,12 @@ def d2i(f, d, c):
                 r = float(c2p(str(p)))
             c.__setattr__(t, r)
 
+
 aid = '{} {}'.format(APP.upper(), APPVERSION)
 
+
 def getcalc(request):
+
     a = getasset(request, aid)
     if a:
         try:
@@ -881,10 +932,14 @@ def getcalc(request):
     a = getasset(request, aid)
     return loads(a) if a else None
 
+
 def setcalc(request, data):
+
     return setasset(request, aid, dumps(data), timedelta(weeks=10))
 
+
 def toxml(c):
+
     xml = newXML('')
     calculation = xml.new_tag('calculation')
     xml.insert(0, calculation)
@@ -934,7 +989,9 @@ def toxml(c):
             tag.insert(0, r.strip())
     return str(xml).encode('utf-8') + b'\n'
 
+
 def fromxml(d):
+
     s = getXML(d)
     if not s:
         return None, 'Chybný formát souboru'
@@ -958,6 +1015,7 @@ def fromxml(d):
             return None, 'Chybný formát souboru'
         c.items.append(item)
     return c, None
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -1046,25 +1104,31 @@ def mainpage(request):
                         c.restoreState()
 
                     reportlab.rl_config.warnOnMissingFontGlyphs = 0
+
                     registerFont(TTFont(
                         'Bookman',
                         join(FONT_DIR, 'URWBookman-Regular.ttf')))
+
                     registerFont(TTFont(
                         'BookmanB',
                         join(FONT_DIR, 'URWBookman-Bold.ttf')))
+
                     registerFont(TTFont(
                         'BookmanI',
                         join(FONT_DIR, 'URWBookman-Italic.ttf')))
+
                     registerFont(
                         TTFont(
                             'BookmanBI',
                             join(FONT_DIR, 'URWBookman-BoldItalic.ttf')))
+
                     registerFontFamily(
                         'Bookman',
                         normal='Bookman',
                         bold='BookmanB',
                         italic='BookmanI',
                         boldItalic='BookmanBI')
+
                     s1 = ParagraphStyle(
                         name='S1',
                         fontName='Bookman',
@@ -1073,6 +1137,7 @@ def mainpage(request):
                         alignment=TA_RIGHT,
                         allowWidows=False,
                         allowOrphans=False)
+
                     s2 = ParagraphStyle(
                         name='S2',
                         fontName='BookmanB',
@@ -1081,6 +1146,7 @@ def mainpage(request):
                         alignment=TA_RIGHT,
                         allowWidows=False,
                         allowOrphans=False)
+
                     s3 = ParagraphStyle(
                         name='S3',
                         fontName='BookmanB',
@@ -1089,6 +1155,7 @@ def mainpage(request):
                         alignment=TA_RIGHT,
                         allowWidows=False,
                         allowOrphans=False)
+
                     s4 = ParagraphStyle(
                         name='S4',
                         fontName='BookmanB',
@@ -1096,6 +1163,7 @@ def mainpage(request):
                         leading=10,
                         allowWidows=False,
                         allowOrphans=False)
+
                     s5 = ParagraphStyle(
                         name='S5',
                         fontName='Bookman',
@@ -1104,6 +1172,7 @@ def mainpage(request):
                         alignment=TA_RIGHT,
                         allowWidows=False,
                         allowOrphans=False)
+
                     s6 = ParagraphStyle(
                         name='S6',
                         fontName='Bookman',
@@ -1112,6 +1181,7 @@ def mainpage(request):
                         leftIndent=8,
                         allowWidows=False,
                         allowOrphans=False)
+
                     s7 = ParagraphStyle(
                         name='S7',
                         fontName='BookmanI',
@@ -1121,6 +1191,7 @@ def mainpage(request):
                         leftIndent=8,
                         allowWidows=False,
                         allowOrphans=False)
+
                     s8 = ParagraphStyle(
                         name='S8',
                         fontName='Bookman',
@@ -1129,6 +1200,7 @@ def mainpage(request):
                         alignment=TA_RIGHT,
                         allowWidows=False,
                         allowOrphans=False)
+
                     s9 = ParagraphStyle(
                         name='S9',
                         fontName='BookmanB',
@@ -1136,6 +1208,7 @@ def mainpage(request):
                         alignment=TA_RIGHT,
                         allowWidows=False,
                         allowOrphans=False)
+
                     s10 = ParagraphStyle(
                         name='S10',
                         fontName='BookmanB',
@@ -1144,6 +1217,7 @@ def mainpage(request):
                         alignment=TA_RIGHT,
                         allowWidows=False,
                         allowOrphans=False)
+
                     s11 = ParagraphStyle(
                         name='S11',
                         fontName='Bookman',
@@ -1152,6 +1226,7 @@ def mainpage(request):
                         alignment=TA_RIGHT,
                         allowWidows=False,
                         allowOrphans=False)
+
                     s12 = ParagraphStyle(
                         name='S12',
                         fontName='BookmanI',
@@ -1162,6 +1237,7 @@ def mainpage(request):
                         leftIndent=8,
                         allowWidows=False,
                         allowOrphans=False)
+
                     d1 = [[[Paragraph('Kalkulace nákladů řízení'.upper(), s1)]]]
                     if c.title:
                         d1[0][0].append(Paragraph(escape(c.title), s2))
@@ -1413,6 +1489,7 @@ def mainpage(request):
     for i in ['total_net', 'total_ex', 'total_vat', 'total']:
         var[i] = formam(var[i])
     return render(request, 'knr_mainpage.html', var)
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -1937,9 +2014,11 @@ def itemform(request, idx=0):
                             var['{}_error'.format(t)] = 'ok'
     return render(request, 'knr_itemform.html', var)
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def itemlist(request):
+
     logger.debug(
         'Item list accessed using method {}'.format(request.method),
         request,
@@ -1968,9 +2047,11 @@ def itemlist(request):
         n += 1
     return render(request, 'knr_itemlist.html', var)
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def itemdel(request, idx=0):
+
     logger.debug(
         'Item delete page accessed using method {}, idx={}' \
             .format(request.method, idx),
@@ -1997,9 +2078,11 @@ def itemdel(request, idx=0):
             return redirect('knr:itemdeleted')
         return redirect('knr:itemlist')
 
+
 @require_http_methods(['GET'])
 @login_required
 def itemmove(request, dir, idx):
+
     logger.debug('Item move requested', request)
     idx = int(idx)
     c = getcalc(request)
@@ -2014,9 +2097,11 @@ def itemmove(request, dir, idx):
         return error(request)
     return redirect('knr:itemlist')
 
+
 @require_http_methods(['GET'])
 @login_required
 def presets(request):
+
     logger.debug('Presets requested', request)
     if not request.user.is_superuser:
         return unauth(request)

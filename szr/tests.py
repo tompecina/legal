@@ -30,12 +30,16 @@ from django.core.exceptions import ValidationError
 from common.settings import BASE_DIR
 from common.glob import localdomain
 from common.tests import link_equal
-from . import cron, forms, models
+from szr import cron, forms, models
+
 
 APP = __package__
+
 TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
+
 class TestCron(TestCase):
+
     fixtures = ['szr_test.json']
 
     def test_addauxid(self):
@@ -138,13 +142,16 @@ class TestCron(TestCase):
             'org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T' \
             '&bcVec=136&rocnik=2013&typSoudu=os&autoFill=true&type=spzn\n\n')
 
+
 class TestForms(TestCase):
+
     fixtures = ['szr_test.json']
 
     def test_courtval(self):
         with self.assertRaises(ValidationError):
             forms.courtval('XXX')
         forms.courtval('NSS')
+
 
 class TestModels(SimpleTestCase):
 
@@ -165,7 +172,9 @@ class TestModels(SimpleTestCase):
                 year=2000)),
             'Nejvyšší soud, 7 Tdo 315/2000')
 
+
 class TestViews(TestCase):
+
     fixtures = ['szr_test.json']
 
     def setUp(self):

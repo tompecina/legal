@@ -22,7 +22,9 @@
 
 from django.apps import AppConfig
 
+
 class CacheConfig(AppConfig):
+
     name = 'cache'
     verbose_name = 'Společná cache'
     version = None

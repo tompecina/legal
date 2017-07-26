@@ -24,9 +24,11 @@ from django.core.validators import MinLengthValidator
 from common import forms, fields, widgets
 from common.utils import grammar
 from common.glob import text_opts, GR_C
-from .glob import MIN_LENGTH, MAX_LENGTH
+from sur.glob import MIN_LENGTH, MAX_LENGTH
+
 
 class PartyForm(forms.Form):
+
     party = fields.CharField(
         widget=widgets.sew(attrs={
             'data-minLen': MIN_LENGTH,
@@ -34,6 +36,7 @@ class PartyForm(forms.Form):
         max_length=MAX_LENGTH,
         label='Vyhledávací řetězec',
         validators=[MinLengthValidator(MIN_LENGTH)])
+
     party_opt = fields.ChoiceField(
         widget=widgets.rs,
         choices=text_opts,

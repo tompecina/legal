@@ -23,7 +23,9 @@
 from datetime import datetime, timedelta
 from django.apps import AppConfig
 
+
 class DirConfig(AppConfig):
+
     name = 'dir'
     verbose_name = 'Sledování nových dlužníků v insolvenci'
     version = '1.0'

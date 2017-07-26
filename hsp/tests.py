@@ -30,10 +30,13 @@ from django.contrib.auth.models import User
 from common.settings import BASE_DIR
 from common.tests import TEST_STRING, stripxml
 from cache.tests import DummyRequest
-from . import forms, views
+from hsp import forms, views
+
 
 APP = __package__
+
 TEST_DIR = join(BASE_DIR, APP, 'testdata')
+
 
 class TestForms(SimpleTestCase):
 
@@ -167,6 +170,7 @@ class TestForms(SimpleTestCase):
              'date_to': '2.1.2000'})
         self.assertTrue(f.is_valid())
 
+
 class TestViews1(SimpleTestCase):
 
     def test_n2l(self):
@@ -192,7 +196,9 @@ class TestViews1(SimpleTestCase):
             self.assertXMLEqual(stripxml(d), stripxml(e), msg=str(i))
             i += 1
 
+
 class TestViews2(TestCase):
+
     fixtures = ['hsp_test.json']
 
     def setUp(self):

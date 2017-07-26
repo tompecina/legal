@@ -25,6 +25,7 @@ from datetime import date
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase
 
+
 pp = [
     ['11.11.2010', '6.7.2016',
      ['11. 11. 2010 → 6. 7. 2016',
@@ -148,6 +149,7 @@ pp = [
     ['29.2.2016', '29.2.2016', ['Počátek musí předcházet konci']],
     ['29.2.2016', '1.4.2011', ['Počátek musí předcházet konci']],
 ]
+
 
 class TestViews(SimpleTestCase):
 

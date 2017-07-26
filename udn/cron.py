@@ -31,11 +31,14 @@ from common.glob import localurl
 from szr.glob import supreme_administrative_court
 from szr.models import Court
 from sur.cron import sur_check
-from .glob import filename_regex
-from .models import Decision, Party, Agenda
+from udn.glob import filename_regex
+from udn.models import Decision, Party, Agenda
+
 
 root_url = 'http://www.nssoud.cz/'
+
 form_url = root_url + 'main2Col.aspx?cls=RozhodnutiList&menu=185'
+
 find_url = root_url + 'main0Col.aspx?cls=JudikaturaBasicSearch&pageSource=0'
 
 decurl = localurl + \
@@ -50,7 +53,9 @@ fr = compile(filename_regex)
 
 OBS = timedelta(days=360)
 
+
 def cron_update():
+
     NSS = Court.objects.get(pk=supreme_administrative_court)
     try:
         res = get(form_url)
@@ -148,7 +153,9 @@ def cron_update():
     except:  # pragma: no cover
         logger.warning('Update failed')
 
+
 def cron_find():
+
     now = datetime.now()
     try:
         dec = Decision.objects.filter(

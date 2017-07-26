@@ -23,7 +23,9 @@
 from datetime import datetime, timedelta
 from django.apps import AppConfig
 
+
 class SirConfig(AppConfig):
+
     name = 'sir'
     verbose_name = 'Sledování změn v insolvenčních řízeních'
     version = '1.0'

@@ -26,6 +26,7 @@ from sys import argv
 from logging import Filter
 from .secrets import DBPASSWD, SECKEY
 
+
 LOCAL = ((len(argv) > 1) and (argv[1] == 'runserver'))
 TEST = ((len(argv) > 1) and (argv[1] == 'test'))
 
@@ -138,6 +139,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
 ] + [(x + '.apps.' + x.capitalize() + 'Config') for x in APPS]
 
+
 class AddFields(Filter):
 
     def filter(self, record):
@@ -155,6 +157,7 @@ class AddFields(Filter):
             a += ' [{}]'.format(record.request.META['REMOTE_ADDR'])
         record.append = a
         return True
+
 
 LOGGING_BC = 5
 
@@ -238,6 +241,7 @@ LOGGING = {
         },
     },
 }
+
 
 if not (LOCAL or TEST):  # pragma: no cover
     SECURE_SSL_REDIRECT = True

@@ -22,9 +22,10 @@
 
 from django.conf.urls import url
 from common.views import genrender
-from .views import (
+from hsp.views import (
     mainpage, debitform, debitdel, creditform, creditdel, balanceform,
     balancedel, fxrateform, fxratedel)
+
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),

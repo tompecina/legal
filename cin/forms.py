@@ -22,10 +22,13 @@
 
 from common import forms, fields, widgets
 
+
 class MainForm(forms.Form):
+
     beg_date = fields.DateField(
         widget=widgets.dw(today=True),
         label='Počátek')
+
     end_date = fields.DateField(
         widget=widgets.dw(today=True),
         label='Konec')

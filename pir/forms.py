@@ -25,117 +25,145 @@ from django.core.validators import RegexValidator
 from common import forms, fields, widgets
 from common.glob import text_opts, format_opts, ic_regex, rc_full_regex
 
+
 curryear = date.today().year
 
+
 class MainForm(forms.Form):
+
     court = fields.CharField(
         max_length=255,
         required=False,
         label='Insolvenční soud',
         initial='')
+
     senate = fields.IntegerField(
         widget=widgets.saw(),
         min_value=0,
         initial='',
         required=False)
+
     number = fields.IntegerField(
         widget=widgets.saw(),
         min_value=1,
         initial='',
         required=False)
+
     year = fields.IntegerField(
         widget=widgets.saw(),
         min_value=2008,
         initial='',
         required=False)
+
     date_first_from = fields.DateField(
         widget=widgets.dw(),
         required=False)
+
     date_first_to = fields.DateField(
         widget=widgets.dw(),
         required=False)
+
     date_last_from = fields.DateField(
         widget=widgets.dw(),
         required=False)
+
     date_last_to = fields.DateField(
         widget=widgets.dw(),
         required=False)
+
     name = fields.CharField(
         widget=widgets.msew(),
         required=False,
         max_length=255,
         label='Příjmení/název')
+
     name_opt = fields.ChoiceField(
         widget=widgets.rs,
         choices=text_opts,
         initial='istartswith')
+
     first_name = fields.CharField(
         widget=widgets.msew(),
         required=False,
         max_length=255,
         label='Jméno')
+
     first_name_opt = fields.ChoiceField(
         widget=widgets.rs,
         choices=text_opts,
         initial='istartswith')
+
     city = fields.CharField(
         widget=widgets.msew(),
         required=False,
         max_length=255,
         label='Obec')
+
     city_opt = fields.ChoiceField(
         widget=widgets.rs,
         choices=text_opts,
         initial='istartswith')
+
     genid = fields.CharField(
         widget=widgets.ssew(),
         required=False,
         max_length=9,
         validators=[RegexValidator(regex=ic_regex)],
         label='IČO')
+
     taxid = fields.CharField(
         widget=widgets.ssew(),
         required=False,
         max_length=14,
         label='DIČ')
+
     birthid = fields.CharField(
         widget=widgets.ssew(),
         required=False,
         max_length=11,
         validators=[RegexValidator(regex=rc_full_regex)],
         label='Rodné číslo')
+
     date_birth = fields.DateField(
         widget=widgets.dw(),
         required=False,
         label='Datum narození')
+
     year_birth_from = fields.IntegerField(
         widget=widgets.yw(),
         min_value=1900,
         max_value=curryear,
         initial='',
         required=False)
+
     year_birth_to = fields.IntegerField(
         widget=widgets.yw(),
         min_value=1900,
         max_value=curryear,
         initial='',
         required=False)
+
     role_debtor = fields.InlineBooleanField(
         initial=True,
         required=False,
         label='dlužník')
+
     role_trustee = fields.InlineBooleanField(
         required=False,
         label='správce')
+
     role_creditor = fields.InlineBooleanField(
         required=False,
         label='věřitel')
+
     deleted = fields.InlineBooleanField(
         required=False,
         label='včetně vyškrtnutých')
+
     creditors = fields.InlineBooleanField(
         required=False,
         label='včetně seznamu věřitelů')
+
     format = fields.ChoiceField(
         widget=widgets.rs,
         choices=format_opts,

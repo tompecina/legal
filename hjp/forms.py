@@ -22,6 +22,7 @@
 
 from common import forms, fields, widgets
 
+
 tr_opts = (('debit', 'závazek'),
            ('credit', 'splátka'),
            ('balance', 'zůstatek'))
@@ -29,20 +30,25 @@ tr_opts = (('debit', 'závazek'),
 rep_opts = (('interest', 'napřed úrok'),
             ('principal', 'napřed jistina'))
 
+
 class TransForm(forms.Form):
+
     description = fields.CharField(
         widget=widgets.genw(),
         max_length=255,
         required=False,
         label='Popis')
+
     transaction_type = fields.ChoiceField(
         widget=widgets.rs,
         choices=tr_opts,
         label='Typ',
         initial='balance')
+
     date = fields.DateField(
         widget=widgets.dw(today=True),
         label='Datum')
+
     amount = fields.DecimalField(
         widget=widgets.aw(),
         max_digits=15,
@@ -51,6 +57,7 @@ class TransForm(forms.Form):
         required=False,
         label='Částka',
         localize=True)
+
     repayment_preference = fields.ChoiceField(
         widget=widgets.rs,
         choices=rep_opts,
@@ -63,6 +70,7 @@ class TransForm(forms.Form):
         if (self.data['transaction_type'] != 'balance') and (not data):
             raise forms.ValidationError('Amount is required')
         return data
+
 
 int_opts = (('none', 'Bez úroku'),
             ('fixed', 'Pevná částka'),
@@ -81,29 +89,37 @@ int_opts = (('none', 'Bez úroku'),
             ('cust4', 'Poplatek z prodlení podle nařízení ' \
              'č. 142/1994 Sb.'))
 
+
 class MainForm(forms.Form):
+
     title = fields.CharField(
         widget=widgets.genw(),
         max_length=255,
         required=False,
         label='Popis')
+
     note = fields.CharField(
         widget=widgets.taw(),
         required=False,
         label='Poznámka')
+
     internal_note = fields.CharField(
         widget=widgets.taw(),
         required=False,
         label='Interní poznámka')
+
     currency = fields.CurrencyField(
         label='Měna',
         initial='CZK')
+
     rounding = fields.CharField(
         label='Zaokrouhlení')
+
     model = fields.ChoiceField(
         widget=widgets.rs,
         choices=int_opts,
         label='Úročení')
+
     fixed_amount = fields.DecimalField(
         widget=widgets.aw(),
         max_digits=15,
@@ -111,30 +127,36 @@ class MainForm(forms.Form):
         min_value=0.0,
         required=False,
         localize=True)
+
     pa_rate = fields.DecimalField(
         widget=widgets.ratew(),
         max_digits=12,
         decimal_places=6,
         required=False,
         localize=True)
+
     ydconv = fields.CharField(
         label='Konvence',
         required=False)
+
     pm_rate = fields.DecimalField(
         widget=widgets.ratew(),
         max_digits=12,
         decimal_places=6,
         required=False,
         localize=True)
+
     mdconv = fields.CharField(
         label='Konvence',
         required=False)
+
     pd_rate = fields.DecimalField(
         widget=widgets.ratew(),
         max_digits=12,
         decimal_places=6,
         required=False,
         localize=True)
+
     next = fields.CharField(
         widget=widgets.hw(),
         required=False)

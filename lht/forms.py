@@ -23,6 +23,7 @@
 from datetime import date
 from common import forms, fields, widgets
 
+
 presets = (
     ('d3', '3 dny'),
     ('w1', '1 týden'),
@@ -38,16 +39,21 @@ presets = (
     ('y1', '1 rok'),
     ('none', 'jiná'))
 
+
 class MainForm(forms.Form):
+
     beg_date = fields.DateField(
         widget=widgets.dw(today=True),
         label='Počátek',
         initial=date.today)
+
     dur = fields.IntegerField(
         widget=widgets.shw(),
         required=False)
+
     unit = fields.CharField(
         required=False)
+
     preset = fields.ChoiceField(
         widget=widgets.rs,
         choices=presets,

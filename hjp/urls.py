@@ -22,7 +22,8 @@
 
 from django.conf.urls import url
 from common.views import genrender
-from .views import mainpage, transform, transdel
+from hjp.views import mainpage, transform, transdel
+
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),

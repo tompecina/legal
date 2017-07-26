@@ -35,15 +35,17 @@ from common.glob import (
     inerr, GR_C, text_opts, text_opts_keys, text_opts_abbr, text_opts_ca,
     text_opts_ai)
 from szr.forms import EmailForm
-from .forms import PartyForm
-from .models import Party
-from .glob import MIN_LENGTH, MAX_LENGTH
+from sur.forms import PartyForm
+from sur.models import Party
+from sur.glob import MIN_LENGTH, MAX_LENGTH
+
 
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
 
 BATCH = 50
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -95,6 +97,7 @@ def mainpage(request):
          'rows': rows,
          'pager': Pager(start, total, reverse('sur:mainpage'), rd, BATCH),
          'total': total})
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -156,9 +159,11 @@ def partyform(request, id=0):
          'page_title': page_title,
          'err_message': err_message})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def partydel(request, id=0):
+
     logger.debug(
         'Party delete page accessed using method {}, id={}' \
             .format(request.method, id),
@@ -183,9 +188,11 @@ def partydel(request, id=0):
             return redirect('sur:partydeleted')
         return redirect('sur:mainpage')
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def partydelall(request):
+
     logger.debug(
         'Delete all parties page accessed using method {}' \
             .format(request.method),
@@ -207,6 +214,7 @@ def partydelall(request):
                 'User "{}" ({:d}) deleted all parties'.format(uname, uid),
                 request)
         return redirect('sur:mainpage')
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -292,9 +300,11 @@ def partybatchform(request):
          'min_length': MIN_LENGTH,
          'max_length': MAX_LENGTH})
 
+
 @require_http_methods(['GET'])
 @login_required
 def partyexport(request):
+
     logger.debug('Party export page accessed', request)
     uid = request.user.id
     uname = request.user.username

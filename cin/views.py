@@ -28,11 +28,13 @@ from common.utils import (
     pd, tod, ply, plm, ydconvs, mdconvs, yfactor, mfactor, odp, grammar,
     getbutton, unrequire, Lf, logger)
 from common.glob import inerr_short, GR_D, GR_B, GR_M, GR_Y
-from .forms import MainForm
+from cin.forms import MainForm
+
 
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
+
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):

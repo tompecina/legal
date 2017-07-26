@@ -22,8 +22,9 @@
 
 from django.conf.urls import url
 from common.views import genrender
-from .views import (
+from szr.views import (
     mainpage, procform, procdel, procdelall, procbatchform, procexport, courts)
+
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),

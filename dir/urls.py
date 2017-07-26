@@ -22,9 +22,10 @@
 
 from django.conf.urls import url
 from common.views import genrender
-from .views import (
+from dir.views import (
     mainpage, debtorform, debtordel, debtordelall, debtorbatchform,
     debtorexport)
+
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),

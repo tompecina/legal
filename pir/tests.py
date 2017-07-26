@@ -28,7 +28,8 @@ from common.tests import stripxml, link_equal, setpr, getpr
 from sir.tests import populate
 from sir.cron import cron_getws2
 from sir.models import Osoba, DruhRoleVRizeni, Vec
-from . import forms, views
+from pir import forms, views
+
 
 class TestForms(SimpleTestCase):
 
@@ -111,6 +112,7 @@ class TestForms(SimpleTestCase):
              'year_birth_to': '1966',
              'format': 'html'})
         self.assertTrue(f.is_valid())
+
 
 class TestViews1(SimpleTestCase):
 
@@ -239,6 +241,7 @@ class TestViews1(SimpleTestCase):
             ]
         for p in pp:
             self.assertEqual(views.o2s(p[0], detailed=p[1]), p[2])
+
 
 x0 = '<?xml version="1.0" encoding="utf-8"?>\n' \
      '<insolvencies application="pir" created="2016-11-22T15:44:22" ' \
@@ -648,8 +651,8 @@ j2 = '[{"creditors": [{"name": "\u010cesk\u00e1 spr\u00e1va ' \
      '"1970-08-13"}], "court": "Krajsk\u00fd soud ' \
      'v \u010cesk\u00fdch Bud\u011bjovic\u00edch", "trustees": []}]'
 
+
 class TestViews2(TestCase):
-    # fixtures = ['pir_test.json']
 
     def setUp(self):
         populate()

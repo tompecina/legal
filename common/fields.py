@@ -24,36 +24,51 @@ from decimal import Decimal
 from datetime import datetime, date
 from django import forms
 from django.core.validators import EMPTY_VALUES
-from . import widgets
-from .utils import Lf
-from .forms import ValidationError
+from common import widgets
+from common.utils import Lf
+from common.forms import ValidationError
+
 
 def prnum(x):
+
     return x.replace(' ', '') \
             .replace('.', '') \
             .replace(',', '.') \
             .replace('−', '-')
 
+
 stypes = (str,)
 
+
 class BooleanField(forms.BooleanField):
+
     pass
 
+
 class InlineBooleanField(forms.BooleanField):
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('label_suffix', '')
         super(InlineBooleanField, self).__init__(*args, **kwargs)
 
+
 class CharField(forms.CharField):
+
     pass
+
 
 class ChoiceField(forms.ChoiceField):
+
     pass
+
 
 class EmailField(forms.EmailField):
+
     pass
 
+
 class DateField(forms.DateField):
+
     def to_python(self, value):
         if value in EMPTY_VALUES:
             return None
@@ -63,7 +78,9 @@ class DateField(forms.DateField):
             return value
         return super(DateField, self).to_python(value.replace(' ', ''))
 
+
 class AmountField(forms.FloatField):
+
     rounding = 0
 
     def prepare_value(self, value):
@@ -85,7 +102,9 @@ class AmountField(forms.FloatField):
         except:
             raise ValidationError('Conversion error')
 
+
 class DecimalField(forms.DecimalField):
+
     def to_python(self, value):
         if value in EMPTY_VALUES:
             return None
@@ -96,7 +115,9 @@ class DecimalField(forms.DecimalField):
         except:
             raise ValidationError('Conversion error')
 
+
 class FloatField(forms.FloatField):
+
     def to_python(self, value):
         if value in EMPTY_VALUES:
             return None
@@ -107,7 +128,9 @@ class FloatField(forms.FloatField):
         except:
             raise ValidationError('Conversion error')
 
+
 class IntegerField(forms.IntegerField):
+
     def to_python(self, value):
         if value in EMPTY_VALUES:
             return None
@@ -118,7 +141,9 @@ class IntegerField(forms.IntegerField):
         except:
             raise ValidationError('Conversion error')
 
+
 class CurrencyField(forms.MultiValueField):
+
     def __init__(self, czk=True, *args, **kwargs):
         kwargs['required'] = False
         super(CurrencyField, self) \

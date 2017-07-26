@@ -22,7 +22,8 @@
 
 from http import HTTPStatus
 from django.test import SimpleTestCase
-from . import forms
+from kos import forms
+
 
 class TestForms(SimpleTestCase):
 
@@ -382,6 +383,7 @@ class TestForms(SimpleTestCase):
             f.errors,
             {'vatrate': ['Toto pole je třeba vyplnit.']})
 
+
 pp = [
     ['0', '0',
      False,
@@ -540,6 +542,7 @@ pp = [
      '9.158', '30.842', '1.634', '7.524', '451.470',
      '1.504.900'],
 ]
+
 
 class TestViews(SimpleTestCase):
 

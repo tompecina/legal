@@ -30,7 +30,8 @@ from django.test import SimpleTestCase, TestCase
 from common.settings import BASE_DIR
 from common.tests import stripxml, link_equal
 from common.glob import localsubdomain, localurl, repourl
-from . import cron, forms, glob, models, views
+from udn import cron, forms, glob, models, views
+
 
 class TestCron(TestCase):
 
@@ -48,7 +49,9 @@ class TestCron(TestCase):
                 fl.append('C: ' + l)
         self.assertFalse(fl, msg=fl)
 
+
 class TestCron1(TestCron):
+
     fixtures = ['udn_test1.json']
 
     def test_update(self):
@@ -72,7 +75,9 @@ class TestCron1(TestCron):
             '0233_5As__1500046S.pdf',
             ])
 
+
 class TestCron2(TestCron):
+
     fixtures = ['udn_test2.json']
 
     def test_find(self):
@@ -87,7 +92,9 @@ class TestCron2(TestCron):
         self.assertTrue(d[0].anonfilename)
         self.checkpdf(['0046_3As__1600114_20160622142215_prevedeno.pdf'])
 
+
 class TestCron3(TestCron):
+
     fixtures = ['udn_test3.json']
 
     def test_find(self):
@@ -100,6 +107,7 @@ class TestCron3(TestCron):
             page=33)
         self.assertEqual(len(d), 1)
         self.assertFalse(d[0].anonfilename)
+
 
 class TestForms(SimpleTestCase):
 
@@ -127,6 +135,7 @@ class TestForms(SimpleTestCase):
              'format': 'html'})
         self.assertTrue(f.is_valid())
 
+
 class TestGlob(SimpleTestCase):
 
     def test_filename_regex(self):
@@ -150,6 +159,7 @@ class TestGlob(SimpleTestCase):
         for p in ee:
             self.assertIsNone(fr.match(p), msg=p)
 
+
 class TestModels(SimpleTestCase):
 
     def test_models(self):
@@ -172,6 +182,7 @@ class TestModels(SimpleTestCase):
                 date=date.today(),
                 filename='test_fn.pdf')),
             '4 As 26/2015-88')
+
 
 x0 = '<?xml version="1.0" encoding="utf-8"?>\n' \
      '<decisions application="udn" created="2016-08-04T00:20:47" ' \
@@ -248,7 +259,9 @@ j2 = '[{{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk' \
      '"agenda": "Ochrana hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee ' \
      'a ve\u0159ejn\u00e9 zak\u00e1zky"}}]'.format(repourl)
 
+
 class TestViews(TestCase):
+
     fixtures = ['udn_test1.json']
 
     def test_main(self):

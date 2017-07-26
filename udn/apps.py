@@ -23,7 +23,9 @@
 from datetime import datetime, timedelta
 from django.apps import AppConfig
 
+
 class UdnConfig(AppConfig):
+
     name = 'udn'
     verbose_name = 'Archiv úřední desky NSS'
     version = '1.1'

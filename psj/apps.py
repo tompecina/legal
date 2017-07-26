@@ -23,7 +23,9 @@
 from datetime import datetime, timedelta
 from django.apps import AppConfig
 
+
 class PsjConfig(AppConfig):
+
     name = 'psj'
     verbose_name = 'Přehled soudních jednání'
     version = '1.1'

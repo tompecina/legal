@@ -33,10 +33,11 @@ from django.urls import reverse
 from common.utils import getbutton, Pager, logger
 from common.glob import inerr
 from szr.forms import EmailForm
-from .glob import l2n, l2s
-from .models import Vec, Insolvency
-from .forms import InsForm
-from .cron import p2s
+from sir.glob import l2n, l2s
+from sir.models import Vec, Insolvency
+from sir.forms import InsForm
+from sir.cron import p2s
+
 
 APP = __package__
 
@@ -44,9 +45,11 @@ APPVERSION = apps.get_app_config(APP).version
 
 BATCH = 50
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def mainpage(request):
+
     logger.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
@@ -85,9 +88,11 @@ def mainpage(request):
          'pager': Pager(start, total, reverse('sir:mainpage'), rd, BATCH),
          'total': total})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def insform(request, id=0):
+
     logger.debug(
         'Proceedings form accessed using method {}, id={}' \
             .format(request.method, id),
@@ -136,9 +141,11 @@ def insform(request, id=0):
          'page_title': page_title,
          'err_message': err_message})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def insdel(request, id=0):
+
     logger.debug(
         'Proceedings delete page accessed using method {}, id={}' \
             .format(request.method, id),
@@ -163,9 +170,11 @@ def insdel(request, id=0):
             return redirect('sir:insdeleted')
         return redirect('sir:mainpage')
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def insdelall(request):
+
     logger.debug(
         'Delete all proceedings page accessed using method {}' \
             .format(request.method),
@@ -187,6 +196,7 @@ def insdelall(request):
                 'User "{}" ({:d}) deleted all proceedings'.format(uname, uid),
                 request)
         return redirect('sir:mainpage')
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -287,9 +297,11 @@ def insbatchform(request):
          'page_title': 'Import řízení ze souboru',
          'err_message': err_message})
 
+
 @require_http_methods(['GET'])
 @login_required
 def insexport(request):
+
     logger.debug('Proceedings export page accessed', request)
     uid = request.user.id
     uname = request.user.username
@@ -312,8 +324,10 @@ def insexport(request):
         request)
     return response
 
+
 @require_http_methods(['GET'])
 def courts(request):
+
     logger.debug('List of courts accessed', request)
     courts = sorted([{'short': l2s[x], 'name': l2n[x]} for x in \
         Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()], \

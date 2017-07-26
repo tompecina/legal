@@ -24,22 +24,28 @@ from django.db import models
 from django.core.validators import MinValueValidator, RegexValidator
 from common.utils import composeref
 from common.glob import register_regex
-from .glob import filename_regex
+from udn.glob import filename_regex
+
 
 class Agenda(models.Model):
+
     desc = models.CharField(
         max_length=255,
         unique=True)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True)
 
     def __str__(self):
         return self.desc
 
+
 class Party(models.Model):
+
     name = models.CharField(
         max_length=255,
         unique=True)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)
@@ -47,36 +53,50 @@ class Party(models.Model):
     def __str__(self):
         return self.name
 
+
 class Decision(models.Model):
+
     senate = models.IntegerField(
         validators=[MinValueValidator(0)])
+
     register = models.CharField(
         max_length=30,
         validators=[RegexValidator(regex=register_regex)])
+
     number = models.PositiveIntegerField()
+
     year = models.IntegerField(
         validators=[MinValueValidator(1990)])
+
     page = models.PositiveIntegerField()
+
     agenda = models.ForeignKey(
         Agenda,
         on_delete=models.CASCADE)
+
     parties = models.ManyToManyField(
         Party)
+
     date = models.DateField(
         db_index=True)
+
     filename = models.CharField(
         max_length=255,
         validators=[RegexValidator(regex=filename_regex)])
+
     anonfilename = models.CharField(
         max_length=255,
         blank=True,
         validators=[RegexValidator(regex=filename_regex)])
+
     updated = models.DateTimeField(
         null=True,
         db_index=True)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)
+
     timestamp_update = models.DateTimeField(
         auto_now=True)
 

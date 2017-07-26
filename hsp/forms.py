@@ -22,22 +22,28 @@
 
 from common import forms, fields, widgets
 
+
 class MainForm(forms.Form):
+
     title = fields.CharField(
         widget=widgets.genw(),
         max_length=255,
         required=False,
         label='Popis')
+
     note = fields.CharField(
         widget=widgets.taw(),
         required=False,
         label='Poznámka')
+
     internal_note = fields.CharField(
         widget=widgets.taw(),
         required=False,
         label='Interní poznámka')
+
     rounding = fields.CharField(
         label='Zaokrouhlení')
+
     next = fields.CharField(
         widget=widgets.hw(),
         required=False)
@@ -47,6 +53,7 @@ class MainForm(forms.Form):
 
     def clean_internal_note(self):
         return self.cleaned_data['internal_note'].replace('\r', '')
+
 
 deb_opts = (('fixed', 'Pevná částka'),
             ('per_annum', 'Roční úrok'),
@@ -63,69 +70,86 @@ deb_opts = (('fixed', 'Pevná částka'),
             ('cust6', 'Úrok z prodlení podle nařízení č. 351/2013 Sb.'),
             ('cust4', 'Poplatek z prodlení podle nařízení č. 142/1994 Sb.'))
 
+
 class DebitForm(forms.Form):
+
     description = fields.CharField(
         widget=widgets.sdw(),
         max_length=50,
         required=False,
         label='Popis')
+
     fixed_amount = fields.AmountField(
         widget=widgets.aw(),
         min_value=0.01,
         required=False,
         localize=True)
+
     fixed_currency = fields.CurrencyField(
         label='v měně',
         initial='CZK')
+
     fixed_date = fields.DateField(
         widget=widgets.dw(),
         required=False,
         label='Splatnost')
+
     principal_debit = fields.IntegerField(
         required=False,
         label='Z')
+
     principal_amount = fields.AmountField(
         widget=widgets.aw(),
         min_value=0.01,
         required=False,
         label='Částka',
         localize=True)
+
     principal_currency = fields.CurrencyField(
         label='v měně',
         initial='CZK')
+
     date_from = fields.DateField(
         widget=widgets.dw(),
         required=False,
         label='Od')
+
     date_to = fields.DateField(
         widget=widgets.dw(),
         required=False,
         label='Do')
+
     model = fields.ChoiceField(
         widget=widgets.rs,
         choices=deb_opts,
         initial='fixed')
+
     pa_rate = fields.FloatField(
         widget=widgets.ratew(),
         min_value=0.0,
         required=False,
         localize=True)
+
     ydconv = fields.CharField(
         label='Konvence',
         required=False)
+
     pm_rate = fields.FloatField(
         widget=widgets.ratew(),
         min_value=0.0,
         required=False,
         localize=True)
+
     mdconv = fields.CharField(
         label='Konvence',
         required=False)
+
     pd_rate = fields.FloatField(
         widget=widgets.ratew(),
         min_value=0.0,
         required=False,
         localize=True)
+
     lock_fixed = fields.BooleanField(
         widget=widgets.hw(),
         required=False)
@@ -199,56 +223,70 @@ class DebitForm(forms.Form):
             del cleaned_data['date_to']
         return cleaned_data
 
+
 class CreditForm(forms.Form):
+
     description = fields.CharField(
         widget=widgets.sdw(),
         max_length=50,
         required=False,
         label='Popis')
+
     date = fields.DateField(
         widget=widgets.dw(),
         label='Datum')
+
     amount = fields.AmountField(
         widget=widgets.aw(),
         min_value=0.01,
         label='Částka',
         localize=True)
+
     currency = fields.CurrencyField(
         label='Měna',
         initial='CZK')
 
+
 class BalanceForm(forms.Form):
+
     description = fields.CharField(
         widget=widgets.sdw(),
         max_length=50,
         required=False,
         label='Popis')
+
     date = fields.DateField(
         widget=widgets.dw(today=True),
         label='Datum')
 
 class FXform(forms.Form):
+
     currency_from = fields.CharField(
         widget=widgets.currw(),
         min_length=3,
         max_length=3)
+
     currency_to = fields.CharField(
         widget=widgets.currw(),
         min_length=3,
         max_length=3)
+
     rate_from = fields.FloatField(
         widget=widgets.fxw(),
         min_value=0.001,
         localize=True,
         initial=1.0)
+
     rate_to = fields.FloatField(
         widget=widgets.fxw(),
         min_value=0.001,
         localize=True,
         initial=1.0)
+
     date_from = fields.DateField(
         widget=widgets.dw(),
         required=False)
+
     date_to = fields.DateField(
         widget=widgets.dw(),
         required=False)

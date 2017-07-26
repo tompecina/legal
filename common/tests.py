@@ -35,15 +35,18 @@ from cache.tests import DummyRequest
 from szr.cron import cron_update
 from szr.models import Proceedings
 from sir.models import Counter
-from .settings import BASE_DIR
-from . import cron, glob, fields, forms, models, utils, views
+from common.settings import BASE_DIR
+from common import cron, glob, fields, forms, models, utils, views
+
 
 TEST_STRING = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské kódy'
 
 xml_regex = compile(r'^(<[^<]+<\w+)[^>]*(.*)$')
 pw_regex = compile(r'/accounts/resetpw/([0-9a-f]{32})/')
 
+
 class DummyResponse:
+
     def __init__(self, content, status=HTTPStatus.OK):
         self.text = content
         if content:
@@ -51,7 +54,9 @@ class DummyResponse:
         self.status_code = status
         self.ok = (status == HTTPStatus.OK)
 
+
 def stripxml(s):
+
     try:
         s = s.decode('utf-8')
         m = xml_regex.match(s)
@@ -59,9 +64,12 @@ def stripxml(s):
     except:
         return ''
 
+
 testdata_prefix = join(BASE_DIR, 'common', 'testdata')
 
+
 def testreq(post, *args):
+
     if post:
         r, d = args
         if isinstance(d, bytes):
@@ -85,7 +93,9 @@ def testreq(post, *args):
     except:
         return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
 
+
 def link_equal(a, b):
+
     a = a.split('?')
     b = b.split('?')
     if a[0] != b[0]:  # pragma: no cover
@@ -94,25 +104,39 @@ def link_equal(a, b):
     b = b[1].split('&')
     return sorted(a) == sorted(b)
 
+
 def setcounter(k, n):
+
     Counter.objects.update_or_create(id=k, defaults={'number': n})
 
+
 def setdl(n):
+
     setcounter('DL', n)
 
+
 def setpr(n):
+
     setcounter('PR', n)
 
+
 def getcounter(k):
+
     return Counter.objects.get(id=k).number
 
+
 def getdl():
+
     return getcounter('DL')
 
+
 def getpr():
+
     return getcounter('PR')
 
+
 class TestCron(TestCase):
+
     fixtures = ['common_test.json']
 
     def test_szr_notice(self):
@@ -291,6 +315,7 @@ class TestCron(TestCase):
         self.assertFalse(models.Lock.objects.exists())
         self.assertFalse(models.Pending.objects.exists())
 
+
 class TestFields(SimpleTestCase):
 
     def test_prnum(self):
@@ -358,6 +383,7 @@ class TestFields(SimpleTestCase):
         with self.assertRaises(forms.ValidationError):
             f.validate([])
 
+
 class TestForms(TestCase):
 
     def test_UserAddForm(self):
@@ -388,6 +414,7 @@ class TestForms(TestCase):
         d['username'] = 'existing'
         self.assertFalse(forms.UserAddForm(d).is_valid())
 
+
 class TestGlob(SimpleTestCase):
 
     def test_register_regex(self):
@@ -396,6 +423,7 @@ class TestGlob(SimpleTestCase):
             self.assertIsNotNone(rr.match(p), msg=p)
         for p in ['X', '']:
             self.assertIsNone(rr.match(p), msg=p)
+
 
 class TestModels(TestCase):
 
@@ -412,10 +440,12 @@ class TestModels(TestCase):
             valid=date(2016, 5, 18))
         self.assertEqual(str(p), 'Test, 2016-05-18')
 
+
 def proc_link(l):
     if not l:
         return -1
     return int(l.split('=')[-1])
+
 
 class TestUtils1(SimpleTestCase):
 
@@ -945,6 +975,7 @@ class TestUtils1(SimpleTestCase):
         self.assertFalse(utils.icmp('a', ''))
         self.assertFalse(utils.icmp('', 'a'))
 
+
 class TestUtils2(TestCase):
 
     def test_getpreset(self):
@@ -959,6 +990,7 @@ class TestUtils2(TestCase):
             valid=(today + glob.odp))
         self.assertEqual(utils.getpreset('XXX'), 0)
         self.assertEqual(utils.getpreset('Test'), 15)
+
 
 class TestViews(TestCase):
 

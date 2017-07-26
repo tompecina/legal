@@ -24,67 +24,81 @@ from datetime import date
 from django.core.validators import RegexValidator
 from common import forms, fields, widgets
 from common.glob import text_opts, ic_regex, rc_full_regex
-from .glob import MAX_LENGTH
+from dir.glob import MAX_LENGTH
+
 
 curryear = date.today().year
 
+
 class DebtorForm(forms.Form):
+
     desc = fields.CharField(
         max_length=255,
         label='Popis',
         widget=widgets.sew(attrs={'class': 'width-full'}))
+
     court = fields.CharField(
         max_length=255,
         required=False,
         label='Insolvenční soud',
         initial='')
+
     name = fields.CharField(
         widget=widgets.sew(),
         max_length=MAX_LENGTH,
         required=False,
         label='Příjmení/název')
+
     name_opt = fields.ChoiceField(
         widget=widgets.rs,
         choices=text_opts,
         label='Posice',
         initial='icontains')
+
     first_name = fields.CharField(
         widget=widgets.sew(),
         max_length=MAX_LENGTH,
         required=False,
         label='Jméno')
+
     first_name_opt = fields.ChoiceField(
         widget=widgets.rs,
         choices=text_opts,
         label='Posice',
         initial='icontains')
+
     genid = fields.CharField(
         widget=widgets.ssew(),
         required=False,
         max_length=9,
         validators=[RegexValidator(regex=ic_regex)],
         label='IČO')
+
     taxid = fields.CharField(
         widget=widgets.ssew(),
         required=False,
         max_length=14,
         label='DIČ')
+
     birthid = fields.CharField(
         widget=widgets.ssew(),
         required=False,
         max_length=11,
         validators=[RegexValidator(regex=rc_full_regex)],
         label='Rodné číslo')
+
     date_birth = fields.DateField(
         widget=widgets.dw(),
         required=False,
         label='Datum narození')
+
     year_birth_from = fields.IntegerField(
         widget=widgets.yw(),
         min_value=1900,
         max_value=curryear,
         initial='',
         required=False)
+
     year_birth_to = fields.IntegerField(
         widget=widgets.yw(),
         min_value=1900,

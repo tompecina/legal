@@ -1,7 +1,10 @@
 function courtchanged(event) {
+
     $('#id_courtroom option').slice(1).remove();
     $('#id_judge option').slice(1).remove();
+
     var court = $(event.target).val();
+
     if (court) {
 	$.get('/psj/court/' + court + '/', null, function(response) {
 	    $('#id_courtroom option')
@@ -13,6 +16,7 @@ function courtchanged(event) {
 	});
     }
 }
+
 $(function() {
     $('#id_court').change(courtchanged);
 });

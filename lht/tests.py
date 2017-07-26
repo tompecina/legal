@@ -24,7 +24,8 @@ from http import HTTPStatus
 from datetime import date
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase
-from . import forms
+from lht import forms
+
 
 class TestForms(SimpleTestCase):
 
@@ -55,6 +56,7 @@ class TestForms(SimpleTestCase):
              'preset': 'd3',
              'unit': 'd'})
         self.assertTrue(f.is_valid())
+
 
 pp = [
     ['1.7.2016', 'd3', '', 'd',
@@ -150,6 +152,7 @@ ee = [
     ['1.7.2016', 'none', '0', 'b'],
     ['31.12.1990', 'none', '5', 'b'],
 ]
+
 
 class TestViews(SimpleTestCase):
 

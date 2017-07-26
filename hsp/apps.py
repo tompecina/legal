@@ -22,7 +22,9 @@
 
 from django.apps import AppConfig
 
+
 class HspConfig(AppConfig):
+
     name = 'hsp'
     verbose_name = 'Historie složené pohledávky'
     version = '1.6'

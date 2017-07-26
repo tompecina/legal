@@ -22,7 +22,9 @@
 
 from django.apps import AppConfig
 
+
 class HjpConfig(AppConfig):
+
     name = 'hjp'
     verbose_name = 'Historie jednoduché pohledávky'
     version = '1.6'

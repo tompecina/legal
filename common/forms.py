@@ -23,16 +23,22 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
-from .glob import MIN_PWLEN
+from common.glob import MIN_PWLEN
+
 
 class ValidationError(forms.ValidationError):
+
     pass
 
+
 class Form(forms.Form):
+
     error_css_class = 'err'
     use_required_attribute = False
 
+
 class UserAddForm(UserChangeForm, UserCreationForm, Form):
+
     captcha = forms.CharField(
         label='Kontrolní otázka',
         help_text='Jaké je hlavní město České republiky?')
@@ -79,7 +85,9 @@ class UserAddForm(UserChangeForm, UserCreationForm, Form):
             raise ValidationError('Wrong answer')
         return captcha
 
+
 class LostPwForm(Form):
+
     username = forms.CharField(
         max_length=150,
         label='Uživatelské jméno')

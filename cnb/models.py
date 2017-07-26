@@ -22,29 +22,39 @@
 
 from django.db import models
 
+
 class FXrate(models.Model):
+
     date = models.DateField(
         db_index=True)
+
     text = models.TextField()
 
     def __str__(self):
         return '{}'.format(self.date)
 
+
 class MPIrate(models.Model):
+
     type = models.CharField(
         max_length=20,
         unique_for_date='valid')
+
     rate = models.FloatField()
+
     valid = models.DateField(
         db_index=True)
 
     def __str__(self):
         return self.type
 
+
 class MPIstat(models.Model):
+
     type = models.CharField(
         max_length=20,
         primary_key=True)
+
     timestamp_update = models.DateTimeField(
         auto_now=True)
 

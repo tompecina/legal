@@ -23,7 +23,9 @@
 from datetime import datetime, timedelta
 from django.apps import AppConfig
 
+
 class SurConfig(AppConfig):
+
     name = 'sur'
     verbose_name = 'Sledování účastníků řízení'
     version = '1.0'

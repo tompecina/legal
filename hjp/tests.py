@@ -31,10 +31,13 @@ from common.settings import BASE_DIR
 from common.tests import TEST_STRING, stripxml
 from common.utils import p2c
 from cache.tests import DummyRequest
-from . import forms, views
+from hjp import forms, views
+
 
 APP = __package__
+
 TEST_DIR = join(BASE_DIR, APP, 'testdata')
+
 
 class TestForms(SimpleTestCase):
 
@@ -121,6 +124,7 @@ class TestForms(SimpleTestCase):
              'pd_rate': '0.125'})
         self.assertTrue(f.is_valid())
 
+
 class TestViews1(SimpleTestCase):
 
     def test_xml(self):
@@ -151,7 +155,9 @@ class TestViews1(SimpleTestCase):
     def test_getrows4(self):
         self.assertEqual(views.getrows4(views.Debt()), [])
 
+
 class TestViews2(TestCase):
+
     fixtures = ['hjp_test.json']
 
     def setUp(self):

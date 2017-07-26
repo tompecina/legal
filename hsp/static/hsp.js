@@ -1,9 +1,11 @@
 $(function() {
+
     function submit_mainform() {
 	$('#id_next').val(this);
 	$('#id_mainform').submit();
 	return false;
     }
+
     function mainpage_reset_onclick() {
 	if ($('.itr').length ||
 	    $('#id_title').val() ||
@@ -14,6 +16,7 @@ $(function() {
 	    return true;
 	}
     }
+
     function mainpage_load_button_onclick() {
 	if ($('#id_load').val()) {
 	    if ($('.itr').length ||
@@ -29,10 +32,12 @@ $(function() {
 	    return false;
 	}
     }
+
     function mainpage_load_onchange() {
 	$('#id_load_button').click();
 	return true;
     }
+
     function debitform_updatemodels() {
 	if ($('[value=fixed]').c()) {
 	    class_enable($('#id_fa'));
@@ -104,6 +109,7 @@ $(function() {
 	}
 	return true;
     }
+
     function credit_reorder() {
 	var $t = $(this);
 	var $s = $('div.debord select');
@@ -127,11 +133,13 @@ $(function() {
 	    pv = $t.data('pv');
 	}
     }
+
     function fxform_updatefields() {
 	$('.curr_from').text($('#id_currency_from').val().toUpperCase());
 	$('.curr_to').text($('#id_currency_to').val().toUpperCase());
 	return true;
     }
+
     if ($('#id_mainform').length) {
 	$('#id_next').r();
 	$('#id_reset').click(mainpage_reset_onclick);

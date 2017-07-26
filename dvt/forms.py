@@ -22,20 +22,25 @@
 
 from common import forms, fields, widgets
 
+
 class MainForm(forms.Form):
+
     beg_date = fields.DateField(
         widget=widgets.dw(),
         label='Nástup trestu')
+
     years = fields.IntegerField(
         widget=widgets.shw(),
         required=False,
         min_value=0,
         label='let')
+
     months = fields.IntegerField(
         widget=widgets.shw(),
         required=False,
         min_value=0,
         label='měsíců')
+
     days = fields.IntegerField(
         widget=widgets.shw(),
         required=False,

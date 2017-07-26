@@ -34,22 +34,26 @@ from django.urls import reverse
 from django.apps import apps
 from django.db import connection
 from django import get_version
-from .settings import APPS
-from .forms import UserAddForm, LostPwForm, MIN_PWLEN
-from .utils import send_mail, logger
-from .glob import inerr, localsubdomain, localurl
-from .models import PwResetLink
+from common.settings import APPS
+from common.forms import UserAddForm, LostPwForm, MIN_PWLEN
+from common.utils import send_mail, logger
+from common.glob import inerr, localsubdomain, localurl
+from common.models import PwResetLink
+
 
 @require_http_methods(['GET'])
 def robots(request):
+
     logger.debug('robots.txt requested', request)
     return render(
         request,
         'robots.txt',
         content_type='text/plain; charset=utf-8')
 
+
 @require_http_methods(['GET', 'POST'])
 def unauth(request):
+
     logger.debug('Unauthorized access', request)
     var = {'page_title': 'Neoprávněný přístup'}
     return render(
@@ -58,8 +62,10 @@ def unauth(request):
         var,
         status=HTTPStatus.UNAUTHORIZED)
 
+
 @require_http_methods(['GET', 'POST'])
 def error(request):
+
     logger.debug(
         'Internal server error page generated',
         request)
@@ -73,8 +79,10 @@ def error(request):
         var,
         status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
+
 @require_http_methods(['GET', 'POST'])
 def logout(request):
+
     logger.debug(
         'Logout page accessed using method {}'.format(request.method),
         request)
@@ -87,9 +95,11 @@ def logout(request):
             request)
     return redirect('home')
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def pwchange(request):
+
     logger.debug(
         'Password change page accessed using method {}'.format(request.method),
         request,
@@ -122,8 +132,10 @@ def pwchange(request):
             return redirect('/accounts/pwchanged/')
     return render(request, 'pwchange.html', var)
 
+
 @require_http_methods(['GET', 'POST'])
 def lostpw(request):
+
     logger.debug(
         'Lost password page accessed using method {}'.format(request.method),
         request,
@@ -173,12 +185,15 @@ def lostpw(request):
          'err_message': err_message,
         })
 
+
 LINKLIFE = timedelta(1)
 PWCHARS = 'ABCDEFGHJKLMNPQRSTUVWXabcdefghijkmnopqrstuvwx23456789'
 PWLEN = 10
 
+
 @require_http_methods(['GET'])
 def resetpw(request, link):
+
     logger.debug('Password reset page accessed', request)
     PwResetLink.objects \
         .filter(timestamp_add__lt=(datetime.now() - LINKLIFE)).delete()
@@ -200,7 +215,9 @@ def resetpw(request, link):
          'newpassword': newpassword,
         })
 
+
 def getappinfo():
+
     appinfo = []
     for id in APPS:
         c = apps.get_app_config(id)
@@ -213,8 +230,10 @@ def getappinfo():
                  'url': (id + ':mainpage')})
     return appinfo
 
+
 @require_http_methods(['GET'])
 def home(request):
+
     logger.debug('Home page accessed', request)
     return render(
         request,
@@ -222,8 +241,10 @@ def home(request):
         {'page_title': 'Právnické výpočty',
          'apps': getappinfo(), 'suppress_home': True})
 
+
 @require_http_methods(['GET'])
 def about(request):
+
     logger.debug('About page accessed', request)
     env = [
         {'name': 'Python', 'version' : python_version()},
@@ -237,7 +258,9 @@ def about(request):
         'about.html',
         {'page_title': 'O aplikaci', 'apps': getappinfo(), 'env': env})
 
+
 def getappstat():
+
     appstat = []
     for id in APPS:
         c = apps.get_app_config(id)
@@ -250,8 +273,10 @@ def getappstat():
     logger.debug('Statistics combined')
     return appstat
 
+
 @require_http_methods(['GET'])
 def stat(request):
+
     logger.debug('Statistics page accessed', request)
     return render(
         request,
@@ -260,7 +285,9 @@ def stat(request):
          'apps': getappstat(),
         })
 
+
 def getuserinfo(user):
+
     userinfo = []
     for id in APPS:
         c = apps.get_app_config(id)
@@ -271,9 +298,11 @@ def getuserinfo(user):
             .format(user.username, user.id))
     return userinfo
 
+
 @require_http_methods(['GET'])
 @login_required
 def user(request):
+
     logger.debug('User information page accessed', request)
     return render(
         request,
@@ -282,8 +311,10 @@ def user(request):
          'userinfo': getuserinfo(request.user),
         })
 
+
 @require_http_methods(['GET', 'POST'])
 def useradd(request):
+
     logger.debug(
         'User add page accessed using method {}'.format(request.method),
         request,
@@ -326,8 +357,10 @@ def useradd(request):
          'suppress_topline': True,
         })
 
+
 @require_http_methods(['GET'])
 def genrender(request, template=None, **kwargs):
+
     logger.debug(
         'Generic page rendered using template "{}"'.format(template),
         request)

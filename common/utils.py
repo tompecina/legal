@@ -32,10 +32,11 @@ import requests
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.pdfbase.pdfdoc import PDFName, PDFDictionary, PDFStream
 from django.core import mail
-from .settings import TEST
-from .glob import (
+from common.settings import TEST
+from common.glob import (
     hd, odp, ydconvs, mdconvs, registers, localsubdomain, localemail)
-from .models import Preset
+from common.models import Preset
+
 
 class Logger:
 
@@ -67,9 +68,12 @@ class Logger:
     def debug(self, *args, **kwargs):
         self._proc(self._logger.debug, args, kwargs)
 
+
 logger = Logger()
 
+
 def easter(dt):
+
     y = dt.year
     g = y % 19
     e = 0
@@ -84,8 +88,11 @@ def easter(dt):
     return ((dt.month == m) and (dt.day == d)) or \
            ((y >= 2016) and (dt2.month == m) and (dt2.day == d))
 
+
 def pd(d):
+
     return '{:d}. {:d}. {:d}'.format(d.day, d.month, d.year)
+
 
 def tod(dt):
 
@@ -105,20 +112,26 @@ def tod(dt):
 
     return dt.weekday() > 4
 
+
 def ply(t, n):
+
     y = t.year + n
     m = t.month
     d = min(t.day, monthrange(y, m)[1])
     return date(y, m, d)
 
+
 def plm(t, n):
+
     m = t.month + n
     y = t.year + ((m - 1) // 12)
     m = ((m - 1) % 12) + 1
     d = min(t.day, monthrange(y, m)[1])
     return date(y, m, d)
 
+
 def yfactor(beg, end, dconv):
+
     if (end < beg) or (dconv not in ydconvs):
         return None
 
@@ -183,7 +196,9 @@ def yfactor(beg, end, dconv):
                 d2 = 1
         return (360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1)) / 360.0
 
+
 def mfactor(beg, end, dconv):
+
     if (end < beg) or (dconv not in mdconvs):
         return None
 
@@ -237,7 +252,9 @@ def mfactor(beg, end, dconv):
                 d2 = 1
         return (360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1)) / 30.0
 
+
 def grammar(n, t):
+
     a = abs(n)
     if a == 1:
         s = t[0]
@@ -247,23 +264,32 @@ def grammar(n, t):
         s = t[1]
     return '{:d} {}'.format(n, s)
 
+
 def getbutton(request):
+
     for i in request.POST:
         if i.startswith('submit_'):
             return i[7:]
     return None
 
+
 def p2c(s):
+
     return s.replace('.', ',')
 
 def c2p(s):
+
     return s.replace(',', '.')
 
+
 class Lf(float):
+
     def __format__(self, format):
         return p2c(super(Lf, self).__format__(format))
 
+
 def formam(x):
+
     if isinstance(x, int):
         s = '{:d}'.format(x)
     else:
@@ -278,28 +304,40 @@ def formam(x):
         i -= 3
     return ''.join(l)
 
+
 def getint(s):
+
     if s:
         return int(s)
     return 0
 
+
 def unrequire(f, flds):
+
     for fld in flds:
         f.fields[fld].required = False
 
+
 def xmldecorate(tag, table):
+
     if tag.name in table:
         for key, val in table[tag.name].items():
             tag[key] = val
     return tag
 
+
 def xmlescape(t):
+
     return escape(t).strip()
 
+
 def xmlunescape(t):
+
     return unescape(t.strip())
 
+
 def rmdsl(l):
+
     if l:
         s = l[-1]
         for i in range((len(l) - 2), -1, -1):
@@ -309,7 +347,9 @@ def rmdsl(l):
                 s = l[i]
     return l
 
+
 def newXML(data):
+
     if data:
         xml = BeautifulSoup(data, 'xml')
     else:
@@ -317,7 +357,9 @@ def newXML(data):
     xml.is_xml = True
     return xml
 
+
 def getXML(d):
+
     if d.startswith(b'<?xml'):
         try:
             return newXML(d)
@@ -337,22 +379,27 @@ def getXML(d):
             return newXML(m.stream.encode('latin-1'))
         except:
             try:
-                return newXML(d.encode('latin-1')
-                              .split('endstream')[0]
-                              .split('stream')[1])
+                return newXML(
+                    d.encode('latin-1') \
+                        .split('endstream')[0] \
+                        .split('stream')[1])
             except:
                 try:
                     return newXML(d.encode('latin-1'))
                 except:
                     return None
 
+
 def iso2date(tag):
+
     if tag.has_attr('year') and tag.has_attr('month') and tag.has_attr('day'):
         return date(int(tag['year']), int(tag['month']), int(tag['day']))
     t = tag.text.strip().split('-')
     return date(int(t[0]), int(t[1]), int(t[2]))
 
+
 class CanvasXML(Canvas):
+
     def save(self):
         data = PDFStream(
             dictionary=PDFDictionary(
@@ -366,9 +413,12 @@ class CanvasXML(Canvas):
         self._doc.Catalog.__setattr__('Data', data)
         Canvas.save(self)
 
+
 TIMEOUT = 1000
 
+
 def get(*args, **kwargs):  # pragma: no cover
+
     if TEST:
         from .tests import testreq
         return testreq(False, *args)
@@ -377,7 +427,9 @@ def get(*args, **kwargs):  # pragma: no cover
             kwargs['timeout'] = TIMEOUT
         return requests.get(*args, **kwargs)
 
+
 def post(*args, **kwargs):  # pragma: no cover
+
     if TEST:
         from .tests import testreq
         return testreq(True, *args)
@@ -386,11 +438,15 @@ def post(*args, **kwargs):  # pragma: no cover
             kwargs['timeout'] = TIMEOUT
         return requests.post(*args, **kwargs)
 
+
 def sleep(*args, **kwargs):  # pragma: no cover
+
     if not TEST:
         time.sleep(*args, **kwargs)
 
+
 def send_mail(subject, text, recipients):
+
     try:
         mail.send_mail(
             subject,
@@ -400,6 +456,7 @@ def send_mail(subject, text, recipients):
             fail_silently=True)
     except:  # pragma: no cover
         logger.warning('Failed to send mail')
+
 
 class Pager:
 
@@ -422,7 +479,9 @@ class Pager:
             self.linkf = link(start + batch)
             self.linkff = link(((total - 1) // batch) * batch)
 
+
 def composeref(*args):
+
     if args[0]:
         s = '{:d} '.format(args[0])
     else:
@@ -432,7 +491,9 @@ def composeref(*args):
         s += '-{:d}'.format(args[4])
     return s
 
+
 def decomposeref(ref):
+
     s = ref.split('-')
     if len(s) == 1:
         page = 0
@@ -453,52 +514,74 @@ def decomposeref(ref):
         return senate, register, int(t[0]), int(t[1]), page
     return senate, register, int(t[0]), int(t[1])
 
+
 def normreg(reg):
+
     rl = reg.lower()
     for r in registers:
         if r.lower() == rl:
             return r
     return reg.title()
 
+
 def xmlbool(x):
+
     if x:
         return 'true'
     return 'false'
 
+
 def icontains(needle, haystack):
+
     return needle.lower() in haystack.lower()
 
+
 def istartswith(needle, haystack):
+
     return haystack.lower().startswith(needle.lower())
 
 def iendswith(needle, haystack):
     return haystack.lower().endswith(needle.lower())
 
+
 def iexact(needle, haystack):
+
     return needle.lower() == haystack.lower()
 
+
 def text_opt(needle, haystack, opt):
+
     if not needle:
         return True
     if not haystack:
         return False
     return [icontains, istartswith, iendswith, iexact][opt](needle, haystack)
 
+
 def lim(lower, x, upper):
+
     return min(max(lower, x), upper)
 
+
 def between(lower, x, upper):
+
     return (x >= lower) and (x <= upper)
 
+
 def normalize(s):
+
     return ' '.join(s.replace('\u00a0', ' ').strip().split())
 
+
 def icmp(x, y):
+
     if x and y:
         return x.lower() == y.lower()
     return x == y
 
+
 def getpreset(id):
+
     try:
         return Preset.objects.filter(name=id, valid__lte=date.today()) \
             .latest('valid').value

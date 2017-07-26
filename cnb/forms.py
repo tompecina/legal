@@ -23,20 +23,25 @@
 from datetime import date
 from common import forms, fields, widgets
 
+
 class MainForm(forms.Form):
+
     curr = fields.CurrencyField(
         czk=False,
         label='Měna',
         initial='EUR')
+
     fx_date = fields.DateField(
         widget=widgets.dw(today=True),
         label='ke dni',
         initial=date.today)
+
     basis = fields.AmountField(
         widget=widgets.aw(),
         min_value=0.01,
         label='Základ',
         localize=True)
+
     mpi_date = fields.DateField(
         widget=widgets.dw(today=True),
         label='Ke dni',

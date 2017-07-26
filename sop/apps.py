@@ -22,7 +22,9 @@
 
 from django.apps import AppConfig
 
+
 class SopConfig(AppConfig):
+
     name = 'sop'
     verbose_name = 'Soudní poplatek'
     version = '1.0'

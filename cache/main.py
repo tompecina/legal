@@ -26,6 +26,7 @@ from django.db.transaction import atomic
 from common.utils import get, logger
 from .models import Cache, Asset
 
+
 def getcache(url, lifespan):
     Cache.objects.filter(expire__lt=datetime.now()).delete()
     c = Cache.objects.filter(url=url)
@@ -43,6 +44,7 @@ def getcache(url, lifespan):
     ).save()
     return (t, None)
 
+
 def getasset(request, asset):
     Asset.objects.filter(expire__lt=datetime.now()).delete()
     sid = request.COOKIES.get('sessionid')
@@ -50,6 +52,7 @@ def getasset(request, asset):
         return None
     a = Asset.objects.filter(sessionid=sid, assetid=asset)
     return b64decode(a[0].data) if a else None
+
 
 @atomic
 def setasset(request, asset, data, lifespan):

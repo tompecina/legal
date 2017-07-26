@@ -23,7 +23,8 @@
 from http import HTTPStatus
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
-from . import forms
+from sop import forms
+
 
 class TestForms(SimpleTestCase):
 
@@ -50,6 +51,7 @@ class TestForms(SimpleTestCase):
              'basis': '1000',
              'opt': 'none'})
         self.assertTrue(f.is_valid())
+
 
 pp = [
     ['1', 'CZK', '', '', '1', 'none', '600'],
@@ -241,7 +243,9 @@ ee = [
     ['5690', 'XXX', '', '1.7.2016', '1', 'none'],
 ]
 
+
 class TestViews(TestCase):
+
     fixtures = ['sop_test.json']
 
     def test_main(self):

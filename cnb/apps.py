@@ -22,13 +22,15 @@
 
 from django.apps import AppConfig
 
+
 class CnbConfig(AppConfig):
+
     name = 'cnb'
     verbose_name = 'Kursy a sazby ČNB'
     version = '1.0'
 
     def stat(self):
-        from .models import FXrate, MPIrate, MPIstat
+        from cnb.models import FXrate, MPIrate, MPIstat
         from common.utils import logger
         logger.debug('Partial statistics generated')
         return [

@@ -26,58 +26,78 @@ from django.contrib.auth.models import User
 from common.utils import composeref
 from common.glob import register_regex
 
+
 class Court(models.Model):
+
     id = models.CharField(
         max_length=30,
         primary_key=True)
+
     name = models.CharField(
         max_length=255,
         unique=True)
+
     reports = models.ForeignKey(
         'self',
         null=True,
         on_delete=models.SET_NULL)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True)
 
     def __str__(self):
         return self.name
 
+
 class Proceedings(models.Model):
+
     uid = models.ForeignKey(
         User,
         on_delete=models.CASCADE)
+
     court = models.ForeignKey(
         Court,
         on_delete=models.CASCADE)
+
     senate = models.IntegerField(
         validators=[MinValueValidator(0)])
+
     register = models.CharField(
         max_length=30,
         validators=[RegexValidator(regex=register_regex)])
+
     number = models.PositiveIntegerField()
+
     year = models.IntegerField(
         validators=[MinValueValidator(1990)])
+
     auxid = models.IntegerField(
         default=0)
+
     desc = models.CharField(
         max_length=255,
         blank=True,
         db_index=True)
+
     hash = models.CharField(
         max_length=32,
         blank=True,
         validators=[RegexValidator(regex=r'[0-9a-f]{32}')])
+
     changed = models.DateTimeField(
         null=True)
+
     updated = models.DateTimeField(
         null=True,
         db_index=True)
+
     notify = models.BooleanField(
         default=False)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)
+
     timestamp_update = models.DateTimeField(
         auto_now=True)
 

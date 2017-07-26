@@ -31,7 +31,8 @@ from psj.cron import cron_schedule, cron_update as psj_update
 from psj.models import Task, Hearing
 from udn.cron import cron_update as udn_update
 from udn.models import Decision
-from . import cron, models
+from sur import cron, models
+
 
 pp = [
     ['Jč', 0, 261, 166, 166, 166, 234],
@@ -48,7 +49,9 @@ pp = [
     ['hUIS', 1, 2, 2],
 ]
 
+
 class TestCron(TestCase):
+
     fixtures = ['sur_test.json']
 
     def test_sur_notice(self):
@@ -127,7 +130,9 @@ class TestCron(TestCase):
             '&date_to=2016-12-01\n\n')
         self.assertEqual(cron.sur_notice(1), '')
 
+
 class TestModels(TestCase):
+
     fixtures = ['sur_test.json']
 
     def test_models(self):
@@ -139,6 +144,7 @@ class TestModels(TestCase):
         self.assertEqual(
             str(models.Found.objects.first()),
             'Nejvyšší správní soud, 4 Ads 208/2015')
+
 
 class TestViews(TestCase):
 

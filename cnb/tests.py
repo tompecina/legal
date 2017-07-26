@@ -25,7 +25,8 @@ from datetime import date, timedelta
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 from cache.models import Cache
-from . import main, models
+from cnb import main, models
+
 
 class TestMain(TestCase):
 
@@ -145,6 +146,7 @@ class TestMain(TestCase):
             main.getMPIrate('DISC', date(2014, 11, 19)),
             (None, 'Chyba tabulky sazeb (2)'))
 
+
 bn = ['submit_show_fx',
       'submit_conv_from',
       'submit_conv_to',
@@ -247,6 +249,7 @@ pp = [
      ['Chybné zadání']],
 ]
 
+
 class TestModels(SimpleTestCase):
 
     def test_models(self):
@@ -265,6 +268,7 @@ class TestModels(SimpleTestCase):
             str(models.MPIstat(
                 type='LOMB')),
             'LOMB')
+
 
 class TestViews(TestCase):
 

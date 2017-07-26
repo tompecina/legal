@@ -21,10 +21,14 @@
 #
 from django.db import models
 
+
 class Cache(models.Model):
+
     url = models.URLField(
         db_index=True)
+
     text = models.TextField()
+
     expire = models.DateTimeField(
         null=True,
         db_index=True)
@@ -32,12 +36,17 @@ class Cache(models.Model):
     def __str__(self):
         return self.url
 
+
 class Asset(models.Model):
+
     sessionid = models.CharField(
         max_length=32)
+
     assetid = models.CharField(
         max_length=30)
+
     data = models.TextField()
+
     expire = models.DateTimeField(
         null=True,
         db_index=True)

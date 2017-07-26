@@ -22,5 +22,7 @@
 
 from common.utils import getpreset
 
+
 def getVAT():
+
     return getpreset('VAT')

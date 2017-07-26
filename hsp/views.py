@@ -50,13 +50,16 @@ from common.glob import (
 from common.views import error
 from cache.main import getasset, setasset
 from cnb.main import getMPIrate, getFXrate
-from .forms import MainForm, DebitForm, CreditForm, BalanceForm, FXform
+from hsp.forms import MainForm, DebitForm, CreditForm, BalanceForm, FXform
+
 
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
 
+
 class Debt(object):
+
     def __init__(self):
         self.title = ''
         self.note = ''
@@ -67,7 +70,9 @@ class Debt(object):
         self.balances = []
         self.fxrates = []
 
+
 class Debit(object):
+
     def __init__(self):
         self.description = ''
         self.model = 'fixed'
@@ -82,7 +87,9 @@ class Debit(object):
         self.date_from = None
         self.date_to = None
 
+
 class Credit(object):
+
     def __init__(self):
         self.description = ''
         self.date = None
@@ -90,12 +97,16 @@ class Credit(object):
         self.currency = 'CZK'
         self.debits = []
 
+
 class Balance(object):
+
     def __init__(self):
         self.description = ''
         self.date = None
 
+
 class FXrate(object):
+
     def __init__(self):
         self.currency_from = None
         self.currency_to = None
@@ -104,12 +115,17 @@ class FXrate(object):
         self.date_from = None
         self.date_to = None
 
+
 class Result(object):
+
     pass
+
 
 aid = '{} {}'.format(APP.upper(), APPVERSION)
 
+
 def getdebt(request):
+
     a = getasset(request, aid)
     if a:
         try:
@@ -120,13 +136,19 @@ def getdebt(request):
     a = getasset(request, aid)
     return loads(a) if a else None
 
+
 def setdebt(request, data):
+
     return setasset(request, aid, dumps(data), timedelta(weeks=10))
 
+
 def n2l(n):
+
     return chr(ord('A') + n) if (n <= (ord('Z') - ord('A'))) else '?'
 
+
 DR, CR, BAL = tuple(range(3))
+
 
 def calcint(interest, pastdate, presdate, debt, res):
 
@@ -245,7 +267,9 @@ def calcint(interest, pastdate, presdate, debt, res):
 
     return (None, 'Neznámý model')
 
+
 def distr(debt, dt, credit, amount, disarr, res):
+
     if amount < LIM:
         return (0.0, None)
     for i in credit.debits:
@@ -298,6 +322,7 @@ def distr(debt, dt, credit, amount, disarr, res):
             amount -= (debit.nb / rt)
             debit.nb = 0.0
     return (amount, None)
+
 
 def calc(debt, pram=(lambda x: x)):
 
@@ -546,7 +571,9 @@ def calc(debt, pram=(lambda x: x)):
 
     return res
 
+
 def toxml(debt):
+
     xd = {
         'debt': {
             'xmlns': 'http://' + localsubdomain,
@@ -697,7 +724,9 @@ def toxml(debt):
     d.append(ts)
     return str(xml).encode('utf-8') + b'\n'
 
+
 def fromxml(d):
+
     s = getXML(d)
     if not s:
         return None, 'Chybný formát souboru (1)'
@@ -842,6 +871,7 @@ def fromxml(d):
                 b.description = xmlunescape(tt.description.text.strip())
                 b.date = iso2date(tt.date)
     return debt, None
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -993,18 +1023,23 @@ def mainpage(request):
                     c.restoreState()
 
                 reportlab.rl_config.warnOnMissingFontGlyphs = 0
+
                 registerFont(TTFont(
                     'Bookman',
                     join(FONT_DIR, 'URWBookman-Regular.ttf')))
+
                 registerFont(TTFont(
                     'BookmanB',
                     join(FONT_DIR, 'URWBookman-Bold.ttf')))
+
                 registerFont(TTFont(
                     'BookmanI',
                     join(FONT_DIR, 'URWBookman-Italic.ttf')))
+
                 registerFont(TTFont(
                     'BookmanBI',
                     join(FONT_DIR, 'URWBookman-BoldItalic.ttf')))
+
                 registerFontFamily(
                     'Bookman',
                     normal='Bookman',
@@ -1020,6 +1055,7 @@ def mainpage(request):
                     alignment=TA_RIGHT,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s2 = ParagraphStyle(
                     name='S2',
                     fontName='BookmanB',
@@ -1028,6 +1064,7 @@ def mainpage(request):
                     alignment=TA_RIGHT,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s4 = ParagraphStyle(
                     name='S4',
                     fontName='BookmanB',
@@ -1035,6 +1072,7 @@ def mainpage(request):
                     leading=10,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s12 = ParagraphStyle(
                     name='S12',
                     fontName='BookmanI',
@@ -1045,6 +1083,7 @@ def mainpage(request):
                     leftIndent=8,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s13 = ParagraphStyle(
                     name='S13',
                     fontName='Bookman',
@@ -1053,6 +1092,7 @@ def mainpage(request):
                     alignment=TA_CENTER,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s14 = ParagraphStyle(
                     name='S14',
                     fontName='BookmanB',
@@ -1060,6 +1100,7 @@ def mainpage(request):
                     leading=12,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s15 = ParagraphStyle(
                     name='S15',
                     fontName='BookmanB',
@@ -1068,6 +1109,7 @@ def mainpage(request):
                     alignment=TA_CENTER,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s17 = ParagraphStyle(
                     name='S17',
                     fontName='Bookman',
@@ -1076,6 +1118,7 @@ def mainpage(request):
                     alignment=TA_CENTER,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s18 = ParagraphStyle(
                     name='S18',
                     fontName='Bookman',
@@ -1083,13 +1126,7 @@ def mainpage(request):
                     leading=10,
                     allowWidows=False,
                     allowOrphans=False)
-                s19 = ParagraphStyle(
-                    name='S19',
-                    fontName='Bookman',
-                    fontSize=8,
-                    leading=10,
-                    allowWidows=False,
-                    allowOrphans=False)
+
                 s20 = ParagraphStyle(
                     name='S20',
                     fontName='Bookman',
@@ -1102,6 +1139,7 @@ def mainpage(request):
                     bulletFontSize=8,
                     bulletIndent=8,
                     leftIndent=16)
+
                 s22 = ParagraphStyle(
                     name='S22',
                     fontName='BookmanI',
@@ -1110,6 +1148,7 @@ def mainpage(request):
                     alignment=TA_CENTER,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s23 = ParagraphStyle(
                     name='S23',
                     fontName='BookmanB',
@@ -1120,6 +1159,7 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False,
                     keepWithNext=True)
+
                 s24 = ParagraphStyle(
                     name='S24',
                     fontName='Bookman',
@@ -1133,6 +1173,7 @@ def mainpage(request):
                     bulletIndent=8,
                     leftIndent=24,
                     keepWithNext=True)
+
                 s25 = ParagraphStyle(
                     name='S25',
                     fontName='Bookman',
@@ -1141,6 +1182,7 @@ def mainpage(request):
                     leftIndent=24,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s26 = ParagraphStyle(
                     name='S26',
                     fontName='Bookman',
@@ -1578,6 +1620,7 @@ def mainpage(request):
          'sb': sb,
          'err_message': err_message})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def debitform(request, id=0):
@@ -1716,9 +1759,11 @@ def debitform(request, id=0):
          'mdconvs': mdconvs,
          'err_message': err_message})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def debitdel(request, id=0):
+
     logger.debug(
         'Debit delete page accessed using method {}, id={}' \
             .format(request.method, id),
@@ -1757,6 +1802,7 @@ def debitdel(request, id=0):
                 return error(request)
             return redirect('hsp:debitdeleted')
         return redirect('hsp:mainpage')
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -1868,9 +1914,11 @@ def creditform(request, id=0):
          'err_message': err_message,
          'deb_class': deb_class})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def creditdel(request, id=0):
+
     logger.debug(
         'Credit delete page accessed using method {}, id={}' \
             .format(request.method, id),
@@ -1897,6 +1945,7 @@ def creditdel(request, id=0):
                 return error(request)
             return redirect('hsp:creditdeleted')
         return redirect('hsp:mainpage')
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -1959,9 +2008,11 @@ def balanceform(request, id=0):
          'page_title': page_title,
          'err_message': err_message})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def balancedel(request, id=0):
+
     logger.debug(
         'Balance delete page accessed using method {}, id={}' \
             .format(request.method, id),
@@ -1988,6 +2039,7 @@ def balancedel(request, id=0):
                 return error(request)
             return redirect('hsp:balancedeleted')
         return redirect('hsp:mainpage')
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -2059,9 +2111,11 @@ def fxrateform(request, id=0):
          'err_message': err_message,
          'display_note': True})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def fxratedel(request, id=0):
+
     logger.debug(
         'FX rate delete page accessed using method {}, id={}' \
             .format(request.method, id),

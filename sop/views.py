@@ -27,11 +27,13 @@ from django.apps import apps
 from common.utils import formam, Lf, logger
 from common.glob import inerr_short
 from cnb.main import getFXrate
-from .forms import MainForm
+from sop.forms import MainForm
+
 
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
+
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):

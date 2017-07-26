@@ -40,9 +40,10 @@ from common.glob import (
 from szr.forms import EmailForm
 from sir.glob import l2n, l2s
 from sir.models import Vec
-from .glob import MAX_LENGTH
-from .forms import DebtorForm
-from .models import Debtor
+from dir.glob import MAX_LENGTH
+from dir.forms import DebtorForm
+from dir.models import Debtor
+
 
 APP = __package__
 
@@ -52,6 +53,7 @@ BATCH = 50
 
 OFIELDS = ['name', 'first_name']
 OPTS = [(x + '_opt') for x in OFIELDS]
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -121,6 +123,7 @@ def mainpage(request):
          'rows': rows,
          'pager': Pager(start, total, reverse('dir:mainpage'), rd, BATCH),
          'total': total})
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -194,9 +197,11 @@ def debtorform(request, id=0):
          'courts': courts,
          'err_message': err_message})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def debtordel(request, id=0):
+
     logger.debug(
         'Debtor delete page accessed using method {}, id={}' \
             .format(request.method, id),
@@ -221,9 +226,11 @@ def debtordel(request, id=0):
             return redirect('dir:debtordeleted')
         return redirect('dir:mainpage')
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def debtordelall(request):
+
     logger.debug(
         'Delete all debtors page accessed using method {}' \
             .format(request.method),
@@ -245,6 +252,7 @@ def debtordelall(request):
                 'User "{}" ({:d}) deleted all debtors'.format(uname, uid),
                 request)
         return redirect('dir:mainpage')
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -438,9 +446,11 @@ def debtorbatchform(request):
          'page_title': 'Import dlužníků ze souboru',
          'err_message': err_message})
 
+
 @require_http_methods(['GET'])
 @login_required
 def debtorexport(request):
+
     logger.debug('Debtor export page accessed', request)
     uid = request.user.id
     uname = request.user.username

@@ -23,7 +23,9 @@
 from datetime import datetime, timedelta
 from django.apps import AppConfig
 
+
 class CommonConfig(AppConfig):
+
     name = 'common'
     verbose_name = 'Společné funkce'
     version = None

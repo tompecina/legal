@@ -22,10 +22,11 @@
 
 from django.conf.urls import url
 from common.views import genrender
-from .views import (
+from knr.views import (
     mainpage, placeform, placelist, placedel, carform, carlist, cardel,
     formulaform, formulalist, formuladel, itemlist, itemform, itemdel,
     itemmove, presets)
+
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),

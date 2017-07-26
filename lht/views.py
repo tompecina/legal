@@ -27,11 +27,13 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from common.utils import pd, tod, odp, getbutton, logger
 from common.glob import wn, inerr_short
-from .forms import MainForm
+from lht.forms import MainForm
+
 
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
+
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):

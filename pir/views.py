@@ -34,13 +34,15 @@ from common.glob import (
     inerr, text_opts_keys, exlim_title, localsubdomain, localurl, DTF)
 from sir.glob import l2n, l2s, l2r, s2d, r2i, a2d
 from sir.models import Vec, Osoba, DruhRoleVRizeni, Counter
-from .forms import MainForm
+from pir.forms import MainForm
+
 
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
 
 EXLIM = 1000
+
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
@@ -102,7 +104,9 @@ def mainpage(request):
          'courts': courts,
          'f': f})
 
+
 def g2p(rd):
+
     p = {'id__lte': Counter.objects.get(id='PR').number}
     if 'court' in rd:
         p['idOsobyPuvodce'] = rd['court']
@@ -167,7 +171,9 @@ def g2p(rd):
         p['datumVyskrtnuti__isnull'] = True
     return p
 
+
 def o2s(o, detailed=False):
+
     r = ' '.join(filter(bool, [o.titulPred, o.jmeno, o.nazevOsoby]))
     r = ', '.join(filter(bool, [r, o.titulZa, o.nazevOsobyObchodni]))
     if detailed:
@@ -177,13 +183,17 @@ def o2s(o, detailed=False):
             r += ', IČO:&nbsp;{}'.format(o.ic)
     return r
 
+
 def getosoby(v, *d):
+
     r = [DruhRoleVRizeni.objects.get(desc=r2i[x]).id for x in d]
     l = v.roles.filter(druhRoleVRizeni__in=r).values_list('osoba', flat=True)
     return Osoba.objects.filter(id__in=l).order_by('nazevOsoby', 'jmeno', 'id')
 
+
 @require_http_methods(['GET'])
 def htmllist(request):
+
     logger.debug('HTML list accessed', request, request.GET)
     page_title = apps.get_app_config(APP).verbose_name
     rd = request.GET.copy()
@@ -234,7 +244,9 @@ def htmllist(request):
          'pager': Pager(start, total, reverse('pir:htmllist'), rd, BATCH),
          'total': total})
 
+
 def xml_addparties(osoby, xml, tag, tagname):
+
     for osoba in osoby:
         subtag = xml.new_tag(tagname)
         tag.append(subtag)
@@ -316,8 +328,10 @@ def xml_addparties(osoby, xml, tag, tagname):
                 tag_address.append(tag_email)
         subtag.append(tag_addresses)
 
+
 @require_http_methods(['GET'])
 def xmllist(request):
+
     logger.debug('XML list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
@@ -408,8 +422,10 @@ def xmllist(request):
                 'attachment; filename=Insolvence.xml'
     return response
 
+
 @require_http_methods(['GET'])
 def csvlist(request):
+
     logger.debug('CSV list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
@@ -453,7 +469,9 @@ def csvlist(request):
         writer.writerow(dat)
     return response
 
+
 def json_addparties(osoby):
+
     r = []
     for osoba in osoby:
         o = {'name': osoba.nazevOsoby}
@@ -499,8 +517,10 @@ def json_addparties(osoby):
         r.append(o)
     return r
 
+
 @require_http_methods(['GET'])
 def jsonlist(request):
+
     logger.debug('JSON list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
@@ -545,8 +565,10 @@ def jsonlist(request):
     dump(r, response)
     return response
 
+
 @require_http_methods(['GET'])
 def party(request, id=0):
+
     logger.debug('Party information page accessed, id={}'.format(id), request)
     osoba = get_object_or_404(Osoba, id=id)
     adresy = osoba.adresy.order_by('-id')

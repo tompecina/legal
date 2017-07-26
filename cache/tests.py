@@ -22,14 +22,18 @@
 
 from datetime import datetime, timedelta
 from django.test import SimpleTestCase, TestCase
-from . import main, models
+from cache import main, models
+
 
 class DummyRequest:
+
     def __init__(self, session_id):
         self.COOKIES = {'sessionid': session_id}
         self.META = {'REMOTE_ADDR': ''}
 
+
 class TestMain(TestCase):
+
     fixtures = ['cache_test.json']
 
     def test_getcache(self):
@@ -70,6 +74,7 @@ class TestMain(TestCase):
             main.getasset(
                 DummyRequest('test_session'),
                 'test_asset2'))
+
 
 class TestModels(SimpleTestCase):
 

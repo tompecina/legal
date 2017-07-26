@@ -24,19 +24,26 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Place(models.Model):
+
     uid = models.ForeignKey(
         User,
         null=True,
         on_delete=models.CASCADE)
+
     abbr = models.CharField(
         max_length=30)
+
     name = models.CharField(
         max_length=255)
+
     addr = models.CharField(
         max_length=255)
+
     lat = models.FloatField(
         validators=[MinValueValidator(-90.0), MaxValueValidator(90.0)])
+
     lon = models.FloatField(
         validators=[MinValueValidator(-180.0), MaxValueValidator(180.0)])
 
@@ -46,24 +53,32 @@ class Place(models.Model):
     def __str__(self):
         return self.abbr
 
+
 class Car(models.Model):
+
     uid = models.ForeignKey(
         User,
         on_delete=models.CASCADE)
+
     abbr = models.CharField(
         max_length=30)
+
     name = models.CharField(
         max_length=255)
+
     fuel = models.CharField(
         max_length=30)
+
     cons1 = models.DecimalField(
         max_digits=3,
         decimal_places=1,
         validators=[MinValueValidator(0)])
+
     cons2 = models.DecimalField(
         max_digits=3,
         decimal_places=1,
         validators=[MinValueValidator(0)])
+
     cons3 = models.DecimalField(
         max_digits=3,
         decimal_places=1,
@@ -75,15 +90,20 @@ class Car(models.Model):
     def __str__(self):
         return self.abbr
 
+
 class Formula(models.Model):
+
     uid = models.ForeignKey(
         User,
         null=True,
         on_delete=models.CASCADE)
+
     abbr = models.CharField(
         max_length=30)
+
     name = models.CharField(
         max_length=255)
+
     flat = models.DecimalField(
         max_digits=5,
         decimal_places=2,
@@ -95,13 +115,17 @@ class Formula(models.Model):
     def __str__(self):
         return self.abbr
 
+
 class Rate(models.Model):
+
     formula = models.ForeignKey(
         Formula,
         on_delete=models.CASCADE,
         db_index=False)
+
     fuel = models.CharField(
         max_length=30)
+
     rate = models.DecimalField(
         max_digits=5,
         decimal_places=2,

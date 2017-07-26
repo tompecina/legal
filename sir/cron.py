@@ -25,20 +25,27 @@ from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 from common.utils import normalize, post, logger
 from dir.cron import dir_check
-from .glob import l2n, l2s, SELIST, BELIST
-from .models import (
+from sir.glob import l2n, l2s, SELIST, BELIST
+from sir.models import (
     DruhStavRizeni, Vec, DruhRoleVRizeni, Osoba, Role, DruhAdresy, Adresa,
     Counter, Transaction, Insolvency, Tracked)
 
+
 PREF = 20
 
+
 def convdt(s):
+
     return datetime.strptime(s.string[:19], "%Y-%m-%dT%H:%M:%S")
 
+
 def convd(s):
+
     return datetime.strptime(s.string[:10], "%Y-%m-%d")
 
+
 def cron_gettr():
+
     id = Counter.objects.get(id='DL').number
     while True:
         soup = BeautifulSoup('', 'lxml')
@@ -99,10 +106,14 @@ def cron_gettr():
         Transaction.objects.bulk_create(l)
         logger.debug('Read {:d} transaction(s)'.format(len(l)))
 
+
 def p2s(p):
+
     return 'INS {:d}/{:d}'.format(p.number, p.year)
 
+
 def cron_proctr():
+
     id = Counter.objects.get(id='DL').number
     debtor = DruhRoleVRizeni.objects.get_or_create(desc='DLUŽNÍK')[0]
     for tr in Transaction.objects.filter(error=False).order_by('id'):
@@ -305,11 +316,15 @@ def cron_proctr():
     Counter.objects.update_or_create(id='DL', defaults={'number': id})
     logger.debug('Transactions processed')
 
+
 def cron_deltr():
+
     Transaction.objects.filter(error=False).delete()
     logger.debug('Transactions deleted')
 
+
 def cron_getws2():
+
     id = Counter.objects.get(id='PR').number
 
     for vec in Vec.objects.filter(id__gt=id, link__isnull=True).order_by('id'):
@@ -363,13 +378,17 @@ def cron_getws2():
     Counter.objects.update_or_create(id='PR', defaults={'number': id})
     logger.debug('WS2 information added')
 
+
 def cron_delerr():
+
     Vec.objects \
        .filter(druhStavRizeni=DruhStavRizeni.objects.get(desc='MYLNÝ ZÁP.')) \
        .delete()
     logger.debug('Erroneous proceedings deleted')
 
+
 def cron_update():
+
     cron_getws2()
     cron_gettr()
     cron_proctr()
@@ -377,7 +396,9 @@ def cron_update():
     cron_delerr()
     logger.info('Batch processed')
 
+
 def sir_notice(uid):
+
     text = ''
     tt = Tracked.objects.filter(uid=uid, vec__link__isnull=False) \
         .order_by('desc', 'id').distinct()

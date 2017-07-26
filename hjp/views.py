@@ -48,13 +48,16 @@ from common.glob import ydconvs, mdconvs, LIM, inerr, localsubdomain, localurl
 from common.views import error
 from cache.main import getasset, setasset
 from cnb.main import getMPIrate
-from .forms import MainForm, TransForm
+from hjp.forms import MainForm, TransForm
+
 
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
 
+
 class Debt(object):
+
     def __init__(self):
         self.title = ''
         self.note = ''
@@ -65,16 +68,23 @@ class Debt(object):
         self.transactions = []
         self.rates = {}
 
+
 class Interest(object):
+
     def __init__(self):
         self.model = 'none'
 
+
 class Transaction(object):
+
     pass
+
 
 aid = '{} {}'.format(APP.upper(), APPVERSION)
 
+
 def getdebt(request):
+
     a = getasset(request, aid)
     if a:
         try:
@@ -85,13 +95,19 @@ def getdebt(request):
     a = getasset(request, aid)
     return loads(a) if a else None
 
+
 def setdebt(request, data):
+
     return setasset(request, aid, dumps(data), timedelta(weeks=10))
 
+
 def dispcurr(curr):
+
     return 'Kč' if (curr == 'CZK') else curr
 
+
 def calcint(pastdate, presdate, principal, debt, default_date):
+
     interest = debt.interest
 
     if interest.model == 'none':
@@ -217,7 +233,9 @@ def calcint(pastdate, presdate, principal, debt, default_date):
 
     return (None, 'Neznámý model')
 
+
 def getrows(debt):
+
     if not debt.transactions:
         return []
 
@@ -314,7 +332,9 @@ def getrows(debt):
 
     return rows
 
+
 def getrows4(debt):
+
     if not debt.transactions:
         return []
 
@@ -426,7 +446,9 @@ def getrows4(debt):
 
     return rows
 
+
 def toxml(debt):
+
     xd = {
         'debt': {
             'xmlns': 'http://' + localsubdomain,
@@ -501,7 +523,9 @@ def toxml(debt):
     d.append(ts)
     return str(xml).encode('utf-8') + b'\n'
 
+
 def fromxml(d):
+
     s = getXML(d)
     if not s:
         return None, 'Chybný formát souboru'
@@ -541,6 +565,7 @@ def fromxml(d):
             transaction.repayment_preference = \
                 tt.repayment_preference.text.strip()
     return debt, None
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -733,18 +758,23 @@ def mainpage(request):
                     c.restoreState()
 
                 reportlab.rl_config.warnOnMissingFontGlyphs = 0
+
                 registerFont(TTFont(
                     'Bookman',
                     join(FONT_DIR, 'URWBookman-Regular.ttf')))
+
                 registerFont(TTFont(
                     'BookmanB',
                     join(FONT_DIR, 'URWBookman-Bold.ttf')))
+
                 registerFont(TTFont(
                     'BookmanI',
                     join(FONT_DIR, 'URWBookman-Italic.ttf')))
+
                 registerFont(TTFont(
                     'BookmanBI',
                     join(FONT_DIR, 'URWBookman-BoldItalic.ttf')))
+
                 registerFontFamily(
                     'Bookman',
                     normal='Bookman',
@@ -760,6 +790,7 @@ def mainpage(request):
                     alignment=TA_RIGHT,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s2 = ParagraphStyle(
                     name='S2',
                     fontName='BookmanB',
@@ -768,6 +799,7 @@ def mainpage(request):
                     alignment=TA_RIGHT,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s4 = ParagraphStyle(
                     name='S4',
                     fontName='BookmanB',
@@ -775,6 +807,7 @@ def mainpage(request):
                     leading=10,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s12 = ParagraphStyle(
                     name='S12',
                     fontName='BookmanI',
@@ -785,6 +818,7 @@ def mainpage(request):
                     leftIndent=8,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s13 = ParagraphStyle(
                     name='S13',
                     fontName='Bookman',
@@ -793,6 +827,7 @@ def mainpage(request):
                     alignment=TA_CENTER,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s14 = ParagraphStyle(
                     name='S14',
                     fontName='BookmanB',
@@ -800,6 +835,7 @@ def mainpage(request):
                     leading=12,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s15 = ParagraphStyle(
                     name='S15',
                     fontName='BookmanB',
@@ -808,6 +844,7 @@ def mainpage(request):
                     alignment=TA_CENTER,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s16 = ParagraphStyle(
                     name='S16',
                     fontName='Bookman',
@@ -816,6 +853,7 @@ def mainpage(request):
                     alignment=TA_CENTER,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s17 = ParagraphStyle(
                     name='S17',
                     fontName='BookmanB',
@@ -824,6 +862,7 @@ def mainpage(request):
                     alignment=TA_RIGHT,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s18 = ParagraphStyle(
                     name='S18',
                     fontName='Bookman',
@@ -831,6 +870,7 @@ def mainpage(request):
                     leading=10,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s19 = ParagraphStyle(
                     name='S19',
                     fontName='Bookman',
@@ -838,6 +878,7 @@ def mainpage(request):
                     leading=10,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s20 = ParagraphStyle(
                     name='S20',
                     fontName='Bookman',
@@ -846,6 +887,7 @@ def mainpage(request):
                     leftIndent=8,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s21 = ParagraphStyle(
                     name='S21',
                     fontName='Bookman',
@@ -854,6 +896,7 @@ def mainpage(request):
                     leftIndent=16,
                     allowWidows=False,
                     allowOrphans=False)
+
                 s22 = ParagraphStyle(
                     name='S22',
                     fontName='BookmanI',
@@ -1219,9 +1262,11 @@ def mainpage(request):
          'err_message': err_message,
          'rows_err': rows_err})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def transform(request, id=0):
+
     logger.debug(
         'Transaction form accessed using method {}, id={}' \
             .format(request.method, id),
@@ -1290,9 +1335,11 @@ def transform(request, id=0):
                    'currency': dispcurr(debt.currency),
                    'err_message': err_message})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def transdel(request, id=0):
+
     logger.debug(
         'Transaction delete page accessed using method {}, id={}' \
             .format(request.method, id),

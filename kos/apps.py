@@ -22,7 +22,9 @@
 
 from django.apps import AppConfig
 
+
 class KosConfig(AppConfig):
+
     name = 'kos'
     verbose_name = 'Kalkulace splátek při oddlužení'
     version = '1.0'

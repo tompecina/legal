@@ -31,9 +31,11 @@ from common.glob import localdomain
 from common.tests import link_equal, setdl
 from sir.cron import cron_gettr, cron_proctr
 from sir.models import Vec
-from . import cron, forms, models
+from dir import cron, forms, models
+
 
 class TestCron(TransactionTestCase):
+
     fixtures = ['dir_test.json']
 
     def test_dir_notice(self):
@@ -78,6 +80,7 @@ class TestCron(TransactionTestCase):
             '   https://legal.pecina.cz/link\n\n')
         self.assertFalse(models.Discovered.objects.exists())
 
+
 class TestForms(SimpleTestCase):
 
     def test_DebtorForm(self):
@@ -103,7 +106,9 @@ class TestForms(SimpleTestCase):
              'year_birth_to': '1966'})
         self.assertTrue(f.is_valid())
 
+
 class TestModels(TransactionTestCase):
+
     fixtures = ['dir_test.json']
 
     def test_models(self):
@@ -117,6 +122,7 @@ class TestModels(TransactionTestCase):
         self.assertEqual(
             str(models.Discovered.objects.first()),
             'Test 02')
+
 
 class TestViews1(TestCase):
 
@@ -451,6 +457,7 @@ class TestViews1(TestCase):
         self.assertEqual(debtor.year_birth_from, 1965)
         self.assertEqual(debtor.year_birth_to, 1966)
 
+
 class TestViews2(TestCase):
 
     def setUp(self):
@@ -640,6 +647,7 @@ class TestViews2(TestCase):
             'Test 26,soud=KSOS,název=Název:*,jméno=Jméno:*,IČO=12345678,' \
             'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,' \
             'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n{}\r\n'.format('T' * 255))
+
 
 class TestViews3(TransactionTestCase):
 

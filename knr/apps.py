@@ -22,7 +22,9 @@
 
 from django.apps import AppConfig
 
+
 class KnrConfig(AppConfig):
+
     name = 'knr'
     verbose_name = 'Náklady řízení'
     version = '1.8'

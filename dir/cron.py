@@ -23,9 +23,11 @@
 from django.contrib.auth.models import User
 from common.utils import text_opt, icmp, logger
 from sir.glob import l2s
-from .models import Debtor, Discovered
+from dir.models import Debtor, Discovered
+
 
 def dir_notice(uid):
+
     text = ''
     dd = Discovered.objects.filter(uid=uid, vec__link__isnull=False) \
         .order_by('desc', 'id').distinct()
@@ -46,7 +48,9 @@ def dir_notice(uid):
                 User.objects.get(pk=uid).username, uid))
     return text
 
+
 def dir_check(osoba, vec):
+
     for d in Debtor.objects.all():
         od = osoba.datumNarozeni
         if od:

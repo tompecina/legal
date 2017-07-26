@@ -23,11 +23,13 @@
 from django.conf.urls import include, url
 from django.contrib.auth.views import LoginView, settings
 from django.contrib import admin
-from .views import (
+from common.views import (
     home, robots, pwchange, logout, user, useradd, lostpw, resetpw, about,
     stat, genrender)
 
+
 admin.autodiscover()
+
 
 urlpatterns = [
     url(r'^$', home, name='home'),

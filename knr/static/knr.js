@@ -1,4 +1,5 @@
 $(function() {
+
     function mainpage_reset_onclick() {
 	if (($('#id_items').val() != '0') ||
 	    $('#id_title').val() ||
@@ -9,6 +10,7 @@ $(function() {
 	    return true;
 	}
     }
+
     function mainpage_load_button_onclick() {
 	if ($('#id_load').val()) {
 	    if (($('#id_items').val() != '0') ||
@@ -24,10 +26,12 @@ $(function() {
 	    return false;
 	}
     }
+
     function mainpage_load_onchange() {
 	$('#id_load_button').click();
 	return true;
     }
+
     function placeform_search_onclick() {
 	if ($('#id_addr').val() == '') {
 	    alert('Do pole "Adresa" zadejte řetězec pro vyhledání');
@@ -36,14 +40,17 @@ $(function() {
 	    return true;
 	}
     }
+
     function itemlist_apply_onclick() {
 	return $('#id_new').val() != '';
     }
+
     function itemlist_new_onchange() {
 	if ($('#id_new').val()) {
 	    $('#id_apply').click();
 	}
     }
+
     function itemform_off10_flag_onclick() {
 	o1 = $('#id_off10_flag');
 	o3 = $('#id_off30_flag');
@@ -56,6 +63,7 @@ $(function() {
 	}
 	return true;
     }
+
     function itemform_off30_flag_onclick() {
 	o1 = $('#id_off10_flag');
 	o3 = $('#id_off30_flag');
@@ -68,6 +76,7 @@ $(function() {
 	}
 	return true;
     }
+
     function itemform_off30limit5000_flag_onclick() {
 	o1 = $('#id_off10_flag');
 	o3 = $('#id_off30_flag');
@@ -80,6 +89,7 @@ $(function() {
 	}
 	return true;
     }
+
     function itemform_off20limit5000_flag_onclick() {
 	o1 = $('#id_off10_flag');
 	o3 = $('#id_off30_flag');
@@ -92,6 +102,7 @@ $(function() {
 	}
 	return true;
     }
+
     function itemform_halved_flag_onclick() {
 	h = $('#id_halved_flag');
 	ha = $('#id_halved_appeal_flag');
@@ -100,6 +111,7 @@ $(function() {
 	}
 	return true;
     }
+
     function itemform_halved_appeal_flag_onclick() {
 	h = $('#id_halved_flag');
 	ha = $('#id_halved_appeal_flag');
@@ -108,6 +120,7 @@ $(function() {
 	}
 	return true;
     }
+
     function itemform_multiple_flag_onclick() {
 	m = $('#id_multiple_flag');
 	m5 = $('#id_multiple50_flag');
@@ -116,6 +129,7 @@ $(function() {
 	}
 	return true;
     }
+
     function itemform_multiple50_flag_onclick() {
 	m = $('#id_multiple_flag');
 	m5 = $('#id_multiple50_flag');
@@ -124,28 +138,33 @@ $(function() {
 	}
 	return true;
     }
+
     function itemform_locset() {
 	return ($('#id_from_lat').val() &&
 		$('#id_from_lon').val() &&
 		$('#id_to_lat').val() &&
 		$('#id_to_lon').val());
     }
+
     function itemform_calcdist() {
 	if (itemform_locset()) {
 	    $('#id_calc').click();
 	}
 	return true;
     }
+
     function itemform_resetdist() {
 	$('#id_trip_distance').r();
 	$('#id_time_number').r();
 	return true;
     }
+
     function itemform_from_sel_onchange() {
 	if ($('#id_from_sel').val()) {
 	    $('#id_from_apply').click();
 	}
     }
+
     function itemform_from_apply_onclick() {
 	if ($('#id_from_sel').val() != '') {
 	    itemform_resetdist();
@@ -154,6 +173,7 @@ $(function() {
 	    return false;
 	}
     }
+
     function itemform_from_search_onclick() {
 	if ($('#id_from_address').val() == '') {
 	    alert('Do pole "Adresa" zadejte řetězec pro vyhledání');
@@ -162,11 +182,13 @@ $(function() {
 	    return true;
 	}
     }
+
     function itemform_to_sel_onchange() {
 	if ($('#id_to_sel').val()) {
 	    $('#id_to_apply').click();
 	}
     }
+
     function itemform_to_apply_onclick() {
 	if ($('#id_to_sel').val() != '') {
 	    itemform_resetdist();
@@ -175,6 +197,7 @@ $(function() {
 	    return false;
 	}
     }
+
     function itemform_to_search_onclick() {
 	if ($('#id_to_address').val() == '') {
 	    alert('Do pole "Adresa" zadejte řetězec pro vyhledání');
@@ -182,6 +205,7 @@ $(function() {
 	} else
 	    return true;
     }
+
     function itemform_calc_onclick() {
 	if (!itemform_locset()) {
 	    alert('Musí byt vyplněny zeměpisné souřadnice obou míst');
@@ -190,22 +214,27 @@ $(function() {
 	    return true;
 	}
     }
+
     function itemform_car_sel_onchange() {
 	if ($('#id_car_sel').val()) {
 	    $('#id_car_apply').click();
 	}
     }
+
     function itemform_car_apply_onclick() {
 	return $('#id_car_sel').val() != '';
     }
+
     function itemform_formula_sel_onchange() {
 	if ($('#id_formula_sel').val()) {
 	    $('#id_formula_apply').click();
 	}
     }
+
     function itemform_formula_apply_onclick() {
 	return $('#id_formula_sel').val() != '';
     }
+
     switch ($('#id_type').val()) {
 	case 'mainpage':
 	    $('#id_reset').click(mainpage_reset_onclick);

@@ -25,43 +25,54 @@ from django.core.exceptions import ValidationError
 from common import forms, fields, widgets
 from common.glob import register_regex
 from szr.models import Court
-from .glob import supreme_court
+from szr.glob import supreme_court
+
 
 class EmailForm(forms.Form):
+
     email = fields.EmailField(
         widget=widgets.emw(),
         max_length=60,
         label='E-mail')
 
+
 def courtval(c):
+
     if not Court.objects.filter(id=c).exists():
         raise ValidationError('Court does not exist')
 
+
 class ProcForm(forms.Form):
+
     court = fields.CharField(
         widget=widgets.abbrw(),
         max_length=30,
         label='Soud',
         initial=supreme_court,
         validators=[courtval])
+
     senate = fields.IntegerField(
         widget=widgets.saw(),
         min_value=0,
         initial='',
         required=False)
+
     register = fields.CharField(
         widget=widgets.saw(),
         max_length=30,
         initial='',
         validators=[RegexValidator(regex=register_regex)])
+
     number = fields.IntegerField(
         widget=widgets.saw(),
         min_value=1,
         initial='')
+
     year = fields.IntegerField(
         widget=widgets.saw(),
         min_value=1990,
         initial='')
+
     desc = fields.CharField(
         widget=widgets.genw(),
         max_length=255,

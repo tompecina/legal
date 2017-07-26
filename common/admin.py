@@ -21,6 +21,7 @@
 #
 
 from django.contrib import admin
-from .models import Preset
+from common.models import Preset
+
 
 admin.site.register(Preset)

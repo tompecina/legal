@@ -27,49 +27,65 @@ from django.contrib.auth.models import User
 from common.utils import composeref
 from common.glob import register_regex, text_opts
 from szr.models import Court
-from .glob import MIN_LENGTH, MAX_LENGTH
+from sur.glob import MIN_LENGTH, MAX_LENGTH
+
 
 class Party(models.Model):
+
     uid = models.ForeignKey(
         User,
         on_delete=models.CASCADE)
+
     party = models.CharField(
         max_length=MAX_LENGTH,
         validators=[MinLengthValidator(MIN_LENGTH)],
         db_index=True)
+
     party_opt = models.SmallIntegerField(
         validators=[
             MinValueValidator(0),
             MaxValueValidator(len(text_opts) - 1)])
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)
+
     timestamp_update = models.DateTimeField(
         auto_now=True)
 
     def __str__(self):
         return self.party
 
+
 class Found(models.Model):
+
     uid = models.ForeignKey(
         User,
         on_delete=models.CASCADE)
+
     name = models.CharField(
         max_length=255,
         db_index=True)
+
     court = models.ForeignKey(
         Court,
         on_delete=models.CASCADE)
+
     senate = models.IntegerField(
         validators=[MinValueValidator(0)])
+
     register = models.CharField(
         max_length=30,
         validators=[RegexValidator(regex=register_regex)])
+
     number = models.PositiveIntegerField()
+
     year = models.IntegerField(
         validators=[MinValueValidator(1990)])
+
     url = models.URLField(
         max_length=1024)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True)
 

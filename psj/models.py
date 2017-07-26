@@ -26,25 +26,33 @@ from common.utils import composeref
 from common.glob import register_regex
 from szr.models import Court
 
+
 class Courtroom(models.Model):
+
     court = models.ForeignKey(
         Court,
         on_delete=models.CASCADE)
+
     desc = models.CharField(
         max_length=255,
         db_index=True)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True)
+
     timestamp_update = models.DateTimeField(
         auto_now=True)
 
     def __str__(self):
         return '{}, {}'.format(self.court, self.desc)
 
+
 class Party(models.Model):
+
     name = models.CharField(
         max_length=255,
         unique=True)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)
@@ -52,54 +60,74 @@ class Party(models.Model):
     def __str__(self):
         return self.name
 
+
 class Judge(models.Model):
+
     name = models.CharField(
         max_length=255,
         unique=True)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True)
 
     def __str__(self):
         return self.name
+
 
 class Form(models.Model):
+
     name = models.CharField(
         max_length=255,
         unique=True)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True)
 
     def __str__(self):
         return self.name
 
+
 class Hearing(models.Model):
+
     courtroom = models.ForeignKey(
         Courtroom,
         on_delete=models.CASCADE)
+
     time = models.DateTimeField(
         db_index=True)
+
     senate = models.IntegerField(
         validators=[MinValueValidator(0)])
+
     register = models.CharField(
         max_length=30,
         validators=[RegexValidator(regex=register_regex)])
+
     number = models.PositiveIntegerField()
+
     year = models.PositiveIntegerField()
+
     form = models.ForeignKey(
         Form,
         on_delete=models.CASCADE)
+
     judge = models.ForeignKey(
         Judge,
         on_delete=models.CASCADE)
+
     parties = models.ManyToManyField(
         Party)
+
     closed = models.BooleanField(
         default=False)
+
     cancelled = models.BooleanField(
         default=False)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)
+
     timestamp_update = models.DateTimeField(
         auto_now=True)
 
@@ -108,11 +136,15 @@ class Hearing(models.Model):
             self.courtroom.court.name,
             composeref(self.senate, self.register, self.number, self.year))
 
+
 class Task(models.Model):
+
     court = models.ForeignKey(
         Court,
         on_delete=models.CASCADE)
+
     date = models.DateField()
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)

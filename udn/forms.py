@@ -24,53 +24,65 @@ from django.core.validators import RegexValidator
 from common import forms, fields, widgets
 from common.glob import register_regex, text_opts, format_opts
 
+
 class MainForm(forms.Form):
+
     date_from = fields.DateField(
         widget=widgets.dw(),
         required=False)
+
     date_to = fields.DateField(
         widget=widgets.dw(),
         required=False)
+
     senate = fields.IntegerField(
         widget=widgets.saw(),
         min_value=0,
         initial='',
         required=False)
+
     register = fields.CharField(
         widget=widgets.saw(),
         max_length=30,
         validators=[RegexValidator(regex=register_regex)],
         initial='',
         required=False)
+
     number = fields.IntegerField(
         widget=widgets.saw(),
         min_value=1,
         initial='',
         required=False)
+
     year = fields.IntegerField(
         widget=widgets.saw(),
         min_value=1990,
         initial='',
         required=False)
+
     page = fields.IntegerField(
         widget=widgets.saw(),
         min_value=1,
         initial='',
         required=False)
+
     agenda = fields.CharField(
         max_length=255,
         required=False,
         label='Oblast',
         initial='')
+
     party = fields.CharField(
         widget=widgets.sew(),
         required=False,
         max_length=255,
         label='Účastník řízení')
+
     party_opt = fields.ChoiceField(
         widget=widgets.rs,
         choices=text_opts,
         initial='icontains')
+
     format = fields.ChoiceField(
         widget=widgets.rs,
         choices=format_opts,

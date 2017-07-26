@@ -23,6 +23,7 @@
 from datetime import date
 from common import forms, fields, widgets
 
+
 opts = (('none', 'sine'),
         ('epr', 'EPR'),
         ('nmu', 'nemajetková újma'),
@@ -32,31 +33,38 @@ opts = (('none', 'sine'),
         ('inc', 'incidence'),
         ('usch', 'úschova'))
 
+
 class MainForm(forms.Form):
+
     basis = fields.AmountField(
         widget=widgets.aw(),
         min_value=1.0,
         label='Základ',
         localize=True)
     basis.rounding = 2
+
     curr = fields.CurrencyField(
         label='Měna',
         czk=True,
         initial='CZK')
+
     oth = fields.CharField(
         widget=widgets.currw(),
         min_length=3,
         max_length=3,
         required=False)
+
     today = date.today()
     fx_date = fields.DateField(
         widget=widgets.dw(),
         required=False,
         label='ke dni',
         initial=date(today.year, today.month, 1))
+
     model = fields.CharField(
         label='Úprava',
         initial='4')
+
     opt = fields.ChoiceField(
         widget=widgets.rs,
         choices=opts,

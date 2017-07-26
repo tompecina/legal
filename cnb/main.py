@@ -23,10 +23,12 @@
 from datetime import date, datetime, timedelta
 from cache.main import getcache
 from common.utils import newXML, logger
-from .models import FXrate, MPIrate, MPIstat
+from cnb.models import FXrate, MPIrate, MPIstat
+
 
 sd = timedelta(days=10)
 cd = timedelta(hours=1)
+
 
 def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
 
@@ -193,6 +195,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
              'date_required': dt,
              'date': dr})
     return ((rate / fr), qty, dr, None)
+
 
 def getMPIrate(tp, dt, log=None):
 

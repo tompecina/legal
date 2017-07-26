@@ -23,7 +23,9 @@
 from datetime import datetime, timedelta
 from django.apps import AppConfig
 
+
 class SzrConfig(AppConfig):
+
     name = 'szr'
     verbose_name = 'Sledování změn v řízení'
     version = '1.0'

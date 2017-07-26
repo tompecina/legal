@@ -35,8 +35,9 @@ from common.glob import (
     localsubdomain, localurl, DTF)
 from szr.glob import (
     supreme_administrative_court, supreme_administrative_court_name)
-from .forms import MainForm
-from .models import Agenda, Decision
+from udn.forms import MainForm
+from udn.models import Agenda, Decision
+
 
 APP = __package__
 
@@ -47,6 +48,7 @@ BATCH = 50
 repoprefix = join(repourl, APP)
 
 EXLIM = 1000
+
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
@@ -98,7 +100,9 @@ def mainpage(request):
                  'agendas': agendas,
                  'f': f})
 
+
 def g2p(rd):
+
     p = {}
     for f, l in [['senate', 0], ['number', 1], ['year', 1990],
                  ['page', 1], ['agenda', 1]]:
@@ -119,8 +123,10 @@ def g2p(rd):
         p['parties__name__' + rd['party_opt']] = rd['party']
     return p
 
+
 @require_http_methods(['GET'])
 def htmllist(request):
+
     logger.debug('HTML list accessed', request, request.GET)
     page_title = apps.get_app_config(APP).verbose_name
     rd = request.GET.copy()
@@ -143,8 +149,10 @@ def htmllist(request):
          'pager': Pager(start, total, reverse('udn:htmllist'), rd, BATCH),
          'total': total})
 
+
 @require_http_methods(['GET'])
 def xmllist(request):
+
     logger.debug('XML list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
@@ -230,8 +238,10 @@ def xmllist(request):
                 'attachment; filename=Rozhodnuti.xml'
     return response
 
+
 @require_http_methods(['GET'])
 def csvlist(request):
+
     logger.debug('CSV list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
@@ -276,8 +286,10 @@ def csvlist(request):
         writer.writerow(dat)
     return response
 
+
 @require_http_methods(['GET'])
 def jsonlist(request):
+
     logger.debug('JSON list accessed', request, request.GET)
     rd = request.GET.copy()
     try:

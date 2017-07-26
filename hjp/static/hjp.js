@@ -1,14 +1,17 @@
 $(function() {
+
     function submit_mainform() {
 	$('#id_next').val(this);
 	$('#id_mainform').submit();
 	return false;
     }
+
     function mainform_updatefields() {
 	$('.curr').text($(($('#id_currency_0').val() == 'OTH') ?
 	    '#id_currency_1' : '#id_currency_0').val().toUpperCase()
 	    .replace('CZK', 'Kč'));
     }
+
     function mainform_updatemodels() {
 	if ($('#id_fixed_amount').dp(!$('[value=fixed]').c())) {
 	    $('#id_fixed_amount').r();
@@ -39,6 +42,7 @@ $(function() {
 	    class_enable($('#id_pd'));
 	}
     }
+
     function mainpage_reset_onclick() {
 	if ($('.trdt').length ||
 	    $('#id_title').val() ||
@@ -49,6 +53,7 @@ $(function() {
 	    return true;
 	}
     }
+
     function mainpage_load_button_onclick() {
 	if ($('#id_load').val()) {
 	    if ($('.trdt').length ||
@@ -64,10 +69,12 @@ $(function() {
 	    return false;
 	}
     }
+
     function mainpage_load_onchange() {
 	$('#id_load_button').click();
 	return true;
     }
+
     function transform_updatefields() {
 	if ($('[value=debit]').c()) {
 	    class_enable($('#id_amt'));
@@ -85,6 +92,7 @@ $(function() {
 	    return;
 	}
     }
+
     if ($('#id_mainform').length) {
 	$('#id_next').r();
 	$('#id_reset').click(mainpage_reset_onclick);

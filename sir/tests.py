@@ -29,14 +29,19 @@ from django.contrib.auth.models import User
 from common.settings import BASE_DIR
 from common.glob import localdomain
 from common.tests import link_equal, setdl, setpr, getdl, getpr
-from . import cron, glob, models
+from sir import cron, glob, models
+
 
 APP = __package__
+
 TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
+
 class DummyTag:
+
     def __init__(self, s):
         self.string = s
+
 
 class TestCron1(SimpleTestCase):
 
@@ -49,6 +54,7 @@ class TestCron1(SimpleTestCase):
         self.assertEqual(
             cron.convd(DummyTag('2016-01-17T14:16:59.315489')),
             datetime(2016, 1, 17))
+
 
 class TestCron2(TransactionTestCase):
 
@@ -91,7 +97,9 @@ class TestCron2(TransactionTestCase):
         self.assertEqual(models.Vec.objects.count(), 37)
         self.assertEqual(models.Transaction.objects.count(), 1)
 
+
 def populate():
+
     setdl(472015)
     cron.cron_gettr()
     setdl(5772013)
@@ -102,7 +110,9 @@ def populate():
     cron.cron_gettr()
     cron.cron_proctr()
 
+
 class TestCron3(TestCase):
+
     fixtures = ['sir_test1.json']
 
     def test_sir_notice(self):
@@ -123,6 +133,7 @@ class TestCron3(TestCase):
             '   https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?' \
             'id=7ba95b84-15ae-4a8e-8339-1918eac00c84\n\n')
         self.assertEqual(models.Tracked.objects.count(), 1)
+
 
 class TestGlob(SimpleTestCase):
 
@@ -158,7 +169,9 @@ class TestGlob(SimpleTestCase):
         self.assertEqual(len(glob.a2d), len(glob.ADDRESSES))
         self.assertEqual(glob.a2d['POBOČKA'], 'pobočka')
 
+
 class TestModels(TestCase):
+
     fixtures = ['sir_test2.json']
 
     def test_models(self):
@@ -195,6 +208,7 @@ class TestModels(TestCase):
         self.assertEqual(
             str(models.Tracked.objects.first()),
             'Test')
+
 
 class TestViews1(TestCase):
 
@@ -614,7 +628,9 @@ class TestViews1(TestCase):
             res.content.decode('utf-8'),
             'Test 1,1,2016,ne\r\nTest 2,2,2011,ano\r\n')
 
+
 class TestViews2(TestCase):
+
     fixtures = ['sir_test2.json']
 
     def test_courts(self):

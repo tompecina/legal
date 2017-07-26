@@ -27,12 +27,14 @@ from django.views.decorators.http import require_http_methods
 from common.utils import getbutton, pd, formam, unrequire, Lf, logger
 from common.glob import inerr_short
 from common.fields import AmountField
-from .main import getFXrate, getMPIrate
-from .forms import MainForm
+from cnb.main import getFXrate, getMPIrate
+from cnb.forms import MainForm
+
 
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
+
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):

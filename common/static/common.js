@@ -10,6 +10,7 @@ $.fn.c = (
 	}
     }
 )
+
 $.fn.s = (
     function(v) {
 	if (v === undefined) {
@@ -20,6 +21,7 @@ $.fn.s = (
 	}
     }
 )
+
 $.fn.d = (
     function(v) {
 	if (v === undefined) {
@@ -30,6 +32,7 @@ $.fn.d = (
 	}
     }
 )
+
 $.fn.dp = (
     function(v) {
 	if (v === undefined) {
@@ -40,6 +43,7 @@ $.fn.dp = (
 	}
     }
 )
+
 $.fn.r = (
     function() {
 	this.each(function() {
@@ -53,6 +57,7 @@ $.fn.r = (
 	return this;
     }
 )
+
 function today() {
     var t = new Date;
     return (t.getDate() + 100).toString().substr(1) +
@@ -61,10 +66,12 @@ function today() {
 	'.' +
 	t.getFullYear();
 }
+
 function set_today() {
     $(this).prev('input').val(today());
     return false;
 }
+
 function class_enable(elem) {
     $('*', elem)
 	.addBack()
@@ -73,6 +80,7 @@ function class_enable(elem) {
 	.filter('input, textarea, select')
 	.d(false);
 }
+
 function class_disable(elem) {
     $('*', elem)
 	.addBack()
@@ -83,6 +91,7 @@ function class_disable(elem) {
 	.d(true)
 	.r();
 }
+
 function currsel_change() {
     var t = $(this);
     if ((t.val() == 'OTH') && !(t.d())) {
@@ -92,6 +101,7 @@ function currsel_change() {
     }
     return true;
 }
+
 $(function() {
     $('.currsel').change(currsel_change).change();
     $('.today').click(set_today);

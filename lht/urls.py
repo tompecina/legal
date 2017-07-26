@@ -21,7 +21,8 @@
 #
 
 from django.conf.urls import url
-from .views import mainpage
+from lht.views import mainpage
+
 
 urlpatterns = [
     url(r'^$', mainpage, name='mainpage'),

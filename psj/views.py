@@ -37,8 +37,9 @@ from common.glob import (
     localsubdomain, localurl, DTF)
 from szr.glob import supreme_court, supreme_administrative_court
 from szr.models import Court
-from .models import Hearing
-from .forms import MainForm
+from psj.models import Hearing
+from psj.forms import MainForm
+
 
 APP = __package__
 
@@ -47,6 +48,7 @@ APPVERSION = apps.get_app_config(APP).version
 BATCH = 50
 
 EXLIM = 1000
+
 
 @require_http_methods(['GET', 'POST'])
 def mainpage(request):
@@ -98,7 +100,10 @@ def mainpage(request):
                  'err_message': err_message,
                  'courts': courts,
                  'f': f})
+
+
 def g2p(rd):
+
     p = {}
     for f, l in [['senate', 0], ['number', 1], ['year', 1],
                  ['courtroom', 1], ['judge', 1]]:
@@ -121,8 +126,10 @@ def g2p(rd):
         p['parties__name__' + rd['party_opt']] = rd['party']
     return p
 
+
 @require_http_methods(['GET'])
 def htmllist(request):
+
     logger.debug('HTML list accessed', request, request.GET)
     page_title = apps.get_app_config(APP).verbose_name
     rd = request.GET.copy()
@@ -146,8 +153,10 @@ def htmllist(request):
          'today': date.today(),
          'total': total})
 
+
 @require_http_methods(['GET'])
 def xmllist(request):
+
     logger.debug('XML list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
@@ -231,8 +240,10 @@ def xmllist(request):
                 'attachment; filename=Jednani.xml'
     return response
 
+
 @require_http_methods(['GET'])
 def csvlist(request):
+
     logger.debug('CSV list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
@@ -283,8 +294,10 @@ def csvlist(request):
         writer.writerow(dat)
     return response
 
+
 @require_http_methods(['GET'])
 def jsonlist(request):
+
     logger.debug('JSON list accessed', request, request.GET)
     rd = request.GET.copy()
     try:
@@ -330,13 +343,18 @@ def jsonlist(request):
     dump(r, response)
     return response
 
+
 sjre = compile(r'^(\S*\.\S*\s)*(.*)$')
 
+
 def stripjudge(name):
+
     return strxfrm(sjre.match(name['judge__name']).group(2))
+
 
 @require_http_methods(['GET'])
 def courtinfo(request, court):
+
     logger.debug(
         'Court information accessed, court="{}"'.format(court),
         request)

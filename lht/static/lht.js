@@ -1,4 +1,5 @@
 $(function() {
+
     function updatefields() {
 	if ($('[value=none]').c()) {
 	    class_enable($('[value=none]').parents('.opt'));
@@ -6,6 +7,7 @@ $(function() {
 	    class_disable($('[value=none]').parents('.opt'));
 	}
     }
+
     $('[value=none]').parent().addClass('immune');
     $('[name=preset]').change(updatefields).change();
 });

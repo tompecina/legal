@@ -31,10 +31,13 @@ from common.settings import BASE_DIR
 from common.utils import newXML, p2c, xmlbool
 from common.tests import TEST_STRING, stripxml
 from cache.tests import DummyRequest
-from . import forms, models, views, utils
+from knr import forms, models, views, utils
+
 
 APP = __package__
+
 TEST_DIR = join(BASE_DIR, APP, 'testdata')
+
 
 class TestForms(SimpleTestCase):
 
@@ -134,6 +137,7 @@ class TestForms(SimpleTestCase):
         f = forms.FlatForm(d)
         self.assertTrue(f.is_valid())
 
+
 class TestModels(SimpleTestCase):
 
     def test_models(self):
@@ -171,14 +175,19 @@ class TestModels(SimpleTestCase):
                 rate=34.90)),
             'test_abbr/test_fuel')
 
+
 class T(views.Calculation, views.Item):
+
     pass
 
+
 class TestUtils(TestCase):
+
     fixtures = ['knr_test.json']
 
     def test_getVAT(self):
         self.assertAlmostEqual(utils.getVAT(), 25)
+
 
 class TestViews1(SimpleTestCase):
 
@@ -353,7 +362,9 @@ class TestViews1(SimpleTestCase):
             self.assertTrue(m)
             i += 1
 
+
 class TestViews2(TestCase):
+
     fixtures = ['knr_test.json']
 
     def setUp(self):

@@ -29,7 +29,8 @@ from common.glob import localurl
 from szr.models import Court
 from szr.glob import supreme_court, supreme_administrative_court
 from sur.cron import sur_check
-from .models import Courtroom, Judge, Form, Hearing, Party, Task
+from psj.models import Courtroom, Judge, Form, Hearing, Party, Task
+
 
 list_courtrooms = \
     'http://infosoud.justice.cz/InfoSoud/seznamJednacichSini?okres={}'
@@ -37,7 +38,9 @@ list_courtrooms = \
 hearingurl = localurl + '/psj/list/?court={}&senate={:d}&register={}&' \
     'number={:d}&year={:d}&date_from={}&date_to={}'
 
+
 def cron_courtrooms():
+
     for c in Court.objects.exclude(id=supreme_administrative_court):
         try:
             sleep(1)
@@ -53,7 +56,9 @@ def cron_courtrooms():
             logger.warning('Error downloading courtrooms')
     logger.info('Courtrooms downloaded')
 
+
 def cron_schedule(*args):
+
     dd = []
     for a in args:
         if len(a) > 2:
@@ -68,10 +73,14 @@ def cron_schedule(*args):
             Task.objects.get_or_create(court=court, date=d)
     logger.info('Tasks scheduled')
 
+
 root_url = 'http://infosoud.justice.cz/'
+
 get_hear = 'InfoSoud/public/searchJednani.do?'
 
+
 def cron_update():
+
     t = Task.objects.all()
     if not t.exists():
         return

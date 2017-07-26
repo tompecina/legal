@@ -22,19 +22,24 @@
 
 from common import forms, fields, widgets
 
+
 class InsForm(forms.Form):
+
     number = fields.IntegerField(
         widget=widgets.saw(),
         min_value=1,
         initial='')
+
     year = fields.IntegerField(
         widget=widgets.saw(),
         min_value=2008,
         initial='')
+
     desc = fields.CharField(
         widget=widgets.genw(),
         max_length=255,
         label='Popis')
+
     detailed = fields.BooleanField(
         initial=True,
         label='Všechny události',

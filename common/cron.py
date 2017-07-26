@@ -31,10 +31,11 @@ from udn.cron import cron_update as udn_update, cron_find as udn_find
 from sur.cron import sur_notice
 from sir.cron import sir_notice, cron_update as sir_update
 from dir.cron import dir_notice
-from .settings import TEST
-from .utils import send_mail, logger
-from .glob import localsubdomain, localurl
-from .models import Pending, Lock
+from common.settings import TEST
+from common.utils import send_mail, logger
+from common.glob import localsubdomain, localurl
+from common.models import Pending, Lock
+
 
 if TEST:
     def test_func(*args):
@@ -48,7 +49,9 @@ if TEST:
         else:
             test_result = int(args[0]) - int(args[1])
 
+
 def cron_notify():
+
     for u in User.objects.all():
         uid = u.id
         text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) + \
@@ -63,6 +66,7 @@ def cron_notify():
                 'Email sent to user "{}" ({:d})'.format(
                     User.objects.get(pk=uid).username, uid))
     logger.info('Emails sent')
+
 
 SCHED = [
     {'name': 'cron_notify',
@@ -113,10 +117,14 @@ SCHED = [
 
 EXPIRE = timedelta(minutes=30)
 
+
 def run(name, args):
+
     globals()[name](*args.split())
 
+
 def cron_run():
+
     now = datetime.now()
     Lock.objects.filter(timestamp_add__lt=(now - EXPIRE)).delete()
     for job in Pending.objects.order_by('timestamp_add'):
@@ -153,11 +161,15 @@ def cron_run():
             if 'lock' in job:
                 Lock.objects.filter(name=lock).delete()
 
+
 def cron_unlock():
+
     Lock.objects.all().delete()
     logger.info('Locks removed')
 
+
 def cron_clean():
+
     Pending.objects.all().delete()
     logger.info('Pending jobs deleted')
     cron_unlock()

@@ -1,8 +1,11 @@
 $(function() {
+
     var submit;
+
     function submit_click(event) {
 	submit = event.target.name;
     }
+
     function partyform_validate(event) {
 	var p = $('#id_party');
 	if ((submit != 'submit_back') &&
@@ -13,6 +16,7 @@ $(function() {
 	}
 	return true;
     }
+
     function partybatchform_load_button_onclick() {
 	if ($('#id_load').val()) {
 	    return true;
@@ -21,10 +25,12 @@ $(function() {
 	    return false;
 	}
     }
+
     function partybatchform_load_onchange() {
 	$('#id_load_button').click();
 	return true;
     }
+
     if ($('#id_partyform').length) {
 	$('#id_partyform').submit(partyform_validate);
 	$('input[type=submit]').click(submit_click);

@@ -22,9 +22,11 @@
 
 from django.contrib.auth.models import User
 from common.utils import text_opt, logger
-from .models import Party, Found
+from sur.models import Party, Found
+
 
 def sur_notice(uid):
+
     text = ''
     ff = Found.objects.filter(uid=uid).order_by('name', 'id').distinct()
     if ff:
@@ -45,7 +47,9 @@ def sur_notice(uid):
                 .format(User.objects.get(pk=uid).username, uid))
     return text
 
+
 def sur_check(name, court, senate, register, number, year, url):
+
     for p in Party.objects.all():
         if text_opt(p.party, name, p.party_opt):
             if Found.objects.update_or_create(

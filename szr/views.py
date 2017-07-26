@@ -32,15 +32,17 @@ from django.apps import apps
 from django.urls import reverse
 from common.utils import getbutton, Pager, composeref, decomposeref, logger
 from common.glob import registers, inerr
-from .forms import EmailForm, ProcForm
-from .models import Court, Proceedings
-from .cron import updateproc, p2s
+from szr.forms import EmailForm, ProcForm
+from szr.models import Court, Proceedings
+from szr.cron import updateproc, p2s
+
 
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
 
 BATCH = 50
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -86,9 +88,11 @@ def mainpage(request):
          'pager': Pager(start, total, reverse('szr:mainpage'), rd, BATCH),
          'total': total})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def procform(request, id=0):
+
     logger.debug(
         'Proceedings form accessed using method {}, id={}' \
             .format(request.method, id),
@@ -158,9 +162,11 @@ def procform(request, id=0):
          'err_message': err_message,
          'courts': courts})
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def procdel(request, id=0):
+
     logger.debug(
         'Proceedings delete page accessed using method {}, id={}' \
             .format(request.method, id),
@@ -185,9 +191,11 @@ def procdel(request, id=0):
             return redirect('szr:procdeleted')
         return redirect('szr:mainpage')
 
+
 @require_http_methods(['GET', 'POST'])
 @login_required
 def procdelall(request):
+
     logger.debug(
         'Delete all proceedings page accessed using method {}' \
             .format(request.method),
@@ -209,6 +217,7 @@ def procdelall(request):
                 'User "{}" ({:d}) deleted all proceedings'.format(uname, uid),
                 request)
         return redirect('szr:mainpage')
+
 
 @require_http_methods(['GET', 'POST'])
 @login_required
@@ -326,9 +335,11 @@ def procbatchform(request):
          'page_title': 'Import řízení ze souboru',
          'err_message': err_message})
 
+
 @require_http_methods(['GET'])
 @login_required
 def procexport(request):
+
     logger.debug('Proceedings export page accessed', request)
     uid = request.user.id
     uname = request.user.username
@@ -354,8 +365,10 @@ def procexport(request):
         request)
     return response
 
+
 @require_http_methods(['GET'])
 def courts(request):
+
     logger.debug('List of courts accessed', request)
     return render(
         request,

@@ -27,21 +27,30 @@ from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 from django.db.models import Q
 from common.utils import get, post, sleep, logger, composeref
-from .models import Court, Proceedings
-from .glob import supreme_court, supreme_administrative_court
+from szr.models import Court, Proceedings
+from szr.glob import supreme_court, supreme_administrative_court
+
 
 list_courts = 'public/search.jsp'
+
 list_reports = 'InfoSoud/seznamOkresnichSoudu?kraj={}'
+
 root_url = 'http://infosoud.justice.cz/'
+
 get_proc = 'InfoSoud/public/search.do?org={}&krajOrg={}&cisloSenatu={:d}' \
            '&druhVec={}&bcVec={:d}&rocnik={:d}&typSoudu={}&autoFill=true' \
            '&type=spzn'
+
 nss_url = 'http://www.nssoud.cz/main0Col.aspx?cls=JudikaturaSimpleSearch' \
           '&pageSource=1&menu=187'
+
 nss_get_proc = 'http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&kau_id={:d}'
+
 update_delay = timedelta(hours=6)
 
+
 def addauxid(p):
+
     if (p.court_id == supreme_administrative_court) and not p.auxid:
         try:
             res = get(nss_url)
@@ -63,11 +72,15 @@ def addauxid(p):
         except:
             pass
 
+
 def isreg(c):
+
     s = c.pk
     return (s[:2] == 'KS') or (s == 'MSPHAAB')
 
+
 def cron_courts():
+
     try:
         res = get(root_url + list_courts)
         soup = BeautifulSoup(res.text, 'html.parser')
@@ -97,12 +110,16 @@ def cron_courts():
                     'Error setting hierarchy for {}'.format(c.id))
     logger.info('Courts imported')
 
+
 def p2s(p):
+
     return '{}, {}'.format(
         p.court_id,
         composeref(p.senate, p.register, p.number, p.year))
 
+
 def updateproc(p):
+
     notnew = bool(p.updated)
     p.updated = datetime.now()
     p.save()
@@ -191,7 +208,9 @@ def updateproc(p):
             p.uid_id))
     return True
 
+
 def cron_update():
+
     p = Proceedings.objects.filter(Q(updated__lte=datetime.now()-update_delay) \
         | Q(updated__isnull=True))
     if p:
@@ -199,7 +218,9 @@ def cron_update():
         if updateproc(p):
             p.save()
 
+
 def szr_notice(uid):
+
     text = ''
     pp = Proceedings.objects.filter(uid=uid, notify=True) \
             .order_by('desc', 'id')

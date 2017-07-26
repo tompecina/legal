@@ -23,36 +23,44 @@
 from common import forms, fields, widgets
 from common.utils import getpreset
 
+
 class MainForm(forms.Form):
+
     netincome = fields.AmountField(
         widget=widgets.saw(),
         min_value=0,
         label='Čistá mzda',
         localize=True)
     netincome.rounding = 0
+
     netincome2 = fields.AmountField(
         widget=widgets.saw(),
         min_value=0,
         localize=True,
         initial=0)
     netincome2.rounding = 0
+
     partner = fields.BooleanField(
         required=False,
         label='Manžel/manželka',
         initial=False)
+
     partner2 = fields.BooleanField(
         required=True,
         initial=True,
         disabled=True)
+
     deps = fields.IntegerField(
         widget=widgets.saw(),
         min_value=0,
         label='Počet dalších vyživovaných osob',
         initial=0)
+
     deps2 = fields.IntegerField(
         widget=widgets.saw(),
         min_value=0,
         initial=0)
+
     subs = fields.AmountField(
         widget=widgets.saw(),
         min_value=0,
@@ -60,6 +68,7 @@ class MainForm(forms.Form):
         localize=True,
         initial=getpreset('SUBS'))
     subs.rounding = 0
+
     apt = fields.AmountField(
         widget=widgets.saw(),
         min_value=0,
@@ -67,6 +76,7 @@ class MainForm(forms.Form):
         localize=True,
         initial=getpreset('APT'))
     apt.rounding = 0
+
     fee = fields.AmountField(
         widget=widgets.saw(),
         min_value=0,
@@ -74,12 +84,14 @@ class MainForm(forms.Form):
         localize=True,
         initial=getpreset(id='FEE'))
     fee.rounding = 0
+
     fee2 = fields.AmountField(
         widget=widgets.saw(),
         min_value=0,
         localize=True,
         initial=getpreset(id='FEE2'))
     fee2.rounding = 0
+
     exp = fields.AmountField(
         widget=widgets.saw(),
         min_value=0,
@@ -87,6 +99,7 @@ class MainForm(forms.Form):
         localize=True,
         initial=getpreset('EXP'))
     exp.rounding = 0
+
     exp2 = fields.AmountField(
         widget=widgets.saw(),
         min_value=0,
@@ -94,10 +107,12 @@ class MainForm(forms.Form):
         localize=True,
         initial=getpreset('EXP2'))
     exp2.rounding = 0
+
     vat = fields.BooleanField(
         required=False,
         label='Správce je plátcem DPH',
         initial=True)
+
     vatrate = fields.DecimalField(
         widget=widgets.saw(),
         max_digits=4,

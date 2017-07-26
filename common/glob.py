@@ -22,6 +22,7 @@
 
 from datetime import timedelta
 
+
 MIN_PWLEN = 6
 
 wn = ('Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne')
