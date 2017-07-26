@@ -38,9 +38,7 @@ from .models import Pending, Lock
 
 if TEST:
     def test_func(*args):
-        global test_result
-        global test_lock
-        global test_pending
+        global test_result, test_lock, test_pending
         test_lock = list(Lock.objects.all())
         test_pending = list(Pending.objects.all())
         if not args:
@@ -107,7 +105,7 @@ SCHEDULE = [
      'when': lambda t: (t.minute % 15) == 0,
     },
     {'name': 'sir_update',
-     'when': lambda t: t.hour in list(range(4, 23, 6)) and t.minute == 5,
+     'when': lambda t: t.hour in [4, 10, 16, 22] and t.minute == 5,
      'lock': 'sir',
      'blocking': False,
     },
