@@ -64,7 +64,7 @@ def cron_notify():
                     User.objects.get(pk=uid).username, uid))
     logger.info('Emails sent')
 
-SCHEDULE = [
+SCHED = [
     {'name': 'cron_notify',
      'when': lambda t: (t.hour % 6) == 0 and t.minute == 0,
     },
@@ -132,7 +132,7 @@ def cron_run():
             logger.debug(
                 'Scheduled job {} with arguments "{}" completed' \
                     .format(job.name, args))
-    for job in SCHEDULE:
+    for job in SCHED:
         if job['when'](now):
             args = job.get('args', '')
             if 'lock' in job:

@@ -167,7 +167,7 @@ class TestCron(TestCase):
 
     def test_cron_run(self):
         cron.cron_clean()
-        cron.SCHEDULE = [
+        cron.SCHED = [
             {'name': 'test_func',
              'when': lambda t: True,
             }]
@@ -178,7 +178,7 @@ class TestCron(TestCase):
         self.assertFalse(models.Pending.objects.exists())
         self.assertFalse(cron.test_lock)
         self.assertFalse(cron.test_pending)
-        cron.SCHEDULE = [
+        cron.SCHED = [
             {'name': 'test_func',
              'when': lambda t: True,
              'lock': 'test',
@@ -192,7 +192,7 @@ class TestCron(TestCase):
         self.assertEqual(len(cron.test_lock), 1)
         self.assertFalse(cron.test_pending)
         self.assertEqual(cron.test_lock[0].name, 'test')
-        cron.SCHEDULE = [
+        cron.SCHED = [
             {'name': 'test_func',
              'when': lambda t: True,
              'lock': 'test',
@@ -207,7 +207,7 @@ class TestCron(TestCase):
         self.assertFalse(cron.test_pending)
         self.assertEqual(cron.test_lock[0].name, 'test')
         models.Lock(name='test').save()
-        cron.SCHEDULE = [
+        cron.SCHED = [
             {'name': 'test_func',
              'when': lambda t: True,
              'lock': 'test',
@@ -218,7 +218,7 @@ class TestCron(TestCase):
         self.assertEqual(cron.test_result, 0)
         self.assertEqual(models.Lock.objects.count(), 1)
         self.assertFalse(models.Pending.objects.exists())
-        cron.SCHEDULE = [
+        cron.SCHED = [
             {'name': 'test_func',
              'when': lambda t: True,
              'lock': 'test',
@@ -229,7 +229,7 @@ class TestCron(TestCase):
         self.assertEqual(cron.test_result, 0)
         self.assertEqual(models.Lock.objects.count(), 1)
         self.assertEqual(models.Pending.objects.count(), 1)
-        cron.SCHEDULE = [
+        cron.SCHED = [
             {'name': 'test_func',
              'args': '1',
              'when': lambda t: True,
@@ -246,14 +246,14 @@ class TestCron(TestCase):
         self.assertEqual(p.args, '1')
         self.assertEqual(p.lock, 'test')
         cron.cron_unlock()
-        cron.SCHEDULE = []
+        cron.SCHED = []
         cron.test_result = 0
         cron.cron_run()
         self.assertEqual(cron.test_result, 2)
         self.assertFalse(models.Lock.objects.exists())
         self.assertFalse(models.Pending.objects.exists())
         models.Lock(name='another').save()
-        cron.SCHEDULE = [
+        cron.SCHED = [
             {'name': 'test_func',
              'args': '4',
              'when': lambda t: True,
@@ -269,7 +269,7 @@ class TestCron(TestCase):
         models.Lock.objects.filter(name='test').update(
             timestamp_add=(datetime.now() - cron.EXPIRE - timedelta(days=1)))
         self.assertEqual(models.Lock.objects.count(), 2)
-        cron.SCHEDULE = []
+        cron.SCHED = []
         cron.test_result = 0
         cron.cron_run()
         self.assertEqual(cron.test_result, 0)
