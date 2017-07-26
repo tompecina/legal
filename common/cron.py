@@ -126,8 +126,12 @@ def cron_run():
         if not Lock.objects.filter(name=lock).exists():
             job.delete()
             Lock.objects.get_or_create(name=lock)
-            run(job.name, getattr(job, 'args', ''))
+            args = getattr(job, 'args', '')
+            run(job.name, args)
             Lock.objects.filter(name=lock).delete()
+            logger.debug(
+                'Scheduled job {} with arguments "{}" completed' \
+                    .format(job.name, args))
     for job in SCHEDULE:
         if job['when'](now):
             args = job.get('args', '')
@@ -140,6 +144,9 @@ def cron_run():
                             args=args,
                             lock=lock
                         ).save()
+                        logger.debug(
+                            'Job {} with arguments "{}" scheduled' \
+                                .format(job['name'], args))
                     continue
                 Lock.objects.get_or_create(name=lock)
             run(job['name'], args)
@@ -148,7 +155,9 @@ def cron_run():
 
 def cron_unlock():
     Lock.objects.all().delete()
+    logger.info('Locks removed')
 
 def cron_clean():
     Pending.objects.all().delete()
+    logger.info('Pending jobs deleted')
     cron_unlock()
