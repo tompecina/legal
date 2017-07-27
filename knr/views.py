@@ -357,7 +357,7 @@ def formulaform(request, id=0):
                 cd['pk'] = id
             d = {}
             for k, v in cd.items():
-                if k[:5] != 'rate_':
+                if not k.startswith('rate_'):
                     d[k] = v
             p = Formula(uid_id=uid, **d)
             p.save()

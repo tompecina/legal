@@ -133,7 +133,7 @@ def yfactor(beg, end, dconv):
     if (end < beg) or (dconv not in ydconvs):
         return None
 
-    if dconv[:3] == 'ACT':
+    if dconv.startswith('ACT'):
         beg += odp
         y1 = beg.year
         m1 = beg.month
