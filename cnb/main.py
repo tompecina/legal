@@ -129,7 +129,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
 
     today = date.today()
     if (dt.year < 1991) or (dt > today):
-        return (None, None, None, 'Chybné datum, data nejsou k disposici')
+        return None, None, None, 'Chybné datum, data nejsou k disposici'
     p = FXrate.objects.filter(date=dt)
     if p:
         tx = p[0].text
@@ -141,7 +141,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         tx = getcache(surl, cd)[0]
         if not tx:
             logger.warning('No connection to CNB server')
-            return (None, None, None, 'Chyba spojení se serverem ČNB')
+            return None, None, None, 'Chyba spojení se serverem ČNB'
     try:
         soup = newXML(tx)
         assert soup
@@ -153,7 +153,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         logger.error(
             'Invalid FX table structure for '
             '{0.year:d}-{0.month:02d}-{0.day:02d}'.format(dt))
-        return (None, None, None, 'Chyba struktury kursové tabulky')
+        return None, None, None, 'Chyba struktury kursové tabulky'
     if (not p) and ((dr == dt) or ((today - dt) > sd)):
         FXrate(date=dt, text=tx).save()
     ln = soup.find('radek', {'kod': curr})
@@ -165,7 +165,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
             curr = fixed_list[curr]['currency_to']
             ln = soup.find('radek', {'kod': curr})
             if not ln:
-                return (None, None, dr, 'Kurs není v kursové tabulce')
+                return None, None, dr, 'Kurs není v kursové tabulce'
             fr = fixed_list[curr_rq]['fixed_rate']
             if log_fixed != None:
                 log_fixed.append(
@@ -174,7 +174,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
                      'rate': fixed_list[curr_rq]['fixed_rate'],
                      'date_from': fixed_list[curr_rq]['date_from']})
         else:
-            return (None, None, dr, 'Kurs není v kursové tabulce')
+            return None, None, dr, 'Kurs není v kursové tabulce'
     try:
         qty = int(ln['mnozstvi'])
         if ln.has_attr('kurz'):
@@ -186,7 +186,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         logger.error(
             'Invalid FX table line for {0.year:d}-{0.month:02d}-{0.day:02d}'
                 .format(dt))
-        return (None, None, dr, 'Chyba řádku kursové tabulky')
+        return None, None, dr, 'Chyba řádku kursové tabulky'
     if log != None:
         log.append(
             {'currency': curr,
@@ -194,7 +194,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
              'rate': rate,
              'date_required': dt,
              'date': dr})
-    return ((rate / fr), qty, dr, None)
+    return (rate / fr), qty, dr, None
 
 
 def getMPIrate(tp, dt, log=None):
@@ -212,10 +212,10 @@ def getMPIrate(tp, dt, log=None):
              'REPO': ('repo', 'PLATNA_OD|CNB_REPO_SAZBA_V_%')}
 
     if tp not in types.keys():
-        return (None, 'Chybný druh sazby')
+        return None, 'Chybný druh sazby'
 
     if (dt.year < 1990) or (dt > now.date()):
-        return (None, 'Chybné datum, data nejsou k disposici')
+        return None, 'Chybné datum, data nejsou k disposici'
 
     st = MPIstat.objects.get_or_create(type=tp)
     updated = st[0].timestamp_update.date()
@@ -225,12 +225,12 @@ def getMPIrate(tp, dt, log=None):
         tx = getcache(surl, cd)[0]
         if not tx:
             logger.warning('No connection to CNB server')
-            return (None, 'Chyba spojení se serverem ČNB')
+            return None, 'Chyba spojení se serverem ČNB'
 
         tx = tx.replace('\r', '').split('\n')
         if tx[0] != types[tp][1]:
             logger.error('Error in rate table for ' + types[tp][0])
-            return (None, 'Chyba tabulky sazeb (1)')
+            return None, 'Chyba tabulky sazeb (1)'
 
         rates = []
         try:
@@ -240,7 +240,7 @@ def getMPIrate(tp, dt, log=None):
                               date(int(l[0:4]), int(l[4:6]), int(l[6:8]))])
         except:
             logger.error('Error in rate table for ' + types[tp][0])
-            return (None, 'Chyba tabulky sazeb (2)')
+            return None, 'Chyba tabulky sazeb (2)'
 
         try:
             for r in rates:
@@ -251,17 +251,17 @@ def getMPIrate(tp, dt, log=None):
                         valid=r[1])
         except:  # pragma: no cover
             logger.error('Error writing in database')
-            return (None, 'Chyba zápisu do database (1)')
+            return None, 'Chyba zápisu do database (1)'
         try:
             MPIstat.objects.get_or_create(type=tp)[0].save()
         except:  # pragma: no cover
             logger.error('Error writing in database')
-            return (None, 'Chyba zápisu do database (2)')
+            return None, 'Chyba zápisu do database (2)'
 
     d = MPIrate.objects.filter(type=tp, valid__lte=dt).order_by('-valid')
     if not d.exists():
-        return (None, 'Sazba není k disposici')
+        return None, 'Sazba není k disposici'
 
     if log != None:
         log.append({'type': tp, 'rate': d[0].rate, 'date': dt})
-    return (d[0].rate, None)
+    return d[0].rate, None

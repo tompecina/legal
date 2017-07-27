@@ -71,19 +71,19 @@ ctrip = ['cons1', 'cons2', 'cons3']
 def findloc(s):
 
     if not s:
-        return False
+        return None
     s = quote(unquote(s).encode('utf-8'))
     u = 'https://maps.googleapis.com/maps/api/geocode/' \
         'json?address={}&language=cs&sensor=false'.format(s)
     r = getcache(u, timedelta(weeks=1))[0]
     if not r:
-        return False
+        return None
     c = json_loads(r)
     if c['status'] != 'OK':
-        return False
+        return None
     c = c['results'][0]
     l = c['geometry']['location']
-    return (c['formatted_address'], l['lat'], l['lng'])
+    return c['formatted_address'], l['lat'], l['lng']
 
 
 def finddist(from_lat, from_lon, to_lat, to_lon):
@@ -94,14 +94,14 @@ def finddist(from_lat, from_lon, to_lat, to_lon):
             .format(from_lat, from_lon, to_lat, to_lon)
     r = getcache(u, timedelta(weeks=1))[0]
     if not r:
-        return (False, False)
+        return None, None
     c = json_loads(r)
     if c['status'] != 'OK':
-        return (False, False)
+        return None, None
     c = c['rows'][0]['elements'][0]
     if c['status'] != 'OK':
-        return (False, False)
-    return (c['distance']['value'], c['duration']['value'])
+        return None, None
+    return c['distance']['value'], c['duration']['value']
 
 
 def convi(n):

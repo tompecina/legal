@@ -394,9 +394,9 @@ class TestViews2(TestCase):
     def test_finddist(self):
         r = views.finddist(50, 15, 51, 16)
         self.assertEqual(r, (182046, 20265))
-        self.assertEqual(views.finddist(50, 15, 51, 17), (False, False))
-        self.assertEqual(views.finddist(50, 15, 51, 18), (False, False))
-        self.assertEqual(views.finddist(50, 15, 51, 19), (False, False))
+        self.assertEqual(views.finddist(50, 15, 51, 17), (None, None))
+        self.assertEqual(views.finddist(50, 15, 51, 18), (None, None))
+        self.assertEqual(views.finddist(50, 15, 51, 19), (None, None))
 
     def test_main(self):
         res = self.client.get('/knr')

@@ -31,18 +31,18 @@ def getcache(url, lifespan):
     Cache.objects.filter(expire__lt=datetime.now()).delete()
     c = Cache.objects.filter(url=url)
     if c:
-        return (c[0].text, None)
+        return c[0].text, None
     u = get(url)
     if not u.ok:
         logger.warning('Failed to access URL: "{}"'.format(url))
-        return (None, 'Chyba při komunikaci se serverem')
+        return None, 'Chyba při komunikaci se serverem'
     t = u.text
     Cache(
         url=url,
         text=t,
         expire=((datetime.now() + lifespan) if lifespan else None)
     ).save()
-    return (t, None)
+    return t, None
 
 
 def getasset(request, asset):
