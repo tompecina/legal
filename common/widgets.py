@@ -191,6 +191,8 @@ rs = forms.RadioSelect
 
 class CurrencyWidget(forms.widgets.MultiWidget):
 
+    template_name = 'currencywidget.html'
+
     std_curr = ['EUR', 'CHF', 'GBP', 'JPY', 'RUB', 'USD']
 
     def __init__(self, czk=True, attrs=None):
@@ -206,10 +208,6 @@ class CurrencyWidget(forms.widgets.MultiWidget):
         if value in self._currlist:
             return [value, None]
         return ['OTH', value]
-
-    @staticmethod
-    def format_output(self, rw):
-        return '&nbsp;'.join(rw).replace('\n', '')
 
 
 class dw(forms.DateInput):
