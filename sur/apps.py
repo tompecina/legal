@@ -30,7 +30,8 @@ class SurConfig(AppConfig):
     verbose_name = 'Sledování účastníků řízení'
     version = '1.0'
 
-    def stat(self):
+    @staticmethod
+    def stat():
         from common.utils import logger
         from .models import Party, Found
         now = datetime.now()
@@ -56,7 +57,8 @@ class SurConfig(AppConfig):
                 Found.objects.count()],
         ]
 
-    def userinfo(self, user):
+    @staticmethod
+    def userinfo(user):
         from common.utils import logger
         from .models import Party
         logger.debug('Partial user information generated')

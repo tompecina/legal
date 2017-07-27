@@ -30,7 +30,8 @@ class DirConfig(AppConfig):
     verbose_name = 'Sledování nových dlužníků v insolvenci'
     version = '1.0'
 
-    def stat(self):
+    @staticmethod
+    def stat():
         from common.utils import logger
         from .models import Debtor, Discovered
         now = datetime.now()
@@ -56,7 +57,8 @@ class DirConfig(AppConfig):
                 Discovered.objects.count()],
         ]
 
-    def userinfo(self, user):
+    @staticmethod
+    def userinfo(user):
         from common.utils import logger
         from .models import Debtor
         logger.debug('Partial user information generated')

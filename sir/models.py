@@ -267,7 +267,7 @@ class Counter(models.Model):
     number = models.IntegerField()
 
     def __str__(self):
-        return '{}: {:d}'.format(self.id, self.number)
+        return '{0.id}: {0.number:d}'.format(self)
 
 
 class Transaction(models.Model):
@@ -340,7 +340,7 @@ class Insolvency(models.Model):
         index_together = ('number', 'year')
 
     def __str__(self):
-        return 'INS {:d}/{:d}'.format(self.number, self.year)
+        return 'INS {0.number:d}/{0.year:d}'.format(self)
 
 
 class Tracked(models.Model):

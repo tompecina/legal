@@ -212,7 +212,7 @@ class DebitForm(forms.Form):
         return data
 
     def clean(self):
-        cleaned_data = super(DebitForm, self).clean()
+        cleaned_data = super().clean()
         date_from = cleaned_data.get('date_from', None)
         date_to = cleaned_data.get('date_to', None)
         if date_from and date_to and (date_from > date_to):
@@ -304,7 +304,7 @@ class FXform(forms.Form):
         return data
 
     def clean(self):
-        cleaned_data = super(FXform, self).clean()
+        cleaned_data = super().clean()
         date_from = cleaned_data.get('date_from', None)
         date_to = cleaned_data.get('date_to', None)
         if date_from and date_to and (date_from > date_to):

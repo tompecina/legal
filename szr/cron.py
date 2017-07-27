@@ -62,7 +62,7 @@ def addauxid(p):
                 ref = '{} '.format(p.senate)
             else:
                 ref = ''
-            ref += '{} {:d}/{:d}'.format(p.register, p.number, p.year)
+            ref += '{0.register} {0.number:d}/{0.year:d}'.format(p)
             d['_ctl0:ContentPlaceMasterPage:_ctl0:txtSpisovaZnackaFull'] = ref
             res = post(nss_url, d)
             soup = BeautifulSoup(res.text, 'html.parser')
@@ -152,12 +152,12 @@ def updateproc(p):
         assert table
     except:  # pragma: no cover
         logger.warning(
-            'Failed to check proceedings "{}" ({}) for user "{}" ({:d})' \
+            'Failed to check proceedings "{0.desc}" ({1}) for user ' \
+            '"{2}" ({0.uid_id:d})' \
                 .format(
-                    p.desc,
+                    p,
                     p2s(p),
-                    User.objects.get(pk=p.uid_id).username,
-                    p.uid_id))
+                    User.objects.get(pk=p.uid_id).username))
         return False
     hash = md5(str(table).encode()).hexdigest()
     if court != supreme_administrative_court:
@@ -170,42 +170,40 @@ def updateproc(p):
                     t[1].split(':')))
         except:  # pragma: no cover
             logger.warning(
-                'Failed to check proceedings "{}" ({}) for user "{}" ({:d})' \
+                'Failed to check proceedings "{0.desc}" ({1}) for user ' \
+                '"{2}" ({0.uid_id:d})' \
                     .format(
-                        p.desc,
+                        p,
                         p2s(p),
-                        User.objects.get(pk=p.uid_id).username,
-                        p.uid_id))
+                        User.objects.get(pk=p.uid_id).username))
         if (changed != p.changed) or (hash != p.hash):
             p.notify |= notnew
             if changed:
                 p.changed = changed
                 logger.info(
-                    'Change detected in proceedings "{}" ({}) ' \
-                    'for user "{}" ({:d})'.format(
-                        p.desc,
+                    'Change detected in proceedings "{0.desc}" ({1}) ' \
+                    'for user "{2}" ({0.uid_id:d})'.format(
+                        p,
                         p2s(p),
-                        User.objects.get(pk=p.uid_id).username,
-                        p.uid_id))
+                        User.objects.get(pk=p.uid_id).username))
     elif hash != p.hash:
         p.notify |= notnew
         if notnew:
             p.changed = p.updated
             if p.changed:
                 logger.info(
-                    'Change detected in proceedings "{}" ({}) ' \
-                    'for user "{}" ({:d})'.format(
-                        p.desc,
+                    'Change detected in proceedings "{0.desc}" ({1}) ' \
+                    'for user "{2}" ({0.uid_id:d})'.format(
+                        p,
                         p2s(p),
-                        User.objects.get(pk=p.uid_id).username,
-                        p.uid_id))
+                        User.objects.get(pk=p.uid_id).username))
     p.hash = hash
     logger.debug(
-        'Proceedings "{}" ({}) updated for user "{}" ({:d})'.format(
-            p.desc,
+        'Proceedings "{0.desc}" ({1}) updated for user ' \
+        '"{2}" ({0.uid_id:d})'.format(
+            p,
             p2s(p),
-            User.objects.get(pk=p.uid_id).username,
-            p.uid_id))
+            User.objects.get(pk=p.uid_id).username))
     return True
 
 
@@ -232,13 +230,8 @@ def szr_notice(uid):
                 desc = ' ({})'.format(p.desc)
             else:
                 desc = ''
-            text += ' - {}, sp. zn. {:d} {} {:d}/{:d}{}\n'.format(
-                p.court,
-                p.senate,
-                p.register,
-                p.number,
-                p.year,
-                desc)
+            text += ' - {0.court}, sp. zn. {0.senate:d} {0.register} ' \
+                    '{0.number:d}/{0.year:d}{1}\n'.format(p, desc)
             if p.court_id != supreme_administrative_court:
                 if p.court_id == supreme_court:
                     court_type = 'ns'

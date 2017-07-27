@@ -30,7 +30,8 @@ class SzrConfig(AppConfig):
     verbose_name = 'Sledování změn v řízení'
     version = '1.0'
 
-    def stat(self):
+    @staticmethod
+    def stat():
         from common.utils import logger
         from .models import Court, Proceedings
         now = datetime.now()
@@ -62,7 +63,8 @@ class SzrConfig(AppConfig):
                 Proceedings.objects.filter(notify=1).count()],
         ]
 
-    def userinfo(self, user):
+    @staticmethod
+    def userinfo(user):
         from common.utils import logger
         from .models import Proceedings
         logger.debug('Partial user information generated')

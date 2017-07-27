@@ -30,7 +30,8 @@ class CommonConfig(AppConfig):
     verbose_name = 'Společné funkce'
     version = None
 
-    def stat(self):
+    @staticmethod
+    def stat():
         from django.contrib.auth.models import User
         from .utils import logger
         from .models import PwResetLink, Preset
@@ -60,7 +61,8 @@ class CommonConfig(AppConfig):
                 Preset.objects.count()],
         ]
 
-    def userinfo(self, user):
+    @staticmethod
+    def userinfo(user):
         from common.utils import logger
         logger.debug('Partial user information generated')
         return [

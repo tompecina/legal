@@ -103,8 +103,7 @@ def cron_update():
             q['krajOrg'] = c1
             q['org'] = c2
             q['sin'] = cr.desc
-            q['datum'] = '{:d}.{:d}.{:d}' \
-                .format(t.date.day, t.date.month, t.date.year)
+            q['datum'] = '{0.day:d}.{0.month:d}.{0.year:d}'.format(t.date)
             q['spamQuestion'] = '23'
             q['druhVec'] = ''
             url = root_url + get_hear + q.urlencode()
@@ -177,9 +176,10 @@ def cron_update():
         t.delete()
     except:
         logger.warning(
-            'Failed to download hearings for {}, {:d}-{:02d}-{:02d}' \
-                .format(t.court_id, t.date.year, t.date.month, t.date.day))
+            'Failed to download hearings for {0}, ' \
+            '{1.year:d}-{1.month:02d}-{1.day:02d}' \
+                .format(t.court_id, t.date))
         return
     logger.debug(
-        'Downloaded hearings for {}, {:d}-{:02d}-{:02d}' \
-            .format(t.court_id, t.date.year, t.date.month, t.date.day))
+        'Downloaded hearings for {0}, {1.year:d}-{1.month:02d}-{1.day:02d}' \
+            .format(t.court_id, t.date))

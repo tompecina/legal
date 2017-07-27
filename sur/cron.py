@@ -33,13 +33,8 @@ def sur_notice(uid):
         text = 'Byli nově zaznamenáni tito účastníci řízení, ' \
                'které sledujete:\n\n'
         for f in ff:
-            text += ' - {}, {}, sp. zn. {:d} {} {:d}/{:d}\n'.format(
-                f.name,
-                f.court,
-                f.senate,
-                f.register,
-                f.number,
-                f.year)
+            text += ' - {0.name}, {0.court}, sp. zn. {0.senate:d} ' \
+                    '{0.register} {0.number:d}/{0.year:d}\n'.format(f)
             text += '   {}\n\n'.format(f.url)
         Found.objects.filter(uid=uid).delete()
         logger.info(

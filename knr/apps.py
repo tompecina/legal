@@ -29,7 +29,8 @@ class KnrConfig(AppConfig):
     verbose_name = 'Náklady řízení'
     version = '1.8'
 
-    def stat(self):
+    @staticmethod
+    def stat():
         from common.utils import logger
         from cache.models import Asset
         from .models import Place, Car, Formula, Rate
@@ -50,10 +51,11 @@ class KnrConfig(AppConfig):
             [
                 'Počet položek v tabulce Asset',
                 Asset.objects.filter(assetid__startswith= \
-                    self.name.upper()).count()],
+                    KnrConfig.name.upper()).count()],
         ]
 
-    def userinfo(self, user):
+    @staticmethod
+    def userinfo(user):
         from common.utils import logger
         from .models import Place, Car, Formula
         logger.debug('Partial user information generated')

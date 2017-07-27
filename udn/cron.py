@@ -169,11 +169,10 @@ def cron_find():
         d = {i['name']: i['value'] for i in form.find_all('input') \
              if i['type'] == 'hidden' and i.has_attr('value')}
         ref = ('{} '.format(dec.senate) if dec.senate else '')
-        ref += '{} {:d}/{:d}'.format(dec.register, dec.number, dec.year)
+        ref += '{0.register} {0.number:d}/{0.year:d}'.format(dec)
         d['_ctl0:ContentPlaceMasterPage:_ctl0:txtDatumOd'] = \
         d['_ctl0:ContentPlaceMasterPage:_ctl0:txtDatumDo'] = \
-            '{:02d}.{:02d}.{:d}' \
-                .format(dec.date.day, dec.date.month, dec.date.year)
+            '{0.day:02d}.{0.month:02d}.{0.year:d}'.format(dec.date)
         d['_ctl0:ContentPlaceMasterPage:_ctl0:txtSpisovaZnackaFull'] = ref
         d['_ctl0_ContentPlaceMasterPage__ctl0_rbTypDatum_0'] = 'on'
         res = post(find_url, d)

@@ -255,6 +255,6 @@ DECIMAL_SEPARATOR = ','
 DATE_FORMAT = 'd.m.Y'
 SHORT_DATE_FORMAT = 'd.m.Y'
 DATE_INPUT_FORMATS = ['%d.%m.%Y']
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*' if DEBUG else 'legal.pecina.cz']
 LOCALE_PATHS = ()
 locale.setlocale(locale.LC_ALL, 'cs_CZ')

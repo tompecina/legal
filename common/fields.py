@@ -49,7 +49,7 @@ class InlineBooleanField(forms.BooleanField):
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('label_suffix', '')
-        super(InlineBooleanField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class CharField(forms.CharField):
@@ -76,7 +76,7 @@ class DateField(forms.DateField):
             return value.date()
         if isinstance(value, date):
             return value
-        return super(DateField, self).to_python(value.replace(' ', ''))
+        return super().to_python(value.replace(' ', ''))
 
 
 class AmountField(forms.FloatField):
@@ -146,12 +146,13 @@ class CurrencyField(forms.MultiValueField):
 
     def __init__(self, czk=True, *args, **kwargs):
         kwargs['required'] = False
-        super(CurrencyField, self) \
-            .__init__(widget=widgets.CurrencyWidget(czk=czk),
-                      fields=(forms.CharField(),
-                              forms.CharField(min_length=3, max_length=3)),
-                      *args,
-                      **kwargs)
+        super().__init__(
+            widget=widgets.CurrencyWidget(czk=czk),
+            fields=(
+                forms.CharField(),
+                forms.CharField(min_length=3, max_length=3)),
+            *args,
+            **kwargs)
 
     def compress(self, data_list):
         if data_list:

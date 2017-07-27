@@ -33,8 +33,9 @@ cd = timedelta(hours=1)
 def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
 
     logger.debug(
-        'FX rate requested, currency "{}" for {:d}-{:02d}-{:02d}, fixed "{}"' \
-            .format(curr, dt.year, dt.month, dt.day, use_fixed))
+        'FX rate requested, currency "{0}" for ' \
+        '{1.year:d}-{1.month:02d}-{1.day:02d}, fixed "{2}"' \
+            .format(curr, dt, use_fixed))
 
     fixed_list = {
         'XEU': {'currency_to': 'EUR',
@@ -135,8 +136,8 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
     else:
         surl = (
             'https://www.cnb.cz/cs/financni_trhy/devizovy_trh/' \
-            'kurzy_devizoveho_trhu/denni_kurz.xml?date={:d}.{:d}.{:d}' \
-                .format(dt.day, dt.month, dt.year))
+            'kurzy_devizoveho_trhu/denni_kurz.xml?date=' \
+            '{0.day:d}.{0.month:d}.{0.year:d}'.format(dt))
         tx = getcache(surl, cd)[0]
         if not tx:
             logger.warning('No connection to CNB server')
@@ -150,8 +151,8 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         dr = date(int(dr[6:]), int(dr[3:5]), int(dr[:2]))
     except:
         logger.error(
-            'Invalid FX table structure for {:d}-{:02d}-{:02d}' \
-                .format(dt.year, dt.month, dt.day))
+            'Invalid FX table structure for ' \
+            '{0.year:d}-{0.month:02d}-{0.day:02d}'.format(dt))
         return (None, None, None, 'Chyba struktury kursové tabulky')
     if (not p) and ((dr == dt) or ((today - dt) > sd)):
         FXrate(date=dt, text=tx).save()
@@ -184,8 +185,8 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         rate = float(rate.replace(',', '.'))
     except:
         logger.error(
-            'Invalid FX table line for {:d}-{:02d}-{:02d}' \
-                .format(dt.year, dt.month, dt.day))
+            'Invalid FX table line for {0.year:d}-{0.month:02d}-{0.day:02d}' \
+                .format(dt))
         return (None, None, dr, 'Chyba řádku kursové tabulky')
     if log != None:
         log.append(
@@ -200,8 +201,8 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
 def getMPIrate(tp, dt, log=None):
 
     logger.debug(
-        'MPI rate of type "{}" requested for {:d}-{:02d}-{:02d}' \
-            .format(tp, dt.year, dt.month, dt.day))
+        'MPI rate of type "{0}" requested for ' \
+        '{1.year:d}-{1.month:02d}-{1.day:02d}'.format(tp, dt))
 
     now = datetime.now()
 

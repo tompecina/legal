@@ -744,8 +744,8 @@ def mainpage(request):
                     c.drawRightString(
                         (A4[0] - 48.0),
                         48.0,
-                        'Vytvořeno: {:d}. {:d}. {:d}' \
-                            .format(today.day, today.month, today.year))
+                        'Vytvořeno: {0.day:d}. {0.month:d}. {0.year:d}' \
+                            .format(today))
                     c.restoreState()
 
                 def page2(c, d):
@@ -946,15 +946,13 @@ def mainpage(request):
                     i1 = 'pevnou částkou {}' \
                              .format(fa(debt.interest.fixed_amount))
                 elif debt.interest.model == 'per_annum':
-                    i1 = 'pevnou sazbou {:n} % <i>p. a.</i>, ' \
-                         'konvence pro počítání dnů: {}' \
-                             .format(debt.interest.rate,
-                                     debt.interest.day_count_convention)
+                    i1 = 'pevnou sazbou {0.rate:n} % <i>p. a.</i>, ' \
+                         'konvence pro počítání dnů: {0.day_count_convention}' \
+                             .format(debt.interest)
                 elif debt.interest.model == 'per_mensem':
-                    i1 = 'pevnou sazbou {:n} % <i>p. m.</i>, ' \
-                         'konvence pro počítání dnů: {}' \
-                             .format(debt.interest.rate,
-                                     debt.interest.day_count_convention)
+                    i1 = 'pevnou sazbou {0.rate:n} % <i>p. m.</i>, ' \
+                         'konvence pro počítání dnů: {0.day_count_convention}' \
+                             .format(debt.interest)
                 elif debt.interest.model == 'per_diem':
                     i1 = 'pevnou sazbou {:n} ‰ <i>p. d.</i>' \
                              .format(debt.interest.rate)

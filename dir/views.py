@@ -474,10 +474,8 @@ def debtorexport(request):
         if p.birthid:
             dat.append('RČ={}/{}'.format(p.birthid[:6], p.birthid[6:]))
         if p.date_birth:
-            dat.append('datumNarození={:02d}.{:02d}.{:d}' .format(
-                p.date_birth.day,
-                p.date_birth.month,
-                p.date_birth.year))
+            dat.append('datumNarození={0.day:02d}.{0.month:02d}.{0.year:d}' \
+                           .format(p.date_birth))
         if p.year_birth_from:
             dat.append('rokNarozeníOd=' + str(p.year_birth_from))
         if p.year_birth_to:

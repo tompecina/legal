@@ -35,12 +35,11 @@ def dir_notice(uid):
         text = 'Byli nově zaznamenáni tito dlužníci, ' \
                'které sledujete:\n\n'
         for d in dd:
-            text += ' - {}, sp. zn. {} {:d} INS {:d}/{:d}\n'.format(
-                d.desc,
-                l2s[d.vec.idOsobyPuvodce],
-                d.vec.senat,
-                d.vec.bc,
-                d.vec.rocnik)
+            text += ' - {0}, sp. zn. {1} {2.senat:d} INS ' \
+                    '{2.bc:d}/{2.rocnik:d}\n'.format(
+                        d.desc,
+                        l2s[d.vec.idOsobyPuvodce],
+                        d.vec)
             text += '   {}\n\n'.format(d.vec.link)
         Discovered.objects.filter(uid=uid, vec__link__isnull=False).delete()
         logger.info(

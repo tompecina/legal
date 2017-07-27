@@ -29,7 +29,8 @@ class CnbConfig(AppConfig):
     verbose_name = 'Kursy a sazby ČNB'
     version = '1.0'
 
-    def stat(self):
+    @staticmethod
+    def stat():
         from cnb.models import FXrate, MPIrate, MPIstat
         from common.utils import logger
         logger.debug('Partial statistics generated')

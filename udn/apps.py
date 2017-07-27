@@ -30,7 +30,8 @@ class UdnConfig(AppConfig):
     verbose_name = 'Archiv úřední desky NSS'
     version = '1.1'
 
-    def stat(self):
+    @staticmethod
+    def stat():
         from common.utils import logger
         from .models import Agenda, Party, Decision
         now = datetime.now()

@@ -30,7 +30,8 @@ class SirConfig(AppConfig):
     verbose_name = 'Sledování změn v insolvenčních řízeních'
     version = '1.0'
 
-    def stat(self):
+    @staticmethod
+    def stat():
         from common.utils import logger
         from .models import (
             DruhAdresy, Adresa, DruhRoleVRizeni, Osoba, Role, DruhStavRizeni,
@@ -142,7 +143,8 @@ class SirConfig(AppConfig):
                 Counter.objects.get(id='PR').number],
         ]
 
-    def userinfo(self, user):
+    @staticmethod
+    def userinfo(user):
         from common.utils import logger
         from .models import Insolvency
         logger.debug('Partial user information generated')

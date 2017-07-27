@@ -29,7 +29,8 @@ class CacheConfig(AppConfig):
     verbose_name = 'Společná cache'
     version = None
 
-    def stat(self):
+    @staticmethod
+    def stat():
         from common.utils import logger
         from .models import Cache, Asset
         logger.debug('Partial statistics generated')

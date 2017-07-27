@@ -42,7 +42,7 @@ class Logger:
 
     _logger = getLogger('logger')
 
-    def _proc(self, meth, args, kwargs):
+    def _proc(meth, args, kwargs):
         if 'extra' not in kwargs:
             kwargs['extra'] = {}
         kwargs['extra']['package'] = \
@@ -57,16 +57,16 @@ class Logger:
         meth(*args, **kwargs)
 
     def error(self, *args, **kwargs):
-        self._proc(self._logger.error, args, kwargs)
+        Logger._proc(self._logger.error, args, kwargs)
 
     def warning(self, *args, **kwargs):
-        self._proc(self._logger.warning, args, kwargs)
+        Logger._proc(self._logger.warning, args, kwargs)
 
     def info(self, *args, **kwargs):
-        self._proc(self._logger.info, args, kwargs)
+        Logger._proc(self._logger.info, args, kwargs)
 
     def debug(self, *args, **kwargs):
-        self._proc(self._logger.debug, args, kwargs)
+        Logger._proc(self._logger.debug, args, kwargs)
 
 
 logger = Logger()
@@ -91,7 +91,7 @@ def easter(dt):
 
 def pd(d):
 
-    return '{:d}. {:d}. {:d}'.format(d.day, d.month, d.year)
+    return '{0.day:d}. {0.month:d}. {0.year:d}'.format(d)
 
 
 def tod(dt):
@@ -285,7 +285,7 @@ def c2p(s):
 class Lf(float):
 
     def __format__(self, format):
-        return p2c(super(Lf, self).__format__(format))
+        return p2c(super().__format__(format))
 
 
 def formam(x):

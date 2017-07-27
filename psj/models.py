@@ -44,7 +44,7 @@ class Courtroom(models.Model):
         auto_now=True)
 
     def __str__(self):
-        return '{}, {}'.format(self.court, self.desc)
+        return '{0.court}, {0.desc}'.format(self)
 
 
 class Party(models.Model):
@@ -153,4 +153,4 @@ class Task(models.Model):
         db_index=True)
 
     def __str__(self):
-        return '{}, {}'.format(self.court.name, self.date)
+        return '{0.court.name}, {0.date}'.format(self)

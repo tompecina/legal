@@ -44,7 +44,7 @@ class UserAddForm(UserChangeForm, UserCreationForm, Form):
         help_text='Jaké je hlavní město České republiky?')
 
     def __init__(self, *args, **kwargs):
-        super(UserAddForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['first_name'].required = True
         self.fields['first_name'].label = 'Jméno'
         self.fields['last_name'].required = True

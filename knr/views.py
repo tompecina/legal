@@ -1099,8 +1099,8 @@ def mainpage(request):
                         c.drawRightString(
                             (A4[0] - 48.0),
                             48.0,
-                            'Vytvořeno: {:d}. {:d}. {:d}' \
-                                .format(nw.day, nw.month, nw.year))
+                            'Vytvořeno: {0.day:d}. {0.month:d}. {0.year:d}' \
+                                .format(nw))
                         c.restoreState()
 
                     reportlab.rl_config.warnOnMissingFontGlyphs = 0
@@ -1266,21 +1266,19 @@ def mainpage(request):
                             if item.type == 'service':
                                 if item.multiple_number < 2:
                                     q.append(Paragraph(
-                                        '<b>Hlavních úkonů:</b> {:d} ' \
+                                        '<b>Hlavních úkonů:</b> ' \
+                                        '{0.major_number:d} ' \
                                         '&nbsp; <b>Vedlejších úkonů:</b> ' \
-                                        '{:d}'.format(
-                                            item.major_number,
-                                            item.minor_number),
+                                        '{0.minor_number:d}'.format(item),
                                         s6))
                                 else:
                                     q.append(Paragraph(
-                                        '<b>Hlavních úkonů:</b> {:d} ' \
+                                        '<b>Hlavních úkonů:</b> ' \
+                                        '{0.major_number:d} ' \
                                         '&nbsp; <b>Vedlejších úkonů:</b> ' \
-                                        '{:d} &nbsp; <b>Zastupovaných ' \
-                                        'účastníků:</b> {:d}'.format(
-                                            item.major_number,
-                                            item.minor_number,
-                                            item.multiple_number),
+                                        '{0.minor_number:d} &nbsp; ' \
+                                        '<b>Zastupovaných účastníků:</b> ' \
+                                        '{0.multiple_number:d}'.format(item),
                                         s6))
                             if item.type == 'administrative':
                                 q.append(Paragraph(
@@ -1351,9 +1349,9 @@ def mainpage(request):
                                     s6))
                             if (item.numerator > 1) or (item.denominator > 1):
                                 q.append(Paragraph(
-                                    '<b>Zlomek:</b> {:d}/{:d}'.format(
-                                        item.numerator,
-                                        item.denominator),
+                                    '<b>Zlomek:</b> ' \
+                                    '{0.numerator:d}/{0.denominator:d}' \
+                                        .format(item),
                                     s6))
                             if item.item_note:
                                 for s in filter(bool, item.item_note.strip() \
@@ -1503,13 +1501,13 @@ def itemform(request, idx=0):
             if t.uid or (not p.filter(abbr=t.abbr, uid=uid)):
                 l1.append(
                     {'idx': t.id,
-                     'text': '{} – {}'.format(t.abbr, t.name)})
+                     'text': '{0.abbr} – {0.name}'.format(t)})
         p = Car.objects.filter(uid=uid).order_by('abbr', 'name')
         l2 = []
         for t in p:
             l2.append(
                 {'idx': t.id,
-                 'text': '{} – {}'.format(t.abbr, t.name)})
+                 'text': '{0.abbr} – {0.name}'.format(t)})
         p = Formula.objects.filter(Q(uid=None) | Q(uid=uid)) \
                            .order_by('abbr', 'name')
         l3 = []
@@ -1517,7 +1515,7 @@ def itemform(request, idx=0):
             if t.uid or (not p.filter(abbr=t.abbr, uid=uid)):
                 l3.append(
                     {'idx': t.id,
-                     'text': '{} – {}'.format(t.abbr, t.name)})
+                     'text': '{0.abbr} – {0.name}'.format(t)})
         var.update(
             {'sep': ('-' * 110),
              'from_sels': l1,

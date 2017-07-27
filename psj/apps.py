@@ -30,7 +30,8 @@ class PsjConfig(AppConfig):
     verbose_name = 'Přehled soudních jednání'
     version = '1.1'
 
-    def stat(self):
+    @staticmethod
+    def stat():
         from common.utils import logger
         from .models import Courtroom, Party, Judge, Form, Hearing, Task
         now = datetime.now()

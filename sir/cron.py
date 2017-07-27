@@ -109,7 +109,7 @@ def cron_gettr():
 
 def p2s(p):
 
-    return 'INS {:d}/{:d}'.format(p.number, p.year)
+    return 'INS {0.number:d}/{0.year:d}'.format(p)
 
 
 def cron_proctr():
@@ -406,12 +406,11 @@ def sir_notice(uid):
         text = 'Došlo ke změně v těchto insolvenčních řízeních, ' \
                'která sledujete:\n\n'
         for t in tt:
-            text += ' - {}sp. zn. {} {:d} INS {:d}/{:d}\n'.format(
-                ('{}, '.format(t.desc) if t.desc else ''),
-                l2s[t.vec.idOsobyPuvodce],
-                t.vec.senat,
-                t.vec.bc,
-                t.vec.rocnik)
+            text += ' - {0}sp. zn. {1} {2.senat:d} INS {2.bc:d}/{2.rocnik:d}\n' \
+                        .format(
+                            ('{}, '.format(t.desc) if t.desc else ''),
+                            l2s[t.vec.idOsobyPuvodce],
+                            t.vec)
             text += '   {}\n\n'.format(t.vec.link)
         Tracked.objects.filter(uid=uid, vec__link__isnull=False).delete()
         logger.info(

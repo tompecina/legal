@@ -171,7 +171,7 @@ class MainForm(forms.Form):
         initial='html')
 
     def clean(self):
-        cleaned_data = super(MainForm, self).clean()
+        cleaned_data = super().clean()
         date_first_from = cleaned_data.get('date_first_from', None)
         date_first_to = cleaned_data.get('date_first_to', None)
         if date_first_from and \

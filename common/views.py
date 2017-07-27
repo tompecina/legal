@@ -170,8 +170,8 @@ def lostpw(request):
                         reverse('resetpw', args=[link]))
                 send_mail('Link pro obnoveni hesla', text, [u[0].email])
                 logger.info(
-                    'Password recovery link for user "{}" ({:d}) sent' \
-                        .format(u[0].username, u[0].id),
+                    'Password recovery link for user "{0.username}" ' \
+                    '({0.id:d}) sent'.format(u[0]),
                     request)
             return redirect('/accounts/pwlinksent/')
         else:
@@ -294,8 +294,8 @@ def getuserinfo(user):
         if hasattr(c, 'userinfo'):
             userinfo.extend(c.userinfo(user))
     logger.debug(
-        'User information combined for user "{}" ({:d})' \
-            .format(user.username, user.id))
+        'User information combined for user "{0.username}" ({0.id:d})' \
+            .format(user))
     return userinfo
 
 
@@ -336,8 +336,7 @@ def useradd(request):
                 user.save()
                 logout(request)
                 logger.info(
-                    'New user "{}" ({:d}) created' \
-                        .format(user.username, user.id),
+                    'New user "{0.username}" ({0.id:d}) created'.format(user),
                     request)
                 return redirect('useradded')
             logger.error('Failed to create user', request)

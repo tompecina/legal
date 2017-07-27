@@ -29,7 +29,8 @@ class HjpConfig(AppConfig):
     verbose_name = 'Historie jednoduché pohledávky'
     version = '1.6'
 
-    def stat(self):
+    @staticmethod
+    def stat():
         from common.utils import logger
         from cache.models import Asset
         logger.debug('Partial statistics generated')
@@ -37,5 +38,5 @@ class HjpConfig(AppConfig):
             [
                 'Počet položek v tabulce Asset',
                 Asset.objects.filter(assetid__startswith= \
-                    self.name.upper()).count()],
+                    HjpConfig.name.upper()).count()],
         ]

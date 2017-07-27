@@ -973,13 +973,13 @@ def mainpage(request):
                 writer = csv.writer(response)
                 hdr = ['Datum', 'Popis', 'Částka', 'Měna']
                 for debit in debt.debits:
-                    hdr.append('Předchozí zůstatek {} ({})' \
-                                   .format(debit.id, debit.currency))
+                    hdr.append('Předchozí zůstatek {0.id} ({0.currency})' \
+                                   .format(debit))
                 for debit in debt.debits:
-                    hdr.append('Změna {} ({})'.format(debit.id, debit.currency))
+                    hdr.append('Změna {0.id} ({0.currency})'.format(debit))
                 for debit in debt.debits:
-                    hdr.append('Nový zůstatek {} ({})' \
-                                   .format(debit.id, debit.currency))
+                    hdr.append('Nový zůstatek {0.id} ({0.currency})' \
+                                   .format(debit))
                 writer.writerow(hdr)
                 for row in res.rows:
                     dat = [
@@ -1008,8 +1008,8 @@ def mainpage(request):
                     c.drawRightString(
                         (A4[0] - 48.0),
                         48.0,
-                        'Vytvořeno: {:d}. {:d}. {:d}' \
-                            .format(today.day, today.month, today.year))
+                        'Vytvořeno: {0.day:d}. {0.month:d}. {0.year:d}' \
+                            .format(today))
                     c.restoreState()
 
                 def page2(c, d):
@@ -1272,15 +1272,14 @@ def mainpage(request):
                                         debit.fixed_date)
                         else:
                             if m == 'per_annum':
-                                t = 'roční úrok {:n} % <i>p. a.</i> ' \
-                                    '(konvence pro počítání dnů: {})' \
-                                        .format(debit.rate,
-                                                debit.day_count_convention)
+                                t = 'roční úrok {0.rate:n} % <i>p. a.</i> ' \
+                                    '(konvence pro počítání dnů: ' \
+                                    '{0.day_count_convention})'.format(debit)
                             elif m == 'per_mensem':
-                                t = 'měsíční úrok {:n} % <i>p. m.</i> ' \
-                                    '(konvence pro počítání dnů: {})' \
-                                        .format(debit.rate,
-                                                debit.day_count_convention)
+                                t = 'měsíční úrok {0.rate:n} % <i>p. m.</i> ' \
+                                    '(konvence pro počítání dnů: ' \
+                                    '{0.day_count_convention})' \
+                                        .format(debit)
                             elif m == 'per_diem':
                                 t = 'denní úrok {:n} ‰ <i>p. d.</i>' \
                                          .format(debit.rate)
@@ -1322,13 +1321,8 @@ def mainpage(request):
                         if t:
                             t = ' ({})'.format(t.strip())
                         r.append(Paragraph(
-                            '{:n} {} = {:n} {}{}' \
-                                .format(
-                                    fxrate.rate_from,
-                                    fxrate.currency_from,
-                                    fxrate.rate_to,
-                                    fxrate.currency_to,
-                                    t),
+                            '{0.rate_from:n} {0.currency_from} = {0.rate_to:n} ' \
+                            '{0.currency_to}{1}'.format(fxrate, t),
                             s20,
                             bulletText='–'))
 
@@ -1339,12 +1333,9 @@ def mainpage(request):
                     r.append(Paragraph(('Použité směnné kursy ČNB:'), s23))
                     for fx in res.fx:
                         r.append(Paragraph(
-                            '{:d} {} = {:.3f} CZK, platný ' \
-                            'ke dni {:%d.%m.%Y}'.format(
-                                fx['quantity'],
-                                fx['currency'],
-                                Lf(fx['rate']),
-                                fx['date_required']),
+                            '{0[quantity]:d} {0[currency]} = {1:.3f} CZK, ' \
+                            'platný ke dni {0[date_required]:%d.%m.%Y}' \
+                                .format(fx, Lf(fx['rate'])),
                             s20,
                             bulletText='–'))
 
@@ -1355,12 +1346,9 @@ def mainpage(request):
                     r.append(Paragraph(('Použité fixní směnné poměry:'), s23))
                     for fix in res.fix:
                         r.append(Paragraph(
-                            '{} {} = 1 {}, platný od {:%d.%m.%Y}' \
-                                .format(
-                                    formam(fix['rate']),
-                                    fix['currency_from'],
-                                    fix['currency_to'],
-                                    fix['date_from']),
+                            '{0} {1[currency_from]} = 1 {1[currency_to]}, ' \
+                            'platný od {1[date_from]:%d.%m.%Y}' \
+                                .format(formam(fix['rate']), fix),
                             s20,
                             bulletText='–'))
 
