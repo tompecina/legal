@@ -67,8 +67,9 @@ class TestForms(SimpleTestCase):
         f = forms.ServiceForm(s)
         self.assertTrue(f.is_valid())
         d = copy(s)
-        d['off10_flag'] = d['off30_flag'] = d['off30limit5000_flag'] = \
-            d['off20limit5000_flag'] = 'on'
+        for t in ['off10_flag', 'off30_flag', 'off30limit5000_flag',
+            'off20limit5000_flag']:
+            d[t] = 'on'
         f = forms.ServiceForm(d)
         self.assertFalse(f.is_valid())
         d = copy(s)
@@ -88,13 +89,13 @@ class TestForms(SimpleTestCase):
         f = forms.ServiceForm(d)
         self.assertTrue(f.is_valid())
         d = copy(s)
-        d['off30_flag'] = d['off30limit5000_flag'] = \
-            d['off20limit5000_flag'] = 'on'
+        for t in ['off30_flag', 'off30limit5000_flag', 'off20limit5000_flag']:
+            d[t] = 'on'
         f = forms.ServiceForm(d)
         self.assertFalse(f.is_valid())
         d = copy(s)
-        d['off10_flag'] = d['off30limit5000_flag'] = \
-            d['off20limit5000_flag'] = 'on'
+        for t in ['off10_flag', 'off30limit5000_flag', 'off20limit5000_flag']:
+            d[t] = 'on'
         f = forms.ServiceForm(d)
         self.assertFalse(f.is_valid())
         d = copy(s)
@@ -319,13 +320,15 @@ class TestViews1(SimpleTestCase):
         self.assertEqual(v, {'vat_rate': 'XXX'})
 
     def test_s2i(self):
-        s = newXML('<?xml version="1.0" encoding="utf-8"?>\n' \
-                   '<vat_rate>22.0</vat_rate>\n')
+        s = newXML(
+            '<?xml version="1.0" encoding="utf-8"?>\n'
+            '<vat_rate>22.0</vat_rate>\n')
         c = views.Calculation()
         views.s2i(['vat_rate'], s, c)
         self.assertAlmostEqual(c.vat_rate, 22)
-        s = newXML('<?xml version="1.0" encoding="utf-8"?>\n' \
-                   '<vat_rate>XXX</vat_rate>\n')
+        s = newXML(
+            '<?xml version="1.0" encoding="utf-8"?>\n'
+            '<vat_rate>XXX</vat_rate>\n')
         c = views.Calculation()
         o = c.vat_rate
         views.s2i(['vat_rate'], s, c)
@@ -335,9 +338,8 @@ class TestViews1(SimpleTestCase):
         i = 1
         while True:
             try:
-                with open('{}/knr/testdata/calc{:d}.xml' \
-                              .format(BASE_DIR, i), 'rb') \
-                    as fi:
+                with open('{}/knr/testdata/calc{:d}.xml'
+                    .format(BASE_DIR, i), 'rb') as fi:
                     d = fi.read()
             except:
                 self.assertGreater(i, 1)
@@ -351,9 +353,8 @@ class TestViews1(SimpleTestCase):
         i = 1
         while True:
             try:
-                with open('{}/knr/testdata/err_calc{:d}.xml' \
-                              .format(BASE_DIR, i),
-                          'rb') as fi:
+                with open('{}/knr/testdata/err_calc{:d}.xml'
+                    .format(BASE_DIR, i), 'rb') as fi:
                     d = fi.read()
             except:
                 self.assertGreater(i, 1)
@@ -542,9 +543,8 @@ class TestViews2(TestCase):
         i = 1
         while True:
             try:
-                fi = open('{}/knr/testdata/calc{:d}.xml' \
-                              .format(BASE_DIR, i),
-                          'rb')
+                fi = open('{}/knr/testdata/calc{:d}.xml'
+                    .format(BASE_DIR, i), 'rb')
             except:
                 self.assertGreater(i, 1)
                 break

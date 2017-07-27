@@ -94,7 +94,7 @@ def mainpage(request):
 def procform(request, id=0):
 
     logger.debug(
-        'Proceedings form accessed using method {}, id={}' \
+        'Proceedings form accessed using method {}, id={}'
             .format(request.method, id),
         request,
         request.POST)
@@ -105,7 +105,7 @@ def procform(request, id=0):
     btn = getbutton(request)
     courts = Court.objects.order_by('name')
     if request.method == 'GET':
-        f = (ProcForm(initial=model_to_dict(get_object_or_404( \
+        f = (ProcForm(initial=model_to_dict(get_object_or_404(
             Proceedings, pk=id, uid=uid))) if id else ProcForm())
     elif btn == 'back':
         return redirect('szr:mainpage')
@@ -122,13 +122,9 @@ def procform(request, id=0):
                 cd['timestamp_update'] = p.timestamp_update
             cd['court_id'] = cd['court']
             del cd['court']
-            onlydesc = ( \
-                id and \
-                p.court.id == cd['court_id'] and \
-                p.senate == cd['senate'] and \
-                p.register == cd['register'] and \
-                p.number == cd['number'] and \
-                p.year == cd['year'])
+            onlydesc = id and p.court.id == cd['court_id'] \
+                and p.senate == cd['senate'] and p.register == cd['register'] \
+                and p.number == cd['number'] and p.year == cd['year']
             if onlydesc:
                 cd['changed'] = p.changed
                 cd['updated'] = p.updated
@@ -141,12 +137,12 @@ def procform(request, id=0):
             p.save()
             if id:
                 logger.info(
-                    'User "{}" ({:d}) updated proceedings "{}" ({})' \
+                    'User "{}" ({:d}) updated proceedings "{}" ({})'
                         .format(uname, uid, p.desc, p2s(p)),
                     request)
             else:
                 logger.info(
-                    'User "{}" ({:d}) added proceedings "{}" ({})' \
+                    'User "{}" ({:d}) added proceedings "{}" ({})'
                         .format(uname, uid, p.desc, p2s(p)),
                     request)
             return redirect('szr:mainpage')
@@ -168,7 +164,7 @@ def procform(request, id=0):
 def procdel(request, id=0):
 
     logger.debug(
-        'Proceedings delete page accessed using method {}, id={}' \
+        'Proceedings delete page accessed using method {}, id={}'
             .format(request.method, id),
         request,
         request.POST)
@@ -184,7 +180,7 @@ def procdel(request, id=0):
         proc = get_object_or_404(Proceedings, pk=id, uid=uid)
         if getbutton(request) == 'yes':
             logger.info(
-                'User "{}" ({:d}) deleted proceedings "{}" ({})' \
+                'User "{}" ({:d}) deleted proceedings "{}" ({})'
                     .format(uname, uid, proc.desc, p2s(proc)),
                 request)
             proc.delete()
@@ -197,7 +193,7 @@ def procdel(request, id=0):
 def procdelall(request):
 
     logger.debug(
-        'Delete all proceedings page accessed using method {}' \
+        'Delete all proceedings page accessed using method {}'
             .format(request.method),
         request)
     uid = request.user.id
@@ -209,9 +205,8 @@ def procdelall(request):
             {'app': APP,
              'page_title': 'Smazání všech řízení'})
     else:
-        if (getbutton(request) == 'yes') and \
-           ('conf' in request.POST) and \
-           (request.POST['conf'] == 'Ano'):
+        if (getbutton(request) == 'yes') and ('conf' in request.POST) \
+           and (request.POST['conf'] == 'Ano'):
             Proceedings.objects.filter(uid=uid).delete()
             logger.info(
                 'User "{}" ({:d}) deleted all proceedings'.format(uname, uid),
@@ -224,7 +219,7 @@ def procdelall(request):
 def procbatchform(request):
 
     logger.debug(
-        'Proceedings import page accessed using method {}' \
+        'Proceedings import page accessed using method {}'
             .format(request.method),
         request)
 
@@ -308,12 +303,12 @@ def procbatchform(request):
                                     except:
                                         errors.append(
                                             [i,
-                                             'Popisu "{}" odpovídá více než ' \
+                                             'Popisu "{}" odpovídá více než '
                                              'jedno řízení'.format(desc)])
                                         continue
                                 count += 1
                     logger.info(
-                        'User "{}" ({:d}) imported {:d} proceedings' \
+                        'User "{}" ({:d}) imported {:d} proceedings'
                             .format(uname, uid, count),
                         request)
                     return render(

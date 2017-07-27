@@ -104,7 +104,7 @@ def mainpage(request):
 def partyform(request, id=0):
 
     logger.debug(
-        'Party form accessed using method {}, id={}' \
+        'Party form accessed using method {}, id={}'
             .format(request.method, id),
         request,
         request.POST)
@@ -137,12 +137,12 @@ def partyform(request, id=0):
             p.party_opt = text_opts_keys.index(cd['party_opt'])
             if id:
                 logger.info(
-                    'User "{}" ({:d}) updated party "{}"' \
+                    'User "{}" ({:d}) updated party "{}"'
                         .format(uname, uid, p.party),
                     request)
             else:
                 logger.info(
-                    'User "{}" ({:d}) added party "{}"' \
+                    'User "{}" ({:d}) added party "{}"'
                         .format(uname, uid, p.party),
                     request)
             p.save()
@@ -165,7 +165,7 @@ def partyform(request, id=0):
 def partydel(request, id=0):
 
     logger.debug(
-        'Party delete page accessed using method {}, id={}' \
+        'Party delete page accessed using method {}, id={}'
             .format(request.method, id),
         request,
         request.POST)
@@ -181,7 +181,7 @@ def partydel(request, id=0):
         party = get_object_or_404(Party, pk=id, uid=uid)
         if getbutton(request) == 'yes':
             logger.info(
-                'User "{}" ({:d}) deleted party "{}"' \
+                'User "{}" ({:d}) deleted party "{}"'
                     .format(uname, uid, party.party),
                 request)
             party.delete()
@@ -194,7 +194,7 @@ def partydel(request, id=0):
 def partydelall(request):
 
     logger.debug(
-        'Delete all parties page accessed using method {}' \
+        'Delete all parties page accessed using method {}'
             .format(request.method),
         request)
     uid = request.user.id
@@ -206,9 +206,8 @@ def partydelall(request):
             {'app': APP,
              'page_title': 'Smazání všech účastníků'})
     else:
-        if (getbutton(request) == 'yes') and \
-           ('conf' in request.POST) and \
-           (request.POST['conf'] == 'Ano'):
+        if (getbutton(request) == 'yes') and ('conf' in request.POST) \
+           and (request.POST['conf'] == 'Ano'):
             Party.objects.filter(uid=uid).delete()
             logger.info(
                 'User "{}" ({:d}) deleted all parties'.format(uname, uid),
@@ -262,18 +261,18 @@ def partybatchform(request):
                                     Party.objects.update_or_create(
                                         uid_id=uid,
                                         party=line,
-                                        defaults={'party_opt': \
+                                        defaults={'party_opt':
                                             text_opts_ai[party_opt]}
                                     )
                                 except:
                                     errors.append(
                                         [i,
-                                         'Řetězci "{}" odpovídá více než ' \
+                                         'Řetězci "{}" odpovídá více než '
                                          'jeden účastník'.format(line)])
                                     continue
                                 count += 1
                     logger.info(
-                        'User "{}" ({:d}) imported {} party/ies' \
+                        'User "{}" ({:d}) imported {} party/ies'
                             .format(uname, uid, count),
                         request)
                     return render(

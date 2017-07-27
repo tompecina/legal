@@ -116,7 +116,7 @@ def mainpage(request):
                      'msg-res'])
                 if t < date(1991, 1, 1):
                     messages.append(
-                        ['(evidence pracovních dnů v tomto období ' \
+                        ['(evidence pracovních dnů v tomto období '
                          'není úplná)',
                          'msg-note'])
 

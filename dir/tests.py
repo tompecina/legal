@@ -47,36 +47,36 @@ class TestCron(TransactionTestCase):
         Vec.objects.update(link="https://legal.pecina.cz/link")
         self.assertEqual(
             cron.dir_notice(1),
-            'Byli nově zaznamenáni tito dlužníci, které sledujete:\n\n' \
-            ' - Test 02, sp. zn. KSBR 0 INS 4/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 03, sp. zn. KSOS 0 INS 7/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 04, sp. zn. KSOS 0 INS 36/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 05, sp. zn. KSOS 0 INS 35/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 07, sp. zn. KSOS 0 INS 18/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 08, sp. zn. KSPL 0 INS 31/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 09, sp. zn. KSOS 0 INS 2/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 11, sp. zn. KSUL 0 INS 22/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 12, sp. zn. KSPH 0 INS 32/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 13, sp. zn. KSHK 0 INS 19/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 14, sp. zn. MSPH 0 INS 20/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 15, sp. zn. KSPH 0 INS 8/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 15, sp. zn. KSOS 0 INS 11/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 15, sp. zn. KSCB 0 INS 27/2008\n' \
-            '   https://legal.pecina.cz/link\n\n' \
-            ' - Test 15, sp. zn. KSCB 0 INS 28/2008\n' \
+            'Byli nově zaznamenáni tito dlužníci, které sledujete:\n\n'
+            ' - Test 02, sp. zn. KSBR 0 INS 4/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 03, sp. zn. KSOS 0 INS 7/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 04, sp. zn. KSOS 0 INS 36/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 05, sp. zn. KSOS 0 INS 35/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 07, sp. zn. KSOS 0 INS 18/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 08, sp. zn. KSPL 0 INS 31/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 09, sp. zn. KSOS 0 INS 2/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 11, sp. zn. KSUL 0 INS 22/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 12, sp. zn. KSPH 0 INS 32/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 13, sp. zn. KSHK 0 INS 19/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 14, sp. zn. MSPH 0 INS 20/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 15, sp. zn. KSPH 0 INS 8/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 15, sp. zn. KSOS 0 INS 11/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 15, sp. zn. KSCB 0 INS 27/2008\n'
+            '   https://legal.pecina.cz/link\n\n'
+            ' - Test 15, sp. zn. KSCB 0 INS 28/2008\n'
             '   https://legal.pecina.cz/link\n\n')
         self.assertFalse(models.Discovered.objects.exists())
 
@@ -629,23 +629,23 @@ class TestViews2(TestCase):
         res = self.client.get('/dir/debtorexport/')
         self.assertEqual(
             res.content.decode('utf-8'),
-            'Test 1,název=Název 2:*\r\n' \
-            'Test 21\r\n' \
-            'Test 21\r\n' \
-            'Test 22,soud=KSOS,název=Název:*,jméno=Jméno:<,IČO=12345678,' \
-            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,' \
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n' \
-            'Test 23,soud=KSOS,název=Název:<,jméno=Jméno:>,IČO=12345678,' \
-            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,' \
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n' \
-            'Test 24,soud=KSOS,název=Název:>,jméno=Jméno:=,IČO=12345678,' \
-            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,' \
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n' \
-            'Test 25,soud=KSOS,název=Název:=,jméno=Jméno:*,IČO=12345678,' \
-            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,' \
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n' \
-            'Test 26,soud=KSOS,název=Název:*,jméno=Jméno:*,IČO=12345678,' \
-            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,' \
+            'Test 1,název=Název 2:*\r\n'
+            'Test 21\r\n'
+            'Test 21\r\n'
+            'Test 22,soud=KSOS,název=Název:*,jméno=Jméno:<,IČO=12345678,'
+            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,'
+            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n'
+            'Test 23,soud=KSOS,název=Název:<,jméno=Jméno:>,IČO=12345678,'
+            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,'
+            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n'
+            'Test 24,soud=KSOS,název=Název:>,jméno=Jméno:=,IČO=12345678,'
+            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,'
+            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n'
+            'Test 25,soud=KSOS,název=Název:=,jméno=Jméno:*,IČO=12345678,'
+            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,'
+            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n'
+            'Test 26,soud=KSOS,název=Název:*,jméno=Jméno:*,IČO=12345678,'
+            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,'
             'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n{}\r\n'.format('T' * 255))
 
 
@@ -698,8 +698,8 @@ class TestViews3(TransactionTestCase):
         self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
         self.assertEqual(
             res.content.decode('utf-8'),
-            'Test 1,soud=MSPH,název=Název:*,jméno=Jméno:<,IČO=12345678,' \
-            'DIČ=001-12345678,RČ=700101/1234,datumNarození=15.01.1970,' \
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n' \
-            'Test 2,název=Název:>,jméno=Jméno:=\r\n' \
+            'Test 1,soud=MSPH,název=Název:*,jméno=Jméno:<,IČO=12345678,'
+            'DIČ=001-12345678,RČ=700101/1234,datumNarození=15.01.1970,'
+            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n'
+            'Test 2,název=Název:>,jméno=Jméno:=\r\n'
             'Test 3\r\n')

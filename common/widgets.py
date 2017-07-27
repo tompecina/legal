@@ -197,8 +197,7 @@ class CurrencyWidget(forms.widgets.MultiWidget):
         self._currlist = ((['CZK'] if czk else []) + self.std_curr)
         super().__init__(
             (forms.Select(
-                choices=([[x, x] for x in self._currlist] + \
-                         [['OTH', 'Jiná:']]),
+                choices=([[x, x] for x in self._currlist] + [['OTH', 'Jiná:']]),
                 attrs={'class': 'currsel'}),
              currw()),
             attrs)
@@ -226,7 +225,7 @@ class dw(forms.DateInput):
         r = super().render(name, *args, **kwargs)
         if self._today:
             return mark_safe(
-                '{0}&nbsp;<input type="submit" name="submit_set_{1}" ' \
-                'value="Dnes" class="today" id="id_set_{1}" />' \
+                '{0}&nbsp;<input type="submit" name="submit_set_{1}" '
+                'value="Dnes" class="today" id="id_set_{1}" />'
                     .format(r, name))
         return r

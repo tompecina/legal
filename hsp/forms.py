@@ -59,13 +59,13 @@ deb_opts = (('fixed', 'Pevná částka'),
             ('per_annum', 'Roční úrok'),
             ('per_mensem', 'Měsíční úrok'),
             ('per_diem', 'Denní úrok'),
-            ('cust1', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
+            ('cust1', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
              '(účinnost do 27.04.2005)'),
-            ('cust2', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
+            ('cust2', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
              '(účinnost od 28.04.2005 do 30.06.2010)'),
-            ('cust3', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
+            ('cust3', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
              '(účinnost od 01.07.2010 do 30.06.2013)'),
-            ('cust5', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
+            ('cust5', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
              '(účinnost od 01.07.2013 do 31.12.2013)'),
             ('cust6', 'Úrok z prodlení podle nařízení č. 351/2013 Sb.'),
             ('cust4', 'Poplatek z prodlení podle nařízení č. 142/1994 Sb.'))
@@ -174,22 +174,22 @@ class DebitForm(forms.Form):
 
     def clean_principal_amount(self):
         data = self.cleaned_data['principal_amount']
-        if (self.data['model'] != 'fixed') and \
-           (self.cleaned_data['principal_debit'] == 0) and (not data):
+        if (self.data['model'] != 'fixed') \
+           and (self.cleaned_data['principal_debit'] == 0) and (not data):
             raise forms.ValidationError('Principal amount is required')
         return data
 
     def clean_principal_currency(self):
         data = self.cleaned_data['principal_currency']
-        if (self.data['model'] != 'fixed') and \
-           (self.cleaned_data['principal_debit'] == 0) and (not data):
+        if (self.data['model'] != 'fixed') \
+           and (self.cleaned_data['principal_debit'] == 0) and (not data):
             raise forms.ValidationError('Principal currency is required')
         return data
 
     def clean_date_from(self):
         data = self.cleaned_data['date_from']
-        if (self.data['model'] != 'fixed') and \
-           (self.cleaned_data['principal_debit'] == 0) and (not data):
+        if (self.data['model'] != 'fixed') \
+           and (self.cleaned_data['principal_debit'] == 0) and (not data):
             raise forms.ValidationError('Starting date is required')
         return data
 

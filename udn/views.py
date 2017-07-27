@@ -174,7 +174,7 @@ def xmllist(request):
         'decisions': {
             'xmlns': 'http://' + localsubdomain,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd' \
+            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd'
                 .format(localsubdomain, localurl, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,

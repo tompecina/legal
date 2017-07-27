@@ -176,10 +176,10 @@ def cron_update():
         t.delete()
     except:
         logger.warning(
-            'Failed to download hearings for {0}, ' \
-            '{1.year:d}-{1.month:02d}-{1.day:02d}' \
+            'Failed to download hearings for {0}, '
+            '{1.year:d}-{1.month:02d}-{1.day:02d}'
                 .format(t.court_id, t.date))
         return
     logger.debug(
-        'Downloaded hearings for {0}, {1.year:d}-{1.month:02d}-{1.day:02d}' \
+        'Downloaded hearings for {0}, {1.year:d}-{1.month:02d}-{1.day:02d}'
             .format(t.court_id, t.date))

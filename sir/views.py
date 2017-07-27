@@ -94,7 +94,7 @@ def mainpage(request):
 def insform(request, id=0):
 
     logger.debug(
-        'Proceedings form accessed using method {}, id={}' \
+        'Proceedings form accessed using method {}, id={}'
             .format(request.method, id),
         request,
         request.POST)
@@ -104,7 +104,7 @@ def insform(request, id=0):
     page_title = ('Úprava řízení' if id else 'Nové řízení')
     btn = getbutton(request)
     if request.method == 'GET':
-        f = (InsForm(initial=model_to_dict(get_object_or_404( \
+        f = (InsForm(initial=model_to_dict(get_object_or_404(
             Insolvency, pk=id, uid=uid))) if id else InsForm())
     elif btn == 'back':
         return redirect('sir:mainpage')
@@ -121,12 +121,12 @@ def insform(request, id=0):
             p.save()
             if id:
                 logger.info(
-                    'User "{}" ({:d}) updated proceedings "{}" ({})' \
+                    'User "{}" ({:d}) updated proceedings "{}" ({})'
                         .format(uname, uid, p.desc, p2s(p)),
                     request)
             else:
                 logger.info(
-                    'User "{}" ({:d}) added proceedings "{}" ({})' \
+                    'User "{}" ({:d}) added proceedings "{}" ({})'
                         .format(uname, uid, p.desc, p2s(p)),
                     request)
             return redirect('sir:mainpage')
@@ -147,7 +147,7 @@ def insform(request, id=0):
 def insdel(request, id=0):
 
     logger.debug(
-        'Proceedings delete page accessed using method {}, id={}' \
+        'Proceedings delete page accessed using method {}, id={}'
             .format(request.method, id),
         request,
         request.POST)
@@ -163,7 +163,7 @@ def insdel(request, id=0):
         ins = get_object_or_404(Insolvency, pk=id, uid=uid)
         if getbutton(request) == 'yes':
             logger.info(
-                'User "{}" ({:d}) deleted proceedings "{}" ({})' \
+                'User "{}" ({:d}) deleted proceedings "{}" ({})'
                     .format(uname, uid, ins.desc, p2s(ins)),
                 request)
             ins.delete()
@@ -176,7 +176,7 @@ def insdel(request, id=0):
 def insdelall(request):
 
     logger.debug(
-        'Delete all proceedings page accessed using method {}' \
+        'Delete all proceedings page accessed using method {}'
             .format(request.method),
         request)
     uid = request.user.id
@@ -188,9 +188,8 @@ def insdelall(request):
             {'app': APP,
              'page_title': 'Smazání všech řízení'})
     else:
-        if (getbutton(request) == 'yes') and \
-           ('conf' in request.POST) and \
-           (request.POST['conf'] == 'Ano'):
+        if (getbutton(request) == 'yes') and ('conf' in request.POST) \
+           and (request.POST['conf'] == 'Ano'):
             Insolvency.objects.filter(uid=uid).delete()
             logger.info(
                 'User "{}" ({:d}) deleted all proceedings'.format(uname, uid),
@@ -203,7 +202,7 @@ def insdelall(request):
 def insbatchform(request):
 
     logger.debug(
-        'Proceedings import page accessed using method {}' \
+        'Proceedings import page accessed using method {}'
             .format(request.method),
         request)
 
@@ -270,12 +269,12 @@ def insbatchform(request):
                                 except:
                                     errors.append(
                                         [i,
-                                         'Popisu "{}" odpovídá více než ' \
+                                         'Popisu "{}" odpovídá více než '
                                          'jedno řízení'.format(desc)])
                                     continue
                                 count += 1
                     logger.info(
-                        'User "{}" ({:d}) imported {:d} proceedings' \
+                        'User "{}" ({:d}) imported {:d} proceedings'
                             .format(uname, uid, count),
                         request)
                     return render(
@@ -329,8 +328,8 @@ def insexport(request):
 def courts(request):
 
     logger.debug('List of courts accessed', request)
-    courts = sorted([{'short': l2s[x], 'name': l2n[x]} for x in \
-        Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()], \
+    courts = sorted([{'short': l2s[x], 'name': l2n[x]} for x in
+        Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()],
         key=(lambda x: strxfrm(x['name'])))
     return render(
         request,

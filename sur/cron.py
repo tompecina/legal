@@ -38,7 +38,7 @@ def sur_notice(uid):
             text += '   {}\n\n'.format(f.url)
         Found.objects.filter(uid=uid).delete()
         logger.info(
-            'Non-empty notice prepared for user "{}" ({:d})' \
+            'Non-empty notice prepared for user "{}" ({:d})'
                 .format(User.objects.get(pk=uid).username, uid))
     return text
 

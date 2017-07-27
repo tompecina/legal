@@ -172,8 +172,8 @@ LOGGING = {
         },
         'logger': {
             'handlers':
-                ['error_mail', 'error_file', 'info_file'] + \
-                (['debug_file'] if DEBUG_LOG else []),
+                ['error_mail', 'error_file', 'info_file']
+                + (['debug_file'] if DEBUG_LOG else []),
             'level': 'DEBUG',
         },
     },

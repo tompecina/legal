@@ -157,27 +157,27 @@ class TestCron(TestCase):
             'Zprava ze serveru ' + glob.localsubdomain)
         self.assertEqual(
             m.body,
-            'V těchto soudních řízeních, která sledujete, došlo ke změně:\n\n' \
-            ' - Nejvyšší soud, sp. zn. 8 Tdo 819/2015\n' \
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
-            'org=NSJIMBM&krajOrg=NSJIMBM&cisloSenatu=8&druhVec=TDO&' \
-            'bcVec=819&rocnik=2015&typSoudu=ns&autoFill=true&type=spzn\n\n' \
-            ' - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)\n' \
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
-            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=41&druhVec=T' \
-            '&bcVec=3&rocnik=2016&typSoudu=os&autoFill=true&type=spzn\n\n' \
-            ' - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 ' \
-            '(Miloš Zbránek)\n' \
-            '   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&' \
-            'kau_id=173442\n\n' \
-            ' - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)\n' \
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
-            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=10&druhVec=T' \
-            '&bcVec=8&rocnik=2014&typSoudu=os&autoFill=true&type=spzn\n\n' \
-            ' - Obvodní soud Praha 2, sp. zn. 6 T 136/2013 (RWU)\n' \
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
-            'org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T' \
-            '&bcVec=136&rocnik=2013&typSoudu=os&autoFill=true&type=spzn\n\n' \
+            'V těchto soudních řízeních, která sledujete, došlo ke změně:\n\n'
+            ' - Nejvyšší soud, sp. zn. 8 Tdo 819/2015\n'
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?'
+            'org=NSJIMBM&krajOrg=NSJIMBM&cisloSenatu=8&druhVec=TDO&'
+            'bcVec=819&rocnik=2015&typSoudu=ns&autoFill=true&type=spzn\n\n'
+            ' - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)\n'
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?'
+            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=41&druhVec=T'
+            '&bcVec=3&rocnik=2016&typSoudu=os&autoFill=true&type=spzn\n\n'
+            ' - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 '
+            '(Miloš Zbránek)\n'
+            '   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&'
+            'kau_id=173442\n\n'
+            ' - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)\n'
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?'
+            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=10&druhVec=T'
+            '&bcVec=8&rocnik=2014&typSoudu=os&autoFill=true&type=spzn\n\n'
+            ' - Obvodní soud Praha 2, sp. zn. 6 T 136/2013 (RWU)\n'
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?'
+            'org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T'
+            '&bcVec=136&rocnik=2013&typSoudu=os&autoFill=true&type=spzn\n\n'
             'Server {} ({})\n'.format(glob.localsubdomain, glob.localurl))
 
     def test_run(self):
@@ -782,7 +782,7 @@ class TestUtils1(SimpleTestCase):
              ]
         for p in pp:
             self.assertEqual(utils.composeref(*utils.decomposeref(p)), p)
-            self.assertEqual(utils.composeref(*utils.decomposeref( \
+            self.assertEqual(utils.composeref(*utils.decomposeref(
                 p.replace('-', ' - '))), p)
 
     def test_normreg(self):

@@ -111,39 +111,39 @@ def calcint(pastdate, presdate, principal, debt, default_date):
     interest = debt.interest
 
     if interest.model == 'none':
-        return (0.0, None)
+        return 0.0, None
 
     if interest.model == 'fixed':
-        return ((0.0 if pastdate else interest.fixed_amount), None)
+        return (0.0 if pastdate else interest.fixed_amount), None
 
     if (not pastdate) or (pastdate > presdate):
-        return (None, 'Chybný interval')
+        return None, 'Chybný interval'
 
     if pastdate < (default_date - odp):
         pastdate = default_date - odp
 
     if pastdate >= presdate:
-        return (0.0, None)
+        return 0.0, None
 
     if interest.model == 'per_annum':
-        return ((principal * yfactor(pastdate, presdate, \
-               interest.day_count_convention) * interest.rate / 100.0), None)
+        return (principal * yfactor(pastdate, presdate,
+            interest.day_count_convention) * interest.rate / 100.0), None
 
     if interest.model == 'per_mensem':
-        return ((principal * mfactor(pastdate, presdate, \
-               interest.day_count_convention) * interest.rate / 100.0), None)
+        return (principal * mfactor(pastdate, presdate,
+            interest.day_count_convention) * interest.rate / 100.0), None
 
     if interest.model == 'per_diem':
-        return ((principal * (presdate - pastdate).days * \
-               interest.rate / 1000.0), None)
+        return (principal * (presdate - pastdate).days
+            * interest.rate / 1000.0), None
 
     if interest.model == 'cust1':
         r = getMPIrate('DISC', default_date)
         if r[1]:
-            return (None, r[1])
+            return None, r[1]
         debt.rates[default_date] = r[0]
-        return ((principal * yfactor(pastdate, presdate, 'ACT/ACT') * \
-                 r[0] / 50.0), None)
+        return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
+            * r[0] / 50.0), None
 
     if interest.model == 'cust2':
         s = 0.0
@@ -159,7 +159,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
                 m1 = 1
             r = getMPIrate('REPO', date(y1, m1, d1))
             if r[1]:
-                return (None, r[1])
+                return None, r[1]
             debt.rates[date(y1, m1, d1)] = r[0]
             y2 = y1
             if (y1 < presdate.year) or ((m1 == 1) and (presdate.month > 6)):
@@ -175,8 +175,8 @@ def calcint(pastdate, presdate, principal, debt, default_date):
             else:
                 m2 = presdate.month
                 d2 = presdate.day
-                return ((principal * (s + yfactor((t - odp), date(y2, m2, d2), \
-                       'ACT/ACT') * (r[0] + 7.0)) / 100.0), None)
+                return (principal * (s + yfactor((t - odp), date(y2, m2, d2),
+                    'ACT/ACT') * (r[0] + 7.0)) / 100.0), None
 
     if interest.model == 'cust3':
         y = default_date.year
@@ -191,10 +191,10 @@ def calcint(pastdate, presdate, principal, debt, default_date):
             y -= 1
         r = getMPIrate('REPO', date(y, m, d))
         if r[1]:
-            return (None, r[1])
+            return None, r[1]
         debt.rates[date(y, m, d)] = r[0]
-        return ((principal * yfactor(pastdate, presdate, 'ACT/ACT') * \
-               (r[0] + 7.0) / 100.0), None)
+        return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
+            * (r[0] + 7.0) / 100.0), None
 
     if interest.model == 'cust5':
         y = default_date.year
@@ -209,10 +209,10 @@ def calcint(pastdate, presdate, principal, debt, default_date):
             y -= 1
         r = getMPIrate('REPO', date(y, m, d))
         if r[1]:
-            return (None, r[1])
+            return None, r[1]
         debt.rates[date(y, m, d)] = r[0]
-        return ((principal * yfactor(pastdate, presdate, 'ACT/ACT') * \
-               (r[0] + 8.0) / 100.0), None)
+        return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
+            * (r[0] + 8.0) / 100.0), None
 
     if interest.model == 'cust6':
         y = default_date.year
@@ -223,15 +223,15 @@ def calcint(pastdate, presdate, principal, debt, default_date):
             m = 1
         r = getMPIrate('REPO', date(y, m, 1))
         if r[1]:
-            return (None, r[1])
+            return None, r[1]
         debt.rates[date(y, m, 1)] = r[0]
-        return ((principal * yfactor(pastdate, presdate, 'ACT/ACT') * \
-               (r[0] + 8.0) / 100.0), None)
+        return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
+            * (r[0] + 8.0) / 100.0), None
 
     if interest.model == 'cust4':
-        return ((principal * (presdate - pastdate).days * .0025), None)
+        return (principal * (presdate - pastdate).days * .0025), None
 
-    return (None, 'Neznámý model')
+    return None, 'Neznámý model'
 
 
 def getrows(debt):
@@ -281,8 +281,8 @@ def getrows(debt):
         if not err:
             op = principal
             oi = interest
-            if (cud and (debt.interest.model != 'none') and \
-                (principal > 0)) or (debt.interest.model == 'fixed'):
+            if (cud and (debt.interest.model != 'none') and (principal > 0)) \
+                or (debt.interest.model == 'fixed'):
                 i = calcint(cud, tt.date, principal, debt, default_date)
                 if i[1]:
                     err = True
@@ -294,9 +294,8 @@ def getrows(debt):
                 row['pre_interest'] = interest
                 row['pre_total'] = (principal + interest)
             else:
-                row['pre_principal'] = \
-                row['pre_interest'] = \
-                row['pre_total'] = 0.0
+                for t in ['pre_principal', 'pre_interest', 'pre_total']:
+                    row[t] = 0.0
             if trt == 'debit':
                 cp = -am
                 ci = 0
@@ -394,9 +393,9 @@ def getrows4(debt):
             row['id'] = tt.id
             row['date'] = dt
             row['description'] = tt.description
-            am = (round(st[e].amount, debt.rounding) \
-                  if hasattr(st[e], 'amount') else 0.0)
-            row['change'] = (am if (st[e].transaction_type == 'debit') else -am)
+            am = round(st[e].amount, debt.rounding) \
+                if hasattr(st[e], 'amount') else 0.0
+            row['change'] = am if (st[e].transaction_type == 'debit') else -am
             row['trt'] = tt.transaction_type
             if tt.transaction_type != 'balance':
                 row['pre_principal'] = principal
@@ -424,17 +423,15 @@ def getrows4(debt):
                 cp = ci = 0.0
 
             if tt.transaction_type == 'credit':
-                row['rep'] = ('jistina' \
-                    if (tt.repayment_preference == 'principal') else 'úrok')
+                row['rep'] = 'jistina' \
+                    if tt.repayment_preference == 'principal' else 'úrok'
             if tt.transaction_type != 'balance':
                 row['change_principal'] = -cp
                 row['change_interest'] = -ci
             else:
-                row['pre_principal'] = \
-                row['pre_interest'] = \
-                row['pre_total'] = \
-                row['change_principal'] = \
-                row['change_interest'] = 0.0
+                for t in ['pre_principal', 'pre_interest', 'pre_total',
+                    'change_principal', 'change_interest']:
+                    row[t] = 0.0
             row['post_principal'] = principal
             row['post_interest'] = interest
             row['post_total'] = principal + interest
@@ -453,7 +450,7 @@ def toxml(debt):
         'debt': {
             'xmlns': 'http://' + localsubdomain,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd' \
+            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd'
                 .format(localsubdomain, localurl, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
@@ -586,9 +583,9 @@ def mainpage(request):
         return '<td class="dr{}">{}</td>'.format(s, formam(-a))
 
     def fa(a):
-        return formam(round(a, debt.rounding) if debt.rounding else \
-                      int(round(a))).replace('-', '−') + '&nbsp;' + \
-                      dispcurr(debt.currency)
+        return '{}&nbsp;{}'.format(
+            formam(round(a, debt.rounding) if debt.rounding else int(round(a)))
+            .replace('-', '−'), dispcurr(debt.currency))
 
     err_message = ''
     rows_err = False
@@ -613,8 +610,8 @@ def mainpage(request):
         i = debt.interest
         var['model'] = m = i.model
         if m == 'fixed':
-            var['fixed_amount'] = ('{:.2f}'.format(Lf(i.fixed_amount)) \
-                if debt.rounding else int(round(i.fixed_amount)))
+            var['fixed_amount'] = '{:.2f}'.format(Lf(i.fixed_amount)) \
+                if debt.rounding else int(round(i.fixed_amount))
         elif m == 'per_annum':
             var['pa_rate'] = i.rate
             var['ydconv'] = i.day_count_convention
@@ -744,7 +741,7 @@ def mainpage(request):
                     c.drawRightString(
                         (A4[0] - 48.0),
                         48.0,
-                        'Vytvořeno: {0.day:d}. {0.month:d}. {0.year:d}' \
+                        'Vytvořeno: {0.day:d}. {0.month:d}. {0.year:d}'
                             .format(today))
                     c.restoreState()
 
@@ -926,16 +923,16 @@ def mainpage(request):
                 wr = 8.0
                 wg = 12.0
                 wf = wc = ((w - wl - wr - (wg * 2.0)) / 6.0)
-                cw = [wl] + ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wg] + \
-                     ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wg] + \
-                     ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wr]
+                cw = [wl] + ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wg] \
+                    + ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wg] \
+                    + ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wr]
 
                 tl = 0.5
 
                 r = [Paragraph(('<b>Měna:</b> {}'.format(debt.currency)), s19)]
                 if hasattr(debt, 'default_date') and debt.default_date:
                     r.append(Paragraph(
-                        '<b>První den prodlení:</b> {:%d.%m.%Y}' \
+                        '<b>První den prodlení:</b> {:%d.%m.%Y}'
                             .format(debt.default_date),
                         s19))
                 i2 = None
@@ -1081,15 +1078,15 @@ def mainpage(request):
                         flow.extend(
                             [Spacer(0, 20),
                              Paragraph(
-                                 '(pro další transakce nejsou k disposici' \
+                                 '(pro další transakce nejsou k disposici'
                                  ' data, při výpočtu došlo k chybě)', s22)])
                         break
                     trt = row['trt']
                     d3 = []
                     r = [Paragraph('{:%d.%m.%Y}'.format(row['date']), s13)] \
                         + ([''] * 4)
-                    q = [Paragraph(escape(row['description']).upper(), s14)] + \
-                        ([''] * 28)
+                    q = [Paragraph(escape(row['description']).upper(), s14)] \
+                        + ([''] * 28)
                     d3.extend([r + q])
 
                     if trt == 'debit':
@@ -1099,7 +1096,7 @@ def mainpage(request):
                             + ([''] * 10) \
                             + [Paragraph('Nový zůstatek', s15), '']
                     elif trt == 'credit':
-                        r = ['', Paragraph('<b>Splátka</b> (přednost {}' \
+                        r = ['', Paragraph('<b>Splátka</b> (přednost {}'
                                     .format(row['rep']), s16)] \
                             + ([''] * 10) \
                             + [Paragraph('Předchozí zůstatek', s15)] \
@@ -1113,7 +1110,7 @@ def mainpage(request):
                     if trt != 'balance':
                         r = ['', Paragraph('Částka', s17)] \
                             + ([''] * 2) \
-                            + [Paragraph(fa((row['change'] if (trt == 'debit') \
+                            + [Paragraph(fa((row['change'] if (trt == 'debit')
                                              else (-row['change']))), s18)] \
                             + ([''] * 7) \
                             + [Paragraph('Jistina', s17)] \
@@ -1266,7 +1263,7 @@ def mainpage(request):
 def transform(request, id=0):
 
     logger.debug(
-        'Transaction form accessed using method {}, id={}' \
+        'Transaction form accessed using method {}, id={}'
             .format(request.method, id),
         request,
         request.POST)
@@ -1325,13 +1322,14 @@ def transform(request, id=0):
             logger.debug('Invalid form', request)
             err_message = inerr
 
-    return render(request,
-                  'hjp_transform.html',
-                  {'app': APP,
-                   'f': f,
-                   'page_title': page_title,
-                   'currency': dispcurr(debt.currency),
-                   'err_message': err_message})
+    return render(
+        request,
+        'hjp_transform.html',
+        {'app': APP,
+         'f': f,
+         'page_title': page_title,
+         'currency': dispcurr(debt.currency),
+         'err_message': err_message})
 
 
 @require_http_methods(['GET', 'POST'])
@@ -1339,7 +1337,7 @@ def transform(request, id=0):
 def transdel(request, id=0):
 
     logger.debug(
-        'Transaction delete page accessed using method {}, id={}' \
+        'Transaction delete page accessed using method {}, id={}'
             .format(request.method, id),
         request,
         request.POST)

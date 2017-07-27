@@ -50,8 +50,8 @@ class KnrConfig(AppConfig):
                 Rate.objects.count()],
             [
                 'Počet položek v tabulce Asset',
-                Asset.objects.filter(assetid__startswith= \
-                    KnrConfig.name.upper()).count()],
+                Asset.objects.filter(
+                    assetid__startswith=KnrConfig.name.upper()).count()],
         ]
 
     @staticmethod

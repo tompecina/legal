@@ -51,40 +51,40 @@ class PsjConfig(AppConfig):
                 Party.objects.count()],
             [
                 'Počet nových účastníků za posledních 24 hodin',
-                Party.objects.filter(timestamp_add__gte=(now - \
-                    timedelta(hours=24))).count()],
+                Party.objects.filter(
+                    timestamp_add__gte=(now - timedelta(hours=24))).count()],
             [
                 'Počet nových účastníků za poslední týden',
-                Party.objects.filter(timestamp_add__gte=(now - \
-                    timedelta(weeks=1))).count()],
+                Party.objects.filter(
+                    timestamp_add__gte=(now - timedelta(weeks=1))).count()],
             [
                 'Počet nových účastníků za poslední měsíc',
-                Party.objects.filter(timestamp_add__gte=(now - \
-                    timedelta(days=30))).count()],
+                Party.objects.filter(
+                    timestamp_add__gte=(now - timedelta(days=30))).count()],
             [
                 'Počet jednání',
                 Hearing.objects.count()],
             [
                 'Počet nových jednání za posledních 24 hodin',
-                Hearing.objects.filter(timestamp_add__gte=(now - \
-                    timedelta(hours=24))).count()],
+                Hearing.objects.filter(
+                    timestamp_add__gte=(now - timedelta(hours=24))).count()],
             [
                 'Počet nových jednání za poslední týden',
-                Hearing.objects.filter(timestamp_add__gte=(now - \
-                    timedelta(weeks=1))).count()],
+                Hearing.objects.filter(
+                    timestamp_add__gte=(now - timedelta(weeks=1))).count()],
             [
                 'Počet nových jednání za poslední měsíc',
-                Hearing.objects.filter(timestamp_add__gte=(now - \
-                    timedelta(days=30))).count()],
+                Hearing.objects.filter(
+                    timestamp_add__gte=(now - timedelta(days=30))).count()],
             [
                 'Počet položek v tabulce Task',
                 Task.objects.count()],
             [
                 'Počet položek v tabulce Task starších než 12 hodin',
-                Task.objects.filter(timestamp_add__lt=(now - \
-                    timedelta(hours=12))).count()],
+                Task.objects.filter(
+                    timestamp_add__lt=(now - timedelta(hours=12))).count()],
             [
                 'Počet položek v tabulce Task starších než 24 hodin',
-                Task.objects.filter(timestamp_add__lt=(now - \
-                    timedelta(hours=24))).count()],
+                Task.objects.filter(
+                    timestamp_add__lt=(now - timedelta(hours=24))).count()],
         ]

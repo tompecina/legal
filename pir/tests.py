@@ -729,8 +729,8 @@ class TestViews2(TestCase):
         self.assertEqual(res.redirect_chain[0][1], HTTPStatus.FOUND)
         self.assertTrue(link_equal(
             res.redirect_chain[0][0],
-            '/pir/list/?name=N%C3%A1zev&name_opt=icontains' \
-            '&first_name=Jm%C3%A9no&first_name_opt=icontains' \
+            '/pir/list/?name=N%C3%A1zev&name_opt=icontains'
+            '&first_name=Jm%C3%A9no&first_name_opt=icontains'
             '&city=M%C4%9Bsto&city_opt=icontains&start=0'))
         res = self.client.post(
             '/pir/',
@@ -1003,8 +1003,8 @@ class TestViews2(TestCase):
         ]
         for p in pp:
             self.assertEqual(
-                list(views.getosoby(Vec.objects.get(bc=47, rocnik=2015), \
-                    *(p[0])).order_by('nazevOsoby') \
+                list(views.getosoby(Vec.objects.get(bc=47, rocnik=2015),
+                    *(p[0])).order_by('nazevOsoby')
                      .values_list('nazevOsoby', flat=True)),
                 p[1])
 
@@ -1127,7 +1127,7 @@ class TestViews2(TestCase):
         self.assertTemplateUsed(res, 'pir_list.html')
         self.assertEqual(res.context['total'], 0)
         res = self.client.get(
-            '/pir/list/?first_name=Veronika&first_name_opt=iexact' \
+            '/pir/list/?first_name=Veronika&first_name_opt=iexact'
             '&role_debtor=on')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.html')
@@ -1204,7 +1204,7 @@ class TestViews2(TestCase):
         self.assertTemplateUsed(res, 'pir_list.html')
         self.assertEqual(res.context['total'], 2)
         res = self.client.get(
-            '/pir/list/?name=k&name_opt=icontains&role_debtor=on' \
+            '/pir/list/?name=k&name_opt=icontains&role_debtor=on'
             '&role_trustee=on')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.html')

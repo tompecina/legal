@@ -77,7 +77,7 @@ class TestCron2(TransactionTestCase):
         self.assertGreater(getpr(), 0)
         self.assertEqual(
             models.Vec.objects.first().link,
-            'https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?' \
+            'https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?'
             'id=7ba95b84-15ae-4a8e-8339-1918eac00c84')
         setdl(5772013)
         cron.cron_gettr()
@@ -127,10 +127,10 @@ class TestCron3(TestCase):
         cron.cron_getws2()
         self.assertEqual(
             cron.sir_notice(1),
-            'Došlo ke změně v těchto insolvenčních řízeních, která' \
-            ' sledujete:\n\n' \
-            ' - Test 47/2015, sp. zn. KSPA 56 INS 47/2015\n' \
-            '   https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?' \
+            'Došlo ke změně v těchto insolvenčních řízeních, která'
+            ' sledujete:\n\n'
+            ' - Test 47/2015, sp. zn. KSPA 56 INS 47/2015\n'
+            '   https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?'
             'id=7ba95b84-15ae-4a8e-8339-1918eac00c84\n\n')
         self.assertEqual(models.Tracked.objects.count(), 1)
 
@@ -594,11 +594,11 @@ class TestViews1(TestCase):
         res = self.client.get('/sir/insexport/')
         self.assertEqual(
             res.content.decode('utf-8'),
-            'Test 1,3,2010,ne\r\n' \
-            'Test 2,2,2013,ano\r\n' \
-            'Test 3,3,2014,ano\r\n' \
-            'Test 4,4,2011,ne\r\n' \
-            'Test 4,5,2012,ne\r\n' \
+            'Test 1,3,2010,ne\r\n'
+            'Test 2,2,2013,ano\r\n'
+            'Test 3,3,2014,ano\r\n'
+            'Test 4,4,2011,ne\r\n'
+            'Test 4,5,2012,ne\r\n'
             '{},57,2012,ano\r\n'.format('T' * 255))
 
     def test_insexport(self):

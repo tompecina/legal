@@ -85,8 +85,8 @@ def easter(dt):
     d = 1 + (p + 28 + (p + 6) // 40) % 31
     m = 3 + (p + 27) // 30
     dt2 = dt + timedelta(3)
-    return ((dt.month == m) and (dt.day == d)) or \
-           ((y >= 2016) and (dt2.month == m) and (dt2.day == d))
+    return ((dt.month == m) and (dt.day == d)) \
+        or ((y >= 2016) and (dt2.month == m) and (dt2.day == d))
 
 
 def pd(d):
@@ -101,10 +101,8 @@ def tod(dt):
     d = dt.day
 
     for h in hd:
-        if (d == h['d']) and \
-           (m == h['m']) and \
-           ((not h['f']) or (y >= h['f'])) and \
-           ((not h['t']) or (y <= h['t'])):
+        if (d == h['d']) and (m == h['m']) and ((not h['f']) or (y >= h['f'])) \
+            and ((not h['t']) or (y <= h['t'])):
             return True
 
     if easter(dt):
@@ -380,9 +378,8 @@ def getXML(d):
         except:
             try:
                 return newXML(
-                    d.encode('latin-1') \
-                        .split('endstream')[0] \
-                        .split('stream')[1])
+                    d.encode('latin-1').split('endstream')[0]
+                    .split('stream')[1])
             except:
                 try:
                     return newXML(d.encode('latin-1'))

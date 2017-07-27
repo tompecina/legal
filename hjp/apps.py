@@ -37,6 +37,6 @@ class HjpConfig(AppConfig):
         return [
             [
                 'Počet položek v tabulce Asset',
-                Asset.objects.filter(assetid__startswith= \
-                    HjpConfig.name.upper()).count()],
+                Asset.objects.filter(
+                    assetid__startswith=HjpConfig.name.upper()).count()],
         ]

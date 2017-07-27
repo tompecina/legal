@@ -56,8 +56,8 @@ def mainpage(request):
     messages = []
     page_title = apps.get_app_config(APP).verbose_name
 
-    courts = sorted([{'id': x, 'name': l2n[x]} for x in \
-        Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()], \
+    courts = sorted([{'id': x, 'name': l2n[x]} for x in
+        Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()],
         key=(lambda x: strxfrm(x['name'])))
     if request.method == 'GET':
         f = MainForm()
@@ -80,12 +80,8 @@ def mainpage(request):
         for p in cd:
             if cd[p]:
                 q[p] = cd[p]
-        for p in \
-            ['role_debtor',
-             'role_trustee',
-             'role_creditor',
-             'deleted',
-             'creditors']:
+        for p in ['role_debtor', 'role_trustee', 'role_creditor',
+            'deleted', 'creditors']:
             if cd[p]:
                 q[p] = 'on'
         q['start'] = 0
@@ -110,8 +106,8 @@ def g2p(rd):
     p = {'id__lte': Counter.objects.get(id='PR').number}
     if 'court' in rd:
         p['idOsobyPuvodce'] = rd['court']
-    for f, d, l in \
-        [['senate', 'senat', 0], ['number', 'bc', 1], ['year', 'rocnik', 2008]]:
+    for f, d, l in [['senate', 'senat', 0], ['number', 'bc', 1],
+        ['year', 'rocnik', 2008]]:
         if f in rd:
             p[d] = int(rd[f])
             assert p[d] >= l
@@ -152,17 +148,12 @@ def g2p(rd):
         p['roles__osoba__datumNarozeni__year__gte'] = rd['year_birth_from']
     if 'year_birth_to' in rd:
         p['roles__osoba__datumNarozeni__year__lte'] = rd['year_birth_to']
-    if ('name' in rd) or \
-       ('first_name' in rd) or \
-       ('city' in rd) or \
-       ('genid' in rd) or \
-       ('taxid' in rd) or \
-       ('birthid' in rd) or \
-       ('date_birth' in rd) or \
-       ('year_birth_from' in rd) or \
-       ('year_birth_to' in rd):
-        role = [DruhRoleVRizeni.objects.get(desc=r2i[f]).id \
-            for f in ['debtor', 'trustee', 'creditor'] \
+    if ('name' in rd) or ('first_name' in rd) or ('city' in rd) \
+        or ('genid' in rd) or ('taxid' in rd) or ('birthid' in rd) \
+        or ('date_birth' in rd) or ('year_birth_from' in rd) \
+        or ('year_birth_to' in rd):
+        role = [DruhRoleVRizeni.objects.get(desc=r2i[f]).id
+            for f in ['debtor', 'trustee', 'creditor']
             if 'role_' + f in rd]
         if 'role_creditor' in rd:
             role.append(DruhRoleVRizeni.objects.get(desc=r2i['motioner']).id)
@@ -210,7 +201,7 @@ def htmllist(request):
     if total and (start >= total):
         start = total - 1
     creditors = ('creditors' in rd)
-    BATCH = (10 if creditors else 20)
+    BATCH = 10 if creditors else 20
     rows = v[start:(start + BATCH)]
     for row in rows:
         row.court = l2n[row.idOsobyPuvodce]
@@ -355,7 +346,7 @@ def xmllist(request):
         'insolvencies': {
             'xmlns': 'http://' + localsubdomain,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd' \
+            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd'
                 .format(localsubdomain, localurl, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
@@ -460,10 +451,10 @@ def csvlist(request):
             l2n[v.idOsobyPuvodce],
             '{}{} INS {:d}/{:d}'.format(
                 l2s[v.idOsobyPuvodce],
-                (' {:d}'.format(v.senat) if v.senat else ''),
+                ' {:d}'.format(v.senat) if v.senat else '',
                 v.bc,
                 v.rocnik),
-            (s2d[v.druhStavRizeni.desc] \
+            (s2d[v.druhStavRizeni.desc]
              if v.druhStavRizeni else '(není známo)'),
         ]
         writer.writerow(dat)
@@ -554,7 +545,7 @@ def jsonlist(request):
                 'number': v.bc,
                 'year': v.rocnik,
                 },
-            'state': (s2d[v.druhStavRizeni.desc] if v.druhStavRizeni else ''),
+            'state': s2d[v.druhStavRizeni.desc] if v.druhStavRizeni else '',
             'debtors': json_addparties(getosoby(v, 'debtor')),
             'trustees': json_addparties(getosoby(v, 'trustee')),
         }
@@ -575,8 +566,8 @@ def party(request, id=0):
     i = 0
     for adresa in adresy:
         adresa.type = a2d[adresa.druhAdresy.desc]
-        adresa.psc = ('{} {}'.format(adresa.psc[:3], adresa.psc[3:]) \
-            if adresa.psc else '')
+        adresa.psc = '{} {}'.format(adresa.psc[:3], adresa.psc[3:]) \
+            if adresa.psc else ''
         adresa.cl = 'even' if i % 2 else 'odd'
         i += 1
     return render(
@@ -586,6 +577,6 @@ def party(request, id=0):
          'page_title': 'Informace o osobě',
          'subtitle': o2s(osoba),
          'osoba': osoba,
-         'birthid': ('{}/{}'.format(osoba.rc[:6], osoba.rc[6:]) \
-            if osoba.rc else ''),
+         'birthid': '{}/{}'.format(osoba.rc[:6], osoba.rc[6:]) \
+            if osoba.rc else '',
          'adresy': adresy})

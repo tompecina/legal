@@ -366,7 +366,7 @@ class TestViews(TestCase):
         res = self.client.get('/udn/list/?start=-1')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get(
-            '/udn/list/?date_from=2015-01-01&date_to=2199-07-01&register=As&' \
+            '/udn/list/?date_from=2015-01-01&date_to=2199-07-01&register=As&'
             'agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'udn_list.html')
@@ -508,14 +508,14 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertXMLEqual(stripxml(res.content), stripxml(x0.encode('utf-8')))
         res = self.client.get(
-            '/udn/xmllist/?date_from=2015-01-01&date_to=2199-07-01&' \
+            '/udn/xmllist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertXMLEqual(stripxml(res.content), stripxml(x1.encode('utf-8')))
         models.Decision.objects.update(
             anonfilename='0067_5As__1500054_20151119130217_prevedeno.pdf')
         res = self.client.get(
-            '/udn/xmllist/?date_from=2015-01-01&date_to=2199-07-01&' \
+            '/udn/xmllist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertXMLEqual(stripxml(res.content), stripxml(x2.encode('utf-8')))
@@ -568,14 +568,14 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c0)
         res = self.client.get(
-            '/udn/csvlist/?date_from=2015-01-01&date_to=2199-07-01&' \
+            '/udn/csvlist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c1)
         models.Decision.objects.update(
             anonfilename='0067_5As__1500054_20151119130217_prevedeno.pdf')
         res = self.client.get(
-            '/udn/csvlist/?date_from=2015-01-01&date_to=2199-07-01&' \
+            '/udn/csvlist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c2)
@@ -628,14 +628,14 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertJSONEqual(res.content.decode('utf-8'), j0)
         res = self.client.get(
-            '/udn/jsonlist/?date_from=2015-01-01&date_to=2199-07-01&' \
+            '/udn/jsonlist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertJSONEqual(res.content.decode('utf-8'), j1)
         models.Decision.objects.update(
             anonfilename='0067_5As__1500054_20151119130217_prevedeno.pdf')
         res = self.client.get(
-            '/udn/jsonlist/?date_from=2015-01-01&date_to=2199-07-01&' \
+            '/udn/jsonlist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertJSONEqual(res.content.decode('utf-8'), j2)

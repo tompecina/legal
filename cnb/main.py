@@ -33,8 +33,8 @@ cd = timedelta(hours=1)
 def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
 
     logger.debug(
-        'FX rate requested, currency "{0}" for ' \
-        '{1.year:d}-{1.month:02d}-{1.day:02d}, fixed "{2}"' \
+        'FX rate requested, currency "{0}" for '
+        '{1.year:d}-{1.month:02d}-{1.day:02d}, fixed "{2}"'
             .format(curr, dt, use_fixed))
 
     fixed_list = {
@@ -135,8 +135,8 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         tx = p[0].text
     else:
         surl = (
-            'https://www.cnb.cz/cs/financni_trhy/devizovy_trh/' \
-            'kurzy_devizoveho_trhu/denni_kurz.xml?date=' \
+            'https://www.cnb.cz/cs/financni_trhy/devizovy_trh/'
+            'kurzy_devizoveho_trhu/denni_kurz.xml?date='
             '{0.day:d}.{0.month:d}.{0.year:d}'.format(dt))
         tx = getcache(surl, cd)[0]
         if not tx:
@@ -151,7 +151,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         dr = date(int(dr[6:]), int(dr[3:5]), int(dr[:2]))
     except:
         logger.error(
-            'Invalid FX table structure for ' \
+            'Invalid FX table structure for '
             '{0.year:d}-{0.month:02d}-{0.day:02d}'.format(dt))
         return (None, None, None, 'Chyba struktury kursové tabulky')
     if (not p) and ((dr == dt) or ((today - dt) > sd)):
@@ -160,9 +160,8 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
     fr = 1.0
     curr_rq = curr
     if not ln:
-        if use_fixed and \
-           (curr in fixed_list) and \
-           (fixed_list[curr]['date_from'] <= dt):
+        if use_fixed and (curr in fixed_list) \
+           and (fixed_list[curr]['date_from'] <= dt):
             curr = fixed_list[curr]['currency_to']
             ln = soup.find('radek', {'kod': curr})
             if not ln:
@@ -185,7 +184,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         rate = float(rate.replace(',', '.'))
     except:
         logger.error(
-            'Invalid FX table line for {0.year:d}-{0.month:02d}-{0.day:02d}' \
+            'Invalid FX table line for {0.year:d}-{0.month:02d}-{0.day:02d}'
                 .format(dt))
         return (None, None, dr, 'Chyba řádku kursové tabulky')
     if log != None:
@@ -201,7 +200,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
 def getMPIrate(tp, dt, log=None):
 
     logger.debug(
-        'MPI rate of type "{0}" requested for ' \
+        'MPI rate of type "{0}" requested for '
         '{1.year:d}-{1.month:02d}-{1.day:02d}'.format(tp, dt))
 
     now = datetime.now()
@@ -220,9 +219,8 @@ def getMPIrate(tp, dt, log=None):
 
     st = MPIstat.objects.get_or_create(type=tp)
     updated = st[0].timestamp_update.date()
-    if st[1] or \
-       ((not MPIrate.objects.filter(valid__gte=dt).exists()) and \
-        ((updated - dt) < sd)):
+    if st[1] or ((not MPIrate.objects.filter(valid__gte=dt).exists())
+        and ((updated - dt) < sd)):
         surl = prefix + types[tp][0] + suffix
         tx = getcache(surl, cd)[0]
         if not tx:

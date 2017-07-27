@@ -120,26 +120,26 @@ class TestCron(TestCase):
             cron.cron_update()
         self.assertEqual(
             cron.szr_notice(1),
-            'V těchto soudních řízeních, která sledujete, došlo ke změně:\n\n' \
-            ' - Nejvyšší soud, sp. zn. 8 Tdo 819/2015\n' \
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
-            'org=NSJIMBM&krajOrg=NSJIMBM&cisloSenatu=8&druhVec=TDO&' \
-            'bcVec=819&rocnik=2015&typSoudu=ns&autoFill=true&type=spzn\n\n' \
-            ' - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)\n' \
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
-            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=41&druhVec=T' \
-            '&bcVec=3&rocnik=2016&typSoudu=os&autoFill=true&type=spzn\n\n' \
-            ' - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 ' \
-            '(Miloš Zbránek)\n' \
-            '   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&' \
-            'kau_id=173442\n\n' \
-            ' - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)\n' \
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
-            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=10&druhVec=T' \
-            '&bcVec=8&rocnik=2014&typSoudu=os&autoFill=true&type=spzn\n\n' \
-            ' - Obvodní soud Praha 2, sp. zn. 6 T 136/2013 (RWU)\n' \
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?' \
-            'org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T' \
+            'V těchto soudních řízeních, která sledujete, došlo ke změně:\n\n'
+            ' - Nejvyšší soud, sp. zn. 8 Tdo 819/2015\n'
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?'
+            'org=NSJIMBM&krajOrg=NSJIMBM&cisloSenatu=8&druhVec=TDO&'
+            'bcVec=819&rocnik=2015&typSoudu=ns&autoFill=true&type=spzn\n\n'
+            ' - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)\n'
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?'
+            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=41&druhVec=T'
+            '&bcVec=3&rocnik=2016&typSoudu=os&autoFill=true&type=spzn\n\n'
+            ' - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 '
+            '(Miloš Zbránek)\n'
+            '   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&'
+            'kau_id=173442\n\n'
+            ' - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)\n'
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?'
+            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=10&druhVec=T'
+            '&bcVec=8&rocnik=2014&typSoudu=os&autoFill=true&type=spzn\n\n'
+            ' - Obvodní soud Praha 2, sp. zn. 6 T 136/2013 (RWU)\n'
+            '   http://infosoud.justice.cz/InfoSoud/public/search.do?'
+            'org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T'
             '&bcVec=136&rocnik=2013&typSoudu=os&autoFill=true&type=spzn\n\n')
 
 
@@ -636,7 +636,7 @@ class TestViews(TestCase):
             number=2,
             year=2016,
             desc='Test 2')
-        self.assertEqual(models.Proceedings.objects \
+        self.assertEqual(models.Proceedings.objects
             .filter(uid=self.user).count(), 2)
         res = self.client.get('/szr/procdelall')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -660,7 +660,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
-        self.assertEqual(models.Proceedings.objects \
+        self.assertEqual(models.Proceedings.objects
             .filter(uid=self.user).count(), 2)
         res = self.client.post(
             '/szr/procdelall/',
@@ -669,7 +669,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
-        self.assertEqual(models.Proceedings.objects \
+        self.assertEqual(models.Proceedings.objects
             .filter(uid=self.user).count(), 2)
         res = self.client.post(
             '/szr/procdelall/',
@@ -678,7 +678,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
-        self.assertFalse(models.Proceedings.objects \
+        self.assertFalse(models.Proceedings.objects
             .filter(uid=self.user).exists())
 
     def test_procbatchform(self):
@@ -748,11 +748,11 @@ class TestViews(TestCase):
         res = self.client.get('/szr/procexport/')
         self.assertEqual(
             res.content.decode('utf-8'),
-            'Test 01,MSPHAAB,45 A 27/2014\r\n' \
-            'Test 06,MSPHAAB,Nc 1070/2016\r\n' \
-            'Test 07,MSPHAAB,Nc 1071/2016\r\n' \
-            'Test 13,MSPHAAB,52 C 4/2011\r\n' \
-            'Test 13,MSPHAAB,52 C 5/2012\r\n' \
+            'Test 01,MSPHAAB,45 A 27/2014\r\n'
+            'Test 06,MSPHAAB,Nc 1070/2016\r\n'
+            'Test 07,MSPHAAB,Nc 1071/2016\r\n'
+            'Test 13,MSPHAAB,52 C 4/2011\r\n'
+            'Test 13,MSPHAAB,52 C 5/2012\r\n'
             '{},MSPHAAB,45 A 27/2014\r\n'.format('T' * 255))
 
     def test_procexport(self):

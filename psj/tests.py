@@ -349,7 +349,7 @@ class TestViews3(TestCase):
         res = self.client.get('/psj/list/?start=-1')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         res = self.client.get(
-            '/psj/list/?date_from=2015-01-01&date_to=2199-07-01&register=C&' \
+            '/psj/list/?date_from=2015-01-01&date_to=2199-07-01&register=C&'
             'party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
@@ -386,7 +386,7 @@ class TestViews3(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 0)
-        res = self.client.get('/psj/list/?courtroom={:d}' \
+        res = self.client.get('/psj/list/?courtroom={:d}'
             .format(models.Courtroom.objects.first().id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
@@ -395,7 +395,7 @@ class TestViews3(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 0)
-        res = self.client.get('/psj/list/?judge={:d}' \
+        res = self.client.get('/psj/list/?judge={:d}'
             .format(models.Hearing.objects.first().judge_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')

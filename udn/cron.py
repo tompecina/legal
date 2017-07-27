@@ -61,7 +61,7 @@ def cron_update():
         res = get(form_url)
         soup = BeautifulSoup(res.text, 'html.parser')
         form = soup.find('form')
-        d = {i['name']: i['value'] for i in form.find_all('input') \
+        d = {i['name']: i['value'] for i in form.find_all('input')
              if i['type'] == 'hidden' and i.has_attr('value')}
         while True:
             d['_ctl0:ContentPlaceMasterPage:_ctl0:ddlSortName'] = '5'
@@ -88,7 +88,7 @@ def cron_update():
                     if not res.ok:
                         continue
                     logger.info(
-                        'Writing abridged decision "{}"' \
+                        'Writing abridged decision "{}"'
                             .format(
                                 composeref(
                                     senate,
@@ -98,7 +98,7 @@ def cron_update():
                     with open(join(repo_pref, fn), 'wb') as fo:
                         if not fo.write(res.content):  # pragma: no cover
                             logger.error(
-                                'Failed to write abridged decision "{}"' \
+                                'Failed to write abridged decision "{}"'
                                     .format(
                                         composeref(
                                             senate,
@@ -106,9 +106,9 @@ def cron_update():
                                             number,
                                             year)))
                             continue
-                    a = Agenda.objects.get_or_create( \
+                    a = Agenda.objects.get_or_create(
                         desc=r[2].td.text.strip())[0]
-                    dt = date(*map(int, list(reversed(r[3].td.text \
+                    dt = date(*map(int, list(reversed(r[3].td.text
                         .split('.')))))
                     dec = Decision(
                         senate=senate,
@@ -146,7 +146,7 @@ def cron_update():
             if cp > len(p):
                 break
             form = soup.find('form')
-            d = {i['name']: i['value'] for i in form.find_all('input') \
+            d = {i['name']: i['value'] for i in form.find_all('input')
                  if i['type'] == 'hidden' and i.has_attr('value')}
             d['__EVENTTARGET'] = p[cp - 1]['href'][70:-34]
             d['__EVENTARGUMENT'] = ''
@@ -166,7 +166,7 @@ def cron_find():
         res = get(find_url)
         soup = BeautifulSoup(res.text, 'html.parser')
         form = soup.find('form')
-        d = {i['name']: i['value'] for i in form.find_all('input') \
+        d = {i['name']: i['value'] for i in form.find_all('input')
              if i['type'] == 'hidden' and i.has_attr('value')}
         ref = ('{} '.format(dec.senate) if dec.senate else '')
         ref += '{0.register} {0.number:d}/{0.year:d}'.format(dec)
@@ -187,7 +187,7 @@ def cron_find():
             if not res.ok:
                 continue
             logger.info(
-                'Writing anonymized decision "{}"' \
+                'Writing anonymized decision "{}"'
                     .format(
                         composeref(
                             dec.senate,
@@ -197,7 +197,7 @@ def cron_find():
             with open(join(repo_pref, fn), 'wb') as fo:
                 if not fo.write(res.content):  # pragma: no cover
                     logger.error(
-                        'Failed to write anonymized decision "{}"' \
+                        'Failed to write anonymized decision "{}"'
                             .format(
                                 composeref(
                                     dec.senate,

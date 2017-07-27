@@ -79,9 +79,8 @@ def cron_gettr():
         soup = BeautifulSoup(xml, 'lxml')
         soup.is_xml = True
 
-        if (not soup.stav) or \
-           (soup.stav.string != 'OK') or \
-           (not soup.find('data')):
+        if not (soup.stav and (soup.stav.string == 'OK') and \
+            soup.find('data')):
             break
 
         l = []
@@ -91,15 +90,15 @@ def cron_gettr():
                 id=id,
                 datumZalozeniUdalosti=convdt(t_data.datumzalozeniudalosti),
                 datumZverejneniUdalosti=convdt(t_data.datumzverejneniudalosti),
-                dokumentUrl=(t_data.dokumenturl.string.strip() \
+                dokumentUrl=(t_data.dokumenturl.string.strip()
                     if t_data.dokumenturl else None),
                 spisovaZnacka=t_data.spisovaznacka.string.strip(),
                 typUdalosti=t_data.typudalosti.string.strip(),
                 popisUdalosti=t_data.popisudalosti.string.strip(),
                 oddil=(t_data.oddil.string.strip() if t_data.oddil else None),
-                cisloVOddilu=(int(t_data.cislovoddilu.string) \
+                cisloVOddilu=(int(t_data.cislovoddilu.string)
                     if t_data.cislovoddilu else None),
-                poznamkaText=(t_data.poznamka.string.strip() \
+                poznamkaText=(t_data.poznamka.string.strip()
                     if t_data.poznamka else None),
                 error=False))
 
@@ -153,8 +152,8 @@ def cron_proctr():
 
             if t_udalost.datumvyskrtnuti:
                 vec.datumVyskrtnuti = convd(t_udalost.datumvyskrtnuti)
-            elif (not vec.lastAction) or \
-                 (datumZalozeniUdalosti.date() > vec.lastAction):
+            elif (not vec.lastAction) \
+                 or (datumZalozeniUdalosti.date() > vec.lastAction):
                 vec.lastAction = datumZalozeniUdalosti.date()
 
             vec.save()
@@ -169,7 +168,7 @@ def cron_proctr():
                                     desc=i.desc,
                                     vec=vec)[1]:
                                 logger.info(
-                                    'Change detected in proceedings "{}" ' \
+                                    'Change detected in proceedings "{}" '
                                     '({}) for user "{}" ({:d})'.format(
                                         i.desc,
                                         p2s(i),
@@ -241,8 +240,8 @@ def cron_proctr():
                 osoba.datumNarozeni = datumNarozeni
 
                 osoba.save()
-                if (druhRoleVRizeni == debtor) and \
-                   (role not in vec.roles.all()):
+                if (druhRoleVRizeni == debtor) \
+                   and (role not in vec.roles.all()):
                     dir_check(osoba, vec)
                 vec.roles.add(role)
 
@@ -364,10 +363,9 @@ def cron_getws2():
         subsoup = BeautifulSoup(xml, 'xml')
         subsoup.is_xml = True
 
-        if subsoup.pocetVysledku and \
-           subsoup.cisloSenatu and \
-           subsoup.urlDetailRizeni and \
-           (subsoup.nazevOrganizace.string.strip()[:PREF] == \
+        if subsoup.pocetVysledku and subsoup.cisloSenatu \
+            and subsoup.urlDetailRizeni \
+            and (subsoup.nazevOrganizace.string.strip()[:PREF] ==
             l2n[vec.idOsobyPuvodce][:PREF]):
             Vec.objects.filter(id=vec.id).update(
                 senat=int(subsoup.cisloSenatu.string),
@@ -406,14 +404,15 @@ def sir_notice(uid):
         text = 'Došlo ke změně v těchto insolvenčních řízeních, ' \
                'která sledujete:\n\n'
         for t in tt:
-            text += ' - {0}sp. zn. {1} {2.senat:d} INS {2.bc:d}/{2.rocnik:d}\n' \
-                        .format(
-                            ('{}, '.format(t.desc) if t.desc else ''),
-                            l2s[t.vec.idOsobyPuvodce],
-                            t.vec)
+            text += ' - {0}sp. zn. {1} {2.senat:d} INS {2.bc:d}/' \
+                '{2.rocnik:d}\n' \
+                    .format(
+                        ('{}, '.format(t.desc) if t.desc else ''),
+                        l2s[t.vec.idOsobyPuvodce],
+                        t.vec)
             text += '   {}\n\n'.format(t.vec.link)
         Tracked.objects.filter(uid=uid, vec__link__isnull=False).delete()
         logger.info(
-            'Non-empty notice prepared for user "{}" ({:d})' \
+            'Non-empty notice prepared for user "{}" ({:d})'
                 .format(User.objects.get(pk=uid).username, uid))
     return text

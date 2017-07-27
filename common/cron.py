@@ -54,8 +54,8 @@ def cron_notify():
 
     for u in User.objects.all():
         uid = u.id
-        text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) + \
-               dir_notice(uid)
+        text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) \
+               + dir_notice(uid)
         if text and u.email:
             text += 'Server {} ({})\n'.format(localsubdomain, localurl)
             send_mail(
@@ -138,7 +138,7 @@ def cron_run():
             run(job.name, args)
             Lock.objects.filter(name=lock).delete()
             logger.debug(
-                'Scheduled job {} with arguments "{}" completed' \
+                'Scheduled job {} with arguments "{}" completed'
                     .format(job.name, args))
     for job in SCHED:
         if job['when'](now):
@@ -153,7 +153,7 @@ def cron_run():
                             lock=lock
                         ).save()
                         logger.debug(
-                            'Job {} with arguments "{}" scheduled' \
+                            'Job {} with arguments "{}" scheduled'
                                 .format(job['name'], args))
                     continue
                 Lock.objects.get_or_create(name=lock)

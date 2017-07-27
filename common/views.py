@@ -170,7 +170,7 @@ def lostpw(request):
                         reverse('resetpw', args=[link]))
                 send_mail('Link pro obnoveni hesla', text, [u[0].email])
                 logger.info(
-                    'Password recovery link for user "{0.username}" ' \
+                    'Password recovery link for user "{0.username}" '
                     '({0.id:d}) sent'.format(u[0]),
                     request)
             return redirect('/accounts/pwlinksent/')
@@ -294,7 +294,7 @@ def getuserinfo(user):
         if hasattr(c, 'userinfo'):
             userinfo.extend(c.userinfo(user))
     logger.debug(
-        'User information combined for user "{0.username}" ({0.id:d})' \
+        'User information combined for user "{0.username}" ({0.id:d})'
             .format(user))
     return userinfo
 

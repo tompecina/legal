@@ -38,11 +38,11 @@ list_reports = 'InfoSoud/seznamOkresnichSoudu?kraj={}'
 root_url = 'http://infosoud.justice.cz/'
 
 get_proc = 'InfoSoud/public/search.do?org={}&krajOrg={}&cisloSenatu={:d}' \
-           '&druhVec={}&bcVec={:d}&rocnik={:d}&typSoudu={}&autoFill=true' \
-           '&type=spzn'
+    '&druhVec={}&bcVec={:d}&rocnik={:d}&typSoudu={}&autoFill=true' \
+    '&type=spzn'
 
 nss_url = 'http://www.nssoud.cz/main0Col.aspx?cls=JudikaturaSimpleSearch' \
-          '&pageSource=1&menu=187'
+    '&pageSource=1&menu=187'
 
 nss_get_proc = 'http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&kau_id={:d}'
 
@@ -56,8 +56,8 @@ def addauxid(p):
             res = get(nss_url)
             soup = BeautifulSoup(res.text, 'html.parser')
             form = soup.find('form')
-            d = {i['name']: i['value'] for i in form.find_all('input') \
-                 if i['type'] == 'hidden' and i.has_attr('value')}
+            d = {i['name']: i['value'] for i in form.find_all('input')
+                if i['type'] == 'hidden' and i.has_attr('value')}
             if int(p.senate):
                 ref = '{} '.format(p.senate)
             else:
@@ -152,8 +152,8 @@ def updateproc(p):
         assert table
     except:  # pragma: no cover
         logger.warning(
-            'Failed to check proceedings "{0.desc}" ({1}) for user ' \
-            '"{2}" ({0.uid_id:d})' \
+            'Failed to check proceedings "{0.desc}" ({1}) for user '
+            '"{2}" ({0.uid_id:d})'
                 .format(
                     p,
                     p2s(p),
@@ -166,12 +166,12 @@ def updateproc(p):
             t = table.find_next_sibling().find_next_sibling().table \
                 .tr.td.find_next_sibling().text.split()
             if len(t) == 4:
-                changed = datetime(*map(int, list(reversed(t[0].split('.'))) + \
-                    t[1].split(':')))
+                changed = datetime(*map(int, list(reversed(t[0].split('.')))
+                    + t[1].split(':')))
         except:  # pragma: no cover
             logger.warning(
-                'Failed to check proceedings "{0.desc}" ({1}) for user ' \
-                '"{2}" ({0.uid_id:d})' \
+                'Failed to check proceedings "{0.desc}" ({1}) for user '
+                '"{2}" ({0.uid_id:d})'
                     .format(
                         p,
                         p2s(p),
@@ -181,7 +181,7 @@ def updateproc(p):
             if changed:
                 p.changed = changed
                 logger.info(
-                    'Change detected in proceedings "{0.desc}" ({1}) ' \
+                    'Change detected in proceedings "{0.desc}" ({1}) '
                     'for user "{2}" ({0.uid_id:d})'.format(
                         p,
                         p2s(p),
@@ -192,14 +192,14 @@ def updateproc(p):
             p.changed = p.updated
             if p.changed:
                 logger.info(
-                    'Change detected in proceedings "{0.desc}" ({1}) ' \
+                    'Change detected in proceedings "{0.desc}" ({1}) '
                     'for user "{2}" ({0.uid_id:d})'.format(
                         p,
                         p2s(p),
                         User.objects.get(pk=p.uid_id).username))
     p.hash = hash
     logger.debug(
-        'Proceedings "{0.desc}" ({1}) updated for user ' \
+        'Proceedings "{0.desc}" ({1}) updated for user '
         '"{2}" ({0.uid_id:d})'.format(
             p,
             p2s(p),
@@ -209,7 +209,7 @@ def updateproc(p):
 
 def cron_update():
 
-    p = Proceedings.objects.filter(Q(updated__lte=datetime.now()-update_delay) \
+    p = Proceedings.objects.filter(Q(updated__lte=datetime.now()-update_delay)
         | Q(updated__isnull=True))
     if p:
         p = p.earliest('updated')
@@ -224,14 +224,14 @@ def szr_notice(uid):
             .order_by('desc', 'id')
     if pp:
         text = 'V těchto soudních řízeních, která sledujete, ' \
-               'došlo ke změně:\n\n'
+            'došlo ke změně:\n\n'
         for p in pp:
             if p.desc:
                 desc = ' ({})'.format(p.desc)
             else:
                 desc = ''
             text += ' - {0.court}, sp. zn. {0.senate:d} {0.register} ' \
-                    '{0.number:d}/{0.year:d}{1}\n'.format(p, desc)
+                '{0.number:d}/{0.year:d}{1}\n'.format(p, desc)
             if p.court_id != supreme_administrative_court:
                 if p.court_id == supreme_court:
                     court_type = 'ns'
@@ -250,6 +250,6 @@ def szr_notice(uid):
             p.notify = False
             p.save()
         logger.info(
-            'Non-empty notice prepared for user "{}" ({:d})' \
+            'Non-empty notice prepared for user "{}" ({:d})'
                 .format(User.objects.get(pk=uid).username, uid))
     return text

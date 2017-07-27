@@ -31,10 +31,8 @@ from common.forms import ValidationError
 
 def prnum(x):
 
-    return x.replace(' ', '') \
-            .replace('.', '') \
-            .replace(',', '.') \
-            .replace('−', '-')
+    return x.replace(' ', '').replace('.', '').replace(',', '.') \
+        .replace('−', '-')
 
 
 stypes = (str,)

@@ -49,24 +49,18 @@ class MainForm(forms.Form):
 
     def clean_years(self):
         data = self.cleaned_data['years']
-        if (not data) and \
-           (not self.data['months']) and \
-           (not self.data['days']):
+        if not (data or self.data['months'] or self.data['days']):
             raise forms.ValidationError('Missing duration')
         return data
 
     def clean_months(self):
         data = self.cleaned_data['months']
-        if (not data) and \
-           (not self.data['years']) and \
-           (not self.data['days']):
+        if not (data or self.data['years'] or self.data['days']):
             raise forms.ValidationError('Missing duration')
         return data
 
     def clean_days(self):
         data = self.cleaned_data['days']
-        if (not data) and \
-           (not self.data['years']) and \
-           (not self.data['months']):
+        if not (data or self.data['years'] or self.data['months']):
             raise forms.ValidationError('Missing duration')
         return data

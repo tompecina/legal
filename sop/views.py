@@ -87,8 +87,8 @@ def mainpage(request):
                             elif basis <= 40000000:
                                 sop = (0.05 * basis)
                             else:
-                                sop = min((2000000 + (0.01 * (basis - \
-                                                      40000000))), 4100000)
+                                sop = min((2000000 + (0.01 * (basis
+                                    - 40000000))), 4100000)
                     elif opt == 'epr':
                         if model == 1:
                             if basis <= 15000:
@@ -140,8 +140,8 @@ def mainpage(request):
                             elif basis <= 40000000:
                                 sop = (0.05 * basis)
                             else:
-                                sop = 2000000 + (0.01 * \
-                                    (min(basis, 250000000) - 40000000))
+                                sop = 2000000 + (0.01
+                                    * (min(basis, 250000000) - 40000000))
                     elif opt == 'sm':
                         if model == 1:
                             if basis <= 15000:

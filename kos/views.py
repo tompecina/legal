@@ -92,11 +92,11 @@ def mainpage(request):
                 totnetincome = netincome + netincome2
                 basis2 = ceil(prot * (1.0 + (deps2 / 4.0)))
                 messages.append([
-                    'Celková základní částka pro 1. manžela: {} Kč' \
+                    'Celková základní částka pro 1. manžela: {} Kč'
                         .format(formam(round(basis1))),
                     None])
                 messages.append([
-                    'Celková základní částka pro 2. manžela: {} Kč' \
+                    'Celková základní částka pro 2. manžela: {} Kč'
                         .format(formam(round(basis2))),
                     None])
                 rem2 = max((netincome2 - basis2), 0.0)
@@ -111,21 +111,21 @@ def mainpage(request):
             else:
                 totnetincome = netincome
                 messages.append([
-                    'Celková základní částka: {} Kč' \
+                    'Celková základní částka: {} Kč'
                         .format(formam(round(basis1))),
                     None])
             messages.append([
                 'Výše měsíční splátky: {} Kč'.format(formam(round(rep))),
                 'msg-gap'])
             messages.append([
-                'Zůstatek ze mzdy: {} Kč' \
+                'Zůstatek ze mzdy: {} Kč'
                     .format(formam(round(totnetincome - rep))),
                 None])
             tru = fee + exp
             if vat:
                 tru *= 1.0 + (vatrate / 100.0)
             messages.append([
-                'Měsíční poplatky insolvenčnímu správci: {} Kč' \
+                'Měsíční poplatky insolvenčnímu správci: {} Kč'
                     .format(formam(round(tru))),
                 None])
             rep = max((rep - tru), 0.0)
@@ -134,7 +134,7 @@ def mainpage(request):
                 None])
             tot = 5 * 12 * rep
             messages.append([
-                'Celková výše splátek věřitelům za 5 let: {} Kč' \
+                'Celková výše splátek věřitelům za 5 let: {} Kč'
                     .format(formam(round(tot))),
                 None])
             messages.append([

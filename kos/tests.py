@@ -579,7 +579,7 @@ class TestViews(SimpleTestCase):
             c = res.context['messages']
             self.assertEqual(
                 c[0][0],
-                ('Kalkulace pro společný návrh manželů' \
+                ('Kalkulace pro společný návrh manželů'
                  if p[13] else 'Kalkulace pro samostatného dlužníka'))
             l = (8 if p[13] else 7)
             for i in range(l):

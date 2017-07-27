@@ -83,8 +83,7 @@ def mainpage(request):
         else:
             logger.debug('Invalid form', request)
             err_message = inerr
-    d = Debtor.objects.filter(uid=uid).order_by('desc', 'pk') \
-        .values()
+    d = Debtor.objects.filter(uid=uid).order_by('desc', 'pk').values()
     total = d.count()
     if (start >= total) and (total > 0):
         start = total - 1
@@ -130,7 +129,7 @@ def mainpage(request):
 def debtorform(request, id=0):
 
     logger.debug(
-        'Debtor form accessed using method {}, id={}' \
+        'Debtor form accessed using method {}, id={}'
             .format(request.method, id),
         request,
         request.POST)
@@ -141,8 +140,8 @@ def debtorform(request, id=0):
     page_title = ('Úprava dlužníka' if id else 'Nový dlužník')
 
     btn = getbutton(request)
-    courts = sorted([{'id': x, 'name': l2n[x]} for x in \
-        Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()], \
+    courts = sorted([{'id': x, 'name': l2n[x]} for x in
+        Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()],
         key=(lambda x: strxfrm(x['name'])))
     if request.method == 'GET':
         if id:
@@ -176,12 +175,12 @@ def debtorform(request, id=0):
             p.save()
             if id:
                 logger.info(
-                    'User "{}" ({:d}) updated debtor "{}"' \
+                    'User "{}" ({:d}) updated debtor "{}"'
                         .format(uname, uid, p.desc),
                     request)
             else:
                 logger.info(
-                    'User "{}" ({:d}) added debtor "{}"' \
+                    'User "{}" ({:d}) added debtor "{}"'
                         .format(uname, uid, p.desc),
                     request)
             return redirect('dir:mainpage')
@@ -203,7 +202,7 @@ def debtorform(request, id=0):
 def debtordel(request, id=0):
 
     logger.debug(
-        'Debtor delete page accessed using method {}, id={}' \
+        'Debtor delete page accessed using method {}, id={}'
             .format(request.method, id),
         request,
         request.POST)
@@ -219,7 +218,7 @@ def debtordel(request, id=0):
         debtor = get_object_or_404(Debtor, pk=id, uid=uid)
         if getbutton(request) == 'yes':
             logger.info(
-                'User "{}" ({:d}) deleted debtor "{}"' \
+                'User "{}" ({:d}) deleted debtor "{}"'
                     .format(uname, uid, debtor.desc),
                 request)
             debtor.delete()
@@ -232,7 +231,7 @@ def debtordel(request, id=0):
 def debtordelall(request):
 
     logger.debug(
-        'Delete all debtors page accessed using method {}' \
+        'Delete all debtors page accessed using method {}'
             .format(request.method),
         request)
     uid = request.user.id
@@ -244,9 +243,8 @@ def debtordelall(request):
             {'app': APP,
              'page_title': 'Smazání všech dlužníků'})
     else:
-        if (getbutton(request) == 'yes') and \
-           ('conf' in request.POST) and \
-           (request.POST['conf'] == 'Ano'):
+        if (getbutton(request) == 'yes') and ('conf' in request.POST) \
+           and (request.POST['conf'] == 'Ano'):
             Debtor.objects.filter(uid=uid).delete()
             logger.info(
                 'User "{}" ({:d}) deleted all debtors'.format(uname, uid),
@@ -285,9 +283,9 @@ def debtorbatchform(request):
                             if not line:
                                 continue
                             desc = line[0].strip()
-                            court = name = first_name = genid = taxid = \
-                                birthid = date_birth = year_birth_from = \
-                                year_birth_to = None
+                            court = name = first_name = genid = taxid \
+                                = birthid = date_birth = year_birth_from \
+                                = year_birth_to = None
                             name_opt = first_name_opt = 0
                             if not desc:
                                 errors.append([i, 'Prázdný popis'])
@@ -310,8 +308,8 @@ def debtorbatchform(request):
                                     if ':' in value:
                                         name, name_opt = value.split(':', 1)
                                         if name_opt not in text_opts_abbr:
-                                            errors.append([i, 'Chybná ' \
-                                                'zkratka pro posici v poli ' \
+                                            errors.append([i, 'Chybná '
+                                                'zkratka pro posici v poli '
                                                 '<q>název</q>'])
                                             continue
                                         name_opt = text_opts_ai[name_opt]
@@ -319,7 +317,7 @@ def debtorbatchform(request):
                                         name = value
                                         name_opt = 0
                                     if len(name) > MAX_LENGTH:
-                                        errors.append([i, 'Příliš dlouhé ' \
+                                        errors.append([i, 'Příliš dlouhé '
                                             'pole <q>název</q>'])
                                         continue
                                 elif key == 'jméno':
@@ -327,8 +325,8 @@ def debtorbatchform(request):
                                         first_name, first_name_opt = \
                                             value.split(':', 1)
                                         if first_name_opt not in text_opts_abbr:
-                                            errors.append([i, 'Chybná ' \
-                                                'zkratka pro posici v poli ' \
+                                            errors.append([i, 'Chybná '
+                                                'zkratka pro posici v poli '
                                                 '<q>jméno</q>'])
                                             continue
                                         first_name_opt = \
@@ -337,24 +335,24 @@ def debtorbatchform(request):
                                         first_name = value
                                         first_name_opt = 0
                                     if len(first_name) > MAX_LENGTH:
-                                        errors.append([i, 'Příliš dlouhé ' \
+                                        errors.append([i, 'Příliš dlouhé '
                                             'pole <q>jméno</q>'])
                                         continue
                                 elif key == 'IČO':
                                     if not compile(ic_regex).match(value):
-                                        errors.append([i, 'Chybná hodnota ' \
+                                        errors.append([i, 'Chybná hodnota '
                                             'pro IČO'])
                                         continue
                                     genid = value
                                 elif key == 'DIČ':
                                     if len(value) > 14:
-                                        errors.append([i, 'Chybná hodnota ' \
+                                        errors.append([i, 'Chybná hodnota '
                                             'pro DIČ'])
                                         continue
                                     taxid = value
                                 elif key == 'RČ':
                                     if not compile(rc_full_regex).match(value):
-                                        errors.append([i, 'Chybná hodnota ' \
+                                        errors.append([i, 'Chybná hodnota '
                                             'pro rodné číslo'])
                                         continue
                                     birthid = value.replace('/', '')
@@ -365,7 +363,7 @@ def debtorbatchform(request):
                                             int(t[2]), int(t[1]), int(t[0]))
                                         assert date_birth.year >= 1900
                                     except:
-                                        errors.append([i, 'Chybná hodnota ' \
+                                        errors.append([i, 'Chybná hodnota '
                                             'pro datum narození'])
                                         continue
                                 elif key == 'rokNarozeníOd':
@@ -373,7 +371,7 @@ def debtorbatchform(request):
                                         year_birth_from = int(value)
                                         assert year_birth_from >= 1900
                                     except:
-                                        errors.append([i, 'Chybná hodnota ' \
+                                        errors.append([i, 'Chybná hodnota '
                                             'pro pole <q>rokNarozeníOd</q>'])
                                         continue
                                 elif key == 'rokNarozeníDo':
@@ -381,7 +379,7 @@ def debtorbatchform(request):
                                         year_birth_to = int(value)
                                         assert year_birth_to >= 1900
                                     except:
-                                        errors.append([i, 'Chybná hodnota ' \
+                                        errors.append([i, 'Chybná hodnota '
                                             'pro pole <q>rokNarozeníDo</q>'])
                                         continue
                                 else:
@@ -389,9 +387,9 @@ def debtorbatchform(request):
                                         [i,
                                          'Chybný parametr: "{}"'.format(key)])
                                     continue
-                                if year_birth_from and year_birth_to and \
-                                   (year_birth_from > year_birth_to):
-                                    errors.append([i, 'Chybný interval pro ' \
+                                if year_birth_from and year_birth_to \
+                                   and (year_birth_from > year_birth_to):
+                                    errors.append([i, 'Chybný interval pro '
                                         'rok narození'])
                                     continue
 
@@ -416,12 +414,12 @@ def debtorbatchform(request):
                                 except:
                                     errors.append(
                                         [i,
-                                         'Popisu "{}" odpovídá více než ' \
+                                         'Popisu "{}" odpovídá více než '
                                          'jeden dlužník'.format(desc)])
                                     continue
                                 count += 1
                     logger.info(
-                        'User "{}" ({:d}) imported {:d} debtor(s)' \
+                        'User "{}" ({:d}) imported {:d} debtor(s)'
                             .format(uname, uid, count),
                         request)
                     return render(
@@ -474,7 +472,7 @@ def debtorexport(request):
         if p.birthid:
             dat.append('RČ={}/{}'.format(p.birthid[:6], p.birthid[6:]))
         if p.date_birth:
-            dat.append('datumNarození={0.day:02d}.{0.month:02d}.{0.year:d}' \
+            dat.append('datumNarození={0.day:02d}.{0.month:02d}.{0.year:d}'
                            .format(p.date_birth))
         if p.year_birth_from:
             dat.append('rokNarozeníOd=' + str(p.year_birth_from))
