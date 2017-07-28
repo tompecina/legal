@@ -24,14 +24,15 @@ from datetime import date
 from common import forms, fields, widgets
 
 
-opts = (('none', 'sine'),
-        ('epr', 'EPR'),
-        ('nmu', 'nemajetková újma'),
-        ('vyz', 'výživné'),
-        ('vyk', 'výkon rozhodnutí'),
-        ('sm', 'smír'),
-        ('inc', 'incidence'),
-        ('usch', 'úschova'))
+opts = (
+    ('none', 'sine'),
+    ('epr', 'EPR'),
+    ('nmu', 'nemajetková újma'),
+    ('vyz', 'výživné'),
+    ('vyk', 'výkon rozhodnutí'),
+    ('sm', 'smír'),
+    ('inc', 'incidence'),
+    ('usch', 'úschova'))
 
 
 class MainForm(forms.Form):
@@ -73,6 +74,6 @@ class MainForm(forms.Form):
 
     def clean_fx_date(self):
         data = self.cleaned_data['fx_date']
-        if (self.data['curr_0'] != 'CZK') and (not data):
+        if self.data['curr_0'] != 'CZK' and not data:
             raise forms.ValidationError('Date is required')
         return data

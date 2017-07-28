@@ -54,15 +54,15 @@ def dir_check(osoba, vec):
         od = osoba.datumNarozeni
         if od:
             od = od.date()
-        if ((not d.court) or (d.court == osoba.idOsobyPuvodce)) \
+        if (not d.court or d.court == osoba.idOsobyPuvodce) \
            and text_opt(d.name, osoba.nazevOsoby, d.name_opt) \
            and text_opt(d.first_name, osoba.jmeno, d.first_name_opt) \
-           and ((not d.genid) or (d.genid == osoba.ic)) \
-           and ((not d.taxid) or icmp(d.taxid, osoba.dic)) \
-           and ((not d.birthid) or (d.birthid == osoba.rc)) \
-           and ((not d.date_birth) or (d.date_birth == od)) \
-           and ((not d.year_birth_from) or (d.year_birth_from <= od.year)) \
-           and ((not d.year_birth_to) or (d.year_birth_to >= od.year)):
+           and (not d.genid or d.genid == osoba.ic) \
+           and (not d.taxid or icmp(d.taxid, osoba.dic)) \
+           and (not d.birthid or d.birthid == osoba.rc) \
+           and (not d.date_birth or d.date_birth == od) \
+           and (not d.year_birth_from or d.year_birth_from <= od.year) \
+           and (not d.year_birth_to or d.year_birth_to >= od.year):
             if Discovered.objects.update_or_create(
                     uid_id=d.uid_id,
                     desc=d.desc,

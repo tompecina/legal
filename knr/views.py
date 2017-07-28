@@ -996,7 +996,7 @@ def fromxml(d):
     if not s:
         return None, 'Chybný formát souboru'
     h = s.findChild('calculation')
-    if (not h) or (h.has_attr('application') and (h['application'] != APP)):
+    if not h or (h.has_attr('application') and h['application'] != APP):
         return None, 'Soubor nebyl vytvořen touto aplikací'
     c = Calculation()
     s2i(fields, s, c)
@@ -1346,7 +1346,7 @@ def mainpage(request):
                                         convf(item.flat_rate, 2),
                                         convf(item.fuel_price, 2)),
                                     s6))
-                            if (item.numerator > 1) or (item.denominator > 1):
+                            if item.numerator > 1 or item.denominator > 1:
                                 q.append(Paragraph(
                                     '<b>Zlomek:</b> ' \
                                     '{0.numerator:d}/{0.denominator:d}'
@@ -1497,7 +1497,7 @@ def itemform(request, idx=0):
             .order_by('abbr', 'name')
         l1 = []
         for t in p:
-            if t.uid or (not p.filter(abbr=t.abbr, uid=uid)):
+            if t.uid or not p.filter(abbr=t.abbr, uid=uid):
                 l1.append(
                     {'idx': t.id,
                      'text': '{0.abbr} – {0.name}'.format(t)})
@@ -1511,7 +1511,7 @@ def itemform(request, idx=0):
             .order_by('abbr', 'name')
         l3 = []
         for t in p:
-            if t.uid or (not p.filter(abbr=t.abbr, uid=uid)):
+            if t.uid or not p.filter(abbr=t.abbr, uid=uid):
                 l3.append(
                     {'idx': t.id,
                      'text': '{0.abbr} – {0.name}'.format(t)})
@@ -1609,7 +1609,7 @@ def itemform(request, idx=0):
         if btn == 'new':
             presel = request.POST.get('presel')
             if presel and presel.isdigit() and int(presel) \
-               and (int(presel) < len(ps)) and ps[int(presel)][TYPE]:
+               and int(presel) < len(ps) and ps[int(presel)][TYPE]:
                 var.update({'idx': 0, 'page_title': 'Nová položka'})
                 var.update(ps[int(presel)][PRESEL])
                 var['type'] = ps[int(presel)][TYPE]
@@ -1673,8 +1673,7 @@ def itemform(request, idx=0):
                                     / 300.0) + float(cd['flat_rate']))
                                     + (cd['time_number'] * cd['time_rate']))
                                     * cd['trip_number']))
-                                if (cd['numerator'] > 1) \
-                                   or (cd['denominator'] > 1):
+                                if cd['numerator'] > 1 or cd['denominator'] > 1:
                                     cd['amount'] = \
                                         (cd['amount'] * cd['numerator']) \
                                         / cd['denominator']
@@ -1757,7 +1756,7 @@ def itemform(request, idx=0):
                             cd['amount'] = (cd['number'] * cd['rate'])
                         elif type == 'time':
                             cd['amount'] = (cd['time_number'] * cd['time_rate'])
-                        if (cd['numerator'] > 1) or (cd['denominator'] > 1):
+                        if cd['numerator'] > 1 or cd['denominator'] > 1:
                             cd['amount'] = (cd['amount'] * cd['numerator']) \
                                 / cd['denominator']
                         d2i(gt[type], cd, i)
@@ -1933,12 +1932,11 @@ def itemform(request, idx=0):
                         for t in gf[type]:
                             var['{}_error'.format(t)] = 'ok'
                     elif type == 'travel':
-                        if (btn == 'from_apply') \
-                           and request.POST.get('from_sel'):
+                        if btn == 'from_apply' and request.POST.get('from_sel'):
                             proc_from(int(request.POST.get('from_sel')), cd)
                             proc_dist(cd)
-                        elif (btn == 'from_search') \
-                             and request.POST.get('from_address'):
+                        elif btn == 'from_search' \
+                            and request.POST.get('from_address'):
                             loc = findloc(request.POST.get('from_address'))
                             if loc:
                                 cd['from_address'], \
@@ -1951,11 +1949,11 @@ def itemform(request, idx=0):
                                      'prosím, upřesněte adresu.'})
                                 cd.update({'from_lat': '', 'from_lon': ''})
                             proc_dist(cd)
-                        elif (btn == 'to_apply') and request.POST.get('to_sel'):
+                        elif btn == 'to_apply' and request.POST.get('to_sel'):
                             proc_to(int(request.POST.get('to_sel')), cd)
                             proc_dist(cd)
-                        elif (btn == 'to_search') \
-                             and request.POST.get('to_address'):
+                        elif btn == 'to_search' \
+                            and request.POST.get('to_address'):
                             loc = findloc(request.POST.get('to_address'))
                             if loc:
                                 cd['to_address'], \
@@ -1974,10 +1972,9 @@ def itemform(request, idx=0):
                             cd['time_rate'] = 50
                         elif btn == 'calc2':
                             cd['time_rate'] = 100
-                        elif (btn == 'car_apply') \
-                            and request.POST.get('car_sel'):
+                        elif btn == 'car_apply' and request.POST.get('car_sel'):
                             proc_car(int(request.POST.get('car_sel')), cd)
-                        elif (btn == 'formula_apply') \
+                        elif btn == 'formula_apply' \
                             and request.POST.get('formula_sel'):
                             proc_formula(int(request.POST.get('formula_sel')),
                                          cd)
@@ -2084,7 +2081,7 @@ def itemmove(request, dir, idx):
         return error(request)
     if dir == 'u':
         idx -= 1
-    if (idx >= len(c.items)) or (idx < 1):
+    if idx >= len(c.items) or idx < 1:
         raise Http404
     c.items[idx - 1], c.items[idx] = c.items[idx], c.items[idx - 1]
     if not setcalc(request, c):  # pragma: no cover

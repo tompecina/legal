@@ -55,20 +55,21 @@ class MainForm(forms.Form):
         return self.cleaned_data['internal_note'].replace('\r', '')
 
 
-deb_opts = (('fixed', 'Pevná částka'),
-            ('per_annum', 'Roční úrok'),
-            ('per_mensem', 'Měsíční úrok'),
-            ('per_diem', 'Denní úrok'),
-            ('cust1', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
-             '(účinnost do 27.04.2005)'),
-            ('cust2', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
-             '(účinnost od 28.04.2005 do 30.06.2010)'),
-            ('cust3', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
-             '(účinnost od 01.07.2010 do 30.06.2013)'),
-            ('cust5', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
-             '(účinnost od 01.07.2013 do 31.12.2013)'),
-            ('cust6', 'Úrok z prodlení podle nařízení č. 351/2013 Sb.'),
-            ('cust4', 'Poplatek z prodlení podle nařízení č. 142/1994 Sb.'))
+deb_opts = (
+    ('fixed', 'Pevná částka'),
+    ('per_annum', 'Roční úrok'),
+    ('per_mensem', 'Měsíční úrok'),
+    ('per_diem', 'Denní úrok'),
+    ('cust1', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
+     '(účinnost do 27.04.2005)'),
+    ('cust2', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
+     '(účinnost od 28.04.2005 do 30.06.2010)'),
+    ('cust3', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
+     '(účinnost od 01.07.2010 do 30.06.2013)'),
+    ('cust5', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
+     '(účinnost od 01.07.2013 do 31.12.2013)'),
+    ('cust6', 'Úrok z prodlení podle nařízení č. 351/2013 Sb.'),
+    ('cust4', 'Poplatek z prodlení podle nařízení č. 142/1994 Sb.'))
 
 
 class DebitForm(forms.Form):
@@ -156,58 +157,58 @@ class DebitForm(forms.Form):
 
     def clean_fixed_amount(self):
         data = self.cleaned_data['fixed_amount']
-        if (self.data['model'] == 'fixed') and (not data):
+        if self.data['model'] == 'fixed' and not data:
             raise forms.ValidationError('Amount is required')
         return data
 
     def clean_fixed_currency(self):
         data = self.cleaned_data['fixed_currency']
-        if (self.data['model'] == 'fixed') and (not data):
+        if self.data['model'] == 'fixed' and not data:
             raise forms.ValidationError('Currency is required')
         return data
 
     def clean_fixed_date(self):
         data = self.cleaned_data['fixed_date']
-        if (self.data['model'] == 'fixed') and (not data):
+        if self.data['model'] == 'fixed' and not data:
             raise forms.ValidationError('Date is required')
         return data
 
     def clean_principal_amount(self):
         data = self.cleaned_data['principal_amount']
-        if (self.data['model'] != 'fixed') \
-           and (self.cleaned_data['principal_debit'] == 0) and (not data):
+        if self.data['model'] != 'fixed' \
+           and self.cleaned_data['principal_debit'] == 0 and not data:
             raise forms.ValidationError('Principal amount is required')
         return data
 
     def clean_principal_currency(self):
         data = self.cleaned_data['principal_currency']
-        if (self.data['model'] != 'fixed') \
-           and (self.cleaned_data['principal_debit'] == 0) and (not data):
+        if self.data['model'] != 'fixed' \
+           and self.cleaned_data['principal_debit'] == 0 and not data:
             raise forms.ValidationError('Principal currency is required')
         return data
 
     def clean_date_from(self):
         data = self.cleaned_data['date_from']
-        if (self.data['model'] != 'fixed') \
-           and (self.cleaned_data['principal_debit'] == 0) and (not data):
+        if self.data['model'] != 'fixed' \
+           and self.cleaned_data['principal_debit'] == 0 and not data:
             raise forms.ValidationError('Starting date is required')
         return data
 
     def clean_pa_rate(self):
         data = self.cleaned_data['pa_rate']
-        if (self.data['model'] == 'per_annum') and (not data):
+        if self.data['model'] == 'per_annum' and not data:
             raise forms.ValidationError('Interest rate is required')
         return data
 
     def clean_pm_rate(self):
         data = self.cleaned_data['pm_rate']
-        if (self.data['model'] == 'per_mensem') and (not data):
+        if self.data['model'] == 'per_mensem' and not data:
             raise forms.ValidationError('Interest rate is required')
         return data
 
     def clean_pd_rate(self):
         data = self.cleaned_data['pd_rate']
-        if (self.data['model'] == 'per_diem') and (not data):
+        if self.data['model'] == 'per_diem' and not data:
             raise forms.ValidationError('Interest rate is required')
         return data
 
@@ -215,7 +216,7 @@ class DebitForm(forms.Form):
         cleaned_data = super().clean()
         date_from = cleaned_data.get('date_from', None)
         date_to = cleaned_data.get('date_to', None)
-        if date_from and date_to and (date_from > date_to):
+        if date_from and date_to and date_from > date_to:
             msg = 'Invalid interval'
             self._errors['date_from'] = self.error_class([msg])
             self._errors['date_to'] = self.error_class([msg])
@@ -307,7 +308,7 @@ class FXform(forms.Form):
         cleaned_data = super().clean()
         date_from = cleaned_data.get('date_from', None)
         date_to = cleaned_data.get('date_to', None)
-        if date_from and date_to and (date_from > date_to):
+        if date_from and date_to and date_from > date_to:
             msg = 'Invalid interval'
             self._errors['date_from'] = self.error_class([msg])
             self._errors['date_to'] = self.error_class([msg])

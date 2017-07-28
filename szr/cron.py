@@ -51,7 +51,7 @@ update_delay = timedelta(hours=6)
 
 def addauxid(p):
 
-    if (p.court_id == supreme_administrative_court) and not p.auxid:
+    if p.court_id == supreme_administrative_court and not p.auxid:
         try:
             res = get(nss_url)
             soup = BeautifulSoup(res.text, 'html.parser')
@@ -76,7 +76,7 @@ def addauxid(p):
 def isreg(c):
 
     s = c.pk
-    return (s[:2] == 'KS') or (s == 'MSPHAAB')
+    return s.startswith('KS') or s == 'MSPHAAB'
 
 
 def cron_courts():
@@ -176,7 +176,7 @@ def updateproc(p):
                         p,
                         p2s(p),
                         User.objects.get(pk=p.uid_id).username))
-        if (changed != p.changed) or (hash != p.hash):
+        if changed != p.changed or hash != p.hash:
             p.notify |= notnew
             if changed:
                 p.changed = changed

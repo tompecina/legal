@@ -93,7 +93,7 @@ class MainForm(forms.Form):
         cleaned_data = super().clean()
         date_from = cleaned_data.get('date_from', None)
         date_to = cleaned_data.get('date_to', None)
-        if date_from and date_to and (date_from > date_to):
+        if date_from and date_to and date_from > date_to:
             msg = 'Invalid interval'
             self._errors['date_from'] = self.error_class([msg])
             self._errors['date_to'] = self.error_class([msg])

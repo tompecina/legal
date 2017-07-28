@@ -62,7 +62,7 @@ class MainForm(forms.Form):
 
     def clean_dur(self):
         data = self.cleaned_data['dur']
-        if ('submit_set_beg_date' not in self.data) \
-            and (self.data['preset'] == 'none') and (not data):
+        if 'submit_set_beg_date' not in self.data \
+            and self.data['preset'] == 'none' and not data:
             raise forms.ValidationError('Duration may not be empty')
         return data

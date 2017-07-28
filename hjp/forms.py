@@ -23,12 +23,14 @@
 from common import forms, fields, widgets
 
 
-tr_opts = (('debit', 'závazek'),
-           ('credit', 'splátka'),
-           ('balance', 'zůstatek'))
+tr_opts = (
+    ('debit', 'závazek'),
+    ('credit', 'splátka'),
+    ('balance', 'zůstatek'))
 
-rep_opts = (('interest', 'napřed úrok'),
-            ('principal', 'napřed jistina'))
+rep_opts = (
+    ('interest', 'napřed úrok'),
+    ('principal', 'napřed jistina'))
 
 
 class TransForm(forms.Form):
@@ -67,27 +69,27 @@ class TransForm(forms.Form):
 
     def clean_amount(self):
         data = self.cleaned_data['amount']
-        if (self.data['transaction_type'] != 'balance') and (not data):
+        if self.data['transaction_type'] != 'balance' and not data:
             raise forms.ValidationError('Amount is required')
         return data
 
 
-int_opts = (('none', 'Bez úroku'),
-            ('fixed', 'Pevná částka'),
-            ('per_annum', 'Roční úrok'),
-            ('per_mensem', 'Měsíční úrok'),
-            ('per_diem', 'Denní úrok'),
-            ('cust1', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
-             '(účinnost do 27.04.2005)'),
-            ('cust2', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
-             '(účinnost od 28.04.2005 do 30.06.2010)'),
-            ('cust3', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
-             '(účinnost od 01.07.2010 do 30.06.2013)'),
-            ('cust5', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
-             '(účinnost od 01.07.2013 do 31.12.2013)'),
-            ('cust6', 'Úrok z prodlení podle nařízení č. 351/2013 Sb.'),
-            ('cust4', 'Poplatek z prodlení podle nařízení '
-             'č. 142/1994 Sb.'))
+int_opts = (
+    ('none', 'Bez úroku'),
+    ('fixed', 'Pevná částka'),
+    ('per_annum', 'Roční úrok'),
+    ('per_mensem', 'Měsíční úrok'),
+    ('per_diem', 'Denní úrok'),
+    ('cust1', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
+     '(účinnost do 27.04.2005)'),
+    ('cust2', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
+     '(účinnost od 28.04.2005 do 30.06.2010)'),
+    ('cust3', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
+     '(účinnost od 01.07.2010 do 30.06.2013)'),
+    ('cust5', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
+     '(účinnost od 01.07.2013 do 31.12.2013)'),
+    ('cust6', 'Úrok z prodlení podle nařízení č. 351/2013 Sb.'),
+    ('cust4', 'Poplatek z prodlení podle nařízení č. 142/1994 Sb.'))
 
 
 class MainForm(forms.Form):

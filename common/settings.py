@@ -27,8 +27,8 @@ from logging import Filter
 from .secrets import DBPASSWD, SECKEY
 
 
-LOCAL = ((len(argv) > 1) and (argv[1] == 'runserver'))
-TEST = ((len(argv) > 1) and (argv[1] == 'test'))
+LOCAL = len(argv) > 1 and argv[1] == 'runserver'
+TEST = len(argv) > 1 and argv[1] == 'test'
 
 DEBUG = LOCAL
 DEBUG_LOG = True

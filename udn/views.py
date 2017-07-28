@@ -138,7 +138,7 @@ def htmllist(request):
     except:
         raise Http404
     total = d.count()
-    if total and (start >= total):
+    if total and start >= total:
         start = total - 1
     return render(
         request,

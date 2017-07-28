@@ -128,7 +128,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
         }
 
     today = date.today()
-    if (dt.year < 1991) or (dt > today):
+    if dt.year < 1991 or dt > today:
         return None, None, None, 'Chybné datum, data nejsou k disposici'
     p = FXrate.objects.filter(date=dt)
     if p:
@@ -154,14 +154,14 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
             'Invalid FX table structure for '
             '{0.year:d}-{0.month:02d}-{0.day:02d}'.format(dt))
         return None, None, None, 'Chyba struktury kursové tabulky'
-    if (not p) and ((dr == dt) or ((today - dt) > sd)):
+    if not p and (dr == dt or (today - dt) > sd):
         FXrate(date=dt, text=tx).save()
     ln = soup.find('radek', {'kod': curr})
     fr = 1.0
     curr_rq = curr
     if not ln:
-        if use_fixed and (curr in fixed_list) \
-           and (fixed_list[curr]['date_from'] <= dt):
+        if use_fixed and curr in fixed_list \
+           and fixed_list[curr]['date_from'] <= dt:
             curr = fixed_list[curr]['currency_to']
             ln = soup.find('radek', {'kod': curr})
             if not ln:
@@ -214,13 +214,13 @@ def getMPIrate(tp, dt, log=None):
     if tp not in types.keys():
         return None, 'Chybný druh sazby'
 
-    if (dt.year < 1990) or (dt > now.date()):
+    if dt.year < 1990 or dt > now.date():
         return None, 'Chybné datum, data nejsou k disposici'
 
     st = MPIstat.objects.get_or_create(type=tp)
     updated = st[0].timestamp_update.date()
-    if st[1] or ((not MPIrate.objects.filter(valid__gte=dt).exists())
-        and ((updated - dt) < sd)):
+    if st[1] or (not MPIrate.objects.filter(valid__gte=dt).exists()
+        and (updated - dt) < sd):
         surl = prefix + types[tp][0] + suffix
         tx = getcache(surl, cd)[0]
         if not tx:
@@ -236,15 +236,16 @@ def getMPIrate(tp, dt, log=None):
         try:
             for l in tx[1:]:
                 assert l[8] == '|'
-                rates.append([float(l[9:].replace(',', '.')),
-                              date(int(l[0:4]), int(l[4:6]), int(l[6:8]))])
+                rates.append(
+                    [float(l[9:].replace(',', '.')),
+                     date(int(l[0:4]), int(l[4:6]), int(l[6:8]))])
         except:
             logger.error('Error in rate table for ' + types[tp][0])
             return None, 'Chyba tabulky sazeb (2)'
 
         try:
             for r in rates:
-                if st[1] or ((updated - r[1]) < sd):
+                if st[1] or (updated - r[1]) < sd:
                     MPIrate.objects.get_or_create(
                         type=tp,
                         rate=r[0],

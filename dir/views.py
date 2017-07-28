@@ -52,7 +52,7 @@ APPVERSION = apps.get_app_config(APP).version
 BATCH = 50
 
 OFIELDS = ['name', 'first_name']
-OPTS = [(x + '_opt') for x in OFIELDS]
+OPTS = [x + '_opt' for x in OFIELDS]
 
 
 @require_http_methods(['GET', 'POST'])
@@ -85,7 +85,7 @@ def mainpage(request):
             err_message = inerr
     d = Debtor.objects.filter(uid=uid).order_by('desc', 'pk').values()
     total = d.count()
-    if (start >= total) and (total > 0):
+    if start >= total and total > 0:
         start = total - 1
     rows = d[start:(start + BATCH)]
     for row in rows:
@@ -243,8 +243,8 @@ def debtordelall(request):
             {'app': APP,
              'page_title': 'Smazání všech dlužníků'})
     else:
-        if (getbutton(request) == 'yes') and ('conf' in request.POST) \
-           and (request.POST['conf'] == 'Ano'):
+        if getbutton(request) == 'yes' and 'conf' in request.POST \
+           and request.POST['conf'] == 'Ano':
             Debtor.objects.filter(uid=uid).delete()
             logger.info(
                 'User "{}" ({:d}) deleted all debtors'.format(uname, uid),
@@ -388,7 +388,7 @@ def debtorbatchform(request):
                                          'Chybný parametr: "{}"'.format(key)])
                                     continue
                                 if year_birth_from and year_birth_to \
-                                   and (year_birth_from > year_birth_to):
+                                   and year_birth_from > year_birth_to:
                                     errors.append([i, 'Chybný interval pro '
                                         'rok narození'])
                                     continue

@@ -79,8 +79,7 @@ def cron_gettr():
         soup = BeautifulSoup(xml, 'lxml')
         soup.is_xml = True
 
-        if not (soup.stav and (soup.stav.string == 'OK') and \
-            soup.find('data')):
+        if not (soup.stav and soup.stav.string == 'OK' and soup.find('data')):
             break
 
         l = []
@@ -120,7 +119,7 @@ def cron_proctr():
         try:
             bc, rocnik = \
                 map(int, tr.spisovaZnacka.split()[-1].split('/'))
-            if (bc <= 0) or (rocnik <= 0):
+            if bc <= 0 or rocnik <= 0:
                 continue
             datumZalozeniUdalosti = tr.datumZalozeniUdalosti
 
@@ -152,8 +151,8 @@ def cron_proctr():
 
             if t_udalost.datumvyskrtnuti:
                 vec.datumVyskrtnuti = convd(t_udalost.datumvyskrtnuti)
-            elif (not vec.lastAction) \
-                 or (datumZalozeniUdalosti.date() > vec.lastAction):
+            elif not vec.lastAction \
+                 or datumZalozeniUdalosti.date() > vec.lastAction:
                 vec.lastAction = datumZalozeniUdalosti.date()
 
             vec.save()
@@ -162,7 +161,7 @@ def cron_proctr():
                 typUdalosti = int(tr.typUdalosti)
                 if typUdalosti not in SELIST:
                     for i in Insolvency.objects.filter(number=bc, year=rocnik):
-                        if i.detailed or (typUdalosti in BELIST):
+                        if i.detailed or typUdalosti in BELIST:
                             if Tracked.objects.get_or_create(
                                     uid_id=i.uid_id,
                                     desc=i.desc,
@@ -221,7 +220,7 @@ def cron_proctr():
                     rc = t_osoba.rc.string.strip().replace('/', '')
                 else:
                     rc = None
-                if (not datumNarozeni) and rc:
+                if not datumNarozeni and rc:
                     year = int(rc[:2]) + 2000
                     if year > rocnik:
                         year -= 100
@@ -240,8 +239,7 @@ def cron_proctr():
                 osoba.datumNarozeni = datumNarozeni
 
                 osoba.save()
-                if (druhRoleVRizeni == debtor) \
-                   and (role not in vec.roles.all()):
+                if druhRoleVRizeni == debtor and role not in vec.roles.all():
                     dir_check(osoba, vec)
                 vec.roles.add(role)
 

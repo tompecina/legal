@@ -78,7 +78,7 @@ def mainpage(request):
     p = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'pk') \
         .values()
     total = p.count()
-    if (start >= total) and (total > 0):
+    if start >= total and total > 0:
         start = total - 1
     rows = p[start:(start + BATCH)]
     for row in rows:
@@ -206,8 +206,8 @@ def partydelall(request):
             {'app': APP,
              'page_title': 'Smazání všech účastníků'})
     else:
-        if (getbutton(request) == 'yes') and ('conf' in request.POST) \
-           and (request.POST['conf'] == 'Ano'):
+        if getbutton(request) == 'yes' and 'conf' in request.POST \
+           and request.POST['conf'] == 'Ano':
             Party.objects.filter(uid=uid).delete()
             logger.info(
                 'User "{}" ({:d}) deleted all parties'.format(uname, uid),

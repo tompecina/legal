@@ -148,10 +148,10 @@ def g2p(rd):
         p['roles__osoba__datumNarozeni__year__gte'] = rd['year_birth_from']
     if 'year_birth_to' in rd:
         p['roles__osoba__datumNarozeni__year__lte'] = rd['year_birth_to']
-    if ('name' in rd) or ('first_name' in rd) or ('city' in rd) \
-        or ('genid' in rd) or ('taxid' in rd) or ('birthid' in rd) \
-        or ('date_birth' in rd) or ('year_birth_from' in rd) \
-        or ('year_birth_to' in rd):
+    if 'name' in rd or 'first_name' in rd or 'city' in rd \
+        or 'genid' in rd or 'taxid' in rd or 'birthid' in rd \
+        or 'date_birth' in rd or 'year_birth_from' in rd \
+        or 'year_birth_to' in rd:
         role = [DruhRoleVRizeni.objects.get(desc=r2i[f]).id
             for f in ['debtor', 'trustee', 'creditor']
             if 'role_' + f in rd]
@@ -198,9 +198,9 @@ def htmllist(request):
     except:
         raise Http404
     total = v.count()
-    if total and (start >= total):
+    if total and start >= total:
         start = total - 1
-    creditors = ('creditors' in rd)
+    creditors = 'creditors' in rd
     BATCH = 10 if creditors else 20
     rows = v[start:(start + BATCH)]
     for row in rows:

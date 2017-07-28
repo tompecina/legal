@@ -68,14 +68,14 @@ def mainpage(request):
                         curr,
                         Lf(rate))
             if not messages:
-                if (opt == 'epr') and (basis > 1000000):
+                if opt == 'epr' and basis > 1000000:
                     messages = [['Nad limit pro EPR', None]]
                 else:
                     if model < 4:
                         basis = int(floor(basis / 100) * 100)
                     else:
                         basis = int(ceil(basis / 10) * 10)
-                    if (opt == 'none') or ((opt == 'nmu') and (model == 1)):
+                    if opt == 'none' or (opt == 'nmu' and model == 1):
                         if model == 1:
                             if basis <= 15000:
                                 sop = 600
@@ -176,7 +176,7 @@ def mainpage(request):
                         sop = int(ceil(sop / 10) * 10)
                     if model == 1:
                         sop = min(sop, 1000000)
-                    elif (opt != 'none') and ((opt != 'vyk') or (model < 3)):
+                    elif opt != 'none' and (opt != 'vyk' or model < 3):
                         sop = min(sop, 2000000)
                     messages.append(['Soudní poplatek:', None])
                     messages.append(

@@ -74,7 +74,7 @@ def mainpage(request):
             err_message = inerr
     p = Insolvency.objects.filter(uid=uid).order_by('desc', 'pk')
     total = p.count()
-    if (start >= total) and (total > 0):
+    if start >= total and total > 0:
         start = total - 1
     rows = p[start:(start + BATCH)]
     return render(
@@ -188,8 +188,8 @@ def insdelall(request):
             {'app': APP,
              'page_title': 'Smazání všech řízení'})
     else:
-        if (getbutton(request) == 'yes') and ('conf' in request.POST) \
-           and (request.POST['conf'] == 'Ano'):
+        if getbutton(request) == 'yes' and 'conf' in request.POST \
+           and request.POST['conf'] == 'Ano':
             Insolvency.objects.filter(uid=uid).delete()
             logger.info(
                 'User "{}" ({:d}) deleted all proceedings'.format(uname, uid),

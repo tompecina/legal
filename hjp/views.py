@@ -116,7 +116,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
     if interest.model == 'fixed':
         return (0.0 if pastdate else interest.fixed_amount), None
 
-    if (not pastdate) or (pastdate > presdate):
+    if not pastdate or pastdate > presdate:
         return None, 'Chybný interval'
 
     if pastdate < (default_date - odp):
@@ -162,7 +162,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
                 return None, r[1]
             debt.rates[date(y1, m1, d1)] = r[0]
             y2 = y1
-            if (y1 < presdate.year) or ((m1 == 1) and (presdate.month > 6)):
+            if y1 < presdate.year or (m1 == 1 and presdate.month > 6):
                 if m1 == 1:
                     m2 = 6
                     d2 = 30
@@ -281,8 +281,8 @@ def getrows(debt):
         if not err:
             op = principal
             oi = interest
-            if (cud and (debt.interest.model != 'none') and (principal > 0)) \
-                or (debt.interest.model == 'fixed'):
+            if (cud and debt.interest.model != 'none' and principal > 0) \
+                or debt.interest.model == 'fixed':
                 i = calcint(cud, tt.date, principal, debt, default_date)
                 if i[1]:
                     err = True
@@ -387,7 +387,7 @@ def getrows4(debt):
             mb = date(y, m, d)
 
         interest += di
-        while (e < len(st)) and (st[e].date == dt):
+        while e < len(st) and st[e].date == dt:
             tt = st[e]
             row = {}
             row['id'] = tt.id
@@ -527,7 +527,7 @@ def fromxml(d):
     if not s:
         return None, 'Chybný formát souboru'
     h = s.debt
-    assert h and (h['application'] == APP)
+    assert h and h['application'] == APP
     debt = Debt()
     debt.title = xmlunescape(h.title.text.strip())
     debt.note = xmlunescape(h.note.text.strip())
@@ -681,7 +681,7 @@ def mainpage(request):
                 interest.rate = float(cd['pd_rate'])
             setdebt(request, debt)
 
-            if (not btn) and cd['next']:
+            if not btn and cd['next']:
                 return redirect(cd['next'])
 
             if btn == 'xml':
@@ -692,7 +692,7 @@ def mainpage(request):
                     'attachment; filename=Pohledavka.xml'
                 return response
 
-            if (btn == 'csv') and not rows_err:
+            if btn == 'csv' and not rows_err:
                 response = \
                     HttpResponse(content_type='text/csv; charset=utf-8')
                 response['Content-Disposition'] = \

@@ -59,6 +59,8 @@ def mainpage(request):
             beg_date = cd['beg_date']
             if beg_date.year < 1991:
                 messages = [['Počátek musí být ≥1.1.1991', None]]
+            if beg_date.year > 2999:
+                messages = [['Počátek musí být <1.1.3000', None]]
             else:
                 preset = cd['preset']
                 if preset == 'none':

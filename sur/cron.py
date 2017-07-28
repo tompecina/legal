@@ -31,10 +31,10 @@ def sur_notice(uid):
     ff = Found.objects.filter(uid=uid).order_by('name', 'id').distinct()
     if ff:
         text = 'Byli nově zaznamenáni tito účastníci řízení, ' \
-               'které sledujete:\n\n'
+            'které sledujete:\n\n'
         for f in ff:
             text += ' - {0.name}, {0.court}, sp. zn. {0.senate:d} ' \
-                    '{0.register} {0.number:d}/{0.year:d}\n'.format(f)
+                '{0.register} {0.number:d}/{0.year:d}\n'.format(f)
             text += '   {}\n\n'.format(f.url)
         Found.objects.filter(uid=uid).delete()
         logger.info(

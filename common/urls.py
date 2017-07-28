@@ -64,5 +64,5 @@ urlpatterns = [
     url(r'^about/$', about, name='about'),
     url(r'^stat/$', stat, name='stat'),
     url(r'^admin/', include((admin.site.urls[0], 'admin')))
-] + [url('^{}/'.format(a),
-         include((a + '.urls', a))) for a in settings.APPS if a != 'common']
+] + [url('^{}/'.format(a), include((a + '.urls', a)))
+     for a in settings.APPS if a != 'common']

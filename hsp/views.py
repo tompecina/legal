@@ -152,10 +152,10 @@ DR, CR, BAL = tuple(range(3))
 
 def calcint(interest, pastdate, presdate, debt, res):
 
-    if (not pastdate) or (pastdate < (interest.default_date - odp)):
+    if not pastdate or pastdate < (interest.default_date - odp):
         pastdate = (interest.default_date - odp)
 
-    if interest.date_to and (interest.date_to < presdate):
+    if interest.date_to and interest.date_to < presdate:
         presdate = interest.date_to
 
     if pastdate >= presdate:
@@ -199,7 +199,7 @@ def calcint(interest, pastdate, presdate, debt, res):
             if r[1]:
                 return None, r[1]
             y2 = y1
-            if (y1 < presdate.year) or ((m1 == 1) and (presdate.month > 6)):
+            if y1 < presdate.year or (m1 == 1 and presdate.month > 6):
                 if m1 == 1:
                     m2 = 6
                     d2 = 30
@@ -279,12 +279,11 @@ def distr(debt, dt, credit, amount, disarr, res):
                 rt = 1.0
             else:
                 for fxrate in debt.fxrates:
-                    if (fxrate.currency_from == credit.currency) \
-                        and (fxrate.currency_to == debit.currency) \
-                        and ((not fxrate.date_from)
-                        or (fxrate.date_from <= dt)) \
-                        and ((not fxrate.date_to) or (dt <= fxrate.date_to)):
-                        rt = (fxrate.rate_to / fxrate.rate_from)
+                    if fxrate.currency_from == credit.currency \
+                        and fxrate.currency_to == debit.currency \
+                        and (not fxrate.date_from or fxrate.date_from <= dt) \
+                        and (not fxrate.date_to or dt <= fxrate.date_to):
+                        rt = fxrate.rate_to / fxrate.rate_from
                         break
                 else:
                     if credit.currency == 'CZK':
@@ -357,14 +356,14 @@ def calc(debt, pram=(lambda x: x)):
         if c not in res.currencies:
             res.currencies.append(c)
     res.multicurrency_debit = (len(res.currencies) > 1)
-    if res.currencies and (not res.multicurrency_debit):
+    if res.currencies and not res.multicurrency_debit:
         res.currency_debits = res.currencies[0]
     for credit in debt.credits:
         if credit.currency not in res.currencies:
             res.currencies.append(credit.currency)
     res.currencies.sort()
     res.multicurrency = (len(res.currencies) > 1)
-    if res.currencies and (not res.multicurrency):
+    if res.currencies and not res.multicurrency:
         res.currency = res.currencies[0]
 
     dr = {}
@@ -420,7 +419,7 @@ def calc(debt, pram=(lambda x: x)):
     if res.nd:
         res.hrow = True
         res.crow = res.ccol = res.multicurrency
-        res.scol = (not res.multicurrency_debit) and (res.nd > 1)
+        res.scol = not res.multicurrency_debit and res.nd > 1
         res.c1 = 3 if res.crow else 2
         res.c2 = res.nd
         res.c3 = res.nd + (1 if res.scol else 0)
@@ -443,8 +442,7 @@ def calc(debt, pram=(lambda x: x)):
     cud = None
     while dt <= ta[-1]['dt']:
         for i in cust4:
-            if (dt >= i.default_date) \
-               and ((not i.date_to) or (dt <= i.date_to)):
+            if dt >= i.default_date and (not i.date_to or dt <= i.date_to):
                 if dt == i.mb:
                     i.li = 0.0
                     i.ui = i.mm
@@ -472,7 +470,7 @@ def calc(debt, pram=(lambda x: x)):
                     i.mb = date(y, m, d)
                 i.balance += di
 
-        while (e < len(ta)) and (ta[e]['dt'] == dt):
+        while e < len(ta) and ta[e]['dt'] == dt:
             tt = ta[e]
             for debit in debt.debits:
                 debit.nb = debit.balance
@@ -530,7 +528,7 @@ def calc(debt, pram=(lambda x: x)):
                     row['change'].append(pram(0.0))
                 else:
                     row['change'].append(pram(debit.nb - debit.ob))
-            if (tp == DR) and (o.model == 'fixed'):
+            if tp == DR and o.model == 'fixed':
                 row['disp_currency'] = o.fixed_currency
             elif tp == CR:
                 row['disp_currency'] = o.currency
@@ -553,7 +551,7 @@ def calc(debt, pram=(lambda x: x)):
             for sp in row['sps']:
                 r.append('{}&nbsp;{}'.format(
                     pram(sp['total']),
-                    sp['curr'] if (res.multicurrency or (sp['curr'] != 'CZK'))
+                    sp['curr'] if (res.multicurrency or sp['curr'] != 'CZK')
                     else 'Kč'))
             row['sps_text'] = ', '.join(r)
 
@@ -731,7 +729,7 @@ def fromxml(d):
     if not s:
         return None, 'Chybný formát souboru (1)'
     h = s.debt
-    if not (h and (h['application'] in [APP, 'hjp'])):
+    if not (h and h['application'] in [APP, 'hjp']):
         return None, 'Chybný formát souboru (2)'
 
     if h['application'] == APP:
@@ -815,8 +813,8 @@ def fromxml(d):
         for tt in tr:
             if not tt.name:
                 continue
-            if (tt.has_attr('type') and (tt['type'] == 'debit')) \
-               or (str(tt.name) == 'debit'):
+            if (tt.has_attr('type') and tt['type'] == 'debit') \
+               or str(tt.name) == 'debit':
                 d = Debit()
                 i = len(debt.debits)
                 principals.append(i)
@@ -827,7 +825,7 @@ def fromxml(d):
                 d.fixed_currency = currency
                 d.fixed_date = iso2date(tt.date)
                 m = interest['model']
-                if (m != 'none') and ((m != 'fixed') or firstfix):
+                if m != 'none' and (m != 'fixed' or firstfix):
                     firstfix = False
                     d = Debit()
                     interests.append(len(debt.debits))
@@ -891,11 +889,11 @@ def mainpage(request):
             return '<span class="cr">{}</span>'.format(formam(-a))
 
     def fa(a, c):
-        if (not a) or (abs(a) < LIM):
+        if not a or abs(a) < LIM:
             return ''
         r = formam(round(a, debt.rounding)
             if debt.rounding else int(round(a))).replace('-', '−')
-        if res.multicurrency or (c != 'CZK'):
+        if res.multicurrency or c != 'CZK':
             return '{}&nbsp;{}'.format(r, c)
         return '{}&nbsp;Kč'.format(r)
 
@@ -952,7 +950,7 @@ def mainpage(request):
             debt.rounding = int(cd['rounding'])
             setdebt(request, debt)
 
-            if (not btn) and cd['next']:
+            if not btn and cd['next']:
                 return redirect(cd['next'])
 
             if btn == 'xml':
@@ -1408,12 +1406,12 @@ def mainpage(request):
                                         ln[1] += 1
                                         cl[1].append(debit.id)
                                         cr[1].append((amount, debit.currency))
-                                if (not res.multicurrency_debit) \
-                                   and (ln[1] > 1):
+                                if not res.multicurrency_debit and ln[1] > 1:
                                     ln[1] += 1
                                     cl[1].append('∑')
-                                    cr[1].append((row['pre_total'],
-                                                  res.currency_debits))
+                                    cr[1].append(
+                                        (row['pre_total'],
+                                         res.currency_debits))
                                 break
 
                     if spf:
@@ -1429,7 +1427,7 @@ def mainpage(request):
                                 ln[2] += 1
                                 cl[2].append(debit.id)
                                 cr[2].append((amount, debit.currency))
-                        if (not res.multicurrency_debit) and (ln[2] > 1):
+                        if not res.multicurrency_debit and ln[2] > 1:
                             ln[2] += 1
                             cl[2].append('∑')
                             cr[2].append((row['post_total'],
@@ -1632,7 +1630,7 @@ def debitform(request, id=0):
 
     rows = [{'value': 0, 'text': 'pevné částky:', 'sel': False}]
     for n, d in enumerate(debt.debits):
-        if (d.model == 'fixed') and ((not id) or (n != (id - 1))):
+        if d.model == 'fixed' and (not id or n != (id - 1)):
             row = {'value': (n + 1),
                    'text': '{} – {}'.format(n2l(n), (d.description
                         if d.description else '(bez názvu)')),
@@ -1690,12 +1688,12 @@ def debitform(request, id=0):
                     if row['value'] == int(request.POST['principal_debit']):
                         row['sel'] = True
                         break
-            if id and (request.POST.get('model') != 'fixed'):
+            if id and request.POST.get('model') != 'fixed':
                 for debit in debt.debits:
                     if debit.principal_debit == id:
                         err_message = \
                             'Na závazek se váže úrok, vyžaduje pevnou částku'
-            if (not err_message) and f.is_valid():
+            if not err_message and f.is_valid():
                 cd = f.cleaned_data
                 debit = Debit()
                 debit.description = cd['description'].strip()
@@ -1776,7 +1774,7 @@ def debitdel(request, id=0):
         if btn == 'yes':
             r = list(range(nd))
             for i in range((nd - 1), -1, -1):
-                if (i == id) or ((debt.debits[i].principal_debit - 1) == id):
+                if i == id or (debt.debits[i].principal_debit - 1) == id:
                     r[i] = None
                     del debt.debits[i]
             c = [x for x in r if x != None]
@@ -1838,8 +1836,7 @@ def creditform(request, id=0):
         else:
             f = CreditForm()
             if nd > 1:
-                if hasattr(debt, 'last_debits') \
-                   and (len(debt.last_debits) == nd):
+                if hasattr(debt, 'last_debits') and len(debt.last_debits) == nd:
                     for n, d in enumerate(debt.debits):
                         rows[n]['sel'] = debt.last_debits[n]
                 else:
@@ -1861,7 +1858,7 @@ def creditform(request, id=0):
                         break
                     else:
                         r.append(c)
-            if f.is_valid() and (not deb_class):
+            if f.is_valid() and not deb_class:
                 cd = f.cleaned_data
                 credit = Credit()
                 credit.description = cd['description'].strip()
