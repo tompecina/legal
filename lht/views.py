@@ -77,10 +77,10 @@ def calc(beg, dur, unit):
         if not between(MIN_DATE.year, year, MAX_DATE.year):
             return Result(OUT_MSG)
         res = date(year, month, day)
-        
+
     elif unit == 'b':
         res = beg
-        for _loop in range(abs(dur)):
+        for dummy in range(abs(dur)):
             res += offset
             while tod(res):
                 res += offset

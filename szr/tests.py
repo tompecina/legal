@@ -74,7 +74,7 @@ class TestCron(TestCase):
         self.assertEqual(models.Proceedings.objects.filter(
             court_id='NSS', auxid=0).count(), 3)
         st = datetime.now()
-        for _ in range(models.Proceedings.objects.count()):
+        for dummy in range(models.Proceedings.objects.count()):
             cron.cron_update()
         self.assertEqual(models.Proceedings.objects.filter(
             court_id='NSS', auxid=0).count(), 1)
@@ -116,7 +116,7 @@ class TestCron(TestCase):
 
     def test_szr_notice(self):
         self.assertEqual(cron.szr_notice(1), '')
-        for _ in range(models.Proceedings.objects.count()):
+        for dummy in range(models.Proceedings.objects.count()):
             cron.cron_update()
         self.assertEqual(
             cron.szr_notice(1),

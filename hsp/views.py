@@ -1811,7 +1811,7 @@ def creditform(request, id=0):
     nd = len(debt.debits)
     deb_class = ''
     if nd > 1:
-        for n, _ in enumerate(debt.debits):
+        for n, dummy in enumerate(debt.debits):
             row = {'n': n, 'cols': []}
             for m, c in enumerate(debt.debits):
                 row['cols'].append(

@@ -94,7 +94,7 @@ class TestForms(SimpleTestCase):
              'dur': '1',
              'unit': 'd'})
         self.assertTrue(f.is_valid())
-        
+
 
 pp = [
     ['1.7.2016', 'd3', '', 'd',

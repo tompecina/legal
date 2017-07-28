@@ -140,7 +140,7 @@ class TestCron(TestCase):
     fixtures = ['common_test.json']
 
     def test_szr_notice(self):
-        for _ in range(Proceedings.objects.count()):
+        for dummy in range(Proceedings.objects.count()):
             cron_update()
         cron.cron_notify()
         m = mail.outbox
