@@ -196,7 +196,7 @@ class CurrencyWidget(forms.widgets.MultiWidget):
     std_curr = ['EUR', 'CHF', 'GBP', 'JPY', 'RUB', 'USD']
 
     def __init__(self, czk=True, attrs=None):
-        self._currlist = ((['CZK'] if czk else []) + self.std_curr)
+        self._currlist = (['CZK'] if czk else []) + self.std_curr
         super().__init__(
             (forms.Select(
                 choices=([[x, x] for x in self._currlist] + [['OTH', 'Jiná:']]),
