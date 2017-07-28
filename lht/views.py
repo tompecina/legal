@@ -25,14 +25,80 @@ from calendar import monthrange
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
-from common.utils import pd, tod, odp, getbutton, logger
+from common.utils import pd, tod, odp, getbutton, logger, between
 from common.glob import wn, inerr_short
+from lht.glob import MIN_DATE, MAX_DATE, UNC_DATE
 from lht.forms import MainForm
 
 
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
+
+class Result:
+
+    def __init__(self, msg=None, res_date=None, bus_date=None, unc=False):
+        self.msg = msg
+        self.res_date = res_date
+        self.bus_date = bus_date
+        self.unc = unc
+
+
+def calc(beg, dur, unit):
+
+    OUT_MSG = \
+        'Výsledek musí být mezi {} a {}'.format(pd(MIN_DATE), pd(MAX_DATE))
+
+    if not between(MIN_DATE, beg, MAX_DATE):
+        return Result(
+            'Počátek musí být mezi {} a {}'.format(pd(MIN_DATE), pd(MAX_DATE)))
+
+    if dur > 0:
+        offset = odp
+    else:
+        offset = -odp
+
+    if unit == 'd':
+        res = beg + timedelta(days=dur)
+
+    elif unit == 'w':
+        res = beg + timedelta(weeks=dur)
+
+    elif unit in ['m', 'y']:
+        if unit == 'y':
+            dur *= 12
+        day = beg.day
+        month = beg.month + dur - 1
+        year = beg.year + (month // 12)
+        month = (month % 12) + 1
+        rng = monthrange(year, month)[1]
+        if day > rng:
+            day = rng
+        if not between(MIN_DATE.year, year, MAX_DATE.year):
+            return Result(OUT_MSG)
+        res = date(year, month, day)
+        
+    elif unit == 'b':
+        res = beg
+        for _loop in range(abs(dur)):
+            res += offset
+            while tod(res):
+                res += offset
+
+    else:
+        return Result('Neznámá jednotka')
+
+    bus = res
+    if unit != 'b':
+        while tod(bus):
+            bus += offset
+
+    if not between(MIN_DATE, bus, MAX_DATE):
+        return Result(OUT_MSG)
+
+    unc = min(res, bus) < UNC_DATE or (beg < UNC_DATE and unit == 'b')
+
+    return Result(None, res, bus, unc)
 
 
 @require_http_methods(['GET', 'POST'])
@@ -44,6 +110,7 @@ def mainpage(request):
         request.POST)
 
     today = date.today()
+
     messages = []
 
     if request.method == 'GET':
@@ -57,70 +124,35 @@ def mainpage(request):
         elif f.is_valid():
             cd = f.cleaned_data
             beg_date = cd['beg_date']
-            if beg_date.year < 1991:
-                messages = [['Počátek musí být ≥1.1.1991', None]]
-            if beg_date.year > 2999:
-                messages = [['Počátek musí být <1.1.3000', None]]
+            preset = cd['preset']
+            if preset == 'none':
+                dur = cd['dur']
+                unit = cd['unit']
             else:
-                preset = cd['preset']
-                if preset == 'none':
-                    dur = cd['dur']
-                    unit = cd['unit']
-                else:
-                    dur = int(preset[1:])
-                    unit = preset[0]
-                if dur > 0:
-                    o = odp
-                else:
-                    o = -odp
-                if unit == 'd':
-                    t = beg_date + timedelta(days=dur)
-                elif unit == 'w':
-                    t = beg_date + timedelta(weeks=dur)
-                elif unit in ['m', 'y']:
-                    if unit == 'y':
-                        dur *= 12
-                    d = beg_date.day
-                    m = beg_date.month
-                    y = beg_date.year
-                    if dur > 0:
-                        for _ in range(dur):
-                            m += 1
-                            if m > 12:
-                                m = 1
-                                y += 1
-                    else:
-                        for _ in range(-dur):
-                            m -= 1
-                            if not m:
-                                m = 12
-                                y -= 1
-                    r = monthrange(y, m)[1]
-                    if d > r:
-                        d = r
-                    t = date(y, m, d)
-                else:
-                    t = beg_date
-                    for _ in range(abs(dur)):
-                        t += o
-                        while tod(t):
-                            t += o
+                dur = int(preset[1:])
+                unit = preset[0]
 
-                if tod(t):
+            res = calc(beg_date, dur, unit)
+
+            if res.msg:
+                messages = [[res.msg, None]]
+
+            else:
+                if res.res_date != res.bus_date:
                     messages.append(
-                        ['{} není pracovní den'.format(pd(t)), None])
+                        ['{} není pracovní den'.format(
+                            pd(res.res_date)), None])
 
-                while tod(t):
-                    t += o
-
-                messages.append(
-                    ['{} {}'.format(wn[t.weekday()], pd(t)),
+                messages.append([
+                    '{} {}'.format(
+                        wn[res.bus_date.weekday()],
+                        pd(res.bus_date)),
                      'msg-res'])
-                if t < date(1991, 1, 1):
-                    messages.append(
-                        ['(evidence pracovních dnů v tomto období '
-                         'není úplná)',
-                         'msg-note'])
+
+                if res.unc:
+                    messages.append([
+                        '(evidence pracovních dnů v tomto období není úplná)',
+                        'msg-note'])
 
         else:
             logger.debug('Invalid form', request)

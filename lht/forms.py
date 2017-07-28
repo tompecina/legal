@@ -21,7 +21,9 @@
 #
 
 from datetime import date
+from django.core.validators import MinValueValidator, MaxValueValidator
 from common import forms, fields, widgets
+from lht.glob import MIN_DATE, MAX_DATE
 
 
 presets = (
@@ -45,6 +47,9 @@ class MainForm(forms.Form):
     beg_date = fields.DateField(
         widget=widgets.dw(today=True),
         label='Počátek',
+        validators=[
+            MinValueValidator(MIN_DATE),
+            MaxValueValidator(MAX_DATE)],
         initial=date.today)
 
     dur = fields.IntegerField(

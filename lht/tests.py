@@ -30,6 +30,7 @@ from lht import forms
 class TestForms(SimpleTestCase):
 
     def test_MainForm(self):
+
         f = forms.MainForm(
             {'beg_date': '6.7.2016',
              'preset': 'none',
@@ -39,17 +40,20 @@ class TestForms(SimpleTestCase):
         self.assertEqual(
             f.errors,
             {'dur': ['Duration may not be empty']})
+
         f = forms.MainForm(
             {'beg_date': '6.7.2016',
              'submit_set_beg_date': 'Dnes',
              'preset': 'd3',
              'unit': 'd'})
         self.assertTrue(f.is_valid())
+
         f = forms.MainForm(
             {'beg_date': '6.7.2016',
              'preset': 'd3',
              'unit': 'd'})
         self.assertTrue(f.is_valid())
+
         f = forms.MainForm(
             {'beg_date': '6.7.2016',
              'dur': '1',
@@ -57,6 +61,40 @@ class TestForms(SimpleTestCase):
              'unit': 'd'})
         self.assertTrue(f.is_valid())
 
+        f = forms.MainForm(
+            {'beg_date': '31.12.1582',
+             'preset': 'none',
+             'dur': '1',
+             'unit': 'd'})
+        self.assertFalse(f.is_valid())
+        self.assertEqual(
+            f.errors,
+            {'beg_date': ['Hodnota musí být větší nebo rovna 1583-01-01.']})
+
+        f = forms.MainForm(
+            {'beg_date': '1.1.1583',
+             'preset': 'none',
+             'dur': '1',
+             'unit': 'd'})
+        self.assertTrue(f.is_valid())
+
+        f = forms.MainForm(
+            {'beg_date': '1.1.3000',
+             'preset': 'none',
+             'dur': '1',
+             'unit': 'd'})
+        self.assertFalse(f.is_valid())
+        self.assertEqual(
+            f.errors,
+            {'beg_date': ['Hodnota musí být menší nebo rovna 2999-12-31.']})
+
+        f = forms.MainForm(
+            {'beg_date': '31.12.2999',
+             'preset': 'none',
+             'dur': '1',
+             'unit': 'd'})
+        self.assertTrue(f.is_valid())
+        
 
 pp = [
     ['1.7.2016', 'd3', '', 'd',
@@ -141,6 +179,31 @@ pp = [
      ['St 10.02.2016']],
     ['31.5.2016', 'm1', '', 'd',
      ['Čt 30.06.2016']],
+    ['31.12.1990', 'none', '1', 'd',
+     ['01.01.1991 není pracovní den',
+      'St 02.01.1991']],
+    ['31.12.1990', 'none', '1', 'b',
+     ['St 02.01.1991',
+      '(evidence pracovních dnů v tomto období není úplná)']],
+    ['02.01.1991', 'none', '-1', 'd',
+     ['01.01.1991 není pracovní den',
+      'Po 31.12.1990',
+      '(evidence pracovních dnů v tomto období není úplná)']],
+    ['03.01.1991', 'none', '-1', 'd',
+     ['St 02.01.1991']],
+    ['01.01.1583', 'none', '-1', 'd',
+     ['Výsledek musí být mezi 01.01.1583 a 31.12.2999']],
+    ['02.01.1583', 'none', '-1', 'd',
+     ['Výsledek musí být mezi 01.01.1583 a 31.12.2999']],
+    ['03.01.1583', 'none', '-1', 'd',
+     ['Výsledek musí být mezi 01.01.1583 a 31.12.2999']],
+    ['04.01.1583', 'none', '-1', 'd',
+     ['Po 03.01.1583',
+      '(evidence pracovních dnů v tomto období není úplná)']],
+    ['31.12.2999', 'none', '1', 'd',
+     ['Výsledek musí být mezi 01.01.1583 a 31.12.2999']],
+    ['30.12.2999', 'none', '1', 'd',
+     ['Út 31.12.2999']],
 ]
 
 ee = [
@@ -150,7 +213,7 @@ ee = [
     ['1.7.2016', 'none', '', 'd'],
     ['1.7.2016', 'none', '0', 'd'],
     ['1.7.2016', 'none', '0', 'b'],
-    ['31.12.1990', 'none', '5', 'b'],
+    ['31.12.1582', 'none', '5', 'b'],
     ['1.1.3000', 'none', '5', 'b'],
 ]
 
