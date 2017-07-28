@@ -103,7 +103,7 @@ def cron_update():
             q['krajOrg'] = c1
             q['org'] = c2
             q['sin'] = cr.desc
-            q['datum'] = '{0.day:d}.{0.month:d}.{0.year:d}'.format(t.date)
+            q['datum'] = '{0.day:02d}.{0.month:02d}.{0.year:02d}'.format(t.date)
             q['spamQuestion'] = '23'
             q['druhVec'] = ''
             url = root_url + get_hear + q.urlencode()

@@ -33,7 +33,7 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', home, name='home'),
-    url(r'robots\.txt$', robots),
+    url(r'^robots\.txt$', robots),
     url(r'^accounts/pwchange/$', pwchange, name='pwchange'),
     url(r'^accounts/pwchanged/$',
         genrender,

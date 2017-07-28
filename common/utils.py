@@ -91,7 +91,7 @@ def easter(dt):
 
 def pd(d):
 
-    return '{0.day:d}. {0.month:d}. {0.year:d}'.format(d)
+    return '{0.day:02d}.{0.month:02d}.{0.year:02d}'.format(d)
 
 
 def tod(dt):

@@ -1007,7 +1007,7 @@ def mainpage(request):
                     c.drawRightString(
                         (A4[0] - 48.0),
                         48.0,
-                        'Vytvořeno: {0.day:d}. {0.month:d}. {0.year:d}'
+                        'Vytvořeno: {0.day:02d}.{0.month:02d}.{0.year:02d}'
                             .format(today))
                     c.restoreState()
 
