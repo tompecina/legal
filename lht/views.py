@@ -47,7 +47,7 @@ class Period:
         self.dur = dur
         self.unit = unit
         self.res = self.bus = self.unc = None
-        
+
         self.error = True
 
         if not between(MIN_DATE, beg, MAX_DATE):
@@ -85,7 +85,7 @@ class Period:
                 res += offset
                 while tod(res):
                     res += offset
-            while tod(res):  # needed only for dur == 0
+            while tod(res):  # only needed for dur == 0
                 res += offset
 
         else:
@@ -155,7 +155,7 @@ def mainpage(request):
                     '{} {}'.format(
                         wn[per.bus.weekday()],
                         pd(per.bus)),
-                     'msg-res'])
+                    'msg-res'])
 
                 if per.unc:
                     messages.append([
