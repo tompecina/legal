@@ -100,6 +100,7 @@ M0 = 'Neznámá jednotka'
 M1 = 'Výsledek musí být mezi 01.01.1583 a 31.12.2999'
 M2 = 'Počátek musí být mezi 01.01.1583 a 31.12.2999'
 M3 = '(evidence pracovních dnů v tomto období není úplná)'
+M4 = 'Délka musí být mezi -999 a 999'
 
 
 class TestViews(SimpleTestCase):
@@ -205,6 +206,18 @@ class TestViews(SimpleTestCase):
             [date(2016, 7, 1), 1, 'xxx', M0, None, None, None],
             [date(1582, 12, 31), 1, 'd', M2, None, None, None],
             [date(3000, 1, 1), 1, 'd', M2, None, None, None],
+            [date(1583, 1, 1), -999, 'd', M1, None, None, None],
+            [date(1583, 1, 1), -999, 'w', M1, None, None, None],
+            [date(1583, 1, 1), -999, 'm', M1, None, None, None],
+            [date(1583, 1, 1), -999, 'y', M1, None, None, None],
+            [date(1583, 1, 1), -999, 'b', M1, None, None, None],
+            [date(2999, 12, 31), 999, 'd', M1, None, None, None],
+            [date(2999, 12, 31), 999, 'w', M1, None, None, None],
+            [date(2999, 12, 31), 999, 'm', M1, None, None, None],
+            [date(2999, 12, 31), 999, 'y', M1, None, None, None],
+            [date(2999, 12, 31), 999, 'b', M1, None, None, None],
+            [date(2016, 7, 1), 1000, 'd', M4, None, None, None],
+            [date(2016, 7, 1), -1000, 'd', M4, None, None, None],
         ]
         for p in pp:
             per = views.Period(*p[:3])
@@ -313,16 +326,24 @@ class TestViews(SimpleTestCase):
             ['31.12.2999', 'none', '1', 'd', [M1]],
             ['30.12.2999', 'none', '1', 'd',
              ['Út 31.12.2999']],
+            ['2.7.2016', 'none', '0', 'd',
+             ['02.07.2016 není pracovní den', 'Po 04.07.2016']],
+            ['2.7.2016', 'none', '0', 'b',
+             ['Po 04.07.2016']],
+            ['1.7.2016', 'none', '0', 'd',
+             ['Pá 01.07.2016']],
+            ['1.7.2016', 'none', '0', 'b',
+             ['Pá 01.07.2016']],
         ]
         ee = [
             ['', 'd3', '', 'd'],
             ['xxx', 'd3', '', 'd'],
             ['1.7.2016', 'none', 'xxx', 'd'],
             ['1.7.2016', 'none', '', 'd'],
-            ['1.7.2016', 'none', '0', 'd'],
-            ['1.7.2016', 'none', '0', 'b'],
             ['31.12.1582', 'none', '5', 'b'],
             ['1.1.3000', 'none', '5', 'b'],
+            ['1.7.2016', 'none', '1000', 'd'],
+            ['1.7.2016', 'none', '-1000', 'd'],
         ]
         res = self.client.get('/lht')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)

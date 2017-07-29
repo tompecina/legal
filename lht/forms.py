@@ -23,7 +23,7 @@
 from datetime import date
 from django.core.validators import MinValueValidator, MaxValueValidator
 from common import forms, fields, widgets
-from lht.glob import MIN_DATE, MAX_DATE
+from lht.glob import MIN_DATE, MAX_DATE, MIN_DUR, MAX_DUR
 
 
 presets = (
@@ -54,6 +54,9 @@ class MainForm(forms.Form):
 
     dur = fields.IntegerField(
         widget=widgets.shw(),
+        validators=[
+            MinValueValidator(MIN_DUR),
+            MaxValueValidator(MAX_DUR)],
         required=False)
 
     unit = fields.CharField(
@@ -68,6 +71,6 @@ class MainForm(forms.Form):
     def clean_dur(self):
         data = self.cleaned_data['dur']
         if 'submit_set_beg_date' not in self.data \
-            and self.data['preset'] == 'none' and not data:
+            and self.data['preset'] == 'none' and data is None:
             raise forms.ValidationError('Duration may not be empty')
         return data

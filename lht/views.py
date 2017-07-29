@@ -27,7 +27,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from common.utils import pd, tod, getbutton, logger, between
 from common.glob import wn, inerr_short, odp, odm
-from lht.glob import MIN_DATE, MAX_DATE, UNC_DATE
+from lht.glob import MIN_DATE, MAX_DATE, UNC_DATE, MIN_DUR, MAX_DUR
 from lht.forms import MainForm
 
 
@@ -53,6 +53,11 @@ class Period:
         if not between(MIN_DATE, beg, MAX_DATE):
             self.msg = 'Počátek musí být mezi {} a {}' \
                 .format(pd(MIN_DATE), pd(MAX_DATE))
+            return
+
+        if not between(MIN_DUR, dur, MAX_DUR):
+            self.msg = 'Délka musí být mezi {:d} a {:d}' \
+                .format(MIN_DUR, MAX_DUR)
             return
 
         if dur >= 0:
