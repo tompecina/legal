@@ -24,7 +24,7 @@ from http import HTTPStatus
 from datetime import date
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase
-from lht import forms
+from lht import forms, views
 
 
 class TestForms(SimpleTestCase):
@@ -96,6 +96,11 @@ class TestForms(SimpleTestCase):
         self.assertTrue(f.is_valid())
 
 
+M0 = 'Neznámá jednotka'
+M1 = 'Výsledek musí být mezi 01.01.1583 a 31.12.2999'
+M2 = 'Počátek musí být mezi 01.01.1583 a 31.12.2999'
+M3 = '(evidence pracovních dnů v tomto období není úplná)'
+
 pp = [
     ['1.7.2016', 'd3', '', 'd',
      ['Po 04.07.2016']],
@@ -163,8 +168,7 @@ pp = [
      ['St 01.07.2015']],
     ['1.7.2016', 'none', '-100', 'y',
      ['01.07.1916 není pracovní den',
-      'Pá 30.06.1916',
-      '(evidence pracovních dnů v tomto období není úplná)']],
+      'Pá 30.06.1916', M3]],
     ['1.7.2016', 'none', '1', 'b',
      ['Po 04.07.2016']],
     ['1.7.2016', 'none', '2', 'b',
@@ -183,25 +187,18 @@ pp = [
      ['01.01.1991 není pracovní den',
       'St 02.01.1991']],
     ['31.12.1990', 'none', '1', 'b',
-     ['St 02.01.1991',
-      '(evidence pracovních dnů v tomto období není úplná)']],
+     ['St 02.01.1991', M3]],
     ['02.01.1991', 'none', '-1', 'd',
      ['01.01.1991 není pracovní den',
-      'Po 31.12.1990',
-      '(evidence pracovních dnů v tomto období není úplná)']],
+      'Po 31.12.1990', M3]],
     ['03.01.1991', 'none', '-1', 'd',
      ['St 02.01.1991']],
-    ['01.01.1583', 'none', '-1', 'd',
-     ['Výsledek musí být mezi 01.01.1583 a 31.12.2999']],
-    ['02.01.1583', 'none', '-1', 'd',
-     ['Výsledek musí být mezi 01.01.1583 a 31.12.2999']],
-    ['03.01.1583', 'none', '-1', 'd',
-     ['Výsledek musí být mezi 01.01.1583 a 31.12.2999']],
+    ['01.01.1583', 'none', '-1', 'd', [M1]],
+    ['02.01.1583', 'none', '-1', 'd', [M1]],
+    ['03.01.1583', 'none', '-1', 'd', [M1]],
     ['04.01.1583', 'none', '-1', 'd',
-     ['Po 03.01.1583',
-      '(evidence pracovních dnů v tomto období není úplná)']],
-    ['31.12.2999', 'none', '1', 'd',
-     ['Výsledek musí být mezi 01.01.1583 a 31.12.2999']],
+     ['Po 03.01.1583', M3]],
+    ['31.12.2999', 'none', '1', 'd', [M1]],
     ['30.12.2999', 'none', '1', 'd',
      ['Út 31.12.2999']],
 ]
@@ -220,6 +217,114 @@ ee = [
 
 class TestViews(SimpleTestCase):
 
+    def test_period(self):
+        pp = [
+            [date(2016, 7, 1), 0, 'd',
+             None, date(2016, 7, 1), date(2016, 7, 1), False],
+            [date(2016, 7, 9), 0, 'd',
+             None, date(2016, 7, 9), date(2016, 7, 11), False],
+            [date(2016, 7, 1), 0, 'b',
+             None, date(2016, 7, 1), date(2016, 7, 1), False],
+            [date(2016, 7, 9), 0, 'b',
+             None, date(2016, 7, 11), date(2016, 7, 11), False],
+            [date(2016, 7, 1), 3, 'd',
+             None, date(2016, 7, 4), date(2016, 7, 4), False],
+            [date(2016, 7, 1), 1, 'w',
+             None, date(2016, 7, 8), date(2016, 7, 8), False],
+            [date(2016, 7, 1), 8, 'd',
+             None, date(2016, 7, 9), date(2016, 7, 11), False],
+            [date(2016, 7, 1), 2, 'w',
+             None, date(2016, 7, 15), date(2016, 7, 15), False],
+            [date(2016, 7, 1), 15, 'd',
+             None, date(2016, 7, 16), date(2016, 7, 18), False],
+            [date(2016, 7, 1), 30, 'd',
+             None, date(2016, 7, 31), date(2016, 8, 1), False],
+            [date(2016, 7, 1), 1, 'm',
+             None, date(2016, 8, 1), date(2016, 8, 1), False],
+            [date(2016, 7, 1), 60, 'd',
+             None, date(2016, 8, 30), date(2016, 8, 30), False],
+            [date(2016, 7, 1), 2, 'm',
+             None, date(2016, 9, 1), date(2016, 9, 1), False],
+            [date(2016, 7, 1), 3, 'm',
+             None, date(2016, 10, 1), date(2016, 10, 3), False],
+            [date(2016, 7, 1), 6, 'm',
+             None, date(2017, 1, 1), date(2017, 1, 2), False],
+            [date(2016, 7, 1), 1, 'y',
+             None, date(2017, 7, 1), date(2017, 7, 3), False],
+            [date(2016, 7, 1), 1, 'd',
+             None, date(2016, 7, 2), date(2016, 7, 4), False],
+            [date(2016, 7, 1), 5, 'd',
+             None, date(2016, 7, 6), date(2016, 7, 7), False],
+            [date(2016, 7, 1), 365, 'd',
+             None, date(2017, 7, 1), date(2017, 7, 3), False],
+            [date(2016, 7, 1), -1, 'd',
+             None, date(2016, 6, 30), date(2016, 6, 30), False],
+            [date(2016, 7, 1), -6, 'd',
+             None, date(2016, 6, 25), date(2016, 6, 24), False],
+            [date(2016, 7, 1), -5, 'd',
+             None, date(2016, 6, 26), date(2016, 6, 24), False],
+            [date(2016, 7, 1), -366, 'd',
+             None, date(2015, 7, 1), date(2015, 7, 1), False],
+            [date(2016, 7, 1), 100, 'w',
+             None, date(2018, 6, 1), date(2018, 6, 1), False],
+            [date(2016, 7, 1), -1, 'w',
+             None, date(2016, 6, 24), date(2016, 6, 24), False],
+            [date(2016, 7, 1), -100, 'w',
+             None, date(2014, 8, 1), date(2014, 8, 1), False],
+            [date(2016, 7, 1), 100, 'm',
+             None, date(2024, 11, 1), date(2024, 11, 1), False],
+            [date(2016, 7, 1), -1, 'm',
+             None, date(2016, 6, 1), date(2016, 6, 1), False],
+            [date(2016, 7, 1), -100, 'm',
+             None, date(2008, 3, 1), date(2008, 2, 29), False],
+            [date(2016, 7, 1), 1, 'y',
+             None, date(2017, 7, 1), date(2017, 7, 3), False],
+            [date(2016, 7, 1), 100, 'y',
+             None, date(2116, 7, 1), date(2116, 7, 1), False],
+            [date(2016, 7, 1), -1, 'y',
+             None, date(2015, 7, 1), date(2015, 7, 1), False],
+            [date(2016, 7, 1), -100, 'y',
+             None, date(1916, 7, 1), date(1916, 6, 30), True],
+            [date(2016, 7, 1), 1, 'b',
+             None, date(2016, 7, 4), date(2016, 7, 4), False],
+            [date(2016, 7, 1), 2, 'b',
+             None, date(2016, 7, 7), date(2016, 7, 7), False],
+            [date(2016, 7, 1), 100, 'b',
+             None, date(2016, 11, 25), date(2016, 11, 25), False],
+            [date(2016, 7, 1), -1, 'b',
+             None, date(2016, 6, 30), date(2016, 6, 30), False],
+            [date(2016, 7, 1), -5, 'b',
+             None, date(2016, 6, 24), date(2016, 6, 24), False],
+            [date(2016, 7, 1), -100, 'b',
+             None, date(2016, 2, 10), date(2016, 2, 10), False],
+            [date(2016, 5, 31), 1, 'm',
+             None, date(2016, 6, 30), date(2016, 6, 30), False],
+            [date(1990, 12, 31), 1, 'd',
+             None, date(1991, 1, 1), date(1991, 1, 2), False],
+            [date(1990, 12, 31), 1, 'b',
+             None, date(1991, 1, 2), date(1991, 1, 2), True],
+            [date(1991, 1, 2), -1, 'd',
+             None, date(1991, 1, 1), date(1990, 12, 31), True],
+            [date(1991, 1, 3), -1, 'd',
+             None, date(1991, 1, 2), date(1991, 1, 2), False],
+            [date(1583, 1, 1), -1, 'd', M1, None, None, None],
+            [date(1583, 1, 2), -1, 'd', M1, None, None, None],
+            [date(1583, 1, 3), -1, 'd', M1, None, None, None],
+            [date(1583, 1, 4), -1, 'd',
+             None, date(1583, 1, 3), date(1583, 1, 3), True],
+            [date(2999, 12, 31), 1, 'd', M1, None, None, None],
+            [date(2999, 12, 30), 1, 'd',
+             None, date(2999, 12, 31), date(2999, 12, 31), False],
+            [date(2016, 7, 1), 1, 'xxx', M0, None, None, None],
+            [date(1582, 12, 31), 1, 'd', M2, None, None, None],
+            [date(3000, 1, 1), 1, 'd', M2, None, None, None],
+        ]
+        for p in pp:
+            per = views.Period(*p[:3])
+            self.assertIsInstance(per.error, bool)
+            self.assertNotEqual(per.error, not per.msg) 
+            self.assertEqual([per.msg, per.res, per.bus, per.unc], p[3:])
+            
     def test_main(self):
         res = self.client.get('/lht')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
