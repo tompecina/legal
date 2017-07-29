@@ -155,7 +155,7 @@ def mainpage(request):
                     '{} {}'.format(
                         wn[per.bus.weekday()],
                         pd(per.bus)),
-                     'msg-per'])
+                     'msg-res'])
 
                 if per.unc:
                     messages.append([
