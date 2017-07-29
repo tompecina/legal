@@ -24,6 +24,5 @@ from datetime import date
 
 MIN_DATE = date(1583, 1, 1)
 MAX_DATE = date(2999, 12, 31)
-UNC_DATE = date(1991, 1, 1)
 MIN_DUR = -999
 MAX_DUR = 999

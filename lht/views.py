@@ -26,8 +26,8 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from common.utils import pd, tod, getbutton, logger, between
-from common.glob import wn, inerr_short, odp, odm
-from lht.glob import MIN_DATE, MAX_DATE, UNC_DATE, MIN_DUR, MAX_DUR
+from common.glob import wn, inerr_short, odp, odm, UNC_DATE
+from lht.glob import MIN_DATE, MAX_DATE, MIN_DUR, MAX_DUR
 from lht.forms import MainForm
 
 
@@ -60,10 +60,7 @@ class Period:
                 .format(MIN_DUR, MAX_DUR)
             return
 
-        if dur >= 0:
-            offset = odp
-        else:
-            offset = odm
+        offset = odm if dur < 0 else odp
 
         if unit == 'd':
             res = beg + timedelta(days=dur)
@@ -74,15 +71,13 @@ class Period:
         elif unit in ['m', 'y']:
             if unit == 'y':
                 dur *= 12
-            day = beg.day
             month = beg.month + dur - 1
             year = beg.year + (month // 12)
-            month = (month % 12) + 1
-            day = min(day, monthrange(year, month)[1])
             if not between(MIN_DATE.year, year, MAX_DATE.year):
                 self.msg = out_msg()
                 return
-            res = date(year, month, day)
+            month = (month % 12) + 1
+            res = date(year, month, min(beg.day, monthrange(year, month)[1]))
 
         elif unit == 'b':
             res = beg

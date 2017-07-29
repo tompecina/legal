@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from datetime import timedelta
+from datetime import date, timedelta
 
 
 MIN_PWLEN = 6
@@ -45,20 +45,7 @@ registers = [
 ]
 register_regex = '^({})$'.format('|'.join(registers))
 
-hd = (
-    {'f': None, 't': None, 'd':  1, 'm':  1},
-    {'f': None, 't': None, 'd':  1, 'm':  5},
-    {'f': 1992, 't': None, 'd':  8, 'm':  5},
-    {'f': None, 't': 1991, 'd':  9, 'm':  5},
-    {'f': None, 't': None, 'd':  5, 'm':  7},
-    {'f': None, 't': None, 'd':  6, 'm':  7},
-    {'f': 2000, 't': None, 'd': 28, 'm':  9},
-    {'f': None, 't': None, 'd': 28, 'm': 10},
-    {'f': 2000, 't': None, 'd': 17, 'm': 11},
-    {'f': None, 't': None, 'd': 24, 'm': 12},
-    {'f': None, 't': None, 'd': 25, 'm': 12},
-    {'f': None, 't': None, 'd': 26, 'm': 12},
-)
+UNC_DATE = date(1951, 1, 1)
 
 ydconvs = (
     'ACT/ACT',
