@@ -468,14 +468,6 @@ def formam(x):
     return ''.join(l)
 
 
-def getint(s):
-    """Return int(s) or 0 if empty."""
-
-    if s:
-        return int(s)
-    return 0
-
-
 def unrequire(form, fields):
     """Reset the required attribute for 'fields' in 'form'."""
 

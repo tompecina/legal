@@ -1660,13 +1660,6 @@ class TestUtils1(SimpleTestCase):
         self.assertEqual(utils.formam(968562515458.216), '968.562.515.458,22')
         self.assertEqual(utils.formam(-968562515458.216), '-968.562.515.458,22')
 
-    def test_getint(self):
-        self.assertEqual(utils.getint(None), 0)
-        self.assertEqual(utils.getint(''), 0)
-        self.assertEqual(utils.getint('1'), 1)
-        with self.assertRaises(ValueError):
-            utils.getint('2.6')
-
     def test_getxml(self):
         self.assertIsNone(utils.getXML(b'test'))
 

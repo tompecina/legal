@@ -48,7 +48,7 @@ from django.db.models import Q
 from cache.main import getcache, getasset, setasset
 from common.settings import FONT_DIR
 from common.utils import (
-    getbutton, unrequire, formam, c2p, getXML, newXML, getint, CanvasXML, lim,
+    getbutton, unrequire, formam, c2p, getXML, newXML, CanvasXML, lim,
     logger)
 from common.glob import inerr, localsubdomain, localurl
 from common.views import error, unauth
@@ -1690,7 +1690,7 @@ def itemform(request, idx=0):
                                     return error(request)
                                 return redirect('knr:itemlist')
                             else:
-                                idx = getint(request.POST.get('idx'))
+                                idx = int(request.POST.get('idx') or 0)
                                 var.update({'errors': True,
                                             'idx': idx,
                                             'type': type})
@@ -1772,7 +1772,7 @@ def itemform(request, idx=0):
                             return error(request)
                         return redirect('knr:itemlist')
                     else:
-                        idx = getint(request.POST.get('idx'))
+                        idx = int(request.POST.get('idx') or 0)
                         var.update({'errors': True, 'idx': idx, 'type': type})
                         if idx:
                             var['page_title'] = 'Úprava položky'
@@ -1991,7 +1991,7 @@ def itemform(request, idx=0):
                             var['{}_error'.format(t)] = 'ok'
                         var['cons_error'] = 'ok'
                 else:
-                    idx = getint(request.POST.get('idx'))
+                    idx = int(request.POST.get('idx') or 0)
                     var.update({'errors': True, 'idx': idx, 'type': type})
                     if idx:
                         var['page_title'] = 'Úprava položky'
