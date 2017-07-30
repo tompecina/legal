@@ -25,7 +25,7 @@ from calendar import monthrange
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
-from common.utils import pd, tod, getbutton, logger, between
+from common.utils import pd, holiday, getbutton, logger, between
 from common.glob import wn, inerr_short, odp, odm, UNC_DATE
 from lht.glob import MIN_DATE, MAX_DATE, MIN_DUR, MAX_DUR
 from lht.forms import MainForm
@@ -83,9 +83,9 @@ class Period:
             res = beg
             for dummy in range(abs(dur)):
                 res += offset
-                while tod(res):
+                while holiday(res):
                     res += offset
-            while tod(res):  # only needed for dur == 0
+            while holiday(res):  # only needed for dur == 0
                 res += offset
 
         else:
@@ -94,7 +94,7 @@ class Period:
 
         bus = res
         if unit != 'b':
-            while tod(bus):
+            while holiday(bus):
                 bus += offset
 
         if not between(MIN_DATE, bus, MAX_DATE):

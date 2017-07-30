@@ -526,23 +526,23 @@ class TestUtils1(SimpleTestCase):
             if s.year >= 2016:
                 self.assertTrue(utils.easter(s - timedelta(2)))
 
-    def test_tod(self):
-        self.assertTrue(utils.tod(date(2016, 1, 1)))
-        self.assertFalse(utils.tod(date(2016, 1, 5)))
-        self.assertTrue(utils.tod(date(2016, 1, 16)))
-        self.assertTrue(utils.tod(date(2016, 2, 7)))
-        self.assertFalse(utils.tod(date(2016, 2, 29)))
-        self.assertFalse(utils.tod(date(2016, 3, 8)))
-        self.assertTrue(utils.tod(date(2016, 3, 20)))
-        self.assertTrue(utils.tod(date(2016, 3, 25)))
-        self.assertTrue(utils.tod(date(2016, 3, 28)))
-        self.assertFalse(utils.tod(date(2016, 4, 18)))
-        self.assertFalse(utils.tod(date(2016, 5, 19)))
-        self.assertFalse(utils.tod(date(2016, 6, 3)))
-        self.assertFalse(utils.tod(date(1991, 5, 8)))
-        self.assertTrue(utils.tod(date(1991, 5, 9)))
-        self.assertTrue(utils.tod(date(1992, 5, 8)))
-        self.assertTrue(utils.tod(date(1992, 5, 9)))
+    def test_holiday(self):
+        self.assertTrue(utils.holiday(date(2016, 1, 1)))
+        self.assertFalse(utils.holiday(date(2016, 1, 5)))
+        self.assertTrue(utils.holiday(date(2016, 1, 16)))
+        self.assertTrue(utils.holiday(date(2016, 2, 7)))
+        self.assertFalse(utils.holiday(date(2016, 2, 29)))
+        self.assertFalse(utils.holiday(date(2016, 3, 8)))
+        self.assertTrue(utils.holiday(date(2016, 3, 20)))
+        self.assertTrue(utils.holiday(date(2016, 3, 25)))
+        self.assertTrue(utils.holiday(date(2016, 3, 28)))
+        self.assertFalse(utils.holiday(date(2016, 4, 18)))
+        self.assertFalse(utils.holiday(date(2016, 5, 19)))
+        self.assertFalse(utils.holiday(date(2016, 6, 3)))
+        self.assertFalse(utils.holiday(date(1991, 5, 8)))
+        self.assertTrue(utils.holiday(date(1991, 5, 9)))
+        self.assertTrue(utils.holiday(date(1992, 5, 8)))
+        self.assertTrue(utils.holiday(date(1992, 5, 9)))
             # not testable as 1992-05-09 was Saturday
 
         CAL = {
@@ -1475,7 +1475,7 @@ class TestUtils1(SimpleTestCase):
             for m in range(1, 13):
                 for d in range(1, (monthrange(y, m)[1] + 1)):
                     dt = date(y, m, d)
-                    self.assertEqual(utils.tod(dt), (d in CAL[y][m - 1]))
+                    self.assertEqual(utils.holiday(dt), (d in CAL[y][m - 1]))
 
     def test_ply(self):
         self.assertEqual(utils.ply(date(2016, 7, 5), 1), date(2017, 7, 5))

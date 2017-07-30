@@ -25,8 +25,8 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from common.utils import (
-    pd, tod, ply, plm, ydconvs, mdconvs, yfactor, mfactor, odp, grammar,
-    getbutton, unrequire, Lf, logger)
+    pd, holiday, ply, plm, ydconvs, mdconvs, yfactor, mfactor, odp,
+    grammar, getbutton, unrequire, Lf, logger)
 from common.glob import inerr_short, GR_D, GR_B, GR_M, GR_Y
 from cin.forms import MainForm
 
@@ -76,7 +76,7 @@ def mainpage(request):
                     t = beg_date + odp
                     n = 0
                     while t <= end_date:
-                        if not tod(t):
+                        if not holiday(t):
                             n += 1
                         t += odp
                     messages.append([grammar(n, GR_B), None])
