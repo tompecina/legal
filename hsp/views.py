@@ -44,7 +44,7 @@ from common import fields
 from common.settings import FONT_DIR
 from common.utils import (
     getbutton, yfactor, mfactor, formam, xmldecorate, xmlescape, xmlunescape,
-    Lf, rmdsl, getXML, newXML, iso2date, CanvasXML, logger)
+    Lf, getXML, newXML, iso2date, CanvasXML, logger)
 from common.glob import (
     ydconvs, odp, mdconvs, LIM, inerr, localsubdomain, localurl)
 from common.views import error
@@ -142,12 +142,26 @@ def setdebt(request, data):
     return setasset(request, aid, dumps(data), timedelta(weeks=10))
 
 
-def n2l(n):
+def n2l(num):
+    """Convert debt number to letter."""
 
-    return chr(ord('A') + n) if (n <= (ord('Z') - ord('A'))) else '?'
+    return chr(ord('A') + num) if num <= (ord('Z') - ord('A')) else '?'
 
 
 DR, CR, BAL = tuple(range(3))
+
+
+def rmdsl(l):
+    """Remove duplicate elements from list."""
+
+    if l:
+        s = l[-1]
+        for i in range((len(l) - 2), -1, -1):
+            if s == l[i]:
+                del l[i]
+            else:
+                s = l[i]
+    return l
 
 
 def calcint(interest, pastdate, presdate, debt, res):
@@ -166,22 +180,22 @@ def calcint(interest, pastdate, presdate, debt, res):
 
     if interest.model == 'per_annum':
         return (principal * yfactor(pastdate, presdate,
-            interest.day_count_convention) * interest.rate / 100.0), None
+            interest.day_count_convention) * interest.rate / 100), None
 
     if interest.model == 'per_mensem':
         return (principal * mfactor(pastdate, presdate,
-            interest.day_count_convention) * interest.rate / 100.0), None
+            interest.day_count_convention) * interest.rate / 100), None
 
     if interest.model == 'per_diem':
         return (principal * (presdate - pastdate).days
-            * interest.rate / 1000.0), None
+            * interest.rate / 1000), None
 
     if interest.model == 'cust1':
         r = getMPIrate('DISC', interest.default_date, log=res.mpi)
         if r[1]:
             return None, r[1]
         return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
-            * r[0] / 50.0), None
+            * r[0] / 50), None
 
     if interest.model == 'cust2':
         s = 0.0
@@ -213,7 +227,7 @@ def calcint(interest, pastdate, presdate, debt, res):
                 m2 = presdate.month
                 d2 = presdate.day
                 return (principal * (s + yfactor((t - odp), date(y2, m2, d2),
-                    'ACT/ACT') * (r[0] + 7.0)) / 100.0), None
+                    'ACT/ACT') * (r[0] + 7)) / 100), None
 
     if interest.model == 'cust3':
         y = interest.default_date.year
@@ -230,7 +244,7 @@ def calcint(interest, pastdate, presdate, debt, res):
         if r[1]:
             return None, r[1]
         return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
-            * (r[0] + 7.0) / 100.0), None
+            * (r[0] + 7) / 100), None
 
     if interest.model == 'cust5':
         y = interest.default_date.year
@@ -247,7 +261,7 @@ def calcint(interest, pastdate, presdate, debt, res):
         if r[1]:
             return None, r[1]
         return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
-            * (r[0] + 8.0) / 100.0), None
+            * (r[0] + 8) / 100), None
 
     if interest.model == 'cust6':
         y = interest.default_date.year
@@ -260,7 +274,7 @@ def calcint(interest, pastdate, presdate, debt, res):
         if r[1]:
             return None, r[1]
         return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
-            * (r[0] + 8.0) / 100.0), None
+            * (r[0] + 8) / 100), None
 
     if interest.model == 'cust4':
         return (principal * (presdate - pastdate).days * .0025), None
@@ -297,7 +311,7 @@ def distr(debt, dt, credit, amount, disarr, res):
                             log_fixed=res.fix)
                         if msg:
                             return 0.0, msg
-                        rcl = (r / q)
+                        rcl = r / q
                     if debit.currency == 'CZK':
                         rld = 1.0
                     else:
@@ -309,16 +323,16 @@ def distr(debt, dt, credit, amount, disarr, res):
                             log_fixed=res.fix)
                         if msg:
                             return 0.0, msg
-                        rld = (r / q)
-                    rt = (rcl / rld)
-            camount = (amount * rt)
+                        rld = r / q
+                    rt = rcl / rld
+            camount = amount * rt
             if camount < debit.nb:
                 debit.nb -= camount
                 debit.nb = round(debit.nb, debt.rounding)
                 disarr[i] += camount
                 return 0.0, None
             disarr[i] += debit.nb
-            amount -= (debit.nb / rt)
+            amount -= debit.nb / rt
             debit.nb = 0.0
     return amount, None
 
@@ -382,7 +396,7 @@ def calc(debt, pram=(lambda x: x)):
             if debit.model == 'cust4':
                 cust4.append(debit)
                 debit.mb = debit.default_date
-                debit.mm = (25.0 if (debit.currency == 'CZK') else 0.0)
+                debit.mm = 25.0 if debit.currency == 'CZK' else 0.0
                 debit.ui = debit.li = 0.0
             else:
                 ncust4.append(debit)
@@ -450,7 +464,7 @@ def calc(debt, pram=(lambda x: x)):
                     ii = debt.debits[i.principal_debit - 1].balance
                 else:
                     ii = i.principal_amount
-                ii *= 0.0025
+                ii *= .0025
                 ii = max(ii, 0.0)
                 i.li += ii
                 if i.li > i.ui:
@@ -1225,7 +1239,7 @@ def mainpage(request):
                        ('TOPPADDING', (0, 0), (-1, 0), 2.5),
                        ('TOPPADDING', (0, 1), (-1, 1), 10),
                        ('TOPPADDING', (0, 2), (-1, -1), 0),
-                       ('BOTTOMPADDING', (0, 0), (-1, 0), 0.5),
+                       ('BOTTOMPADDING', (0, 0), (-1, 0), .5),
                        ('BOTTOMPADDING', (0, 1), (-1, 1), 1.5),
                        ('BOTTOMPADDING', (0, -1), (-1, -1), 18),
                       ]
@@ -1243,13 +1257,13 @@ def mainpage(request):
                 wl = 8.0
                 wr = 8.0
                 wg = 12.0
-                wf = wc = ((w - wl - wr - (wg * 2.0)) / 6.0)
-                cw = [wl] + ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wg] \
-                    + ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wg] \
-                    + ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wr]
+                wf = wc = ((w - wl - wr - (wg * 2)) / 6)
+                cw = [wl] + ([wc / 5] * 5) + ([wf / 5] * 5) + [wg] \
+                    + ([wc / 5] * 5) + ([wf / 5] * 5) + [wg] \
+                    + ([wc / 5] * 5) + ([wf / 5] * 5) + [wr]
 
                 res = calc(debt)
-                tl = 0.5
+                tl = .5
 
                 r = []
 

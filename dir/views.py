@@ -130,7 +130,7 @@ def debtorform(request, id=0):
 
     logger.debug(
         'Debtor form accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, id),
         request,
         request.POST)
 
@@ -176,12 +176,12 @@ def debtorform(request, id=0):
             if id:
                 logger.info(
                     'User "{}" ({:d}) updated debtor "{}"'
-                        .format(uname, uid, p.desc),
+                    .format(uname, uid, p.desc),
                     request)
             else:
                 logger.info(
                     'User "{}" ({:d}) added debtor "{}"'
-                        .format(uname, uid, p.desc),
+                    .format(uname, uid, p.desc),
                     request)
             return redirect('dir:mainpage')
         else:
@@ -203,7 +203,7 @@ def debtordel(request, id=0):
 
     logger.debug(
         'Debtor delete page accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, id),
         request,
         request.POST)
     uid = request.user.id
@@ -219,7 +219,7 @@ def debtordel(request, id=0):
         if getbutton(request) == 'yes':
             logger.info(
                 'User "{}" ({:d}) deleted debtor "{}"'
-                    .format(uname, uid, debtor.desc),
+                .format(uname, uid, debtor.desc),
                 request)
             debtor.delete()
             return redirect('dir:debtordeleted')
@@ -232,7 +232,7 @@ def debtordelall(request):
 
     logger.debug(
         'Delete all debtors page accessed using method {}'
-            .format(request.method),
+        .format(request.method),
         request)
     uid = request.user.id
     uname = request.user.username
@@ -308,26 +308,29 @@ def debtorbatchform(request):
                                     if ':' in value:
                                         name, name_opt = value.split(':', 1)
                                         if name_opt not in text_opts_abbr:
-                                            errors.append([i, 'Chybná '
-                                                'zkratka pro posici v poli '
-                                                '<q>název</q>'])
+                                            errors.append(
+                                                [i,
+                                                 'Chybná zkratka pro posici '
+                                                 'v poli <q>název</q>'])
                                             continue
                                         name_opt = text_opts_ai[name_opt]
                                     else:
                                         name = value
                                         name_opt = 0
                                     if len(name) > MAX_LENGTH:
-                                        errors.append([i, 'Příliš dlouhé '
-                                            'pole <q>název</q>'])
+                                        errors.append(
+                                            [i,
+                                             'Příliš dlouhé pole <q>název</q>'])
                                         continue
                                 elif key == 'jméno':
                                     if ':' in value:
                                         first_name, first_name_opt = \
                                             value.split(':', 1)
                                         if first_name_opt not in text_opts_abbr:
-                                            errors.append([i, 'Chybná '
-                                                'zkratka pro posici v poli '
-                                                '<q>jméno</q>'])
+                                            errors.append(
+                                                [i,
+                                                 'Chybná zkratka pro posici '
+                                                 'v poli <q>jméno</q>'])
                                             continue
                                         first_name_opt = \
                                             text_opts_ai[first_name_opt]
@@ -335,25 +338,29 @@ def debtorbatchform(request):
                                         first_name = value
                                         first_name_opt = 0
                                     if len(first_name) > MAX_LENGTH:
-                                        errors.append([i, 'Příliš dlouhé '
-                                            'pole <q>jméno</q>'])
+                                        errors.append(
+                                            [i,
+                                             'Příliš dlouhé pole <q>jméno</q>'])
                                         continue
                                 elif key == 'IČO':
                                     if not compile(ic_regex).match(value):
-                                        errors.append([i, 'Chybná hodnota '
-                                            'pro IČO'])
+                                        errors.append(
+                                            [i,
+                                             'Chybná hodnota pro IČO'])
                                         continue
                                     genid = value
                                 elif key == 'DIČ':
                                     if len(value) > 14:
-                                        errors.append([i, 'Chybná hodnota '
-                                            'pro DIČ'])
+                                        errors.append(
+                                            [i,
+                                             'Chybná hodnota pro DIČ'])
                                         continue
                                     taxid = value
                                 elif key == 'RČ':
                                     if not compile(rc_full_regex).match(value):
-                                        errors.append([i, 'Chybná hodnota '
-                                            'pro rodné číslo'])
+                                        errors.append(
+                                            [i,
+                                             'Chybná hodnota pro rodné číslo'])
                                         continue
                                     birthid = value.replace('/', '')
                                 elif key == 'datumNarození':
@@ -363,24 +370,30 @@ def debtorbatchform(request):
                                             int(t[2]), int(t[1]), int(t[0]))
                                         assert date_birth.year >= 1900
                                     except:
-                                        errors.append([i, 'Chybná hodnota '
-                                            'pro datum narození'])
+                                        errors.append(
+                                            [i,
+                                             'Chybná hodnota pro datum '
+                                             'narození'])
                                         continue
                                 elif key == 'rokNarozeníOd':
                                     try:
                                         year_birth_from = int(value)
                                         assert year_birth_from >= 1900
                                     except:
-                                        errors.append([i, 'Chybná hodnota '
-                                            'pro pole <q>rokNarozeníOd</q>'])
+                                        errors.append(
+                                            [i,
+                                             'Chybná hodnota pro pole '
+                                             '<q>rokNarozeníOd</q>'])
                                         continue
                                 elif key == 'rokNarozeníDo':
                                     try:
                                         year_birth_to = int(value)
                                         assert year_birth_to >= 1900
                                     except:
-                                        errors.append([i, 'Chybná hodnota '
-                                            'pro pole <q>rokNarozeníDo</q>'])
+                                        errors.append(
+                                            [i,
+                                             'Chybná hodnota pro pole '
+                                             '<q>rokNarozeníDo</q>'])
                                         continue
                                 else:
                                     errors.append(
@@ -389,8 +402,9 @@ def debtorbatchform(request):
                                     continue
                                 if year_birth_from and year_birth_to \
                                    and year_birth_from > year_birth_to:
-                                    errors.append([i, 'Chybný interval pro '
-                                        'rok narození'])
+                                    errors.append(
+                                        [i,
+                                         'Chybný interval pro rok narození'])
                                     continue
 
                             if len(errors) == errlen:

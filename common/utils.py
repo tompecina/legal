@@ -73,31 +73,44 @@ class Logger:
 logger = Logger()
 
 
-def lim(lower, x, upper):
+def lim(lower, arg, upper):
+    """Return arg bound by [lower, upper]."""
 
-    return min(max(lower, x), upper)
-
-
-def between(lower, x, upper):
-
-    return x >= lower and x <= upper
+    return min(max(lower, arg), upper)
 
 
-def easter_monday(y):
+def between(lower, arg, upper):
+    """Check if arg lies within [lower, upper]."""
 
-    g = y % 19
+    return arg >= lower and arg <= upper
+
+
+def pd(dt):
+    """
+    Return standard project-wide formatted string represenation of date dt.
+    """
+
+    return '{0.day:02d}.{0.month:02d}.{0.year:02d}'.format(dt)
+
+
+def easter_monday(year):
+    """Return the date of the Easter Monday in year."""
+
+    g = year % 19
     e = 0
-    c = y // 100
+    c = year // 100
     h = (c - c // 4 - (8 * c + 13) // 25 + 19 * g + 15) % 30
     i = h - (h // 28) * (1 - (h // 28) * (29 // (h + 1)) * ((21 - g) // 11))
-    j = (y + y // 4 + i + 2 - c + c // 4) % 7
+    j = (year + year // 4 + i + 2 - c + c // 4) % 7
     p = i - j + e
-    d = 1 + (p + 28 + (p + 6) // 40) % 31
-    m = 3 + (p + 27) // 30
-    return date(y, m, d)
+    day = 1 + (p + 28 + (p + 6) // 40) % 31
+    month = 3 + (p + 27) // 30
+
+    return date(year, month, day)
 
 
 def movable_holiday(dt):
+    """Check if dt is a local movable banking holiday."""
 
     HOLIDAYS = (
         # Good Friday
@@ -126,12 +139,9 @@ def movable_holiday(dt):
             return True
     return False
 
-def pd(d):
-
-    return '{0.day:02d}.{0.month:02d}.{0.year:02d}'.format(d)
-
 
 def holiday(dt):
+    """Check if dt is a local banking holiday."""
 
     HOLIDAYS = (
         {'day': 1, 'month': 1, 'from': -inf, 'to': inf},
@@ -196,7 +206,7 @@ def holiday(dt):
         1990: ((4, 30),),
     }
 
-    EXTRA_NOT_HOLIDAYS = {
+    EXTRA_NON_HOLIDAYS = {
         1968: ((12, 21), (12, 22), (12, 28), (12, 29)),
         1969: ((5, 4), (10, 25), (12, 28)),
         1970: ((1, 3), (1, 4), (4, 4), (5, 16), (10, 25), (11, 14), (12, 27)),
@@ -236,7 +246,7 @@ def holiday(dt):
     if year in EXTRA_HOLIDAYS and (month, day) in EXTRA_HOLIDAYS[year]:
         return True
 
-    if year in EXTRA_NOT_HOLIDAYS and (month, day) in EXTRA_NOT_HOLIDAYS[year]:
+    if year in EXTRA_NON_HOLIDAYS and (month, day) in EXTRA_NON_HOLIDAYS[year]:
         return False
 
     for hol in HOLIDAYS:
@@ -250,24 +260,30 @@ def holiday(dt):
     return dt.weekday() > (5 if dt < date(1968, 10, 5) else 4)
 
 
-def ply(t, n):
+def ply(dt, n):
+    """Return dt plus n years."""
 
-    y = t.year + n
-    m = t.month
-    d = min(t.day, monthrange(y, m)[1])
-    return date(y, m, d)
+    year = dt.year + n
+    month = dt.month
+    day = min(dt.day, monthrange(year, month)[1])
+    return date(year, month, day)
 
 
-def plm(t, n):
+def plm(dt, n):
+    """Return dt plus n months."""
 
-    m = t.month + n
-    y = t.year + ((m - 1) // 12)
-    m = ((m - 1) % 12) + 1
-    d = min(t.day, monthrange(y, m)[1])
-    return date(y, m, d)
+    month = dt.month + n
+    year = dt.year + ((month - 1) // 12)
+    month = ((month - 1) % 12) + 1
+    day = min(dt.day, monthrange(year, month)[1])
+    return date(year, month, day)
 
 
 def yfactor(beg, end, dconv):
+    """
+    Return number of years between 'beg' and 'end', using day-count convention
+    'dconv'.
+    """
 
     if end < beg or dconv not in ydconvs:
         return None
@@ -296,12 +312,12 @@ def yfactor(beg, end, dconv):
                 leap += n
             else:
                 nleap += n
-            return (nleap / 365.0) + (leap / 366.0)
+            return (nleap / 365) + (leap / 366)
         if dconv == 'ACT/365':
-            return (end - beg).days / 365.0
+            return (end - beg).days / 365
         if dconv == 'ACT/360':
-            return (end - beg).days / 360.0
-        return (end - beg).days / 364.0
+            return (end - beg).days / 360
+        return (end - beg).days / 364
 
     else:
         y1 = beg.year
@@ -331,10 +347,14 @@ def yfactor(beg, end, dconv):
             if d2 == 31:
                 m2 += 1
                 d2 = 1
-        return (360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1)) / 360.0
+        return (360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1)) / 360
 
 
 def mfactor(beg, end, dconv):
+    """
+    Return number of months between 'beg' and 'end', using day-count convention
+    'dconv'.
+    """
 
     if end < beg or dconv not in mdconvs:
         return None
@@ -387,19 +407,20 @@ def mfactor(beg, end, dconv):
             if d2 == 31:
                 m2 += 1
                 d2 = 1
-        return (360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1)) / 30.0
+        return (360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1)) / 30
 
 
-def grammar(n, t):
+def grammar(num, noun):
+    """Return correct form of plural, 'num noun(s)'."""
 
-    a = abs(n)
+    a = abs(num)
     if a == 1:
-        s = t[0]
+        s = noun[0]
     elif not a or a > 4:
-        s = t[2]
+        s = noun[2]
     else:
-        s = t[1]
-    return '{:d} {}'.format(n, s)
+        s = noun[1]
+    return '{:d} {}'.format(num, s)
 
 
 def getbutton(request):
@@ -411,21 +432,26 @@ def getbutton(request):
 
 
 def p2c(s):
+    """Convert periods in 's' to commas."""
 
     return s.replace('.', ',')
 
+
 def c2p(s):
+    """Convert commas in 's' to periods."""
 
     return s.replace(',', '.')
 
 
 class Lf(float):
+    """Class for correct formatting of floats."""
 
     def __format__(self, format):
         return p2c(super().__format__(format))
 
 
 def formam(x):
+    """Format amount 'x' according to its type."""
 
     if isinstance(x, int):
         s = '{:d}'.format(x)
@@ -443,19 +469,22 @@ def formam(x):
 
 
 def getint(s):
+    """Return int(s) or 0 if empty."""
 
     if s:
         return int(s)
     return 0
 
 
-def unrequire(f, flds):
+def unrequire(form, fields):
+    """Reset the required attribute for 'fields' in 'form'."""
 
-    for fld in flds:
-        f.fields[fld].required = False
+    for fld in fields:
+        form.fields[fld].required = False
 
 
 def xmldecorate(tag, table):
+    """Add all attributes in 'table' to XML tag 'tag'."""
 
     if tag.name in table:
         for key, val in table[tag.name].items():
@@ -464,28 +493,22 @@ def xmldecorate(tag, table):
 
 
 def xmlescape(t):
+    """XML-escape and strip 't'."""
 
     return escape(t).strip()
 
 
 def xmlunescape(t):
+    """Strip and XML-unescape 't'."""
 
     return unescape(t.strip())
 
 
-def rmdsl(l):
-
-    if l:
-        s = l[-1]
-        for i in range((len(l) - 2), -1, -1):
-            if s == l[i]:
-                del l[i]
-            else:
-                s = l[i]
-    return l
-
-
 def newXML(data):
+    """
+    Create new XML soup using correct parser, either from scratch or
+    from 'data'.
+    """
 
     if data:
         xml = BeautifulSoup(data, 'xml')
@@ -496,6 +519,7 @@ def newXML(data):
 
 
 def getXML(d):
+    """Get XML soup from string 'd'."""
 
     if d.startswith(b'<?xml'):
         try:
@@ -527,6 +551,7 @@ def getXML(d):
 
 
 def iso2date(tag):
+    """Extract date from XML tag 'tag'."""
 
     if tag.has_attr('year') and tag.has_attr('month') and tag.has_attr('day'):
         return date(int(tag['year']), int(tag['month']), int(tag['day']))
@@ -535,6 +560,7 @@ def iso2date(tag):
 
 
 class CanvasXML(Canvas):
+    """Subclassed Canvas adding XML information on save."""
 
     def save(self):
         data = PDFStream(
@@ -554,6 +580,7 @@ TIMEOUT = 1000
 
 
 def get(*args, **kwargs):  # pragma: no cover
+    """Test-compatible get."""
 
     if TEST:
         from .tests import testreq
@@ -565,6 +592,7 @@ def get(*args, **kwargs):  # pragma: no cover
 
 
 def post(*args, **kwargs):  # pragma: no cover
+    """Test-compatible post."""
 
     if TEST:
         from .tests import testreq
@@ -582,6 +610,7 @@ def sleep(*args, **kwargs):  # pragma: no cover
 
 
 def send_mail(subject, text, recipients):
+    """Project-wide mail sender."""
 
     try:
         mail.send_mail(
@@ -595,6 +624,7 @@ def send_mail(subject, text, recipients):
 
 
 class Pager:
+    """General pager."""
 
     def __init__(self, start, total, url, p, batch):
 
@@ -617,6 +647,9 @@ class Pager:
 
 
 def composeref(*args):
+    """
+    Compose reference from senate, register, number, year and (optional) page.
+    """
 
     if args[0]:
         s = '{:d} '.format(args[0])
@@ -629,6 +662,9 @@ def composeref(*args):
 
 
 def decomposeref(ref):
+    """
+    Decompose reference into senate, register, number, year and (optional) page.
+    """
 
     s = ref.split('-')
     if len(s) == 1:
@@ -652,6 +688,7 @@ def decomposeref(ref):
 
 
 def normreg(reg):
+    """Normalize register 'reg'."""
 
     rl = reg.lower()
     for r in registers:
@@ -660,32 +697,37 @@ def normreg(reg):
     return reg.title()
 
 
-def xmlbool(x):
+def xmlbool(val):
+    """Return XML representation of a Boolean value."""
 
-    if x:
-        return 'true'
-    return 'false'
+    return 'true' if val else 'false'
 
 
 def icontains(needle, haystack):
+    """Search function for case-insensitive 'contains'."""
 
     return needle.lower() in haystack.lower()
 
 
 def istartswith(needle, haystack):
+    """Search function for case-insensitive 'startswith'."""
 
     return haystack.lower().startswith(needle.lower())
 
+
 def iendswith(needle, haystack):
+    """Search function for case-insensitive 'endswith'."""
     return haystack.lower().endswith(needle.lower())
 
 
 def iexact(needle, haystack):
+    """Search function for case-insensitive 'exact'."""
 
     return needle.lower() == haystack.lower()
 
 
 def text_opt(needle, haystack, opt):
+    """Search function with selectable search method."""
 
     if not needle:
         return True
@@ -695,11 +737,13 @@ def text_opt(needle, haystack, opt):
 
 
 def normalize(s):
+    """Replace hard-spaces, strip and split."""
 
     return ' '.join(s.replace('\u00a0', ' ').strip().split())
 
 
 def icmp(x, y):
+    """Case-insensitive comparison."""
 
     if x and y:
         return x.lower() == y.lower()
@@ -707,6 +751,7 @@ def icmp(x, y):
 
 
 def getpreset(id):
+    """Get current preset."""
 
     try:
         return Preset.objects.filter(name=id, valid__lte=date.today()) \

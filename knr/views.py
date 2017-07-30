@@ -1334,7 +1334,7 @@ def mainpage(request):
                                         .format(
                                             item.fuel_name,
                                             convf(((item.cons1 + item.cons2
-                                                + item.cons3) / 3.0), 3)),
+                                                + item.cons3) / 3), 3)),
                                     s6))
                                 q.append(Paragraph(
                                     '<b>Předpis:</b> {}'.format(
@@ -1363,8 +1363,8 @@ def mainpage(request):
                         t2 = LongTable(d2, colWidths=[16.15, 400.45, 66.70])
                         t2.setStyle(
                             TableStyle([
-                                ('LINEABOVE', (0, 0), (-1, 0), 0.25, gray),
-                                ('LINEBELOW', (0, 0), (-1, -1), 0.25, gray),
+                                ('LINEABOVE', (0, 0), (-1, 0), .25, gray),
+                                ('LINEBELOW', (0, 0), (-1, -1), .25, gray),
                                 ('VALIGN', (0, 0), (1, -1), 'TOP'),
                                 ('VALIGN', (-1, 0), (-1, -1), 'MIDDLE'),
                                 ('RIGHTPADDING', (0, 0), (1, -1), 0),
@@ -1382,7 +1382,7 @@ def mainpage(request):
                         else:
                             total_ex += int(i.amount)
                     total_vat = \
-                        int(round(float(total_net * c.vat_rate) / 100.0))
+                        int(round(float(total_net * c.vat_rate) / 100))
                     total = int(total_net + total_ex + total_vat)
                     d3 = []
                     if total_vat:
@@ -1481,7 +1481,7 @@ def mainpage(request):
         else:
             var['total_ex'] += int(i.amount)
         var['num_items'] += 1
-    var['total_vat'] = int(round(float(var['total_net'] * c.vat_rate) / 100.0))
+    var['total_vat'] = int(round(float(var['total_net'] * c.vat_rate) / 100))
     var['total'] = int(var['total_net'] + var['total_ex'] + var['total_vat'])
     for i in ['total_net', 'total_ex', 'total_vat', 'total']:
         var[i] = formam(var[i])
@@ -1572,9 +1572,9 @@ def itemform(request, idx=0):
                 p['to_lat'],
                 p['to_lon'])
             if dist:
-                cd['trip_distance'] = int(ceil(dist / 1000.0))
+                cd['trip_distance'] = int(ceil(dist / 1000))
             if dur:
-                cd['time_number'] = int(ceil(dur / 1800.0))
+                cd['time_number'] = int(ceil(dur / 1800))
 
     logger.debug(
         'Item form accessed using method {}, idx={}'
@@ -1670,7 +1670,7 @@ def itemform(request, idx=0):
                                     int(round((cd['trip_distance']
                                     * ((float((cd['cons1'] + cd['cons2']
                                     + cd['cons3']) * cd['fuel_price'])
-                                    / 300.0) + float(cd['flat_rate']))
+                                    / 300) + float(cd['flat_rate']))
                                     + (cd['time_number'] * cd['time_rate']))
                                     * cd['trip_number']))
                                 if cd['numerator'] > 1 or cd['denominator'] > 1:
@@ -1719,39 +1719,39 @@ def itemform(request, idx=0):
                         if type == 'service':
                             cd['amount'] = \
                                 int(round(cd['major_number'] * cd['rate'] \
-                                + cd['minor_number'] * 0.5 * cd['rate']))
+                                + cd['minor_number'] * .5 * cd['rate']))
                             if cd['off10_flag']:
-                                cd['amount'] = int(round(0.9 * cd['amount']))
+                                cd['amount'] = int(round(.9 * cd['amount']))
                             if cd['off30_flag']:
-                                cd['amount'] = int(round(0.7 * cd['amount']))
+                                cd['amount'] = int(round(.7 * cd['amount']))
                             if cd['off30limit5000_flag']:
                                 cd['amount'] = \
-                                    min(int(round(0.7 * cd['amount'])), 5000)
+                                    min(int(round(.7 * cd['amount'])), 5000)
                             if cd['off20limit5000_flag']:
                                 cd['amount'] = \
-                                    min(int(round(0.8 * cd['amount'])), 5000)
+                                    min(int(round(.8 * cd['amount'])), 5000)
                             if cd['multiple_number'] > 1:
-                                cd['amount'] = int(round(0.8
+                                cd['amount'] = int(round(.8
                                     * cd['multiple_number'] * cd['amount']))
                         elif type == 'flat':
                             cd['amount'] = cd['rate']
                             if cd['collection_flag']:
                                 cd['amount'] = \
-                                    max(int(round(0.5 * cd['amount'])), 750)
+                                    max(int(round(.5 * cd['amount'])), 750)
                             if cd['halved_flag']:
-                                cd['amount'] = lim(750, int(round(0.5
+                                cd['amount'] = lim(750, int(round(.5
                                     * cd['amount'])), 15000)
                             if cd['halved_appeal_flag']:
-                                cd['amount'] = lim(750, int(round(0.5
+                                cd['amount'] = lim(750, int(round(.5
                                     * cd['amount'])), 20000)
                             if cd['single_flag']:
                                 cd['amount'] = \
-                                    max(int(round(0.5 * cd['amount'])), 400)
+                                    max(int(round(.5 * cd['amount'])), 400)
                             if cd['multiple_flag']:
                                 cd['amount'] = int(round(1.3 * cd['amount']))
                             if cd['multiple50_flag']:
                                 cd['amount'] = int(round(1.5 * cd['amount']))
-                            cd['amount'] = int(ceil(cd['amount'] / 10.0) * 10)
+                            cd['amount'] = int(ceil(cd['amount'] / 10) * 10)
                         elif type == 'administrative':
                             cd['amount'] = (cd['number'] * cd['rate'])
                         elif type == 'time':
@@ -1806,13 +1806,13 @@ def itemform(request, idx=0):
                                 r = 1000
                             elif b <= 200000:
                                 r = 1000 \
-                                    + 25 * int(ceil((b - 10000) / 1000.0))
+                                    + 25 * int(ceil((b - 10000) / 1000))
                             elif b <= 10000000:
                                 r = 5750 \
-                                    + 25 * int(ceil((b - 200000) / 10000.0))
+                                    + 25 * int(ceil((b - 200000) / 10000))
                             else:
                                 r = 30250 \
-                                    + 25 * int(ceil((b - 10000000) / 100000.0))
+                                    + 25 * int(ceil((b - 10000000) / 100000))
                         else:
                             if b <= 500:
                                 r = 300
@@ -1824,13 +1824,13 @@ def itemform(request, idx=0):
                                 r = 1500
                             elif b <= 200000:
                                 r = 1500 \
-                                    + 40 * int(ceil((b - 10000) / 1000.0))
+                                    + 40 * int(ceil((b - 10000) / 1000))
                             elif b <= 10000000:
                                 r = 9100 \
-                                    + 40 * int(ceil((b - 200000) / 10000.0))
+                                    + 40 * int(ceil((b - 200000) / 10000))
                             else:
                                 r = 48300 \
-                                    + 40 * int(ceil((b - 10000000) / 100000.0))
+                                    + 40 * int(ceil((b - 10000000) / 100000))
                         idx = cd['idx']
                         var.update({'idx': idx, 'type': type})
                         if idx:
@@ -1853,11 +1853,11 @@ def itemform(request, idx=0):
                             elif b <= 10000:
                                 r = 6000
                             elif b <= 200000:
-                                r = 6000 + 0.15 * (b - 10000.0)
+                                r = 6000 + .15 * (b - 10000)
                             elif b <= 10000000:
-                                r = 34500 + 0.015 * (b - 200000.0)
+                                r = 34500 + .015 * (b - 200000)
                             else:
-                                r = 181500 + 0.00015 * (b - 10000000.0)
+                                r = 181500 + .00015 * (b - 10000000)
                         elif btn == 'calc2':
                             if b <= 1000:
                                 r = 4500
@@ -1866,11 +1866,11 @@ def itemform(request, idx=0):
                             elif b <= 10000:
                                 r = 9000
                             elif b <= 200000:
-                                r = 9000 + 0.17 * (b - 10000.0)
+                                r = 9000 + .17 * (b - 10000)
                             elif b <= 10000000:
-                                r = 41300 + 0.02 * (b - 200000.0)
+                                r = 41300 + .02 * (b - 200000)
                             else:
-                                r = 237300 + 0.0015 * (b - 10000000.0)
+                                r = 237300 + .0015 * (b - 10000000)
                         else:
                             if b <= 100:
                                 r = 1000
@@ -1885,12 +1885,12 @@ def itemform(request, idx=0):
                             elif b <= 10000:
                                 r = 7500
                             elif b <= 200000:
-                                r = 7500 + 0.17 * (b - 10000.0)
+                                r = 7500 + .17 * (b - 10000)
                             elif b <= 10000000:
-                                r = 39800 + 0.02 * (b - 200000.0)
+                                r = 39800 + .02 * (b - 200000)
                             else:
-                                r = 235800 + 0.0015 * (b - 10000000.0)
-                        r = int(ceil(r / 10.0) * 10)
+                                r = 235800 + .0015 * (b - 10000000)
+                        r = int(ceil(r / 10) * 10)
                         idx = cd['idx']
                         var.update({'idx': idx, 'type': type})
                         if idx:

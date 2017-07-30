@@ -179,6 +179,14 @@ class TestViews1(SimpleTestCase):
         self.assertEqual(views.n2l(25), 'Z')
         self.assertEqual(views.n2l(26), '?')
 
+    def test_rmdsl(self):
+        self.assertEqual(views.rmdsl([]), [])
+        self.assertEqual(views.rmdsl([1]), [1])
+        self.assertEqual(views.rmdsl([1, 2]), [1, 2])
+        self.assertEqual(views.rmdsl([1, 2, 2]), [1, 2])
+        self.assertEqual(views.rmdsl([1, 2, 2, 3]), [1, 2, 3])
+        self.assertEqual(views.rmdsl([1, 2, 2, 3, 4, 4, 4]), [1, 2, 3, 4])
+
     def test_xml(self):
         i = 1
         while True:

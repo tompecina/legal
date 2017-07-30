@@ -225,5 +225,5 @@ class dw(forms.DateInput):
             return mark_safe(
                 '{0}&nbsp;<input type="submit" name="submit_set_{1}" '
                 'value="Dnes" class="today" id="id_set_{1}" />'
-                    .format(r, name))
+                .format(r, name))
         return r

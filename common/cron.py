@@ -64,7 +64,7 @@ def cron_notify():
                 [u.email])
             logger.debug(
                 'Email sent to user "{}" ({:d})'
-                    .format(User.objects.get(pk=uid).username, uid))
+                .format(User.objects.get(pk=uid).username, uid))
     logger.info('Emails sent')
 
 
@@ -140,7 +140,7 @@ def cron_run():
             Lock.objects.filter(name=lock).delete()
             logger.debug(
                 'Scheduled job {} with arguments "{}" completed'
-                    .format(job.name, args))
+                .format(job.name, args))
     for job in SCHED:
         if job['when'](now):
             args = job.get('args', '')
@@ -155,7 +155,7 @@ def cron_run():
                         ).save()
                         logger.debug(
                             'Job {} with arguments "{}" scheduled'
-                                .format(job['name'], args))
+                            .format(job['name'], args))
                     continue
                 Lock.objects.get_or_create(name=lock)
             run(job['name'], args)

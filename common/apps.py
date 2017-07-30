@@ -78,7 +78,7 @@ class CommonConfig(AppConfig):
             [
                 'E-mail',
                 '<a href="mailto:{0}">{0}</a>'.format(user.email)
-                    if user.email else ''],
+                if user.email else ''],
             [
                 'Datum založení účtu',
                 '{:%d.%m.%Y}'.format(user.date_joined)],

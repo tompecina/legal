@@ -1667,14 +1667,6 @@ class TestUtils1(SimpleTestCase):
         with self.assertRaises(ValueError):
             utils.getint('2.6')
 
-    def test_rmdsl(self):
-        self.assertEqual(utils.rmdsl([]), [])
-        self.assertEqual(utils.rmdsl([1]), [1])
-        self.assertEqual(utils.rmdsl([1, 2]), [1, 2])
-        self.assertEqual(utils.rmdsl([1, 2, 2]), [1, 2])
-        self.assertEqual(utils.rmdsl([1, 2, 2, 3]), [1, 2, 3])
-        self.assertEqual(utils.rmdsl([1, 2, 2, 3, 4, 4, 4]), [1, 2, 3, 4])
-
     def test_getxml(self):
         self.assertIsNone(utils.getXML(b'test'))
 

@@ -127,15 +127,15 @@ def calcint(pastdate, presdate, principal, debt, default_date):
 
     if interest.model == 'per_annum':
         return (principal * yfactor(pastdate, presdate,
-            interest.day_count_convention) * interest.rate / 100.0), None
+            interest.day_count_convention) * interest.rate / 100), None
 
     if interest.model == 'per_mensem':
         return (principal * mfactor(pastdate, presdate,
-            interest.day_count_convention) * interest.rate / 100.0), None
+            interest.day_count_convention) * interest.rate / 100), None
 
     if interest.model == 'per_diem':
         return (principal * (presdate - pastdate).days
-            * interest.rate / 1000.0), None
+            * interest.rate / 1000), None
 
     if interest.model == 'cust1':
         r = getMPIrate('DISC', default_date)
@@ -143,7 +143,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
             return None, r[1]
         debt.rates[default_date] = r[0]
         return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
-            * r[0] / 50.0), None
+            * r[0] / 50), None
 
     if interest.model == 'cust2':
         s = 0.0
@@ -170,13 +170,13 @@ def calcint(pastdate, presdate, principal, debt, default_date):
                     m2 = 12
                     d2 = 31
                 nt = date(y2, m2, d2)
-                s += yfactor((t - odp), nt, 'ACT/ACT') * (r[0] + 7.0)
+                s += yfactor((t - odp), nt, 'ACT/ACT') * (r[0] + 7)
                 t = nt
             else:
                 m2 = presdate.month
                 d2 = presdate.day
                 return (principal * (s + yfactor((t - odp), date(y2, m2, d2),
-                    'ACT/ACT') * (r[0] + 7.0)) / 100.0), None
+                    'ACT/ACT') * (r[0] + 7)) / 100), None
 
     if interest.model == 'cust3':
         y = default_date.year
@@ -194,7 +194,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
             return None, r[1]
         debt.rates[date(y, m, d)] = r[0]
         return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
-            * (r[0] + 7.0) / 100.0), None
+            * (r[0] + 7) / 100), None
 
     if interest.model == 'cust5':
         y = default_date.year
@@ -212,7 +212,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
             return None, r[1]
         debt.rates[date(y, m, d)] = r[0]
         return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
-            * (r[0] + 8.0) / 100.0), None
+            * (r[0] + 8) / 100), None
 
     if interest.model == 'cust6':
         y = default_date.year
@@ -226,7 +226,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
             return None, r[1]
         debt.rates[date(y, m, 1)] = r[0]
         return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
-            * (r[0] + 8.0) / 100.0), None
+            * (r[0] + 8) / 100), None
 
     if interest.model == 'cust4':
         return (principal * (presdate - pastdate).days * .0025), None
@@ -337,7 +337,7 @@ def getrows4(debt):
     if not debt.transactions:
         return []
 
-    mm = (25.0 if (debt.currency == 'CZK') else 0.0)
+    mm = 25.0 if debt.currency == 'CZK' else 0.0
 
     st = debt.transactions[:]
     id = 1
@@ -366,7 +366,7 @@ def getrows4(debt):
         if dt == mb:
             li = 0.0
             ui = mm
-        ii = (principal * 0.0025)
+        ii = (principal * .0025)
         if ii < 0.0:
             ii = 0.0
         li += ii
@@ -742,7 +742,7 @@ def mainpage(request):
                         (A4[0] - 48.0),
                         48.0,
                         'Vytvořeno: {0.day:02d}.{0.month:02d}.{0.year:02d}'
-                            .format(today))
+                        .format(today))
                     c.restoreState()
 
                 def page2(c, d):
@@ -922,18 +922,18 @@ def mainpage(request):
                 wl = 8.0
                 wr = 8.0
                 wg = 12.0
-                wf = wc = ((w - wl - wr - (wg * 2.0)) / 6.0)
-                cw = [wl] + ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wg] \
-                    + ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wg] \
-                    + ([wc / 5.0] * 5) + ([wf / 5.0] * 5) + [wr]
+                wf = wc = ((w - wl - wr - (wg * 2)) / 6)
+                cw = [wl] + ([wc / 5] * 5) + ([wf / 5] * 5) + [wg] \
+                    + ([wc / 5] * 5) + ([wf / 5] * 5) + [wg] \
+                    + ([wc / 5] * 5) + ([wf / 5] * 5) + [wr]
 
-                tl = 0.5
+                tl = .5
 
                 r = [Paragraph(('<b>Měna:</b> {}'.format(debt.currency)), s19)]
                 if hasattr(debt, 'default_date') and debt.default_date:
                     r.append(Paragraph(
                         '<b>První den prodlení:</b> {:%d.%m.%Y}'
-                            .format(debt.default_date),
+                        .format(debt.default_date),
                         s19))
                 i2 = None
                 i3 = []
@@ -1048,7 +1048,7 @@ def mainpage(request):
                        ('TOPPADDING', (0, 0), (-1, 0), 2.5),
                        ('TOPPADDING', (0, 1), (-1, 1), 10),
                        ('TOPPADDING', (0, 2), (-1, -1), 0),
-                       ('BOTTOMPADDING', (0, 0), (-1, 0), 0.5),
+                       ('BOTTOMPADDING', (0, 0), (-1, 0), .5),
                        ('BOTTOMPADDING', (0, 1), (-1, 1), 1.5),
                        ('BOTTOMPADDING', (0, 2), (-1, 4), 0),
                        ('BOTTOMPADDING', (0, -1), (-1, -1), 18),
@@ -1264,7 +1264,7 @@ def transform(request, id=0):
 
     logger.debug(
         'Transaction form accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, id),
         request,
         request.POST)
     page_title = ('Úprava transakce' if id else 'Nová transakce')
@@ -1338,7 +1338,7 @@ def transdel(request, id=0):
 
     logger.debug(
         'Transaction delete page accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, id),
         request,
         request.POST)
     id = int(id) - 1

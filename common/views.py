@@ -295,7 +295,7 @@ def getuserinfo(user):
             userinfo.extend(c.userinfo(user))
     logger.debug(
         'User information combined for user "{0.username}" ({0.id:d})'
-            .format(user))
+        .format(user))
     return userinfo
 
 

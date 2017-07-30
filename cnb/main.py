@@ -35,7 +35,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
     logger.debug(
         'FX rate requested, currency "{0}" for '
         '{1.year:d}-{1.month:02d}-{1.day:02d}, fixed "{2}"'
-            .format(curr, dt, use_fixed))
+        .format(curr, dt, use_fixed))
 
     fixed_list = {
         'XEU': {'currency_to': 'EUR',
@@ -185,7 +185,7 @@ def getFXrate(curr, dt, log=None, use_fixed=False, log_fixed=None):
     except:
         logger.error(
             'Invalid FX table line for {0.year:d}-{0.month:02d}-{0.day:02d}'
-                .format(dt))
+            .format(dt))
         return None, None, dr, 'Chyba řádku kursové tabulky'
     if log != None:
         log.append(
