@@ -55,7 +55,7 @@ def cron_notify():
     for u in User.objects.all():
         uid = u.id
         text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) \
-               + dir_notice(uid)
+            + dir_notice(uid)
         if text and u.email:
             text += 'Server {} ({})\n'.format(localsubdomain, localurl)
             send_mail(
@@ -63,8 +63,8 @@ def cron_notify():
                 text,
                 [u.email])
             logger.debug(
-                'Email sent to user "{}" ({:d})'.format(
-                    User.objects.get(pk=uid).username, uid))
+                'Email sent to user "{}" ({:d})'
+                    .format(User.objects.get(pk=uid).username, uid))
     logger.info('Emails sent')
 
 

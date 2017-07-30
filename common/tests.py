@@ -292,7 +292,7 @@ class TestCron(TestCase):
         self.assertFalse(models.Pending.objects.exists())
         models.Lock(name='test').save()
         models.Lock.objects.filter(name='test').update(
-            timestamp_add=(datetime.now() - cron.EXPIRE - timedelta(days=1)))
+            timestamp_add=(datetime.now() - cron.EXPIRE - timedelta(1)))
         self.assertEqual(models.Lock.objects.count(), 2)
         cron.SCHED = []
         cron.test_result = 0
@@ -450,7 +450,19 @@ def proc_link(l):
 
 class TestUtils1(SimpleTestCase):
 
-    def test_easter(self):
+    def test_lim(self):
+        self.assertEqual(utils.lim(1, 2, 3), 2)
+        self.assertEqual(utils.lim(1, -2, 3), 1)
+        self.assertEqual(utils.lim(1, 4, 3), 3)
+
+    def test_between(self):
+        self.assertTrue(utils.between(1, 2, 3))
+        self.assertTrue(utils.between(1, 1, 3))
+        self.assertTrue(utils.between(1, 3, 3))
+        self.assertFalse(utils.between(1, -2, 3))
+        self.assertFalse(utils.between(1, 4, 3))
+
+    def test_easter_monday(self):
         es = [
             date(1900, 4, 15), date(1901, 4, 7), date(1902, 3, 30),
             date(1903, 4, 12), date(1904, 4, 3), date(1905, 4, 23),
@@ -521,10 +533,26 @@ class TestUtils1(SimpleTestCase):
             date(2098, 4, 20), date(2099, 4, 12),
         ]
         for s in es:
-            self.assertFalse(utils.easter(s))
-            self.assertTrue(utils.easter(s + timedelta(1)))
-            if s.year >= 2016:
-                self.assertTrue(utils.easter(s - timedelta(2)))
+            self.assertEqual(utils.easter_monday(s.year), s + timedelta(1))
+
+    def test_movable_holiday(self):
+        HOL = [
+            date(1946, 4, 19), date(1951, 3, 23), date(2016, 3, 25),
+            date(1939, 4, 10), date(1946, 4, 22), date(1948, 3, 29),
+            date(1951, 5, 3), date(1939, 5, 29), date(1946, 6, 10),
+            date(1948, 5, 17), date(1951, 5, 14), date(1951, 5, 24),
+        ]
+        NOHOL = [
+            date(1945, 3, 30), date(1952, 4, 11), date(2015, 4, 3),
+            date(1938, 4, 18), date(1947, 4, 7), date(1952, 5, 22),
+            date(1938, 6, 6), date(1947, 5, 26), date(1952, 6, 2),
+            date(1952, 6, 12),
+        ]
+        for dt in HOL:
+            self.assertTrue(utils.movable_holiday(dt))
+            self.assertFalse(utils.movable_holiday(dt - timedelta(1)))
+        for dt in NOHOL:
+            self.assertFalse(utils.movable_holiday(dt))
 
     def test_holiday(self):
         self.assertTrue(utils.holiday(date(2016, 1, 1)))
@@ -546,20 +574,6 @@ class TestUtils1(SimpleTestCase):
             # not testable as 1992-05-09 was Saturday
 
         CAL = {
-            1951: (
-                (1, 7, 14, 21, 28),
-                (4, 11, 18, 25),
-                (4, 11, 18, 25, 26),
-                (1, 8, 15, 22, 29),
-                (1, 6, 9, 13, 20, 27),
-                (3, 10, 17, 24),
-                (1, 5, 6, 8, 15, 22, 29),
-                (5, 12, 19, 26),
-                (2, 9, 16, 23, 30),
-                (7, 14, 21, 28),
-                (4, 11, 18, 25),
-                (2, 9, 16, 23, 25, 26, 30),
-            ),
             1952: (
                 (1, 6, 13, 20, 27),
                 (3, 10, 17, 24),
@@ -1471,7 +1485,7 @@ class TestUtils1(SimpleTestCase):
                 (3, 4, 10, 11, 17, 18, 24, 25, 26, 31),
             ),
         }
-        for y in range(1951, 2017):
+        for y in range(1952, 2017):
             for m in range(1, 13):
                 for d in range(1, (monthrange(y, m)[1] + 1)):
                     dt = date(y, m, d)
@@ -1872,18 +1886,6 @@ class TestUtils1(SimpleTestCase):
         self.assertFalse(utils.text_opt('y', '', 3))
         self.assertTrue(utils.text_opt('', 'xyzw', 3))
         self.assertTrue(utils.text_opt('', '', 3))
-
-    def test_lim(self):
-        self.assertEqual(utils.lim(1, 2, 3), 2)
-        self.assertEqual(utils.lim(1, -2, 3), 1)
-        self.assertEqual(utils.lim(1, 4, 3), 3)
-
-    def test_between(self):
-        self.assertTrue(utils.between(1, 2, 3))
-        self.assertTrue(utils.between(1, 1, 3))
-        self.assertTrue(utils.between(1, 3, 3))
-        self.assertFalse(utils.between(1, -2, 3))
-        self.assertFalse(utils.between(1, 4, 3))
 
     def test_normalize(self):
         self.assertEqual(utils.normalize('a'), 'a')

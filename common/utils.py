@@ -25,6 +25,7 @@ from inspect import stack
 import time
 from datetime import date, timedelta
 from calendar import monthrange, isleap
+from math import inf
 from xml.sax.saxutils import escape, unescape
 from bs4 import BeautifulSoup
 from pdfrw import PdfReader, PdfName
@@ -72,9 +73,18 @@ class Logger:
 logger = Logger()
 
 
-def easter(dt):
+def lim(lower, x, upper):
 
-    y = dt.year
+    return min(max(lower, x), upper)
+
+
+def between(lower, x, upper):
+
+    return x >= lower and x <= upper
+
+
+def easter_monday(y):
+
     g = y % 19
     e = 0
     c = y // 100
@@ -84,10 +94,34 @@ def easter(dt):
     p = i - j + e
     d = 1 + (p + 28 + (p + 6) // 40) % 31
     m = 3 + (p + 27) // 30
-    dt2 = dt + timedelta(3)
-    return (dt.month == m and dt.day == d) \
-        or (y >= 2016 and dt2.month == m and dt2.day == d)
+    return date(y, m, d)
 
+
+def movable_holiday(dt):
+
+    HOLIDAYS = (
+        # Good Friday
+        {'offset': -3, 'from': 1946, 'to': 1951},
+        {'offset': -3, 'from': 2016, 'to': inf},
+        # Easter Monday
+        {'offset': 0, 'from': 1939, 'to': 1946},
+        {'offset': 0, 'from': 1948, 'to': inf},
+        # Ascension
+        {'offset': 38, 'from': -inf, 'to': 1951},
+        # Whit Monday
+        {'offset': 49, 'from': 1939, 'to': 1946},
+        {'offset': 49, 'from': 1948, 'to': 1951},
+        # Corpus Christi
+        {'offset': 59, 'from': -inf, 'to': 1951},
+    )
+
+    year = dt.year
+    em = easter_monday(year)
+    for hol in HOLIDAYS:
+        if dt == (em + timedelta(hol['offset'])) \
+            and between(hol['from'], year, hol['to']):
+            return True
+    return False
 
 def pd(d):
 
@@ -96,26 +130,34 @@ def pd(d):
 
 def holiday(dt):
 
-    HOLIDAY = (
-        {'from': None, 'to': None, 'day': 1, 'month': 1},
-        {'from': None, 'to': None, 'day': 1, 'month': 5},
-        {'from': 1992, 'to': None, 'day': 8, 'month': 5},
-        {'from': None, 'to': 1991, 'day': 9, 'month': 5},
-        {'from': None, 'to': 1951, 'day': 5, 'month': 7},
-        {'from': 1990, 'to': None, 'day': 5, 'month': 7},
-        {'from': None, 'to': 1951, 'day': 6, 'month': 7},
-        {'from': 1990, 'to': None, 'day': 6, 'month': 7},
-        {'from': 2000, 'to': None, 'day': 28, 'month': 9},
-        {'from': None, 'to': 1969, 'day': 28, 'month': 10},
-        {'from': 1988, 'to': None, 'day': 28, 'month': 10},
-        {'from': 2000, 'to': None, 'day': 17, 'month': 11},
-        {'from': 1966, 'to': 1975, 'day': 24, 'month': 12},
-        {'from': 1984, 'to': None, 'day': 24, 'month': 12},
-        {'from': None, 'to': None, 'day': 25, 'month': 12},
-        {'from': None, 'to': None, 'day': 26, 'month': 12},
+    HOLIDAYS = (
+        {'day': 1, 'month': 1, 'from': -inf, 'to': inf},
+        {'day': 6, 'month': 1, 'from': -inf, 'to': 1951},
+        {'day': 7, 'month': 3, 'from': 1946, 'to': 1951},
+        {'day': 1, 'month': 5, 'from': 1925, 'to': inf},
+        {'day': 8, 'month': 5, 'from': 1992, 'to': inf},
+        {'day': 9, 'month': 5, 'from': 1952, 'to': 1991},
+        {'day': 29, 'month': 6, 'from': -inf, 'to': 1951},
+        {'day': 5, 'month': 7, 'from': -inf, 'to': 1951},
+        {'day': 5, 'month': 7, 'from': 1990, 'to': inf},
+        {'day': 6, 'month': 7, 'from': -inf, 'to': 1951},
+        {'day': 6, 'month': 7, 'from': 1990, 'to': inf},
+        {'day': 15, 'month': 8, 'from': -inf, 'to': 1951},
+        {'day': 28, 'month': 9, 'from': -inf, 'to': 1951},
+        {'day': 28, 'month': 9, 'from': 2000, 'to': inf},
+        {'day': 28, 'month': 10, 'from': 1919, 'to': 1939},
+        {'day': 28, 'month': 10, 'from': 1946, 'to': 1969},
+        {'day': 28, 'month': 10, 'from': 1988, 'to': inf},
+        {'day': 1, 'month': 11, 'from': -inf, 'to': 1951},
+        {'day': 17, 'month': 11, 'from': 2000, 'to': inf},
+        {'day': 8, 'month': 12, 'from': -inf, 'to': 1951},
+        {'day': 24, 'month': 12, 'from': 1966, 'to': 1975},
+        {'day': 24, 'month': 12, 'from': 1984, 'to': inf},
+        {'day': 25, 'month': 12, 'from': -inf, 'to': inf},
+        {'day': 26, 'month': 12, 'from': 1939, 'to': inf},
     )
 
-    EXTRA_HOLIDAY = {
+    EXTRA_HOLIDAYS = {
         1966: ((8, 6), (9, 3), (10, 1), (10, 29), (11, 26)),
         1967: (
             (1, 7), (1, 21), (2, 4), (2, 18), (3, 4), (3, 18), (4, 1),
@@ -147,7 +189,7 @@ def holiday(dt):
         1990: ((4, 30),),
     }
 
-    EXTRA_NOT_HOLIDAY = {
+    EXTRA_NOT_HOLIDAYS = {
         1968: ((12, 21), (12, 22), (12, 28), (12, 29)),
         1969: ((5, 4), (10, 25), (12, 28)),
         1970: ((1, 3), (1, 4), (4, 4), (5, 16), (10, 25), (11, 14), (12, 27)),
@@ -184,19 +226,18 @@ def holiday(dt):
     month = dt.month
     day = dt.day
 
-    if year in EXTRA_HOLIDAY and (month, day) in EXTRA_HOLIDAY[year]:
+    if year in EXTRA_HOLIDAYS and (month, day) in EXTRA_HOLIDAYS[year]:
         return True
 
-    if year in EXTRA_NOT_HOLIDAY and (month, day) in EXTRA_NOT_HOLIDAY[year]:
+    if year in EXTRA_NOT_HOLIDAYS and (month, day) in EXTRA_NOT_HOLIDAYS[year]:
         return False
 
-    for hol in HOLIDAY:
+    for hol in HOLIDAYS:
         if day == hol['day'] and month == hol['month'] and \
-            (not hol['from'] or year >= hol['from']) \
-            and (not hol['to'] or year <= hol['to']):
+           between(hol['from'], year, hol['to']):
             return True
 
-    if easter(dt):
+    if movable_holiday(dt):
         return True
 
     return dt.weekday() > (5 if dt < date(1968, 10, 5) else 4)
@@ -644,16 +685,6 @@ def text_opt(needle, haystack, opt):
     if not haystack:
         return False
     return [icontains, istartswith, iendswith, iexact][opt](needle, haystack)
-
-
-def lim(lower, x, upper):
-
-    return min(max(lower, x), upper)
-
-
-def between(lower, x, upper):
-
-    return x >= lower and x <= upper
 
 
 def normalize(s):

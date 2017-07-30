@@ -45,7 +45,7 @@ registers = [
 ]
 register_regex = '^({})$'.format('|'.join(registers))
 
-UNC_DATE = date(1951, 1, 1)
+UNC_DATE = date(1925, 4, 15)
 
 ydconvs = (
     'ACT/ACT',
