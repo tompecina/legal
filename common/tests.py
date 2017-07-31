@@ -582,17 +582,16 @@ class TestUtils1(SimpleTestCase):
     def test_movable_holiday(self):
 
         HOL = [
-            date(1946, 4, 19), date(2016, 3, 25),
-            date(1939, 4, 10), date(1946, 4, 22), date(1948, 3, 29),
-            date(1951, 5, 3), date(1939, 5, 29), date(1946, 6, 10),
-            date(1948, 5, 17), date(1951, 5, 14), date(1951, 5, 24),
+            date(1946, 4, 19), date(2016, 3, 25), date(1939, 4, 10),
+            date(1946, 4, 22), date(1948, 3, 29), date(1951, 5, 3),
+            date(1939, 5, 29), date(1946, 6, 10), date(1948, 5, 17),
+            date(1951, 5, 14), date(1951, 5, 24),
         ]
 
         NOHOL = [
             date(1945, 3, 30), date(1947, 4, 4), date(2015, 4, 3),
-            date(1938, 4, 18), date(1947, 4, 7), date(1952, 5, 22),
-            date(1938, 6, 6), date(1947, 5, 26), date(1952, 6, 2),
-            date(1952, 6, 12),
+            date(1947, 4, 7), date(1952, 5, 22), date(1938, 6, 6),
+            date(1947, 5, 26), date(1952, 6, 2), date(1952, 6, 12),
         ]
 
         for dt in HOL:

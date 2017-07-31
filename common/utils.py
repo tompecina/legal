@@ -127,7 +127,7 @@ def movable_holiday(dt):
         {'offset': -3, 'from': 1948, 'to': 1951},
         {'offset': -3, 'from': 2016, 'to': inf},
         # Easter Monday
-        {'offset': 0, 'from': 1939, 'to': 1946},
+        {'offset': 0, 'from': -inf, 'to': 1946},
         {'offset': 0, 'from': 1948, 'to': inf},
         # Ascension
         {'offset': 38, 'from': -inf, 'to': 1946},
@@ -161,6 +161,7 @@ def holiday(dt):
         {'day': 25, 'month': 3, 'from': -inf, 'to': 1925},
         {'day': 1, 'month': 5, 'from': 1925, 'to': inf},
         {'day': 8, 'month': 5, 'from': 1992, 'to': inf},
+        {'day': 9, 'month': 5, 'from': 1946, 'to': 1946},
         {'day': 9, 'month': 5, 'from': 1952, 'to': 1991},
         {'day': 16, 'month': 5, 'from': -inf, 'to': 1924},
         {'day': 29, 'month': 6, 'from': -inf, 'to': 1946},
@@ -181,7 +182,7 @@ def holiday(dt):
         {'day': 24, 'month': 12, 'from': 1966, 'to': 1975},
         {'day': 24, 'month': 12, 'from': 1984, 'to': inf},
         {'day': 25, 'month': 12, 'from': -inf, 'to': inf},
-        {'day': 26, 'month': 12, 'from': 1939, 'to': inf},
+        {'day': 26, 'month': 12, 'from': -inf, 'to': inf},
     )
 
     EXTRA_HOLIDAYS = {
