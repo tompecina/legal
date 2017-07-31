@@ -41,8 +41,10 @@ TEST_DIR = join(BASE_DIR, APP, 'testdata')
 class TestForms(SimpleTestCase):
 
     def test_MainForm(self):
+
         f = forms.MainForm({'rounding': '0'})
         self.assertTrue(f.is_valid())
+
         f = forms.MainForm(
             {'rounding': '0',
              'note': 'n\rn',
@@ -52,45 +54,53 @@ class TestForms(SimpleTestCase):
         self.assertEqual(f.cleaned_data['internal_note'], 'in')
 
     def test_DebitForm(self):
+
         f = forms.DebitForm(
             {'model': 'fixed',
              'fixed_currency_0': 'CZK',
              'fixed_date': '1.1.2000'})
         self.assertFalse(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'fixed',
              'fixed_amount': '500',
              'fixed_date': '1.1.2000'})
         self.assertFalse(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'fixed',
              'fixed_amount': '500',
              'fixed_currency_0': 'CZK'})
         self.assertFalse(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'fixed',
              'fixed_amount': '500',
              'fixed_currency_0': 'CZK',
              'fixed_date': '1.1.2000'})
         self.assertTrue(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'cust1',
              'principal_debit': '0',
              'principal_currency_0': 'CZK',
              'date_from': '1.1.2000'})
         self.assertFalse(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'cust1',
              'principal_debit': '0',
              'date_from': '1.1.2000',
              'principal_amount': '80'})
         self.assertFalse(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'cust1',
              'principal_debit': '0',
              'principal_currency_0': 'CZK',
              'principal_amount': '80'})
         self.assertFalse(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'cust1',
              'principal_debit': '0',
@@ -98,34 +108,43 @@ class TestForms(SimpleTestCase):
              'date_from': '1.1.2000',
              'principal_amount': '80'})
         self.assertTrue(f.is_valid())
+
         f = forms.DebitForm({'model': 'per_annum'})
         self.assertFalse(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'per_annum',
              'pa_rate': '28.2'})
         self.assertTrue(f.is_valid())
+
         f = forms.DebitForm({'model': 'per_mensem'})
         self.assertFalse(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'per_mensem',
              'pm_rate': '0.84'})
         self.assertTrue(f.is_valid())
+
         f = forms.DebitForm({'model': 'per_diem'})
         self.assertFalse(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'per_diem',
              'pd_rate': '0.2'})
         self.assertTrue(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'cust1',
              'date_from': '1.1.2000',
              'date_to': '31.12.1999'})
         self.assertFalse(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'cust1',
              'date_from': '1.1.2000',
              'date_to': '1.1.2000'})
         self.assertTrue(f.is_valid())
+
         f = forms.DebitForm(
             {'model': 'cust1',
              'date_from': '1.1.2000',
@@ -133,18 +152,21 @@ class TestForms(SimpleTestCase):
         self.assertTrue(f.is_valid())
 
     def test_FXform(self):
+
         f = forms.FXform(
             {'currency_from': 'EUR',
              'currency_to': 'EUR',
              'rate_from': '1',
              'rate_to': '1'})
         self.assertFalse(f.is_valid())
+
         f = forms.FXform(
             {'currency_from': 'CZK',
              'currency_to': 'EUR',
              'rate_from': '16.6',
              'rate_to': '1'})
         self.assertTrue(f.is_valid())
+
         f = forms.FXform(
             {'currency_from': 'CZK',
              'currency_to': 'EUR',
@@ -153,6 +175,7 @@ class TestForms(SimpleTestCase):
              'date_from': '1.1.2000',
              'date_to': '31.12.1999'})
         self.assertFalse(f.is_valid())
+
         f = forms.FXform(
             {'currency_from': 'CZK',
              'currency_to': 'EUR',
@@ -161,6 +184,7 @@ class TestForms(SimpleTestCase):
              'date_from': '1.1.2000',
              'date_to': '1.1.2000'})
         self.assertTrue(f.is_valid())
+
         f = forms.FXform(
             {'currency_from': 'CZK',
              'currency_to': 'EUR',
@@ -174,12 +198,14 @@ class TestForms(SimpleTestCase):
 class TestViews1(SimpleTestCase):
 
     def test_n2l(self):
+
         self.assertEqual(views.n2l(0), 'A')
         self.assertEqual(views.n2l(1), 'B')
         self.assertEqual(views.n2l(25), 'Z')
         self.assertEqual(views.n2l(26), '?')
 
     def test_rmdsl(self):
+
         self.assertEqual(views.rmdsl([]), [])
         self.assertEqual(views.rmdsl([1]), [1])
         self.assertEqual(views.rmdsl([1, 2]), [1, 2])
@@ -188,6 +214,7 @@ class TestViews1(SimpleTestCase):
         self.assertEqual(views.rmdsl([1, 2, 2, 3, 4, 4, 4]), [1, 2, 3, 4])
 
     def test_xml(self):
+
         i = 1
         while True:
             try:
@@ -216,24 +243,30 @@ class TestViews2(TestCase):
         self.client.logout()
 
     def test_main(self):
+
         res = self.client.get('/hsp')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/hsp/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/hsp/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/hsp/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/',
             {'rounding': '0',
              'submit_update': 'Aktualisovat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/',
             {'rounding': '0',
@@ -241,6 +274,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/',
             {'rounding': '0',
@@ -261,6 +295,7 @@ class TestViews2(TestCase):
         internal_note = soup.select('#id_internal_note')
         self.assertEqual(len(internal_note), 1)
         self.assertEqual(internal_note[0].text, '')
+
         for suffix in [['xml', 'Uložit', 'text/xml; charset=utf-8'],
                        ['pdf', 'Export do PDF', 'application/pdf']]:
             with open(join(TEST_DIR, 'debt1.' + suffix[0]), 'rb') as fi:
@@ -285,6 +320,7 @@ class TestViews2(TestCase):
             rounding = soup.select('#id_rounding option[value=0]')
             self.assertEqual(len(rounding), 1)
             self.assertTrue(rounding[0].has_attr('selected'))
+
             res = self.client.post(
                 '/hsp/',
                 {'rounding': '2',
@@ -297,6 +333,7 @@ class TestViews2(TestCase):
             self.assertEqual(res['content-type'], suffix[2])
             con = BytesIO(res.content)
             con.seek(0)
+
             res = self.client.post(
                 '/hsp/',
                 {'submit_load': 'Načíst',
@@ -318,6 +355,7 @@ class TestViews2(TestCase):
             rounding = soup.select('#id_rounding option[value=2]')
             self.assertEqual(len(rounding), 1)
             self.assertTrue(rounding[0].has_attr('selected'))
+
         with open(join(TEST_DIR, 'debt1.xml'), 'rb') as fi:
             res = self.client.post(
                 '/hsp/',
@@ -327,6 +365,7 @@ class TestViews2(TestCase):
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/',
             {'rounding': '0',
@@ -341,6 +380,7 @@ class TestViews2(TestCase):
         with open(join(TEST_DIR, 'debt1.csv'), 'rb') as fi:
             t = fi.read().decode('utf-8')
         self.assertEqual(s, t)
+
         res = self.client.post(
             '/hsp/',
             {'rounding': '2',
@@ -352,6 +392,7 @@ class TestViews2(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Nejprve zvolte soubor k načtení')
+
         with open(join(TEST_DIR, 'err_debt5.xml'), 'rb') as fi:
             res = self.client.post(
                 '/hsp/',
@@ -364,6 +405,7 @@ class TestViews2(TestCase):
             self.assertEqual(
                 res.context['err_message'],
                 'Chyba při načtení souboru')
+
         with open(join(TEST_DIR, 'err_debt6.xml'), 'rb') as fi:
             res = self.client.post(
                 '/hsp/',
@@ -376,11 +418,13 @@ class TestViews2(TestCase):
             self.assertEqual(
                 res.context['err_message'],
                 'Chyba při načtení souboru')
+
         res = self.client.post(
             '/hsp/',
             {'rounding': '2',
              'next': '/hsp/'})
         self.assertRedirects(res, '/hsp/')
+
         i = 1
         while True:
             try:
@@ -390,6 +434,7 @@ class TestViews2(TestCase):
             except:
                 self.assertGreater(i, 1)
                 break
+
             res = self.client.post(
                 '/hsp/',
                 {'rounding': '2',
@@ -400,6 +445,7 @@ class TestViews2(TestCase):
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
             soup = BeautifulSoup(res.content, 'html.parser')
+
             res = self.client.post(
                 '/hsp/',
                 {'title': res.context['f']['title'].value(),
@@ -411,6 +457,7 @@ class TestViews2(TestCase):
             self.assertEqual(res['content-type'], 'application/pdf')
             con = BytesIO(res.content)
             con.seek(0)
+
             res = self.client.post(
                 '/hsp/',
                 {'submit_load': 'Načíst',
@@ -420,6 +467,7 @@ class TestViews2(TestCase):
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
             i += 1
+
         with open(join(TEST_DIR, 'err_debt1.xml'), 'rb') as fi:
             res = self.client.post(
                 '/hsp/',
@@ -432,6 +480,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
         soup = BeautifulSoup(res.content, 'html.parser')
+
         res = self.client.post(
             '/hsp/',
             {'rounding': str(res.context['f']['rounding'].value()),
@@ -441,6 +490,7 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'application/pdf')
         con = BytesIO(res.content)
         con.seek(0)
+
         res = self.client.post(
             '/hsp/',
             {'submit_load': 'Načíst',
@@ -451,17 +501,22 @@ class TestViews2(TestCase):
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
 
     def test_form(self):
+
         for b in [['debit', 'Nový závazek'],
                   ['credit', 'Nová splátka'],
                   ['balance', 'Nový kontrolní bod'],
                   ['fxrate', 'Nový kurs']]:
+
             res = self.client.get('/hsp/{}form'.format(b[0]))
             self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
             res = self.client.get('/hsp/{}form/'.format(b[0]))
             self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
             res = self.client.get('/hsp/{}form/'.format(b[0]), follow=True)
             self.assertTemplateUsed(res, 'login.html')
             self.assertTrue(self.client.login(username='user', password='none'))
+
             res = self.client.get('/hsp/{}form/'.format(b[0]))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTrue(res.has_header('content-type'))
@@ -474,13 +529,17 @@ class TestViews2(TestCase):
             self.client.logout()
 
     def test_debit(self):
+
         res = self.client.get('/hsp/debitform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/hsp/debitform/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/hsp/debitform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/hsp/debitform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
@@ -490,6 +549,7 @@ class TestViews2(TestCase):
         p = soup.select('h1')
         self.assertEqual(len(p), 1)
         self.assertEqual(p[0].text, 'Nový závazek')
+
         res = self.client.post(
             '/hsp/creditform/',
             {'date': '4.9.2015',
@@ -499,6 +559,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/debitform/',
             {'model': 'fixed',
@@ -509,6 +570,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/debitform/',
             {'model': 'fixed',
@@ -519,6 +581,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/debitform/',
             {'model': 'per_annum',
@@ -529,6 +592,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/debitform/',
             {'model': 'per_mensem',
@@ -539,6 +603,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/debitform/',
             {'model': 'per_diem',
@@ -548,6 +613,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/debitform/',
             {'model': 'per_diem',
@@ -560,23 +626,28 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/debitform/',
             {'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.get('/hsp/debitform/100/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
         res = self.client.get('/hsp/debitform/2/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_debitform.html')
+
         for i in range(1, 7):
             res = self.client.get('/hsp/debitform/{:d}/'.format(i))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_debitform.html')
+
         res = self.client.post(
             '/hsp/debitform/3/',
             {'model': 'per_diem',
@@ -586,6 +657,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/debitform/100/',
             {'model': 'per_diem',
@@ -594,6 +666,7 @@ class TestViews2(TestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
         res = self.client.post(
             '/hsp/debitform/',
             {'model': 'per_mensem',
@@ -606,6 +679,7 @@ class TestViews2(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/hsp/debitform/1/',
             {'model': 'per_annum',
@@ -619,34 +693,43 @@ class TestViews2(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Na závazek se váže úrok, vyžaduje pevnou částku')
+
         res = self.client.get('/hsp/debitdel/3/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_debitdel.html')
+
         res = self.client.post(
             '/hsp/debitdel/6/',
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/debitdel/6/',
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_debitdeleted.html')
+
         res = self.client.get('/hsp/debitdel/6/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
         res = self.client.post('/hsp/debitdel/6/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
     def test_credit(self):
+
         res = self.client.get('/hsp/creditform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/hsp/creditform/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/hsp/creditform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/hsp/creditform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
@@ -656,6 +739,7 @@ class TestViews2(TestCase):
         p = soup.select('h1')
         self.assertEqual(len(p), 1)
         self.assertEqual(p[0].text, 'Nová splátka')
+
         res = self.client.post(
             '/hsp/debitform/',
             {'model': 'fixed',
@@ -666,9 +750,11 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.get('/hsp/creditform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+
         res = self.client.post(
             '/hsp/creditform/',
             {'date': '5.1.2015',
@@ -678,12 +764,14 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/creditdel/1/',
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditdeleted.html')
+
         res = self.client.post(
             '/hsp/debitform/',
             {'model': 'fixed',
@@ -694,9 +782,11 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.get('/hsp/creditform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+
         res = self.client.post(
             '/hsp/creditform/',
             {'date': '14.7.2015',
@@ -708,9 +798,11 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.get('/hsp/creditform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+
         res = self.client.post(
             '/hsp/creditform/',
             {'date': '4.9.2015',
@@ -722,9 +814,11 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.get('/hsp/creditform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+
         res = self.client.post(
             '/hsp/creditform/',
             {'date': '4.8.2015',
@@ -736,9 +830,11 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.get('/hsp/creditform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+
         res = self.client.post(
             '/hsp/creditform/',
             {'date': '6.8.2015',
@@ -753,23 +849,28 @@ class TestViews2(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/hsp/creditform/',
             {'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.get('/hsp/creditform/100/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
         res = self.client.get('/hsp/creditform/1/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+
         for i in range(1, 4):
             res = self.client.get('/hsp/creditform/{:d}/'.format(i))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_creditform.html')
+
         res = self.client.post(
             '/hsp/creditform/3/',
             {'date': '5.5.2015',
@@ -781,6 +882,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/creditform/100/',
             {'date': '14.10.2015',
@@ -791,32 +893,40 @@ class TestViews2(TestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
         res = self.client.get('/hsp/creditdel/3/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditdel.html')
+
         res = self.client.post(
             '/hsp/creditdel/3/',
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/creditdel/3/',
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditdeleted.html')
+
         res = self.client.post('/hsp/creditdel/3/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
     def test_balance(self):
+
         res = self.client.get('/hsp/balanceform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/hsp/balanceform/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/hsp/balanceform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/hsp/balanceform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
@@ -826,8 +936,10 @@ class TestViews2(TestCase):
         p = soup.select('h1')
         self.assertEqual(len(p), 1)
         self.assertEqual(p[0].text, 'Nový kontrolní bod')
+
         res = self.client.post('/hsp/balanceform/', {'submit_set_date': 'Dnes'})
         self.assertEqual(res.context['f']['date'].value(), date.today())
+
         res = self.client.post(
             '/hsp/balanceform/',
             {'date': '5.1.2015',
@@ -835,6 +947,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/balanceform/',
             {'date': '14.7.2015',
@@ -842,6 +955,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/balanceform/',
             {'date': '6.X.2015',
@@ -852,23 +966,28 @@ class TestViews2(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/hsp/balanceform/',
             {'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.get('/hsp/balanceform/100/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
         res = self.client.get('/hsp/balanceform/1/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_balanceform.html')
+
         for i in range(1, 3):
             res = self.client.get('/hsp/balanceform/{:d}/'.format(i))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_balanceform.html')
+
         res = self.client.post(
             '/hsp/balanceform/2/',
             {'date': '15.7.2015',
@@ -876,38 +995,47 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/balanceform/100/',
             {'date': '14.10.2015',
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
         res = self.client.get('/hsp/balancedel/2/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_balancedel.html')
+
         res = self.client.post(
             '/hsp/balancedel/2/',
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/balancedel/2/',
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_balancedeleted.html')
+
         res = self.client.post('/hsp/balancedel/2/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
     def test_fxrate(self):
+
         res = self.client.get('/hsp/fxrateform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/hsp/fxrateform/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/hsp/fxrateform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/hsp/fxrateform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
@@ -917,6 +1045,7 @@ class TestViews2(TestCase):
         p = soup.select('h1')
         self.assertEqual(len(p), 1)
         self.assertEqual(p[0].text, 'Nový kurs')
+
         res = self.client.post(
             '/hsp/fxrateform/',
             {'currency_from': 'EUR',
@@ -927,6 +1056,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/fxrateform/',
             {'currency_from': 'CZK',
@@ -937,6 +1067,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/fxrateform/',
             {'submit': 'Uložit'},
@@ -946,23 +1077,28 @@ class TestViews2(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/hsp/fxrateform/',
             {'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.get('/hsp/fxrateform/100/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
         res = self.client.get('/hsp/fxrateform/1/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_fxrateform.html')
+
         for i in range(1, 3):
             res = self.client.get('/hsp/fxrateform/{:d}/'.format(i))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_fxrateform.html')
+
         res = self.client.post(
             '/hsp/fxrateform/2/',
             {'currency_from': 'USD',
@@ -973,6 +1109,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/fxrateform/100/',
             {'currency_from': 'EUR',
@@ -982,25 +1119,30 @@ class TestViews2(TestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
         res = self.client.get('/hsp/fxratedel/2/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_fxratedel.html')
+
         res = self.client.post(
             '/hsp/fxratedel/2/',
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+
         res = self.client.post(
             '/hsp/fxratedel/2/',
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_fxratedeleted.html')
+
         res = self.client.post('/hsp/fxratedel/2/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
     def test_debt(self):
+
         req = DummyRequest('test-session')
         c = views.Debt()
         c.title = TEST_STRING
@@ -1008,6 +1150,7 @@ class TestViews2(TestCase):
         self.assertEqual(views.getdebt(req).title, TEST_STRING)
 
     def test_calcint(self):
+
         pp = [
             [date(2015, 1, 1),
              date(2016, 1, 1),
@@ -1134,7 +1277,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/ACT',
              },
-             0.767123287671233],
+             .767123287671233],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -1143,7 +1286,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/365',
              },
-             0.767123287671233],
+             .767123287671233],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -1152,7 +1295,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/360',
              },
-             0.7777777777777777],
+             .7777777777777777],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -1161,7 +1304,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/364',
              },
-             0.7692307692307692],
+             .7692307692307692],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -1170,7 +1313,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30U/360',
              },
-             0.7777777777777777],
+             .7777777777777777],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -1179,7 +1322,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E/360',
              },
-             0.7777777777777777],
+             .7777777777777777],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -1188,7 +1331,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E/360 ISDA',
              },
-             0.8333333333333331],
+             .8333333333333331],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -1197,7 +1340,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E+/360',
              },
-             0.7777777777777777],
+             .7777777777777777],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -1215,7 +1358,7 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30U',
              },
-             0.9333333333333332],
+             .9333333333333332],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -1224,7 +1367,7 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E',
              },
-             0.9333333333333332],
+             .9333333333333332],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -1242,7 +1385,7 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E+',
              },
-             0.9333333333333332],
+             .9333333333333332],
             [date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
@@ -1341,6 +1484,7 @@ class TestViews2(TestCase):
              },
              100],
         ]
+
         ee = [
             [date(2015, 1, 1),
              date(2016, 1, 1),
@@ -1385,6 +1529,7 @@ class TestViews2(TestCase):
              {},
              'Sazba není k disposici'],
         ]
+
         for p in pp:
             pastdate = p[0]
             presdate = p[1]
@@ -1404,6 +1549,7 @@ class TestViews2(TestCase):
             self.assertEqual(len(c), 2)
             self.assertIsNone(c[1])
             self.assertAlmostEqual(c[0], p[6])
+
         for p in ee:
             pastdate = p[0]
             presdate = p[1]
@@ -1425,6 +1571,7 @@ class TestViews2(TestCase):
             self.assertEqual(c[1], p[6])
 
     def test_calc(self):
+
         i = 1
         while True:
             try:
@@ -1443,7 +1590,9 @@ class TestViews2(TestCase):
             i += 1
 
     def test_calculation(self):
+
         self.assertTrue(self.client.login(username='user', password='none'))
+
         i = 1
         while True:
             try:
@@ -1453,6 +1602,7 @@ class TestViews2(TestCase):
             except:
                 self.assertGreater(i, 1)
                 break
+
             res = self.client.post(
                 '/hsp/',
                 {'rounding': '2',
@@ -1471,6 +1621,7 @@ class TestViews2(TestCase):
                 if o.has_attr('selected'):
                     d['rounding'] = o['value']
                     break
+
             res = self.client.post('/hsp/', d)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
@@ -1484,11 +1635,14 @@ class TestViews2(TestCase):
             i += 1
 
     def test_hjp2hsp(self):
+
         self.assertTrue(self.client.login(username='user', password='none'))
+
         for i in range(1, 14):
             with open(
                 '{}/hjp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
                 'rb') as fi:
+
                 res = self.client.post(
                     '/hsp/',
                     {'rounding': '2',
@@ -1506,6 +1660,7 @@ class TestViews2(TestCase):
                 if o.has_attr('selected'):
                     d['rounding'] = o['value']
                     break
+
             res = self.client.post('/hsp/', d)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)

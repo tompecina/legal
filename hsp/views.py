@@ -143,7 +143,9 @@ def setdebt(request, data):
 
 
 def n2l(num):
-    """Convert debt number to letter."""
+    """
+    Convert debt number 'num' to letter.
+    """
 
     return chr(ord('A') + num) if num <= (ord('Z') - ord('A')) else '?'
 
@@ -151,17 +153,19 @@ def n2l(num):
 DR, CR, BAL = tuple(range(3))
 
 
-def rmdsl(l):
-    """Remove duplicate elements from list."""
+def rmdsl(li):
+    """
+    Remove duplicate elements from list 'li'.
+    """
 
-    if l:
-        s = l[-1]
-        for i in range((len(l) - 2), -1, -1):
-            if s == l[i]:
-                del l[i]
+    if li:
+        s = li[-1]
+        for i in range((len(li) - 2), -1, -1):
+            if s == li[i]:
+                del li[i]
             else:
-                s = l[i]
-    return l
+                s = li[i]
+    return li
 
 
 def calcint(interest, pastdate, presdate, debt, res):
@@ -400,7 +404,7 @@ def calc(debt, pram=(lambda x: x)):
                 debit.ui = debit.li = 0.0
             else:
                 ncust4.append(debit)
-    ir = (cust4 + ncust4)
+    ir = cust4 + ncust4
 
     cr = {}
     for i, credit in enumerate(debt.credits):
@@ -861,8 +865,8 @@ def fromxml(d):
                             interest.day_count_convention.text.strip()
                     elif m == 'per_diem':
                         d.rate = float(interest.pd_rate.text.strip())
-        orderi = (interests + principals)
-        orderp = (principals + interests)
+        orderi = interests + principals
+        orderp = principals + interests
         for tt in tr:
             if not tt.name:
                 continue
@@ -894,7 +898,7 @@ def mainpage(request):
         request.POST)
 
     def ft(a):
-        a = (round(a, debt.rounding) if debt.rounding else int(round(a)))
+        a = round(a, debt.rounding) if debt.rounding else int(round(a))
         if abs(a) < LIM:
             return '<span class="dr"></span>'
         elif a > 0:

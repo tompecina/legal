@@ -106,6 +106,7 @@ M4 = 'Délka musí být mezi -999 a 999'
 class TestViews(SimpleTestCase):
 
     def test_period(self):
+
         pp = [
             [date(2016, 7, 1), 0, 'd',
              None, date(2016, 7, 1), date(2016, 7, 1), False],
@@ -217,6 +218,7 @@ class TestViews(SimpleTestCase):
             [date(2016, 7, 1), 1000, 'd', M4, None, None, None],
             [date(2016, 7, 1), -1000, 'd', M4, None, None, None],
         ]
+
         for p in pp:
             per = views.Period(*p[:3])
             self.assertIsInstance(per.error, bool)
@@ -224,6 +226,7 @@ class TestViews(SimpleTestCase):
             self.assertEqual([per.msg, per.res, per.bus, per.unc], p[3:])
 
     def test_main(self):
+
         pp = [
             ['1.7.2016', 'd3', '', 'd',
              ['Po 04.07.2016']],
@@ -328,6 +331,7 @@ class TestViews(SimpleTestCase):
             ['1.7.2016', 'none', '0', 'b',
              ['Pá 01.07.2016']],
         ]
+
         ee = [
             ['', 'd3', '', 'd'],
             ['xxx', 'd3', '', 'd'],
@@ -338,13 +342,16 @@ class TestViews(SimpleTestCase):
             ['1.7.2016', 'none', '1000', 'd'],
             ['1.7.2016', 'none', '-1000', 'd'],
         ]
+
         res = self.client.get('/lht')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/lht/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'lht_main.html')
+
         for p in pp:
             res = self.client.post(
                 '/lht/',
@@ -360,6 +367,7 @@ class TestViews(SimpleTestCase):
             self.assertEqual(l, len(p[4]))
             for i in range(l):
                 self.assertEqual(msg[i].text, p[4][i])
+
         for p in ee:
             res = self.client.post(
                 '/lht/',
@@ -372,6 +380,7 @@ class TestViews(SimpleTestCase):
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertTrue(msg[0].text)
+
         res = self.client.post(
             '/lht/',
             {'submit_set_beg_date': 'Dnes'})

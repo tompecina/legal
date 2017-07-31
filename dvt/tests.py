@@ -29,24 +29,28 @@ from dvt import forms
 class TestForms(SimpleTestCase):
 
     def test_MainForm(self):
+
         f = forms.MainForm(
             {'beg_date': '6.7.2016',
              'years': '',
              'months': '',
              'days': ''})
         self.assertFalse(f.is_valid())
+
         f = forms.MainForm(
             {'beg_date': '6.7.2016',
              'years': '10',
              'months': '',
              'days': ''})
         self.assertTrue(f.is_valid())
+
         f = forms.MainForm(
             {'beg_date': '6.7.2016',
              'years': '',
              'months': '10',
              'days': ''})
         self.assertTrue(f.is_valid())
+
         f = forms.MainForm(
             {'beg_date': '6.7.2016',
              'years': '',
@@ -55,41 +59,43 @@ class TestForms(SimpleTestCase):
         self.assertTrue(f.is_valid())
 
 
-pp = [
-    ['1.7.2016', '1', '', '',
-     '01.07.2017', '01.11.2016', '01.01.2017', '01.03.2017'],
-    ['1. 7. 2016', '1', '', '',
-     '01.07.2017', '01.11.2016', '01.01.2017', '01.03.2017'],
-    ['01.07.2016', '1', '', '',
-     '01.07.2017', '01.11.2016', '01.01.2017', '01.03.2017'],
-    ['12.7.2011', '11', '5', '16',
-     '28.12.2022', '07.05.2015', '04.04.2017', '04.03.2019'],
-    ['7.7.2011', '', '1', '',
-     '07.08.2011', '17.07.2011', '22.07.2011', '27.07.2011'],
-]
-
-ee = [
-    ['1.7.2016', '', '', ''],
-    ['XXX', '1', '', ''],
-    ['1.7.2016', 'XXX', '', ''],
-    ['1.7.2016', '', 'XXX', ''],
-    ['1.7.2016', '', '', 'XXX'],
-    ['1.7.2016', '1', 'XXX', ''],
-    ['1.7.2016', '0', '', ''],
-    ['1.7.2016', '-1', '', ''],
-]
-
-
 class TestViews(SimpleTestCase):
 
     def test_main(self):
+
+        pp = [
+            ['1.7.2016', '1', '', '',
+             '01.07.2017', '01.11.2016', '01.01.2017', '01.03.2017'],
+            ['1. 7. 2016', '1', '', '',
+             '01.07.2017', '01.11.2016', '01.01.2017', '01.03.2017'],
+            ['01.07.2016', '1', '', '',
+             '01.07.2017', '01.11.2016', '01.01.2017', '01.03.2017'],
+            ['12.7.2011', '11', '5', '16',
+             '28.12.2022', '07.05.2015', '04.04.2017', '04.03.2019'],
+            ['7.7.2011', '', '1', '',
+             '07.08.2011', '17.07.2011', '22.07.2011', '27.07.2011'],
+        ]
+
+        ee = [
+            ['1.7.2016', '', '', ''],
+            ['XXX', '1', '', ''],
+            ['1.7.2016', 'XXX', '', ''],
+            ['1.7.2016', '', 'XXX', ''],
+            ['1.7.2016', '', '', 'XXX'],
+            ['1.7.2016', '1', 'XXX', ''],
+            ['1.7.2016', '0', '', ''],
+            ['1.7.2016', '-1', '', ''],
+        ]
+
         res = self.client.get('/dvt')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/dvt/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'dvt_main.html')
+
         for p in pp:
             res = self.client.post(
                 '/dvt/',
@@ -107,6 +113,7 @@ class TestViews(SimpleTestCase):
             self.assertEqual(msg[1].text, 'Třetina trestu: ' + p[5])
             self.assertEqual(msg[2].text, 'Polovina trestu: ' + p[6])
             self.assertEqual(msg[3].text, 'Dvě třetiny trestu: ' + p[7])
+
         for p in ee:
             res = self.client.post(
                 '/dvt/',

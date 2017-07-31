@@ -42,31 +42,37 @@ TEST_DIR = join(BASE_DIR, APP, 'testdata')
 class TestForms(SimpleTestCase):
 
     def test_TransForm(self):
+
         f = forms.TransForm(
             {'transaction_type': 'balance',
              'repayment_preference': 'principal'})
         self.assertFalse(f.is_valid())
+
         f = forms.TransForm(
             {'transaction_type': 'balance',
              'date': '1.7.2016',
              'repayment_preference': 'principal'})
         self.assertTrue(f.is_valid())
+
         f = forms.TransForm(
             {'transaction_type': 'debit',
              'date': '1.7.2016',
              'repayment_preference': 'principal'})
         self.assertFalse(f.is_valid())
+
         f = forms.TransForm(
             {'transaction_type': 'debit',
              'date': '1.7.2016',
              'repayment_preference': 'principal',
              'amount': '2000'})
         self.assertTrue(f.is_valid())
+
         f = forms.TransForm(
             {'transaction_type': 'credit',
              'date': '1.7.2016',
              'repayment_preference': 'principal'})
         self.assertFalse(f.is_valid())
+
         f = forms.TransForm(
             {'transaction_type': 'credit',
              'date': '1.7.2016',
@@ -75,10 +81,12 @@ class TestForms(SimpleTestCase):
         self.assertTrue(f.is_valid())
 
     def test_MainForm(self):
+
         f = forms.MainForm(
             {'rounding': '0',
              'model': 'none'})
         self.assertTrue(f.is_valid())
+
         f = forms.MainForm(
             {'rounding': '0',
              'model': 'none',
@@ -87,37 +95,45 @@ class TestForms(SimpleTestCase):
         self.assertTrue(f.is_valid())
         self.assertEqual(f.cleaned_data['note'], 'nn')
         self.assertEqual(f.cleaned_data['internal_note'], 'in')
+
         f = forms.MainForm(
             {'rounding': '0',
              'model': 'fixed'})
         self.assertFalse(f.is_valid())
+
         f = forms.MainForm(
             {'rounding': '0',
              'model': 'fixed',
              'fixed_amount': '8000'})
         self.assertTrue(f.is_valid())
+
         f = forms.MainForm(
             {'rounding': '0',
              'model': 'per_annum'})
         self.assertFalse(f.is_valid())
+
         f = forms.MainForm(
             {'rounding': '0',
              'model': 'per_annum',
              'pa_rate': '13.65'})
         self.assertTrue(f.is_valid())
+
         f = forms.MainForm(
             {'rounding': '0',
              'model': 'per_mensem'})
         self.assertFalse(f.is_valid())
+
         f = forms.MainForm(
             {'rounding': '0',
              'model': 'per_mensem',
              'pm_rate': '0.94'})
         self.assertTrue(f.is_valid())
+
         f = forms.MainForm(
             {'rounding': '0',
              'model': 'per_diem'})
         self.assertFalse(f.is_valid())
+
         f = forms.MainForm(
             {'rounding': '0',
              'model': 'per_diem',
@@ -128,6 +144,7 @@ class TestForms(SimpleTestCase):
 class TestViews1(SimpleTestCase):
 
     def test_xml(self):
+
         i = 1
         while True:
             try:
@@ -146,13 +163,16 @@ class TestViews1(SimpleTestCase):
         self.assertEqual(views.fromxml(b'XXX'), (None, 'Chybný formát souboru'))
 
     def test_dispcurr(self):
+
         self.assertEqual(views.dispcurr('CZK'), 'Kč')
         self.assertEqual(views.dispcurr('EUR'), 'EUR')
 
     def test_getrows(self):
+
         self.assertEqual(views.getrows(views.Debt()), [])
 
     def test_getrows4(self):
+
         self.assertEqual(views.getrows4(views.Debt()), [])
 
 
@@ -167,18 +187,23 @@ class TestViews2(TestCase):
         self.client.logout()
 
     def test_main(self):
+
         res = self.client.get('/hjp')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/hjp/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/hjp/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/hjp/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
+
         res = self.client.post(
             '/hjp/',
             {'rounding': '0',
@@ -186,6 +211,7 @@ class TestViews2(TestCase):
              'submit_update': 'Aktualisovat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
+
         res = self.client.post(
             '/hjp/',
             {'rounding': '0',
@@ -197,6 +223,7 @@ class TestViews2(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/hjp/',
             {'rounding': '0',
@@ -205,6 +232,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
+
         res = self.client.post(
             '/hjp/',
             {'rounding': '0',
@@ -226,6 +254,7 @@ class TestViews2(TestCase):
         internal_note = soup.select('#id_internal_note')
         self.assertEqual(len(internal_note), 1)
         self.assertEqual(internal_note[0].text, '')
+
         for suffix in [['xml', 'Uložit', 'text/xml; charset=utf-8'],
                        ['pdf', 'Export do PDF', 'application/pdf']]:
             with open(join(TEST_DIR, 'debt1.' + suffix[0]), 'rb') as fi:
@@ -255,6 +284,7 @@ class TestViews2(TestCase):
             rounding = soup.select('#id_rounding option[value=0]')
             self.assertEqual(len(rounding), 1)
             self.assertTrue(rounding[0].has_attr('selected'))
+
             res = self.client.post(
                 '/hjp/',
                 {'currency_0': 'OTH',
@@ -268,8 +298,10 @@ class TestViews2(TestCase):
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], suffix[2])
+
             con = BytesIO(res.content)
             con.seek(0)
+
             res = self.client.post(
                 '/hjp/',
                 {'submit_load': 'Načíst',
@@ -297,6 +329,7 @@ class TestViews2(TestCase):
             rounding = soup.select('#id_rounding option[value=2]')
             self.assertEqual(len(rounding), 1)
             self.assertTrue(rounding[0].has_attr('selected'))
+
         with open(join(TEST_DIR, 'debt1.xml'), 'rb') as fi:
             res = self.client.post(
                 '/hjp/',
@@ -308,6 +341,7 @@ class TestViews2(TestCase):
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
+
         res = self.client.post(
             '/hjp/',
             {'currency_0': 'CZK',
@@ -326,6 +360,7 @@ class TestViews2(TestCase):
         with open(join(TEST_DIR, 'debt1.csv'), 'rb') as fi:
             t = fi.read().decode('utf-8')
         self.assertEqual(s, t)
+
         with open(join(TEST_DIR, 'err_debt1.xml'), 'rb') as fi:
             res = self.client.post(
                 '/hjp/',
@@ -342,6 +377,7 @@ class TestViews2(TestCase):
         self.assertEqual(len(b), 1)
         self.assertTrue(b[0].has_attr('disabled'))
         self.assertContains(res, 'Chybné datum, data nejsou k disposici')
+
         res = self.client.post(
             '/hjp/',
             {'currency_0': 'OTH',
@@ -355,6 +391,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertIn('content-type', res)
         self.assertEqual(res['content-type'], 'application/pdf')
+
         res = self.client.post(
             '/hjp/',
             {'currency_0': 'EUR',
@@ -368,6 +405,7 @@ class TestViews2(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Nejprve zvolte soubor k načtení')
+
         with open(join(TEST_DIR, 'err_debt2.xml'), 'rb') as fi:
             res = self.client.post(
                 '/hjp/',
@@ -382,6 +420,7 @@ class TestViews2(TestCase):
             self.assertEqual(
                 res.context['err_message'],
                 'Chyba při načtení souboru')
+
         with open(join(TEST_DIR, 'err_debt3.xml'), 'rb') as fi:
             res = self.client.post(
                 '/hjp/',
@@ -396,6 +435,7 @@ class TestViews2(TestCase):
             self.assertEqual(
                 res.context['err_message'],
                 'Chyba při načtení souboru')
+
         res = self.client.post(
             '/hjp/',
             {'currency_0': 'EUR',
@@ -403,6 +443,7 @@ class TestViews2(TestCase):
              'model': 'none',
              'next': '/hjp/'})
         self.assertRedirects(res, '/hjp/')
+
         i = 1
         while True:
             try:
@@ -433,12 +474,14 @@ class TestViews2(TestCase):
             d['currency_0'] = \
                 soup.select('#id_currency_0 option[selected]')[0]['value']
             d['currency_1'] = d['currency']
+
             res = self.client.post('/hjp/', d)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], 'application/pdf')
             con = BytesIO(res.content)
             con.seek(0)
+
             res = self.client.post(
                 '/hjp/',
                 {'submit_load': 'Načíst',
@@ -450,19 +493,25 @@ class TestViews2(TestCase):
             i += 1
 
     def test_trans(self):
+
         res = self.client.get('/hjp/transform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/hjp/transform/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/hjp/transform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         today = date.today()
+
         res = self.client.post(
             '/hjp/transform/',
             {'transaction_type': 'balance',
              'submit_set_date': 'Dnes'})
         self.assertEqual(res.context['f']['date'].value(), today)
+
         res = self.client.get('/hjp/transform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
@@ -472,6 +521,7 @@ class TestViews2(TestCase):
         p = soup.select('h1')
         self.assertEqual(len(p), 1)
         self.assertEqual(p[0].text, 'Nová transakce')
+
         res = self.client.post(
             '/hjp/transform/',
             {'date': '5.8.2014',
@@ -481,6 +531,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
+
         res = self.client.post(
             '/hjp/transform/',
             {'date': '25.10.2014',
@@ -491,6 +542,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
+
         res = self.client.post(
             '/hjp/transform/',
             {'date': '25.10.2015',
@@ -499,19 +551,23 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
+
         res = self.client.post(
             '/hjp/transform/',
             {'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
+
         res = self.client.get('/hjp/transform/100/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
         res = self.client.get('/hjp/transform/2/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hjp_transform.html')
+
         res = self.client.post(
             '/hjp/transform/3/',
             {'date': '25.10.2015',
@@ -520,6 +576,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
+
         res = self.client.post(
             '/hjp/transform/100/',
             {'date': '25.10.2015',
@@ -527,6 +584,7 @@ class TestViews2(TestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
         res = self.client.post(
             '/hjp/transform/',
             {'date': 'XXX',
@@ -538,27 +596,33 @@ class TestViews2(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.get('/hjp/transdel/3/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_transdel.html')
+
         res = self.client.post(
             '/hjp/transdel/3/',
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
+
         res = self.client.post(
             '/hjp/transdel/3/',
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_transdeleted.html')
+
         res = self.client.get('/hjp/transdel/3/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
         res = self.client.post('/hjp/transdel/3/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
     def test_debt(self):
+
         req = DummyRequest('test-session')
         c = views.Debt()
         c.title = TEST_STRING
@@ -566,6 +630,7 @@ class TestViews2(TestCase):
         self.assertEqual(views.getdebt(req).title, TEST_STRING)
 
     def test_calcint(self):
+
         pp = [
             [date(2015, 1, 1),
              date(2016, 1, 1),
@@ -745,7 +810,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/ACT',
              },
-             0.767123287671233],
+             .767123287671233],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -754,7 +819,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/365',
              },
-             0.767123287671233],
+             .767123287671233],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -763,7 +828,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/360',
              },
-             0.7777777777777777],
+             .7777777777777777],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -772,7 +837,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/364',
              },
-             0.7692307692307692],
+             .7692307692307692],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -781,7 +846,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30U/360',
              },
-             0.7777777777777777],
+             .7777777777777777],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -790,7 +855,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E/360',
              },
-             0.7777777777777777],
+             .7777777777777777],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -799,7 +864,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E/360 ISDA',
              },
-             0.8333333333333331],
+             .8333333333333331],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -808,7 +873,7 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E+/360',
              },
-             0.7777777777777777],
+             .7777777777777777],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -826,7 +891,7 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30U',
              },
-             0.9333333333333332],
+             .9333333333333332],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -835,7 +900,7 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E',
              },
-             0.9333333333333332],
+             .9333333333333332],
             [date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
@@ -853,7 +918,7 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E+',
              },
-             0.9333333333333332],
+             .9333333333333332],
             [date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
@@ -933,6 +998,7 @@ class TestViews2(TestCase):
              {},
              13.320982109439328],
         ]
+
         ee = [
             [date(2016, 1, 1),
              date(2015, 1, 1),
@@ -986,6 +1052,7 @@ class TestViews2(TestCase):
              {},
              'Chybné datum, data nejsou k disposici'],
         ]
+
         for p in pp:
             pastdate = p[0]
             presdate = p[1]
@@ -1002,6 +1069,7 @@ class TestViews2(TestCase):
             self.assertEqual(len(c), 2)
             self.assertIsNone(c[1])
             self.assertAlmostEqual(c[0], p[6])
+
         for p in ee:
             pastdate = p[0]
             presdate = p[1]
@@ -1020,7 +1088,9 @@ class TestViews2(TestCase):
             self.assertEqual(c[1], p[6])
 
     def test_calculation(self):
+
         self.assertTrue(self.client.login(username='user', password='none'))
+
         i = 1
         while True:
             try:
@@ -1030,6 +1100,7 @@ class TestViews2(TestCase):
             except:
                 self.assertGreater(i, 1)
                 break
+
             res = self.client.post(
                 '/hjp/',
                 {'currency_0': 'EUR',
@@ -1065,6 +1136,7 @@ class TestViews2(TestCase):
                     if o.has_attr('checked'):
                         d[f] = o['value']
                         break
+
             res = self.client.post('/hjp/', d)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)

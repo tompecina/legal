@@ -37,39 +37,48 @@ class TestMain(TestCase):
     fixtures = ['cache_test.json']
 
     def test_getcache(self):
+
         r = main.getcache('test', timedelta(1))
         self.assertEqual(r, ('ok', None))
+
         r = main.getcache('xxx', timedelta(1))
         self.assertEqual(r, (None, 'Chyba při komunikaci se serverem'))
 
     def test_asset(self):
+
         self.assertIsNone(main.getasset(
             DummyRequest(None),
             None))
+
         self.assertIsNone(main.getasset(
             DummyRequest('test_session'),
             'test_asset1'))
+
         self.assertTrue(main.setasset(
             DummyRequest('test_session'),
             'test_asset1',
             b'test_data',
             timedelta(1)))
+
         self.assertEqual(
             main.getasset(
                 DummyRequest('test_session'), 'test_asset1'),
             b'test_data')
+
         self.assertFalse(
             main.setasset(
                 DummyRequest(None),
                 'test_asset',
                 b'test_data',
                 timedelta(1)))
+
         self.assertTrue(
             main.setasset(
                 DummyRequest('test_session'),
                 'test_asset2',
                 b'test_data',
                 timedelta(-1)))
+
         self.assertIsNone(
             main.getasset(
                 DummyRequest('test_session'),
@@ -79,12 +88,14 @@ class TestMain(TestCase):
 class TestModels(SimpleTestCase):
 
     def test_models(self):
+
         self.assertEqual(
             str(models.Cache(
                 url='test_url',
                 text='test',
                 expire=datetime.now())),
             'test_url')
+
         self.assertEqual(
             str(models.Asset(
                 sessionid='test_sessionid',

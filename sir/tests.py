@@ -46,11 +46,13 @@ class DummyTag:
 class TestCron1(SimpleTestCase):
 
     def test_convdt(self):
+
         self.assertEqual(
             cron.convdt(DummyTag('2016-01-17T14:16:59.315489')),
             datetime(2016, 1, 17, 14, 16, 59))
 
     def test_convd(self):
+
         self.assertEqual(
             cron.convd(DummyTag('2016-01-17T14:16:59.315489')),
             datetime(2016, 1, 17))
@@ -59,10 +61,12 @@ class TestCron1(SimpleTestCase):
 class TestCron2(TransactionTestCase):
 
     def test_update(self):
+
         setdl(472015)
         cron.cron_gettr()
         self.assertEqual(getdl(), 472015)
         self.assertEqual(models.Transaction.objects.count(), 115)
+
         setpr(-1)
         cron.cron_proctr()
         self.assertEqual(getdl(), 25707639)
@@ -71,21 +75,26 @@ class TestCron2(TransactionTestCase):
         self.assertEqual(models.Osoba.objects.count(), 11)
         self.assertEqual(models.Role.objects.count(), 11)
         self.assertEqual(models.Adresa.objects.count(), 3)
+
         cron.cron_deltr()
         self.assertFalse(models.Transaction.objects.exists())
+
         cron.cron_getws2()
         self.assertGreater(getpr(), 0)
         self.assertEqual(
             models.Vec.objects.first().link,
             'https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?'
             'id=7ba95b84-15ae-4a8e-8339-1918eac00c84')
+
         setdl(5772013)
         cron.cron_gettr()
         cron.cron_proctr()
         cron.cron_deltr()
         self.assertEqual(models.Vec.objects.count(), 2)
+
         cron.cron_delerr()
         self.assertEqual(models.Vec.objects.count(), 1)
+
         setdl(-1)
         cron.cron_update()
         self.assertEqual(models.DruhAdresy.objects.count(), 3)
@@ -116,6 +125,7 @@ class TestCron3(TestCase):
     fixtures = ['sir_test1.json']
 
     def test_sir_notice(self):
+
         populate()
         self.assertEqual(models.Tracked.objects.count(), 2)
         self.assertTrue(models.Tracked.objects.filter(
@@ -123,6 +133,7 @@ class TestCron3(TestCase):
         self.assertTrue(models.Tracked.objects.filter(
             desc__contains='577/2013').exists())
         self.assertEqual(cron.sir_notice(1), '')
+
         setpr(-1)
         cron.cron_getws2()
         self.assertEqual(
@@ -138,34 +149,42 @@ class TestCron3(TestCase):
 class TestGlob(SimpleTestCase):
 
     def test_l2n(self):
+
         self.assertEqual(len(glob.l2n), len(glob.COURTS))
         self.assertEqual(glob.l2n['KSSCEUL'], 'Krajský soud v Ústí nad Labem')
 
     def test_l2r(self):
+
         self.assertEqual(len(glob.l2r), len(glob.COURTS))
         self.assertEqual(glob.l2r['KSSECULP1'], 'KSSCEUL')
 
     def test_l2s(self):
+
         self.assertEqual(len(glob.l2s), len(glob.COURTS))
         self.assertEqual(glob.l2s['KSSCEUL'], 'KSUL')
 
     def test_selist(self):
+
         self.assertEqual(len(glob.SERVICE_EVENTS), len(glob.SELIST))
         self.assertTrue(642 in glob.SELIST)
 
     def test_s2d(self):
+
         self.assertEqual(len(glob.s2d), len(glob.STATES))
         self.assertEqual(glob.s2d['ZRUŠENO VS'], 'Zrušeno vrchním soudem')
 
     def test_r2i(self):
+
         self.assertEqual(len(glob.r2i), len(glob.ROLES))
         self.assertEqual(glob.r2i['trustee'], 'SPRÁVCE')
 
     def test_r2d(self):
+
         self.assertEqual(len(glob.r2d), len(glob.ROLES))
         self.assertEqual(glob.r2d['SPRÁVCE'], 'správce')
 
     def test_a2d(self):
+
         self.assertEqual(len(glob.a2d), len(glob.ADDRESSES))
         self.assertEqual(glob.a2d['POBOČKA'], 'pobočka')
 
@@ -175,36 +194,47 @@ class TestModels(TestCase):
     fixtures = ['sir_test2.json']
 
     def test_models(self):
+
         self.assertEqual(
             str(models.DruhAdresy.objects.first()),
             'SÍDLO ORG.')
+
         self.assertEqual(
             str(models.Adresa.objects.first()),
             'Plzeň')
+
         self.assertEqual(
             str(models.DruhRoleVRizeni.objects.first()),
             'DLUŽNÍK')
+
         self.assertEqual(
             str(models.Osoba.objects.first()),
             'Romské informační centrum')
+
         self.assertEqual(
             str(models.Role.objects.first()),
             'Romské informační centrum, DLUŽNÍK')
+
         self.assertEqual(
             str(models.DruhStavRizeni.objects.first()),
             'ÚPADEK')
+
         self.assertEqual(
             str(models.Vec.objects.first()),
             'KSSEMOS, 8 INS 1/2008')
+
         self.assertEqual(
             str(models.Counter.objects.first()),
             'DL: 27660755')
+
         self.assertEqual(
             str(models.Transaction.objects.first()),
             '27660656, INS 20806/2015')
+
         self.assertEqual(
             str(models.Insolvency.objects.first()),
             'INS 14515/2016')
+
         self.assertEqual(
             str(models.Tracked.objects.first()),
             'Test')
@@ -220,18 +250,23 @@ class TestViews1(TestCase):
         self.client.logout()
 
     def test_mainpage(self):
+
         res = self.client.get('/sir')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sir/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/sir/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/sir/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'sir_mainpage.html')
+
         res = self.client.post(
             '/sir/',
             {'email': 'xxx',
@@ -240,6 +275,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/sir/',
             {'email': 'alt@' + localdomain,
@@ -248,6 +284,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.user = User.objects.first()
         self.assertEqual(self.user.email, 'alt@' + localdomain)
+
         res = self.client.get('/sir/')
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertFalse(soup.select('table#list'))
@@ -256,6 +293,7 @@ class TestViews1(TestCase):
             number=13287,
             year=2016,
             desc='Test').save()
+
         res = self.client.get('/sir/')
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertEqual(len(soup.select('table#list tbody tr')), 1)
@@ -265,6 +303,7 @@ class TestViews1(TestCase):
                 number=number,
                 year=2016,
                 desc='Test {:d}'.format(number)).save()
+
         res = self.client.get('/sir/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
@@ -279,6 +318,7 @@ class TestViews1(TestCase):
         self.assertTrue(link_equal(
             links[2]['href'],
             '/sir/?start=200'))
+
         res = self.client.get('/sir/?start=50')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
@@ -299,6 +339,7 @@ class TestViews1(TestCase):
         self.assertTrue(link_equal(
             links[4]['href'],
             '/sir/?start=200'))
+
         res = self.client.get('/sir/?start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
@@ -319,6 +360,7 @@ class TestViews1(TestCase):
         self.assertTrue(link_equal(
             links[4]['href'],
             '/sir/?start=200'))
+
         res = self.client.get('/sir/?start=200')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
@@ -333,6 +375,7 @@ class TestViews1(TestCase):
         self.assertTrue(link_equal(
             links[2]['href'],
             '/sir/?start=150'))
+
         res = self.client.get('/sir/?start=500')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
@@ -349,13 +392,17 @@ class TestViews1(TestCase):
             '/sir/?start=187'))
 
     def test_insform(self):
+
         res = self.client.get('/sir/insform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sir/insform/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/sir/insform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/sir/insform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
@@ -365,6 +412,7 @@ class TestViews1(TestCase):
         p = soup.select('h1')
         self.assertEqual(len(p), 1)
         self.assertEqual(p[0].text, 'Nové řízení')
+
         res = self.client.post(
             '/sir/insform/',
             {'year': '2016',
@@ -374,6 +422,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/sir/insform/',
             {'number': '1',
@@ -383,6 +432,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/sir/insform/',
             {'number': '1',
@@ -392,6 +442,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/sir/insform/',
             {'number': '0',
@@ -402,6 +453,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/sir/insform/',
             {'number': '1',
@@ -412,12 +464,14 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/sir/insform/',
             {'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
+
         res = self.client.post(
             '/sir/insform/',
             {'number': '1',
@@ -427,11 +481,13 @@ class TestViews1(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
+
         ins_id = models.Insolvency.objects.create(
             uid=self.user,
             number=1,
             year=2016,
             desc='Test 2').id
+
         res = self.client.get('/sir/insform/{:d}/'.format(ins_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
@@ -441,6 +497,7 @@ class TestViews1(TestCase):
         p = soup.select('h1')
         self.assertEqual(len(p), 1)
         self.assertEqual(p[0].text, 'Úprava řízení')
+
         res = self.client.post(
             '/sir/insform/{:d}/'.format(ins_id),
             {'number': '8',
@@ -451,6 +508,7 @@ class TestViews1(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
+
         ins = models.Insolvency.objects.get(pk=ins_id)
         self.assertEqual(ins.number, 8)
         self.assertEqual(ins.year, 2011)
@@ -458,27 +516,34 @@ class TestViews1(TestCase):
         self.assertTrue(ins.detailed)
 
     def test_insdel(self):
+
         ins_id = models.Insolvency.objects.create(
             uid=self.user,
             number=1,
             year=2016,
             desc='Test').id
+
         res = self.client.get('/sir/insdel/{:d}'.format(ins_id))
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sir/insdel/{:d}/'.format(ins_id))
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/sir/insdel/{:d}/'.format(ins_id), follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/sir/insdel/{:d}/'.format(ins_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insdel.html')
+
         res = self.client.post(
             '/sir/insdel/{:d}/'.format(ins_id),
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
+
         res = self.client.post(
             '/sir/insdel/{:d}/'.format(ins_id),
             {'submit_yes': 'Ano'},
@@ -486,37 +551,47 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insdeleted.html')
         self.assertFalse(models.Insolvency.objects.filter(pk=ins_id).exists())
+
         res = self.client.post('/sir/insdel/{:d}/'.format(ins_id))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
     def test_insdelall(self):
+
         models.Insolvency.objects.create(
             uid=self.user,
             number=1,
             year=2016,
             desc='Test 1')
+
         models.Insolvency.objects.create(
             uid=self.user,
             number=2,
             year=2016,
             desc='Test 2')
+
         self.assertEqual(models.Insolvency.objects.count(), 2)
+
         res = self.client.get('/sir/insdelall')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sir/insdelall/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/sir/insdelall/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/sir/insdelall/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insdelall.html')
+
         res = self.client.post(
             '/sir/insdelall/',
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
+
         res = self.client.post(
             '/sir/insdelall/',
             {'submit_yes': 'Ano'},
@@ -524,6 +599,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
         self.assertEqual(models.Insolvency.objects.count(), 2)
+
         res = self.client.post(
             '/sir/insdelall/',
             {'submit_yes': 'Ano',
@@ -532,6 +608,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.html')
         self.assertEqual(models.Insolvency.objects.count(), 2)
+
         res = self.client.post(
             '/sir/insdelall/',
             {'submit_yes': 'Ano',
@@ -542,37 +619,46 @@ class TestViews1(TestCase):
         self.assertFalse(models.Insolvency.objects.exists())
 
     def test_insbatchform(self):
+
         models.Insolvency.objects.create(
             uid=self.user,
             number=1,
             year=2016,
             desc='Test 1')
+
         models.Insolvency.objects.create(
             uid=self.user,
             number=4,
             year=2011,
             desc='Test 4')
+
         models.Insolvency.objects.create(
             uid=self.user,
             number=5,
             year=2012,
             desc='Test 4')
+
         res = self.client.get('/sir/insbatchform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sir/insbatchform/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/sir/insbatchform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/sir/insbatchform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insbatchform.html')
+
         res = self.client.post(
             '/sir/insbatchform/',
             {'submit_load': 'Načíst'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insbatchform.html')
         self.assertContains(res, 'Nejprve zvolte soubor k načtení')
+
         with open(join(TEST_DIR, 'import.csv'), 'rb') as fi:
             res = self.client.post(
                 '/sir/insbatchform/',
@@ -591,6 +677,7 @@ class TestViews1(TestCase):
              [7, 'Prázdný popis'],
              [8, 'Popisu "Test 4" odpovídá více než jedno řízení'],
              [11, 'Příliš dlouhý popis']])
+
         res = self.client.get('/sir/insexport/')
         self.assertEqual(
             res.content.decode('utf-8'),
@@ -602,24 +689,30 @@ class TestViews1(TestCase):
             '{},57,2012,ano\r\n'.format('T' * 255))
 
     def test_insexport(self):
+
         models.Insolvency.objects.create(
             uid=self.user,
             number=1,
             year=2016,
             desc='Test 1')
+
         models.Insolvency.objects.create(
             uid=self.user,
             number=2,
             year=2011,
             detailed=True,
             desc='Test 2')
+
         res = self.client.get('/sir/insexport')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sir/insexport/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/sir/insexport/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/sir/insexport/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
@@ -634,8 +727,10 @@ class TestViews2(TestCase):
     fixtures = ['sir_test2.json']
 
     def test_courts(self):
+
         res = self.client.get('/sir/courts')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sir/courts/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))

@@ -34,28 +34,29 @@ from udn.models import Decision
 from sur import cron, models
 
 
-pp = [
-    ['Jč', 0, 261, 166, 166, 166, 234],
-    ['jČ', 0, 261, 166, 166, 166, 234],
-    ['B', 1, 134, 158, 38, 108],
-    ['b', 1, 134, 158, 38, 108],
-    ['ová', 2, 261, 166, 166, 363, 485, 234, 38, 152, 233],
-    ['OVÁ', 2, 261, 166, 166, 363, 485, 234, 38, 152, 233],
-    ['Luděk Legner', 3, 234],
-    ['LUDĚK legner', 3, 234],
-    ['Mgr. Ivana Rychnovská', 3, 1784],
-    ['MGR. IVANA RYCHNOVSKÁ', 3, 1784],
-    ['Huis', 1, 2, 2],
-    ['hUIS', 1, 2, 2],
-]
-
-
 class TestCron(TestCase):
 
     fixtures = ['sur_test.json']
 
     def test_sur_notice(self):
+
+        pp = [
+            ['Jč', 0, 261, 166, 166, 166, 234],
+            ['jČ', 0, 261, 166, 166, 166, 234],
+            ['B', 1, 134, 158, 38, 108],
+            ['b', 1, 134, 158, 38, 108],
+            ['ová', 2, 261, 166, 166, 363, 485, 234, 38, 152, 233],
+            ['OVÁ', 2, 261, 166, 166, 363, 485, 234, 38, 152, 233],
+            ['Luděk Legner', 3, 234],
+            ['LUDĚK legner', 3, 234],
+            ['Mgr. Ivana Rychnovská', 3, 1784],
+            ['MGR. IVANA RYCHNOVSKÁ', 3, 1784],
+            ['Huis', 1, 2, 2],
+            ['hUIS', 1, 2, 2],
+        ]
+
         self.assertEqual(cron.sur_notice(1), '')
+
         for p in pp:
             Hearing.objects.all().delete()
             models.Found.objects.all().delete()
@@ -69,6 +70,7 @@ class TestCron(TestCase):
             self.assertEqual(
                 list(models.Found.objects.values_list('number', flat=True)),
                 p[2:])
+
         Hearing.objects.all().delete()
         models.Found.objects.all().delete()
         models.Party.objects.all().delete()
@@ -80,54 +82,68 @@ class TestCron(TestCase):
         udn_update()
         self.assertEqual(
             cron.sur_notice(1),
-            'Byli nově zaznamenáni tito účastníci řízení, které '
-            'sledujete:\n\n'
-            ' - Anna Krayemová, Krajský soud Brno, sp. zn. 27 Co 363/2014\n'
-            '   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27'
-            '&register=Co&number=363&year=2014&date_from=2016-12-01'
-            '&date_to=2016-12-01\n\n'
-            ' - Dana Lauerová, Krajský soud Brno, sp. zn. 7 To 485/2016\n'
-            '   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=7'
-            '&register=To&number=485&year=2016&date_from=2016-12-01'
-            '&date_to=2016-12-01\n\n'
-            ' - Hana Brychtová, Nejvyšší správní soud, sp. zn. 5 As '
-            '233/2015\n'
-            '   https://legal.pecina.cz/udn/list/?senate=5&register=As'
-            '&number=233&year=2015&page=46\n\n'
-            ' - Helena Polášková, Krajský soud Brno, sp. zn. 18 Co 234/2016\n'
-            '   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=18'
-            '&register=Co&number=234&year=2016&date_from=2016-12-01'
-            '&date_to=2016-12-01\n\n'
-            ' - Jana Krebsová, Nejvyšší správní soud, sp. zn. 4 Ads '
-            '152/2015\n'
-            '   https://legal.pecina.cz/udn/list/?senate=4&register=Ads'
-            '&number=152&year=2015&page=27\n\n'
-            ' - Jitka Krejčová, Krajský soud Brno, sp. zn. 27 Co 166/2016\n'
-            '   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27'
-            '&register=Co&number=166&year=2016&date_from=2016-12-01'
-            '&date_to=2016-12-01\n\n'
-            ' - Lenka Krejčová, Krajský soud Brno, sp. zn. 27 Co 166/2016\n'
-            '   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27'
-            '&register=Co&number=166&year=2016&date_from=2016-12-01'
-            '&date_to=2016-12-01\n\n'
-            ' - Mateřská škola a Základní škola, Ostopovice, okres Brno - '
-            'venkov, příspěvková organizace, Nejvyšší správní soud, '
-            'sp. zn. 10 As 81/2016\n'
-            '   https://legal.pecina.cz/udn/list/?senate=10&register=As'
-            '&number=81&year=2016&page=26\n\n'
-            ' - Milada Krajčová, Krajský soud Brno, sp. zn. 27 Co 261/2016\n'
-            '   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27'
-            '&register=Co&number=261&year=2016&date_from=2016-12-01'
-            '&date_to=2016-12-01\n\n'
-            ' - Odborová organizace ochrany práv zaměstnanců, Nejvyšší '
-            'správní soud, sp. zn. 4 Ads 208/2015\n'
-            '   https://legal.pecina.cz/udn/list/?senate=4&register=Ads'
-            '&number=208&year=2015&page=82\n\n'
-            ' - Vladimíra Foukalová, Krajský soud Brno, sp. zn. 18 Co '
-            '38/2016\n'
-            '   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=18'
-            '&register=Co&number=38&year=2016&date_from=2016-12-01'
-            '&date_to=2016-12-01\n\n')
+            '''\
+Byli nově zaznamenáni tito účastníci řízení, které \
+sledujete:
+
+ - Anna Krayemová, Krajský soud Brno, sp. zn. 27 Co 363/2014
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27\
+&register=Co&number=363&year=2014&date_from=2016-12-01\
+&date_to=2016-12-01
+
+ - Dana Lauerová, Krajský soud Brno, sp. zn. 7 To 485/2016
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=7\
+&register=To&number=485&year=2016&date_from=2016-12-01\
+&date_to=2016-12-01
+
+ - Hana Brychtová, Nejvyšší správní soud, sp. zn. 5 As \
+233/2015
+   https://legal.pecina.cz/udn/list/?senate=5&register=As\
+&number=233&year=2015&page=46
+
+ - Helena Polášková, Krajský soud Brno, sp. zn. 18 Co 234/2016
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=18\
+&register=Co&number=234&year=2016&date_from=2016-12-01\
+&date_to=2016-12-01
+
+ - Jana Krebsová, Nejvyšší správní soud, sp. zn. 4 Ads \
+152/2015
+   https://legal.pecina.cz/udn/list/?senate=4&register=Ads\
+&number=152&year=2015&page=27
+
+ - Jitka Krejčová, Krajský soud Brno, sp. zn. 27 Co 166/2016
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27\
+&register=Co&number=166&year=2016&date_from=2016-12-01\
+&date_to=2016-12-01
+
+ - Lenka Krejčová, Krajský soud Brno, sp. zn. 27 Co 166/2016
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27\
+&register=Co&number=166&year=2016&date_from=2016-12-01\
+&date_to=2016-12-01
+
+ - Mateřská škola a Základní škola, Ostopovice, okres Brno - \
+venkov, příspěvková organizace, Nejvyšší správní soud, \
+sp. zn. 10 As 81/2016
+   https://legal.pecina.cz/udn/list/?senate=10&register=As\
+&number=81&year=2016&page=26
+
+ - Milada Krajčová, Krajský soud Brno, sp. zn. 27 Co 261/2016
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27\
+&register=Co&number=261&year=2016&date_from=2016-12-01\
+&date_to=2016-12-01
+
+ - Odborová organizace ochrany práv zaměstnanců, Nejvyšší \
+správní soud, sp. zn. 4 Ads 208/2015
+   https://legal.pecina.cz/udn/list/?senate=4&register=Ads\
+&number=208&year=2015&page=82
+
+ - Vladimíra Foukalová, Krajský soud Brno, sp. zn. 18 Co \
+38/2016
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=18\
+&register=Co&number=38&year=2016&date_from=2016-12-01\
+&date_to=2016-12-01
+
+''')
         self.assertEqual(cron.sur_notice(1), '')
 
 
@@ -136,6 +152,7 @@ class TestModels(TestCase):
     fixtures = ['sur_test.json']
 
     def test_models(self):
+
         models.Party(uid_id=1, party='ová', party_opt=0).save()
         udn_update()
         self.assertEqual(
@@ -156,18 +173,23 @@ class TestViews(TestCase):
         self.client.logout()
 
     def test_mainpage(self):
+
         res = self.client.get('/sur')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sur/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/sur/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/sur/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+
         res = self.client.post(
             '/sur/',
             {'email': 'xxx',
@@ -176,6 +198,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/sur/',
             {'email': 'alt@' + localdomain,
@@ -184,6 +207,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.user = User.objects.first()
         self.assertEqual(self.user.email, 'alt@' + localdomain)
+
         res = self.client.get('/sur/')
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertFalse(soup.select('table#list'))
@@ -191,6 +215,7 @@ class TestViews(TestCase):
             uid=self.user,
             party_opt=0,
             party='Test').save()
+
         res = self.client.get('/sur/')
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertEqual(len(soup.select('table#list tbody tr')), 1)
@@ -199,6 +224,7 @@ class TestViews(TestCase):
                 uid=self.user,
                 party_opt=0,
                 party='Test {:d}'.format(number)).save()
+
         res = self.client.get('/sur/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
@@ -213,6 +239,7 @@ class TestViews(TestCase):
         self.assertTrue(link_equal(
             links[2]['href'],
             '/sur/?start=200'))
+
         res = self.client.get('/sur/?start=50')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
@@ -233,6 +260,7 @@ class TestViews(TestCase):
         self.assertTrue(link_equal(
             links[4]['href'],
             '/sur/?start=200'))
+
         res = self.client.get('/sur/?start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
@@ -253,6 +281,7 @@ class TestViews(TestCase):
         self.assertTrue(link_equal(
             links[4]['href'],
             '/sur/?start=200'))
+
         res = self.client.get('/sur/?start=200')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
@@ -267,6 +296,7 @@ class TestViews(TestCase):
         self.assertTrue(link_equal(
             links[2]['href'],
             '/sur/?start=150'))
+
         res = self.client.get('/sur/?start=500')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
@@ -283,13 +313,17 @@ class TestViews(TestCase):
             '/sur/?start=187'))
 
     def test_partyform(self):
+
         res = self.client.get('/sur/partyform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sur/partyform/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/sur/partyform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/sur/partyform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
@@ -299,6 +333,7 @@ class TestViews(TestCase):
         p = soup.select('h1')
         self.assertEqual(len(p), 1)
         self.assertEqual(p[0].text, 'Nový účastník')
+
         res = self.client.post(
             '/sur/partyform/',
             {'party_opt': 'icontains',
@@ -307,6 +342,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partyform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/sur/partyform/',
             {'party': 'XXX',
@@ -315,6 +351,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partyform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/sur/partyform/',
             {'party': 'Test',
@@ -324,12 +361,14 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partyform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+
         res = self.client.post(
             '/sur/partyform/',
             {'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+
         res = self.client.post(
             '/sur/partyform/',
             {'party': 'Test',
@@ -338,10 +377,12 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+
         party_id = models.Party.objects.create(
             uid=self.user,
             party_opt=0,
             party='Test 2').id
+
         res = self.client.get('/sur/partyform/{:d}/'.format(party_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
@@ -351,6 +392,7 @@ class TestViews(TestCase):
         p = soup.select('h1')
         self.assertEqual(len(p), 1)
         self.assertEqual(p[0].text, 'Úprava účastníka')
+
         res = self.client.post(
             '/sur/partyform/{:d}/'.format(party_id),
             {'party': 'Test 8',
@@ -363,28 +405,35 @@ class TestViews(TestCase):
         self.assertEqual(party.party, 'Test 8')
 
     def test_partydel(self):
+
         party_id = models.Party.objects.create(
             uid=self.user,
             party_opt=0,
             party='Test').id
+
         res = self.client.get('/sur/partydel/{:d}'.format(party_id))
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sur/partydel/{:d}/'.format(party_id))
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get(
             '/sur/partydel/{:d}/'.format(party_id),
             follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/sur/partydel/{:d}/'.format(party_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partydel.html')
+
         res = self.client.post(
             '/sur/partydel/{:d}/'.format(party_id),
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+
         res = self.client.post(
             '/sur/partydel/{:d}/'.format(party_id),
             {'submit_yes': 'Ano'},
@@ -392,35 +441,45 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partydeleted.html')
         self.assertFalse(models.Party.objects.filter(pk=party_id).exists())
+
         res = self.client.post('/sur/partydel/{:d}/'.format(party_id))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
     def test_partydelall(self):
+
         models.Party.objects.create(
             uid=self.user,
             party_opt=0,
             party='Test 1')
+
         models.Party.objects.create(
             uid=self.user,
             party_opt=0,
             party='Test 2')
+
         self.assertEqual(models.Party.objects.count(), 2)
+
         res = self.client.get('/sur/partydelall')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sur/partydelall/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/sur/partydelall/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/sur/partydelall/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partydelall.html')
+
         res = self.client.post(
             '/sur/partydelall/',
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+
         res = self.client.post(
             '/sur/partydelall/',
             {'submit_yes': 'Ano'},
@@ -428,6 +487,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
         self.assertEqual(models.Party.objects.count(), 2)
+
         res = self.client.post(
             '/sur/partydelall/',
             {'submit_yes': 'Ano',
@@ -436,6 +496,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
         self.assertEqual(models.Party.objects.count(), 2)
+
         res = self.client.post(
             '/sur/partydelall/',
             {'submit_yes': 'Ano',
@@ -446,34 +507,43 @@ class TestViews(TestCase):
         self.assertFalse(models.Party.objects.exists())
 
     def test_partybatchform(self):
+
         models.Party.objects.create(
             uid=self.user,
             party_opt=0,
             party='Test 01')
+
         models.Party.objects.create(
             uid=self.user,
             party_opt=0,
             party='Test 05')
+
         models.Party.objects.create(
             uid=self.user,
             party_opt=0,
             party='Test 05')
+
         res = self.client.get('/sur/partybatchform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sur/partybatchform/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/sur/partybatchform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/sur/partybatchform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partybatchform.html')
+
         res = self.client.post(
             '/sur/partybatchform/',
             {'submit_load': 'Načíst'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partybatchform.html')
         self.assertContains(res, 'Nejprve zvolte soubor k načtení')
+
         res = self.client.post(
             '/sur/partybatchform/',
             {'submit_xxx': 'XXX'})
@@ -482,6 +552,7 @@ class TestViews(TestCase):
         self.assertEqual(
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
+
         with open(BASE_DIR + '/sur/testdata/import.csv', 'rb') as fi:
             res = self.client.post(
                 '/sur/partybatchform/',
@@ -498,6 +569,7 @@ class TestViews(TestCase):
              [3, 'Chybná délka řetězce'],
              [4, 'Chybná zkratka pro posici'],
              [5, 'Řetězci "Test 05" odpovídá více než jeden účastník']])
+
         res = self.client.get('/sur/partyexport/')
         self.assertEqual(
             res.content.decode('utf-8'),
@@ -512,29 +584,37 @@ class TestViews(TestCase):
             + ('T' * 80) + ':*\r\n')
 
     def test_partyexport(self):
+
         models.Party.objects.create(
             uid=self.user,
             party='Test 1',
             party_opt=0)
+
         models.Party.objects.create(
             uid=self.user,
             party='Test 2',
             party_opt=1)
+
         models.Party.objects.create(
             uid=self.user,
             party='Test 3',
             party_opt=2)
+
         models.Party.objects.create(
             uid=self.user,
             party='Test 4',
             party_opt=3)
+
         res = self.client.get('/sur/partyexport')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
         res = self.client.get('/sur/partyexport/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
+
         res = self.client.get('/sur/partyexport/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.get('/sur/partyexport/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
