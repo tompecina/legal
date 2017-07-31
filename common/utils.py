@@ -226,7 +226,7 @@ def holiday(dt):
         {'day': 8, 'month': 12, 'from': -inf, 'to': 1946},
         {'day': 28, 'month': 9, 'from': 1948, 'to': 1951},
 
-        # Chistmas Eve
+        # Christmas Eve
         {'day': 24, 'month': 12, 'from': 1966, 'to': 1975},
         {'day': 24, 'month': 12, 'from': 1984, 'to': inf},
 
