@@ -27,7 +27,7 @@ from django.apps import apps
 from common.utils import (
     pd, holiday, ply, plm, ydconvs, mdconvs, yfactor, mfactor, odp,
     grammar, getbutton, unrequire, Lf, logger)
-from common.glob import inerr_short, GR_D, GR_B, GR_M, GR_Y
+from common.glob import inerr_short, GR_D, GR_B, GR_M, GR_Y, UNC_DATE
 from cin.forms import MainForm
 
 
@@ -72,7 +72,7 @@ def mainpage(request):
                 messages.append(
                     [grammar((end_date - beg_date).days, GR_D), None])
 
-                if beg_date.year >= 1991:
+                if beg_date >= UNC_DATE:
                     t = beg_date + odp
                     n = 0
                     while t <= end_date:
