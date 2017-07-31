@@ -75,7 +75,7 @@ logger = Logger()
 
 def lim(lower, arg, upper):
     """
-    Return arg bound by [lower, upper].
+    Return 'arg' bound by ['lower', 'upper'].
     """
 
     return min(max(lower, arg), upper)
@@ -83,7 +83,7 @@ def lim(lower, arg, upper):
 
 def between(lower, arg, upper):
     """
-    Check if arg lies within [lower, upper].
+    Check if 'arg' lies within ['lower', 'upper'].
     """
 
     return arg >= lower and arg <= upper
@@ -91,7 +91,7 @@ def between(lower, arg, upper):
 
 def pd(dt):
     """
-    Return standard project-wide formatted string represenation of date dt.
+    Return standard project-wide formatted string represenation of date 'dt'.
     """
 
     return '{0.day:02d}.{0.month:02d}.{0.year:02d}'.format(dt)
@@ -99,7 +99,7 @@ def pd(dt):
 
 def easter_monday(year):
     """
-    Return the date of the Easter Monday in year.
+    Return the date of the Easter Monday in 'year'.
     """
 
     g = year % 19
@@ -117,7 +117,7 @@ def easter_monday(year):
 
 def movable_holiday(dt):
     """
-    Check if dt is a local movable banking holiday.
+    Check if 'dt' is a local movable banking holiday.
     """
 
     HOLIDAYS = (
@@ -153,7 +153,7 @@ def movable_holiday(dt):
 
 def holiday(dt):
     """
-    Check if dt is a local banking holiday.
+    Check if 'dt' is a local banking holiday.
     """
 
     HOLIDAYS = (
@@ -521,7 +521,7 @@ def c2p(string):
 
 class Lf(float):
     """
-    Class for correct formatting of floats.
+    Class for correct localized formatting of floats.
     """
 
     def __format__(self, format):
@@ -848,11 +848,11 @@ def text_opt(needle, haystack, opt):
     return [icontains, istartswith, iendswith, iexact][opt](needle, haystack)
 
 
-def normalize(s):
+def normalize(string):
     """
     Replace hard-spaces, strip and split.
     """
-    return ' '.join(s.replace('\u00a0', ' ').strip().split())
+    return ' '.join(string.replace('\u00a0', ' ').strip().split())
 
 
 def icmp(x, y):
