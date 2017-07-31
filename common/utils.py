@@ -97,20 +97,21 @@ def pd(dt):
     return '{0.day:02d}.{0.month:02d}.{0.year:02d}'.format(dt)
 
 
-def easter_monday(year):
+def easter_sunday(year):
     """
-    Return the date of the Easter Monday in 'year'.
+    Return the date of the Easter Sunday in 'year'.
     """
 
-    g = year % 19
-    e = 0
-    c = year // 100
-    h = (c - c // 4 - (8 * c + 13) // 25 + 19 * g + 15) % 30
-    i = h - (h // 28) * (1 - (h // 28) * (29 // (h + 1)) * ((21 - g) // 11))
-    j = (year + year // 4 + i + 2 - c + c // 4) % 7
-    p = i - j + e
-    day = 1 + (p + 28 + (p + 6) // 40) % 31
-    month = 3 + (p + 27) // 30
+    a = year % 19
+    b = year >> 2
+    c = b // 25 + 1
+    d = (c * 3) >> 2
+    e = ((a * 19) - ((c * 8 + 5) // 25) + d + 15) % 30
+    e += (29578 - a - e * 32) >> 10
+    e -= ((year % 7) + b - d + e + 2) % 7
+    d = e >> 5
+    day = e - d * 31
+    month = d + 3
 
     return date(year, month, day)
 
@@ -123,29 +124,29 @@ def movable_holiday(dt):
     HOLIDAYS = (
 
         # Good Friday
-        {'offset': -3, 'from': 1948, 'to': 1951},
-        {'offset': -3, 'from': 2016, 'to': inf},
+        {'offset': -2, 'from': 1948, 'to': 1951},
+        {'offset': -2, 'from': 2016, 'to': inf},
 
         # Easter Monday
-        {'offset': 0, 'from': -inf, 'to': 1946},
-        {'offset': 0, 'from': 1948, 'to': inf},
+        {'offset': 1, 'from': -inf, 'to': 1946},
+        {'offset': 1, 'from': 1948, 'to': inf},
 
         # Ascension of Jesus
-        {'offset': 38, 'from': -inf, 'to': 1946},
-        {'offset': 38, 'from': 1948, 'to': 1951},
+        {'offset': 39, 'from': -inf, 'to': 1946},
+        {'offset': 39, 'from': 1948, 'to': 1951},
 
         # Whit Monday
-        {'offset': 49, 'from': -inf, 'to': 1946},
-        {'offset': 49, 'from': 1948, 'to': 1951},
+        {'offset': 50, 'from': -inf, 'to': 1946},
+        {'offset': 50, 'from': 1948, 'to': 1951},
 
         # Corpus Christi
-        {'offset': 59, 'from': -inf, 'to': 1951},
+        {'offset': 60, 'from': -inf, 'to': 1951},
     )
 
     year = dt.year
-    em = easter_monday(year)
+    es = easter_sunday(year)
     for hol in HOLIDAYS:
-        if dt == (em + timedelta(hol['offset'])) \
+        if dt == (es + timedelta(hol['offset'])) \
             and between(hol['from'], year, hol['to']):
             return True
     return False
