@@ -121,20 +121,23 @@ def movable_holiday(dt):
     """
 
     HOLIDAYS = (
+
         # Good Friday
-        {'offset': -3, 'from': -inf, 'to': 1925},
-        {'offset': -3, 'from': 1946, 'to': 1946},
         {'offset': -3, 'from': 1948, 'to': 1951},
         {'offset': -3, 'from': 2016, 'to': inf},
+
         # Easter Monday
         {'offset': 0, 'from': -inf, 'to': 1946},
         {'offset': 0, 'from': 1948, 'to': inf},
-        # Ascension
+
+        # Ascension of Jesus
         {'offset': 38, 'from': -inf, 'to': 1946},
         {'offset': 38, 'from': 1948, 'to': 1951},
+
         # Whit Monday
-        {'offset': 49, 'from': 1939, 'to': 1946},
+        {'offset': 49, 'from': -inf, 'to': 1946},
         {'offset': 49, 'from': 1948, 'to': 1951},
+
         # Corpus Christi
         {'offset': 59, 'from': -inf, 'to': 1951},
     )
@@ -154,34 +157,83 @@ def holiday(dt):
     """
 
     HOLIDAYS = (
+
+        # Circumcision of Jesus/New Year
         {'day': 1, 'month': 1, 'from': -inf, 'to': inf},
+
+        # Epiphany/Magi
         {'day': 6, 'month': 1, 'from': -inf, 'to': 1946},
+        {'day': 6, 'month': 1, 'from': 1948, 'to': 1951},
+
+        # Purification of the Virgin
         {'day': 2, 'month': 2, 'from': -inf, 'to': 1925},
+
+        # Birthday of T. G. Masaryk
         {'day': 7, 'month': 3, 'from': 1946, 'to': 1946},
+        {'day': 7, 'month': 3, 'from': 1948, 'to': 1951},
+
+        # Annunciation
         {'day': 25, 'month': 3, 'from': -inf, 'to': 1925},
+
+        # Labor Day
         {'day': 1, 'month': 5, 'from': 1925, 'to': inf},
+
+        # Liberation Day
         {'day': 8, 'month': 5, 'from': 1992, 'to': inf},
         {'day': 9, 'month': 5, 'from': 1946, 'to': 1946},
         {'day': 9, 'month': 5, 'from': 1952, 'to': 1991},
-        {'day': 16, 'month': 5, 'from': -inf, 'to': 1924},
+
+        # St. John of Nepomuk
+        {'day': 16, 'month': 5, 'from': -inf, 'to': 1924}, # only in Bohemia
+
+        # Saints Peter and Paul
         {'day': 29, 'month': 6, 'from': -inf, 'to': 1946},
+        {'day': 29, 'month': 6, 'from': 1948, 'to': 1951},
+
+        # Saints Cyril and Methodius
+        {'day': 5, 'month': 7, 'from': -inf, 'to': 1924}, # only in Moravia
         {'day': 5, 'month': 7, 'from': 1925, 'to': 1951},
         {'day': 5, 'month': 7, 'from': 1990, 'to': inf},
+
+        # John Huss
         {'day': 6, 'month': 7, 'from': 1925, 'to': 1951},
         {'day': 6, 'month': 7, 'from': 1990, 'to': inf},
+
+        # Ascension of the Virgin
         {'day': 15, 'month': 8, 'from': -inf, 'to': 1951},
+
+        # Nativity of the Virgin
         {'day': 8, 'month': 9, 'from': -inf, 'to': 1924},
-        {'day': 28, 'month': 9, 'from': -inf, 'to': 1946},
+
+        # St. Wenceslaus
+        {'day': 28, 'month': 9, 'from': -inf, 'to': 1924}, # only in Bohemia
+        {'day': 28, 'month': 9, 'from': 1925, 'to': 1946},
+        {'day': 28, 'month': 9, 'from': 1948, 'to': 1951},
         {'day': 28, 'month': 9, 'from': 2000, 'to': inf},
+
+        # Creation of Czechoslovakia/Nationalization Day
         {'day': 28, 'month': 10, 'from': 1919, 'to': 1939},
         {'day': 28, 'month': 10, 'from': 1946, 'to': 1969},
         {'day': 28, 'month': 10, 'from': 1988, 'to': inf},
+
+        # All Saints
         {'day': 1, 'month': 11, 'from': -inf, 'to': 1951},
+
+        # Velvet Revolution
         {'day': 17, 'month': 11, 'from': 2000, 'to': inf},
+
+        # Immaculate Conception
         {'day': 8, 'month': 12, 'from': -inf, 'to': 1946},
+        {'day': 28, 'month': 9, 'from': 1948, 'to': 1951},
+
+        # Chistmas Eve
         {'day': 24, 'month': 12, 'from': 1966, 'to': 1975},
         {'day': 24, 'month': 12, 'from': 1984, 'to': inf},
+
+        # Nativity of Jesus/First Christmas Holiday
         {'day': 25, 'month': 12, 'from': -inf, 'to': inf},
+
+        # St. Stephen/Second Christmas Holiday
         {'day': 26, 'month': 12, 'from': -inf, 'to': inf},
     )
 
