@@ -222,7 +222,7 @@ def get_mpi_rate(typ, dat, log=None):
 
     stat = MPIstat.objects.get_or_create(type=typ)
     updated = stat[0].timestamp_update.date()
-    if stat[1] or (not MPIrate.objects.filter(valid__gte=dat).exists()
+    if stat[1] or (not MPIrate.objects.filter(type=typ, valid__gte=dat).exists()
         and (updated - dat) < DOWNLOAD_WAIT):
         surl = prefix + types[typ][0] + suffix
         txt = getcache(surl, DOWNLOAD_REPEAT)[0]
@@ -232,7 +232,7 @@ def get_mpi_rate(typ, dat, log=None):
 
         txt = txt.replace('\r', '').split('\n')
         if txt[0] != types[typ][1]:
-            logger.error('Error in rate table for ' + types[typ][0])
+            logger.error('Error in rate table for {}'.format(types[typ][0]))
             return None, 'Chyba tabulky sazeb (1)'
 
         rates = []
@@ -243,7 +243,7 @@ def get_mpi_rate(typ, dat, log=None):
                     (float(lin[9:].replace(',', '.')),
                      date(int(lin[0:4]), int(lin[4:6]), int(lin[6:8]))))
         except:
-            logger.error('Error in rate table for ' + types[typ][0])
+            logger.error('Error in rate table for {}'.format(types[typ][0]))
             return None, 'Chyba tabulky sazeb (2)'
 
         try:
