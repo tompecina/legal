@@ -241,7 +241,7 @@ def get_mpi_rate(typ, dat, log=None):
                 assert lin[8] == '|'
                 rates.append(
                     (float(lin[9:].replace(',', '.')),
-                     date(int(lin[0:4]), int(lin[4:6]), int(lin[6:8]))))
+                     date(int(lin[:4]), int(lin[4:6]), int(lin[6:8]))))
         except:
             logger.error('Error in rate table for {}'.format(types[typ][0]))
             return None, 'Chyba tabulky sazeb (2)'
