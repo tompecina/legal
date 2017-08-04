@@ -24,8 +24,8 @@ from django.conf.urls import include, url
 from django.contrib.auth.views import LoginView, settings
 from django.contrib import admin
 from common.views import (
-    home, robots, pwchange, logout, user, useradd, lostpw, resetpw, about,
-    stat, genrender)
+    home, robots, pwchange, logout, userinfo, useradd, lostpw, resetpw,
+    about, stat, genrender)
 
 
 admin.autodiscover()
@@ -45,7 +45,7 @@ urlpatterns = [
         LoginView.as_view(template_name='login.html'),
         name='login'),
     url(r'^accounts/logout/$', logout, name='logout'),
-    url(r'^accounts/user/$', user, name='user'),
+    url(r'^accounts/user/$', userinfo, name='user'),
     url(r'^accounts/useradd/$', useradd, name='useradd'),
     url(r'^accounts/useradded/$',
         genrender,

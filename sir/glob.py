@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-COURTS = [
+COURTS = (
     {
         'long': 'KSJIMBM',
         'short': 'KSBR',
@@ -91,12 +91,12 @@ COURTS = [
         'short': 'MSPH',
         'name': 'Městský soud v Praze',
         'reg': 'MSPHAAB'},
-]
-l2n = {c['long']: c['name'] for c in COURTS}
-l2r = {c['long']: c['reg'] for c in COURTS}
-l2s = {c['long']: c['short'] for c in COURTS}
+)
+L2N = {c['long']: c['name'] for c in COURTS}
+L2R = {c['long']: c['reg'] for c in COURTS}
+L2S = {c['long']: c['short'] for c in COURTS}
 
-SERVICE_EVENTS = [
+SERVICE_EVENTS = (
     {
         'id': 330,
         'desc': 'Změna XSD dokumentu poznámky',
@@ -158,12 +158,12 @@ SERVICE_EVENTS = [
         'id': 1022,
         'desc': 'Smazání údajů o úpadku',
         'ws': False},
-]
+)
 SELIST = [x['id'] for x in SERVICE_EVENTS]
 
-BELIST = [75, 76, 77, 78, 84]
+BELIST = (75, 76, 77, 78, 84)
 
-STATES = [
+STATES = (
     {
         'id': 'ODDLUŽENÍ',
         'desc': 'Povoleno oddlužení'},
@@ -206,10 +206,10 @@ STATES = [
     {
         'id': 'KONKURS',
         'desc': 'Prohlášený konkurs'},
-]
-s2d = {s['id']: s['desc'] for s in STATES}
+)
+S2D = {s['id']: s['desc'] for s in STATES}
 
-ROLES = [
+ROLES = (
     {
         'field': 'debtor',
         'id': 'DLUŽNÍK',
@@ -226,11 +226,11 @@ ROLES = [
         'field': 'motioner',
         'id': 'VĚŘIT-NAVR',
         'desc': ' věřitel, který podal insolvenční návrh'},
-]
-r2i = {x['field']: x['id'] for x in ROLES}
-r2d = {x['id']: x['desc'] for x in ROLES}
+)
+R2I = {x['field']: x['id'] for x in ROLES}
+R2D = {x['id']: x['desc'] for x in ROLES}
 
-ADDRESSES = [
+ADDRESSES = (
     {
         'id': 'E-MAIL',
         'desc': 'email'},
@@ -258,5 +258,5 @@ ADDRESSES = [
     {
         'id': 'MÍSTO PODN',
         'desc': 'místo podnikání'},
-]
-a2d = {x['id']: x['desc'] for x in ADDRESSES}
+)
+A2D = {x['id']: x['desc'] for x in ADDRESSES}

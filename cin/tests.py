@@ -30,9 +30,9 @@ class TestViews(SimpleTestCase):
 
     def test_main(self):
 
-        pp = [
-            ['11.11.2010', '6.7.2016',
-             ['11.11.2010 → 06.07.2016',
+        cases = (
+            ('11.11.2010', '6.7.2016',
+             ('11.11.2010 → 06.07.2016',
               '2064 dnů',
               '1423 pracovních dnů',
               '5 let 7 měsíců 25 dnů',
@@ -49,9 +49,9 @@ class TestViews(SimpleTestCase):
               '67,833333 měsíců (30E)',
               '67,833333 měsíců (30E ISDA)',
               '67,833333 měsíců (30E+)',
-             ]],
-            ['11.11.2010', '06.07.2016',
-             ['11.11.2010 → 06.07.2016',
+             )),
+            ('11.11.2010', '06.07.2016',
+             ('11.11.2010 → 06.07.2016',
               '2064 dnů',
               '1423 pracovních dnů',
               '5 let 7 měsíců 25 dnů',
@@ -68,9 +68,9 @@ class TestViews(SimpleTestCase):
               '67,833333 měsíců (30E)',
               '67,833333 měsíců (30E ISDA)',
               '67,833333 měsíců (30E+)',
-             ]],
-            ['11.11.2010', '6. 7. 2016',
-             ['11.11.2010 → 06.07.2016',
+             )),
+            ('11.11.2010', '6. 7. 2016',
+             ('11.11.2010 → 06.07.2016',
               '2064 dnů',
               '1423 pracovních dnů',
               '5 let 7 měsíců 25 dnů',
@@ -87,9 +87,9 @@ class TestViews(SimpleTestCase):
               '67,833333 měsíců (30E)',
               '67,833333 měsíců (30E ISDA)',
               '67,833333 měsíců (30E+)',
-             ]],
-            ['3.8.2016', '4.8.2016',
-             ['03.08.2016 → 04.08.2016',
+             )),
+            ('3.8.2016', '4.8.2016',
+             ('03.08.2016 → 04.08.2016',
               '1 den',
               '1 pracovní den',
               '0 let 0 měsíců 1 den',
@@ -106,9 +106,9 @@ class TestViews(SimpleTestCase):
               '0,033333 měsíců (30E)',
               '0,033333 měsíců (30E ISDA)',
               '0,033333 měsíců (30E+)',
-             ]],
-            ['15.2.2001', '29.3.2003',
-             ['15.02.2001 → 29.03.2003',
+             )),
+            ('15.2.2001', '29.3.2003',
+             ('15.02.2001 → 29.03.2003',
               '772 dnů',
               '532 pracovních dnů',
               '2 roky 1 měsíc 14 dnů',
@@ -125,9 +125,9 @@ class TestViews(SimpleTestCase):
               '25,466667 měsíců (30E)',
               '25,466667 měsíců (30E ISDA)',
               '25,466667 měsíců (30E+)',
-             ]],
-            ['29.2.2016', '31.5.2016',
-             ['29.02.2016 → 31.05.2016',
+             )),
+            ('29.2.2016', '31.5.2016',
+             ('29.02.2016 → 31.05.2016',
               '92 dnů',
               '64 pracovních dnů',
               '0 let 3 měsíce 2 dny',
@@ -144,15 +144,15 @@ class TestViews(SimpleTestCase):
               '3,033333 měsíců (30E)',
               '3,000000 měsíců (30E ISDA)',
               '3,066667 měsíců (30E+)',
-             ]],
-            ['', '31.5.2016', ['Chybné zadání']],
-            ['XXX', '31.5.2016', ['Chybné zadání']],
-            ['30.2.2016', '31.5.2016', ['Chybné zadání']],
-            ['29.2.2016', '', ['Chybné zadání']],
-            ['29.2.2016', 'XXX', ['Chybné zadání']],
-            ['29.2.2016', '29.2.2016', ['Počátek musí předcházet konci']],
-            ['29.2.2016', '1.4.2011', ['Počátek musí předcházet konci']],
-        ]
+             )),
+            ('', '31.5.2016', ('Chybné zadání',)),
+            ('XXX', '31.5.2016', ('Chybné zadání',)),
+            ('30.2.2016', '31.5.2016', ('Chybné zadání',)),
+            ('29.2.2016', '', ('Chybné zadání',)),
+            ('29.2.2016', 'XXX', ('Chybné zadání',)),
+            ('29.2.2016', '29.2.2016', ('Počátek musí předcházet konci',)),
+            ('29.2.2016', '1.4.2011', ('Počátek musí předcházet konci',)),
+        )
 
         res = self.client.get('/cin')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -164,20 +164,20 @@ class TestViews(SimpleTestCase):
         self.assertTemplateUsed(res, 'cin_main.html')
 
         today = date.today()
-        for f in ['beg_date', 'end_date']:
-            res = self.client.post('/cin/', {'submit_set_' + f: 'Dnes'})
-            self.assertEqual(res.context['f'][f].value(), today)
+        for button in ('beg_date', 'end_date'):
+            res = self.client.post('/cin/', {'submit_set_' + button: 'Dnes'})
+            self.assertEqual(res.context['form'][button].value(), today)
 
-        for p in pp:
+        for test in cases:
             res = self.client.post(
                 '/cin/',
-                {'beg_date': p[0],
-                 'end_date': p[1]})
+                {'beg_date': test[0],
+                 'end_date': test[1]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'cin_main.html')
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
-            l = len(msg)
-            self.assertEqual(l, len(p[2]))
-            for i in range(l):
-                self.assertEqual(msg[i].text, p[2][i])
+            length = len(msg)
+            self.assertEqual(length, len(test[2]))
+            for idx in range(length):
+                self.assertEqual(msg[idx].text, test[2][idx])

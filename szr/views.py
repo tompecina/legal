@@ -31,7 +31,7 @@ from django.forms.models import model_to_dict
 from django.apps import apps
 from django.urls import reverse
 from common.utils import getbutton, Pager, composeref, decomposeref, logger
-from common.glob import registers, inerr
+from common.glob import REGISTERS, INERR
 from szr.forms import EmailForm, ProcForm
 from szr.models import Court, Proceedings
 from szr.cron import updateproc, p2s
@@ -44,7 +44,7 @@ APPVERSION = apps.get_app_config(APP).version
 BATCH = 50
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def mainpage(request):
 
@@ -57,115 +57,115 @@ def mainpage(request):
     uid = request.user.id
     page_title = 'Sledování změn v řízení'
 
-    rd = request.GET.copy()
-    start = int(rd['start']) if ('start' in rd) else 0
+    reqd = request.GET.copy()
+    start = int(reqd['start']) if 'start' in reqd else 0
     if request.method == 'GET':
-        f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
+        form = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
     else:
-        f = EmailForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            p = get_object_or_404(User, pk=uid)
-            p.email = cd['email']
-            p.save()
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            user = get_object_or_404(User, pk=uid)
+            user.email = cld['email']
+            user.save()
             return redirect('szr:mainpage')
         else:
             logger.debug('Invalid form', request)
-            err_message = inerr
-    p = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk')
-    total = p.count()
-    if start >= total and total > 0:
+            err_message = INERR
+    proc = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk')
+    total = proc.count()
+    if start >= total and total:
         start = total - 1
-    rows = p[start:(start + BATCH)]
+    rows = proc[start:start + BATCH]
     return render(
         request,
         'szr_mainpage.html',
         {'app': APP,
-         'f': f,
+         'form': form,
          'page_title': page_title,
          'err_message': err_message,
          'rows': rows,
-         'pager': Pager(start, total, reverse('szr:mainpage'), rd, BATCH),
+         'pager': Pager(start, total, reverse('szr:mainpage'), reqd, BATCH),
          'total': total})
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def procform(request, id=0):
+def procform(request, idx=0):
 
     logger.debug(
         'Proceedings form accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, idx),
         request,
         request.POST)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
-    page_title = ('Úprava řízení' if id else 'Nové řízení')
-    btn = getbutton(request)
-    courts = Court.objects.order_by('name')
+    page_title = 'Úprava řízení' if idx else 'Nové řízení'
+    button = getbutton(request)
+    crts = Court.objects.order_by('name')
     if request.method == 'GET':
-        f = (ProcForm(initial=model_to_dict(get_object_or_404(
-            Proceedings, pk=id, uid=uid))) if id else ProcForm())
-    elif btn == 'back':
+        form = ProcForm(initial=model_to_dict(get_object_or_404(
+            Proceedings, pk=idx, uid=uid))) if idx else ProcForm()
+    elif button == 'back':
         return redirect('szr:mainpage')
     else:
-        f = ProcForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            if not cd['senate']:
-                cd['senate'] = 0
-            if id:
-                p = get_object_or_404(Proceedings, pk=id, uid=uid)
-                cd['pk'] = id
-                cd['timestamp_add'] = p.timestamp_add
-                cd['timestamp_update'] = p.timestamp_update
-            cd['court_id'] = cd['court']
-            del cd['court']
-            onlydesc = id and p.court.id == cd['court_id'] \
-                and p.senate == cd['senate'] and p.register == cd['register'] \
-                and p.number == cd['number'] and p.year == cd['year']
+        form = ProcForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            if not cld['senate']:
+                cld['senate'] = 0
+            if idx:
+                proc = get_object_or_404(Proceedings, pk=idx, uid=uid)
+                cld['pk'] = idx
+                cld['timestamp_add'] = proc.timestamp_add
+                cld['timestamp_update'] = proc.timestamp_update
+            cld['court_id'] = cld['court']
+            del cld['court']
+            onlydesc = idx and proc.court.id == cld['court_id'] \
+                and proc.senate == cld['senate'] \
+                and proc.register == cld['register'] \
+                and proc.number == cld['number'] and proc.year == cld['year']
             if onlydesc:
-                cd['changed'] = p.changed
-                cd['updated'] = p.updated
-                cd['hash'] = p.hash
-                cd['auxid'] = p.auxid
-                cd['notify'] = p.notify
-            p = Proceedings(uid_id=uid, **cd)
+                cld['changed'] = proc.changed
+                cld['updated'] = proc.updated
+                cld['hash'] = proc.hash
+                cld['auxid'] = proc.auxid
+                cld['notify'] = proc.notify
+            proc = Proceedings(uid_id=uid, **cld)
             if not onlydesc:
-                updateproc(p)
-            p.save()
-            if id:
-                logger.info(
-                    'User "{}" ({:d}) updated proceedings "{}" ({})'
-                        .format(uname, uid, p.desc, p2s(p)),
-                    request)
-            else:
-                logger.info(
-                    'User "{}" ({:d}) added proceedings "{}" ({})'
-                        .format(uname, uid, p.desc, p2s(p)),
-                    request)
+                updateproc(proc)
+            proc.save()
+            logger.info(
+                'User "{}" ({:d}) {} proceedings "{}" ({})'
+                .format(
+                    uname,
+                    uid,
+                    'updated' if idx else 'added',
+                    proc.desc,
+                    p2s(proc)),
+                request)
             return redirect('szr:mainpage')
         else:  # pragma: no cover
             logger.debug('Invalid form', request)
-            err_message = inerr
+            err_message = INERR
     return render(
         request,
         'szr_procform.html',
         {'app': APP,
-         'f': f,
+         'form': form,
          'page_title': page_title,
          'err_message': err_message,
-         'courts': courts})
+         'courts': crts})
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def procdel(request, id=0):
+def procdel(request, idx=0):
 
     logger.debug(
         'Proceedings delete page accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, idx),
         request,
         request.POST)
     uid = request.user.id
@@ -177,24 +177,24 @@ def procdel(request, id=0):
             {'app': APP,
              'page_title': 'Smazání řízení'})
     else:
-        proc = get_object_or_404(Proceedings, pk=id, uid=uid)
+        proc = get_object_or_404(Proceedings, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
             logger.info(
                 'User "{}" ({:d}) deleted proceedings "{}" ({})'
-                    .format(uname, uid, proc.desc, p2s(proc)),
+                .format(uname, uid, proc.desc, p2s(proc)),
                 request)
             proc.delete()
             return redirect('szr:procdeleted')
         return redirect('szr:mainpage')
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def procdelall(request):
 
     logger.debug(
         'Delete all proceedings page accessed using method {}'
-            .format(request.method),
+        .format(request.method),
         request)
     uid = request.user.id
     uname = request.user.username
@@ -214,13 +214,13 @@ def procdelall(request):
         return redirect('szr:mainpage')
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def procbatchform(request):
 
     logger.debug(
         'Proceedings import page accessed using method {}'
-            .format(request.method),
+        .format(request.method),
         request)
 
     err_message = ''
@@ -229,51 +229,51 @@ def procbatchform(request):
     today = date.today()
 
     if request.method == 'POST':
-        btn = getbutton(request)
+        button = getbutton(request)
 
-        if btn == 'load':
-            f = request.FILES.get('load')
-            if not f:
+        if button == 'load':
+            infile = request.FILES.get('load')
+            if not infile:
                 err_message = 'Nejprve zvolte soubor k načtení'
             else:
                 errors = []
                 try:
                     count = 0
-                    with f:
-                        i = 0
-                        for line in csvreader(StringIO(f.read().decode())):
-                            i += 1
+                    with infile:
+                        idx = 0
+                        for line in csvreader(StringIO(infile.read().decode())):
+                            idx += 1
                             errlen = len(errors)
                             if not line:
                                 continue
                             if len(line) != 3:
-                                errors.append([i, 'Chybný formát'])
+                                errors.append((idx, 'Chybný formát'))
                                 continue
                             desc = line[0].strip()
                             if not desc:
-                                errors.append([i, 'Prázdný popis'])
+                                errors.append((idx, 'Prázdný popis'))
                                 continue
                             if len(desc) > 255:
-                                errors.append([i, 'Příliš dlouhý popis'])
+                                errors.append((idx, 'Příliš dlouhý popis'))
                                 continue
                             try:
                                 court = line[1]
                                 assert Court.objects.get(id=court)
                             except:
-                                errors.append([i, 'Chybná zkratka soudu'])
+                                errors.append((idx, 'Chybná zkratka soudu'))
                                 continue
                             try:
                                 senate, register, number, year = \
                                     decomposeref(line[2])
                                 assert senate >= 0
-                                assert register in registers
+                                assert register in REGISTERS
                                 assert number > 0
                                 assert year >= 1990 and year <= today.year
                             except:
-                                errors.append([i, 'Chybná spisová značka'])
+                                errors.append((idx, 'Chybná spisová značka'))
                                 continue
                             if len(errors) == errlen:
-                                p = Proceedings.objects.filter(
+                                proc = Proceedings.objects.filter(
                                     uid_id=uid,
                                     desc=desc,
                                     court=court,
@@ -281,9 +281,9 @@ def procbatchform(request):
                                     register=register,
                                     number=number,
                                     year=year)
-                                if not p.exists():
+                                if not proc.exists():
                                     try:
-                                        p, pc = Proceedings.objects. \
+                                        proc = Proceedings.objects. \
                                             update_or_create(
                                                 uid_id=uid,
                                                 desc=desc,
@@ -297,19 +297,19 @@ def procbatchform(request):
                                                     'updated': None,
                                                     'hash': '',
                                                     'auxid': 0,
-                                                    'notify': False})
-                                        updateproc(p)
-                                        p.save()
+                                                    'notify': False})[0]
+                                        updateproc(proc)
+                                        proc.save()
                                     except:
                                         errors.append(
-                                            [i,
+                                            (idx,
                                              'Popisu "{}" odpovídá více než '
-                                             'jedno řízení'.format(desc)])
+                                             'jedno řízení'.format(desc)))
                                         continue
                                 count += 1
                     logger.info(
                         'User "{}" ({:d}) imported {:d} proceedings'
-                            .format(uname, uid, count),
+                        .format(uname, uid, count),
                         request)
                     return render(
                         request,
@@ -331,29 +331,29 @@ def procbatchform(request):
          'err_message': err_message})
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 @login_required
 def procexport(request):
 
     logger.debug('Proceedings export page accessed', request)
     uid = request.user.id
     uname = request.user.username
-    pp = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk') \
+    res = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk') \
         .distinct()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = \
         'attachment; filename=szr.csv'
     writer = csvwriter(response)
-    for p in pp:
-        dat = [
-            p.desc,
-            p.court.id,
+    for proc in res:
+        dat = (
+            proc.desc,
+            proc.court.id,
             composeref(
-                p.senate,
-                p.register,
-                p.number,
-                p.year)
-        ]
+                proc.senate,
+                proc.register,
+                proc.number,
+                proc.year)
+        )
         writer.writerow(dat)
     logger.info(
         'User "{}" ({:d}) exported proceedings'.format(uname, uid),
@@ -361,7 +361,7 @@ def procexport(request):
     return response
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def courts(request):
 
     logger.debug('List of courts accessed', request)

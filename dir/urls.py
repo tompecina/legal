@@ -27,7 +27,7 @@ from dir.views import (
     debtorexport)
 
 
-urlpatterns = [
+urlpatterns = (
     url(r'^$', mainpage, name='mainpage'),
     url(r'^debtorform/(\d+)/$', debtorform, name='debtorform'),
     url(r'^debtorform/$', debtorform, name='debtorform'),
@@ -41,4 +41,4 @@ urlpatterns = [
     url(r'^debtordelall/$', debtordelall, name='debtordelall'),
     url(r'^debtorbatchform/$', debtorbatchform, name='debtorbatchform'),
     url(r'^debtorexport/$', debtorexport, name='debtorexport'),
-]
+)

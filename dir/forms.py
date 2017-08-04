@@ -23,19 +23,18 @@
 from datetime import date
 from django.core.validators import RegexValidator
 from common import forms, fields, widgets
-from common.glob import text_opts, ic_regex, rc_full_regex
+from common.glob import TEXT_OPTS, IC_REGEX, RC_FULL_REGEX
 from dir.glob import MAX_LENGTH
-
-
-curryear = date.today().year
 
 
 class DebtorForm(forms.Form):
 
+    curr_year = date.today().year
+
     desc = fields.CharField(
         max_length=255,
         label='Popis',
-        widget=widgets.sew(attrs={'class': 'width-full'}))
+        widget=widgets.Sew(attrs={'class': 'width-full'}))
 
     court = fields.CharField(
         max_length=255,
@@ -44,65 +43,65 @@ class DebtorForm(forms.Form):
         initial='')
 
     name = fields.CharField(
-        widget=widgets.sew(),
+        widget=widgets.Sew(),
         max_length=MAX_LENGTH,
         required=False,
         label='Příjmení/název')
 
     name_opt = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=text_opts,
+        widget=widgets.Rs(),
+        choices=TEXT_OPTS,
         label='Posice',
         initial='icontains')
 
     first_name = fields.CharField(
-        widget=widgets.sew(),
+        widget=widgets.Sew(),
         max_length=MAX_LENGTH,
         required=False,
         label='Jméno')
 
     first_name_opt = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=text_opts,
+        widget=widgets.Rs(),
+        choices=TEXT_OPTS,
         label='Posice',
         initial='icontains')
 
     genid = fields.CharField(
-        widget=widgets.ssew(),
+        widget=widgets.Ssew(),
         required=False,
         max_length=9,
-        validators=[RegexValidator(regex=ic_regex)],
+        validators=(RegexValidator(regex=IC_REGEX),),
         label='IČO')
 
     taxid = fields.CharField(
-        widget=widgets.ssew(),
+        widget=widgets.Ssew(),
         required=False,
         max_length=14,
         label='DIČ')
 
     birthid = fields.CharField(
-        widget=widgets.ssew(),
+        widget=widgets.Ssew(),
         required=False,
         max_length=11,
-        validators=[RegexValidator(regex=rc_full_regex)],
+        validators=(RegexValidator(regex=RC_FULL_REGEX),),
         label='Rodné číslo')
 
     date_birth = fields.DateField(
-        widget=widgets.dw(),
+        widget=widgets.Dw(),
         required=False,
         label='Datum narození')
 
     year_birth_from = fields.IntegerField(
-        widget=widgets.yw(),
+        widget=widgets.Yw(),
         min_value=1900,
-        max_value=curryear,
+        max_value=curr_year,
         initial='',
         required=False)
 
     year_birth_to = fields.IntegerField(
-        widget=widgets.yw(),
+        widget=widgets.Yw(),
         min_value=1900,
-        max_value=curryear,
+        max_value=curr_year,
         initial='',
         required=False)
 

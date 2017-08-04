@@ -24,6 +24,6 @@ from django.conf.urls import url
 from cnb.views import mainpage
 
 
-urlpatterns = [
+urlpatterns = (
     url(r'^$', mainpage, name='mainpage'),
-]
+)

@@ -37,49 +37,49 @@ class CommonConfig(AppConfig):
         from .models import PwResetLink, Preset
         now = datetime.now()
         logger.debug('Partial statistics generated')
-        return [
-            [
+        return (
+            (
                 'Počet uživatelů',
-                User.objects.count()],
-            [
+                User.objects.count()),
+            (
                 'Počet nových uživatelů za posledních 24 hodin',
                 User.objects.filter(
-                    date_joined__gte=(now - timedelta(hours=24))).count()],
-            [
+                    date_joined__gte=(now - timedelta(hours=24))).count()),
+            (
                 'Počet nových uživatelů za poslední týden',
                 User.objects.filter(
-                    date_joined__gte=(now - timedelta(weeks=1))).count()],
-            [
+                    date_joined__gte=(now - timedelta(weeks=1))).count()),
+            (
                 'Počet nových uživatelů za poslední měsíc',
                 User.objects.filter(
-                    date_joined__gte=(now - timedelta(days=30))).count()],
-            [
+                    date_joined__gte=(now - timedelta(days=30))).count()),
+            (
                 'Počet dočasných linků pro obnovení hesla',
-                PwResetLink.objects.count()],
-            [
+                PwResetLink.objects.count()),
+            (
                 'Počet záznamů v tabulce Preset',
-                Preset.objects.count()],
-        ]
+                Preset.objects.count()),
+        )
 
     @staticmethod
     def userinfo(user):
         from common.utils import logger
         logger.debug('Partial user information generated')
-        return [
-            [
+        return (
+            (
                 'Uživatelské jméno',
-                user.username],
-            [
+                user.username),
+            (
                 'Jméno',
-                user.first_name if user.first_name else ''],
-            [
+                user.first_name if user.first_name else ''),
+            (
                 'Příjmení',
-                user.last_name if user.last_name else ''],
-            [
+                user.last_name if user.last_name else ''),
+            (
                 'E-mail',
                 '<a href="mailto:{0}">{0}</a>'.format(user.email)
-                if user.email else ''],
-            [
+                if user.email else ''),
+            (
                 'Datum založení účtu',
-                '{:%d.%m.%Y}'.format(user.date_joined)],
-        ]
+                '{:%d.%m.%Y}'.format(user.date_joined)),
+        )

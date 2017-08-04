@@ -25,14 +25,14 @@ from datetime import date, timedelta
 
 MIN_PWLEN = 6
 
-wn = ('Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne')
+WD_NAMES = ('Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne')
 
-LIM = 0.005
+LIM = .005
 
-inerr = 'Chybné zadání, prosím, opravte údaje'
-inerr_short = 'Chybné zadání'
+INERR = 'Chybné zadání, prosím, opravte údaje'
+INERR_SHORT = 'Chybné zadání'
 
-registers = [
+REGISTERS = (
     'T', 'C', 'P a Nc', 'D', 'E', 'P', 'Nc', 'ERo', 'Ro', 'EC',
     'EVC', 'EXE', 'EPR', 'PP', 'Cm', 'Sm', 'Ca', 'Cad', 'Az', 'To',
     'Nt', 'Co', 'Ntd', 'Cmo', 'Ko', 'Nco', 'Ncd', 'Ncp', 'ECm',
@@ -42,12 +42,12 @@ registers = [
     'Konf', 'Kse', 'Kseo', 'Kss', 'Ksz', 'Na', 'Nad', 'Nao', 'Ncn',
     'Nk', 'Ntn', 'Obn', 'Plen', 'Plsn', 'Pst', 'Rozk', 'Rs', 'S',
     'Spr', 'Sst', 'Vol', 'Tm', 'Tmo', 'Ntm'
-]
-register_regex = '^({})$'.format('|'.join(registers))
+)
+REGISTER_REGEX = '^({})$'.format('|'.join(REGISTERS))
 
 UNC_DATE = date(1925, 4, 15)
 
-ydconvs = (
+YDCONVS = (
     'ACT/ACT',
     'ACT/365',
     'ACT/360',
@@ -58,7 +58,7 @@ ydconvs = (
     '30E+/360'
 )
 
-mdconvs = (
+MDCONVS = (
     'ACT',
     '30U',
     '30E',
@@ -66,10 +66,12 @@ mdconvs = (
     '30E+'
 )
 
-odp = timedelta(days=1)
-odm = timedelta(days=-1)
+ODP = timedelta(days=1)
+ODM = timedelta(days=-1)
 
-TEXTOPTS = [
+ASSET_EXP = timedelta(weeks=1)
+
+TEXT_OPTS_RAW = (
     {
         'sql': 'icontains',
         'abbr': '*', 'desc':
@@ -86,39 +88,39 @@ TEXTOPTS = [
         'sql': 'iexact',
         'abbr': '=',
         'desc': 'přesně'},
-]
-text_opts = [[x['sql'], x['desc']] for x in TEXTOPTS]
-text_opts_keys = [x['sql'] for x in TEXTOPTS]
-text_opts_abbr = [x['abbr'] for x in TEXTOPTS]
-text_opts_ai = {x: text_opts_abbr.index(x) for x in text_opts_abbr}
-text_opts_ca = [(':' + x) for x in text_opts_abbr]
+)
+TEXT_OPTS = [(x['sql'], x['desc']) for x in TEXT_OPTS_RAW]
+TEXT_OPTS_KEYS = [x['sql'] for x in TEXT_OPTS_RAW]
+TEXT_OPTS_ABBR = [x['abbr'] for x in TEXT_OPTS_RAW]
+TEXT_OPTS_AI = {x: TEXT_OPTS_ABBR.index(x) for x in TEXT_OPTS_ABBR}
+TEXT_OPTS_CA = [':' + x for x in TEXT_OPTS_ABBR]
 
-localdomain = 'pecina.cz'
-localsubdomain = 'legal.' + localdomain
-localemail = 'legal@' + localdomain
-localscheme = 'https'
-localprefix = localscheme + '://'
-localurl = localprefix + localsubdomain
-repourl = localurl + '/repo/'
+LOCAL_DOMAIN = 'pecina.cz'
+LOCAL_SUBDOMAIN = 'legal.' + LOCAL_DOMAIN
+LOCAL_EMAIL = 'legal@' + LOCAL_DOMAIN
+LOCAL_SCHEME = 'https'
+LOCAL_PREFIX = LOCAL_SCHEME + '://'
+LOCAL_URL = LOCAL_PREFIX + LOCAL_SUBDOMAIN
+REPO_URL = LOCAL_URL + '/repo/'
 
-exlim_title = 'Příliš velký počet záznamů'
+EXLIM_TITLE = 'Příliš velký počet záznamů'
 
-GR_C = ('znak', 'znaky', 'znaků')
-GR_D = ('den', 'dny', 'dnů')
-GR_B = ('pracovní den', 'pracovní dny', 'pracovních dnů')
-GR_M = ('měsíc', 'měsíce', 'měsíců')
-GR_Y = ('rok', 'roky', 'let')
+GR_CHAR = ('znak', 'znaky', 'znaků')
+GR_DAY = ('den', 'dny', 'dnů')
+GR_BUSDAY = ('pracovní den', 'pracovní dny', 'pracovních dnů')
+GR_MONTH = ('měsíc', 'měsíce', 'měsíců')
+GR_YEAR = ('rok', 'roky', 'let')
 
-format_opts = (
+FORMAT_OPTS = (
     ('html', 'HTML'),
     ('xml', 'XML'),
     ('csv', 'CSV'),
     ('json', 'JSON'),
 )
 
-ic_regex = r'^\d{1,9}$'
-rc_regex = r'^\d{9,10}$'
-rc_full_regex = r'^\d{6}/\d{3,4}$'
-psc_regex = r'^\d{5}$'
+IC_REGEX = r'^\d{1,9}$'
+RC_REGEX = r'^\d{9,10}$'
+RC_FULL_REGEX = r'^\d{6}/\d{3,4}$'
+PSC_REGEX = r'^\d{5}$'
 
 DTF = '%Y-%m-%d'

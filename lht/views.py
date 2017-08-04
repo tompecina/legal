@@ -25,8 +25,8 @@ from calendar import monthrange
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
-from common.utils import pd, holiday, getbutton, logger, between
-from common.glob import wn, inerr_short, odp, odm, UNC_DATE
+from common.utils import fdt, holiday, getbutton, logger, between
+from common.glob import WD_NAMES, INERR_SHORT, ODP, ODM, UNC_DATE
 from lht.glob import MIN_DATE, MAX_DATE, MIN_DUR, MAX_DUR
 from lht.forms import MainForm
 
@@ -40,8 +40,9 @@ class Period:
     def __init__(self, beg, dur, unit):
 
         def out_msg():
-            return 'Výsledek musí být mezi {} a {}' \
-                .format(pd(MIN_DATE), pd(MAX_DATE))
+            return \
+                'Výsledek musí být mezi {} a {}' \
+                .format(fdt(MIN_DATE), fdt(MAX_DATE))
 
         self.beg = beg
         self.dur = dur
@@ -51,16 +52,18 @@ class Period:
         self.error = True
 
         if not between(MIN_DATE, beg, MAX_DATE):
-            self.msg = 'Počátek musí být mezi {} a {}' \
-                .format(pd(MIN_DATE), pd(MAX_DATE))
+            self.msg = \
+                'Počátek musí být mezi {} a {}' \
+                .format(fdt(MIN_DATE), fdt(MAX_DATE))
             return
 
         if not between(MIN_DUR, dur, MAX_DUR):
-            self.msg = 'Délka musí být mezi {:d} a {:d}' \
+            self.msg = \
+                'Délka musí být mezi {:d} a {:d}' \
                 .format(MIN_DUR, MAX_DUR)
             return
 
-        offset = odm if dur < 0 else odp
+        offset = ODM if dur < 0 else ODP
 
         if unit == 'd':
             res = beg + timedelta(days=dur)
@@ -68,7 +71,7 @@ class Period:
         elif unit == 'w':
             res = beg + timedelta(weeks=dur)
 
-        elif unit in ['m', 'y']:
+        elif unit in ('m', 'y'):
             if unit == 'y':
                 dur *= 12
             month = beg.month + dur - 1
@@ -105,11 +108,11 @@ class Period:
         self.msg = None
         self.res = res
         self.bus = bus
-        self.unc = min(res, bus) < UNC_DATE \
-            or (beg < UNC_DATE and unit == 'b')
+        self.unc = \
+            min(res, bus) < UNC_DATE or (beg < UNC_DATE and unit == 'b')
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
     logger.debug(
@@ -122,20 +125,20 @@ def mainpage(request):
     messages = []
 
     if request.method == 'GET':
-        f = MainForm()
+        form = MainForm()
     else:
-        f = MainForm(request.POST)
-        b = getbutton(request)
-        if b == 'set_beg_date':
-            f.data = f.data.copy()
-            f.data['beg_date'] = today
-        elif f.is_valid():
-            cd = f.cleaned_data
-            beg = cd['beg_date']
-            preset = cd['preset']
+        form = MainForm(request.POST)
+        button = getbutton(request)
+        if button == 'set_beg_date':
+            form.data = form.data.copy()
+            form.data['beg_date'] = today
+        elif form.is_valid():
+            cld = form.cleaned_data
+            beg = cld['beg_date']
+            preset = cld['preset']
             if preset == 'none':
-                dur = cd['dur']
-                unit = cd['unit']
+                dur = cld['dur']
+                unit = cld['unit']
             else:
                 dur = int(preset[1:])
                 unit = preset[0]
@@ -143,32 +146,32 @@ def mainpage(request):
             per = Period(beg, dur, unit)
 
             if per.error:
-                messages = [[per.msg, None]]
+                messages = [(per.msg, None)]
 
             else:
                 if per.res != per.bus:
                     messages.append(
-                        ['{} není pracovní den'.format(
-                            pd(per.res)), None])
+                        ('{} není pracovní den'.format(
+                            fdt(per.res)), None))
 
-                messages.append([
+                messages.append((
                     '{} {}'.format(
-                        wn[per.bus.weekday()],
-                        pd(per.bus)),
-                    'msg-res'])
+                        WD_NAMES[per.bus.weekday()],
+                        fdt(per.bus)),
+                    'msg-res'))
 
                 if per.unc:
-                    messages.append([
+                    messages.append((
                         '(evidence pracovních dnů v tomto období není úplná)',
-                        'msg-note'])
+                        'msg-note'))
 
         else:
             logger.debug('Invalid form', request)
-            messages = [[inerr_short, None]]
+            messages = [(INERR_SHORT, None)]
 
     return render(request,
                   'lht_main.html',
                   {'app': APP,
                    'page_title': 'Konec lhůty',
                    'messages': messages,
-                   'f': f})
+                   'form': form})

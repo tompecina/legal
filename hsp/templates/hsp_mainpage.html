@@ -11,15 +11,15 @@
 		<fieldset class="infotbl">
 		  <legend>Údaje o pohledávce</legend>
 		  <table class="mtm mrl mbm mll">
-                    <tr><th class="{{ f.title.css_classes }}">{{ f.title.label_tag }}</th><td>{{ f.title }}</td></tr>
-	            <tr><th class="{{ f.note.css_classes }}">{{ f.note.label_tag }}</th><td>{{ f.note }}</td></tr>
-                    <tr><th class="{{ f.internal_note.css_classes }}">{{ f.internal_note.label_tag }}</th><td>{{ f.internal_note }}</td></tr>
+                    <tr><th class="{{ form.title.css_classes }}">{{ form.title.label_tag }}</th><td>{{ form.title }}</td></tr>
+	            <tr><th class="{{ form.note.css_classes }}">{{ form.note.label_tag }}</th><td>{{ form.note }}</td></tr>
+                    <tr><th class="{{ form.internal_note.css_classes }}">{{ form.internal_note.label_tag }}</th><td>{{ form.internal_note }}</td></tr>
                     <tr>
-		      <th class="pts prm pbs plm">{{ f.rounding.label_tag }}</th>
+		      <th class="pts prm pbs plm">{{ form.rounding.label_tag }}</th>
 		      <td>{{ rt }}
 			<select name="rounding" id="id_rounding">
-			  <option value="0" {% if f.rounding.value == '0' %} selected="selected"{% endif %}>na jednotky</option>
-			  <option value="2" {% if f.rounding.value == '2' %} selected="selected"{% endif %}>na 2 desetinná místa</option>
+			  <option value="0" {% if form.rounding.value == '0' %} selected="selected"{% endif %}>na jednotky</option>
+			  <option value="2" {% if form.rounding.value == '2' %} selected="selected"{% endif %}>na 2 desetinná místa</option>
 			</select>
 		      </td>
 		    </tr>
@@ -130,15 +130,15 @@
           <table class="mth mra mbn mla" id="id_calc">
 	    <thead>
 	      <tr class="header">
-		<th rowspan="{{ res.c1 }}">Datum</th>
-		<th rowspan="{{ res.c1 }}">Popis</th>
-		<th rowspan="{{ res.c1 }}">Částka</th>
+		<th rowspan="{{ res.cell1 }}">Datum</th>
+		<th rowspan="{{ res.cell1 }}">Popis</th>
+		<th rowspan="{{ res.cell1 }}">Částka</th>
 {% if res.ccol %}
-		<th rowspan="{{ res.c1 }}">Měna</th>
+		<th rowspan="{{ res.cell1 }}">Měna</th>
 {% endif %}
-		<th colspan="{{ res.c2 }}">Předchozí zůstatek</th>
-		<th colspan="{{ res.c2 }}">Změna</th>
-		<th colspan="{{ res.c3 }}">Nový zůstatek</th>
+		<th colspan="{{ res.cell2 }}">Předchozí zůstatek</th>
+		<th colspan="{{ res.cell2 }}">Změna</th>
+		<th colspan="{{ res.cell3 }}">Nový zůstatek</th>
 	      </tr>
 {% if res.hrow %}	      <tr class="header deb">
 {% for d in debt.debits %}		<th>{{ d.id }}</th>
@@ -147,13 +147,13 @@
 {% endfor %}{% if res.scol %}		<th class="sum">∑</th>
 {% endif %}	      </tr>
 {% endif %}{% if res.crow %}	      <tr class="header curr">
-{% for i in res.r3 %}{% for d in debt.debits %}                <th>{{ d.disp_currency }}</th>
+{% for i in res.rng3 %}{% for d in debt.debits %}                <th>{{ d.disp_currency }}</th>
 {% endfor %}{% endfor %}{% if res.scol %}                <th>{{ res.currency_debits }}</th>
 {% endif %}	      </tr>
 {% endif %}	    </thead>
 {% if not suppress_table_footer %}	    <tfoot>
 	      <tr class="footer">
-		<td colspan="{{ res.c4 }}">{% if not res.multicurrency %}<span class="bold">Měna:</span> {{ res.currency }}{% else %}<span class="bold">Měny:</span> {{ res.currencies|join:', ' }}{% endif %}</td>
+		<td colspan="{{ res.cell4 }}">{% if not res.multicurrency %}<span class="bold">Měna:</span> {{ res.currency }}{% else %}<span class="bold">Měny:</span> {{ res.currencies|join:', ' }}{% endif %}</td>
 	      </tr>
 	    </tfoot>
 {% endif %}	    <tbody>
@@ -171,10 +171,10 @@
 {% endfor %}{% if res.scol %}		<td class="am">{{ row.post_total|safe }}</td>
 {% endif %}	      </tr>
 {% empty %}              <tr class="odd">
-		<td colspan="{{ res.c4 }}" class="taberr">(žádné transakce)</td>
+		<td colspan="{{ res.cell4 }}" class="taberr">(žádné transakce)</td>
 	      </tr>
 {% endfor %}{% if res.msg %}              <tr class="odd">
-		<td colspan="{{ res.c4 }}" class="taberr"><span class="bold">Chyba:</span> {{ res.msg }}</td>
+		<td colspan="{{ res.cell4 }}" class="taberr"><span class="bold">Chyba:</span> {{ res.msg }}</td>
 	      </tr>
 {% endif %}	    </tbody>
 	  </table>
@@ -191,7 +191,7 @@
 	      <td colspan="2"></td><td colspan="4"><input type="file" name="load" accept="application/pdf,text/xml" id="id_load" /></td>
 	    </tr>
 	  </table>
-	  <div class="hidden">{{ f.next }}</div>
+	  <div class="hidden">{{ form.next }}</div>
 	  {% csrf_token %}
 	</form>
 {% endblock %}

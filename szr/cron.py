@@ -28,65 +28,68 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from common.utils import get, post, sleep, logger, composeref
 from szr.models import Court, Proceedings
-from szr.glob import supreme_court, supreme_administrative_court
+from szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT
 
 
-list_courts = 'public/search.jsp'
+LIST_COURTS = 'public/search.jsp'
 
-list_reports = 'InfoSoud/seznamOkresnichSoudu?kraj={}'
+LIST_REPORTS = 'InfoSoud/seznamOkresnichSoudu?kraj={}'
 
-root_url = 'http://infosoud.justice.cz/'
+ROOT_URL = 'http://infosoud.justice.cz/'
 
-get_proc = 'InfoSoud/public/search.do?org={}&krajOrg={}&cisloSenatu={:d}' \
+GET_PROC = \
+    'InfoSoud/public/search.do?org={}&krajOrg={}&cisloSenatu={:d}' \
     '&druhVec={}&bcVec={:d}&rocnik={:d}&typSoudu={}&autoFill=true' \
     '&type=spzn'
 
-nss_url = 'http://www.nssoud.cz/main0Col.aspx?cls=JudikaturaSimpleSearch' \
+NSS_URL = \
+    'http://www.nssoud.cz/main0Col.aspx?cls=JudikaturaSimpleSearch' \
     '&pageSource=1&menu=187'
 
-nss_get_proc = 'http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&kau_id={:d}'
+NSS_GET_PROC = 'http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&kau_id={:d}'
 
-update_delay = timedelta(hours=6)
+UPDATE_DELAY = timedelta(hours=6)
 
 
-def addauxid(p):
+def addauxid(proc):
 
-    if p.court_id == supreme_administrative_court and not p.auxid:
+    if proc.court_id == SUPREME_ADMINISTRATIVE_COURT and not proc.auxid:
         try:
-            res = get(nss_url)
+            res = get(NSS_URL)
             soup = BeautifulSoup(res.text, 'html.parser')
             form = soup.find('form')
-            d = {i['name']: i['value'] for i in form.find_all('input')
+            dct = {i['name']: i['value'] for i in form.find_all('input')
                 if i['type'] == 'hidden' and i.has_attr('value')}
-            if int(p.senate):
-                ref = '{} '.format(p.senate)
+            if int(proc.senate):
+                ref = '{} '.format(proc.senate)
             else:
                 ref = ''
-            ref += '{0.register} {0.number:d}/{0.year:d}'.format(p)
-            d['_ctl0:ContentPlaceMasterPage:_ctl0:txtSpisovaZnackaFull'] = ref
-            res = post(nss_url, d)
+            ref += '{0.register} {0.number:d}/{0.year:d}'.format(proc)
+            dct['_ctl0:ContentPlaceMasterPage:_ctl0:txtSpisovaZnackaFull'] = ref
+            res = post(NSS_URL, dct)
             soup = BeautifulSoup(res.text, 'html.parser')
-            oc = soup.select('table#_ctl0_ContentPlaceMasterPage__ctl0_grwA') \
-                 [0].select('img[src="/Image/infosoud.gif"]')[0]['onclick']
-            p.auxid = int(oc.split('=')[-1].split("'")[0])
+            oncl = \
+                soup.select('table#_ctl0_ContentPlaceMasterPage__ctl0_grwA') \
+                [0].select('img[src="/Image/infosoud.gif"]')[0]['onclick']
+            proc.auxid = int(oncl.split('=')[-1].split("'")[0])
         except:
             pass
 
 
-def isreg(c):
+def isreg(court):
 
-    s = c.pk
-    return s.startswith('KS') or s == 'MSPHAAB'
+    string = court.pk
+    return string.startswith('KS') or string == 'MSPHAAB'
 
 
 def cron_courts():
 
     try:
-        res = get(root_url + list_courts)
+        res = get(ROOT_URL + LIST_COURTS)
         soup = BeautifulSoup(res.text, 'html.parser')
-        Court.objects.get_or_create(id=supreme_court, name='Nejvyšší soud')
+        Court.objects.get_or_create(id=SUPREME_COURT, name='Nejvyšší soud')
         Court.objects.get_or_create(
-            id=supreme_administrative_court,
+            id=SUPREME_ADMINISTRATIVE_COURT,
             name='Nejvyšší správní soud')
         upper = soup.find(id='kraj').find_all('option')[1:]
         lower = soup.find(id='soudy').find_all('option')[1:]
@@ -97,54 +100,55 @@ def cron_courts():
     except:  # pragma: no cover
         logger.warning('Error importing courts')
     Court.objects.all().update(reports=None)
-    for c in Court.objects.all():
-        if isreg(c):
+    for court in Court.objects.all():
+        if isreg(court):
             try:
                 sleep(1)
-                res = get(root_url + list_reports.format(c.pk))
+                res = get(ROOT_URL + LIST_REPORTS.format(court.pk))
                 soup = BeautifulSoup(res.text, 'xml')
-                for r in soup.find_all('okresniSoud'):
-                    Court.objects.filter(pk=r.id.string).update(reports=c)
+                for item in soup.find_all('okresniSoud'):
+                    Court.objects.filter(pk=item.id.string) \
+                    .update(reports=court)
             except:  # pragma: no cover
                 logger.warning(
-                    'Error setting hierarchy for {}'.format(c.id))
+                    'Error setting hierarchy for {}'.format(court.id))
     logger.info('Courts imported')
 
 
-def p2s(p):
+def p2s(proc):
 
     return '{}, {}'.format(
-        p.court_id,
-        composeref(p.senate, p.register, p.number, p.year))
+        proc.court_id,
+        composeref(proc.senate, proc.register, proc.number, proc.year))
 
 
-def updateproc(p):
+def updateproc(proc):
 
-    notnew = bool(p.updated)
-    p.updated = datetime.now()
-    p.save()
-    court = p.court_id
+    notnew = bool(proc.updated)
+    proc.updated = datetime.now()
+    proc.save()
+    court = proc.court_id
     try:
-        if court == supreme_administrative_court:
-            addauxid(p)
-            if not p.auxid:
+        if court == SUPREME_ADMINISTRATIVE_COURT:
+            addauxid(proc)
+            if not proc.auxid:
                 return
-            url = nss_get_proc.format(p.auxid)
+            url = NSS_GET_PROC.format(proc.auxid)
             res = get(url)
             soup = BeautifulSoup(res.text, 'html.parser')
             table = soup.find('table', 'frm')
         else:
-            if court == supreme_court:
+            if court == SUPREME_COURT:
                 court_type = 'ns'
             else:
                 court_type = 'os'
-            url = root_url + get_proc.format(
+            url = ROOT_URL + GET_PROC.format(
                 court,
-                (p.court.reports.id if p.court.reports else p.court.id),
-                p.senate,
-                quote(p.register.upper()),
-                p.number,
-                p.year,
+                proc.court.reports.id if proc.court.reports else proc.court.id,
+                proc.senate,
+                quote(proc.register.upper()),
+                proc.number,
+                proc.year,
                 court_type)
             res = get(url)
             soup = BeautifulSoup(res.text, 'html.parser')
@@ -155,101 +159,101 @@ def updateproc(p):
             'Failed to check proceedings "{0.desc}" ({1}) for user '
             '"{2}" ({0.uid_id:d})'
                 .format(
-                    p,
-                    p2s(p),
-                    User.objects.get(pk=p.uid_id).username))
+                    proc,
+                    p2s(proc),
+                    User.objects.get(pk=proc.uid_id).username))
         return False
-    hash = md5(str(table).encode()).hexdigest()
-    if court != supreme_administrative_court:
+    hsh = md5(str(table).encode()).hexdigest()
+    if court != SUPREME_ADMINISTRATIVE_COURT:
         changed = None
         try:
-            t = table.find_next_sibling().find_next_sibling().table \
+            tbl = \
+                table.find_next_sibling().find_next_sibling().table \
                 .tr.td.find_next_sibling().text.split()
-            if len(t) == 4:
-                changed = datetime(*map(int, list(reversed(t[0].split('.')))
-                    + t[1].split(':')))
+            if len(tbl) == 4:
+                changed = \
+                    datetime(*map(int, list(reversed(tbl[0].split('.')))
+                    + tbl[1].split(':')))
         except:  # pragma: no cover
             logger.warning(
                 'Failed to check proceedings "{0.desc}" ({1}) for user '
                 '"{2}" ({0.uid_id:d})'
                     .format(
-                        p,
-                        p2s(p),
-                        User.objects.get(pk=p.uid_id).username))
-        if changed != p.changed or hash != p.hash:
-            p.notify |= notnew
+                        proc,
+                        p2s(proc),
+                        User.objects.get(pk=proc.uid_id).username))
+        if changed != proc.changed or hsh != proc.hash:
+            proc.notify |= notnew
             if changed:
-                p.changed = changed
+                proc.changed = changed
                 logger.info(
                     'Change detected in proceedings "{0.desc}" ({1}) '
                     'for user "{2}" ({0.uid_id:d})'.format(
-                        p,
-                        p2s(p),
-                        User.objects.get(pk=p.uid_id).username))
-    elif hash != p.hash:
-        p.notify |= notnew
+                        proc,
+                        p2s(proc),
+                        User.objects.get(pk=proc.uid_id).username))
+    elif hsh != proc.hash:
+        proc.notify |= notnew
         if notnew:
-            p.changed = p.updated
-            if p.changed:
+            proc.changed = proc.updated
+            if proc.changed:
                 logger.info(
                     'Change detected in proceedings "{0.desc}" ({1}) '
                     'for user "{2}" ({0.uid_id:d})'.format(
-                        p,
-                        p2s(p),
-                        User.objects.get(pk=p.uid_id).username))
-    p.hash = hash
+                        proc,
+                        p2s(proc),
+                        User.objects.get(pk=proc.uid_id).username))
+    proc.hash = hsh
     logger.debug(
         'Proceedings "{0.desc}" ({1}) updated for user '
         '"{2}" ({0.uid_id:d})'.format(
-            p,
-            p2s(p),
-            User.objects.get(pk=p.uid_id).username))
+            proc,
+            p2s(proc),
+            User.objects.get(pk=proc.uid_id).username))
     return True
 
 
 def cron_update():
 
-    p = Proceedings.objects.filter(Q(updated__lte=datetime.now()-update_delay)
+    proc = \
+        Proceedings.objects.filter(Q(updated__lte=datetime.now()-UPDATE_DELAY)
         | Q(updated__isnull=True))
-    if p:
-        p = p.earliest('updated')
-        if updateproc(p):
-            p.save()
+    if proc:
+        proc = proc.earliest('updated')
+        if updateproc(proc):
+            proc.save()
 
 
 def szr_notice(uid):
 
     text = ''
-    pp = Proceedings.objects.filter(uid=uid, notify=True) \
-            .order_by('desc', 'id')
-    if pp:
-        text = 'V těchto soudních řízeních, která sledujete, ' \
+    res = \
+        Proceedings.objects.filter(uid=uid, notify=True).order_by('desc', 'id')
+    if res:
+        text = \
+            'V těchto soudních řízeních, která sledujete, ' \
             'došlo ke změně:\n\n'
-        for p in pp:
-            if p.desc:
-                desc = ' ({})'.format(p.desc)
-            else:
-                desc = ''
-            text += ' - {0.court}, sp. zn. {0.senate:d} {0.register} ' \
-                '{0.number:d}/{0.year:d}{1}\n'.format(p, desc)
-            if p.court_id != supreme_administrative_court:
-                if p.court_id == supreme_court:
-                    court_type = 'ns'
-                else:
-                    court_type = 'os'
-                text += '   {}\n\n'.format(root_url + get_proc.format(
-                    p.court.id,
-                    (p.court.reports.id if p.court.reports else p.court.id),
-                    p.senate,
-                    quote(p.register.upper()),
-                    p.number,
-                    p.year,
+        for proc in res:
+            desc = ' ({})'.format(proc.desc) if proc.desc else ''
+            text += \
+                ' - {0.court}, sp. zn. {0.senate:d} {0.register} ' \
+                '{0.number:d}/{0.year:d}{1}\n'.format(proc, desc)
+            if proc.court_id != SUPREME_ADMINISTRATIVE_COURT:
+                court_type = 'ns' if proc.court_id == SUPREME_COURT else 'os'
+                text += '   {}\n\n'.format(ROOT_URL + GET_PROC.format(
+                    proc.court.id,
+                    proc.court.reports.id if proc.court.reports
+                    else proc.court.id,
+                    proc.senate,
+                    quote(proc.register.upper()),
+                    proc.number,
+                    proc.year,
                     court_type))
-            elif p.auxid:
-                text += '   {}\n\n'.format(nss_get_proc.format(p.auxid))
-            p.notify = False
-            p.save()
+            elif proc.auxid:
+                text += '   {}\n\n'.format(NSS_GET_PROC.format(proc.auxid))
+            proc.notify = False
+            proc.save()
         logger.info(
             'Non-empty notice prepared for user "{}" ({:d})'
-                .format(User.objects.get(pk=uid).username, uid))
+            .format(User.objects.get(pk=uid).username, uid))
     return text

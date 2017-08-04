@@ -31,11 +31,11 @@ from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
 from common.utils import (
-    Pager, newXML, xmldecorate, composeref, xmlbool, logger)
+    Pager, new_xml, xml_decorate, composeref, xmlbool, logger)
 from common.glob import (
-    registers, inerr, text_opts_keys, odp, exlim_title,
-    localsubdomain, localurl, DTF)
-from szr.glob import supreme_court, supreme_administrative_court
+    REGISTERS, INERR, TEXT_OPTS_KEYS, ODP, EXLIM_TITLE,
+    LOCAL_SUBDOMAIN, LOCAL_URL, DTF)
+from szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT
 from szr.models import Court
 from psj.models import Hearing
 from psj.forms import MainForm
@@ -50,7 +50,7 @@ BATCH = 50
 EXLIM = 1000
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
     logger.debug(
@@ -59,13 +59,12 @@ def mainpage(request):
         request.POST)
 
     err_message = ''
-    messages = []
     page_title = apps.get_app_config(APP).verbose_name
 
-    courts = Court.objects.exclude(id=supreme_court) \
-        .exclude(id=supreme_administrative_court).order_by('name')
+    courts = Court.objects.exclude(id=SUPREME_COURT) \
+        .exclude(id=SUPREME_ADMINISTRATIVE_COURT).order_by('name')
     if request.method == 'GET':
-        f = MainForm()
+        form = MainForm()
         return render(
             request,
             'psj_mainpage.html',
@@ -73,25 +72,25 @@ def mainpage(request):
              'page_title': page_title,
              'err_message': err_message,
              'courts': courts,
-             'f': f})
+             'form': form})
     else:
-        f = MainForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            if not cd['party']:
-                del cd['party_opt']
-            q = QueryDict(mutable=True)
-            for p in cd:
-                if cd[p]:
-                    q[p] = cd[p]
-            q['start'] = 0
-            del q['format']
+        form = MainForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            if not cld['party']:
+                del cld['party_opt']
+            query = QueryDict(mutable=True)
+            for key in cld:
+                if cld[key]:
+                    query[key] = cld[key]
+            query['start'] = 0
+            del query['format']
             return redirect('{}?{}'.format(
-                reverse('{}:{}list'.format(APP, cd['format'])),
-                q.urlencode()))
+                reverse('{}:{}list'.format(APP, cld['format'])),
+                query.urlencode()))
         else:
             logger.debug('Invalid form', request)
-            err_message = inerr
+            err_message = INERR
             return render(
                 request,
                 'psj_mainpage.html',
@@ -99,48 +98,55 @@ def mainpage(request):
                  'page_title': page_title,
                  'err_message': err_message,
                  'courts': courts,
-                 'f': f})
+                 'form': form})
 
 
-def g2p(rd):
+def g2p(reqd):
 
-    p = {}
-    for f, l in [['senate', 0], ['number', 1], ['year', 1],
-                 ['courtroom', 1], ['judge', 1]]:
-        if f in rd:
-            p[f] = int(rd[f])
-            assert p[f] >= l
-    if 'court' in rd:
-        p['courtroom__court_id'] = rd['court']
-    if 'register' in rd:
-        assert rd['register'] in registers
-        p['register'] = rd['register']
-    if 'date_from' in rd:
-        p['time__gte'] = datetime.strptime(rd['date_from'], DTF).date()
-    if 'date_to' in rd:
-        p['time__lt'] = datetime.strptime(rd['date_to'], DTF).date() + odp
-    if 'party_opt' in rd:
-        assert rd['party_opt'] in text_opts_keys
-    if 'party' in rd:
-        assert 'party_opt' in rd
-        p['parties__name__' + rd['party_opt']] = rd['party']
-    return p
+    par = {}
+    
+    lims = {
+        'senate': 0,
+        'number': 1,
+        'year': 1,
+        'courtroom': 1,
+        'judge': 1,
+    }
+    for fld in lims:
+        if fld in reqd:
+            par[fld] = npar = int(reqd[fld])
+            assert npar >= lims[fld]
+
+    if 'court' in reqd:
+        par['courtroom__court_id'] = reqd['court']
+    if 'register' in reqd:
+        assert reqd['register'] in REGISTERS
+        par['register'] = reqd['register']
+    if 'date_from' in reqd:
+        par['time__gte'] = datetime.strptime(reqd['date_from'], DTF).date()
+    if 'date_to' in reqd:
+        par['time__lt'] = datetime.strptime(reqd['date_to'], DTF).date() + ODP
+    if 'party_opt' in reqd:
+        assert reqd['party_opt'] in TEXT_OPTS_KEYS
+    if 'party' in reqd:
+        assert 'party_opt' in reqd
+        par['parties__name__' + reqd['party_opt']] = reqd['party']
+    return par
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def htmllist(request):
 
     logger.debug('HTML list accessed', request, request.GET)
-    page_title = apps.get_app_config(APP).verbose_name
-    rd = request.GET.copy()
+    reqd = request.GET.copy()
     try:
-        p = g2p(rd)
-        start = int(rd['start']) if ('start' in rd) else 0
+        par = g2p(reqd)
+        start = int(reqd['start']) if 'start' in reqd else 0
         assert start >= 0
-        d = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
+        res = Hearing.objects.filter(**par).order_by('time', 'pk').distinct()
     except:
         raise Http404
-    total = d.count()
+    total = res.count()
     if total and start >= total:
         start = total - 1
     return render(
@@ -148,91 +154,91 @@ def htmllist(request):
         'psj_list.html',
         {'app': APP,
          'page_title': 'Výsledky vyhledávání',
-         'rows': d[start:(start + BATCH)],
-         'pager': Pager(start, total, reverse('psj:htmllist'), rd, BATCH),
+         'rows': res[start:start + BATCH],
+         'pager': Pager(start, total, reverse('psj:htmllist'), reqd, BATCH),
          'today': date.today(),
          'total': total})
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def xmllist(request):
 
     logger.debug('XML list accessed', request, request.GET)
-    rd = request.GET.copy()
+    reqd = request.GET.copy()
     try:
-        p = g2p(rd)
-        hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
+        par = g2p(reqd)
+        res = Hearing.objects.filter(**par).order_by('time', 'pk').distinct()
     except:
         raise Http404
-    total = hh.count()
+    total = res.count()
     if total > EXLIM:
         return render(
             request,
             'exlim.html',
             {'app': APP,
-             'page_title': exlim_title,
+             'page_title': EXLIM_TITLE,
              'limit': EXLIM,
              'total': total,
              'back': reverse('psj:mainpage')})
-    xd = {
+    dec = {
         'hearings': {
-            'xmlns': 'http://' + localsubdomain,
+            'xmlns': 'http://' + LOCAL_SUBDOMAIN,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
             'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd'
-                .format(localsubdomain, localurl, APP, APPVERSION),
+            .format(LOCAL_SUBDOMAIN, LOCAL_URL, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()
         }
     }
-    xml = newXML('')
-    tag_hearings = xmldecorate(xml.new_tag('hearings'), xd)
+    xml = new_xml('')
+    tag_hearings = xml_decorate(xml.new_tag('hearings'), dec)
     xml.append(tag_hearings)
-    for h in hh:
+    for item in res:
         tag_hearing = xml.new_tag('hearing')
         tag_hearings.append(tag_hearing)
         tag_court = xml.new_tag('court')
         tag_hearing.append(tag_court)
-        tag_court['id'] = h.courtroom.court_id
-        tag_court.append(h.courtroom.court.name)
+        tag_court['id'] = item.courtroom.court_id
+        tag_court.append(item.courtroom.court.name)
         tag_courtroom = xml.new_tag('courtroom')
         tag_hearing.append(tag_courtroom)
-        tag_courtroom.append(h.courtroom.desc)
+        tag_courtroom.append(item.courtroom.desc)
         tag_time = xml.new_tag('time')
         tag_hearing.append(tag_time)
-        tag_time.append(h.time.replace(microsecond=0).isoformat())
+        tag_time.append(item.time.replace(microsecond=0).isoformat())
         tag_ref = xml.new_tag('ref')
         tag_hearing.append(tag_ref)
         tag_senate = xml.new_tag('senate')
-        tag_senate.append(str(h.senate))
+        tag_senate.append(str(item.senate))
         tag_ref.append(tag_senate)
         tag_register = xml.new_tag('register')
-        tag_register.append(h.register)
+        tag_register.append(item.register)
         tag_ref.append(tag_register)
         tag_number = xml.new_tag('number')
-        tag_number.append(str(h.number))
+        tag_number.append(str(item.number))
         tag_ref.append(tag_number)
         tag_year = xml.new_tag('year')
-        tag_year.append(str(h.year))
+        tag_year.append(str(item.year))
         tag_ref.append(tag_year)
         tag_judge = xml.new_tag('judge')
         tag_hearing.append(tag_judge)
-        tag_judge.append(h.judge.name)
+        tag_judge.append(item.judge.name)
         tag_parties = xml.new_tag('parties')
         tag_hearing.append(tag_parties)
-        for party in h.parties.values():
+        for party in item.parties.values():
             tag_party = xml.new_tag('party')
             tag_parties.append(tag_party)
             tag_party.append(party['name'])
         tag_form = xml.new_tag('form')
         tag_hearing.append(tag_form)
-        tag_form.append(h.form.name)
+        tag_form.append(item.form.name)
         tag_closed = xml.new_tag('closed')
         tag_hearing.append(tag_closed)
-        tag_closed.append(xmlbool(h.closed))
+        tag_closed.append(xmlbool(item.closed))
         tag_cancelled = xml.new_tag('cancelled')
         tag_hearing.append(tag_cancelled)
-        tag_cancelled.append(xmlbool(h.cancelled))
+        tag_cancelled.append(xmlbool(item.cancelled))
     response = HttpResponse(
         str(xml).encode('utf-8') + b'\n',
         content_type='text/xml; charset=utf-8')
@@ -241,23 +247,23 @@ def xmllist(request):
     return response
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def csvlist(request):
 
     logger.debug('CSV list accessed', request, request.GET)
-    rd = request.GET.copy()
+    reqd = request.GET.copy()
     try:
-        p = g2p(rd)
-        hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
+        par = g2p(reqd)
+        res = Hearing.objects.filter(**par).order_by('time', 'pk').distinct()
     except:
         raise Http404
-    total = hh.count()
+    total = res.count()
     if total > EXLIM:
         return render(
             request,
             'exlim.html',
             {'app': APP,
-             'page_title': exlim_title,
+             'page_title': EXLIM_TITLE,
              'limit': EXLIM,
              'total': total,
              'back': reverse('psj:mainpage')})
@@ -265,7 +271,7 @@ def csvlist(request):
     response['Content-Disposition'] = \
         'attachment; filename=Jednani.csv'
     writer = csvwriter(response)
-    hdr = [
+    hdr = (
         'Soud',
         'Jednací síň',
         'Datum',
@@ -276,83 +282,83 @@ def csvlist(request):
         'Druh jednání',
         'Neveřejné',
         'Zrušeno',
-    ]
+    )
     writer.writerow(hdr)
-    for h in hh:
-        dat = [
-            h.courtroom.court.name,
-            h.courtroom.desc,
-            '{:%d.%m.%Y}'.format(h.time),
-            '{:%H:%M}'.format(h.time),
-            composeref(h.senate, h.register, h.number, h.year),
-            h.judge.name,
-            ';'.join([p['name'] for p in h.parties.values()]),
-            h.form.name,
-            'ano' if h.closed else 'ne',
-            'ano' if h.cancelled else 'ne',
-        ]
+    for item in res:
+        dat = (
+            item.courtroom.court.name,
+            item.courtroom.desc,
+            '{:%d.%m.%Y}'.format(item.time),
+            '{:%H:%M}'.format(item.time),
+            composeref(item.senate, item.register, item.number, item.year),
+            item.judge.name,
+            ';'.join([p['name'] for p in item.parties.values()]),
+            item.form.name,
+            'ano' if item.closed else 'ne',
+            'ano' if item.cancelled else 'ne',
+        )
         writer.writerow(dat)
     return response
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def jsonlist(request):
 
     logger.debug('JSON list accessed', request, request.GET)
-    rd = request.GET.copy()
+    reqd = request.GET.copy()
     try:
-        p = g2p(rd)
-        hh = Hearing.objects.filter(**p).order_by('time', 'pk').distinct()
+        par = g2p(reqd)
+        res = Hearing.objects.filter(**par).order_by('time', 'pk').distinct()
     except:
         raise Http404
-    total = hh.count()
+    total = res.count()
     if total > EXLIM:
         return render(
             request,
             'exlim.html',
             {'app': APP,
-             'page_title': exlim_title,
+             'page_title': EXLIM_TITLE,
              'limit': EXLIM,
              'total': total,
              'back': reverse('psj:mainpage')})
     response = HttpResponse(content_type='application/json; charset=utf-8')
     response['Content-Disposition'] = \
         'attachment; filename=Jednani.json'
-    r = []
-    for h in hh:
+    lst = []
+    for item in res:
         court = {
-            'id': h.courtroom.court.id,
-            'name': h.courtroom.court.name,
+            'id': item.courtroom.court.id,
+            'name': item.courtroom.court.name,
         }
-        r.append({
+        lst.append({
             'court': court,
-            'courtroom': h.courtroom.desc,
-            'time': h.time.isoformat(),
+            'courtroom': item.courtroom.desc,
+            'time': item.time.isoformat(),
             'ref': {
-                'senate': h.senate,
-                'register': h.register,
-                'number': h.number,
-                'year': h.year,
+                'senate': item.senate,
+                'register': item.register,
+                'number': item.number,
+                'year': item.year,
             },
-            'judge': h.judge.name,
-            'parties': [p['name'] for p in h.parties.values()],
-            'form': h.form.name,
-            'closed': h.closed,
-            'cancelled': h.cancelled,
+            'judge': item.judge.name,
+            'parties': [p['name'] for p in item.parties.values()],
+            'form': item.form.name,
+            'closed': item.closed,
+            'cancelled': item.cancelled,
         })
-    dump(r, response)
+    dump(lst, response)
     return response
 
 
-sjre = compile(r'^(\S*\.\S*\s)*(.*)$')
+SJRE = compile(r'^(\S*\.\S*\s)*(.*)$')
 
 
 def stripjudge(name):
 
-    return strxfrm(sjre.match(name['judge__name']).group(2))
+    return strxfrm(SJRE.match(name['judge__name']).group(2))
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def courtinfo(request, court):
 
     logger.debug(

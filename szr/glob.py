@@ -20,8 +20,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-supreme_court = 'NSJIMBM'
-supreme_court_name = 'Nejvyšší soud'
+SUPREME_COURT = 'NSJIMBM'
+SUPREME_COURT_NAME = 'Nejvyšší soud'
 
-supreme_administrative_court = 'NSS'
-supreme_administrative_court_name = 'Nejvyšší správní soud'
+SUPREME_ADMINISTRATIVE_COURT = 'NSS'
+SUPREME_ADMINISTRATIVE_COURT_NAME = 'Nejvyšší správní soud'

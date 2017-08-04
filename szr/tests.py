@@ -28,7 +28,7 @@ from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from common.settings import BASE_DIR
-from common.glob import localdomain
+from common.glob import LOCAL_DOMAIN
 from common.tests import link_equal
 from szr import cron, forms, models
 
@@ -40,61 +40,61 @@ TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 class TestCron(TestCase):
 
-    fixtures = ['szr_test.json']
+    fixtures = ('szr_test.json',)
 
     def test_addauxid(self):
 
         cron.addauxid(models.Proceedings.objects.get(pk=1))
 
-        p = models.Proceedings.objects.get(pk=1)
-        cron.addauxid(p)
-        self.assertEqual(p.auxid, 0)
+        proc = models.Proceedings.objects.get(pk=1)
+        cron.addauxid(proc)
+        self.assertEqual(proc.auxid, 0)
 
-        p = models.Proceedings.objects.get(pk=6)
-        cron.addauxid(p)
-        self.assertEqual(p.auxid, 173442)
+        proc = models.Proceedings.objects.get(pk=6)
+        cron.addauxid(proc)
+        self.assertEqual(proc.auxid, 173442)
 
-        p.auxid = 0
-        p.senate = 0
-        cron.addauxid(p)
-        self.assertEqual(p.auxid, 173443)
+        proc.auxid = 0
+        proc.senate = 0
+        cron.addauxid(proc)
+        self.assertEqual(proc.auxid, 173443)
 
-        p.auxid = 0
-        p.year = 2014
-        cron.addauxid(p)
-        self.assertEqual(p.auxid, 0)
+        proc.auxid = 0
+        proc.year = 2014
+        cron.addauxid(proc)
+        self.assertEqual(proc.auxid, 0)
 
     def test_isreg(self):
 
         self.assertEqual(
-            list(map(cron.isreg, models.Court.objects.order_by('pk'))),
-            [True, False, False, False])
+            tuple(map(cron.isreg, models.Court.objects.order_by('pk'))),
+            (True, False, False, False))
 
     def test_courts(self):
 
         cron.cron_courts()
-        c = models.Court.objects
-        self.assertEqual(c.count(), 98)
-        self.assertEqual(c.exclude(reports__isnull=True).count(), 86)
+        court = models.Court.objects
+        self.assertEqual(court.count(), 98)
+        self.assertEqual(court.exclude(reports__isnull=True).count(), 86)
 
     def test_update(self):
 
         self.assertEqual(models.Proceedings.objects.filter(
             court_id='NSS', auxid=0).count(), 3)
 
-        st = datetime.now()
+        now = datetime.now()
         for dummy in range(models.Proceedings.objects.count()):
             cron.cron_update()
         self.assertEqual(models.Proceedings.objects.filter(
             court_id='NSS', auxid=0).count(), 1)
 
         ch6 = models.Proceedings.objects.get(pk=6).changed
-        self.assertGreaterEqual(ch6, st)
+        self.assertGreaterEqual(ch6, now)
 
-        p = models.Proceedings.objects.all().order_by('pk')
+        proc = models.Proceedings.objects.all().order_by('pk')
         self.assertEqual(
-            list(p.values_list('pk', 'changed', 'hash', 'notify')),
-            [
+            tuple(proc.values_list('pk', 'changed', 'hash', 'notify')),
+            (
                 (1,
                  datetime(2016, 10, 20, 12, 39, 6),
                  '1430516cb2a0c99c351869a97ac77ee0',
@@ -123,7 +123,7 @@ class TestCron(TestCase):
                  None,
                  '33e51a9e60a51f4595a5bc5ed5f2a4aa',
                  False),
-            ])
+            ))
 
     def test_szr_notice(self):
 
@@ -167,7 +167,7 @@ org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T\
 
 class TestForms(TestCase):
 
-    fixtures = ['szr_test.json']
+    fixtures = ('szr_test.json',)
 
     def test_courtval(self):
 
@@ -180,18 +180,18 @@ class TestModels(SimpleTestCase):
 
     def test_models(self):
 
-        c = models.Court(
+        court = models.Court(
             id='NSJIMBM',
             name='Nejvyšší soud')
 
         self.assertEqual(
-            str(c),
+            str(court),
             'Nejvyšší soud')
 
         self.assertEqual(
             str(models.Proceedings(
                 uid_id=1,
-                court=c,
+                court=court,
                 senate=7,
                 register='Tdo',
                 number=315,
@@ -201,10 +201,10 @@ class TestModels(SimpleTestCase):
 
 class TestViews(TestCase):
 
-    fixtures = ['szr_test.json']
+    fixtures = ('szr_test.json',)
 
     def setUp(self):
-        User.objects.create_user('user', 'user@' + localdomain, 'none')
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
         self.user = User.objects.get(username='user')
 
     def tearDown(self):
@@ -239,12 +239,12 @@ class TestViews(TestCase):
 
         res = self.client.post(
             '/szr/',
-            {'email': 'alt@' + localdomain,
+            {'email': 'alt@' + LOCAL_DOMAIN,
              'submit': 'Změnit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.user = User.objects.get(username='user')
-        self.assertEqual(self.user.email, 'alt@' + localdomain)
+        self.assertEqual(self.user.email, 'alt@' + LOCAL_DOMAIN)
 
         res = self.client.get('/szr/')
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -381,9 +381,9 @@ class TestViews(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'szr_procform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Nové řízení')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Nové řízení')
 
         res = self.client.post(
             '/szr/procform/',
@@ -606,9 +606,9 @@ class TestViews(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'szr_procform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Úprava řízení')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Úprava řízení')
 
         res = self.client.post(
             '/szr/procform/{:d}/'.format(proc_id),
@@ -814,11 +814,11 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'szr_procbatchform.html')
         self.assertContains(res, 'Nejprve zvolte soubor k načtení')
 
-        with open(join(TEST_DIR, 'import.csv'), 'rb') as fi:
+        with open(join(TEST_DIR, 'import.csv'), 'rb') as infile:
             res = self.client.post(
                 '/szr/procbatchform/',
                 {'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procbatchresult.html')
@@ -826,27 +826,29 @@ class TestViews(TestCase):
         self.assertEqual(res.context['count'], 4)
         self.assertEqual(
             res.context['errors'],
-            [[3, 'Chybná zkratka soudu'],
-             [4, 'Chybná zkratka soudu'],
-             [5, 'Chybný formát'],
-             [8, 'Chybná spisová značka'],
-             [9, 'Chybná spisová značka'],
-             [10, 'Chybná spisová značka'],
-             [11, 'Chybná spisová značka'],
-             [12, 'Chybná spisová značka'],
-             [13, 'Popisu "Test 13" odpovídá více než jedno řízení'],
-             [14, 'Prázdný popis'],
-             [16, 'Příliš dlouhý popis']])
+            [(3, 'Chybná zkratka soudu'),
+             (4, 'Chybná zkratka soudu'),
+             (5, 'Chybný formát'),
+             (8, 'Chybná spisová značka'),
+             (9, 'Chybná spisová značka'),
+             (10, 'Chybná spisová značka'),
+             (11, 'Chybná spisová značka'),
+             (12, 'Chybná spisová značka'),
+             (13, 'Popisu "Test 13" odpovídá více než jedno řízení'),
+             (14, 'Prázdný popis'),
+             (16, 'Příliš dlouhý popis')])
 
         res = self.client.get('/szr/procexport/')
         self.assertEqual(
             res.content.decode('utf-8'),
-            'Test 01,MSPHAAB,45 A 27/2014\r\n'
-            'Test 06,MSPHAAB,Nc 1070/2016\r\n'
-            'Test 07,MSPHAAB,Nc 1071/2016\r\n'
-            'Test 13,MSPHAAB,52 C 4/2011\r\n'
-            'Test 13,MSPHAAB,52 C 5/2012\r\n'
-            '{},MSPHAAB,45 A 27/2014\r\n'.format('T' * 255))
+            '''\
+Test 01,MSPHAAB,45 A 27/2014
+Test 06,MSPHAAB,Nc 1070/2016
+Test 07,MSPHAAB,Nc 1071/2016
+Test 13,MSPHAAB,52 C 4/2011
+Test 13,MSPHAAB,52 C 5/2012
+{},MSPHAAB,45 A 27/2014
+'''.format('T' * 255).replace('\n', '\r\n'))
 
     def test_procexport(self):
 
@@ -897,8 +899,9 @@ class TestViews(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'szr_courts.html')
         self.assertEqual(
-            list(res.context['rows']),
-            [{'id': 'MSPHAAB', 'name': 'Městský soud Praha'},
+            tuple(res.context['rows']),
+            ({'id': 'MSPHAAB', 'name': 'Městský soud Praha'},
              {'id': 'NSJIMBM', 'name': 'Nejvyšší soud'},
              {'id': 'NSS', 'name': 'Nejvyšší správní soud'},
-             {'id': 'OSPHA02', 'name': 'Obvodní soud Praha 2'}])
+             {'id': 'OSPHA02', 'name': 'Obvodní soud Praha 2'},
+            ))

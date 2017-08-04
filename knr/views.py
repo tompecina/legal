@@ -27,10 +27,6 @@ from pickle import dumps, loads
 from xml.sax.saxutils import escape, unescape
 from datetime import datetime, timedelta
 from io import BytesIO
-from os.path import join
-import reportlab.rl_config
-from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
-from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     Paragraph, SimpleDocTemplate, LongTable, TableStyle, Spacer, KeepTogether)
 from reportlab.lib.styles import ParagraphStyle
@@ -45,414 +41,76 @@ from django.template import Context, Template
 from django.forms.models import model_to_dict
 from django.apps import apps
 from django.db.models import Q
-from cache.main import getcache, getasset, setasset
-from common.settings import FONT_DIR
+from cache.utils import getcache, getasset, setasset
 from common.utils import (
-    getbutton, unrequire, formam, c2p, getXML, newXML, CanvasXML, lim,
-    logger)
-from common.glob import inerr, localsubdomain, localurl
+    getbutton, unrequire, famt, c2p, get_xml, new_xml, xmlbool, register_fonts,
+    make_pdf, lim, logger)
+from common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
 from common.views import error, unauth
-from knr.glob import fuels
-from knr.utils import getVAT
+from knr.glob import FUELS
+from knr.utils import getvat
 from knr.forms import (
     PlaceForm, CarForm, FormulaForm, CalcForm, GeneralForm, ServiceForm,
     ServiceSubform, FlatForm, FlatSubform, AdministrativeForm,
     AdministrativeSubform, TimeForm, TimeSubform, TravelForm, TravelSubform)
-from .models import Place, Car, Formula, Rate
+from knr.models import Place, Car, Formula, Rate
 
 
 APP = __package__
 
 APPVERSION = apps.get_app_config(APP).version
 
-ctrip = ['cons1', 'cons2', 'cons3']
+CTRIP = ('cons1', 'cons2', 'cons3')
 
 
-def findloc(s):
+def findloc(addr):
 
-    if not s:
+    if not addr:
         return None
-    s = quote(unquote(s).encode('utf-8'))
-    u = 'https://maps.googleapis.com/maps/api/geocode/' \
-        'json?address={}&language=cs&sensor=false'.format(s)
-    r = getcache(u, timedelta(weeks=1))[0]
-    if not r:
+    addr = quote(unquote(addr).encode('utf-8'))
+    url = \
+        'https://maps.googleapis.com/maps/api/geocode/' \
+        'json?address={}&language=cs&sensor=false'.format(addr)
+    res = getcache(url, timedelta(weeks=1))[0]
+    if not res:
         return None
-    c = json_loads(r)
-    if c['status'] != 'OK':
+    res = json_loads(res)
+    if res['status'] != 'OK':
         return None
-    c = c['results'][0]
-    l = c['geometry']['location']
-    return c['formatted_address'], l['lat'], l['lng']
+    res = res['results'][0]
+    loc = res['geometry']['location']
+    return res['formatted_address'], loc['lat'], loc['lng']
 
 
 def finddist(from_lat, from_lon, to_lat, to_lon):
 
-    u = 'https://maps.googleapis.com/maps/api/distancematrix/' \
+    url = \
+        'https://maps.googleapis.com/maps/api/distancematrix/' \
         'json?origins={:f},{:f}&destinations={:f},{:f}&mode=driving&' \
         'units=metric&language=cs&sensor=false' \
-            .format(from_lat, from_lon, to_lat, to_lon)
-    r = getcache(u, timedelta(weeks=1))[0]
-    if not r:
+        .format(from_lat, from_lon, to_lat, to_lon)
+    res = getcache(url, timedelta(weeks=1))[0]
+    if not res:
         return None, None
-    c = json_loads(r)
-    if c['status'] != 'OK':
+    res = json_loads(res)
+    if res['status'] != 'OK':
         return None, None
-    c = c['rows'][0]['elements'][0]
-    if c['status'] != 'OK':
+    res = res['rows'][0]['elements'][0]
+    if res['status'] != 'OK':
         return None, None
-    return c['distance']['value'], c['duration']['value']
+    return res['distance']['value'], res['duration']['value']
 
 
-def convi(n):
+def convi(arg):
 
-    return formam(int(n))
-
-
-def convf(n, p):
-
-    tpl = Template('{{{{ v|floatformat:"{:d}" }}}}'.format(p))
-    c = Context({'v': n})
-    return tpl.render(c)
+    return famt(int(arg))
 
 
-@require_http_methods(['GET', 'POST'])
-@login_required
-def placeform(request, id=0):
+def convf(arg, num):
 
-    logger.debug(
-        'Place form accessed using method {}, id={}'
-            .format(request.method, id),
-        request,
-        request.POST)
-    err_message = ''
-    uid = request.user.id
-    uname = request.user.username
-    page_title = ('Úprava místa' if id else 'Nové místo')
-    btn = getbutton(request)
-    if request.method == 'GET':
-        f = (PlaceForm(initial=model_to_dict(get_object_or_404(
-            Place, pk=id, uid=uid))) if id else PlaceForm())
-    elif btn == 'back':
-        return redirect('knr:placelist')
-    elif btn == 'search':
-        f = PlaceForm(request.POST)
-        unrequire(f, ['abbr', 'name', 'addr', 'lat', 'lon'])
-        loc = findloc(request.POST.get('addr'))
-        f.data = f.data.copy()
-        if loc:
-            f.data['addr'], f.data['lat'], f.data['lon'] = loc
-        else:
-            f.data['lat'] = f.data['lon'] = ''
-            err_message = 'Hledání neúspěšné, prosím, upřesněte adresu'
-    else:
-        f = PlaceForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            if id:
-                get_object_or_404(Place, pk=id, uid=uid)
-                cd['pk'] = id
-            Place(uid_id=uid, **cd).save()
-            if id:
-                logger.info(
-                    'User "{}" ({:d}) updated place "{}"'
-                        .format(uname, uid, cd['name']),
-                    request)
-            else:
-                logger.info(
-                    'User "{}" ({:d}) added place "{}"'
-                        .format(uname, uid, cd['name']),
-                    request)
-            return redirect('knr:placelist')
-        else:
-            logger.debug('Invalid form', request)
-            err_message = inerr
-    return render(
-        request,
-        'knr_placeform.html',
-        {'app': APP,
-         'f': f,
-         'page_title': page_title,
-         'err_message': err_message})
-
-
-@require_http_methods(['GET'])
-@login_required
-def placelist(request):
-
-    logger.debug('Place list accessed', request)
-    rows = Place.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
-        .order_by('uid', 'abbr', 'name')
-    for row in rows:
-        if row.uid:
-            row.user = True
-        elif rows.filter(abbr=row.abbr).exclude(uid=None):
-            row.disabled = True
-    return render(
-        request,
-        'knr_placelist.html',
-        {'app': APP,
-         'page_title': 'Přehled míst',
-         'rows': rows})
-
-
-@require_http_methods(['GET', 'POST'])
-@login_required
-def placedel(request, id=0):
-
-    logger.debug(
-        'Place delete page accessed using method {}, id={}'
-            .format(request.method, id),
-        request,
-        request.POST)
-    uid = request.user.id
-    uname = request.user.username
-    if request.method == 'GET':
-        return render(
-            request,
-            'knr_placedel.html',
-            {'app': APP,
-             'page_title': 'Smazání místa',
-             'name': get_object_or_404(Place, pk=id, uid=uid).name})
-    else:
-        place = get_object_or_404(Place, pk=id, uid=uid)
-        if getbutton(request) == 'yes':
-            logger.info(
-                'User "{}" ({:d}) deleted place "{}"'
-                    .format(uname, uid, place.name),
-                request)
-            place.delete()
-            return redirect('knr:placedeleted')
-        return redirect('knr:placelist')
-
-
-@require_http_methods(['GET', 'POST'])
-@login_required
-def carform(request, id=0):
-
-    logger.debug(
-        'Car form accessed using method {}, id={}'
-            .format(request.method, id),
-        request,
-        request.POST)
-    err_message = ''
-    uid = request.user.id
-    uname = request.user.username
-    page_title = ('Úprava vozidla' if id else 'Nové vozidlo')
-    btn = getbutton(request)
-    if request.method == 'GET':
-        f = (CarForm(initial=model_to_dict(
-            get_object_or_404(Car, pk=id, uid=uid))) if id else CarForm())
-    elif btn == 'back':
-        return redirect('knr:carlist')
-    else:
-        f = CarForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            if id:
-                get_object_or_404(Car, pk=id, uid=uid)
-                cd['pk'] = id
-            Car(uid_id=uid, **cd).save()
-            if id:
-                logger.info(
-                    'User "{}" ({:d}) updated car "{}"'
-                        .format(uname, uid, cd['name']),
-                    request)
-            else:
-                logger.info(
-                    'User "{}" ({:d}) added car "{}"'
-                        .format(uname, uid, cd['name']),
-                    request)
-            return redirect('knr:carlist')
-        else:
-            logger.debug('Invalid form', request)
-            err_message = inerr
-    return render(
-        request,
-        'knr_carform.html',
-        {'app': APP,
-         'f': f,
-         'page_title': page_title,
-         'err_message': err_message,
-         'fuels': fuels})
-
-
-@require_http_methods(['GET'])
-@login_required
-def carlist(request):
-
-    logger.debug('Car list accessed', request)
-    rows = Car.objects.filter(uid=request.user.id).order_by('abbr', 'name')
-    return render(
-        request,
-        'knr_carlist.html',
-        {'app': APP,
-         'page_title': 'Přehled vozidel',
-         'rows': rows})
-
-
-@require_http_methods(['GET', 'POST'])
-@login_required
-def cardel(request, id=0):
-
-    logger.debug(
-        'Car delete page accessed using method {}, id={}'
-            .format(request.method, id),
-        request,
-        request.POST)
-    uid = request.user.id
-    uname = request.user.username
-    if request.method == 'GET':
-        return render(
-            request,
-            'knr_cardel.html',
-            {'app': APP,
-             'page_title':
-             'Smazání vozidla',
-             'name': get_object_or_404(Car, pk=id, uid=uid).name})
-    else:
-        car = get_object_or_404(Car, pk=id, uid=uid)
-        if getbutton(request) == 'yes':
-            logger.info(
-                'User "{}" ({:d}) deleted car "{}"'
-                    .format(uname, uid, car.name),
-                request)
-            car.delete()
-            return redirect('knr:cardeleted')
-        return redirect('knr:carlist')
-
-
-@require_http_methods(['GET', 'POST'])
-@login_required
-def formulaform(request, id=0):
-
-    logger.debug(
-        'Formula form accessed using method {}, id={}'
-            .format(request.method, id),
-        request,
-        request.POST)
-    err_message = ''
-    uid = request.user.id
-    uname = request.user.username
-    page_title = ('Úprava předpisu' if id else 'Nový předpis')
-    btn = getbutton(request)
-    if request.method == 'GET':
-        if id:
-            p = model_to_dict(get_object_or_404(Formula, pk=id, uid=uid))
-            for fuel in fuels:
-                r = Rate.objects.filter(formula=id, fuel=fuel)
-                if r and r[0].rate:
-                    p['rate_{}'.format(fuel)] = r[0].rate
-            f = FormulaForm(initial=p)
-        else:
-            f = FormulaForm()
-    elif btn == 'back':
-        return redirect('knr:formulalist')
-    else:
-        f = FormulaForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            if id:
-                p = get_object_or_404(Formula, pk=id, uid=uid)
-                cd['pk'] = id
-            d = {}
-            for k, v in cd.items():
-                if not k.startswith('rate_'):
-                    d[k] = v
-            p = Formula(uid_id=uid, **d)
-            p.save()
-            if id:
-                logger.info(
-                    'User "{}" ({:d}) updated formula "{}"'
-                        .format(uname, uid, p.name),
-                    request)
-            else:
-                logger.info(
-                    'User "{}" ({:d}) added formula "{}"'
-                        .format(uname, uid, p.name),
-                    request)
-            for fuel in fuels:
-                r = Rate.objects.filter(formula=p, fuel=fuel)
-                if  r:
-                    r = r[0]
-                else:
-                    r = Rate(formula=p, fuel=fuel)
-                r.rate = cd['rate_{}'.format(fuel)]
-                if not r.rate:
-                    r.rate = 0
-                r.save()
-            return redirect('knr:formulalist')
-        else:
-            logger.debug('Invalid form', request)
-            err_message = inerr
-    rates = []
-    for fuel in fuels:
-        rates.append(f['rate_{}'.format(fuel)])
-    return render(
-        request,
-        'knr_formulaform.html',
-        {'app': APP,
-         'f': f,
-         'page_title': page_title,
-         'err_message': err_message,
-         'rates': rates})
-
-
-@require_http_methods(['GET'])
-@login_required
-def formulalist(request):
-
-    logger.debug('Formula list accessed', request)
-    rows = Formula.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
-        .order_by('uid', 'abbr', 'name')
-    for row in rows:
-        rates = []
-        for fuel in fuels:
-            r = Rate.objects.filter(formula=row.id, fuel=fuel)
-            rates.append(r[0].rate if r else 0)
-        row.rates = rates
-        if row.uid:
-            row.user = True
-        elif rows.filter(abbr=row.abbr).exclude(uid=None):
-            row.disabled = True
-    return render(
-        request,
-        'knr_formulalist.html',
-        {'app': APP,
-         'page_title': 'Přehled předpisů',
-         'fuels': fuels,
-         'colspan': (len(fuels) + 4),
-         'rows': rows})
-
-
-@require_http_methods(['GET', 'POST'])
-@login_required
-def formuladel(request, id=0):
-
-    logger.debug(
-        'Formula delete page accessed using method {}, id={}'
-            .format(request.method, id),
-        request,
-        request.POST)
-    uid = request.user.id
-    uname = request.user.username
-    if request.method == 'GET':
-        return render(
-            request,
-            'knr_formuladel.html',
-            {'app': APP,
-             'page_title': 'Smazání předpisu',
-             'name': get_object_or_404(Formula, pk=id, uid=uid).name})
-    else:
-        formula = get_object_or_404(Formula, pk=id, uid=uid)
-        if getbutton(request) == 'yes':
-            logger.info(
-                'User "{}" ({:d}) deleted formula "{}"'
-                    .format(uname, uid, formula.name),
-                request)
-            formula.delete()
-            return redirect('knr:formuladeleted')
-        return redirect('knr:formulalist')
+    tpl = Template('{{{{ var|floatformat:"{:d}" }}}}'.format(num))
+    con = Context({'var': arg})
+    return tpl.render(con)
 
 
 B = 'B'
@@ -463,326 +121,507 @@ F2 = 'F2'
 F3 = 'F3'
 F7 = 'F7'
 
-gd = {'title': S,
-      'calculation_note': S,
-      'internal_note': S,
-      'vat_rate': F2,
-      'numerator': I,
-      'denominator': I,
-      'type': S,
-      'description': S,
-      'amount': I,
-      'vat': B,
-      'item_note': S,
-      'major_number': I,
-      'rate': I,
-      'minor_number': I,
-      'multiple_number': I,
-      'multiple_flag': B,
-      'multiple50_flag': B,
-      'single_flag': B,
-      'halved_flag': B,
-      'halved_appeal_flag': B,
-      'collection_flag': B,
-      'off10_flag': B,
-      'off30_flag': B,
-      'off30limit5000_flag': B,
-      'off20limit5000_flag': B,
-      'basis': I,
-      'number': I,
-      'from_name': S,
-      'from_address': S,
-      'from_lat': F7,
-      'from_lon': F7,
-      'to_name': S,
-      'to_address': S,
-      'to_lat': F7,
-      'to_lon': F7,
-      'trip_number': I,
-      'trip_distance': I,
-      'time_rate': I,
-      'time_number': I,
-      'car_name': S,
-      'fuel_name': S,
-      'cons1': F1,
-      'cons2': F1,
-      'cons3': F1,
-      'formula_name': S,
-      'flat_rate': F2,
-      'fuel_price': F2}
+TYPES = {
+    'title': S,
+    'calculation_note': S,
+    'internal_note': S,
+    'vat_rate': F2,
+    'numerator': I,
+    'denominator': I,
+    'type': S,
+    'description': S,
+    'amount': I,
+    'vat': B,
+    'item_note': S,
+    'major_number': I,
+    'rate': I,
+    'minor_number': I,
+    'multiple_number': I,
+    'multiple_flag': B,
+    'multiple50_flag': B,
+    'single_flag': B,
+    'halved_flag': B,
+    'halved_appeal_flag': B,
+    'collection_flag': B,
+    'off10_flag': B,
+    'off30_flag': B,
+    'off30limit5000_flag': B,
+    'off20limit5000_flag': B,
+    'basis': I,
+    'number': I,
+    'from_name': S,
+    'from_address': S,
+    'from_lat': F7,
+    'from_lon': F7,
+    'to_name': S,
+    'to_address': S,
+    'to_lat': F7,
+    'to_lon': F7,
+    'trip_number': I,
+    'trip_distance': I,
+    'time_rate': I,
+    'time_number': I,
+    'car_name': S,
+    'fuel_name': S,
+    'cons1': F1,
+    'cons2': F1,
+    'cons3': F1,
+    'formula_name': S,
+    'flat_rate': F2,
+    'fuel_price': F2,
+}
 
-ga = {'vat_rate': {'unit': 'percentage'},
-      'amount': {'currency': 'CZK'},
-      'rate': {'currency': 'CZK'},
-      'from_lat': {'unit': 'deg', 'datum': 'WGS84'},
-      'from_lon': {'unit': 'deg', 'datum': 'WGS84'},
-      'to_lat': {'unit': 'deg', 'datum': 'WGS84'},
-      'to_lon': {'unit': 'deg', 'datum': 'WGS84'},
-      'trip_distance': {'unit': 'km'},
-      'time_rate': {'currency': 'CZK', 'unit': 'per half-hour'},
-      'time_number': {'unit': 'half-hour'},
-      'cons1': {'unit': 'l per 100 km'},
-      'cons2': {'unit': 'l per 100 km'},
-      'cons3': {'unit': 'l per 100 km'},
-      'flat_rate': {'currency': 'CZK', 'unit': 'per km'},
-      'fuel_price': {'currency': 'CZK', 'unit': 'per l'}}
+XML_DEC = {
+    'vat_rate': {'unit': 'percentage'},
+    'amount': {'currency': 'CZK'},
+    'rate': {'currency': 'CZK'},
+    'from_lat': {'unit': 'deg', 'datum': 'WGS84'},
+    'from_lon': {'unit': 'deg', 'datum': 'WGS84'},
+    'to_lat': {'unit': 'deg', 'datum': 'WGS84'},
+    'to_lon': {'unit': 'deg', 'datum': 'WGS84'},
+    'trip_distance': {'unit': 'km'},
+    'time_rate': {'currency': 'CZK', 'unit': 'per half-hour'},
+    'time_number': {'unit': 'half-hour'},
+    'cons1': {'unit': 'l per 100 km'},
+    'cons2': {'unit': 'l per 100 km'},
+    'cons3': {'unit': 'l per 100 km'},
+    'flat_rate': {'currency': 'CZK', 'unit': 'per km'},
+    'fuel_price': {'currency': 'CZK', 'unit': 'per l'},
+}
 
-gt = {'general' : ['description', 'amount', 'vat', 'numerator',
-                   'denominator', 'item_note'],
-      'service' : ['description', 'amount', 'vat', 'numerator',
-                   'denominator', 'item_note', 'major_number', 'rate',
-                   'minor_number', 'multiple_number', 'off10_flag',
-                   'off30_flag', 'off30limit5000_flag', 'off20limit5000_flag'],
-      'flat' : ['description', 'amount', 'vat', 'numerator',
-                'denominator', 'rate', 'multiple_flag',
-                'multiple50_flag', 'item_note', 'single_flag', 'halved_flag',
-                'halved_appeal_flag', 'collection_flag'],
-      'administrative' : ['description', 'amount', 'vat', 'numerator',
-                          'denominator', 'item_note', 'number', 'rate'],
-      'time' : ['description', 'amount', 'vat', 'numerator',
-                'denominator', 'item_note', 'time_number', 'time_rate'],
-      'travel' : ['description', 'amount', 'vat', 'numerator',
-                  'denominator', 'item_note', 'from_name', 'from_address',
-                  'from_lat', 'from_lon', 'to_name', 'to_address',
-                  'to_lat', 'to_lon', 'trip_number', 'trip_distance',
-                  'time_rate', 'time_number', 'car_name', 'fuel_name',
-                  'cons1', 'cons2', 'cons3', 'formula_name', 'flat_rate',
-                  'fuel_price']}
+FORM_FIELDS = {
+    'general': (
+        'description',
+        'amount',
+        'vat',
+        'numerator',
+        'denominator',
+        'item_note',
+    ),
+    'service': (
+        'description',
+        'amount',
+        'vat',
+        'numerator',
+        'denominator',
+        'item_note',
+        'major_number',
+        'rate',
+        'minor_number',
+        'multiple_number',
+        'off10_flag',
+        'off30_flag',
+        'off30limit5000_flag',
+        'off20limit5000_flag',
+    ),
+    'flat': (
+        'description',
+        'amount',
+        'vat',
+        'numerator',
+        'denominator',
+        'rate',
+        'multiple_flag',
+        'multiple50_flag',
+        'item_note',
+        'single_flag',
+        'halved_flag',
+        'halved_appeal_flag',
+        'collection_flag',
+    ),
+    'administrative': (
+        'description',
+        'amount',
+        'vat',
+        'numerator',
+        'denominator',
+        'item_note',
+        'number',
+        'rate',
+    ),
+    'time': (
+        'description',
+        'amount',
+        'vat',
+        'numerator',
+        'denominator',
+        'item_note',
+        'time_number',
+        'time_rate',
+    ),
+    'travel': (
+        'description',
+        'amount',
+        'vat',
+        'numerator',
+        'denominator',
+        'item_note',
+        'from_name',
+        'from_address',
+        'from_lat',
+        'from_lon',
+        'to_name',
+        'to_address',
+        'to_lat',
+        'to_lon',
+        'trip_number',
+        'trip_distance',
+        'time_rate',
+        'time_number',
+        'car_name',
+        'fuel_name',
+        'cons1',
+        'cons2',
+        'cons3',
+        'formula_name',
+        'flat_rate',
+        'fuel_price',
+    ),
+}
 
-gf = {'general' : ['description', 'amount', 'vat', 'numerator',
-                   'denominator', 'item_note'],
-      'service' : ['description', 'vat', 'numerator', 'denominator',
-                   'item_note', 'major_number', 'rate', 'minor_number',
-                   'multiple_number', 'off10_flag', 'off30_flag',
-                   'off30limit5000_flag', 'off20limit5000_flag', 'basis'],
-      'flat' : ['description', 'vat', 'numerator', 'denominator', 'rate',
-                'multiple_flag', 'multiple50_flag', 'basis', 'item_note',
-                'single_flag', 'halved_flag', 'halved_appeal_flag',
-                'collection_flag'],
-      'administrative' : ['description', 'vat', 'numerator', 'denominator',
-                          'item_note', 'number', 'rate'],
-      'time' : ['description', 'vat', 'numerator', 'denominator',
-                'item_note', 'time_number', 'time_rate'],
-      'travel' : ['description', 'vat', 'numerator', 'denominator',
-                  'item_note', 'from_name', 'from_address', 'from_lat',
-                  'from_lon', 'to_name', 'to_address', 'to_lat', 'to_lon',
-                  'trip_number', 'trip_distance', 'time_rate', 'time_number',
-                  'car_name', 'fuel_name', 'cons1', 'cons2', 'cons3',
-                  'formula_name', 'flat_rate', 'fuel_price']}
+SUBFORM_FIELDS = {
+    'general': (
+        'description',
+        'amount',
+        'vat',
+        'numerator',
+        'denominator',
+        'item_note',
+    ),
+    'service': (
+        'description',
+        'vat',
+        'numerator',
+        'denominator',
+        'item_note',
+        'major_number',
+        'rate',
+        'minor_number',
+        'multiple_number',
+        'off10_flag',
+        'off30_flag',
+        'off30limit5000_flag',
+        'off20limit5000_flag',
+        'basis',
+    ),
+    'flat': (
+        'description',
+        'vat',
+        'numerator',
+        'denominator',
+        'rate',
+        'multiple_flag',
+        'multiple50_flag',
+        'basis',
+        'item_note',
+        'single_flag',
+        'halved_flag',
+        'halved_appeal_flag',
+        'collection_flag',
+    ),
+    'administrative': (
+        'description',
+        'vat',
+        'numerator',
+        'denominator',
+        'item_note',
+        'number',
+        'rate',
+    ),
+    'time': (
+        'description',
+        'vat',
+        'numerator',
+        'denominator',
+        'item_note',
+        'time_number',
+        'time_rate',
+    ),
+    'travel': (
+        'description',
+        'vat',
+        'numerator',
+        'denominator',
+        'item_note',
+        'from_name',
+        'from_address',
+        'from_lat',
+        'from_lon',
+        'to_name',
+        'to_address',
+        'to_lat',
+        'to_lon',
+        'trip_number',
+        'trip_distance',
+        'time_rate',
+        'time_number',
+        'car_name',
+        'fuel_name',
+        'cons1',
+        'cons2',
+        'cons3',
+        'formula_name',
+        'flat_rate',
+        'fuel_price',
+    ),
+}
 
 TEXT = 'text'
 TYPE = 'type'
 PRESEL = 'presel'
 
-SEP = ('-' * 95)
+SEP = '-' * 95
 
-ps = [{TEXT: 'Vyberte předvolbu:', TYPE: None},
+PRESELS = (
+    {
+        TEXT: 'Vyberte předvolbu:',
+        TYPE: None,
+    },
+    {
+        TEXT: SEP,
+        TYPE: None,
+    },
+    {
+        TEXT: 'Soudní poplatek',
+        TYPE: 'general',
+        PRESEL: {
+            'description': 'Zaplacený soudní poplatek',
+            'vat': False,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: 'Záloha na znalecký posudek',
+        TYPE: 'general',
+        PRESEL: {
+            'description': 'Zaplacená záloha na znalecký posudek',
+            'vat': False,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: 'Záloha na svědečné',
+        TYPE: 'general',
+        PRESEL: {
+            'description': 'Zaplacená záloha na svědečné',
+            'vat': False,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: 'Použití motorového vozidla klient',
+        TYPE: 'travel',
+        PRESEL: {
+            'description': 'Náhrada za použití motorového vozidla (klient)',
+            'trip_number': 2,
+            'time_rate': 0,
+            'fuel_name': 'BA95',
+            'vat': False,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: 'Další hotové výdaje klient',
+        TYPE: 'general',
+        PRESEL: {
+            'description': 'Další hotové výdaje (klient)',
+            'vat': False,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: SEP,
+        TYPE: None,
+    },
+    {
+        TEXT: 'Odměna za úkony podle AdvT (neplátce DPH)',
+        TYPE: 'service',
+        PRESEL: {
+            'description':
+            'Mimosmluvní odměna za úkony právní služby podle advokátního '
+            'tarifu',
+            'major_number': 0,
+            'minor_number': 0,
+            'multiple_number': 1,
+            'off10_flag': False,
+            'off30_flag': False,
+            'off30limit5000_flag': False,
+            'off20limit5000_flag': False,
+            'vat': False,
+            'numerator': 1,
+            'denominator': 1},
+    },
+    {
+        TEXT: 'Paušální odměna podle vyhlášky (neplátce DPH)',
+        TYPE: 'flat',
+        PRESEL: {
+            'description':
+            'Paušální odměna za zastupování účastníka podle vyhlášky '
+            'č. 484/2000 Sb.',
+            'multiple_flag': False,
+            'multiple50_flag': False,
+            'vat': False,
+            'numerator': 1,
+            'denominator': 1},
+    },
+    {
+        TEXT: 'Paušální odměna stanovená pevnou částkou (neplátce DPH)',
+        TYPE: 'general',
+        PRESEL: {
+            'description':
+            'Paušální odměna za zastupování účastníka stanovená pevnou částkou',
+            'vat': False,
+            'numerator': 1,
+            'denominator': 1},
+    },
+    {
+        TEXT: 'Použití motorového vozidla advokát (neplátce DPH)',
+        TYPE: 'travel',
+        PRESEL: {
+            'description': 'Náhrada za použití motorového vozidla (advokát)',
+            'trip_number': 2,
+            'time_rate': 100,
+            'fuel_name': 'BA95',
+            'vat': False,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: 'Další promeškaný čas (neplátce DPH)',
+        TYPE: 'time',
+        PRESEL: {
+            'description': 'Náhrada za promeškaný čas podle advokátního tarifu',
+            'time_rate': 100,
+            'vat': False,
+            'numerator': 1,
+            'denominator': 1},
+    },
+    {
+        TEXT: 'Režijní paušál za úkony podle AdvT (neplátce DPH)',
+        TYPE: 'administrative',
+        PRESEL: {
+            'description':
+            'Paušální náhrada za úkony právní služby podle advokátního tarifu',
+            'rate': 300,
+            'vat': False,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: 'Další hotové výdaje advokát (neplátce DPH)',
+        TYPE: 'general',
+        PRESEL: {
+            'description': 'Další hotové výdaje (advokát)',
+            'vat': False,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: SEP,
+        TYPE: None,
+    },
+    {
+        TEXT: 'Odměna za úkony podle AdvT (plátce DPH)',
+        TYPE: 'service',
+        PRESEL: {
+            'description':
+            'Mimosmluvní odměna za úkony právní služby podle advokátního '
+            'tarifu',
+            'major_number': 0,
+            'minor_number': 0,
+            'multiple_number': 1,
+            'off10_flag': False,
+            'off30_flag': False,
+            'off30limit5000_flag': False,
+            'off20limit5000_flag': False,
+            'vat': True,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: 'Paušální odměna podle vyhlášky (plátce DPH)',
+        TYPE: 'flat',
+        PRESEL: {
+            'description':
+            'Paušální odměna za zastupování účastníka podle vyhlášky '
+            'č. 484/2000 Sb.',
+            'multiple_flag': False,
+            'multiple50_flag': False,
+            'vat': True,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: 'Paušální odměna stanovená pevnou částkou (plátce DPH)',
+        TYPE: 'general',
+        PRESEL: {
+            'description':
+            'Paušální odměna za zastupování účastníka stanovená pevnou částkou',
+            'vat': True,
+            'numerator': 1,
+            'denominator': 1},
+    },
+    {
+        TEXT: 'Použití motorového vozidla advokát (plátce DPH)',
+        TYPE: 'travel',
+        PRESEL: {
+            'description': 'Náhrada za použití motorového vozidla (advokát)',
+            'trip_number': 2,
+            'time_rate': 100,
+            'fuel_name': 'BA95',
+            'vat': True,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: 'Další promeškaný čas (plátce DPH)',
+        TYPE: 'time',
+        PRESEL: {
+            'description': 'Náhrada za promeškaný čas podle advokátního tarifu',
+            'time_rate': 100,
+            'vat': True,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: 'Režijní paušál za úkony podle AdvT (plátce DPH)',
+        TYPE: 'administrative',
+        PRESEL: {
+            'description':
+            'Paušální náhrada za úkony právní služby podle advokátního tarifu',
+            'rate': 300,
+            'vat': True,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    },
+    {
+        TEXT: 'Další hotové výdaje advokát (plátce DPH)',
+        TYPE: 'general',
+        PRESEL: {
+            'description': 'Další hotové výdaje (advokát)',
+            'vat': True,
+            'numerator': 1,
+            'denominator': 1,
+        },
+    }
+)
 
-      {TEXT: SEP, TYPE: None},
+FIELDS = ('title', 'calculation_note', 'internal_note', 'vat_rate')
 
-      {TEXT: 'Soudní poplatek',
-       TYPE: 'general',
-       PRESEL: {
-           'description': 'Zaplacený soudní poplatek',
-           'vat': False,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Záloha na znalecký posudek',
-       TYPE: 'general',
-       PRESEL: {
-           'description': 'Zaplacená záloha na znalecký posudek',
-           'vat': False,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Záloha na svědečné',
-       TYPE: 'general',
-       PRESEL: {
-           'description': 'Zaplacená záloha na svědečné',
-           'vat': False,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Použití motorového vozidla klient',
-       TYPE: 'travel',
-       PRESEL: {
-           'description': 'Náhrada za použití motorového vozidla (klient)',
-           'trip_number': 2,
-           'time_rate': 0,
-           'fuel_name': 'BA95',
-           'vat': False,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Další hotové výdaje klient',
-       TYPE: 'general',
-       PRESEL: {
-           'description': 'Další hotové výdaje (klient)',
-           'vat': False,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: SEP, TYPE: None},
-
-      {TEXT: 'Odměna za úkony podle AdvT (neplátce DPH)',
-       TYPE: 'service',
-       PRESEL: {
-           'description':
-           'Mimosmluvní odměna za úkony právní služby podle advokátního tarifu',
-           'major_number': 0,
-           'minor_number': 0,
-           'multiple_number': 1,
-           'off10_flag': False,
-           'off30_flag': False,
-           'off30limit5000_flag': False,
-           'off20limit5000_flag': False,
-           'vat': False,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Paušální odměna podle vyhlášky (neplátce DPH)',
-       TYPE: 'flat',
-       PRESEL: {
-           'description':
-           'Paušální odměna za zastupování účastníka podle vyhlášky '
-           'č. 484/2000 Sb.',
-           'multiple_flag': False,
-           'multiple50_flag': False,
-           'vat': False,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Paušální odměna stanovená pevnou částkou (neplátce DPH)',
-       TYPE: 'general',
-       PRESEL: {
-           'description':
-           'Paušální odměna za zastupování účastníka stanovená pevnou částkou',
-           'vat': False,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Použití motorového vozidla advokát (neplátce DPH)',
-       TYPE: 'travel',
-       PRESEL: {
-           'description': 'Náhrada za použití motorového vozidla (advokát)',
-           'trip_number': 2,
-           'time_rate': 100,
-           'fuel_name': 'BA95',
-           'vat': False,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Další promeškaný čas (neplátce DPH)',
-       TYPE: 'time',
-       PRESEL: {
-           'description': 'Náhrada za promeškaný čas podle advokátního tarifu',
-           'time_rate': 100,
-           'vat': False,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Režijní paušál za úkony podle AdvT (neplátce DPH)',
-       TYPE: 'administrative',
-       PRESEL: {
-           'description':
-           'Paušální náhrada za úkony právní služby podle advokátního tarifu',
-           'rate': 300,
-           'vat': False,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Další hotové výdaje advokát (neplátce DPH)',
-       TYPE: 'general',
-       PRESEL: {
-           'description': 'Další hotové výdaje (advokát)',
-           'vat': False,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: SEP, TYPE: None},
-
-      {TEXT: 'Odměna za úkony podle AdvT (plátce DPH)',
-       TYPE: 'service',
-       PRESEL: {
-           'description':
-           'Mimosmluvní odměna za úkony právní služby podle advokátního tarifu',
-           'major_number': 0,
-           'minor_number': 0,
-           'multiple_number': 1,
-           'off10_flag': False,
-           'off30_flag': False,
-           'off30limit5000_flag': False,
-           'off20limit5000_flag': False,
-           'vat': True,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Paušální odměna podle vyhlášky (plátce DPH)',
-       TYPE: 'flat',
-       PRESEL: {
-           'description':
-           'Paušální odměna za zastupování účastníka podle vyhlášky '
-           'č. 484/2000 Sb.',
-           'multiple_flag': False,
-           'multiple50_flag': False,
-           'vat': True,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Paušální odměna stanovená pevnou částkou (plátce DPH)',
-       TYPE: 'general',
-       PRESEL: {
-           'description':
-           'Paušální odměna za zastupování účastníka stanovená pevnou částkou',
-           'vat': True,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Použití motorového vozidla advokát (plátce DPH)',
-       TYPE: 'travel',
-       PRESEL: {
-           'description': 'Náhrada za použití motorového vozidla (advokát)',
-           'trip_number': 2,
-           'time_rate': 100,
-           'fuel_name': 'BA95',
-           'vat': True,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Další promeškaný čas (plátce DPH)',
-       TYPE: 'time',
-       PRESEL: {
-           'description': 'Náhrada za promeškaný čas podle advokátního tarifu',
-           'time_rate': 100,
-           'vat': True,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Režijní paušál za úkony podle AdvT (plátce DPH)',
-       TYPE: 'administrative',
-       PRESEL: {
-           'description':
-           'Paušální náhrada za úkony právní služby podle advokátního tarifu',
-           'rate': 300,
-           'vat': True,
-           'numerator': 1,
-           'denominator': 1}},
-
-      {TEXT: 'Další hotové výdaje advokát (plátce DPH)',
-       TYPE: 'general',
-       PRESEL: {
-           'description': 'Další hotové výdaje (advokát)',
-           'vat': True,
-           'numerator': 1,
-           'denominator': 1}}]
-
-fields = ['title', 'calculation_note', 'internal_note', 'vat_rate']
-
-ifields = list(gd.keys())
-
-for t in ['title', 'calculation_note', 'internal_note', 'vat_rate', 'type']:
-    ifields.remove(t)
+IFIELDS = [x for x in TYPES if x not in FIELDS + ('type',)]
 
 
 class Calculation:
@@ -791,7 +630,7 @@ class Calculation:
         self.title = ''
         self.calculation_note = ''
         self.internal_note = ''
-        self.vat_rate = getVAT()
+        self.vat_rate = getvat()
         self.items = []
 
 
@@ -822,202 +661,201 @@ class Item:
         self.number = 0
         self.from_name = ''
         self.from_address = ''
-        self.from_lat = 0.0
-        self.from_lon = 0.0
+        self.from_lat = .0
+        self.from_lon = .0
         self.to_name = ''
         self.to_address = ''
-        self.to_lat = 0.0
-        self.to_lon = 0.0
+        self.to_lat = .0
+        self.to_lon = .0
         self.trip_number = 0
         self.trip_distance = 0
         self.time_rate = 0
         self.time_number = 0
         self.car_name = ''
         self.fuel_name = ''
-        self.cons1 = 0.0
-        self.cons2 = 0.0
-        self.cons3 = 0.0
+        self.cons1 = .0
+        self.cons2 = .0
+        self.cons3 = .0
         self.formula_name = ''
-        self.flat_rate = 0.0
-        self.fuel_price = 0.0
+        self.flat_rate = .0
+        self.fuel_price = .0
 
 
-def i2d(f, c, d):
+def i2d(keys, inp, out):
 
-    for t in f:
-        p = c.__getattribute__(t)
-        y = gd[t]
-        if y == B:
-            r = bool(p)
-        elif y == S:
-            r = str(p)
-        elif y == I:
-            r = int(round(float(c2p(str(p)))))
+    for key in keys:
+        val = inp.__getattribute__(key)
+        typ = TYPES[key]
+        if typ == B:
+            res = bool(val)
+        elif typ == S:
+            res = str(val)
+        elif typ == I:
+            res = int(round(float(c2p(str(val)))))
         else:
-            r = float(c2p(str(p)))
-        d[t] = r
+            res = float(c2p(str(val)))
+        out[key] = res
 
 
-def d2d(f, d, v):
+def d2d(keys, inp, out):
 
-    for t in f:
-        if t in d:
-            p = d[t]
-            y = gd[t]
+    for key in keys:
+        if key in inp:
+            val = inp[key]
+            typ = TYPES[key]
             try:
-                if y == B:
-                    r = bool(p)
-                elif y == S:
-                    r = str(p)
-                elif y == I:
-                    r = int(round(float(c2p(str(p)))))
+                if typ == B:
+                    res = bool(val)
+                elif typ == S:
+                    res = str(val)
+                elif typ == I:
+                    res = int(round(float(c2p(str(val)))))
                 else:
-                    r = float(c2p(str(p)))
+                    res = float(c2p(str(val)))
             except:
-                r = str(p)
-            v[t] = r
+                res = str(val)
+            out[key] = res
 
 
-def s2i(f, s, c):
+def s2i(keys, inp, out):
 
-    for t in f:
-        q = s.find(t)
-        if q:
-            d = gd[t]
-            if q.contents:
-                p = q.contents[0].strip()
+    for key in keys:
+        ind = inp.find(key)
+        if ind:
+            typ = TYPES[key]
+            if ind.contents:
+                val = ind.contents[0].strip()
                 try:
-                    if d == B:
-                        r = (p == 'true')
-                    elif d == S:
-                        r = str(unescape(p))
-                    elif d == I:
-                        r = int(round(float(c2p(str(p)))))
+                    if typ == B:
+                        res = (val == 'true')
+                    elif typ == S:
+                        res = str(unescape(val))
+                    elif typ == I:
+                        res = int(round(float(c2p(str(val)))))
                     else:
-                        r = float(c2p(str(p)))
-                    c.__setattr__(t, r)
+                        res = float(c2p(str(val)))
+                    out.__setattr__(key, res)
                 except:
                     pass
 
 
-def d2i(f, d, c):
+def d2i(keys, inp, out):
 
-    for t in f:
-        if t in d:
-            p = d[t]
-            y = gd[t]
-            if y == B:
-                r = bool(p)
-            elif y == S:
-                r = str(p)
-            elif y == I:
-                r = int(round(float(c2p(str(p)))))
+    for key in keys:
+        if key in inp:
+            val = inp[key]
+            typ = TYPES[key]
+            if typ == B:
+                res = bool(val)
+            elif typ == S:
+                res = str(val)
+            elif typ == I:
+                res = int(round(float(c2p(str(val)))))
             else:
-                r = float(c2p(str(p)))
-            c.__setattr__(t, r)
+                res = float(c2p(str(val)))
+            out.__setattr__(key, res)
 
 
-aid = '{} {}'.format(APP.upper(), APPVERSION)
+AID = '{} {}'.format(APP.upper(), APPVERSION)
 
 
 def getcalc(request):
 
-    a = getasset(request, aid)
-    if a:
+    asset = getasset(request, AID)
+    if asset:
         try:
-            return loads(a)
+            return loads(asset)
         except:  # pragma: no cover
             pass
     setcalc(request, Calculation())
-    a = getasset(request, aid)
-    return loads(a) if a else None
+    asset = getasset(request, AID)
+    return loads(asset) if asset else None
 
 
 def setcalc(request, data):
 
-    return setasset(request, aid, dumps(data), timedelta(weeks=10))
+    return setasset(request, AID, dumps(data), timedelta(weeks=10))
 
 
-def toxml(c):
+def to_xml(calc):
 
-    xml = newXML('')
+    xml = new_xml('')
     calculation = xml.new_tag('calculation')
     xml.insert(0, calculation)
-    calculation['xmlns'] = 'http://' + localsubdomain
+    calculation['xmlns'] = 'http://' + LOCAL_SUBDOMAIN
     calculation['xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
-    calculation['xsi:schemaLocation'] = 'http://{} {}/static/{}-{}.xsd' \
-        .format(localsubdomain, localurl, APP, APPVERSION)
+    calculation['xsi:schemaLocation'] = \
+        'http://{} {}/static/{}-{}.xsd' \
+        .format(LOCAL_SUBDOMAIN, LOCAL_URL, APP, APPVERSION)
     calculation['application'] = APP
     calculation['version'] = APPVERSION
     calculation['created'] = datetime.now().replace(microsecond=0).isoformat()
-    for t in ['title', 'calculation_note', 'internal_note']:
-        tag = xml.new_tag(t)
-        tag.insert(0, escape(c.__getattribute__(t)).strip())
+    for key in ('title', 'calculation_note', 'internal_note'):
+        tag = xml.new_tag(key)
+        tag.insert(0, escape(calc.__getattribute__(key)).strip())
         calculation.insert(len(calculation), tag)
-        if tag.name in ga:  # pragma: no cover
-            for key, val in ga[tag.name].items():
-                tag[key] = val
+        if tag.name in XML_DEC:  # pragma: no cover
+            for key2, val in XML_DEC[tag.name].items():
+                tag[key2] = val
     vat_rate = xml.new_tag('vat_rate')
-    vat_rate.insert(0, '{:.2f}'.format(c.vat_rate))
-    for key, val in ga['vat_rate'].items():
+    vat_rate.insert(0, '{:.2f}'.format(calc.vat_rate))
+    for key, val in XML_DEC['vat_rate'].items():
         vat_rate[key] = val
     calculation.insert(len(calculation), vat_rate)
     items = xml.new_tag('items')
     calculation.insert(len(calculation), items)
-    for i in c.items:
-        item = xml.new_tag(i.type)
+    for itm in calc.items:
+        item = xml.new_tag(itm.type)
         items.insert(len(items), item)
-        for t in gt[i.type]:
-            tag = xml.new_tag(t)
+        for key in FORM_FIELDS[itm.type]:
+            tag = xml.new_tag(key)
             item.insert(len(item), tag)
-            if tag.name in ga:
-                for key, val in ga[tag.name].items():
-                    tag[key] = val
-            p = i.__getattribute__(t)
-            y = gd[t]
-            if y == S:
-                r = str(escape(p))
-            elif y == B:
-                if p:
-                    r = 'true'
-                else:
-                    r = 'false'
-            elif y == I:
-                r = '{:d}'.format(p)
-            elif y[0] == 'F':
-                r = '{:.{prec}f}'.format(p, prec=int(y[1]))
-            tag.insert(0, r.strip())
+            if tag.name in XML_DEC:
+                for attr, string in XML_DEC[tag.name].items():
+                    tag[attr] = string
+            val = itm.__getattribute__(key)
+            typ = TYPES[key]
+            if typ == S:
+                res = str(escape(val))
+            elif typ == B:
+                res = xmlbool(val)
+            elif typ == I:
+                res = '{:d}'.format(val)
+            elif typ[0] == 'F':
+                res = '{:.{prec}f}'.format(val, prec=int(typ[1]))
+            tag.insert(0, res.strip())
     return str(xml).encode('utf-8') + b'\n'
 
 
-def fromxml(d):
+def from_xml(dat):
 
-    s = getXML(d)
-    if not s:
+    string = get_xml(dat)
+    if not string:
         return None, 'Chybný formát souboru'
-    h = s.findChild('calculation')
-    if not h or (h.has_attr('application') and h['application'] != APP):
+    tcalc = string.findChild('calculation')
+    if not tcalc or (tcalc.has_attr('application')
+        and tcalc['application'] != APP):
         return None, 'Soubor nebyl vytvořen touto aplikací'
-    c = Calculation()
-    s2i(fields, s, c)
-    l = s.items.children
-    for ll in l:
-        if not ll.name:  # pragma: no cover
+    calc = Calculation()
+    s2i(FIELDS, string, calc)
+    items = string.items.children
+    for itm in items:
+        if not itm.name:  # pragma: no cover
             continue
         item = Item()
-        s2i(ifields, ll, item)
+        s2i(IFIELDS, itm, item)
         try:
-            if ll.has_attr('type'):  # pragma: no cover
-                item.type = str(ll['type'])
+            if itm.has_attr('type'):  # pragma: no cover
+                item.type = str(itm['type'])
             else:
-                item.type = str(ll.name)
+                item.type = str(itm.name)
         except:  # pragma: no cover
             return None, 'Chybný formát souboru'
-        c.items.append(item)
-    return c, None
+        calc.items.append(item)
+    return calc, None
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def mainpage(request):
 
@@ -1026,111 +864,73 @@ def mainpage(request):
         request,
         request.POST)
 
-    c = getcalc(request)
-    if not c:  # pragma: no cover
+    calc = getcalc(request)
+    if not calc:  # pragma: no cover
         return error(request)
-    var = {'app': APP,
-           'page_title': 'Kalkulace nákladů řízení',
-           'errors': False, 'rows': []}
+    var = {
+        'app': APP,
+        'page_title': 'Kalkulace nákladů řízení',
+        'errors': False, 'rows': [],
+    }
     if request.method == 'GET':
-        i2d(fields, c, var)
-        for t in fields:
-            var['{}_error'.format(t)] = 'ok'
+        i2d(FIELDS, calc, var)
+        for key in FIELDS:
+            var['{}_error'.format(key)] = 'ok'
     else:
-        f = CalcForm(request.POST)
-        for t in fields:
-            var['{}_error'.format(t)] = 'ok'
-        d2d(fields, f.data, var)
-        btn = getbutton(request)
-        if btn == 'empty':
-            c = Calculation()
-            if not setcalc(request, c):  # pragma: no cover
+        form = CalcForm(request.POST)
+        for key in FIELDS:
+            var['{}_error'.format(key)] = 'ok'
+        d2d(FIELDS, form.data, var)
+        button = getbutton(request)
+        if button == 'empty':
+            calc = Calculation()
+            if not setcalc(request, calc):  # pragma: no cover
                 return error(request)
             return redirect('knr:mainpage')
-        if btn == 'load':
-            f = request.FILES.get('load')
-            if not f:
+        if button == 'load':
+            infile = request.FILES.get('load')
+            if not infile:
                 var['errors'] = True
                 var['err_message'] = 'Nejprve zvolte soubor k načtení'
                 return render(request, 'knr_mainpage.html', var)
             try:
-                d = f.read()
-                f.close()
+                dat = infile.read()
+                infile.close()
             except:  # pragma: no cover
                 raise Exception('Error reading file')
-            c, m = fromxml(d)
-            if m:
+            calc, msg = from_xml(dat)
+            if msg:
                 var['errors'] = True
-                var['err_message'] = m
+                var['err_message'] = msg
                 return render(request, 'knr_mainpage.html', var)
-            if not setcalc(request, c):  # pragma: no cover
+            if not setcalc(request, calc):  # pragma: no cover
                 return error(request)
             return redirect('knr:mainpage')
-        elif btn:
-            f = CalcForm(request.POST)
-            if f.is_valid():
-                cd = f.cleaned_data
-                d2i(fields, cd, c)
-                if not setcalc(request, c):  # pragma: no cover
+        elif button:
+            form = CalcForm(request.POST)
+            if form.is_valid():
+                cld = form.cleaned_data
+                d2i(FIELDS, cld, calc)
+                if not setcalc(request, calc):  # pragma: no cover
                     return error(request)
-                var.update(cd)
-                for t in fields:
-                    var['{}_error'.format(t)] = 'ok'
-                if btn == 'edit':
+                var.update(cld)
+                for key in FIELDS:
+                    var['{}_error'.format(key)] = 'ok'
+                if button == 'edit':
                     return redirect('knr:itemlist')
-                if btn == 'xml':
+                if button == 'xml':
                     response = HttpResponse(
-                        toxml(c),
+                        to_xml(calc),
                         content_type='text/xml; charset=utf-8')
                     response['Content-Disposition'] = \
                         'attachment; filename=Naklady.xml'
                     return response
-                if btn == 'pdf':
+                if button == 'pdf':
 
-                    def page1(c, d):
-                        c.saveState()
-                        c.setFont('Bookman', 7)
-                        c.drawString(
-                            64.0,
-                            48.0,
-                            '{} V{}'.format(APP.upper(), APPVERSION))
-                        c.setFont('BookmanI', 7)
-                        nw = datetime.now()
-                        c.drawRightString(
-                            (A4[0] - 48.0),
-                            48.0,
-                            'Vytvořeno: {0.day:02d}.{0.month:02d}.{0.year:02d}'
-                                .format(nw))
-                        c.restoreState()
+                    register_fonts()
 
-                    reportlab.rl_config.warnOnMissingFontGlyphs = 0
-
-                    registerFont(TTFont(
-                        'Bookman',
-                        join(FONT_DIR, 'URWBookman-Regular.ttf')))
-
-                    registerFont(TTFont(
-                        'BookmanB',
-                        join(FONT_DIR, 'URWBookman-Bold.ttf')))
-
-                    registerFont(TTFont(
-                        'BookmanI',
-                        join(FONT_DIR, 'URWBookman-Italic.ttf')))
-
-                    registerFont(
-                        TTFont(
-                            'BookmanBI',
-                            join(FONT_DIR, 'URWBookman-BoldItalic.ttf')))
-
-                    registerFontFamily(
-                        'Bookman',
-                        normal='Bookman',
-                        bold='BookmanB',
-                        italic='BookmanI',
-                        boldItalic='BookmanBI')
-
-                    s1 = ParagraphStyle(
-                        name='S1',
+                    style1 = ParagraphStyle(
+                        name='STYLE1',
                         fontName='Bookman',
                         fontSize=8,
                         leading=9,
@@ -1138,8 +938,8 @@ def mainpage(request):
                         allowWidows=False,
                         allowOrphans=False)
 
-                    s2 = ParagraphStyle(
-                        name='S2',
+                    style2 = ParagraphStyle(
+                        name='STYLE2',
                         fontName='BookmanB',
                         fontSize=10,
                         leading=11,
@@ -1147,8 +947,8 @@ def mainpage(request):
                         allowWidows=False,
                         allowOrphans=False)
 
-                    s3 = ParagraphStyle(
-                        name='S3',
+                    style3 = ParagraphStyle(
+                        name='STYLE3',
                         fontName='BookmanB',
                         fontSize=8,
                         leading=10,
@@ -1156,16 +956,16 @@ def mainpage(request):
                         allowWidows=False,
                         allowOrphans=False)
 
-                    s4 = ParagraphStyle(
-                        name='S4',
+                    style4 = ParagraphStyle(
+                        name='STYLE4',
                         fontName='BookmanB',
                         fontSize=8,
                         leading=10,
                         allowWidows=False,
                         allowOrphans=False)
 
-                    s5 = ParagraphStyle(
-                        name='S5',
+                    style5 = ParagraphStyle(
+                        name='STYLE5',
                         fontName='Bookman',
                         fontSize=8,
                         leading=10,
@@ -1173,8 +973,8 @@ def mainpage(request):
                         allowWidows=False,
                         allowOrphans=False)
 
-                    s6 = ParagraphStyle(
-                        name='S6',
+                    style6 = ParagraphStyle(
+                        name='STYLE6',
                         fontName='Bookman',
                         fontSize=7,
                         leading=9,
@@ -1182,8 +982,8 @@ def mainpage(request):
                         allowWidows=False,
                         allowOrphans=False)
 
-                    s7 = ParagraphStyle(
-                        name='S7',
+                    style7 = ParagraphStyle(
+                        name='STYLE7',
                         fontName='BookmanI',
                         fontSize=7,
                         leading=9,
@@ -1192,8 +992,8 @@ def mainpage(request):
                         allowWidows=False,
                         allowOrphans=False)
 
-                    s8 = ParagraphStyle(
-                        name='S8',
+                    style8 = ParagraphStyle(
+                        name='STYLE8',
                         fontName='Bookman',
                         fontSize=8,
                         leading=10,
@@ -1201,16 +1001,16 @@ def mainpage(request):
                         allowWidows=False,
                         allowOrphans=False)
 
-                    s9 = ParagraphStyle(
-                        name='S9',
+                    style9 = ParagraphStyle(
+                        name='STYLE9',
                         fontName='BookmanB',
                         fontSize=8, leading=9,
                         alignment=TA_RIGHT,
                         allowWidows=False,
                         allowOrphans=False)
 
-                    s10 = ParagraphStyle(
-                        name='S10',
+                    style10 = ParagraphStyle(
+                        name='STYLE10',
                         fontName='BookmanB',
                         fontSize=8,
                         leading=9,
@@ -1218,8 +1018,8 @@ def mainpage(request):
                         allowWidows=False,
                         allowOrphans=False)
 
-                    s11 = ParagraphStyle(
-                        name='S11',
+                    style11 = ParagraphStyle(
+                        name='STYLE11',
                         fontName='Bookman',
                         fontSize=8,
                         leading=9,
@@ -1227,8 +1027,8 @@ def mainpage(request):
                         allowWidows=False,
                         allowOrphans=False)
 
-                    s12 = ParagraphStyle(
-                        name='S12',
+                    style12 = ParagraphStyle(
+                        name='STYLE12',
                         fontName='BookmanI',
                         fontSize=8,
                         leading=9,
@@ -1238,131 +1038,135 @@ def mainpage(request):
                         allowWidows=False,
                         allowOrphans=False)
 
-                    d1 = [[[Paragraph('Kalkulace nákladů řízení'.upper(), s1)]]]
-                    if c.title:
-                        d1[0][0].append(Paragraph(escape(c.title), s2))
-                    t1 = LongTable(d1, colWidths=[483.30])
-                    t1.setStyle(
-                        TableStyle([
-                            ('LINEABOVE', (0, 0), (0, -1), 1.0, black),
+                    doc1 = (([Paragraph(
+                        'Kalkulace nákladů řízení'.upper(),
+                        style1)],),)
+                    if calc.title:
+                        doc1[0][0].append(Paragraph(escape(calc.title), style2))
+                    tbl1 = LongTable(doc1, colWidths=(483.3,))
+                    tbl1.setStyle(
+                        TableStyle((
+                            ('LINEABOVE', (0, 0), (0, -1), 1, black),
                             ('TOPPADDING', (0, 0), (0, -1), 2),
-                            ('LINEBELOW', (-1, 0), (-1, -1), 1.0, black),
+                            ('LINEBELOW', (-1, 0), (-1, -1), 1, black),
                             ('BOTTOMPADDING', (-1, 0), (-1, -1), 3),
                             ('LEFTPADDING', (0, 0), (-1, -1), 2),
                             ('RIGHTPADDING', (0, 0), (-1, -1), 2),
-                        ]))
-                    flow = [t1, Spacer(0, 36)]
-                    if c.items:
-                        d2 = []
-                        for i in range(len(c.items)):
-                            item = c.items[i]
-                            r = [Paragraph('{:d}.'.format(i + 1), s3)]
-                            q = [Paragraph(
+                        )))
+                    flow = [tbl1, Spacer(0, 36)]
+                    if calc.items:
+                        doc2 = []
+                        for idx in range(len(calc.items)):
+                            item = calc.items[idx]
+                            temp = [Paragraph('{:d}.'.format(idx + 1), style3)]
+                            temp2 = [Paragraph(
                                 escape(item.description.upper()
                                     .replace(' Č. ', ' č. ')
                                     .replace(' SB.', ' Sb.')),
-                                s4)]
+                                style4)]
                             if item.type == 'service':
                                 if item.multiple_number < 2:
-                                    q.append(Paragraph(
+                                    temp2.append(Paragraph(
                                         '<b>Hlavních úkonů:</b> '
                                         '{0.major_number:d} '
                                         '&nbsp; <b>Vedlejších úkonů:</b> '
                                         '{0.minor_number:d}'.format(item),
-                                        s6))
+                                        style6))
                                 else:
-                                    q.append(Paragraph(
+                                    temp2.append(Paragraph(
                                         '<b>Hlavních úkonů:</b> '
                                         '{0.major_number:d} '
                                         '&nbsp; <b>Vedlejších úkonů:</b> '
                                         '{0.minor_number:d} &nbsp; '
                                         '<b>Zastupovaných účastníků:</b> '
                                         '{0.multiple_number:d}'.format(item),
-                                        s6))
+                                        style6))
                             if item.type == 'administrative':
-                                q.append(Paragraph(
+                                temp2.append(Paragraph(
                                     '<b>Počet úkonů:</b> {:d} &nbsp; '
                                     '<b>Sazba:</b> {} Kč'.format(
                                         item.number,
                                         convi(item.rate)),
-                                    s6))
+                                    style6))
                             if item.type == 'time':
-                                q.append(Paragraph(
+                                temp2.append(Paragraph(
                                     '<b>Počet započatých půlhodin:</b> {:d} '
                                     '&nbsp; <b>Sazba:</b> {} Kč/půlhodinu'
                                         .format(
                                             item.time_number,
                                             convi(item.time_rate)),
-                                    s6))
+                                    style6))
                             if item.type == 'travel':
-                                q.append(Paragraph(
+                                temp2.append(Paragraph(
                                     '<b>Z:</b> {} ({})'.format(
                                         escape(item.from_name),
                                         escape(item.from_address.replace(
                                             ', Česká republika', '').replace(
                                                 ', Česko', ''))),
-                                    s6))
-                                q.append(Paragraph(
+                                    style6))
+                                temp2.append(Paragraph(
                                     '<b>Do:</b> {} ({})'.format(
                                         escape(item.to_name),
                                         escape(item.to_address.replace(
                                             ', Česká republika', '').replace(
                                                 ', Česko', ''))),
-                                    s6))
-                                q.append(Paragraph(
+                                    style6))
+                                temp2.append(Paragraph(
                                     '<b>Vzdálenost:</b> {} km &nbsp; '
                                     '<b>Počet cest:</b> {:d}'.format(
                                         convi(item.trip_distance),
                                         item.trip_number),
-                                    s6))
+                                    style6))
                                 if item.time_number and item.time_rate:
-                                    q.append(Paragraph(
+                                    temp2.append(Paragraph(
                                         '<b>Počet započatých půlhodin:</b> '
                                         '{:d} &nbsp; <b>Sazba:</b> {} '
                                         'Kč/půlhodinu'.format(
                                             (item.time_number
                                             * item.trip_number),
                                             convi(item.time_rate)),
-                                        s6))
-                                q.append(Paragraph(
+                                        style6))
+                                temp2.append(Paragraph(
                                     '<b>Vozidlo</b> {}'.format(
                                         escape(item.car_name)),
-                                    s6))
-                                q.append(Paragraph(
+                                    style6))
+                                temp2.append(Paragraph(
                                     '<b>Palivo:</b> {} &nbsp; '
                                     '<b>Průměrná spotřeba:</b> {} l/100 km'
                                         .format(
                                             item.fuel_name,
                                             convf(((item.cons1 + item.cons2
                                                 + item.cons3) / 3), 3)),
-                                    s6))
-                                q.append(Paragraph(
+                                    style6))
+                                temp2.append(Paragraph(
                                     '<b>Předpis:</b> {}'.format(
                                         escape(item.formula_name)),
-                                    s6))
-                                q.append(Paragraph(
+                                    style6))
+                                temp2.append(Paragraph(
                                     '<b>Paušál:</b> {} Kč/km &nbsp; '
                                     '<b>Cena paliva:</b> {} Kč/l'.format(
                                         convf(item.flat_rate, 2),
                                         convf(item.fuel_price, 2)),
-                                    s6))
+                                    style6))
                             if item.numerator > 1 or item.denominator > 1:
-                                q.append(Paragraph(
+                                temp2.append(Paragraph(
                                     '<b>Zlomek:</b> ' \
                                     '{0.numerator:d}/{0.denominator:d}'
                                         .format(item),
-                                    s6))
+                                    style6))
                             if item.item_note:
-                                for s in filter(bool, item.item_note.strip()
+                                for temp3 in filter(bool, item.item_note.strip()
                                     .split('\n')):
-                                    q.append(Paragraph(escape(s), s7))
-                            r.append(q)
-                            r.append(Paragraph(
-                                '{} Kč'.format(convi(item.amount)), s5))
-                            d2.append(r)
-                        t2 = LongTable(d2, colWidths=[16.15, 400.45, 66.70])
-                        t2.setStyle(
-                            TableStyle([
+                                    temp2.append(Paragraph(
+                                        escape(temp3),
+                                        style7))
+                            temp.append(temp2)
+                            temp.append(Paragraph(
+                                '{} Kč'.format(convi(item.amount)), style5))
+                            doc2.append(temp)
+                        tbl2 = LongTable(doc2, colWidths=(16.15, 400.45, 66.7))
+                        tbl2.setStyle(
+                            TableStyle((
                                 ('LINEABOVE', (0, 0), (-1, 0), .25, gray),
                                 ('LINEBELOW', (0, 0), (-1, -1), .25, gray),
                                 ('VALIGN', (0, 0), (1, -1), 'TOP'),
@@ -1373,640 +1177,952 @@ def mainpage(request):
                                 ('LEFTPADDING', (1, 0), (1, -1), 6),
                                 ('TOPPADDING', (0, 0), (-1, -1), 4),
                                 ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
-                            ]))
-                        flow.extend([t2, Spacer(0, 24)])
+                            )))
+                        flow.extend([tbl2, Spacer(0, 24)])
                     total_net = total_ex = 0
-                    for i in c.items:
-                        if i.vat:
-                            total_net += int(i.amount)
+                    for itm in calc.items:
+                        if itm.vat:
+                            total_net += int(itm.amount)
                         else:
-                            total_ex += int(i.amount)
+                            total_ex += int(itm.amount)
                     total_vat = \
-                        int(round(float(total_net * c.vat_rate) / 100))
+                        int(round(float(total_net * calc.vat_rate) / 100))
                     total = int(total_net + total_ex + total_vat)
-                    d3 = []
+                    doc3 = []
                     if total_vat:
-                        d3.append(
+                        doc3.append(
                             [None,
-                             Paragraph('Základ bez DPH', s8),
-                             Paragraph('{} Kč'.format(convi(total_ex)), s11)
+                             Paragraph('Základ bez DPH', style8),
+                             Paragraph('{} Kč'.format(convi(total_ex)), style11)
                             ])
-                        d3.append(
+                        doc3.append(
                             [None,
-                             Paragraph('Základ s DPH', s8),
-                             Paragraph('{} Kč'.format(convi(total_net)), s11)
+                             Paragraph('Základ s DPH', style8),
+                             Paragraph(
+                                 '{} Kč'.format(convi(total_net)),
+                                 style11)
                             ])
-                        d3.append(
+                        doc3.append(
                             [None,
                              Paragraph(
-                                 'DPH {} %'.format(convf(c.vat_rate, 0)),
-                                 s8),
+                                 'DPH {} %'.format(convf(calc.vat_rate, 0)),
+                                 style8),
                              Paragraph(
                                  '{} Kč'.format(convi(total_vat)),
-                                 s11)
+                                 style11)
                             ])
-                    d3.append(
+                    doc3.append(
                         [None,
-                         Paragraph('Celkem'.upper(), s9),
-                         Paragraph('{} Kč'.format(convi(total)), s10)])
+                         Paragraph('Celkem'.upper(), style9),
+                         Paragraph('{} Kč'.format(convi(total)), style10)])
+                    tbl3 = LongTable(
+                        doc3,
+                        colWidths=(346.6, 70, 66.7) if total_vat
+                        else (366.6, 50, 66.7))
+                    lst3 = [
+                        ('LINEABOVE', (1, 0), (-1, 0), 1, black),
+                        ('LINEABOVE', (1, -1), (-1, -1), 1, black),
+                        ('LINEBELOW', (1, -1), (-1, -1), 1, black),
+                        ('RIGHTPADDING', (0, 0), (1, -1), 0),
+                        ('RIGHTPADDING', (-1, 0), (-1, -1), 2),
+                        ('LEFTPADDING', (0, 0), (-1, -1), 0),
+                        ('LEFTPADDING', (1, 0), (1, -1), 6),
+                        ('TOPPADDING', (0, 0), (-1, -1), -1),
+                        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+                    ]
                     if total_vat:
-                        t3 = LongTable(d3, colWidths=[346.60, 70.00, 66.70])
-                    else:
-                        t3 = LongTable(d3, colWidths=[366.60, 50.00, 66.70])
-                    l3 = [('LINEABOVE', (1, 0), (-1, 0), 1.0, black),
-                          ('LINEABOVE', (1, -1), (-1, -1), 1.0, black),
-                          ('LINEBELOW', (1, -1), (-1, -1), 1.0, black),
-                          ('RIGHTPADDING', (0, 0), (1, -1), 0),
-                          ('RIGHTPADDING', (-1, 0), (-1, -1), 2),
-                          ('LEFTPADDING', (0, 0), (-1, -1), 0),
-                          ('LEFTPADDING', (1, 0), (1, -1), 6),
-                          ('TOPPADDING', (0, 0), (-1, -1), -1),
-                          ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
-                         ]
-                    if total_vat:
-                        l3.append(('TOPPADDING', (0, 1), (-1, 2), -3))
-                    t3.setStyle(TableStyle(l3))
-                    flow.append(KeepTogether([t3]))
-                    if c.calculation_note:
+                        lst3.append(('TOPPADDING', (0, 1), (-1, 2), -3))
+                    tbl3.setStyle(TableStyle(lst3))
+                    flow.append(KeepTogether([tbl3]))
+                    if calc.calculation_note:
                         flow.append(Spacer(0, 24))
-                        q = [Paragraph('Poznámka:'.upper(), s4)]
-                        for s in filter(bool,
-                                        c.calculation_note.strip().split('\n')):
-                            q.append(Paragraph(escape(s), s12))
-                        flow.append(KeepTogether(q[:2]))
-                        if len(q) > 2:
-                            flow.extend(q[2:])
+                        temp2 = [Paragraph('Poznámka:'.upper(), style4)]
+                        for string in filter(
+                                bool,
+                                calc.calculation_note.strip().split('\n')):
+                            temp2.append(Paragraph(escape(string), style12))
+                        flow.append(KeepTogether(temp2[:2]))
+                        if len(temp2) > 2:
+                            flow.extend(temp2[2:])
                     temp = BytesIO()
                     response = HttpResponse(content_type='application/pdf')
                     response['Content-Disposition'] = \
                         'attachment; filename=Naklady.pdf'
+                    auth = '{} V{}'.format(APP.upper(), APPVERSION)
                     doc = SimpleDocTemplate(
                         temp,
                         pagesize=A4,
                         title='Kalkulace nákladů řízení',
-                        author='{} V{}'.format(APP.upper(), APPVERSION),
-                        leftMargin=64.0,
-                        rightMargin=48.0,
-                        topMargin=48.0,
-                        bottomMargin=96.0,
+                        author=auth,
+                        leftMargin=64,
+                        rightMargin=48,
+                        topMargin=48,
+                        bottomMargin=96,
                         )
-                    CanvasXML.xml = toxml(c)
-                    doc.build(
+                    make_pdf(
+                        doc,
                         flow,
-                        onFirstPage=page1,
-                        onLaterPages=page1,
-                        canvasmaker=CanvasXML)
+                        string=auth,
+                        xml=to_xml(calc))
                     response.write(temp.getvalue())
                     return response
-                if btn == "place":
+                if button == "place":
                     return redirect('knr:placelist')
-                if btn == "car":
+                if button == "car":
                     return redirect('knr:carlist')
-                if btn == "formula":
+                if button == "formula":
                     return redirect('knr:formulalist')
             else:
                 var.update({'errors': True})
-                d2d(fields, f.data, var)
-                for t in fields:
-                    if f[t].errors:
-                        var['{}_error'.format(t)] = 'err'
-                    else:
-                        var['{}_error'.format(t)] = 'ok'
+                d2d(FIELDS, form.data, var)
+                for key in FIELDS:
+                    var['{}_error'.format(key)] = \
+                        'err' if form[key].errors else 'ok'
         else:  # pragma: no cover
-            i2d(fields, c, var)
+            i2d(FIELDS, calc, var)
     var['total_net'] = var['total_ex'] = var['num_items'] = 0
-    for i in c.items:
-        if i.vat:
-            var['total_net'] += int(i.amount)
-        else:
-            var['total_ex'] += int(i.amount)
+    for itm in calc.items:
+        var['total_net' if itm.vat else 'total_ex'] += int(itm.amount)
         var['num_items'] += 1
-    var['total_vat'] = int(round(float(var['total_net'] * c.vat_rate) / 100))
+    var['total_vat'] = int(round(float(var['total_net'] * calc.vat_rate) / 100))
     var['total'] = int(var['total_net'] + var['total_ex'] + var['total_vat'])
-    for i in ['total_net', 'total_ex', 'total_vat', 'total']:
-        var[i] = formam(var[i])
+    for key in ('total_net', 'total_ex', 'total_vat', 'total'):
+        var[key] = famt(var[key])
     return render(request, 'knr_mainpage.html', var)
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
+@login_required
+def placeform(request, idx=0):
+
+    logger.debug(
+        'Place form accessed using method {}, id={}'
+        .format(request.method, idx),
+        request,
+        request.POST)
+    err_message = ''
+    uid = request.user.id
+    uname = request.user.username
+    page_title = 'Úprava místa' if idx else 'Nové místo'
+    button = getbutton(request)
+    if request.method == 'GET':
+        form = PlaceForm(initial=model_to_dict(get_object_or_404(
+            Place, pk=idx, uid=uid))) if idx else PlaceForm()
+    elif button == 'back':
+        return redirect('knr:placelist')
+    elif button == 'search':
+        form = PlaceForm(request.POST)
+        unrequire(form, ('abbr', 'name', 'addr', 'lat', 'lon'))
+        loc = findloc(request.POST.get('addr'))
+        form.data = form.data.copy()
+        if loc:
+            form.data['addr'], form.data['lat'], form.data['lon'] = loc
+        else:
+            form.data['lat'] = form.data['lon'] = ''
+            err_message = 'Hledání neúspěšné, prosím, upřesněte adresu'
+    else:
+        form = PlaceForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            if idx:
+                get_object_or_404(Place, pk=idx, uid=uid)
+                cld['pk'] = idx
+            Place(uid_id=uid, **cld).save()
+            if idx:
+                logger.info(
+                    'User "{}" ({:d}) updated place "{}"'
+                    .format(uname, uid, cld['name']),
+                    request)
+            else:
+                logger.info(
+                    'User "{}" ({:d}) added place "{}"'
+                    .format(uname, uid, cld['name']),
+                    request)
+            return redirect('knr:placelist')
+        else:
+            logger.debug('Invalid form', request)
+            err_message = INERR
+    return render(
+        request,
+        'knr_placeform.html',
+        {'app': APP,
+         'form': form,
+         'page_title': page_title,
+         'err_message': err_message})
+
+
+@require_http_methods(('GET',))
+@login_required
+def placelist(request):
+
+    logger.debug('Place list accessed', request)
+    rows = Place.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
+        .order_by('uid', 'abbr', 'name')
+    for row in rows:
+        if row.uid:
+            row.user = True
+        elif rows.filter(abbr=row.abbr).exclude(uid=None):
+            row.disabled = True
+    return render(
+        request,
+        'knr_placelist.html',
+        {'app': APP,
+         'page_title': 'Přehled míst',
+         'rows': rows})
+
+
+@require_http_methods(('GET', 'POST'))
+@login_required
+def placedel(request, idx=0):
+
+    logger.debug(
+        'Place delete page accessed using method {}, id={}'
+        .format(request.method, idx),
+        request,
+        request.POST)
+    uid = request.user.id
+    uname = request.user.username
+    if request.method == 'GET':
+        return render(
+            request,
+            'knr_placedel.html',
+            {'app': APP,
+             'page_title': 'Smazání místa',
+             'name': get_object_or_404(Place, pk=idx, uid=uid).name})
+    else:
+        place = get_object_or_404(Place, pk=idx, uid=uid)
+        if getbutton(request) == 'yes':
+            logger.info(
+                'User "{}" ({:d}) deleted place "{}"'
+                .format(uname, uid, place.name),
+                request)
+            place.delete()
+            return redirect('knr:placedeleted')
+        return redirect('knr:placelist')
+
+
+@require_http_methods(('GET', 'POST'))
+@login_required
+def carform(request, idx=0):
+
+    logger.debug(
+        'Car form accessed using method {}, id={}'
+        .format(request.method, idx),
+        request,
+        request.POST)
+    err_message = ''
+    uid = request.user.id
+    uname = request.user.username
+    page_title = 'Úprava vozidla' if idx else 'Nové vozidlo'
+    button = getbutton(request)
+    if request.method == 'GET':
+        form = CarForm(initial=model_to_dict(
+            get_object_or_404(Car, pk=idx, uid=uid))) if idx else CarForm()
+    elif button == 'back':
+        return redirect('knr:carlist')
+    else:
+        form = CarForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            if idx:
+                get_object_or_404(Car, pk=idx, uid=uid)
+                cld['pk'] = idx
+            Car(uid_id=uid, **cld).save()
+            if idx:
+                logger.info(
+                    'User "{}" ({:d}) updated car "{}"'
+                    .format(uname, uid, cld['name']),
+                    request)
+            else:
+                logger.info(
+                    'User "{}" ({:d}) added car "{}"'
+                    .format(uname, uid, cld['name']),
+                    request)
+            return redirect('knr:carlist')
+        else:
+            logger.debug('Invalid form', request)
+            err_message = INERR
+    return render(
+        request,
+        'knr_carform.html',
+        {'app': APP,
+         'form': form,
+         'page_title': page_title,
+         'err_message': err_message,
+         'fuels': FUELS})
+
+
+@require_http_methods(('GET',))
+@login_required
+def carlist(request):
+
+    logger.debug('Car list accessed', request)
+    rows = Car.objects.filter(uid=request.user.id).order_by('abbr', 'name')
+    return render(
+        request,
+        'knr_carlist.html',
+        {'app': APP,
+         'page_title': 'Přehled vozidel',
+         'rows': rows})
+
+
+@require_http_methods(('GET', 'POST'))
+@login_required
+def cardel(request, idx=0):
+
+    logger.debug(
+        'Car delete page accessed using method {}, id={}'
+        .format(request.method, idx),
+        request,
+        request.POST)
+    uid = request.user.id
+    uname = request.user.username
+    if request.method == 'GET':
+        return render(
+            request,
+            'knr_cardel.html',
+            {'app': APP,
+             'page_title':
+             'Smazání vozidla',
+             'name': get_object_or_404(Car, pk=idx, uid=uid).name})
+    else:
+        car = get_object_or_404(Car, pk=idx, uid=uid)
+        if getbutton(request) == 'yes':
+            logger.info(
+                'User "{}" ({:d}) deleted car "{}"'
+                .format(uname, uid, car.name),
+                request)
+            car.delete()
+            return redirect('knr:cardeleted')
+        return redirect('knr:carlist')
+
+
+@require_http_methods(('GET', 'POST'))
+@login_required
+def formulaform(request, idx=0):
+
+    logger.debug(
+        'Formula form accessed using method {}, id={}'
+        .format(request.method, idx),
+        request,
+        request.POST)
+    err_message = ''
+    uid = request.user.id
+    uname = request.user.username
+    page_title = 'Úprava předpisu' if idx else 'Nový předpis'
+    button = getbutton(request)
+    if request.method == 'GET':
+        if idx:
+            res = model_to_dict(get_object_or_404(Formula, pk=idx, uid=uid))
+            for fuel in FUELS:
+                rat = Rate.objects.filter(formula=idx, fuel=fuel)
+                if rat and rat[0].rate:
+                    res['rate_{}'.format(fuel)] = rat[0].rate
+            form = FormulaForm(initial=res)
+        else:
+            form = FormulaForm()
+    elif button == 'back':
+        return redirect('knr:formulalist')
+    else:
+        form = FormulaForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            if idx:
+                res = get_object_or_404(Formula, pk=idx, uid=uid)
+                cld['pk'] = idx
+            dct = {}
+            for key, val in cld.items():
+                if not key.startswith('rate_'):
+                    dct[key] = val
+            res = Formula(uid_id=uid, **dct)
+            res.save()
+            logger.info(
+                'User "{}" ({:d}) {} formula {}'
+                .format(
+                    uname,
+                    uid,
+                    'updated' if idx else 'added',
+                    res.name),
+                request)
+            for fuel in FUELS:
+                rat = Rate.objects.filter(formula=res, fuel=fuel)
+                rat = rat[0] if rat else Rate(formula=res, fuel=fuel)
+                rat.rate = cld['rate_{}'.format(fuel)]
+                if not rat.rate:
+                    rat.rate = 0
+                rat.save()
+            return redirect('knr:formulalist')
+        else:
+            logger.debug('Invalid form', request)
+            err_message = INERR
+    rates = []
+    for fuel in FUELS:
+        rates.append(form['rate_{}'.format(fuel)])
+    return render(
+        request,
+        'knr_formulaform.html',
+        {'app': APP,
+         'form': form,
+         'page_title': page_title,
+         'err_message': err_message,
+         'rates': rates})
+
+
+@require_http_methods(('GET',))
+@login_required
+def formulalist(request):
+
+    logger.debug('Formula list accessed', request)
+    rows = Formula.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
+        .order_by('uid', 'abbr', 'name')
+    for row in rows:
+        rates = []
+        for fuel in FUELS:
+            rat = Rate.objects.filter(formula=row.id, fuel=fuel)
+            rates.append(rat[0].rate if rat else 0)
+        row.rates = rates
+        if row.uid:
+            row.user = True
+        elif rows.filter(abbr=row.abbr).exclude(uid=None):
+            row.disabled = True
+    return render(
+        request,
+        'knr_formulalist.html',
+        {'app': APP,
+         'page_title': 'Přehled předpisů',
+         'fuels': FUELS,
+         'colspan': len(FUELS) + 4,
+         'rows': rows})
+
+
+@require_http_methods(('GET', 'POST'))
+@login_required
+def formuladel(request, idx=0):
+
+    logger.debug(
+        'Formula delete page accessed using method {}, id={}'
+        .format(request.method, idx),
+        request,
+        request.POST)
+    uid = request.user.id
+    uname = request.user.username
+    if request.method == 'GET':
+        return render(
+            request,
+            'knr_formuladel.html',
+            {'app': APP,
+             'page_title': 'Smazání předpisu',
+             'name': get_object_or_404(Formula, pk=idx, uid=uid).name})
+    else:
+        formula = get_object_or_404(Formula, pk=idx, uid=uid)
+        if getbutton(request) == 'yes':
+            logger.info(
+                'User "{}" ({:d}) deleted formula "{}"'
+                .format(uname, uid, formula.name),
+                request)
+            formula.delete()
+            return redirect('knr:formuladeleted')
+        return redirect('knr:formulalist')
+
+
+@require_http_methods(('GET', 'POST'))
 @login_required
 def itemform(request, idx=0):
 
     def addtravellists(var):
-        p = Place.objects.filter(Q(uid=None) | Q(uid=uid)) \
+        res = Place.objects.filter(Q(uid=None) | Q(uid=uid)) \
             .order_by('abbr', 'name')
-        l1 = []
-        for t in p:
-            if t.uid or not p.filter(abbr=t.abbr, uid=uid):
-                l1.append(
-                    {'idx': t.id,
-                     'text': '{0.abbr} – {0.name}'.format(t)})
-        p = Car.objects.filter(uid=uid).order_by('abbr', 'name')
-        l2 = []
-        for t in p:
-            l2.append(
-                {'idx': t.id,
-                 'text': '{0.abbr} – {0.name}'.format(t)})
-        p = Formula.objects.filter(Q(uid=None) | Q(uid=uid)) \
+        lst1 = []
+        for obj in res:
+            if obj.uid or not res.filter(abbr=obj.abbr, uid=uid):
+                lst1.append(
+                    {'idx': obj.id,
+                     'text': '{0.abbr} – {0.name}'.format(obj)})
+        res = Car.objects.filter(uid=uid).order_by('abbr', 'name')
+        lst2 = []
+        for obj in res:
+            lst2.append(
+                {'idx': obj.id,
+                 'text': '{0.abbr} – {0.name}'.format(obj)})
+        res = Formula.objects.filter(Q(uid=None) | Q(uid=uid)) \
             .order_by('abbr', 'name')
-        l3 = []
-        for t in p:
-            if t.uid or not p.filter(abbr=t.abbr, uid=uid):
-                l3.append(
-                    {'idx': t.id,
-                     'text': '{0.abbr} – {0.name}'.format(t)})
+        lst3 = []
+        for obj in res:
+            if obj.uid or not res.filter(abbr=obj.abbr, uid=uid):
+                lst3.append(
+                    {'idx': obj.id,
+                     'text': '{0.abbr} – {0.name}'.format(obj)})
         var.update(
-            {'sep': ('-' * 110),
-             'from_sels': l1,
-             'to_sels': l1,
-             'car_sels': l2,
-             'formula_sels': l3,
-             'fuel_names': fuels})
+            {'sep': '-' * 110,
+             'from_sels': lst1,
+             'to_sels': lst1,
+             'car_sels': lst2,
+             'formula_sels': lst3,
+             'fuel_names': FUELS})
 
-    def proc_from(sel, cd):
-        p = Place.objects.filter(Q(pk=sel) & (Q(uid=None) | Q(uid=uid)))
-        if p:
-            cd['from_name'] = p[0].name
-            cd['from_address'] = p[0].addr
-            cd['from_lat'] = p[0].lat
-            cd['from_lon'] = p[0].lon
-            cd['trip_distance'] = cd['time_number'] = ''
+    def proc_from(sel, cld):
+        res = Place.objects.filter(Q(pk=sel) & (Q(uid=None) | Q(uid=uid)))
+        if res:
+            cld['from_name'] = res[0].name
+            cld['from_address'] = res[0].addr
+            cld['from_lat'] = res[0].lat
+            cld['from_lon'] = res[0].lon
+            cld['trip_distance'] = cld['time_number'] = ''
 
-    def proc_to(sel, cd):
-        p = Place.objects.filter(Q(pk=sel) & (Q(uid=None) | Q(uid=uid)))
-        if p:
-            cd['to_name'] = p[0].name
-            cd['to_address'] = p[0].addr
-            cd['to_lat'] = p[0].lat
-            cd['to_lon'] = p[0].lon
-            cd['trip_distance'] = cd['time_number'] = ''
+    def proc_to(sel, cld):
+        res = Place.objects.filter(Q(pk=sel) & (Q(uid=None) | Q(uid=uid)))
+        if res:
+            cld['to_name'] = res[0].name
+            cld['to_address'] = res[0].addr
+            cld['to_lat'] = res[0].lat
+            cld['to_lon'] = res[0].lon
+            cld['trip_distance'] = cld['time_number'] = ''
 
-    def proc_car(sel, cd):
-        p = Car.objects.filter(pk=sel, uid=uid)
-        if p:
-            cd['car_name'] = p[0].name
-            cd['fuel_name'] = p[0].fuel
-            cd['cons1'] = float(p[0].cons1)
-            cd['cons2'] = float(p[0].cons2)
-            cd['cons3'] = float(p[0].cons3)
+    def proc_car(sel, cld):
+        res = Car.objects.filter(pk=sel, uid=uid)
+        if res:
+            cld['car_name'] = res[0].name
+            cld['fuel_name'] = res[0].fuel
+            cld['cons1'] = float(res[0].cons1)
+            cld['cons2'] = float(res[0].cons2)
+            cld['cons3'] = float(res[0].cons3)
 
-    def proc_formula(sel, cd):
-        p = Formula.objects.filter(Q(pk=sel) & (Q(uid=None) | Q(uid=uid)))
-        if p:
-            cd['formula_name'] = p[0].name
-            cd['flat_rate'] = float(p[0].flat)
-            q = Rate.objects.filter(formula=sel, fuel=cd['fuel_name'])
-            if q:
-                cd['fuel_price'] = float(q[0].rate)
-            else:
-                cd['fuel_price'] = ''
+    def proc_formula(sel, cld):
+        res = Formula.objects.filter(Q(pk=sel) & (Q(uid=None) | Q(uid=uid)))
+        if res:
+            cld['formula_name'] = res[0].name
+            cld['flat_rate'] = float(res[0].flat)
+            rat = Rate.objects.filter(formula=sel, fuel=cld['fuel_name'])
+            cld['fuel_price'] = float(rat[0].rate) if rat else ''
 
-    def proc_dist(cd):
-        cd['trip_distance'] = cd['time_number'] = ''
-        p = {}
-        d2d(['from_lat', 'from_lon', 'to_lat', 'to_lon'], cd, p)
-        if p['from_lat'] and p['from_lon'] and p['to_lat'] and p['to_lon']:
+    def proc_dist(cld):
+        cld['trip_distance'] = cld['time_number'] = ''
+        res = {}
+        d2d(('from_lat', 'from_lon', 'to_lat', 'to_lon'), cld, res)
+        if res['from_lat'] and res['from_lon'] and res['to_lat'] \
+           and res['to_lon']:
             dist, dur = finddist(
-                p['from_lat'],
-                p['from_lon'],
-                p['to_lat'],
-                p['to_lon'])
+                res['from_lat'],
+                res['from_lon'],
+                res['to_lat'],
+                res['to_lon'])
             if dist:
-                cd['trip_distance'] = int(ceil(dist / 1000))
+                cld['trip_distance'] = int(ceil(dist / 1000))
             if dur:
-                cd['time_number'] = int(ceil(dur / 1800))
+                cld['time_number'] = int(ceil(dur / 1800))
 
     logger.debug(
         'Item form accessed using method {}, idx={}'
-            .format(request.method, idx),
+        .format(request.method, idx),
         request,
         request.POST)
     uid = request.user.id
-    c = getcalc(request)
-    if not c:  # pragma: no cover
+    calc = getcalc(request)
+    if not calc:  # pragma: no cover
         return error(request)
     var = {'app': APP, 'errors': False}
     if request.method == 'GET':
         if idx:
             idx = int(idx)
             var.update({'idx': idx, 'page_title': 'Úprava položky'})
-            if idx > len(c.items):
+            if idx > len(calc.items):
                 raise Http404
-            c = c.items[idx - 1]
-            i2d(gt[c.type], c, var)
-            var['type'] = c.type
-            for t in gf[c.type]:
-                var['{}_error'.format(t)] = 'ok'
+            calc = calc.items[idx - 1]
+            i2d(FORM_FIELDS[calc.type], calc, var)
+            var['type'] = calc.type
+            for key in SUBFORM_FIELDS[calc.type]:
+                var['{}_error'.format(key)] = 'ok'
             if var['type'] == 'travel':
                 addtravellists(var)
                 var['cons_error'] = 'ok'
         else:
             return redirect('knr:itemlist')
     else:
-        btn = getbutton(request)
-        if btn == 'back':
+        button = getbutton(request)
+        if button == 'back':
             return redirect('knr:itemlist')
-        if btn == 'new':
+        if button == 'new':
             presel = request.POST.get('presel')
             if presel and presel.isdigit() and int(presel) \
-               and int(presel) < len(ps) and ps[int(presel)][TYPE]:
+               and int(presel) < len(PRESELS) and PRESELS[int(presel)][TYPE]:
                 var.update({'idx': 0, 'page_title': 'Nová položka'})
-                var.update(ps[int(presel)][PRESEL])
-                var['type'] = ps[int(presel)][TYPE]
-                for t in gf[var['type']]:
-                    var['{}_error'.format(t)] = 'ok'
+                var.update(PRESELS[int(presel)][PRESEL])
+                var['type'] = PRESELS[int(presel)][TYPE]
+                for key in SUBFORM_FIELDS[var['type']]:
+                    var['{}_error'.format(key)] = 'ok'
                 if var['type'] == 'travel':
                     addtravellists(var)
                     var['cons_error'] = 'ok'
             else:
                 return redirect('knr:itemlist')
         else:
-            type = str(request.POST.get('type'))
-            if type not in gf:
+            typ = str(request.POST.get('type'))
+            if typ not in SUBFORM_FIELDS:
                 raise Http404
-            if type == 'travel':
+            if typ == 'travel':
                 addtravellists(var)
             if request.POST.get('submit'):
-                if type == 'travel':
-                    f = TravelSubform(request.POST)
-                    if f.is_valid():
-                        cd = f.cleaned_data
+                if typ == 'travel':
+                    form = TravelSubform(request.POST)
+                    if form.is_valid():
+                        cld = form.cleaned_data
                         sel = False
                         if request.POST.get('from_sel'):
-                            proc_from(int(request.POST.get('from_sel')), cd)
+                            proc_from(int(request.POST.get('from_sel')), cld)
                             sel = True
                         if request.POST.get('to_sel'):
-                            proc_to(int(request.POST.get('to_sel')), cd)
+                            proc_to(int(request.POST.get('to_sel')), cld)
                             sel = True
                         if request.POST.get('car_sel'):
-                            proc_car(int(request.POST.get('car_sel')), cd)
+                            proc_car(int(request.POST.get('car_sel')), cld)
                             sel = True
                         if request.POST.get('formula_sel'):
                             proc_formula(
                                 int(request.POST.get('formula_sel')),
-                                cd)
+                                cld)
                             sel = True
-                        if not (cd['trip_distance'] and cd['time_number']):
-                            proc_dist(cd)
-                            if cd['trip_distance'] and cd['time_number']:
+                        if not (cld['trip_distance'] and cld['time_number']):
+                            proc_dist(cld)
+                            if cld['trip_distance'] and cld['time_number']:
                                 sel = True
                         if sel:
-                            idx = cd['idx']
-                            var.update({'idx': idx, 'type': type})
-                            if idx:
-                                var['page_title'] = 'Úprava položky'
-                            else:
-                                var['page_title'] = 'Nová položka'
-                            d2d(gf[type], cd, var)
-                            for t in gf[type]:
-                                var['{}_error'.format(t)] = 'ok'
+                            idx = cld['idx']
+                            var.update({'idx': idx, 'type': typ})
+                            var['page_title'] = \
+                                'Úprava položky' if idx else 'Nová položka'
+                            d2d(SUBFORM_FIELDS[typ], cld, var)
+                            for key in SUBFORM_FIELDS[typ]:
+                                var['{}_error'.format(key)] = 'ok'
                             var['cons_error'] = 'ok'
                         else:
-                            f = TravelForm(request.POST)
-                            if f.is_valid():
-                                cd = f.cleaned_data
-                                i = Item()
-                                cd['amount'] = \
-                                    int(round((cd['trip_distance']
-                                    * ((float((cd['cons1'] + cd['cons2']
-                                    + cd['cons3']) * cd['fuel_price'])
-                                    / 300) + float(cd['flat_rate']))
-                                    + (cd['time_number'] * cd['time_rate']))
-                                    * cd['trip_number']))
-                                if cd['numerator'] > 1 or cd['denominator'] > 1:
-                                    cd['amount'] = \
-                                        (cd['amount'] * cd['numerator']) \
-                                        / cd['denominator']
-                                d2i(gt[type], cd, i)
-                                i.type = type
-                                idx = cd['idx']
+                            form = TravelForm(request.POST)
+                            if form.is_valid():
+                                cld = form.cleaned_data
+                                item = Item()
+                                cld['amount'] = \
+                                    int(round((cld['trip_distance']
+                                    * ((float((cld['cons1'] + cld['cons2']
+                                    + cld['cons3']) * cld['fuel_price'])
+                                    / 300) + float(cld['flat_rate']))
+                                    + (cld['time_number'] * cld['time_rate']))
+                                    * cld['trip_number']))
+                                if cld['numerator'] > 1 \
+                                   or cld['denominator'] > 1:
+                                    cld['amount'] = \
+                                        (cld['amount'] * cld['numerator']) \
+                                        / cld['denominator']
+                                d2i(FORM_FIELDS[typ], cld, item)
+                                item.type = typ
+                                idx = cld['idx']
                                 if idx:
-                                    if idx > len(c.items):
+                                    if idx > len(calc.items):
                                         raise Http404
-                                    c.items[idx - 1] = i
+                                    calc.items[idx - 1] = item
                                 else:
-                                    c.items.append(i)
-                                if not setcalc(request, c):  # pragma: no cover
-                                    return error(request)
+                                    calc.items.append(item)
+                                if not setcalc(request, calc):
+                                    return error(request)  # pragma: no cover
                                 return redirect('knr:itemlist')
                             else:
                                 idx = int(request.POST.get('idx') or 0)
-                                var.update({'errors': True,
-                                            'idx': idx,
-                                            'type': type})
-                                if idx:
-                                    var['page_title'] = 'Úprava položky'
-                                else:
-                                    var['page_title'] = 'Nová položka'
-                                d2d(gf[type], f.data, var)
-                                for t in gf[type]:
-                                    if f[t].errors:
-                                        var['{}_error'.format(t)] = 'err'
-                                    else:
-                                        var['{}_error'.format(t)] = 'ok'
+                                var.update({
+                                    'errors': True,
+                                    'idx': idx,
+                                    'type': typ})
+                                var['page_title'] = 'Úprava položky' if idx \
+                                    else 'Nová položka'
+                                d2d(SUBFORM_FIELDS[typ], form.data, var)
+                                for key in SUBFORM_FIELDS[typ]:
+                                    var['{}_error'.format(key)] = \
+                                        'err' if form[key].errors else 'ok'
                                 var['cons_error'] = 'ok'
-                                for t in ctrip:
-                                    if f[t].errors:
+                                for key in CTRIP:
+                                    if form[key].errors:
                                         var['cons_error'] = 'err'
                                         break
                     else:
                         raise Http404
                 else:
-                    f = globals()[type.title() + 'Form'](request.POST)
-                    if f.is_valid():
-                        cd = f.cleaned_data
-                        i = Item()
-                        if type == 'service':
-                            cd['amount'] = \
-                                int(round(cd['major_number'] * cd['rate'] \
-                                + cd['minor_number'] * .5 * cd['rate']))
-                            if cd['off10_flag']:
-                                cd['amount'] = int(round(.9 * cd['amount']))
-                            if cd['off30_flag']:
-                                cd['amount'] = int(round(.7 * cd['amount']))
-                            if cd['off30limit5000_flag']:
-                                cd['amount'] = \
-                                    min(int(round(.7 * cd['amount'])), 5000)
-                            if cd['off20limit5000_flag']:
-                                cd['amount'] = \
-                                    min(int(round(.8 * cd['amount'])), 5000)
-                            if cd['multiple_number'] > 1:
-                                cd['amount'] = int(round(.8
-                                    * cd['multiple_number'] * cd['amount']))
-                        elif type == 'flat':
-                            cd['amount'] = cd['rate']
-                            if cd['collection_flag']:
-                                cd['amount'] = \
-                                    max(int(round(.5 * cd['amount'])), 750)
-                            if cd['halved_flag']:
-                                cd['amount'] = lim(750, int(round(.5
-                                    * cd['amount'])), 15000)
-                            if cd['halved_appeal_flag']:
-                                cd['amount'] = lim(750, int(round(.5
-                                    * cd['amount'])), 20000)
-                            if cd['single_flag']:
-                                cd['amount'] = \
-                                    max(int(round(.5 * cd['amount'])), 400)
-                            if cd['multiple_flag']:
-                                cd['amount'] = int(round(1.3 * cd['amount']))
-                            if cd['multiple50_flag']:
-                                cd['amount'] = int(round(1.5 * cd['amount']))
-                            cd['amount'] = int(ceil(cd['amount'] / 10) * 10)
-                        elif type == 'administrative':
-                            cd['amount'] = (cd['number'] * cd['rate'])
-                        elif type == 'time':
-                            cd['amount'] = (cd['time_number'] * cd['time_rate'])
-                        if cd['numerator'] > 1 or cd['denominator'] > 1:
-                            cd['amount'] = (cd['amount'] * cd['numerator']) \
-                                / cd['denominator']
-                        d2i(gt[type], cd, i)
-                        i.type = type
-                        idx = cd['idx']
+                    form = globals()[typ.title() + 'Form'](request.POST)
+                    if form.is_valid():
+                        cld = form.cleaned_data
+                        item = Item()
+                        if typ == 'service':
+                            cld['amount'] = \
+                                int(round(cld['major_number'] * cld['rate'] \
+                                + cld['minor_number'] * .5 * cld['rate']))
+                            if cld['off10_flag']:
+                                cld['amount'] = int(round(.9 * cld['amount']))
+                            if cld['off30_flag']:
+                                cld['amount'] = int(round(.7 * cld['amount']))
+                            if cld['off30limit5000_flag']:
+                                cld['amount'] = \
+                                    min(int(round(.7 * cld['amount'])), 5000)
+                            if cld['off20limit5000_flag']:
+                                cld['amount'] = \
+                                    min(int(round(.8 * cld['amount'])), 5000)
+                            if cld['multiple_number'] > 1:
+                                cld['amount'] = int(round(.8
+                                    * cld['multiple_number'] * cld['amount']))
+                        elif typ == 'flat':
+                            cld['amount'] = cld['rate']
+                            if cld['collection_flag']:
+                                cld['amount'] = \
+                                    max(int(round(.5 * cld['amount'])), 750)
+                            if cld['halved_flag']:
+                                cld['amount'] = lim(750, int(round(.5
+                                    * cld['amount'])), 15000)
+                            if cld['halved_appeal_flag']:
+                                cld['amount'] = lim(750, int(round(.5
+                                    * cld['amount'])), 20000)
+                            if cld['single_flag']:
+                                cld['amount'] = \
+                                    max(int(round(.5 * cld['amount'])), 400)
+                            if cld['multiple_flag']:
+                                cld['amount'] = int(round(1.3 * cld['amount']))
+                            if cld['multiple50_flag']:
+                                cld['amount'] = int(round(1.5 * cld['amount']))
+                            cld['amount'] = int(ceil(cld['amount'] / 10) * 10)
+                        elif typ == 'administrative':
+                            cld['amount'] = cld['number'] * cld['rate']
+                        elif typ == 'time':
+                            cld['amount'] = \
+                                cld['time_number'] * cld['time_rate']
+                        if cld['numerator'] > 1 or cld['denominator'] > 1:
+                            cld['amount'] = (cld['amount'] * cld['numerator']) \
+                                / cld['denominator']
+                        d2i(FORM_FIELDS[typ], cld, item)
+                        item.type = typ
+                        idx = cld['idx']
                         if idx:
-                            if idx > len(c.items):
+                            if idx > len(calc.items):
                                 raise Http404
-                            c.items[idx - 1] = i
+                            calc.items[idx - 1] = item
                         else:
-                            c.items.append(i)
-                        if not setcalc(request, c):  # pragma: no cover
+                            calc.items.append(item)
+                        if not setcalc(request, calc):  # pragma: no cover
                             return error(request)
                         return redirect('knr:itemlist')
                     else:
                         idx = int(request.POST.get('idx') or 0)
-                        var.update({'errors': True, 'idx': idx, 'type': type})
-                        if idx:
-                            var['page_title'] = 'Úprava položky'
-                        else:
-                            var['page_title'] = 'Nová položka'
-                        d2d(gf[type], f.data, var)
-                        for t in gf[type]:
-                            if f[t].errors:
-                                var['{}_error'.format(t)] = 'err'
-                            else:
-                                var['{}_error'.format(t)] = 'ok'
+                        var.update({'errors': True, 'idx': idx, 'type': typ})
+                        var['page_title'] = \
+                            'Úprava položky' if idx else 'Nová položka'
+                        d2d(SUBFORM_FIELDS[typ], form.data, var)
+                        for key in SUBFORM_FIELDS[typ]:
+                            var['{}_error'.format(key)] = \
+                                'err' if form[key].errors else 'ok'
                         var['fraction_error'] = \
-                            'err' if (
-                                f['numerator'].errors or
-                                f['denominator'].errors) \
-                            else 'ok'
+                            'err' if form['numerator'].errors \
+                            or form['denominator'].errors else 'ok'
             else:
-                f = globals()[type.title() + 'Subform'](request.POST)
-                if f.is_valid():
-                    cd = f.cleaned_data
-                    if type == 'service':
-                        b = cd['basis']
-                        if btn == 'calc1':
-                            if b <= 500:
-                                r = 250
-                            elif b <= 1000:
-                                r = 500
-                            elif b <= 5000:
-                                r = 750
-                            elif b <= 10000:
-                                r = 1000
-                            elif b <= 200000:
-                                r = 1000 \
-                                    + 25 * int(ceil((b - 10000) / 1000))
-                            elif b <= 10000000:
-                                r = 5750 \
-                                    + 25 * int(ceil((b - 200000) / 10000))
+                form = globals()[typ.title() + 'Subform'](request.POST)
+                if form.is_valid():
+                    cld = form.cleaned_data
+                    if typ == 'service':
+                        bas = cld['basis']
+                        if button == 'calc1':
+                            if bas <= 500:
+                                rat = 250
+                            elif bas <= 1000:
+                                rat = 500
+                            elif bas <= 5000:
+                                rat = 750
+                            elif bas <= 10000:
+                                rat = 1000
+                            elif bas <= 200000:
+                                rat = 1000 \
+                                    + 25 * int(ceil((bas - 10000) / 1000))
+                            elif bas <= 10000000:
+                                rat = 5750 \
+                                    + 25 * int(ceil((bas - 200000) / 10000))
                             else:
-                                r = 30250 \
-                                    + 25 * int(ceil((b - 10000000) / 100000))
+                                rat = 30250 \
+                                    + 25 * int(ceil((bas - 10000000) / 100000))
                         else:
-                            if b <= 500:
-                                r = 300
-                            elif b <= 1000:
-                                r = 500
-                            elif b <= 5000:
-                                r = 1000
-                            elif b <= 10000:
-                                r = 1500
-                            elif b <= 200000:
-                                r = 1500 \
-                                    + 40 * int(ceil((b - 10000) / 1000))
-                            elif b <= 10000000:
-                                r = 9100 \
-                                    + 40 * int(ceil((b - 200000) / 10000))
+                            if bas <= 500:
+                                rat = 300
+                            elif bas <= 1000:
+                                rat = 500
+                            elif bas <= 5000:
+                                rat = 1000
+                            elif bas <= 10000:
+                                rat = 1500
+                            elif bas <= 200000:
+                                rat = 1500 \
+                                    + 40 * int(ceil((bas - 10000) / 1000))
+                            elif bas <= 10000000:
+                                rat = 9100 \
+                                    + 40 * int(ceil((bas - 200000) / 10000))
                             else:
-                                r = 48300 \
-                                    + 40 * int(ceil((b - 10000000) / 100000))
-                        idx = cd['idx']
-                        var.update({'idx': idx, 'type': type})
-                        if idx:
-                            var['page_title'] = 'Úprava položky'
-                        else:
-                            var['page_title'] = 'Nová položka'
-                        d2d(gf[type], cd, var)
-                        var['rate'] = r
-                        for t in gf[type]:
-                            var['{}_error'.format(t)] = 'ok'
-                    elif type == 'flat':
-                        b = cd['basis']
-                        if btn == 'calc1':
-                            if b <= 500:
-                                r = 1500
-                            elif b <= 1000:
-                                r = 3000
-                            elif b <= 5000:
-                                r = 4500
-                            elif b <= 10000:
-                                r = 6000
-                            elif b <= 200000:
-                                r = 6000 + .15 * (b - 10000)
-                            elif b <= 10000000:
-                                r = 34500 + .015 * (b - 200000)
+                                rat = 48300 \
+                                    + 40 * int(ceil((bas - 10000000) / 100000))
+                        idx = cld['idx']
+                        var.update({'idx': idx, 'type': typ})
+                        var['page_title'] = \
+                            'Úprava položky' if idx else 'Nová položka'
+                        d2d(SUBFORM_FIELDS[typ], cld, var)
+                        var['rate'] = rat
+                        for key in SUBFORM_FIELDS[typ]:
+                            var['{}_error'.format(key)] = 'ok'
+                    elif typ == 'flat':
+                        bas = cld['basis']
+                        if button == 'calc1':
+                            if bas <= 500:
+                                rat = 1500
+                            elif bas <= 1000:
+                                rat = 3000
+                            elif bas <= 5000:
+                                rat = 4500
+                            elif bas <= 10000:
+                                rat = 6000
+                            elif bas <= 200000:
+                                rat = 6000 + .15 * (bas - 10000)
+                            elif bas <= 10000000:
+                                rat = 34500 + .015 * (bas - 200000)
                             else:
-                                r = 181500 + .00015 * (b - 10000000)
-                        elif btn == 'calc2':
-                            if b <= 1000:
-                                r = 4500
-                            elif b <= 5000:
-                                r = 6000
-                            elif b <= 10000:
-                                r = 9000
-                            elif b <= 200000:
-                                r = 9000 + .17 * (b - 10000)
-                            elif b <= 10000000:
-                                r = 41300 + .02 * (b - 200000)
+                                rat = 181500 + .00015 * (bas - 10000000)
+                        elif button == 'calc2':
+                            if bas <= 1000:
+                                rat = 4500
+                            elif bas <= 5000:
+                                rat = 6000
+                            elif bas <= 10000:
+                                rat = 9000
+                            elif bas <= 200000:
+                                rat = 9000 + .17 * (bas - 10000)
+                            elif bas <= 10000000:
+                                rat = 41300 + .02 * (bas - 200000)
                             else:
-                                r = 237300 + .0015 * (b - 10000000)
+                                rat = 237300 + .0015 * (bas - 10000000)
                         else:
-                            if b <= 100:
-                                r = 1000
-                            elif b <= 500:
-                                r = 1500
-                            elif b <= 1000:
-                                r = 2500
-                            elif b <= 2000:
-                                r = 3750
-                            elif b <= 5000:
-                                r = 4800
-                            elif b <= 10000:
-                                r = 7500
-                            elif b <= 200000:
-                                r = 7500 + .17 * (b - 10000)
-                            elif b <= 10000000:
-                                r = 39800 + .02 * (b - 200000)
+                            if bas <= 100:
+                                rat = 1000
+                            elif bas <= 500:
+                                rat = 1500
+                            elif bas <= 1000:
+                                rat = 2500
+                            elif bas <= 2000:
+                                rat = 3750
+                            elif bas <= 5000:
+                                rat = 4800
+                            elif bas <= 10000:
+                                rat = 7500
+                            elif bas <= 200000:
+                                rat = 7500 + .17 * (bas - 10000)
+                            elif bas <= 10000000:
+                                rat = 39800 + .02 * (bas - 200000)
                             else:
-                                r = 235800 + .0015 * (b - 10000000)
-                        r = int(ceil(r / 10) * 10)
-                        idx = cd['idx']
-                        var.update({'idx': idx, 'type': type})
-                        if idx:
-                            var['page_title'] = 'Úprava položky'
+                                rat = 235800 + .0015 * (bas - 10000000)
+                        rat = int(ceil(rat / 10) * 10)
+                        idx = cld['idx']
+                        var.update({'idx': idx, 'type': typ})
+                        var['page_title'] = \
+                            'Úprava položky' if idx else 'Nová položka'
+                        d2d(SUBFORM_FIELDS[typ], cld, var)
+                        var['rate'] = rat
+                        for key in SUBFORM_FIELDS[typ]:
+                            var['{}_error'.format(key)] = 'ok'
+                    elif typ == 'administrative':
+                        if button == 'calc1':
+                            rat = 75
                         else:
-                            var['page_title'] = 'Nová položka'
-                        d2d(gf[type], cd, var)
-                        var['rate'] = r
-                        for t in gf[type]:
-                            var['{}_error'.format(t)] = 'ok'
-                    elif type == 'administrative':
-                        if btn == 'calc1':
-                            r = 75
+                            rat = 300
+                        idx = cld['idx']
+                        var.update({'idx': idx, 'type': typ})
+                        var['page_title'] = \
+                            'Úprava položky' if idx else 'Nová položka'
+                        d2d(SUBFORM_FIELDS[typ], cld, var)
+                        var['rate'] = rat
+                        for key in SUBFORM_FIELDS[typ]:
+                            var['{}_error'.format(key)] = 'ok'
+                    elif typ == 'time':
+                        if button == 'calc1':
+                            rat = 50
                         else:
-                            r = 300
-                        idx = cd['idx']
-                        var.update({'idx': idx, 'type': type})
-                        if idx:
-                            var['page_title'] = 'Úprava položky'
-                        else:
-                            var['page_title'] = 'Nová položka'
-                        d2d(gf[type], cd, var)
-                        var['rate'] = r
-                        for t in gf[type]:
-                            var['{}_error'.format(t)] = 'ok'
-                    elif type == 'time':
-                        if btn == 'calc1':
-                            r = 50
-                        else:
-                            r = 100
-                        idx = cd['idx']
-                        var.update({'idx': idx, 'type': type})
-                        if idx:
-                            var['page_title'] = 'Úprava položky'
-                        else:
-                            var['page_title'] = 'Nová položka'
-                        d2d(gf[type], cd, var)
-                        var['time_rate'] = r
-                        for t in gf[type]:
-                            var['{}_error'.format(t)] = 'ok'
-                    elif type == 'travel':
-                        if btn == 'from_apply' and request.POST.get('from_sel'):
-                            proc_from(int(request.POST.get('from_sel')), cd)
-                            proc_dist(cd)
-                        elif btn == 'from_search' \
+                            rat = 100
+                        idx = cld['idx']
+                        var.update({'idx': idx, 'type': typ})
+                        var['page_title'] = \
+                            'Úprava položky' if idx else 'Nová položka'
+                        d2d(SUBFORM_FIELDS[typ], cld, var)
+                        var['time_rate'] = rat
+                        for key in SUBFORM_FIELDS[typ]:
+                            var['{}_error'.format(key)] = 'ok'
+                    elif typ == 'travel':
+                        if button == 'from_apply' \
+                           and request.POST.get('from_sel'):
+                            proc_from(int(request.POST.get('from_sel')), cld)
+                            proc_dist(cld)
+                        elif button == 'from_search' \
                             and request.POST.get('from_address'):
                             loc = findloc(request.POST.get('from_address'))
                             if loc:
-                                cd['from_address'], \
-                                cd['from_lat'], \
-                                cd['from_lon'] = loc
+                                cld['from_address'], \
+                                cld['from_lat'], \
+                                cld['from_lon'] = loc
                             else:
                                 var.update(
                                     {'errors': True,
                                      'err_message': 'Hledání neúspěšné, '
                                      'prosím, upřesněte adresu.'})
-                                cd.update({'from_lat': '', 'from_lon': ''})
-                            proc_dist(cd)
-                        elif btn == 'to_apply' and request.POST.get('to_sel'):
-                            proc_to(int(request.POST.get('to_sel')), cd)
-                            proc_dist(cd)
-                        elif btn == 'to_search' \
+                                cld.update({'from_lat': '', 'from_lon': ''})
+                            proc_dist(cld)
+                        elif button == 'to_apply' \
+                            and request.POST.get('to_sel'):
+                            proc_to(int(request.POST.get('to_sel')), cld)
+                            proc_dist(cld)
+                        elif button == 'to_search' \
                             and request.POST.get('to_address'):
                             loc = findloc(request.POST.get('to_address'))
                             if loc:
-                                cd['to_address'], \
-                                cd['to_lat'], \
-                                cd['to_lon'] = loc
+                                cld['to_address'], \
+                                cld['to_lat'], \
+                                cld['to_lon'] = loc
                             else:
                                 var.update(
                                     {'errors': True,
                                      'err_message': 'Hledání neúspěšné, '
                                      'prosím, upřesněte adresu.'})
-                                cd.update({'to_lat': '', 'to_lon': ''})
-                            proc_dist(cd)
-                        elif btn == 'calc':
-                            proc_dist(cd)
-                        elif btn == 'calc1':
-                            cd['time_rate'] = 50
-                        elif btn == 'calc2':
-                            cd['time_rate'] = 100
-                        elif btn == 'car_apply' and request.POST.get('car_sel'):
-                            proc_car(int(request.POST.get('car_sel')), cd)
-                        elif btn == 'formula_apply' \
+                                cld.update({'to_lat': '', 'to_lon': ''})
+                            proc_dist(cld)
+                        elif button == 'calc':
+                            proc_dist(cld)
+                        elif button == 'calc1':
+                            cld['time_rate'] = 50
+                        elif button == 'calc2':
+                            cld['time_rate'] = 100
+                        elif button == 'car_apply' \
+                             and request.POST.get('car_sel'):
+                            proc_car(int(request.POST.get('car_sel')), cld)
+                        elif button == 'formula_apply' \
                             and request.POST.get('formula_sel'):
-                            proc_formula(int(request.POST.get('formula_sel')),
-                                         cd)
-                        idx = cd['idx']
-                        var.update({'idx': idx, 'type': type})
-                        if idx:
-                            var['page_title'] = 'Úprava položky'
-                        else:
-                            var['page_title'] = 'Nová položka'
-                        d2d(gf[type], cd, var)
+                            proc_formula(
+                                int(request.POST.get('formula_sel')),
+                                cld)
+                        idx = cld['idx']
+                        var.update({'idx': idx, 'type': typ})
+                        var['page_title'] = \
+                            'Úprava položky' if idx else 'Nová položka'
+                        d2d(SUBFORM_FIELDS[typ], cld, var)
                         if not var['fuel_price']:
                             var['fuel_price'] = ''
-                        for t in gf[type]:
-                            var['{}_error'.format(t)] = 'ok'
+                        for key in SUBFORM_FIELDS[typ]:
+                            var['{}_error'.format(key)] = 'ok'
                         var['cons_error'] = 'ok'
                 else:
                     idx = int(request.POST.get('idx') or 0)
-                    var.update({'errors': True, 'idx': idx, 'type': type})
-                    if idx:
-                        var['page_title'] = 'Úprava položky'
-                    else:
-                        var['page_title'] = 'Nová položka'
-                    d2d(gf[type], f.data, var)
-                    for t in gf[type]:
-                        if f[t].errors:
-                            var['{}_error'.format(t)] = 'err'
-                        else:
-                            var['{}_error'.format(t)] = 'ok'
+                    var.update({'errors': True, 'idx': idx, 'type': typ})
+                    var['page_title'] = \
+                        'Úprava položky' if idx else 'Nová položka'
+                    d2d(SUBFORM_FIELDS[typ], form.data, var)
+                    for key in SUBFORM_FIELDS[typ]:
+                        var['{}_error'.format(key)] = \
+                            'err' if form[key].errors else 'ok'
     return render(request, 'knr_itemform.html', var)
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def itemlist(request):
 
@@ -2014,107 +2130,110 @@ def itemlist(request):
         'Item list accessed using method {}'.format(request.method),
         request,
         request.POST)
-    c = getcalc(request)
-    if not c:  # pragma: no cover
+    calc = getcalc(request)
+    if not calc:  # pragma: no cover
         return error(request)
-    var = {'app': APP,
-           'page_title': 'Položky kalkulace',
-           'rows': [],
-           'presel': []}
-    n = 0
-    for row in c.items:
-        r = {'idx': (n + 1), 'up': (n > 0), 'down': (n < (len(c.items) - 1))}
-        i2d(['description', 'amount'], row, r)
-        r['amount'] = formam(r['amount'])
-        n += 1
-        var['rows'].append(r)
-    n = 0
-    for presel in ps:
-        if presel[TYPE]:
-            p = n
-        else:
-            p = ''
-        var['presel'].append({'idx': p, 'text': presel[TEXT]})
-        n += 1
+    var = {
+        'app': APP,
+        'page_title': 'Položky kalkulace',
+        'rows': [],
+        'presel': [],
+    }
+    num = 0
+    for row in calc.items:
+        dct = {
+            'idx': num + 1,
+            'up': num > 0,
+            'down': num < (len(calc.items) - 1),
+        }
+        i2d(('description', 'amount'), row, dct)
+        dct['amount'] = famt(dct['amount'])
+        num += 1
+        var['rows'].append(dct)
+    num = 0
+    for presel in PRESELS:
+        prn = num if presel[TYPE] else ''
+        var['presel'].append({'idx': prn, 'text': presel[TEXT]})
+        num += 1
     return render(request, 'knr_itemlist.html', var)
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def itemdel(request, idx=0):
 
     logger.debug(
         'Item delete page accessed using method {}, idx={}'
-            .format(request.method, idx),
+        .format(request.method, idx),
         request,
         request.POST)
     idx = (int(idx) - 1)
     var = {'app': APP, 'page_title': 'Smazání položky'}
-    c = getcalc(request)
-    if not c:  # pragma: no cover
+    calc = getcalc(request)
+    if not calc:  # pragma: no cover
         return error(request)
-    if idx >= len(c.items):
+    if idx >= len(calc.items):
         raise Http404
     if request.method == 'GET':
         var['idx'] = idx
-        var['desc'] = c.items[idx].description
+        var['desc'] = calc.items[idx].description
         return render(request, 'knr_itemdel.html', var)
     else:
-        btn = getbutton(request)
-        if btn == 'yes':
-            del c.items[idx]
+        button = getbutton(request)
+        if button == 'yes':
+            del calc.items[idx]
             logger.debug('Item deleted', request)
-            if not setcalc(request, c):  # pragma: no cover
+            if not setcalc(request, calc):  # pragma: no cover
                 return error(request)
             return redirect('knr:itemdeleted')
         return redirect('knr:itemlist')
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 @login_required
-def itemmove(request, dir, idx):
+def itemmove(request, drc, idx):
 
     logger.debug('Item move requested', request)
     idx = int(idx)
-    c = getcalc(request)
-    if not c:  # pragma: no cover
+    calc = getcalc(request)
+    if not calc:  # pragma: no cover
         return error(request)
-    if dir == 'u':
+    if drc == 'u':
         idx -= 1
-    if idx >= len(c.items) or idx < 1:
+    if idx >= len(calc.items) or idx < 1:
         raise Http404
-    c.items[idx - 1], c.items[idx] = c.items[idx], c.items[idx - 1]
-    if not setcalc(request, c):  # pragma: no cover
+    calc.items[idx - 1], calc.items[idx] = calc.items[idx], calc.items[idx - 1]
+    if not setcalc(request, calc):  # pragma: no cover
         return error(request)
     return redirect('knr:itemlist')
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 @login_required
 def presets(request):
 
     logger.debug('Presets requested', request)
     if not request.user.is_superuser:
         return unauth(request)
-    from .presets import pl, fo
+    from knr.presets import PS_PLACES, PS_FORMULAS
     Place.objects.filter(uid=None).delete()
     Car.objects.filter(uid=None).delete()
     Formula.objects.filter(uid=None).delete()
-    pp = []
-    for p in pl:
-        pp.append(Place(
+    lst = []
+    for item in PS_PLACES:
+        lst.append(Place(
             uid=None,
-            abbr=p[0],
-            name=p[1],
-            addr=p[2],
-            lat=p[3],
-            lon=p[4]))
-    Place.objects.bulk_create(pp)
-    for f in fo:
-        ff = Formula(uid=None, abbr=f[0], name=f[1], flat=f[2])
-        ff.save()
-        fid = ff.id
-        for r in f[3]:
-            Rate(formula_id=fid, fuel=r[0], rate=r[1]).save()
+            abbr=item[0],
+            name=item[1],
+            addr=item[2],
+            lat=item[3],
+            lon=item[4]))
+    Place.objects.bulk_create(lst)
+    for item in PS_FORMULAS:
+        formula = Formula(uid=None, abbr=item[0], name=item[1], flat=item[2])
+        formula.save()
+        fid = formula.id
+        for rat in item[3]:
+            Rate(formula_id=fid, fuel=rat[0], rate=rat[1]).save()
     logger.info('Presets restored', request)
     return redirect('knr:mainpage')

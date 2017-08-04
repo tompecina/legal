@@ -25,8 +25,8 @@ from calendar import monthrange
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
-from common.utils import pd, logger
-from common.glob import inerr_short
+from common.utils import fdt, logger
+from common.glob import INERR_SHORT
 from .forms import MainForm
 
 APP = __package__
@@ -34,17 +34,17 @@ APP = __package__
 APPVERSION = apps.get_app_config(APP).version
 
 def calc(beg_date, years, months, days):
-    y = beg_date.year
-    m = beg_date.month
-    d = beg_date.day
-    y += years
-    m += months
-    y += ((m - 1) // 12)
-    m = (((m - 1) % 12) + 1)
-    d = min(d, monthrange(y, m)[1])
-    return pd(date(y, m, d) + timedelta(days=days))
+    year = beg_date.year
+    month = beg_date.month
+    day = beg_date.day
+    year += years
+    month += months
+    year += (month - 1) // 12
+    month = ((month - 1) % 12) + 1
+    day = min(day, monthrange(year, month)[1])
+    return fdt(date(year, month, day) + timedelta(days=days))
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
     logger.debug(
@@ -55,50 +55,53 @@ def mainpage(request):
     messages = []
 
     if request.method == 'GET':
-        f = MainForm()
+        form = MainForm()
 
     else:
-        f = MainForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            beg_date = cd['beg_date']
-            years = (cd['years'] if cd['years'] else 0)
-            months = (cd['months'] if cd['months'] else 0)
-            days = (cd['days'] if cd['days'] else 0)
+        form = MainForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            beg_date = cld['beg_date']
+            years = (cld['years'] if cld['years'] else 0)
+            months = (cld['months'] if cld['months'] else 0)
+            days = (cld['days'] if cld['days'] else 0)
 
             messages.append(
-                ['Trest skončí: {}'.format(calc(beg_date, years, months, days)),
-                 'msg-res'])
-            messages.append(
-                ['Třetina trestu: {}'.format(calc(
+                ('Trest skončí: {}'.format(calc(
                     beg_date,
-                    (years // 3),
-                    (((years % 3) * 4) + (months // 3)),
-                    (((months % 3) * 10) + (days // 3)))),
-                 'msg-normal'])
+                    years, months,
+                    days)),
+                 'msg-res'))
             messages.append(
-                ['Polovina trestu: {}'.format(calc(
+                ('Třetina trestu: {}'.format(calc(
                     beg_date,
-                    (years // 2),
-                    (((years % 2) * 6) + (months // 2)),
-                    (((months % 2) * 15) + (days // 2)))),
-                 'msg-normal'])
+                    years // 3,
+                    ((years % 3) * 4) + (months // 3),
+                    ((months % 3) * 10) + (days // 3))),
+                 'msg-normal'))
             messages.append(
-                ['Dvě třetiny trestu: {}'.format(calc(
+                ('Polovina trestu: {}'.format(calc(
                     beg_date,
-                    ((years * 2) // 3),
-                    ((((years * 2) % 3) * 4) + ((months * 2) // 3)),
-                    ((((months * 2) % 3) * 10) + ((days * 2) // 3)))),
-                 None])
+                    years // 2,
+                    ((years % 2) * 6) + (months // 2),
+                    ((months % 2) * 15) + (days // 2))),
+                 'msg-normal'))
+            messages.append(
+                ('Dvě třetiny trestu: {}'.format(calc(
+                    beg_date,
+                    (years * 2) // 3,
+                    (((years * 2) % 3) * 4) + ((months * 2) // 3),
+                    (((months * 2) % 3) * 10) + ((days * 2) // 3))),
+                 None))
 
 
         else:
             logger.debug('Invalid form', request)
-            messages = [[inerr_short, None]]
+            messages = [(INERR_SHORT, None)]
 
     return render(request,
                   'dvt_main.html',
                   {'app': APP,
-                   'f': f,
+                   'form': form,
                    'messages': messages,
                    'page_title': 'Doba výkonu trestu'})

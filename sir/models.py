@@ -24,7 +24,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, RegexValidator
 from common.utils import composeref
-from common.glob import ic_regex, rc_regex, psc_regex
+from common.glob import IC_REGEX, RC_REGEX, PSC_REGEX
 
 
 class DruhAdresy(models.Model):
@@ -66,7 +66,7 @@ class Adresa(models.Model):
     psc = models.CharField(
         null=True,
         max_length=5,
-        validators=[RegexValidator(regex=psc_regex)],
+        validators=(RegexValidator(regex=PSC_REGEX),),
         db_index=True)
 
     telefon = models.CharField(
@@ -133,7 +133,7 @@ class Osoba(models.Model):
     ic = models.CharField(
         null=True,
         max_length=9,
-        validators=[RegexValidator(regex=ic_regex)],
+        validators=(RegexValidator(regex=IC_REGEX),),
         db_index=True)
 
     dic = models.CharField(
@@ -148,7 +148,7 @@ class Osoba(models.Model):
     rc = models.CharField(
         max_length=10,
         null=True,
-        validators=[RegexValidator(regex=rc_regex)],
+        validators=(RegexValidator(regex=RC_REGEX),),
         db_index=True)
 
     adresy = models.ManyToManyField(
@@ -209,13 +209,13 @@ class Vec(models.Model):
 
     senat = models.SmallIntegerField(
         default=0,
-        validators=[MinValueValidator(0)],
+        validators=(MinValueValidator(0),),
         db_index=True)
 
     bc = models.PositiveIntegerField()
 
     rocnik = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(2008)])
+        validators=(MinValueValidator(2008),))
 
     druhStavRizeni = models.ForeignKey(
         DruhStavRizeni,
@@ -320,7 +320,7 @@ class Insolvency(models.Model):
     number = models.PositiveIntegerField()
 
     year = models.IntegerField(
-        validators=[MinValueValidator(2008)])
+        validators=(MinValueValidator(2008),))
 
     desc = models.CharField(
         max_length=255,

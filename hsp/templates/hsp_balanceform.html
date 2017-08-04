@@ -4,6 +4,6 @@
 	    <tr id="id_balanceform"><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
               {% include "formwarning.html" %}            </td></tr>
-{% endif %}	    <tr class="{{ f.date.css_classes }}"><th>{{ f.date.label_tag }}</th><td colspan="2">{{ f.date }}</td></tr>
-	    <tr class="{{ f.description.css_classes }}"><th>{{ f.description.label_tag }}</th><td colspan="2">{{ f.description }}</td></tr>
+{% endif %}	    <tr class="{{ form.date.css_classes }}"><th>{{ form.date.label_tag }}</th><td colspan="2">{{ form.date }}</td></tr>
+	    <tr class="{{ form.description.css_classes }}"><th>{{ form.description.label_tag }}</th><td colspan="2">{{ form.description }}</td></tr>
 {% endblock %}

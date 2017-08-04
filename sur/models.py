@@ -25,7 +25,7 @@ from django.core.validators import (
 from django.db import models
 from django.contrib.auth.models import User
 from common.utils import composeref
-from common.glob import register_regex, text_opts
+from common.glob import REGISTER_REGEX, TEXT_OPTS
 from szr.models import Court
 from sur.glob import MIN_LENGTH, MAX_LENGTH
 
@@ -38,13 +38,13 @@ class Party(models.Model):
 
     party = models.CharField(
         max_length=MAX_LENGTH,
-        validators=[MinLengthValidator(MIN_LENGTH)],
+        validators=(MinLengthValidator(MIN_LENGTH),),
         db_index=True)
 
     party_opt = models.SmallIntegerField(
-        validators=[
+        validators=(
             MinValueValidator(0),
-            MaxValueValidator(len(text_opts) - 1)])
+            MaxValueValidator(len(TEXT_OPTS) - 1)))
 
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
@@ -72,16 +72,16 @@ class Found(models.Model):
         on_delete=models.CASCADE)
 
     senate = models.IntegerField(
-        validators=[MinValueValidator(0)])
+        validators=(MinValueValidator(0),))
 
     register = models.CharField(
         max_length=30,
-        validators=[RegexValidator(regex=register_regex)])
+        validators=(RegexValidator(regex=REGISTER_REGEX),))
 
     number = models.PositiveIntegerField()
 
     year = models.IntegerField(
-        validators=[MinValueValidator(1990)])
+        validators=(MinValueValidator(1990),))
 
     url = models.URLField(
         max_length=1024)

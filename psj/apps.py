@@ -36,55 +36,55 @@ class PsjConfig(AppConfig):
         from .models import Courtroom, Party, Judge, Form, Hearing, Task
         now = datetime.now()
         logger.debug('Partial statistics generated')
-        return [
-            [
+        return (
+            (
                 'Počet jednacích síní',
-                Courtroom.objects.count()],
-            [
+                Courtroom.objects.count()),
+            (
                 'Počet řešitelů',
-                Judge.objects.count()],
-            [
+                Judge.objects.count()),
+            (
                 'Počet druhů jednání',
-                Form.objects.count()],
-            [
+                Form.objects.count()),
+            (
                 'Počet účastníků',
-                Party.objects.count()],
-            [
+                Party.objects.count()),
+            (
                 'Počet nových účastníků za posledních 24 hodin',
                 Party.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+            (
                 'Počet nových účastníků za poslední týden',
                 Party.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+            (
                 'Počet nových účastníků za poslední měsíc',
                 Party.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+            (
                 'Počet jednání',
-                Hearing.objects.count()],
-            [
+                Hearing.objects.count()),
+            (
                 'Počet nových jednání za posledních 24 hodin',
                 Hearing.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+            (
                 'Počet nových jednání za poslední týden',
                 Hearing.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+            (
                 'Počet nových jednání za poslední měsíc',
                 Hearing.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+            (
                 'Počet položek v tabulce Task',
-                Task.objects.count()],
-            [
+                Task.objects.count()),
+            (
                 'Počet položek v tabulce Task starších než 12 hodin',
                 Task.objects.filter(
-                    timestamp_add__lt=(now - timedelta(hours=12))).count()],
-            [
+                    timestamp_add__lt=(now - timedelta(hours=12))).count()),
+            (
                 'Počet položek v tabulce Task starších než 24 hodin',
                 Task.objects.filter(
-                    timestamp_add__lt=(now - timedelta(hours=24))).count()],
-        ]
+                    timestamp_add__lt=(now - timedelta(hours=24))).count()),
+        )

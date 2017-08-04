@@ -20,4 +20,4 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-fuels = ['BA91', 'BA95', 'BA98', 'NM']
+FUELS = ('BA91', 'BA95', 'BA98', 'NM')

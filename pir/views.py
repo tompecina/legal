@@ -29,10 +29,10 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
-from common.utils import Pager, newXML, xmldecorate, logger
+from common.utils import Pager, new_xml, xml_decorate, logger
 from common.glob import (
-    inerr, text_opts_keys, exlim_title, localsubdomain, localurl, DTF)
-from sir.glob import l2n, l2s, l2r, s2d, r2i, a2d
+    INERR, TEXT_OPTS_KEYS, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF)
+from sir.glob import L2N, L2S, L2R, S2D, R2I, A2D
 from sir.models import Vec, Osoba, DruhRoleVRizeni, Counter
 from pir.forms import MainForm
 
@@ -44,7 +44,7 @@ APPVERSION = apps.get_app_config(APP).version
 EXLIM = 1000
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
     logger.debug(
@@ -53,14 +53,13 @@ def mainpage(request):
         request.POST)
 
     err_message = ''
-    messages = []
     page_title = apps.get_app_config(APP).verbose_name
 
-    courts = sorted([{'id': x, 'name': l2n[x]} for x in
+    courts = sorted([{'id': x, 'name': L2N[x]} for x in
         Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()],
         key=(lambda x: strxfrm(x['name'])))
     if request.method == 'GET':
-        f = MainForm()
+        form = MainForm()
         return render(
             request,
             'pir_mainpage.html',
@@ -68,29 +67,29 @@ def mainpage(request):
              'page_title': page_title,
              'err_message': err_message,
              'courts': courts,
-             'f': f})
-    f = MainForm(request.POST)
-    if f.is_valid():
-        cd = f.cleaned_data
-        for n in ['name', 'first_name', 'city']:
-            if not cd[n]:
-                del cd[n + '_opt']
-        cd['birthid'] = cd['birthid'].replace('/', '')
-        q = QueryDict(mutable=True)
-        for p in cd:
-            if cd[p]:
-                q[p] = cd[p]
-        for p in ['role_debtor', 'role_trustee', 'role_creditor',
-            'deleted', 'creditors']:
-            if cd[p]:
-                q[p] = 'on'
-        q['start'] = 0
-        del q['format']
+             'form': form})
+    form = MainForm(request.POST)
+    if form.is_valid():
+        cld = form.cleaned_data
+        for key in ('name', 'first_name', 'city'):
+            if not cld[key]:
+                del cld[key + '_opt']
+        cld['birthid'] = cld['birthid'].replace('/', '')
+        query = QueryDict(mutable=True)
+        for key in cld:
+            if cld[key]:
+                query[key] = cld[key]
+        for key in ('role_debtor', 'role_trustee', 'role_creditor',
+            'deleted', 'creditors'):
+            if cld[key]:
+                query[key] = 'on'
+        query['start'] = 0
+        del query['format']
         return redirect('{}?{}'.format(
-            reverse('{}:{}list'.format(APP, cd['format'])),
-            q.urlencode()))
+            reverse('{}:{}list'.format(APP, cld['format'])),
+            query.urlencode()))
     logger.debug('Invalid form', request)
-    err_message = inerr
+    err_message = INERR
     return render(
         request,
         'pir_mainpage.html',
@@ -98,117 +97,129 @@ def mainpage(request):
          'page_title': page_title,
          'err_message': err_message,
          'courts': courts,
-         'f': f})
+         'form': form})
 
 
-def g2p(rd):
+def g2p(reqd):
 
-    p = {'id__lte': Counter.objects.get(id='PR').number}
-    if 'court' in rd:
-        p['idOsobyPuvodce'] = rd['court']
-    for f, d, l in [['senate', 'senat', 0], ['number', 'bc', 1],
-        ['year', 'rocnik', 2008]]:
-        if f in rd:
-            p[d] = int(rd[f])
-            assert p[d] >= l
-    if 'date_first_from' in rd:
-        p['firstAction__gte'] = \
-            datetime.strptime(rd['date_first_from'], DTF).date()
-    if 'date_first_to' in rd:
-        p['firstAction__lte'] = \
-            datetime.strptime(rd['date_first_to'], DTF).date()
-    if 'date_last_from' in rd:
-        p['lastAction__gte'] = \
-            datetime.strptime(rd['date_last_from'], DTF).date()
-    if 'date_last_to' in rd:
-        p['lastAction__lte'] = \
-            datetime.strptime(rd['date_last_to'], DTF).date()
-    if 'name_opt' in rd:
-        assert rd['name_opt'] in text_opts_keys
-    if 'name' in rd:
-        assert 'name_opt' in rd
-        p['roles__osoba__nazevOsoby__' + rd['name_opt']] = rd['name']
-    if 'first_name_opt' in rd:
-        assert rd['first_name_opt'] in text_opts_keys
-    if 'first_name' in rd:
-        assert 'first_name_opt' in rd
-        p['roles__osoba__jmeno__' + rd['first_name_opt']] = rd['first_name']
-    if 'city_opt' in rd:
-        assert rd['city_opt'] in text_opts_keys
-    if 'city' in rd:
-        assert 'city_opt' in rd
-        p['roles__osoba__adresy__mesto__' + rd['city_opt']] = rd['city']
-    for f, m in [['genid', 'ic'], ['taxid', 'dic'], ['birthid', 'rc']]:
-        if f in rd:
-            p['roles__osoba__' + m] = rd[f]
-    if 'date_birth' in rd:
-        p['roles__osoba__datumNarozeni'] = \
-            datetime.strptime(rd['date_birth'], DTF).date()
-    if 'year_birth_from' in rd:
-        p['roles__osoba__datumNarozeni__year__gte'] = rd['year_birth_from']
-    if 'year_birth_to' in rd:
-        p['roles__osoba__datumNarozeni__year__lte'] = rd['year_birth_to']
-    if 'name' in rd or 'first_name' in rd or 'city' in rd \
-        or 'genid' in rd or 'taxid' in rd or 'birthid' in rd \
-        or 'date_birth' in rd or 'year_birth_from' in rd \
-        or 'year_birth_to' in rd:
-        role = [DruhRoleVRizeni.objects.get(desc=r2i[f]).id
+    par = {'id__lte': Counter.objects.get(id='PR').number}
+    if 'court' in reqd:
+        par['idOsobyPuvodce'] = reqd['court']
+
+    lims = {
+        'senate': ('senat', 0),
+        'number': ('bc', 1),
+        'year': ('rocnik', 2008),
+    }
+    for fld in lims:
+        if fld in reqd:
+            par[lims[fld][0]] = npar = int(reqd[fld])
+            assert npar >= lims[fld][1]
+
+    if 'date_first_from' in reqd:
+        par['firstAction__gte'] = \
+            datetime.strptime(reqd['date_first_from'], DTF).date()
+    if 'date_first_to' in reqd:
+        par['firstAction__lte'] = \
+            datetime.strptime(reqd['date_first_to'], DTF).date()
+    if 'date_last_from' in reqd:
+        par['lastAction__gte'] = \
+            datetime.strptime(reqd['date_last_from'], DTF).date()
+    if 'date_last_to' in reqd:
+        par['lastAction__lte'] = \
+            datetime.strptime(reqd['date_last_to'], DTF).date()
+    if 'name_opt' in reqd:
+        assert reqd['name_opt'] in TEXT_OPTS_KEYS
+    if 'name' in reqd:
+        assert 'name_opt' in reqd
+        par['roles__osoba__nazevOsoby__' + reqd['name_opt']] = reqd['name']
+    if 'first_name_opt' in reqd:
+        assert reqd['first_name_opt'] in TEXT_OPTS_KEYS
+    if 'first_name' in reqd:
+        assert 'first_name_opt' in reqd
+        par['roles__osoba__jmeno__' + reqd['first_name_opt']] = \
+            reqd['first_name']
+    if 'city_opt' in reqd:
+        assert reqd['city_opt'] in TEXT_OPTS_KEYS
+    if 'city' in reqd:
+        assert 'city_opt' in reqd
+        par['roles__osoba__adresy__mesto__' + reqd['city_opt']] = reqd['city']
+    for fld, key in (('genid', 'ic'), ('taxid', 'dic'), ('birthid', 'rc')):
+        if fld in reqd:
+            par['roles__osoba__' + key] = reqd[fld]
+    if 'date_birth' in reqd:
+        par['roles__osoba__datumNarozeni'] = \
+            datetime.strptime(reqd['date_birth'], DTF).date()
+    if 'year_birth_from' in reqd:
+        par['roles__osoba__datumNarozeni__year__gte'] = reqd['year_birth_from']
+    if 'year_birth_to' in reqd:
+        par['roles__osoba__datumNarozeni__year__lte'] = reqd['year_birth_to']
+    if 'name' in reqd or 'first_name' in reqd or 'city' in reqd \
+        or 'genid' in reqd or 'taxid' in reqd or 'birthid' in reqd \
+        or 'date_birth' in reqd or 'year_birth_from' in reqd \
+        or 'year_birth_to' in reqd:
+        role = [DruhRoleVRizeni.objects.get(desc=R2I[f]).id
             for f in ['debtor', 'trustee', 'creditor']
-            if 'role_' + f in rd]
-        if 'role_creditor' in rd:
-            role.append(DruhRoleVRizeni.objects.get(desc=r2i['motioner']).id)
-        p['roles__druhRoleVRizeni__in'] = role
-    if 'deleted' not in rd:
-        p['datumVyskrtnuti__isnull'] = True
-    return p
+            if 'role_' + f in reqd]
+        if 'role_creditor' in reqd:
+            role.append(DruhRoleVRizeni.objects.get(desc=R2I['motioner']).id)
+        par['roles__druhRoleVRizeni__in'] = role
+    if 'deleted' not in reqd:
+        par['datumVyskrtnuti__isnull'] = True
+    return par
 
 
-def o2s(o, detailed=False):
+def o2s(osoba, detailed=False):
 
-    r = ' '.join(filter(bool, [o.titulPred, o.jmeno, o.nazevOsoby]))
-    r = ', '.join(filter(bool, [r, o.titulZa, o.nazevOsobyObchodni]))
+    res = ' '.join(filter(
+        bool,
+        (osoba.titulPred, osoba.jmeno, osoba.nazevOsoby)))
+    res = ', '.join(filter(
+        bool,
+        (res, osoba.titulZa, osoba.nazevOsobyObchodni)))
     if detailed:
-        if o.datumNarozeni:
-            r += ', nar.&nbsp;{:%d.%m.%Y}'.format(o.datumNarozeni)
-        elif o.ic:
-            r += ', IČO:&nbsp;{}'.format(o.ic)
-    return r
+        if osoba.datumNarozeni:
+            res += ', nar.&nbsp;{:%d.%m.%Y}'.format(osoba.datumNarozeni)
+        elif osoba.ic:
+            res += ', IČO:&nbsp;{}'.format(osoba.ic)
+    return res
 
 
-def getosoby(v, *d):
+def getosoby(vec, *desc):
 
-    r = [DruhRoleVRizeni.objects.get(desc=r2i[x]).id for x in d]
-    l = v.roles.filter(druhRoleVRizeni__in=r).values_list('osoba', flat=True)
-    return Osoba.objects.filter(id__in=l).order_by('nazevOsoby', 'jmeno', 'id')
+    roles = [DruhRoleVRizeni.objects.get(desc=R2I[x]).id for x in desc]
+    lst = vec.roles.filter(druhRoleVRizeni__in=roles) \
+        .values_list('osoba', flat=True)
+    return Osoba.objects.filter(id__in=lst) \
+        .order_by('nazevOsoby', 'jmeno', 'id')
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def htmllist(request):
 
     logger.debug('HTML list accessed', request, request.GET)
-    page_title = apps.get_app_config(APP).verbose_name
-    rd = request.GET.copy()
+    reqd = request.GET.copy()
     try:
-        p = g2p(rd)
-        start = int(rd['start']) if ('start' in rd) else 0
+        par = g2p(reqd)
+        start = int(reqd['start']) if 'start' in reqd else 0
         assert start >= 0
-        v = Vec.objects.filter(**p) \
+        res = Vec.objects.filter(**par) \
             .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce') \
             .distinct()
     except:
         raise Http404
-    total = v.count()
+    total = res.count()
     if total and start >= total:
         start = total - 1
-    creditors = 'creditors' in rd
-    BATCH = 10 if creditors else 20
-    rows = v[start:(start + BATCH)]
+    creditors = 'creditors' in reqd
+    batch = 10 if creditors else 20
+    rows = res[start:start + batch]
     for row in rows:
-        row.court = l2n[row.idOsobyPuvodce]
-        row.court_short = l2s[row.idOsobyPuvodce]
-        row.court_reg = l2r[row.idOsobyPuvodce]
+        row.court = L2N[row.idOsobyPuvodce]
+        row.court_short = L2S[row.idOsobyPuvodce]
+        row.court_reg = L2R[row.idOsobyPuvodce]
         if row.druhStavRizeni:
-            row.state = s2d[row.druhStavRizeni.desc]
+            row.state = S2D[row.druhStavRizeni.desc]
         else:
             row.state = '(není známo)'
         row.debtors = []
@@ -232,7 +243,7 @@ def htmllist(request):
          'page_title': 'Výsledky vyhledávání',
          'rows': rows,
          'creditors': creditors,
-         'pager': Pager(start, total, reverse('pir:htmllist'), rd, BATCH),
+         'pager': Pager(start, total, reverse('pir:htmllist'), reqd, batch),
          'total': total})
 
 
@@ -280,7 +291,7 @@ def xml_addparties(osoby, xml, tag, tagname):
         for adresa in osoba.adresy.all():
             tag_address = xml.new_tag('address')
             tag_addresses.append(tag_address)
-            tag_address['type'] = a2d[adresa.druhAdresy.desc]
+            tag_address['type'] = A2D[adresa.druhAdresy.desc]
             if adresa.mesto:
                 tag_city = xml.new_tag('city')
                 tag_city.append(adresa.mesto)
@@ -320,89 +331,89 @@ def xml_addparties(osoby, xml, tag, tagname):
         subtag.append(tag_addresses)
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def xmllist(request):
 
     logger.debug('XML list accessed', request, request.GET)
-    rd = request.GET.copy()
+    reqd = request.GET.copy()
     try:
-        p = g2p(rd)
-        vv = Vec.objects.filter(**p) \
+        par = g2p(reqd)
+        res = Vec.objects.filter(**par) \
             .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce') \
             .distinct()
     except:
         raise Http404
-    total = vv.count()
+    total = res.count()
     if total > EXLIM:
         return render(
             request,
             'exlim.html',
             {'app': APP,
-             'page_title': exlim_title,
+             'page_title': EXLIM_TITLE,
              'limit': EXLIM,
              'total': total,
              'back': reverse('pir:mainpage')})
-    xd = {
+    dec = {
         'insolvencies': {
-            'xmlns': 'http://' + localsubdomain,
+            'xmlns': 'http://' + LOCAL_SUBDOMAIN,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
             'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd'
-                .format(localsubdomain, localurl, APP, APPVERSION),
+            .format(LOCAL_SUBDOMAIN, LOCAL_URL, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()
         }
     }
-    xml = newXML('')
-    tag_insolvencies = xmldecorate(xml.new_tag('insolvencies'), xd)
+    xml = new_xml('')
+    tag_insolvencies = xml_decorate(xml.new_tag('insolvencies'), dec)
     xml.append(tag_insolvencies)
-    for v in vv:
+    for item in res:
         tag_insolvency = xml.new_tag('insolvency')
         tag_insolvencies.append(tag_insolvency)
         tag_court = xml.new_tag('court')
         tag_insolvency.append(tag_court)
-        tag_court['id'] = v.idOsobyPuvodce
-        tag_court.append(l2n[v.idOsobyPuvodce])
+        tag_court['id'] = item.idOsobyPuvodce
+        tag_court.append(L2N[item.idOsobyPuvodce])
         tag_ref = xml.new_tag('ref')
         tag_insolvency.append(tag_ref)
         tag_court = xml.new_tag('court')
-        tag_court.append(l2s[v.idOsobyPuvodce])
+        tag_court.append(L2S[item.idOsobyPuvodce])
         tag_ref.append(tag_court)
         tag_senate = xml.new_tag('senate')
-        tag_senate.append(str(v.senat))
+        tag_senate.append(str(item.senat))
         tag_ref.append(tag_senate)
         tag_register = xml.new_tag('register')
         tag_register.append('INS')
         tag_ref.append(tag_register)
         tag_number = xml.new_tag('number')
-        tag_number.append(str(v.bc))
+        tag_number.append(str(item.bc))
         tag_ref.append(tag_number)
         tag_year = xml.new_tag('year')
-        tag_year.append(str(v.rocnik))
+        tag_year.append(str(item.rocnik))
         tag_ref.append(tag_year)
-        if v.druhStavRizeni:
+        if item.druhStavRizeni:
             tag_state = xml.new_tag('state')
-            tag_state.append(s2d[v.druhStavRizeni.desc])
+            tag_state.append(S2D[item.druhStavRizeni.desc])
             tag_insolvency.append(tag_state)
         tag_debtors = xml.new_tag('debtors')
         tag_insolvency.append(tag_debtors)
         xml_addparties(
-            getosoby(v, 'debtor'),
+            getosoby(item, 'debtor'),
             xml,
             tag_debtors,
             'debtor')
         tag_trustees = xml.new_tag('trustees')
         tag_insolvency.append(tag_trustees)
         xml_addparties(
-            getosoby(v, 'trustee'),
+            getosoby(item, 'trustee'),
             xml,
             tag_trustees,
             'trustee')
-        if 'creditors' in rd:
+        if 'creditors' in reqd:
             tag_creditors = xml.new_tag('creditors')
             tag_insolvency.append(tag_creditors)
             xml_addparties(
-                getosoby(v, 'motioner', 'creditor'),
+                getosoby(item, 'motioner', 'creditor'),
                 xml,
                 tag_creditors,
                 'creditor')
@@ -414,25 +425,25 @@ def xmllist(request):
     return response
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def csvlist(request):
 
     logger.debug('CSV list accessed', request, request.GET)
-    rd = request.GET.copy()
+    reqd = request.GET.copy()
     try:
-        p = g2p(rd)
-        vv = Vec.objects.filter(**p) \
+        par = g2p(reqd)
+        res = Vec.objects.filter(**par) \
             .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce') \
             .distinct()
     except:
         raise Http404
-    total = vv.count()
+    total = res.count()
     if total > EXLIM:
         return render(
             request,
             'exlim.html',
             {'app': APP,
-             'page_title': exlim_title,
+             'page_title': EXLIM_TITLE,
              'limit': EXLIM,
              'total': total,
              'back': reverse('pir:mainpage')})
@@ -440,22 +451,22 @@ def csvlist(request):
     response['Content-Disposition'] = \
         'attachment; filename=Insolvence.csv'
     writer = csvwriter(response)
-    hdr = [
+    hdr = (
         'Soud',
         'Spisová značka',
         'Stav řízení',
-    ]
+    )
     writer.writerow(hdr)
-    for v in vv:
+    for item in res:
         dat = [
-            l2n[v.idOsobyPuvodce],
+            L2N[item.idOsobyPuvodce],
             '{}{} INS {:d}/{:d}'.format(
-                l2s[v.idOsobyPuvodce],
-                ' {:d}'.format(v.senat) if v.senat else '',
-                v.bc,
-                v.rocnik),
-            (s2d[v.druhStavRizeni.desc]
-             if v.druhStavRizeni else '(není známo)'),
+                L2S[item.idOsobyPuvodce],
+                ' {:d}'.format(item.senat) if item.senat else '',
+                item.bc,
+                item.rocnik),
+            (S2D[item.druhStavRizeni.desc]
+             if item.druhStavRizeni else '(není známo)'),
         ]
         writer.writerow(dat)
     return response
@@ -463,113 +474,114 @@ def csvlist(request):
 
 def json_addparties(osoby):
 
-    r = []
+    res = []
     for osoba in osoby:
-        o = {'name': osoba.nazevOsoby}
+        item = {'name': osoba.nazevOsoby}
         if osoba.nazevOsobyObchodni:
-            o['business_name'] = osoba.nazevOsobyObchodni
+            item['business_name'] = osoba.nazevOsobyObchodni
         if osoba.jmeno:
-            o['first_name'] = osoba.jmeno
+            item['first_name'] = osoba.jmeno
         if osoba.titulPred:
-            o['honorifics_prepended'] = osoba.titulPred
+            item['honorifics_prepended'] = osoba.titulPred
         if osoba.titulZa:
-            o['honorifics_appended'] = osoba.titulZa
+            item['honorifics_appended'] = osoba.titulZa
         if osoba.ic:
-            o['gen_id'] = osoba.ic
+            item['gen_id'] = osoba.ic
         if osoba.dic:
-            o['tax_id'] = osoba.dic
+            item['tax_id'] = osoba.dic
         if osoba.datumNarozeni:
-            o['birth_date'] = osoba.datumNarozeni.isoformat()
+            item['birth_date'] = osoba.datumNarozeni.isoformat()
         if osoba.rc:
-            o['birth_id'] = '{}/{}'.format(osoba.rc[:6], osoba.rc[6:])
-        aa = []
+            item['birth_id'] = '{}/{}'.format(osoba.rc[:6], osoba.rc[6:])
+        subres = []
         for adresa in osoba.adresy.all():
-            a = {'type': a2d[adresa.druhAdresy.desc]}
+            addr = {'type': A2D[adresa.druhAdresy.desc]}
             if adresa.mesto:
-                a['city'] = adresa.mesto
+                addr['city'] = adresa.mesto
             if adresa.ulice:
-                a['street'] = adresa.ulice
+                addr['street'] = adresa.ulice
             if adresa.cisloPopisne:
-                a['street_number'] = adresa.cisloPopisne
+                addr['street_number'] = adresa.cisloPopisne
             if adresa.okres:
-                a['district'] = adresa.okres
+                addr['district'] = adresa.okres
             if adresa.zeme:
-                a['country'] = adresa.zeme
+                addr['country'] = adresa.zeme
             if adresa.psc:
-                a['zip'] = '{} {}'.format(adresa.psc[:3], adresa.psc[3:])
+                addr['zip'] = '{} {}'.format(adresa.psc[:3], adresa.psc[3:])
             if adresa.telefon:
-                a['phone'] = adresa.telefon
+                addr['phone'] = adresa.telefon
             if adresa.fax:
-                a['fax'] = adresa.fax
+                addr['fax'] = adresa.fax
             if adresa.textAdresy:
-                a['email'] = adresa.textAdresy
-            aa.append(a)
-        o['addresses'] = aa
-        r.append(o)
-    return r
+                addr['email'] = adresa.textAdresy
+            subres.append(addr)
+        item['addresses'] = subres
+        res.append(item)
+    return res
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def jsonlist(request):
 
     logger.debug('JSON list accessed', request, request.GET)
-    rd = request.GET.copy()
+    reqd = request.GET.copy()
     try:
-        p = g2p(rd)
-        vv = Vec.objects.filter(**p) \
+        par = g2p(reqd)
+        res = Vec.objects.filter(**par) \
             .order_by('firstAction', 'rocnik', 'bc', 'idOsobyPuvodce') \
             .distinct()
     except:
         raise Http404
-    total = vv.count()
+    total = res.count()
     if total > EXLIM:
         return render(
             request,
             'exlim.html',
             {'app': APP,
-             'page_title': exlim_title,
+             'page_title': EXLIM_TITLE,
              'limit': EXLIM,
              'total': total,
              'back': reverse('pir:mainpage')})
     response = HttpResponse(content_type='application/json; charset=utf-8')
     response['Content-Disposition'] = \
         'attachment; filename=Insolvence.json'
-    r = []
-    for v in vv:
-        p = {
-            'court': l2n[v.idOsobyPuvodce],
+    lst = []
+    for item in res:
+        par = {
+            'court': L2N[item.idOsobyPuvodce],
             'ref': {
-                'court': l2s[v.idOsobyPuvodce],
-                'senate': v.senat,
+                'court': L2S[item.idOsobyPuvodce],
+                'senate': item.senat,
                 'register': 'INS',
-                'number': v.bc,
-                'year': v.rocnik,
+                'number': item.bc,
+                'year': item.rocnik,
                 },
-            'state': s2d[v.druhStavRizeni.desc] if v.druhStavRizeni else '',
-            'debtors': json_addparties(getosoby(v, 'debtor')),
-            'trustees': json_addparties(getosoby(v, 'trustee')),
+            'state': S2D[item.druhStavRizeni.desc]
+            if item.druhStavRizeni else '',
+            'debtors': json_addparties(getosoby(item, 'debtor')),
+            'trustees': json_addparties(getosoby(item, 'trustee')),
         }
-        if 'creditors' in rd:
-            p['creditors'] = \
-                json_addparties(getosoby(v, 'motioner', 'creditor'))
-        r.append(p)
-    dump(r, response)
+        if 'creditors' in reqd:
+            par['creditors'] = \
+                json_addparties(getosoby(item, 'motioner', 'creditor'))
+        lst.append(par)
+    dump(lst, response)
     return response
 
 
-@require_http_methods(['GET'])
-def party(request, id=0):
+@require_http_methods(('GET',))
+def party(request, idx=0):
 
-    logger.debug('Party information page accessed, id={}'.format(id), request)
-    osoba = get_object_or_404(Osoba, id=id)
+    logger.debug('Party information page accessed, id={}'.format(idx), request)
+    osoba = get_object_or_404(Osoba, id=idx)
     adresy = osoba.adresy.order_by('-id')
-    i = 0
+    num = 0
     for adresa in adresy:
-        adresa.type = a2d[adresa.druhAdresy.desc]
+        adresa.type = A2D[adresa.druhAdresy.desc]
         adresa.psc = '{} {}'.format(adresa.psc[:3], adresa.psc[3:]) \
             if adresa.psc else ''
-        adresa.cl = 'even' if i % 2 else 'odd'
-        i += 1
+        adresa.cl = 'even' if num % 2 else 'odd'
+        num += 1
     return render(
         request,
         'pir_party.html',

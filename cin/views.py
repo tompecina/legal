@@ -25,9 +25,10 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from common.utils import (
-    pd, holiday, ply, plm, ydconvs, mdconvs, yfactor, mfactor, odp,
-    grammar, getbutton, unrequire, Lf, logger)
-from common.glob import inerr_short, GR_D, GR_B, GR_M, GR_Y, UNC_DATE
+    fdt, holiday, ply, plm, YDCONVS, MDCONVS, yfactor, mfactor, ODP,
+    grammar, getbutton, unrequire, LocalFloat, logger)
+from common.glob import (
+    INERR_SHORT, GR_DAY, GR_BUSDAY, GR_MONTH, GR_YEAR, UNC_DATE)
 from cin.forms import MainForm
 
 
@@ -36,7 +37,7 @@ APP = __package__
 APPVERSION = apps.get_app_config(APP).version
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
     logger.debug(
@@ -48,89 +49,89 @@ def mainpage(request):
     messages = []
 
     if request.method == 'GET':
-        f = MainForm()
+        form = MainForm()
     else:
-        f = MainForm(request.POST)
-        b = getbutton(request)
-        if b in ['set_beg_date', 'set_end_date']:
-            unrequire(f, ['beg_date', 'end_date'])
-            f.data = f.data.copy()
-            if b == 'set_beg_date':
-                f.data['beg_date'] = today
-            else:
-                f.data['end_date'] = today
-        elif f.is_valid():
-            cd = f.cleaned_data
-            beg_date = cd['beg_date']
-            end_date = cd['end_date']
+        form = MainForm(request.POST)
+        button = getbutton(request)
+        if button in ('set_beg_date', 'set_end_date'):
+            unrequire(form, ('beg_date', 'end_date'))
+            form.data = form.data.copy()
+            form.data['{}_date'.format(button[4:7])] = today
+        elif form.is_valid():
+            cld = form.cleaned_data
+            beg_date = cld['beg_date']
+            end_date = cld['end_date']
             if beg_date >= end_date:
-                messages.append(['Počátek musí předcházet konci', None])
+                messages.append(('Počátek musí předcházet konci', None))
             else:
-                messages.append(['{} → {}'.format(pd(beg_date), pd(end_date)),
-                                 'msg-header'])
+                messages.append((
+                    '{} → {}'.format(fdt(beg_date), fdt(end_date)),
+                    'msg-header'))
 
                 messages.append(
-                    [grammar((end_date - beg_date).days, GR_D), None])
+                    (grammar((end_date - beg_date).days, GR_DAY), None))
 
                 if beg_date >= UNC_DATE:
-                    t = beg_date + odp
-                    n = 0
-                    while t <= end_date:
-                        if not holiday(t):
-                            n += 1
-                        t += odp
-                    messages.append([grammar(n, GR_B), None])
+                    temp = beg_date + ODP
+                    num = 0
+                    while temp <= end_date:
+                        if not holiday(temp):
+                            num += 1
+                        temp += ODP
+                    messages.append((grammar(num, GR_BUSDAY), None))
 
-                ny = nm = nd = 0
+                nyear = nmonth = nday = 0
                 while True:
-                    t = ply(beg_date, (ny + 1))
-                    if t > end_date:
+                    temp = ply(beg_date, nyear + 1)
+                    if temp > end_date:
                         break
-                    ny += 1
-                r = ply(beg_date, ny)
+                    nyear += 1
+                res = ply(beg_date, nyear)
                 while True:
-                    t = plm(r, (nm + 1))
-                    if t > end_date:
+                    temp = plm(res, nmonth + 1)
+                    if temp > end_date:
                         break
-                    nm += 1
-                r = plm(r, nm)
-                while r < end_date:
-                    r += odp
-                    nd += 1
+                    nmonth += 1
+                res = plm(res, nmonth)
+                while res < end_date:
+                    res += ODP
+                    nday += 1
                 messages.append(
-                    ['{} {} {}'.format(
-                        grammar(ny, GR_Y),
-                        grammar(nm, GR_M),
-                        grammar(nd, GR_D)),
-                     'msg-ymd'])
+                    ('{} {} {}'.format(
+                        grammar(nyear, GR_YEAR),
+                        grammar(nmonth, GR_MONTH),
+                        grammar(nday, GR_DAY)),
+                     'msg-ymd'))
 
-                for dconv in ydconvs:
+                for dconv in YDCONVS:
                     messages.append(
-                        ['{:.6f} let ({})'.format(
-                            Lf(yfactor(beg_date, end_date, dconv)),
+                        ('{:.6f} let ({})'.format(
+                            LocalFloat(yfactor(beg_date, end_date, dconv)),
                             dconv),
-                         'msg-y'])
+                         'msg-y'))
 
-                for dconv in mdconvs:
-                    if dconv == mdconvs[0]:
+                for dconv in MDCONVS:
+                    if dconv == MDCONVS[0]:
                         messages.append(
-                            ['{:.6f} měsíců ({})'.format(
-                                Lf(mfactor(beg_date, end_date, dconv)),
+                            ('{:.6f} měsíců ({})'.format(
+                                LocalFloat(mfactor(beg_date, end_date, dconv)),
                                 dconv),
-                             'msg-m1'])
+                             'msg-m1'))
                     else:
                         messages.append(
-                            ['{:.6f} měsíců ({})'.format(
-                                Lf(mfactor(beg_date, end_date, dconv)),
+                            ('{:.6f} měsíců ({})'.format(
+                                LocalFloat(mfactor(beg_date, end_date, dconv)),
                                 dconv),
-                             'msg-m2'])
+                             'msg-m2'))
 
         else:
             logger.debug('Invalid form', request)
-            messages = [[inerr_short, None]]
+            messages = [(INERR_SHORT, None)]
 
-    return render(request, 'cin_main.html',
-                  {'app': APP,
-                   'f': f,
-                   'messages': messages,
-                   'page_title': 'Délka časového intervalu'})
+    return render(
+        request,
+        'cin_main.html',
+        {'app': APP,
+         'form': form,
+         'messages': messages,
+         'page_title': 'Délka časového intervalu'})

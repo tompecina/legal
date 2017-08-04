@@ -23,10 +23,10 @@
 from datetime import date
 from django.core.validators import RegexValidator
 from common import forms, fields, widgets
-from common.glob import text_opts, format_opts, ic_regex, rc_full_regex
+from common.glob import TEXT_OPTS, FORMAT_OPTS, IC_REGEX, RC_FULL_REGEX
 
 
-curryear = date.today().year
+CURRYEAR = date.today().year
 
 
 class MainForm(forms.Form):
@@ -38,108 +38,108 @@ class MainForm(forms.Form):
         initial='')
 
     senate = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         initial='',
         required=False)
 
     number = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=1,
         initial='',
         required=False)
 
     year = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=2008,
         initial='',
         required=False)
 
     date_first_from = fields.DateField(
-        widget=widgets.dw(),
+        widget=widgets.Dw(),
         required=False)
 
     date_first_to = fields.DateField(
-        widget=widgets.dw(),
+        widget=widgets.Dw(),
         required=False)
 
     date_last_from = fields.DateField(
-        widget=widgets.dw(),
+        widget=widgets.Dw(),
         required=False)
 
     date_last_to = fields.DateField(
-        widget=widgets.dw(),
+        widget=widgets.Dw(),
         required=False)
 
     name = fields.CharField(
-        widget=widgets.msew(),
+        widget=widgets.Msew(),
         required=False,
         max_length=255,
         label='Příjmení/název')
 
     name_opt = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=text_opts,
+        widget=widgets.Rs(),
+        choices=TEXT_OPTS,
         initial='istartswith')
 
     first_name = fields.CharField(
-        widget=widgets.msew(),
+        widget=widgets.Msew(),
         required=False,
         max_length=255,
         label='Jméno')
 
     first_name_opt = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=text_opts,
+        widget=widgets.Rs(),
+        choices=TEXT_OPTS,
         initial='istartswith')
 
     city = fields.CharField(
-        widget=widgets.msew(),
+        widget=widgets.Msew(),
         required=False,
         max_length=255,
         label='Obec')
 
     city_opt = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=text_opts,
+        widget=widgets.Rs(),
+        choices=TEXT_OPTS,
         initial='istartswith')
 
     genid = fields.CharField(
-        widget=widgets.ssew(),
+        widget=widgets.Ssew(),
         required=False,
         max_length=9,
-        validators=[RegexValidator(regex=ic_regex)],
+        validators=(RegexValidator(regex=IC_REGEX),),
         label='IČO')
 
     taxid = fields.CharField(
-        widget=widgets.ssew(),
+        widget=widgets.Ssew(),
         required=False,
         max_length=14,
         label='DIČ')
 
     birthid = fields.CharField(
-        widget=widgets.ssew(),
+        widget=widgets.Ssew(),
         required=False,
         max_length=11,
-        validators=[RegexValidator(regex=rc_full_regex)],
+        validators=(RegexValidator(regex=RC_FULL_REGEX),),
         label='Rodné číslo')
 
     date_birth = fields.DateField(
-        widget=widgets.dw(),
+        widget=widgets.Dw(),
         required=False,
         label='Datum narození')
 
     year_birth_from = fields.IntegerField(
-        widget=widgets.yw(),
+        widget=widgets.Yw(),
         min_value=1900,
-        max_value=curryear,
+        max_value=CURRYEAR,
         initial='',
         required=False)
 
     year_birth_to = fields.IntegerField(
-        widget=widgets.yw(),
+        widget=widgets.Yw(),
         min_value=1900,
-        max_value=curryear,
+        max_value=CURRYEAR,
         initial='',
         required=False)
 
@@ -165,8 +165,8 @@ class MainForm(forms.Form):
         label='včetně seznamu věřitelů')
 
     format = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=format_opts,
+        widget=widgets.Rs(),
+        choices=FORMAT_OPTS,
         label='Výstupní formát',
         initial='html')
 

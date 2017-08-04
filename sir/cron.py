@@ -25,7 +25,7 @@ from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 from common.utils import normalize, post, logger
 from dir.cron import dir_check
-from sir.glob import l2n, l2s, SELIST, BELIST
+from sir.glob import L2N, L2S, SELIST, BELIST
 from sir.models import (
     DruhStavRizeni, Vec, DruhRoleVRizeni, Osoba, Role, DruhAdresy, Adresa,
     Counter, Transaction, Insolvency, Tracked)
@@ -34,19 +34,19 @@ from sir.models import (
 PREF = 20
 
 
-def convdt(s):
+def convdt(string):
 
-    return datetime.strptime(s.string[:19], "%Y-%m-%dT%H:%M:%S")
+    return datetime.strptime(string.string[:19], "%Y-%m-%dT%H:%M:%S")
 
 
-def convd(s):
+def convd(string):
 
-    return datetime.strptime(s.string[:10], "%Y-%m-%d")
+    return datetime.strptime(string.string[:10], "%Y-%m-%d")
 
 
 def cron_gettr():
 
-    id = Counter.objects.get(id='DL').number
+    idx = Counter.objects.get(id='DL').number
     while True:
         soup = BeautifulSoup('', 'lxml')
         soup.is_xml = True
@@ -63,7 +63,7 @@ def cron_gettr():
         req = soup.new_tag('getIsirWsPublicIdDataRequest', None, 'typ')
         body.append(req)
         idPodnetu = soup.new_tag('idPodnetu', None, None)
-        idPodnetu.append(str(id))
+        idPodnetu.append(str(idx))
         req.append(idPodnetu)
         url = 'https://isir.justice.cz:8443/isir_public_ws/IsirWsPublicService'
 
@@ -82,11 +82,11 @@ def cron_gettr():
         if not (soup.stav and soup.stav.string == 'OK' and soup.find('data')):
             break
 
-        l = []
+        lst = []
         for t_data in soup.find_all('data'):
-            id = int(t_data.id.string)
-            l.append(Transaction(
-                id=id,
+            idx = int(t_data.id.string)
+            lst.append(Transaction(
+                id=idx,
                 datumZalozeniUdalosti=convdt(t_data.datumzalozeniudalosti),
                 datumZverejneniUdalosti=convdt(t_data.datumzverejneniudalosti),
                 dokumentUrl=(t_data.dokumenturl.string.strip()
@@ -101,29 +101,29 @@ def cron_gettr():
                     if t_data.poznamka else None),
                 error=False))
 
-        Transaction.objects.bulk_create(l)
-        logger.debug('Read {:d} transaction(s)'.format(len(l)))
+        Transaction.objects.bulk_create(lst)
+        logger.debug('Read {:d} transaction(s)'.format(len(lst)))
 
 
-def p2s(p):
+def p2s(ins):
 
-    return 'INS {0.number:d}/{0.year:d}'.format(p)
+    return 'INS {0.number:d}/{0.year:d}'.format(ins)
 
 
 def cron_proctr():
 
-    id = Counter.objects.get(id='DL').number
+    idx = Counter.objects.get(id='DL').number
     debtor = DruhRoleVRizeni.objects.get_or_create(desc='DLUŽNÍK')[0]
-    for tr in Transaction.objects.filter(error=False).order_by('id'):
-        id = tr.id
+    for trans in Transaction.objects.filter(error=False).order_by('id'):
+        idx = trans.id
         try:
             bc, rocnik = \
-                map(int, tr.spisovaZnacka.split()[-1].split('/'))
+                map(int, trans.spisovaZnacka.split()[-1].split('/'))
             if bc <= 0 or rocnik <= 0:
                 continue
-            datumZalozeniUdalosti = tr.datumZalozeniUdalosti
+            datumZalozeniUdalosti = trans.datumZalozeniUdalosti
 
-            poznamkaText = tr.poznamkaText.strip()
+            poznamkaText = trans.poznamkaText.strip()
             subsoup = BeautifulSoup(poznamkaText, 'lxml')
             subsoup.is_xml = True
 
@@ -138,13 +138,13 @@ def cron_proctr():
                     druhStavRizeni = DruhStavRizeni.objects.get_or_create(
                         desc=t_vec.druhstavrizeni.string.strip())[0]
 
-            vec, c_vec = Vec.objects.get_or_create(
+            vec = Vec.objects.get_or_create(
                 idOsobyPuvodce=idOsobyPuvodce,
                 bc=bc,
                 rocnik=rocnik,
                 defaults={
                     'firstAction': datumZalozeniUdalosti.date(),
-                    'lastAction': datumZalozeniUdalosti.date()})
+                    'lastAction': datumZalozeniUdalosti.date()})[0]
 
             if druhStavRizeni:
                 vec.druhStavRizeni = druhStavRizeni
@@ -157,36 +157,39 @@ def cron_proctr():
 
             vec.save()
 
-            if tr.oddil and tr.typUdalosti:
-                typUdalosti = int(tr.typUdalosti)
+            if trans.oddil and trans.typUdalosti:
+                typUdalosti = int(trans.typUdalosti)
                 if typUdalosti not in SELIST:
-                    for i in Insolvency.objects.filter(number=bc, year=rocnik):
-                        if i.detailed or typUdalosti in BELIST:
+                    for ins in \
+                        Insolvency.objects.filter(number=bc, year=rocnik):
+                        if ins.detailed or typUdalosti in BELIST:
                             if Tracked.objects.get_or_create(
-                                    uid_id=i.uid_id,
-                                    desc=i.desc,
+                                    uid_id=ins.uid_id,
+                                    desc=ins.desc,
                                     vec=vec)[1]:
                                 logger.info(
                                     'Change detected in proceedings "{}" '
-                                    '({}) for user "{}" ({:d})'.format(
-                                        i.desc,
-                                        p2s(i),
-                                        User.objects.get(pk=i.uid_id).username,
-                                        i.uid_id))
+                                    '({}) for user "{}" ({:d})'
+                                    .format(
+                                        ins.desc,
+                                        p2s(ins),
+                                        User.objects.get(pk=ins.uid_id)
+                                        .username,
+                                        ins.uid_id))
 
             if t_osoba:
                 idOsoby = t_osoba.idosoby.string.strip()
                 druhRoleVRizeni = DruhRoleVRizeni.objects.get_or_create(
                     desc=t_osoba.druhrolevrizeni.string.strip())[0]
                 nazevOsoby = normalize(t_osoba.nazevosoby.string)
-                osoba, c_osoba = Osoba.objects.get_or_create(
+                osoba = Osoba.objects.get_or_create(
                     idOsobyPuvodce=idOsobyPuvodce,
                     idOsoby=idOsoby,
                     defaults={
-                        'nazevOsoby': nazevOsoby})
-                role, c_role = Role.objects.get_or_create(
+                        'nazevOsoby': nazevOsoby})[0]
+                role = Role.objects.get_or_create(
                     osoba=osoba,
-                    druhRoleVRizeni=druhRoleVRizeni)
+                    druhRoleVRizeni=druhRoleVRizeni)[0]
                 if t_osoba.nazevosobyobchodni:
                     nazevOsobyObchodni = \
                         normalize(t_osoba.nazevosobyobchodni.string)
@@ -290,7 +293,7 @@ def cron_proctr():
                         else:
                             textAdresy = None
 
-                        adresa, c_adresa = Adresa.objects.get_or_create(
+                        adresa = Adresa.objects.get_or_create(
                             druhAdresy=druhAdresy,
                             mesto=mesto,
                             ulice=ulice,
@@ -300,17 +303,17 @@ def cron_proctr():
                             psc=psc,
                             telefon=telefon,
                             fax=fax,
-                            textAdresy=textAdresy)
+                            textAdresy=textAdresy)[0]
 
                         osoba.adresy.add(adresa)
 
                         if t_adresa.datumpobytdo:
                             osoba.adresy.remove(adresa)
         except:
-            tr.error = True
-            tr.save()
+            trans.error = True
+            trans.save()
 
-    Counter.objects.update_or_create(id='DL', defaults={'number': id})
+    Counter.objects.update_or_create(id='DL', defaults={'number': idx})
     logger.debug('Transactions processed')
 
 
@@ -322,9 +325,9 @@ def cron_deltr():
 
 def cron_getws2():
 
-    id = Counter.objects.get(id='PR').number
+    idx = Counter.objects.get(id='PR').number
 
-    for vec in Vec.objects.filter(id__gt=id, link__isnull=True).order_by('id'):
+    for vec in Vec.objects.filter(id__gt=idx, link__isnull=True).order_by('id'):
         soup = BeautifulSoup('', 'lxml')
         soup.is_xml = True
 
@@ -364,14 +367,14 @@ def cron_getws2():
         if subsoup.pocetVysledku and subsoup.cisloSenatu \
             and subsoup.urlDetailRizeni \
             and (subsoup.nazevOrganizace.string.strip()[:PREF] ==
-            l2n[vec.idOsobyPuvodce][:PREF]):
+            L2N[vec.idOsobyPuvodce][:PREF]):
             Vec.objects.filter(id=vec.id).update(
                 senat=int(subsoup.cisloSenatu.string),
                 link=subsoup.urlDetailRizeni.string.strip())
 
-        id = vec.id
+        idx = vec.id
 
-    Counter.objects.update_or_create(id='PR', defaults={'number': id})
+    Counter.objects.update_or_create(id='PR', defaults={'number': idx})
     logger.debug('WS2 information added')
 
 
@@ -396,19 +399,19 @@ def cron_update():
 def sir_notice(uid):
 
     text = ''
-    tt = Tracked.objects.filter(uid=uid, vec__link__isnull=False) \
+    res = Tracked.objects.filter(uid=uid, vec__link__isnull=False) \
         .order_by('desc', 'id').distinct()
-    if tt:
+    if res:
         text = 'Došlo ke změně v těchto insolvenčních řízeních, ' \
                'která sledujete:\n\n'
-        for t in tt:
+        for ins in res:
             text += ' - {0}sp. zn. {1} {2.senat:d} INS {2.bc:d}/' \
                 '{2.rocnik:d}\n' \
                     .format(
-                        ('{}, '.format(t.desc) if t.desc else ''),
-                        l2s[t.vec.idOsobyPuvodce],
-                        t.vec)
-            text += '   {}\n\n'.format(t.vec.link)
+                        ('{}, '.format(ins.desc) if ins.desc else ''),
+                        L2S[ins.vec.idOsobyPuvodce],
+                        ins.vec)
+            text += '   {}\n\n'.format(ins.vec.link)
         Tracked.objects.filter(uid=uid, vec__link__isnull=False).delete()
         logger.info(
             'Non-empty notice prepared for user "{}" ({:d})'

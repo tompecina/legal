@@ -5,10 +5,10 @@
 	  <table class="basic">	    <tr><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
               {% include "formwarning.html" %}            </td></tr>
-{% endif %}	    <tr class="{{ f.desc.css_classes }}">
-	      <th>{{ f.desc.label_tag }}</th>
+{% endif %}	    <tr class="{{ form.desc.css_classes }}">
+	      <th>{{ form.desc.label_tag }}</th>
 	      <td colspan="2" class="nowrap">
-		{{ f.desc }}
+		{{ form.desc }}
 	      </td>
 	    </tr>
 	    <tr>
@@ -16,61 +16,61 @@
 	      </td>
 	    </tr>
 	    <tr>
-	      <th>{{ f.court.label_tag }}</th>
+	      <th>{{ form.court.label_tag }}</th>
 	      <td colspan="2">
 		<select name="court" id="id_court" class="width-full">
 		  <option value="">(všechny)</option>
-{% for court in courts %}		  <option value="{{ court.id }}"{% if f.court.value == court.id %} selected="selected"{% endif %}>{{ court.name }}</option>
+{% for court in courts %}		  <option value="{{ court.id }}"{% if form.court.value == court.id %} selected="selected"{% endif %}>{{ court.name }}</option>
 {% endfor %}	        </select>
 	      </td>
 	    </tr>
-	    <tr class="{{ f.name.css_classes }}">
-	      <th>{{ f.name.label_tag }}</th>
+	    <tr class="{{ form.name.css_classes }}">
+	      <th>{{ form.name.label_tag }}</th>
 	      <td colspan="2" class="nowrap">
-		<span>{{ f.name }}</span>
-{% for p in f.name_opt %}		  {{ p }}
+		<span>{{ form.name }}</span>
+{% for p in form.name_opt %}		  {{ p }}
 {% endfor %}	      </td>
 	    </tr>
-	    <tr class="{{ f.first_name.css_classes }}">
-	      <th>{{ f.first_name.label_tag }}</th>
+	    <tr class="{{ form.first_name.css_classes }}">
+	      <th>{{ form.first_name.label_tag }}</th>
 	      <td colspan="2" class="nowrap">
-		<span>{{ f.first_name }}</span>
-{% for p in f.first_name_opt %}		  {{ p }}
+		<span>{{ form.first_name }}</span>
+{% for p in form.first_name_opt %}		  {{ p }}
 {% endfor %}	      </td>
 	    </tr>
 	    <tr>
-	      <th>{{ f.genid.label_tag }}</th>
+	      <th>{{ form.genid.label_tag }}</th>
 	      <td colspan="2">
-		<span>{{ f.genid }}</span>
+		<span>{{ form.genid }}</span>
 	      </td>
 	    </tr>
 	    <tr>
-	      <th>{{ f.taxid.label_tag }}</th>
+	      <th>{{ form.taxid.label_tag }}</th>
 	      <td colspan="2">
-		<span>{{ f.taxid }}</span>
+		<span>{{ form.taxid }}</span>
 	      </td>
 	    </tr>
 	    <tr>
-	      <th>{{ f.birthid.label_tag }}</th>
+	      <th>{{ form.birthid.label_tag }}</th>
 	      <td colspan="2">
-		<span>{{ f.birthid }}</span>
+		<span>{{ form.birthid }}</span>
 		(včetně lomítka)
 	      </td>
 	    </tr>
 	    <tr>
-	      <th>{{ f.date_birth.label_tag }}</th>
+	      <th>{{ form.date_birth.label_tag }}</th>
 	      <td colspan="2">
-		<span>{{ f.date_birth }}</span>
+		<span>{{ form.date_birth }}</span>
 	      </td>
 	    </tr>
 	    <tr>
-	      <th class="{% if f.year_birth_from.errors or f.year_birth_to.errors %}err{% endif %}">
+	      <th class="{% if form.year_birth_from.errors or form.year_birth_to.errors %}err{% endif %}">
 		Rok narození:
 	      </th>
 	      <td colspan="2" class="nowrap">
-		<span class="{{ f.year_birth_from.css_classes }}" id="id_year_birth_from_span">{{ f.year_birth_from }}</span>
+		<span class="{{ form.year_birth_from.css_classes }}" id="id_year_birth_from_span">{{ form.year_birth_from }}</span>
 		–
-		<span class="{{ f.year_birth_to.css_classes }}" id="id_year_birth_to_span">{{ f.year_birth_to }}</span>
+		<span class="{{ form.year_birth_to.css_classes }}" id="id_year_birth_to_span">{{ form.year_birth_to }}</span>
 	      </td>
 	    </tr>
 	    {% include "submit.html" %}	  </table>

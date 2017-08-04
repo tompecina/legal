@@ -34,9 +34,9 @@ class HspConfig(AppConfig):
         from common.utils import logger
         from cache.models import Asset
         logger.debug('Partial statistics generated')
-        return [
-            [
+        return (
+            (
                 'Počet položek v tabulce Asset',
                 Asset.objects.filter(
-                    assetid__startswith=HspConfig.name.upper()).count()],
-        ]
+                    assetid__startswith=HspConfig.name.upper()).count()),
+        )

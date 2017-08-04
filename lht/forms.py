@@ -26,7 +26,7 @@ from common import forms, fields, widgets
 from lht.glob import MIN_DATE, MAX_DATE, MIN_DUR, MAX_DUR
 
 
-presets = (
+PRESETS = (
     ('d3', '3 dny'),
     ('w1', '1 týden'),
     ('d8', '8 dnů'),
@@ -39,32 +39,33 @@ presets = (
     ('m3', '3 měsíce'),
     ('m6', '6 měsíců'),
     ('y1', '1 rok'),
-    ('none', 'jiná'))
+    ('none', 'jiná'),
+)
 
 
 class MainForm(forms.Form):
 
     beg_date = fields.DateField(
-        widget=widgets.dw(today=True),
+        widget=widgets.Dw(today=True),
         label='Počátek',
-        validators=[
+        validators=(
             MinValueValidator(MIN_DATE),
-            MaxValueValidator(MAX_DATE)],
+            MaxValueValidator(MAX_DATE)),
         initial=date.today)
 
     dur = fields.IntegerField(
-        widget=widgets.shw(),
-        validators=[
+        widget=widgets.Shw(),
+        validators=(
             MinValueValidator(MIN_DUR),
-            MaxValueValidator(MAX_DUR)],
+            MaxValueValidator(MAX_DUR)),
         required=False)
 
     unit = fields.CharField(
         required=False)
 
     preset = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=presets,
+        widget=widgets.Rs(),
+        choices=PRESETS,
         label='Délka',
         initial='none')
 

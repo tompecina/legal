@@ -27,14 +27,14 @@ from common.utils import getpreset
 class MainForm(forms.Form):
 
     netincome = fields.AmountField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         label='Čistá mzda',
         localize=True)
     netincome.rounding = 0
 
     netincome2 = fields.AmountField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         localize=True,
         initial=0)
@@ -51,18 +51,18 @@ class MainForm(forms.Form):
         disabled=True)
 
     deps = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         label='Počet dalších vyživovaných osob',
         initial=0)
 
     deps2 = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         initial=0)
 
     subs = fields.AmountField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         label='Zákonné životní minimum',
         localize=True,
@@ -70,7 +70,7 @@ class MainForm(forms.Form):
     subs.rounding = 0
 
     apt = fields.AmountField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         label='Normativní náklady na bydlení',
         localize=True,
@@ -78,22 +78,22 @@ class MainForm(forms.Form):
     apt.rounding = 0
 
     fee = fields.AmountField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         label='Měsíční odměna správce',
         localize=True,
-        initial=getpreset(id='FEE'))
+        initial=getpreset('FEE'))
     fee.rounding = 0
 
     fee2 = fields.AmountField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         localize=True,
-        initial=getpreset(id='FEE2'))
+        initial=getpreset('FEE2'))
     fee2.rounding = 0
 
     exp = fields.AmountField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         label='Měsíční hotové výdaje správce',
         localize=True,
@@ -101,7 +101,7 @@ class MainForm(forms.Form):
     exp.rounding = 0
 
     exp2 = fields.AmountField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         label='Měsíční hotové výdaje správce',
         localize=True,
@@ -114,7 +114,7 @@ class MainForm(forms.Form):
         initial=True)
 
     vatrate = fields.DecimalField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         max_digits=4,
         decimal_places=2,
         min_value=0,

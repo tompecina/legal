@@ -36,34 +36,34 @@ class DirConfig(AppConfig):
         from .models import Debtor, Discovered
         now = datetime.now()
         logger.debug('Partial statistics generated')
-        return [
-            [
+        return (
+            (
                 'Počet dlužníků',
-                Debtor.objects.count()],
-            [
+                Debtor.objects.count()),
+            (
                 'Počet nových dlužníků za posledních 24 hodin',
                 Debtor.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+            (
                 'Počet nových dlužníků za poslední týden',
                 Debtor.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+            (
                 'Počet nových dlužníků za poslední měsíc',
                 Debtor.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+            (
                 'Počet dlužníků pro příští notifikaci',
-                Discovered.objects.count()],
-        ]
+                Discovered.objects.count()),
+        )
 
     @staticmethod
     def userinfo(user):
         from common.utils import logger
         from .models import Debtor
         logger.debug('Partial user information generated')
-        return [
-            [
+        return (
+            (
                 'Počet sledovaných dlužníků',
-                Debtor.objects.filter(uid=user).count()],
-        ]
+                Debtor.objects.filter(uid=user).count()),
+        )

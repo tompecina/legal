@@ -32,17 +32,17 @@ class MainForm(forms.Form):
         initial='EUR')
 
     fx_date = fields.DateField(
-        widget=widgets.dw(today=True),
+        widget=widgets.Dw(today=True),
         label='ke dni',
         initial=date.today)
 
     basis = fields.AmountField(
-        widget=widgets.aw(),
+        widget=widgets.Aw(),
         min_value=0.01,
         label='Základ',
         localize=True)
 
     mpi_date = fields.DateField(
-        widget=widgets.dw(today=True),
+        widget=widgets.Dw(today=True),
         label='Ke dni',
         initial=date.today)

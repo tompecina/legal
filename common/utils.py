@@ -26,23 +26,33 @@ import time
 from datetime import date, timedelta
 from calendar import monthrange, isleap
 from math import inf
+from os.path import join
+from re import compile
 from xml.sax.saxutils import escape, unescape
 from bs4 import BeautifulSoup
 from pdfrw import PdfReader, PdfName
 import requests
+import reportlab.rl_config
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.pdfbase.pdfdoc import PDFName, PDFDictionary, PDFStream
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
+from reportlab.lib.pagesizes import A4
 from django.core import mail
-from common.settings import TEST
+from common.settings import FONT_DIR, TEST
 from common.glob import (
-    odp, ydconvs, mdconvs, registers, localsubdomain, localemail)
+    LIM, ODP, YDCONVS, MDCONVS, REGISTERS, LOCAL_SUBDOMAIN, LOCAL_EMAIL)
 from common.models import Preset
 
 
 class Logger:
+    """
+    Enhanced logging facility.
+    """
 
     _logger = getLogger('logger')
 
+    @staticmethod
     def _proc(meth, args, kwargs):
         if 'extra' not in kwargs:
             kwargs['extra'] = {}
@@ -89,12 +99,26 @@ def between(lower, arg, upper):
     return arg >= lower and arg <= upper
 
 
-def pd(dt):
+def more(*args):
+    """
+    True of more than one argument evaluates to True.
+    """
+
+    res = 0
+    for arg in args:
+        if arg:
+            res += 1
+            if res > 1:
+                return True
+    return False
+
+
+def fdt(dat):
     """
     Return standard project-wide formatted string represenation of date 'dt'.
     """
 
-    return '{0.day:02d}.{0.month:02d}.{0.year:02d}'.format(dt)
+    return '{0.day:02d}.{0.month:02d}.{0.year:02d}'.format(dat)
 
 
 def easter_sunday(year):
@@ -102,26 +126,26 @@ def easter_sunday(year):
     Return the date of the Easter Sunday in 'year'.
     """
 
-    a = year % 19
-    b = year >> 2
-    c = b // 25 + 1
-    d = (c * 3) >> 2
-    e = ((a * 19) - ((c * 8 + 5) // 25) + d + 15) % 30
-    e += (29578 - a - e * 32) >> 10
-    e -= ((year % 7) + b - d + e + 2) % 7
-    d = e >> 5
-    day = e - d * 31
-    month = d + 3
+    aux1 = year % 19
+    aux2 = year >> 2
+    aux3 = aux2 // 25 + 1
+    aux4 = (aux3 * 3) >> 2
+    aux5 = ((aux1 * 19) - ((aux3 * 8 + 5) // 25) + aux4 + 15) % 30
+    aux5 += (29578 - aux1 - aux5 * 32) >> 10
+    aux5 -= ((year % 7) + aux2 - aux4 + aux5 + 2) % 7
+    aux4 = aux5 >> 5
+    day = aux5 - aux4 * 31
+    month = aux4 + 3
 
     return date(year, month, day)
 
 
-def movable_holiday(dt):
+def movable_holiday(dat):
     """
-    Check if 'dt' is a local movable banking holiday.
+    Check if 'dat' is a local movable banking holiday.
     """
 
-    HOLIDAYS = (
+    holidays = (
 
         # Good Friday
         {'offset': -2, 'from': 1948, 'to': 1951},
@@ -143,21 +167,21 @@ def movable_holiday(dt):
         {'offset': 60, 'from': -inf, 'to': 1951},
     )
 
-    year = dt.year
-    es = easter_sunday(year)
-    for hol in HOLIDAYS:
-        if dt == (es + timedelta(hol['offset'])) \
+    year = dat.year
+    esun = easter_sunday(year)
+    for hol in holidays:
+        if dat == (esun + timedelta(hol['offset'])) \
             and between(hol['from'], year, hol['to']):
             return True
     return False
 
 
-def holiday(dt):
+def holiday(dat):
     """
-    Check if 'dt' is a local banking holiday.
+    Check if 'dat' is a local banking holiday.
     """
 
-    HOLIDAYS = (
+    holidays = (
 
         # Circumcision of Jesus/New Year
         {'day': 1, 'month': 1, 'from': -inf, 'to': inf},
@@ -238,7 +262,7 @@ def holiday(dt):
         {'day': 26, 'month': 12, 'from': -inf, 'to': inf},
     )
 
-    EXTRA_HOLIDAYS = {
+    extra_holidays = {
         1966: ((8, 6), (9, 3), (10, 1), (10, 29), (11, 26)),
         1967: (
             (1, 7), (1, 21), (2, 4), (2, 18), (3, 4), (3, 18), (4, 1),
@@ -270,7 +294,7 @@ def holiday(dt):
         1990: ((4, 30),),
     }
 
-    EXTRA_NON_HOLIDAYS = {
+    extra_non_holidays = {
         1968: ((12, 21), (12, 22), (12, 28), (12, 29)),
         1969: ((5, 4), (10, 25), (12, 28)),
         1970: ((1, 3), (1, 4), (4, 4), (5, 16), (10, 25), (11, 14), (12, 27)),
@@ -303,47 +327,47 @@ def holiday(dt):
         1990: ((4, 28),),
     }
 
-    year = dt.year
-    month = dt.month
-    day = dt.day
+    year = dat.year
+    month = dat.month
+    day = dat.day
 
-    if year in EXTRA_HOLIDAYS and (month, day) in EXTRA_HOLIDAYS[year]:
+    if year in extra_holidays and (month, day) in extra_holidays[year]:
         return True
 
-    if year in EXTRA_NON_HOLIDAYS and (month, day) in EXTRA_NON_HOLIDAYS[year]:
+    if year in extra_non_holidays and (month, day) in extra_non_holidays[year]:
         return False
 
-    for hol in HOLIDAYS:
+    for hol in holidays:
         if day == hol['day'] and month == hol['month'] and \
            between(hol['from'], year, hol['to']):
             return True
 
-    if movable_holiday(dt):
+    if movable_holiday(dat):
         return True
 
-    return dt.weekday() > (5 if dt < date(1968, 10, 5) else 4)
+    return dat.weekday() > (5 if dat < date(1968, 10, 5) else 4)
 
 
-def ply(dt, num):
+def ply(dat, num):
     """
-    Return 'dt' plus 'num' years.
+    Return 'dat' plus 'num' years.
     """
 
-    year = dt.year + num
-    month = dt.month
-    day = min(dt.day, monthrange(year, month)[1])
+    year = dat.year + num
+    month = dat.month
+    day = min(dat.day, monthrange(year, month)[1])
     return date(year, month, day)
 
 
-def plm(dt, num):
+def plm(dat, num):
     """
-    Return 'dt' plus 'num' months.
+    Return 'dat' plus 'num' months.
     """
 
-    month = dt.month + num
-    year = dt.year + ((month - 1) // 12)
+    month = dat.month + num
+    year = dat.year + ((month - 1) // 12)
     month = ((month - 1) % 12) + 1
-    day = min(dt.day, monthrange(year, month)[1])
+    day = min(dat.day, monthrange(year, month)[1])
     return date(year, month, day)
 
 
@@ -353,33 +377,35 @@ def yfactor(beg, end, dconv):
     'dconv'.
     """
 
-    if end < beg or dconv not in ydconvs:
+    if end < beg or dconv not in YDCONVS:
         return None
 
     if dconv.startswith('ACT'):
-        beg += odp
-        y1 = beg.year
-        m1 = beg.month
-        d1 = beg.day
-        end += odp
-        y2 = end.year
-        m2 = end.month
-        d2 = end.day
+        beg += ODP
+        beg_year = beg.year
+        beg_month = beg.month
+        beg_day = beg.day
+        end += ODP
+        end_year = end.year
+        end_month = end.month
+        end_day = end.day
         if dconv == 'ACT/ACT':
             leap = nleap = 0
-            while y1 < y2:
-                n = (date((y1 + 1), 1, 1) - date(y1, m1, d1)).days
-                if isleap(y1):
-                    leap += n
+            while beg_year < end_year:
+                num = (date((beg_year + 1), 1, 1) - \
+                    date(beg_year, beg_month, beg_day)).days
+                if isleap(beg_year):
+                    leap += num
                 else:
-                    nleap += n
-                d1 = m1 = 1
-                y1 += 1
-            n = (date(y2, m2, d2) - date(y1, m1, d1)).days
-            if isleap(y1):
-                leap += n
+                    nleap += num
+                beg_day = beg_month = 1
+                beg_year += 1
+            num = (date(end_year, end_month, end_day) - \
+                date(beg_year, beg_month, beg_day)).days
+            if isleap(beg_year):
+                leap += num
             else:
-                nleap += n
+                nleap += num
             return (nleap / 365) + (leap / 366)
         if dconv == 'ACT/365':
             return (end - beg).days / 365
@@ -388,34 +414,35 @@ def yfactor(beg, end, dconv):
         return (end - beg).days / 364
 
     else:
-        y1 = beg.year
-        m1 = beg.month
-        d1 = beg.day
-        y2 = end.year
-        m2 = end.month
-        d2 = end.day
+        beg_year = beg.year
+        beg_month = beg.month
+        beg_day = beg.day
+        end_year = end.year
+        end_month = end.month
+        end_day = end.day
         if dconv == '30U/360':
-            if d2 == 31 and d1 >= 30:
-                d2 = 30
-            if d1 == 31:
-                d1 = 30
+            if end_day == 31 and beg_day >= 30:
+                end_day = 30
+            if beg_day == 31:
+                beg_day = 30
         elif dconv == '30E/360':
-            if d1 == 31:
-                d1 = 30
-            if d2 == 31:
-                d2 = 30
+            if beg_day == 31:
+                beg_day = 30
+            if end_day == 31:
+                end_day = 30
         elif dconv == '30E/360 ISDA':
-            if d1 == monthrange(y1, m1)[1]:
-                d1 = 30
-            if d2 == monthrange(y2, m2)[1]:
-                d2 = 30
+            if beg_day == monthrange(beg_year, beg_month)[1]:
+                beg_day = 30
+            if end_day == monthrange(end_year, end_month)[1]:
+                end_day = 30
         elif dconv == '30E+/360':
-            if d1 == 31:
-                d1 = 30
-            if d2 == 31:
-                m2 += 1
-                d2 = 1
-        return (360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1)) / 360
+            if beg_day == 31:
+                beg_day = 30
+            if end_day == 31:
+                end_month += 1
+                end_day = 1
+        return (360 * (end_year - beg_year) + 30 * (end_month - beg_month) \
+            + (end_day - beg_day)) / 360
 
 
 def mfactor(beg, end, dconv):
@@ -424,58 +451,59 @@ def mfactor(beg, end, dconv):
     'dconv'.
     """
 
-    if end < beg or dconv not in mdconvs:
+    if end < beg or dconv not in MDCONVS:
         return None
 
     if dconv == 'ACT':
-        beg += odp
-        y = beg.year
-        m = beg.month
-        d = beg.day
-        r = 0.0
-        while y < end.year or m != end.month:
-            if d == 1:
-                r += 1.0
+        beg += ODP
+        year = beg.year
+        month = beg.month
+        day = beg.day
+        res = .0
+        while year < end.year or month != end.month:
+            if day == 1:
+                res += 1
             else:
-                dm = monthrange(y, m)[1]
-                r += float(dm - d + 1) / dm
-            m += 1
-            if m > 12:
-                m = 1
-                y += 1
-            d = 1
-        r += float(end.day - d + 1) / monthrange(y, m)[1]
-        return r
+                dim = monthrange(year, month)[1]
+                res += float(dim - day + 1) / dim
+            month += 1
+            if month > 12:
+                month = 1
+                year += 1
+            day = 1
+        res += float(end.day - day + 1) / monthrange(year, month)[1]
+        return res
 
     else:
-        y1 = beg.year
-        m1 = beg.month
-        d1 = beg.day
-        y2 = end.year
-        m2 = end.month
-        d2 = end.day
+        beg_year = beg.year
+        beg_month = beg.month
+        beg_day = beg.day
+        end_year = end.year
+        end_month = end.month
+        end_day = end.day
         if dconv == '30U':
-            if d2 == 31 and d1 >= 30:
-                d2 = 30
-            if d1 == 31:
-                d1 = 30
+            if end_day == 31 and beg_day >= 30:
+                end_day = 30
+            if beg_day == 31:
+                beg_day = 30
         elif dconv == '30E':
-            if d1 == 31:
-                d1 = 30
-            if d2 == 31:
-                d2 = 30
+            if beg_day == 31:
+                beg_day = 30
+            if end_day == 31:
+                end_day = 30
         elif dconv == '30E ISDA':
-            if d1 == monthrange(y1, m1)[1]:
-                d1 = 30
-            if d2 == monthrange(y2, m2)[1]:
-                d2 = 30
+            if beg_day == monthrange(beg_year, beg_month)[1]:
+                beg_day = 30
+            if end_day == monthrange(end_year, end_month)[1]:
+                end_day = 30
         elif dconv == '30E+':
-            if d1 == 31:
-                d1 = 30
-            if d2 == 31:
-                m2 += 1
-                d2 = 1
-        return (360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1)) / 30
+            if beg_day == 31:
+                beg_day = 30
+            if end_day == 31:
+                end_month += 1
+                end_day = 1
+        return (360 * (end_year - beg_year) + 30 * (end_month - beg_month) \
+            + (end_day - beg_day)) / 30
 
 
 def grammar(num, noun):
@@ -483,14 +511,14 @@ def grammar(num, noun):
     Return correct form of plural, 'num noun(s)'.
     """
 
-    a = abs(num)
-    if a == 1:
-        s = noun[0]
-    elif not a or a > 4:
-        s = noun[2]
+    anum = abs(num)
+    if anum == 1:
+        suf = noun[0]
+    elif not anum or anum > 4:
+        suf = noun[2]
     else:
-        s = noun[1]
-    return '{:d} {}'.format(num, s)
+        suf = noun[1]
+    return '{:d} {}'.format(num, suf)
 
 
 def getbutton(request):
@@ -498,9 +526,9 @@ def getbutton(request):
     Get id of button pressed.
     """
 
-    for i in request.POST:
-        if i.startswith('submit_'):
-            return i[7:]
+    for key in request.POST:
+        if key.startswith('submit_'):
+            return key[7:]
     return None
 
 
@@ -520,33 +548,47 @@ def c2p(string):
     return string.replace(',', '.')
 
 
-class Lf(float):
+def normfl(val):
+    """
+    Prevent the 'minus zero' effect.
+    """
+
+    return .0 if abs(val) < LIM else val
+
+
+NEG_ZERO_REGEX = r'^-0\.0*$'
+
+
+class LocalFloat(float):
     """
     Class for correct localized formatting of floats.
     """
 
-    def __format__(self, format):
-        return p2c(super().__format__(format))
+    def __format__(self, fmt):
+        string = super().__format__(fmt)
+        if compile(NEG_ZERO_REGEX).match(string):
+            string = string.replace('-', '', 1)
+        return p2c(string)
 
 
-def formam(amount):
+def famt(amount):
     """
-    Format 'amount' according to its type.
+    Format 'amount' according to its type, adding thousands separators.
     """
 
     if isinstance(amount, int):
-        s = '{:d}'.format(amount)
+        string = '{:d}'.format(amount)
     else:
-        s = '{:.2f}'.format(Lf(amount))
-    i = s.find(',')
-    if i < 0:
-        i = len(s)
-    l = list(s)
-    i -= 3
-    while i > 0 and l[i-1] != '-':
-        l.insert(i, '.')
-        i -= 3
-    return ''.join(l)
+        string = '{:.2f}'.format(LocalFloat(amount))
+    idx = string.find(',')
+    if idx < 0:
+        idx = len(string)
+    lst = list(string)
+    idx -= 3
+    while idx > 0 and lst[idx - 1] != '-':
+        lst.insert(idx, '.')
+        idx -= 3
+    return ''.join(lst)
 
 
 def unrequire(form, fields):
@@ -558,7 +600,7 @@ def unrequire(form, fields):
         form.fields[fld].required = False
 
 
-def xmldecorate(tag, table):
+def xml_decorate(tag, table):
     """
     Add all attributes in 'table' to XML tag 'tag'.
     """
@@ -569,7 +611,7 @@ def xmldecorate(tag, table):
     return tag
 
 
-def xmlescape(string):
+def xml_espace(string):
     """
     XML-escape and strip 'string'.
     """
@@ -577,7 +619,7 @@ def xmlescape(string):
     return escape(string).strip()
 
 
-def xmlunescape(string):
+def xml_unespace(string):
     """
     Strip and XML-unescape 'string'.
     """
@@ -585,7 +627,7 @@ def xmlunescape(string):
     return unescape(string.strip())
 
 
-def newXML(data):
+def new_xml(data):
     """
     Create new XML soup using correct parser, either from scratch or
     from 'data'.
@@ -599,36 +641,36 @@ def newXML(data):
     return xml
 
 
-def getXML(string):
+def get_xml(string):
     """
     Get XML soup from 'string'.
     """
 
     if string.startswith(b'<?xml'):
         try:
-            return newXML(string)
+            return new_xml(string)
         except:  # pragma: no cover
             return None
     try:
-        r = PdfReader(fdata=string)
-        c = r['/Root']
-        m = c.get(PdfName('Data'))
-        return newXML(m.stream.encode('latin-1'))
+        reader = PdfReader(fdata=string)
+        root = reader['/Root']
+        msg = root.get(PdfName('Data'))
+        return new_xml(msg.stream.encode('latin-1'))
     # these are legacy branches; I don't believe such files actually exist
     except:  # pragma: no cover
         try:
-            r = PdfReader(fdata=string)
-            c = r['/Root']
-            m = c.get(PdfName('Metadata'))
-            return newXML(m.stream.encode('latin-1'))
+            reader = PdfReader(fdata=string)
+            root = reader['/Root']
+            msg = root.get(PdfName('Metadata'))
+            return new_xml(msg.stream.encode('latin-1'))
         except:
             try:
-                return newXML(
+                return new_xml(
                     string.encode('latin-1').split('endstream')[0]
                     .split('stream')[1])
             except:
                 try:
-                    return newXML(string.encode('latin-1'))
+                    return new_xml(string.encode('latin-1'))
                 except:
                     return None
 
@@ -640,27 +682,93 @@ def iso2date(tag):
 
     if tag.has_attr('year') and tag.has_attr('month') and tag.has_attr('day'):
         return date(int(tag['year']), int(tag['month']), int(tag['day']))
-    t = tag.text.strip().split('-')
-    return date(int(t[0]), int(t[1]), int(t[2]))
+    res = tag.text.strip().split('-')
+    return date(*map(int, res[:3]))
 
 
-class CanvasXML(Canvas):
+def register_fonts():
     """
-    Subclassed Canvas adding XML information on save.
+    Register fonts used for generation of PDF documents.
     """
 
-    def save(self):
-        data = PDFStream(
-            dictionary=PDFDictionary(
-                {'Type': PDFName('Data'),
-                 'Subtype': PDFName('XML')}),
-            content=self.xml,
-            filters=None)
-        self._doc.Reference(data)
-        if 'Data' not in self._doc.Catalog.__NoDefault__:
-            self._doc.Catalog.__NoDefault__.append('Data')
-        self._doc.Catalog.__setattr__('Data', data)
-        Canvas.save(self)
+    reportlab.rl_config.warnOnMissingFontGlyphs = 0
+
+    registerFont(TTFont(
+        'Bookman',
+        join(FONT_DIR, 'URWBookman-Regular.ttf')))
+
+    registerFont(TTFont(
+        'BookmanB',
+        join(FONT_DIR, 'URWBookman-Bold.ttf')))
+
+    registerFont(TTFont(
+        'BookmanI',
+        join(FONT_DIR, 'URWBookman-Italic.ttf')))
+
+    registerFont(TTFont(
+        'BookmanBI',
+        join(FONT_DIR, 'URWBookman-BoldItalic.ttf')))
+
+    registerFontFamily(
+        'Bookman',
+        normal='Bookman',
+        bold='BookmanB',
+        italic='BookmanI',
+        boldItalic='BookmanBI')
+
+
+def make_pdf(doc, flow, string=None, xml=None):
+    """
+    Finalize PDF document.
+    """
+
+    class CanvasXML(Canvas):
+
+        def save(self):
+            data = PDFStream(
+                dictionary=PDFDictionary(
+                    {'Type': PDFName('Data'),
+                     'Subtype': PDFName('XML')}),
+                content=self.xml,
+                filters=None)
+            self._doc.Reference(data)
+            if 'Data' not in self._doc.Catalog.__NoDefault__:
+                self._doc.Catalog.__NoDefault__.append('Data')
+            self._doc.Catalog.__setattr__('Data', data)
+            Canvas.save(self)
+
+
+    def first_page(canvas, doc):
+        canvas.saveState()
+        if string:
+            canvas.setFont('Bookman', 7)
+            canvas.drawString(64, 48, string)
+        canvas.setFont('BookmanI', 7)
+        canvas.drawRightString(
+            A4[0] - 48,
+            48,
+            'Vytvořeno: {0.day:02d}.{0.month:02d}.{0.year:02d}'
+            .format(today))
+        canvas.restoreState()
+
+    def later_page(canvas, doc):
+        first_page(canvas, doc)
+        canvas.saveState()
+        canvas.setFont('Bookman', 8)
+        canvas.drawCentredString(
+            A4[0] / 2,
+            A4[1] - 30,
+            '– {:d} –'.format(doc.page))
+        canvas.restoreState()
+
+    today = date.today()
+    if xml:
+        CanvasXML.xml = xml
+    doc.build(
+        flow,
+        onFirstPage=first_page,
+        onLaterPages=later_page,
+        canvasmaker=CanvasXML if xml else Canvas)
 
 
 TIMEOUT = 1000
@@ -712,7 +820,7 @@ def send_mail(subject, text, recipients):
         mail.send_mail(
             subject,
             text,
-            'Server {} <{}>'.format(localsubdomain, localemail),
+            'Server {} <{}>'.format(LOCAL_SUBDOMAIN, LOCAL_EMAIL),
             recipients,
             fail_silently=True)
     except:  # pragma: no cover
@@ -724,11 +832,11 @@ class Pager:
     General pager.
     """
 
-    def __init__(self, start, total, url, p, batch):
+    def __init__(self, start, total, url, par, batch):
 
-        def link(n):
-            p['start'] = n
-            return '{}?{}'.format(url, p.urlencode())
+        def link(num):
+            par['start'] = num
+            return '{}?{}'.format(url, par.urlencode())
 
         self.curr = (start // batch) + 1
         self.total = ((total - 1) // batch) + 1
@@ -750,13 +858,13 @@ def composeref(*args):
     """
 
     if args[0]:
-        s = '{:d} '.format(args[0])
+        res = '{:d} '.format(args[0])
     else:
-        s = ''
-    s += '{} {:d}/{:d}'.format(*args[1:4])
+        res = ''
+    res += '{} {:d}/{:d}'.format(*args[1:4])
     if len(args) == 5:
-        s += '-{:d}'.format(args[4])
-    return s
+        res += '-{:d}'.format(args[4])
+    return res
 
 
 def decomposeref(ref):
@@ -764,25 +872,25 @@ def decomposeref(ref):
     Decompose reference into senate, register, number, year and (optional) page.
     """
 
-    s = ref.split('-')
-    if len(s) == 1:
+    res = ref.split('-')
+    if len(res) == 1:
         page = 0
     else:
-        page = int(s[1])
-    s = s[0].split()
-    if s[0].isdigit():
-        senate = int(s[0])
-        del s[0]
+        page = int(res[1])
+    res = res[0].split()
+    if res[0].isdigit():
+        senate = int(res[0])
+        del res[0]
     else:
         senate = 0
-    while not s[1][0].isdigit():
-        s[1] = ' '.join(s[:2])
-        del s[0]
-    register = s[0]
-    t = s[1].split('/')
+    while not res[1][0].isdigit():
+        res[1] = ' '.join(res[:2])
+        del res[0]
+    register = res[0]
+    num_year = res[1].split('/')
     if page:
-        return senate, register, int(t[0]), int(t[1]), page
-    return senate, register, int(t[0]), int(t[1])
+        return senate, register, int(num_year[0]), int(num_year[1]), page
+    return senate, register, int(num_year[0]), int(num_year[1])
 
 
 def normreg(reg):
@@ -790,11 +898,11 @@ def normreg(reg):
     Normalize register 'reg'.
     """
 
-    rl = reg.lower()
-    for r in registers:
-        if r.lower() == rl:
-            return r
-    return reg.title()
+    regl = reg.lower()
+    for reg2 in REGISTERS:
+        if reg2.lower() == regl:
+            return reg2
+    return regl.title()
 
 
 def xmlbool(val):
@@ -851,28 +959,28 @@ def text_opt(needle, haystack, opt):
 
 def normalize(string):
     """
-    Replace hard-spaces, strip and split.
+    Replace hard-spaces, strip, split and join.
     """
     return ' '.join(string.replace('\u00a0', ' ').strip().split())
 
 
-def icmp(x, y):
+def icmp(string1, string2):
     """
     Case-insensitive comparison.
     """
 
-    if x and y:
-        return x.lower() == y.lower()
-    return x == y
+    if string1 and string2:
+        return string1.lower() == string2.lower()
+    return string1 == string2
 
 
-def getpreset(id):
+def getpreset(key):
     """
     Get current preset.
     """
 
     try:
-        return Preset.objects.filter(name=id, valid__lte=date.today()) \
+        return Preset.objects.filter(name=key, valid__lte=date.today()) \
             .latest('valid').value
     except:
         return 0

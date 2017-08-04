@@ -23,8 +23,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator, RegexValidator
 from common.utils import composeref
-from common.glob import register_regex
-from udn.glob import filename_regex
+from common.glob import REGISTER_REGEX
+from udn.glob import FILENAME_REGEX
 
 
 class Agenda(models.Model):
@@ -57,16 +57,16 @@ class Party(models.Model):
 class Decision(models.Model):
 
     senate = models.IntegerField(
-        validators=[MinValueValidator(0)])
+        validators=(MinValueValidator(0),))
 
     register = models.CharField(
         max_length=30,
-        validators=[RegexValidator(regex=register_regex)])
+        validators=(RegexValidator(regex=REGISTER_REGEX),))
 
     number = models.PositiveIntegerField()
 
     year = models.IntegerField(
-        validators=[MinValueValidator(1990)])
+        validators=(MinValueValidator(1990),))
 
     page = models.PositiveIntegerField()
 
@@ -82,12 +82,12 @@ class Decision(models.Model):
 
     filename = models.CharField(
         max_length=255,
-        validators=[RegexValidator(regex=filename_regex)])
+        validators=(RegexValidator(regex=FILENAME_REGEX),))
 
     anonfilename = models.CharField(
         max_length=255,
         blank=True,
-        validators=[RegexValidator(regex=filename_regex)])
+        validators=(RegexValidator(regex=FILENAME_REGEX),))
 
     updated = models.DateTimeField(
         null=True,

@@ -22,17 +22,17 @@
 
 from django.core.validators import RegexValidator
 from common import forms, fields, widgets
-from common.glob import register_regex, text_opts, format_opts
+from common.glob import REGISTER_REGEX, TEXT_OPTS, FORMAT_OPTS
 
 
 class MainForm(forms.Form):
 
     date_from = fields.DateField(
-        widget=widgets.dw(),
+        widget=widgets.Dw(),
         required=False)
 
     date_to = fields.DateField(
-        widget=widgets.dw(),
+        widget=widgets.Dw(),
         required=False)
 
     court = fields.CharField(
@@ -42,26 +42,26 @@ class MainForm(forms.Form):
         initial='0')
 
     senate = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         initial='',
         required=False)
 
     register = fields.CharField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         max_length=30,
-        validators=[RegexValidator(regex=register_regex)],
+        validators=(RegexValidator(regex=REGISTER_REGEX),),
         initial='',
         required=False)
 
     number = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=1,
         initial='',
         required=False)
 
     year = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=1,
         initial='',
         required=False)
@@ -79,19 +79,19 @@ class MainForm(forms.Form):
         initial='')
 
     party = fields.CharField(
-        widget=widgets.sew(),
+        widget=widgets.Sew(),
         required=False,
         max_length=255,
         label='Účastník řízení')
 
     party_opt = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=text_opts,
+        widget=widgets.Rs(),
+        choices=TEXT_OPTS,
         initial='icontains')
 
     format = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=format_opts,
+        widget=widgets.Rs(),
+        choices=FORMAT_OPTS,
         label='Výstupní formát',
         initial='html')
 

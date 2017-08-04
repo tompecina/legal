@@ -23,58 +23,58 @@
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from common import forms, fields, widgets
-from common.glob import register_regex
+from common.glob import REGISTER_REGEX
 from szr.models import Court
-from szr.glob import supreme_court
+from szr.glob import SUPREME_COURT
 
 
 class EmailForm(forms.Form):
 
     email = fields.EmailField(
-        widget=widgets.emw(),
+        widget=widgets.Emw(),
         max_length=60,
         label='E-mail')
 
 
-def courtval(c):
+def courtval(court):
 
-    if not Court.objects.filter(id=c).exists():
+    if not Court.objects.filter(id=court).exists():
         raise ValidationError('Court does not exist')
 
 
 class ProcForm(forms.Form):
 
     court = fields.CharField(
-        widget=widgets.abbrw(),
+        widget=widgets.Abbrw(),
         max_length=30,
         label='Soud',
-        initial=supreme_court,
-        validators=[courtval])
+        initial=SUPREME_COURT,
+        validators=(courtval,))
 
     senate = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=0,
         initial='',
         required=False)
 
     register = fields.CharField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         max_length=30,
         initial='',
-        validators=[RegexValidator(regex=register_regex)])
+        validators=(RegexValidator(regex=REGISTER_REGEX),))
 
     number = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=1,
         initial='')
 
     year = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=1990,
         initial='')
 
     desc = fields.CharField(
-        widget=widgets.genw(),
+        widget=widgets.Genw(),
         max_length=255,
         label='Popis',
         required=False)

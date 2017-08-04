@@ -33,7 +33,7 @@ from sir.cron import sir_notice, cron_update as sir_update
 from dir.cron import dir_notice
 from common.settings import TEST
 from common.utils import send_mail, logger
-from common.glob import localsubdomain, localurl
+from common.glob import LOCAL_SUBDOMAIN, LOCAL_URL
 from common.models import Pending, Lock
 
 
@@ -52,23 +52,23 @@ if TEST:
 
 def cron_notify():
 
-    for u in User.objects.all():
-        uid = u.id
+    for user in User.objects.all():
+        uid = user.id
         text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) \
             + dir_notice(uid)
-        if text and u.email:
-            text += 'Server {} ({})\n'.format(localsubdomain, localurl)
+        if text and user.email:
+            text += 'Server {} ({})\n'.format(LOCAL_SUBDOMAIN, LOCAL_URL)
             send_mail(
-                'Zprava ze serveru {}'.format(localsubdomain),
+                'Zprava ze serveru {}'.format(LOCAL_SUBDOMAIN),
                 text,
-                [u.email])
+                [user.email])
             logger.debug(
                 'Email sent to user "{}" ({:d})'
                 .format(User.objects.get(pk=uid).username, uid))
     logger.info('Emails sent')
 
 
-SCHED = [
+SCHED = (
     {'name': 'cron_notify',
      'when': lambda t: (t.hour % 6) == 0 and t.minute == 0,
     },
@@ -87,7 +87,7 @@ SCHED = [
     },
     {'name': 'psj_schedule',
      'args': '15 22 29',
-     'when': lambda t: t.weekday() in [6, 0, 1, 2, 3] and t.hour == 18 \
+     'when': lambda t: t.weekday() in (6, 0, 1, 2, 3) and t.hour == 18 \
          and t.minute == 31,
      'lock': 'psj',
      'blocking': True,
@@ -110,11 +110,11 @@ SCHED = [
      'when': lambda t: (t.minute % 15) == 0,
     },
     {'name': 'sir_update',
-     'when': lambda t: t.hour in [4, 10, 16, 22] and t.minute == 5,
+     'when': lambda t: t.hour in (4, 10, 16, 22) and t.minute == 5,
      'lock': 'sir',
      'blocking': False,
     },
-]
+)
 
 EXPIRE = timedelta(minutes=30)
 
@@ -127,7 +127,9 @@ def run(name, args):
 def cron_run():
 
     now = datetime.now()
+
     Lock.objects.filter(timestamp_add__lt=(now - EXPIRE)).delete()
+
     for job in Pending.objects.order_by('timestamp_add'):
         if not Pending.objects.filter(pk=job.id).exists():
             continue
@@ -141,6 +143,7 @@ def cron_run():
             logger.debug(
                 'Scheduled job {} with arguments "{}" completed'
                 .format(job.name, args))
+
     for job in SCHED:
         if job['when'](now):
             args = job.get('args', '')

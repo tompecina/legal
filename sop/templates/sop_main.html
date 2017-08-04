@@ -4,35 +4,35 @@
         <form method="post" enctype="multipart/form-data">
 	  <table class="basic">
 	    <tr><td></td><td><h1 class="left">{{ page_title }}</h1></td></tr>
-	    <tr class="{{ f.basis.css_classes }}">
-	      <th>{{ f.basis.label_tag }}</th>
-	      <td>{{ f.basis }}</td>
+	    <tr class="{{ form.basis.css_classes }}">
+	      <th>{{ form.basis.label_tag }}</th>
+	      <td>{{ form.basis }}</td>
 	    </tr>
 	    <tr>
-	      <th class="{{ f.curr.css_classes }}">
-		{{ f.curr.label_tag }}
+	      <th class="{{ form.curr.css_classes }}">
+		{{ form.curr.label_tag }}
 	      </th>
 	      <td>
-		{{ f.curr }}
-		<span class="{{ f.fx_date.css_classes }}" id="id_fx_date_span">&nbsp;{{ f.fx_date.label_tag }} {{ f.fx_date }}</span>
+		{{ form.curr }}
+		<span class="{{ form.fx_date.css_classes }}" id="id_fx_date_span">&nbsp;{{ form.fx_date.label_tag }} {{ form.fx_date }}</span>
 	      </td>
 	    </tr>
 	    <tr>
-	      <th>{{ f.model.label_tag }}</th>
+	      <th>{{ form.model.label_tag }}</th>
 	      <td>
 		<select name="model" id="id_model">
-		  <option value="1"{% if f.model.value == '1' %} selected="selected"{% endif %}>Do 31.08.2011</option>
-		  <option value="2"{% if f.model.value == '2' %} selected="selected"{% endif %}>Od 01.09.2011 do 31.12.2012</option>
-		  <option value="3"{% if f.model.value == '3' %} selected="selected"{% endif %}>Od 01.01.2013 do 31.12.2013</option>
-		  <option value="4"{% if f.model.value == '4' %} selected="selected"{% endif %}>Od 01.01.2014</option>
+		  <option value="1"{% if form.model.value == '1' %} selected="selected"{% endif %}>Do 31.08.2011</option>
+		  <option value="2"{% if form.model.value == '2' %} selected="selected"{% endif %}>Od 01.09.2011 do 31.12.2012</option>
+		  <option value="3"{% if form.model.value == '3' %} selected="selected"{% endif %}>Od 01.01.2013 do 31.12.2013</option>
+		  <option value="4"{% if form.model.value == '4' %} selected="selected"{% endif %}>Od 01.01.2014</option>
 		</select>
 	      </td>
 	    </tr>
 	    <tr><td></td>
 	      <td>
 		<fieldset>
-		  <legend>{{ f.opt.label }}</legend>
-{% for p in f.opt %}		  <div class="opt">{{ p }}</div>
+		  <legend>{{ form.opt.label }}</legend>
+{% for p in form.opt %}		  <div class="opt">{{ p }}</div>
 {% endfor %}		</fieldset>
 	      </td>
 	    </tr>

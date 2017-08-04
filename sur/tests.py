@@ -21,11 +21,12 @@
 #
 
 from http import HTTPStatus
+from os.path import join
 from bs4 import BeautifulSoup
 from django.test import TestCase
 from django.contrib.auth.models import User
 from common.settings import BASE_DIR
-from common.glob import localdomain
+from common.glob import LOCAL_DOMAIN
 from common.tests import link_equal
 from psj.cron import cron_schedule, cron_update as psj_update
 from psj.models import Task, Hearing
@@ -34,42 +35,47 @@ from udn.models import Decision
 from sur import cron, models
 
 
+APP = __package__
+
+TEST_DIR = join(BASE_DIR, APP, 'testdata')
+
+
 class TestCron(TestCase):
 
-    fixtures = ['sur_test.json']
+    fixtures = ('sur_test.json',)
 
     def test_sur_notice(self):
 
-        pp = [
-            ['Jč', 0, 261, 166, 166, 166, 234],
-            ['jČ', 0, 261, 166, 166, 166, 234],
-            ['B', 1, 134, 158, 38, 108],
-            ['b', 1, 134, 158, 38, 108],
-            ['ová', 2, 261, 166, 166, 363, 485, 234, 38, 152, 233],
-            ['OVÁ', 2, 261, 166, 166, 363, 485, 234, 38, 152, 233],
-            ['Luděk Legner', 3, 234],
-            ['LUDĚK legner', 3, 234],
-            ['Mgr. Ivana Rychnovská', 3, 1784],
-            ['MGR. IVANA RYCHNOVSKÁ', 3, 1784],
-            ['Huis', 1, 2, 2],
-            ['hUIS', 1, 2, 2],
-        ]
+        cases = (
+            ('Jč', 0, 261, 166, 166, 166, 234),
+            ('jČ', 0, 261, 166, 166, 166, 234),
+            ('B', 1, 134, 158, 38, 108),
+            ('b', 1, 134, 158, 38, 108),
+            ('ová', 2, 261, 166, 166, 363, 485, 234, 38, 152, 233),
+            ('OVÁ', 2, 261, 166, 166, 363, 485, 234, 38, 152, 233),
+            ('Luděk Legner', 3, 234),
+            ('LUDĚK legner', 3, 234),
+            ('Mgr. Ivana Rychnovská', 3, 1784),
+            ('MGR. IVANA RYCHNOVSKÁ', 3, 1784),
+            ('Huis', 1, 2, 2),
+            ('hUIS', 1, 2, 2),
+        )
 
         self.assertEqual(cron.sur_notice(1), '')
 
-        for p in pp:
+        for test in cases:
             Hearing.objects.all().delete()
             models.Found.objects.all().delete()
             models.Party.objects.all().delete()
-            models.Party(uid_id=1, party=p[0], party_opt=p[1]).save()
+            models.Party(uid_id=1, party=test[0], party_opt=test[1]).save()
             cron_schedule('1.12.2016')
             while Task.objects.exists():
                 psj_update()
             Decision.objects.all().delete()
             udn_update()
             self.assertEqual(
-                list(models.Found.objects.values_list('number', flat=True)),
-                p[2:])
+                tuple(models.Found.objects.values_list('number', flat=True)),
+                test[2:])
 
         Hearing.objects.all().delete()
         models.Found.objects.all().delete()
@@ -149,7 +155,7 @@ správní soud, sp. zn. 4 Ads 208/2015
 
 class TestModels(TestCase):
 
-    fixtures = ['sur_test.json']
+    fixtures = ('sur_test.json',)
 
     def test_models(self):
 
@@ -166,7 +172,7 @@ class TestModels(TestCase):
 class TestViews(TestCase):
 
     def setUp(self):
-        User.objects.create_user('user', 'user@' + localdomain, 'none')
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
         self.user = User.objects.first()
 
     def tearDown(self):
@@ -201,12 +207,12 @@ class TestViews(TestCase):
 
         res = self.client.post(
             '/sur/',
-            {'email': 'alt@' + localdomain,
+            {'email': 'alt@' + LOCAL_DOMAIN,
              'submit': 'Změnit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.user = User.objects.first()
-        self.assertEqual(self.user.email, 'alt@' + localdomain)
+        self.assertEqual(self.user.email, 'alt@' + LOCAL_DOMAIN)
 
         res = self.client.get('/sur/')
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -330,9 +336,9 @@ class TestViews(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'sur_partyform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Nový účastník')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Nový účastník')
 
         res = self.client.post(
             '/sur/partyform/',
@@ -389,9 +395,9 @@ class TestViews(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'sur_partyform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Úprava účastníka')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Úprava účastníka')
 
         res = self.client.post(
             '/sur/partyform/{:d}/'.format(party_id),
@@ -553,11 +559,11 @@ class TestViews(TestCase):
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
 
-        with open(BASE_DIR + '/sur/testdata/import.csv', 'rb') as fi:
+        with open(join(TEST_DIR, 'import.csv'), 'rb') as infile:
             res = self.client.post(
                 '/sur/partybatchform/',
                 {'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partybatchresult.html')
@@ -565,23 +571,25 @@ class TestViews(TestCase):
         self.assertEqual(res.context['count'], 6)
         self.assertEqual(
             res.context['errors'],
-            [[1, 'Chybná délka řetězce'],
-             [3, 'Chybná délka řetězce'],
-             [4, 'Chybná zkratka pro posici'],
-             [5, 'Řetězci "Test 05" odpovídá více než jeden účastník']])
+            [(1, 'Chybná délka řetězce'),
+             (3, 'Chybná délka řetězce'),
+             (4, 'Chybná zkratka pro posici'),
+             (5, 'Řetězci "Test 05" odpovídá více než jeden účastník')])
 
         res = self.client.get('/sur/partyexport/')
         self.assertEqual(
             res.content.decode('utf-8'),
-            'Test 01:*\r\n'
-            'Test 05:*\r\n'
-            'Test 05:*\r\n'
-            'Test 06:*\r\n'
-            'Test 07:*\r\n'
-            'Test 08:<\r\n'
-            'Test 09:>\r\n'
-            'Test 10:=\r\n'
-            + ('T' * 80) + ':*\r\n')
+            '''\
+Test 01:*
+Test 05:*
+Test 05:*
+Test 06:*
+Test 07:*
+Test 08:<
+Test 09:>
+Test 10:=
+{}:*
+'''.format('T' * 80).replace('\n', '\r\n'))
 
     def test_partyexport(self):
 
@@ -621,7 +629,9 @@ class TestViews(TestCase):
         self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
         self.assertEqual(
             res.content.decode('utf-8'),
-            'Test 1:*\r\n'
-            'Test 2:<\r\n'
-            'Test 3:>\r\n'
-            'Test 4:=\r\n')
+            '''\
+Test 1:*
+Test 2:<
+Test 3:>
+Test 4:=
+'''.replace('\n', '\r\n'))

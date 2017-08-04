@@ -28,27 +28,29 @@ from sur.models import Party, Found
 def sur_notice(uid):
 
     text = ''
-    ff = Found.objects.filter(uid=uid).order_by('name', 'id').distinct()
-    if ff:
-        text = 'Byli nově zaznamenáni tito účastníci řízení, ' \
+    res = Found.objects.filter(uid=uid).order_by('name', 'id').distinct()
+    if res:
+        text = \
+            'Byli nově zaznamenáni tito účastníci řízení, ' \
             'které sledujete:\n\n'
-        for f in ff:
-            text += ' - {0.name}, {0.court}, sp. zn. {0.senate:d} ' \
-                '{0.register} {0.number:d}/{0.year:d}\n'.format(f)
-            text += '   {}\n\n'.format(f.url)
+        for item in res:
+            text += \
+                ' - {0.name}, {0.court}, sp. zn. {0.senate:d} ' \
+                '{0.register} {0.number:d}/{0.year:d}\n'.format(item)
+            text += '   {}\n\n'.format(item.url)
         Found.objects.filter(uid=uid).delete()
         logger.info(
             'Non-empty notice prepared for user "{}" ({:d})'
-                .format(User.objects.get(pk=uid).username, uid))
+            .format(User.objects.get(pk=uid).username, uid))
     return text
 
 
 def sur_check(name, court, senate, register, number, year, url):
 
-    for p in Party.objects.all():
-        if text_opt(p.party, name, p.party_opt):
+    for party in Party.objects.all():
+        if text_opt(party.party, name, party.party_opt):
             if Found.objects.update_or_create(
-                    uid_id=p.uid_id,
+                    uid_id=party.uid_id,
                     name=name,
                     court=court,
                     senate=senate,
@@ -59,5 +61,5 @@ def sur_check(name, court, senate, register, number, year, url):
                 logger.info(
                     'New party "{}" detected for user "{}" ({:d})'.format(
                         name,
-                        User.objects.get(pk=p.uid_id).username,
-                        p.uid_id))
+                        User.objects.get(pk=party.uid_id).username,
+                        party.uid_id))

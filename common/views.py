@@ -37,11 +37,11 @@ from django import get_version
 from common.settings import APPS
 from common.forms import UserAddForm, LostPwForm, MIN_PWLEN
 from common.utils import send_mail, logger
-from common.glob import inerr, localsubdomain, localurl
+from common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
 from common.models import PwResetLink
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def robots(request):
 
     logger.debug('robots.txt requested', request)
@@ -51,7 +51,7 @@ def robots(request):
         content_type='text/plain; charset=utf-8')
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 def unauth(request):
 
     logger.debug('Unauthorized access', request)
@@ -63,7 +63,7 @@ def unauth(request):
         status=HTTPStatus.UNAUTHORIZED)
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 def error(request):
 
     logger.debug(
@@ -80,7 +80,7 @@ def error(request):
         status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 def logout(request):
 
     logger.debug(
@@ -96,7 +96,7 @@ def logout(request):
     return redirect('home')
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def pwchange(request):
 
@@ -105,16 +105,16 @@ def pwchange(request):
         request,
         request.POST)
     var = {'page_title': 'Změna hesla'}
-    u = request.user
-    uid = u.id
+    user = request.user
+    uid = user.id
     username = request.user.username
     if request.method == 'POST':
         if request.POST.get('back'):
             return redirect('home')
-        fields = ['oldpassword', 'newpassword1', 'newpassword2']
-        for f in fields:
-            var[f] = request.POST.get(f, '')
-        if not u.check_password(var['oldpassword']):
+        fields = ('oldpassword', 'newpassword1', 'newpassword2')
+        for fld in fields:
+            var[fld] = request.POST.get(fld, '')
+        if not user.check_password(var['oldpassword']):
             var['error_message'] = 'Nesprávné heslo'
             var['oldpassword'] = ''
         elif var['newpassword1'] != var['newpassword2']:
@@ -124,8 +124,8 @@ def pwchange(request):
             var['error_message'] = 'Nové heslo je příliš krátké'
             var['newpassword1'] = var['newpassword2'] = ''
         else:
-            u.set_password(var['newpassword1'])
-            u.save()
+            user.set_password(var['newpassword1'])
+            user.save()
             logger.info(
                 'User "{}" ({:d}) changed password'.format(username, uid),
                 request)
@@ -133,7 +133,7 @@ def pwchange(request):
     return render(request, 'pwchange.html', var)
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 def lostpw(request):
 
     logger.debug(
@@ -143,35 +143,45 @@ def lostpw(request):
     err_message = None
     page_title = 'Ztracené heslo'
     if request.method == 'GET':
-        f = LostPwForm()
+        form = LostPwForm()
     elif request.POST.get('back'):
         return redirect('login')
     else:
-        f = LostPwForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            u = User.objects.filter(username=cd['username'])
-            if u.exists() and u[0].email:
+        form = LostPwForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            users = User.objects.filter(username=cld['username'])
+            if users.exists() and users[0].email:
+                user = users[0]
                 link = '{:032x}'.format(getrandbits(16 * 8))
-                PwResetLink(user_id=u[0].id, link=link).save()
-                text = \
-                    'Vážený uživateli,\n' \
-                    'někdo požádal o obnovení hesla pro Váš účet "{0}" na ' \
-                    'serveru {1} ({2}).\n\n' \
-                    'Pokud skutečně chcete své heslo obnovit, použijte, ' \
-                    'prosím, následující jednorázový odkaz:\n\n' \
-                    '  {2}{3}\n\n' \
-                    'V případě, že jste o obnovení hesla nežádali, ' \
-                    'můžete tuto zprávu ignorovat.\n\n' \
-                    'Server {1} ({2})\n'.format(
-                        u[0].username,
-                        localsubdomain,
-                        localurl,
-                        reverse('resetpw', args=[link]))
-                send_mail('Link pro obnoveni hesla', text, [u[0].email])
+                PwResetLink(user_id=user.id, link=link).save()
+                text = '''\
+Vážený uživateli,
+někdo požádal o obnovení hesla pro Váš účet "{0}" na \
+serveru {1} ({2}).
+
+Pokud skutečně chcete své heslo obnovit, použijte, \
+prosím, následující jednorázový odkaz:
+
+
+  {2}{3}
+
+
+V případě, že jste o obnovení hesla nežádali, \
+můžete tuto zprávu ignorovat.
+
+
+Server {1} ({2})
+''' \
+                .format(
+                    user.username,
+                    LOCAL_SUBDOMAIN,
+                    LOCAL_URL,
+                    reverse('resetpw', args=(link,)))
+                send_mail('Link pro obnoveni hesla', text, (user.email,))
                 logger.info(
                     'Password recovery link for user "{0.username}" '
-                    '({0.id:d}) sent'.format(u[0]),
+                    '({0.id:d}) sent'.format(user),
                     request)
             return redirect('/accounts/pwlinksent/')
         else:
@@ -180,33 +190,33 @@ def lostpw(request):
     return render(
         request,
         'lostpw.html',
-        {'f': f,
+        {'form': form,
          'page_title': page_title,
          'err_message': err_message,
         })
 
 
-LINKLIFE = timedelta(1)
+LINKLIFE = timedelta(days=1)
 PWCHARS = 'ABCDEFGHJKLMNPQRSTUVWXabcdefghijkmnopqrstuvwx23456789'
 PWLEN = 10
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def resetpw(request, link):
 
     logger.debug('Password reset page accessed', request)
     PwResetLink.objects \
         .filter(timestamp_add__lt=(datetime.now() - LINKLIFE)).delete()
-    p = get_object_or_404(PwResetLink, link=link)
-    u = p.user
+    link = get_object_or_404(PwResetLink, link=link)
+    user = link.user
     newpassword = ''
     for dummy in range(PWLEN):
         newpassword += choice(PWCHARS)
-    u.set_password(newpassword)
-    u.save()
-    p.delete()
+    user.set_password(newpassword)
+    user.save()
+    link.delete()
     logger.info(
-        'Password for user "{}" ({:d}) reset'.format(u.username, u.id),
+        'Password for user "{}" ({:d}) reset'.format(user.username, user.id),
         request)
     return render(
         request,
@@ -219,19 +229,19 @@ def resetpw(request, link):
 def getappinfo():
 
     appinfo = []
-    for id in APPS:
-        c = apps.get_app_config(id)
-        version = c.version
+    for app in APPS:
+        conf = apps.get_app_config(app)
+        version = conf.version
         if version:
             appinfo.append(
-                {'id': id,
-                 'name': c.verbose_name,
+                {'id': app,
+                 'name': conf.verbose_name,
                  'version': version,
-                 'url': (id + ':mainpage')})
+                 'url': app + ':mainpage'})
     return appinfo
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def home(request):
 
     logger.debug('Home page accessed', request)
@@ -239,42 +249,47 @@ def home(request):
         request,
         'home.html',
         {'page_title': 'Právnické výpočty',
-         'apps': getappinfo(), 'suppress_home': True})
+         'apps': getappinfo(),
+         'suppress_home': True})
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def about(request):
 
     logger.debug('About page accessed', request)
-    env = [
+
+    env = (
         {'name': 'Python', 'version' : python_version()},
         {'name': 'Django', 'version' : get_version()},
         {'name': 'MySQL',
          'version' : '{:d}.{:d}.{:d}'.format(*connection.mysql_version)},
         {'name': 'Platforma', 'version' : '{0}-{2}'.format(*uname())},
-    ]
+    )
+
     return render(
         request,
         'about.html',
-        {'page_title': 'O aplikaci', 'apps': getappinfo(), 'env': env})
+        {'page_title': 'O aplikaci',
+         'apps': getappinfo(),
+         'env': env})
 
 
 def getappstat():
 
     appstat = []
-    for id in APPS:
-        c = apps.get_app_config(id)
-        if hasattr(c, 'stat'):
+    for app in APPS:
+        conf = apps.get_app_config(app)
+        if hasattr(conf, 'stat'):
             appstat.append(
-                {'abbr': c.name,
-                 'name': c.verbose_name,
-                 'stat': c.stat(),
+                {'abbr': conf.name,
+                 'name': conf.verbose_name,
+                 'stat': conf.stat(),
                 })
     logger.debug('Statistics combined')
     return appstat
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def stat(request):
 
     logger.debug('Statistics page accessed', request)
@@ -288,20 +303,20 @@ def stat(request):
 
 def getuserinfo(user):
 
-    userinfo = []
-    for id in APPS:
-        c = apps.get_app_config(id)
-        if hasattr(c, 'userinfo'):
-            userinfo.extend(c.userinfo(user))
+    res = []
+    for idx in APPS:
+        conf = apps.get_app_config(idx)
+        if hasattr(conf, 'userinfo'):
+            res.extend(conf.userinfo(user))
     logger.debug(
         'User information combined for user "{0.username}" ({0.id:d})'
         .format(user))
-    return userinfo
+    return res
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 @login_required
-def user(request):
+def userinfo(request):
 
     logger.debug('User information page accessed', request)
     return render(
@@ -312,7 +327,7 @@ def user(request):
         })
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 def useradd(request):
 
     logger.debug(
@@ -321,18 +336,18 @@ def useradd(request):
         request.POST)
     err_message = None
     if request.method == 'GET':
-        f = UserAddForm()
+        form = UserAddForm()
     else:
-        f = UserAddForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
+        form = UserAddForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
             user = User.objects.create_user(
-                cd['username'],
-                cd['email'],
-                cd['password1'])
+                cld['username'],
+                cld['email'],
+                cld['password1'])
             if user:
-                user.first_name = cd['first_name']
-                user.last_name = cd['last_name']
+                user.first_name = cld['first_name']
+                user.last_name = cld['last_name']
                 user.save()
                 logout(request)
                 logger.info(
@@ -343,21 +358,21 @@ def useradd(request):
             return error(request)  # pragma: no cover
         else:
             logger.debug('Invalid form', request)
-            err_message = inerr
-            if 'Duplicate username' in f['username'].errors.as_text():
+            err_message = INERR
+            if 'Duplicate username' in form['username'].errors.as_text():
                 err_message = 'Toto uživatelské jméno se již používá'
                 logger.debug('Duplicate user name', request)
     return render(
         request,
         'useradd.html',
-        {'f': f,
+        {'form': form,
          'page_title': 'Registrace nového uživatele',
          'err_message': err_message,
          'suppress_topline': True,
         })
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 def genrender(request, template=None, **kwargs):
 
     logger.debug(

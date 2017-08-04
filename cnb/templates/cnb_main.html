@@ -8,13 +8,13 @@
 	      <td>
 		<fieldset>
 		  <legend>Devisové kursy</legend>
-		  <div class="ptm"><span class="{{ f.curr.css_classes }}">{{ f.curr.label_tag }}</span>
-		    {{ f.curr }}
-		    <span class="{{ f.fx_date.css_classes }}">&nbsp;{{ f.fx_date.label_tag }} {{ f.fx_date }}</span>
+		  <div class="ptm"><span class="{{ form.curr.css_classes }}">{{ form.curr.label_tag }}</span>
+		    {{ form.curr }}
+		    <span class="{{ form.fx_date.css_classes }}">&nbsp;{{ form.fx_date.label_tag }} {{ form.fx_date }}</span>
 		  </div>
 		  <div><input type="submit" name="submit_show_fx" value="Zobrazit kurs" /></div>
 		  <hr />
-		  <div class="{{ f.basis.css_classes }}">{{ f.basis.label_tag }} {{ f.basis }}</div>
+		  <div class="{{ form.basis.css_classes }}">{{ form.basis.label_tag }} {{ form.basis }}</div>
 		  <div><input type="submit" name="submit_conv_from" value="Převod cizí měna → CZK" /></div>
 		  <div><input type="submit" name="submit_conv_to" value="Převod CZK → cizí měna" /></div>
 	        </fieldset>
@@ -24,7 +24,7 @@
 	      <td>
 		<fieldset>
 		  <legend>Úrokové sazby</legend>
-		  <div class="{{ f.mpi_date.css_classes }}">{{ f.mpi_date.label_tag }} {{ f.mpi_date }}</div>
+		  <div class="{{ form.mpi_date.css_classes }}">{{ form.mpi_date.label_tag }} {{ form.mpi_date }}</div>
 		  <div><input type="submit" name="submit_DISC" value="Diskontní sazba" /></div>
 		  <div><input type="submit" name="submit_LOMB" value="Lombardní sazba" /></div>
 		  <div><input type="submit" name="submit_REPO" value="2T repo sazba" /></div>

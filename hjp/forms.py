@@ -23,36 +23,38 @@
 from common import forms, fields, widgets
 
 
-tr_opts = (
+TR_OPTS = (
     ('debit', 'závazek'),
     ('credit', 'splátka'),
-    ('balance', 'zůstatek'))
+    ('balance', 'zůstatek'),
+)
 
-rep_opts = (
+REP_OPTS = (
     ('interest', 'napřed úrok'),
-    ('principal', 'napřed jistina'))
+    ('principal', 'napřed jistina'),
+)
 
 
 class TransForm(forms.Form):
 
     description = fields.CharField(
-        widget=widgets.genw(),
+        widget=widgets.Genw(),
         max_length=255,
         required=False,
         label='Popis')
 
     transaction_type = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=tr_opts,
+        widget=widgets.Rs(),
+        choices=TR_OPTS,
         label='Typ',
         initial='balance')
 
     date = fields.DateField(
-        widget=widgets.dw(today=True),
+        widget=widgets.Dw(today=True),
         label='Datum')
 
     amount = fields.DecimalField(
-        widget=widgets.aw(),
+        widget=widgets.Aw(),
         max_digits=15,
         decimal_places=2,
         min_value=0.0,
@@ -61,8 +63,8 @@ class TransForm(forms.Form):
         localize=True)
 
     repayment_preference = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=rep_opts,
+        widget=widgets.Rs(),
+        choices=REP_OPTS,
         required=False,
         label='Přednost',
         initial='interest')
@@ -74,7 +76,7 @@ class TransForm(forms.Form):
         return data
 
 
-int_opts = (
+INT_OPTS = (
     ('none', 'Bez úroku'),
     ('fixed', 'Pevná částka'),
     ('per_annum', 'Roční úrok'),
@@ -89,24 +91,25 @@ int_opts = (
     ('cust5', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
      '(účinnost od 01.07.2013 do 31.12.2013)'),
     ('cust6', 'Úrok z prodlení podle nařízení č. 351/2013 Sb.'),
-    ('cust4', 'Poplatek z prodlení podle nařízení č. 142/1994 Sb.'))
+    ('cust4', 'Poplatek z prodlení podle nařízení č. 142/1994 Sb.'),
+)
 
 
 class MainForm(forms.Form):
 
     title = fields.CharField(
-        widget=widgets.genw(),
+        widget=widgets.Genw(),
         max_length=255,
         required=False,
         label='Popis')
 
     note = fields.CharField(
-        widget=widgets.taw(),
+        widget=widgets.Taw(),
         required=False,
         label='Poznámka')
 
     internal_note = fields.CharField(
-        widget=widgets.taw(),
+        widget=widgets.Taw(),
         required=False,
         label='Interní poznámka')
 
@@ -118,12 +121,12 @@ class MainForm(forms.Form):
         label='Zaokrouhlení')
 
     model = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=int_opts,
+        widget=widgets.Rs(),
+        choices=INT_OPTS,
         label='Úročení')
 
     fixed_amount = fields.DecimalField(
-        widget=widgets.aw(),
+        widget=widgets.Aw(),
         max_digits=15,
         decimal_places=2,
         min_value=0.0,
@@ -131,7 +134,7 @@ class MainForm(forms.Form):
         localize=True)
 
     pa_rate = fields.DecimalField(
-        widget=widgets.ratew(),
+        widget=widgets.Ratew(),
         max_digits=12,
         decimal_places=6,
         required=False,
@@ -142,7 +145,7 @@ class MainForm(forms.Form):
         required=False)
 
     pm_rate = fields.DecimalField(
-        widget=widgets.ratew(),
+        widget=widgets.Ratew(),
         max_digits=12,
         decimal_places=6,
         required=False,
@@ -153,14 +156,14 @@ class MainForm(forms.Form):
         required=False)
 
     pd_rate = fields.DecimalField(
-        widget=widgets.ratew(),
+        widget=widgets.Ratew(),
         max_digits=12,
         decimal_places=6,
         required=False,
         localize=True)
 
     next = fields.CharField(
-        widget=widgets.hw(),
+        widget=widgets.Hw(),
         required=False)
 
     def clean_note(self):
@@ -171,24 +174,24 @@ class MainForm(forms.Form):
 
     def clean_fixed_amount(self):
         data = self.cleaned_data['fixed_amount']
-        if (self.data['model'] == 'fixed') and (not data):
+        if self.data['model'] == 'fixed' and not data:
             raise forms.ValidationError('Amount is required')
         return data
 
     def clean_pa_rate(self):
         data = self.cleaned_data['pa_rate']
-        if (self.data['model'] == 'per_annum') and (not data):
+        if self.data['model'] == 'per_annum' and not data:
             raise forms.ValidationError('Interest rate is required')
         return data
 
     def clean_pm_rate(self):
         data = self.cleaned_data['pm_rate']
-        if (self.data['model'] == 'per_mensem') and (not data):
+        if self.data['model'] == 'per_mensem' and not data:
             raise forms.ValidationError('Interest rate is required')
         return data
 
     def clean_pd_rate(self):
         data = self.cleaned_data['pd_rate']
-        if (self.data['model'] == 'per_diem') and (not data):
+        if self.data['model'] == 'per_diem' and not data:
             raise forms.ValidationError('Interest rate is required')
         return data

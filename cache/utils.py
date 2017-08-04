@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# cache/main.py
+# cache/utils.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -29,20 +29,20 @@ from .models import Cache, Asset
 
 def getcache(url, lifespan):
     Cache.objects.filter(expire__lt=datetime.now()).delete()
-    c = Cache.objects.filter(url=url)
-    if c:
-        return c[0].text, None
-    u = get(url)
-    if not u.ok:
+    cache = Cache.objects.filter(url=url)
+    if cache:
+        return cache[0].text, None
+    res = get(url)
+    if not res.ok:
         logger.warning('Failed to access URL: "{}"'.format(url))
         return None, 'Chyba při komunikaci se serverem'
-    t = u.text
+    txt = res.text
     Cache(
         url=url,
-        text=t,
-        expire=((datetime.now() + lifespan) if lifespan else None)
+        text=txt,
+        expire=datetime.now() + lifespan if lifespan else None,
     ).save()
-    return t, None
+    return txt, None
 
 
 def getasset(request, asset):
@@ -50,8 +50,8 @@ def getasset(request, asset):
     sid = request.COOKIES.get('sessionid')
     if not sid:
         return None
-    a = Asset.objects.filter(sessionid=sid, assetid=asset)
-    return b64decode(a[0].data) if a else None
+    asset = Asset.objects.filter(sessionid=sid, assetid=asset)
+    return b64decode(asset[0].data) if asset else None
 
 
 @atomic
@@ -64,6 +64,6 @@ def setasset(request, asset, data, lifespan):
         sessionid=sid,
         assetid=asset,
         data=b64encode(data),
-        expire=((datetime.now() + lifespan) if lifespan else None)
+        expire=datetime.now() + lifespan if lifespan else None,
     ).save()
     return True

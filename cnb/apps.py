@@ -34,14 +34,14 @@ class CnbConfig(AppConfig):
         from cnb.models import FXrate, MPIrate, MPIstat
         from common.utils import logger
         logger.debug('Partial statistics generated')
-        return [
-            [
+        return (
+            (
                 'Počet kursových tabulek',
-                FXrate.objects.count()],
-            [
+                FXrate.objects.count()),
+            (
                 'Počet historických úrokových sazeb',
-                MPIrate.objects.count()],
-            [
+                MPIrate.objects.count()),
+            (
                 'Počet aktuálních úrokových sazeb',
-                MPIstat.objects.count()],
-        ]
+                MPIstat.objects.count()),
+        )

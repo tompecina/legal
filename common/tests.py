@@ -50,17 +50,17 @@ class DummyResponse:
         if content:
             self.content = content.encode('utf-8')
         self.status_code = status
-        self.ok = (status == HTTPStatus.OK)
+        self.ok = status == HTTPStatus.OK
 
 
-def stripxml(s):
+def strip_xml(string):
 
     xml_regex = compile(r'^(<[^<]+<\w+)[^>]*(.*)$')
 
     try:
-        s = s.decode('utf-8')
-        m = xml_regex.match(s)
-        return m.group(1) + m.group(2)
+        string = string.decode('utf-8')
+        match = xml_regex.match(string)
+        return match.group(1) + match.group(2)
     except:
         return ''
 
@@ -70,58 +70,58 @@ def testreq(post, *args):
     testdata_prefix = join(BASE_DIR, 'common', 'testdata')
 
     if post:
-        r, d = args
-        if isinstance(d, bytes):
-            d = {'bytes': d.decode()}
+        req, data = args
+        if isinstance(data, bytes):
+            data = {'bytes': data.decode()}
     else:
-        n = args[0]
-        if '?' in n:
-            r, q = n.split('?', 1)
+        url = args[0]
+        if '?' in url:
+            req, query = url.split('?', 1)
         else:
-            r = n
-            q = ''
-        d = QueryDict(q).dict()
-    m = md5(r.encode())
-    for k in sorted(d):
-        m.update(k.encode())
-        m.update(d[k].encode())
-    fn = m.hexdigest() + '.dat'
+            req = url
+            query = ''
+        data = QueryDict(query).dict()
+    hsh = md5(req.encode())
+    for key in sorted(data):
+        hsh.update(key.encode())
+        hsh.update(data[key].encode())
+    filename = hsh.hexdigest() + '.dat'
     try:
-        with open(join(testdata_prefix, fn), 'rb') as fi:
-            return DummyResponse(fi.read().decode())
+        with open(join(testdata_prefix, filename), 'rb') as infile:
+            return DummyResponse(infile.read().decode())
     except:
         return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
 
 
-def link_equal(a, b):
+def link_equal(link1, link2):
 
-    a = a.split('?')
-    b = b.split('?')
-    if a[0] != b[0]:  # pragma: no cover
+    link1 = link1.split('?')
+    link2 = link2.split('?')
+    if link1[0] != link2[0]:  # pragma: no cover
         return False
-    a = a[1].split('&')
-    b = b[1].split('&')
-    return sorted(a) == sorted(b)
+    link1 = link1[1].split('&')
+    link2 = link2[1].split('&')
+    return sorted(link1) == sorted(link2)
 
 
-def setcounter(k, n):
+def setcounter(key, num):
 
-    Counter.objects.update_or_create(id=k, defaults={'number': n})
-
-
-def setdl(n):
-
-    setcounter('DL', n)
+    Counter.objects.update_or_create(id=key, defaults={'number': num})
 
 
-def setpr(n):
+def setdl(num):
 
-    setcounter('PR', n)
+    setcounter('DL', num)
 
 
-def getcounter(k):
+def setpr(num):
 
-    return Counter.objects.get(id=k).number
+    setcounter('PR', num)
+
+
+def getcounter(key):
+
+    return Counter.objects.get(id=key).number
 
 
 def getdl():
@@ -136,49 +136,57 @@ def getpr():
 
 class TestCron(TestCase):
 
-    fixtures = ['common_test.json']
+    fixtures = ('common_test.json',)
 
     def test_szr_notice(self):
 
         for dummy in range(Proceedings.objects.count()):
             cron_update()
         cron.cron_notify()
-        m = mail.outbox
-        self.assertEqual(len(m), 1)
-        m = m[0]
+        msgs = mail.outbox
+        self.assertEqual(len(msgs), 1)
+        msg = msgs[0]
         self.assertEqual(
-            m.from_email,
-            'Server {} <{}>'.format(glob.localsubdomain, glob.localemail))
+            msg.from_email,
+            'Server {} <{}>'.format(glob.LOCAL_SUBDOMAIN, glob.LOCAL_EMAIL))
         self.assertEqual(
-            m.to,
-            ['tomas@' + glob.localdomain])
+            msg.to,
+            ['tomas@' + glob.LOCAL_DOMAIN])
         self.assertEqual(
-            m.subject,
-            'Zprava ze serveru ' + glob.localsubdomain)
+            msg.subject,
+            'Zprava ze serveru ' + glob.LOCAL_SUBDOMAIN)
         self.assertEqual(
-            m.body,
-            'V těchto soudních řízeních, která sledujete, došlo ke změně:\n\n'
-            ' - Nejvyšší soud, sp. zn. 8 Tdo 819/2015\n'
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?'
-            'org=NSJIMBM&krajOrg=NSJIMBM&cisloSenatu=8&druhVec=TDO&'
-            'bcVec=819&rocnik=2015&typSoudu=ns&autoFill=true&type=spzn\n\n'
-            ' - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)\n'
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?'
-            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=41&druhVec=T'
-            '&bcVec=3&rocnik=2016&typSoudu=os&autoFill=true&type=spzn\n\n'
-            ' - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 '
-            '(Miloš Zbránek)\n'
-            '   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&'
-            'kau_id=173442\n\n'
-            ' - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)\n'
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?'
-            'org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=10&druhVec=T'
-            '&bcVec=8&rocnik=2014&typSoudu=os&autoFill=true&type=spzn\n\n'
-            ' - Obvodní soud Praha 2, sp. zn. 6 T 136/2013 (RWU)\n'
-            '   http://infosoud.justice.cz/InfoSoud/public/search.do?'
-            'org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T'
-            '&bcVec=136&rocnik=2013&typSoudu=os&autoFill=true&type=spzn\n\n'
-            'Server {} ({})\n'.format(glob.localsubdomain, glob.localurl))
+            msg.body,
+            '''\
+V těchto soudních řízeních, která sledujete, došlo ke změně:
+
+ - Nejvyšší soud, sp. zn. 8 Tdo 819/2015
+   http://infosoud.justice.cz/InfoSoud/public/search.do?\
+org=NSJIMBM&krajOrg=NSJIMBM&cisloSenatu=8&druhVec=TDO&\
+bcVec=819&rocnik=2015&typSoudu=ns&autoFill=true&type=spzn
+
+ - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)
+   http://infosoud.justice.cz/InfoSoud/public/search.do?\
+org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=41&druhVec=T\
+&bcVec=3&rocnik=2016&typSoudu=os&autoFill=true&type=spzn
+
+ - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 \
+(Miloš Zbránek)
+   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&\
+kau_id=173442
+
+ - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)
+   http://infosoud.justice.cz/InfoSoud/public/search.do?\
+org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=10&druhVec=T\
+&bcVec=8&rocnik=2014&typSoudu=os&autoFill=true&type=spzn
+
+ - Obvodní soud Praha 2, sp. zn. 6 T 136/2013 (RWU)
+   http://infosoud.justice.cz/InfoSoud/public/search.do?\
+org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T\
+&bcVec=136&rocnik=2013&typSoudu=os&autoFill=true&type=spzn
+
+Server {} ({})
+'''.format(glob.LOCAL_SUBDOMAIN, glob.LOCAL_URL))
 
     def test_run(self):
 
@@ -196,10 +204,11 @@ class TestCron(TestCase):
 
         cron.cron_clean()
 
-        cron.SCHED = [
+        cron.SCHED = (
             {'name': 'test_func',
              'when': lambda t: True,
-            }]
+            },
+        )
         cron.test_result = 0
         cron.cron_run()
         self.assertEqual(cron.test_result, 6)
@@ -208,12 +217,13 @@ class TestCron(TestCase):
         self.assertFalse(cron.test_lock)
         self.assertFalse(cron.test_pending)
 
-        cron.SCHED = [
+        cron.SCHED = (
             {'name': 'test_func',
              'when': lambda t: True,
              'lock': 'test',
              'blocking': False,
-            }]
+            },
+        )
         cron.test_result = 0
         cron.cron_run()
         self.assertEqual(cron.test_result, 6)
@@ -223,12 +233,13 @@ class TestCron(TestCase):
         self.assertFalse(cron.test_pending)
         self.assertEqual(cron.test_lock[0].name, 'test')
 
-        cron.SCHED = [
+        cron.SCHED = (
             {'name': 'test_func',
              'when': lambda t: True,
              'lock': 'test',
              'blocking': True,
-            }]
+            },
+        )
         cron.test_result = 0
         cron.cron_run()
         self.assertEqual(cron.test_result, 6)
@@ -239,49 +250,52 @@ class TestCron(TestCase):
         self.assertEqual(cron.test_lock[0].name, 'test')
         models.Lock(name='test').save()
 
-        cron.SCHED = [
+        cron.SCHED = (
             {'name': 'test_func',
              'when': lambda t: True,
              'lock': 'test',
              'blocking': False,
-            }]
+            },
+        )
         cron.test_result = 0
         cron.cron_run()
         self.assertEqual(cron.test_result, 0)
         self.assertEqual(models.Lock.objects.count(), 1)
         self.assertFalse(models.Pending.objects.exists())
 
-        cron.SCHED = [
+        cron.SCHED = (
             {'name': 'test_func',
              'when': lambda t: True,
              'lock': 'test',
              'blocking': True,
-            }]
+            },
+        )
         cron.test_result = 0
         cron.cron_run()
         self.assertEqual(cron.test_result, 0)
         self.assertEqual(models.Lock.objects.count(), 1)
         self.assertEqual(models.Pending.objects.count(), 1)
 
-        cron.SCHED = [
+        cron.SCHED = (
             {'name': 'test_func',
              'args': '1',
              'when': lambda t: True,
              'lock': 'test',
              'blocking': True,
-            }]
+            },
+        )
         cron.test_result = 0
         cron.cron_run()
         self.assertEqual(cron.test_result, 0)
         self.assertEqual(models.Lock.objects.count(), 1)
         self.assertEqual(models.Pending.objects.count(), 2)
-        p = models.Pending.objects.latest('timestamp_add')
-        self.assertEqual(p.name, 'test_func')
-        self.assertEqual(p.args, '1')
-        self.assertEqual(p.lock, 'test')
+        pend = models.Pending.objects.latest('timestamp_add')
+        self.assertEqual(pend.name, 'test_func')
+        self.assertEqual(pend.args, '1')
+        self.assertEqual(pend.lock, 'test')
 
         cron.cron_unlock()
-        cron.SCHED = []
+        cron.SCHED = ()
         cron.test_result = 0
         cron.cron_run()
         self.assertEqual(cron.test_result, 2)
@@ -289,13 +303,14 @@ class TestCron(TestCase):
         self.assertFalse(models.Pending.objects.exists())
 
         models.Lock(name='another').save()
-        cron.SCHED = [
+        cron.SCHED = (
             {'name': 'test_func',
              'args': '4',
              'when': lambda t: True,
              'lock': 'test',
              'blocking': True,
-            }]
+            },
+        )
         cron.test_result = 0
         cron.cron_run()
         self.assertEqual(cron.test_result, 8)
@@ -307,7 +322,7 @@ class TestCron(TestCase):
             timestamp_add=(datetime.now() - cron.EXPIRE - timedelta(1)))
         self.assertEqual(models.Lock.objects.count(), 2)
 
-        cron.SCHED = []
+        cron.SCHED = ()
         cron.test_result = 0
         cron.cron_run()
         self.assertEqual(cron.test_result, 0)
@@ -336,156 +351,156 @@ class TestCron(TestCase):
 
 class TestFields(SimpleTestCase):
 
-    def test_prnum(self):
+    def test_proc_num(self):
 
-        self.assertEqual(fields.prnum('−11.216 530,5'), '-11216530.5')
+        self.assertEqual(fields.proc_num('−11.216 530,5'), '-11216530.5')
 
-    def test_DateField(self):
+    def test_date_field(self):
 
-        f = fields.DateField()
-        self.assertIsNone(f.to_python([]))
+        fld = fields.DateField()
+        self.assertIsNone(fld.to_python(()))
         self.assertEqual(
-            f.to_python(datetime(2012, 4, 3, 15, 32)),
+            fld.to_python(datetime(2012, 4, 3, 15, 32)),
             date(2012, 4, 3))
-        self.assertEqual(f.to_python(date(2012, 4, 3)), date(2012, 4, 3))
-        self.assertEqual(f.to_python('3.4.2012'), date(2012, 4, 3))
-        self.assertEqual(f.to_python('03.04.2012'), date(2012, 4, 3))
-        self.assertEqual(f.to_python('3. 4. 2012'), date(2012, 4, 3))
-        self.assertEqual(f.to_python('03. 04. 2012'), date(2012, 4, 3))
+        self.assertEqual(fld.to_python(date(2012, 4, 3)), date(2012, 4, 3))
+        self.assertEqual(fld.to_python('3.4.2012'), date(2012, 4, 3))
+        self.assertEqual(fld.to_python('03.04.2012'), date(2012, 4, 3))
+        self.assertEqual(fld.to_python('3. 4. 2012'), date(2012, 4, 3))
+        self.assertEqual(fld.to_python('03. 04. 2012'), date(2012, 4, 3))
 
-    def test_AmountField(self):
+    def test_amount_field(self):
 
-        f = fields.AmountField()
-        self.assertIsNone(f.prepare_value([]))
+        fld = fields.AmountField()
+        self.assertIsNone(fld.prepare_value(()))
 
-        f.rounding = 0
-        self.assertEqual(f.prepare_value(115), '115')
-        self.assertEqual(f.prepare_value(115.6), '116')
-        self.assertEqual(f.prepare_value('115'), '115')
-        self.assertIsNone(f.to_python([]))
-        self.assertEqual(f.to_python('−11.216 530,7'), -11216531)
+        fld.rounding = 0
+        self.assertEqual(fld.prepare_value(115), '115')
+        self.assertEqual(fld.prepare_value(115.6), '116')
+        self.assertEqual(fld.prepare_value('115'), '115')
+        self.assertIsNone(fld.to_python(()))
+        self.assertEqual(fld.to_python('−11.216 530,7'), -11216531)
         with self.assertRaises(forms.ValidationError):
-            f.to_python('x')
+            fld.to_python('x')
 
-        f.rounding = 2
-        self.assertEqual(f.prepare_value(115), '115,00')
-        self.assertEqual(f.prepare_value(115.6), '115,60')
-        self.assertAlmostEqual(f.to_python('−11.216 530,7'), -11216530.7)
+        fld.rounding = 2
+        self.assertEqual(fld.prepare_value(115), '115,00')
+        self.assertEqual(fld.prepare_value(115.6), '115,60')
+        self.assertAlmostEqual(fld.to_python('−11.216 530,7'), -11216530.7)
 
-    def test_DecimalField(self):
+    def test_decimal_field(self):
 
-        f = fields.DecimalField()
-        self.assertIsNone(f.to_python([]))
+        fld = fields.DecimalField()
+        self.assertIsNone(fld.to_python(()))
         self.assertAlmostEqual(
-            f.to_python('−11.216 530,7'),
+            fld.to_python('−11.216 530,7'),
             Decimal(-11216530.7))
-        self.assertIsInstance(f.to_python('−11.216 530,7'), Decimal)
-        self.assertAlmostEqual(f.to_python(-11216530.7), Decimal(-11216530.7))
-        self.assertIsInstance(f.to_python(-11216530.7), Decimal)
+        self.assertIsInstance(fld.to_python('−11.216 530,7'), Decimal)
+        self.assertAlmostEqual(fld.to_python(-11216530.7), Decimal(-11216530.7))
+        self.assertIsInstance(fld.to_python(-11216530.7), Decimal)
         with self.assertRaises(forms.ValidationError):
-            f.to_python('x')
+            fld.to_python('x')
 
-    def test_FloatField(self):
+    def test_float_field(self):
 
-        f = fields.FloatField()
-        self.assertIsNone(f.to_python([]))
-        self.assertAlmostEqual(f.to_python('−11.216 530,7'), -11216530.7)
-        self.assertAlmostEqual(f.to_python(-11216530.7), -11216530.7)
+        fld = fields.FloatField()
+        self.assertIsNone(fld.to_python(()))
+        self.assertAlmostEqual(fld.to_python('−11.216 530,7'), -11216530.7)
+        self.assertAlmostEqual(fld.to_python(-11216530.7), -11216530.7)
         with self.assertRaises(forms.ValidationError):
-            f.to_python('x')
+            fld.to_python('x')
 
-    def test_IntegerField(self):
+    def test_integer_field(self):
 
-        f = fields.IntegerField()
-        self.assertIsNone(f.to_python([]))
-        self.assertEqual(f.to_python('−11.216 530,7'), -11216530)
-        self.assertEqual(f.to_python(-11216530.7), -11216530)
+        fld = fields.IntegerField()
+        self.assertIsNone(fld.to_python(()))
+        self.assertEqual(fld.to_python('−11.216 530,7'), -11216530)
+        self.assertEqual(fld.to_python(-11216530.7), -11216530)
         with self.assertRaises(forms.ValidationError):
-            f.to_python('x')
+            fld.to_python('x')
 
-    def test_CurrencyField(self):
+    def test_currency_field(self):
 
-        f = fields.CurrencyField()
-        self.assertIsNone(f.compress([]))
-        self.assertEqual(f.compress(['EUR', 'xxx']), 'EUR')
-        self.assertEqual(f.compress(['OTH', 'xxx']), 'XXX')
+        fld = fields.CurrencyField()
+        self.assertIsNone(fld.compress(()))
+        self.assertEqual(fld.compress(('EUR', 'xxx')), 'EUR')
+        self.assertEqual(fld.compress(('OTH', 'xxx')), 'XXX')
         with self.assertRaises(forms.ValidationError):
-            f.validate([])
+            fld.validate(())
 
 
 class TestForms(TestCase):
 
-    def test_UserAddForm(self):
+    def test_user_add_form(self):
 
         User.objects.create_user(
             'existing',
-            'existing@' + glob.localdomain, 'none')
-        s = {'first_name': 'New',
-             'last_name': 'User',
-             'username': 'new',
-             'password1': 'nopassword',
-             'password2': 'nopassword',
-             'captcha': 'Praha'}
-        self.assertTrue(forms.UserAddForm(s).is_valid())
+            'existing@' + glob.LOCAL_DOMAIN, 'none')
+        src = {
+            'first_name': 'New',
+            'last_name': 'User',
+            'username': 'new',
+            'password1': 'nopassword',
+            'password2': 'nopassword',
+            'captcha': 'Praha',
+        }
+        self.assertTrue(forms.UserAddForm(src).is_valid())
 
-        d = copy(s)
-        del d['password1']
-        del d['password2']
-        self.assertFalse(forms.UserAddForm(d).is_valid())
+        dst = copy(src)
+        del dst['password1']
+        del dst['password2']
+        self.assertFalse(forms.UserAddForm(dst).is_valid())
 
-        d = copy(s)
-        d['password2'] = 'different'
-        self.assertFalse(forms.UserAddForm(d).is_valid())
+        dst = copy(src)
+        dst['password2'] = 'different'
+        self.assertFalse(forms.UserAddForm(dst).is_valid())
 
-        d = copy(s)
-        d['captcha'] = 'praha'
-        self.assertTrue(forms.UserAddForm(d).is_valid())
+        dst = copy(src)
+        dst['captcha'] = 'praha'
+        self.assertTrue(forms.UserAddForm(dst).is_valid())
 
-        d = copy(s)
-        d['captcha'] = 'Brno'
-        self.assertFalse(forms.UserAddForm(d).is_valid())
+        dst = copy(src)
+        dst['captcha'] = 'Brno'
+        self.assertFalse(forms.UserAddForm(dst).is_valid())
 
-        d = copy(s)
-        d['username'] = 'existing'
-        self.assertFalse(forms.UserAddForm(d).is_valid())
+        dst = copy(src)
+        dst['username'] = 'existing'
+        self.assertFalse(forms.UserAddForm(dst).is_valid())
 
 
 class TestGlob(SimpleTestCase):
 
     def test_register_regex(self):
 
-        rr = compile(glob.register_regex)
+        register_re = compile(glob.REGISTER_REGEX)
 
-        for p in glob.registers:
-            self.assertIsNotNone(rr.match(p), msg=p)
+        for reg in glob.REGISTERS:
+            self.assertIsNotNone(register_re.match(reg), msg=reg)
 
-        for p in ['X', '']:
-            self.assertIsNone(rr.match(p), msg=p)
+        for reg in ('X', ''):
+            self.assertIsNone(register_re.match(reg), msg=reg)
 
 
 class TestModels(TestCase):
 
     def test_models(self):
 
-        User.objects.create_user('user', 'user@' + glob.localdomain, 'none')
+        User.objects.create_user('user', 'user@' + glob.LOCAL_DOMAIN, 'none')
         uid = User.objects.all()[0].id
 
-        p = models.PwResetLink(
+        pwd = models.PwResetLink(
             user_id=uid,
             link=('0' * 32))
-        self.assertEqual(str(p), ('0' * 32))
+        self.assertEqual(str(pwd), ('0' * 32))
 
-        p = models.Preset(
+        pwd = models.Preset(
             name='Test',
             value=15,
             valid=date(2016, 5, 18))
-        self.assertEqual(str(p), 'Test, 2016-05-18')
+        self.assertEqual(str(pwd), 'Test, 2016-05-18')
 
 
-def proc_link(l):
-    if not l:
-        return -1
-    return int(l.split('=')[-1])
+def proc_link(link):
+    return int(link.split('=')[-1]) if link else -1
 
 
 class TestUtils1(SimpleTestCase):
@@ -504,9 +519,28 @@ class TestUtils1(SimpleTestCase):
         self.assertFalse(utils.between(1, -2, 3))
         self.assertFalse(utils.between(1, 4, 3))
 
+    def test_more(self):
+
+        self.assertFalse(utils.more())
+        self.assertFalse(utils.more(False))
+        self.assertFalse(utils.more(True))
+        self.assertFalse(utils.more(False, False))
+        self.assertFalse(utils.more(False, True))
+        self.assertFalse(utils.more(True, False))
+        self.assertTrue(utils.more(True, True))
+        self.assertFalse(utils.more(False, False, False))
+        self.assertFalse(utils.more(True, False, False))
+        self.assertFalse(utils.more(False, True, False))
+        self.assertTrue(utils.more(True, True, False))
+        self.assertFalse(utils.more(False, False, True))
+        self.assertTrue(utils.more(True, False, True))
+        self.assertTrue(utils.more(False, True, True))
+        self.assertTrue(utils.more(True, True, True))
+
+
     def test_easter_sunday(self):
 
-        es = [
+        easter_sundays = (
             date(1700, 4, 11), date(1701, 3, 27), date(1702, 4, 16),
             date(1703, 4, 8), date(1704, 3, 23), date(1705, 4, 12),
             date(1706, 4, 4), date(1707, 4, 24), date(1708, 4, 8),
@@ -707,32 +741,32 @@ class TestUtils1(SimpleTestCase):
             date(2291, 4, 19), date(2292, 4, 10), date(2293, 3, 26),
             date(2294, 4, 15), date(2295, 4, 7), date(2296, 4, 19),
             date(2297, 4, 11), date(2298, 4, 3), date(2299, 4, 16),
-        ]
+        )
 
-        for s in es:
-            self.assertEqual(utils.easter_sunday(s.year), s)
+        for dat in easter_sundays:
+            self.assertEqual(utils.easter_sunday(dat.year), dat)
 
     def test_movable_holiday(self):
 
-        HOL = [
+        hol = (
             date(2016, 3, 25), date(1939, 4, 10), date(1946, 4, 22),
             date(1948, 3, 29), date(1951, 5, 3), date(1939, 5, 29),
             date(1946, 6, 10), date(1948, 5, 17), date(1951, 5, 14),
             date(1951, 5, 24),
-        ]
+        )
 
-        NOHOL = [
+        nohol = (
             date(1945, 3, 30), date(1947, 4, 4), date(2015, 4, 3),
             date(1947, 4, 7), date(1952, 5, 22), date(1947, 5, 26),
             date(1952, 6, 2), date(1952, 6, 12),
-        ]
+        )
 
-        for dt in HOL:
-            self.assertTrue(utils.movable_holiday(dt))
-            self.assertFalse(utils.movable_holiday(dt - timedelta(1)))
+        for dat in hol:
+            self.assertTrue(utils.movable_holiday(dat))
+            self.assertFalse(utils.movable_holiday(dat - timedelta(days=1)))
 
-        for dt in NOHOL:
-            self.assertFalse(utils.movable_holiday(dt))
+        for dat in nohol:
+            self.assertFalse(utils.movable_holiday(dat))
 
     def test_holiday(self):
 
@@ -754,7 +788,7 @@ class TestUtils1(SimpleTestCase):
         self.assertTrue(utils.holiday(date(1992, 5, 9)))
             # not testable as 1992-05-09 was Saturday
 
-        CAL = {
+        cal = {
             1952: (
                 (1, 6, 13, 20, 27),
                 (3, 10, 17, 24),
@@ -1667,11 +1701,13 @@ class TestUtils1(SimpleTestCase):
             ),
         }
 
-        for y in range(1952, 2017):
-            for m in range(1, 13):
-                for d in range(1, (monthrange(y, m)[1] + 1)):
-                    dt = date(y, m, d)
-                    self.assertEqual(utils.holiday(dt), (d in CAL[y][m - 1]))
+        for year in range(1952, 2017):
+            for month in range(1, 13):
+                for day in range(1, (monthrange(year, month)[1] + 1)):
+                    dat = date(year, month, day)
+                    self.assertEqual(
+                        utils.holiday(dat),
+                        (day in cal[year][month - 1]))
 
     def test_ply(self):
 
@@ -1837,104 +1873,123 @@ class TestUtils1(SimpleTestCase):
 
     def test_grammar(self):
 
-        t = ['koruna', 'koruny', 'korun']
-        self.assertEqual(utils.grammar(-5, t), '-5 korun')
-        self.assertEqual(utils.grammar(-4, t), '-4 koruny')
-        self.assertEqual(utils.grammar(-2, t), '-2 koruny')
-        self.assertEqual(utils.grammar(-1, t), '-1 koruna')
-        self.assertEqual(utils.grammar(0, t), '0 korun')
-        self.assertEqual(utils.grammar(1, t), '1 koruna')
-        self.assertEqual(utils.grammar(2, t), '2 koruny')
-        self.assertEqual(utils.grammar(4, t), '4 koruny')
-        self.assertEqual(utils.grammar(5, t), '5 korun')
+        test = ('koruna', 'koruny', 'korun')
+        self.assertEqual(utils.grammar(-5, test), '-5 korun')
+        self.assertEqual(utils.grammar(-4, test), '-4 koruny')
+        self.assertEqual(utils.grammar(-2, test), '-2 koruny')
+        self.assertEqual(utils.grammar(-1, test), '-1 koruna')
+        self.assertEqual(utils.grammar(0, test), '0 korun')
+        self.assertEqual(utils.grammar(1, test), '1 koruna')
+        self.assertEqual(utils.grammar(2, test), '2 koruny')
+        self.assertEqual(utils.grammar(4, test), '4 koruny')
+        self.assertEqual(utils.grammar(5, test), '5 korun')
 
-    def test_formam(self):
+    def test_normfl(self):
 
-        self.assertEqual(utils.formam(0), '0')
-        self.assertEqual(utils.formam(1), '1')
-        self.assertEqual(utils.formam(-1), '-1')
-        self.assertEqual(utils.formam(1.4), '1,40')
-        self.assertEqual(utils.formam(-1.4), '-1,40')
-        self.assertEqual(utils.formam(1.489), '1,49')
-        self.assertEqual(utils.formam(-1.489), '-1,49')
-        self.assertEqual(utils.formam(537), '537')
-        self.assertEqual(utils.formam(-537), '-537')
-        self.assertEqual(utils.formam(1537), '1.537')
-        self.assertEqual(utils.formam(-1537), '-1.537')
-        self.assertEqual(utils.formam(68562515458), '68.562.515.458')
-        self.assertEqual(utils.formam(-68562515458), '-68.562.515.458')
-        self.assertEqual(utils.formam(68562515458.216), '68.562.515.458,22')
-        self.assertEqual(utils.formam(-68562515458.216), '-68.562.515.458,22')
-        self.assertEqual(utils.formam(968562515458.216), '968.562.515.458,22')
-        self.assertEqual(utils.formam(-968562515458.216), '-968.562.515.458,22')
+        self.assertEqual(utils.normfl(0), .0)
+        self.assertEqual(utils.normfl(1), 1.0)
+        self.assertEqual(utils.normfl(-1.), -1.0)
+        self.assertEqual(utils.normfl(.004999), .0)
+        self.assertEqual(utils.normfl(.005), .005)
+        self.assertEqual(utils.normfl(-.004999), -.0)
+        self.assertEqual(utils.normfl(-.005), -.005)
+
+    def test_famt(self):
+
+        self.assertEqual(utils.famt(0), '0')
+        self.assertEqual(utils.famt(1), '1')
+        self.assertEqual(utils.famt(-1), '-1')
+        self.assertEqual(utils.famt(1.4), '1,40')
+        self.assertEqual(utils.famt(-1.4), '-1,40')
+        self.assertEqual(utils.famt(1.489), '1,49')
+        self.assertEqual(utils.famt(-1.489), '-1,49')
+        self.assertEqual(utils.famt(537), '537')
+        self.assertEqual(utils.famt(-537), '-537')
+        self.assertEqual(utils.famt(1537), '1.537')
+        self.assertEqual(utils.famt(-1537), '-1.537')
+        self.assertEqual(utils.famt(68562515458), '68.562.515.458')
+        self.assertEqual(utils.famt(-68562515458), '-68.562.515.458')
+        self.assertEqual(utils.famt(68562515458.216), '68.562.515.458,22')
+        self.assertEqual(utils.famt(-68562515458.216), '-68.562.515.458,22')
+        self.assertEqual(utils.famt(968562515458.216), '968.562.515.458,22')
+        self.assertEqual(utils.famt(-968562515458.216), '-968.562.515.458,22')
+        self.assertEqual(utils.famt(-.001), '0,00')
+        self.assertEqual(utils.famt(.001), '0,00')
 
     def test_getxml(self):
 
-        self.assertIsNone(utils.getXML(b'test'))
+        self.assertIsNone(utils.get_xml(b'test'))
 
     def test_iso2date(self):
 
-        soup = utils.newXML(None)
-        t = soup.new_tag('date')
-        t['year'] = 2014
-        t['month'] = 11
-        t['day'] = 14
-        self.assertEqual(utils.iso2date(t), date(2014, 11, 14))
+        soup = utils.new_xml(None)
+        tag = soup.new_tag('date')
+        tag['year'] = 2014
+        tag['month'] = 11
+        tag['day'] = 14
+        self.assertEqual(utils.iso2date(tag), date(2014, 11, 14))
 
-        soup = utils.newXML(None)
-        t = soup.new_tag('date')
-        t.string = '2014-11-14'
-        self.assertEqual(utils.iso2date(t), date(2014, 11, 14))
+        soup = utils.new_xml(None)
+        tag = soup.new_tag('date')
+        tag.string = '2014-11-14'
+        self.assertEqual(utils.iso2date(tag), date(2014, 11, 14))
 
     def test_pager(self):
 
-        pp = [
-            [0, 1, [1, 1, -1, -1, -1, -1]],
-            [0, 50, [1, 1, -1, -1, -1, -1]],
-            [0, 51, [1, 2, -1, -1, 50, 50]],
-            [0, 100, [1, 2, -1, -1, 50, 50]],
-            [0, 101, [1, 3, -1, -1, 50, 100]],
-            [0, 53697, [1, 1074, -1, -1, 50, 53650]],
-            [50, 51, [2, 2, 0, 0, -1, -1]],
-            [50, 100, [2, 2, 0, 0, -1, -1]],
-            [50, 101, [2, 3, 0, 0, 100, 100]],
-            [50, 53697, [2, 1074, 0, 0, 100, 53650]],
-            [100, 53697, [3, 1074, 0, 50, 150, 53650]],
-            [53600, 53697, [1073, 1074, 0, 53550, 53650, 53650]],
-            [53650, 53697, [1074, 1074, 0, 53600, -1, -1]],
-        ]
+        cases = (
+            (0, 1, (1, 1, -1, -1, -1, -1)),
+            (0, 50, (1, 1, -1, -1, -1, -1)),
+            (0, 51, (1, 2, -1, -1, 50, 50)),
+            (0, 100, (1, 2, -1, -1, 50, 50)),
+            (0, 101, (1, 3, -1, -1, 50, 100)),
+            (0, 53697, (1, 1074, -1, -1, 50, 53650)),
+            (50, 51, (2, 2, 0, 0, -1, -1)),
+            (50, 100, (2, 2, 0, 0, -1, -1)),
+            (50, 101, (2, 3, 0, 0, 100, 100)),
+            (50, 53697, (2, 1074, 0, 0, 100, 53650)),
+            (100, 53697, (3, 1074, 0, 50, 150, 53650)),
+            (53600, 53697, (1073, 1074, 0, 53550, 53650, 53650)),
+            (53650, 53697, (1074, 1074, 0, 53600, -1, -1)),
+        )
 
-        i = 0
-        for p in pp:
-            pag = utils.Pager(p[0], p[1], 'url', QueryDict(mutable=True), 50)
-            r = [pag.curr,
-                 pag.total,
-                 proc_link(pag.linkbb),
-                 proc_link(pag.linkb),
-                 proc_link(pag.linkf),
-                 proc_link(pag.linkff),
-                ]
-            self.assertEqual(r, p[2], msg=str(i))
-            i += 1
+        idx = 0
+        for test in cases:
+            pag = utils.Pager(
+                test[0],
+                test[1],
+                'url',
+                QueryDict(mutable=True),
+                50)
+            res = (
+                pag.curr,
+                pag.total,
+                proc_link(pag.linkbb),
+                proc_link(pag.linkb),
+                proc_link(pag.linkf),
+                proc_link(pag.linkff),
+            )
+            self.assertEqual(res, test[2], msg=str(idx))
+            idx += 1
 
     def test_ref(self):
 
-        pp = ['3 As 12/2015-8',
-              '12 Azs 4/2009-118',
-              'Konf 1/2011-221',
-              '3 As 12/2015',
-              '12 Azs 4/2009',
-              'Konf 1/2011',
-             ]
+        refs = (
+            '3 As 12/2015-8',
+            '12 Azs 4/2009-118',
+            'Konf 1/2011-221',
+            '3 As 12/2015',
+            '12 Azs 4/2009',
+            'Konf 1/2011',
+        )
 
-        for p in pp:
-            self.assertEqual(utils.composeref(*utils.decomposeref(p)), p)
+        for ref in refs:
+            self.assertEqual(utils.composeref(*utils.decomposeref(ref)), ref)
             self.assertEqual(utils.composeref(*utils.decomposeref(
-                p.replace('-', ' - '))), p)
+                ref.replace('-', ' - '))), ref)
 
     def test_normreg(self):
 
-        registers = [[
+        regs = ((
             'T', 'C', 'P A NC', 'D', 'E', 'P', 'NC', 'ERO', 'RO', 'EC',
             'EVC', 'EXE', 'EPR', 'PP', 'CM', 'SM', 'CA', 'CAD', 'AZ', 'TO',
             'NT', 'CO', 'NTD', 'CMO', 'KO', 'NCO', 'NCD', 'NCP', 'ECM',
@@ -1944,7 +1999,7 @@ class TestUtils1(SimpleTestCase):
             'KONF', 'KSE', 'KSEO', 'KSS', 'KSZ', 'NA', 'NAD', 'NAO', 'NCN',
             'NK', 'NTN', 'OBN', 'PLEN', 'PLSN', 'PST', 'ROZK', 'RS', 'S',
             'SPR', 'SST', 'VOL', 'ABC', 'abc'
-        ], [
+        ), (
             'T', 'C', 'P a Nc', 'D', 'E', 'P', 'Nc', 'ERo', 'Ro', 'EC',
             'EVC', 'EXE', 'EPR', 'PP', 'Cm', 'Sm', 'Ca', 'Cad', 'Az', 'To',
             'Nt', 'Co', 'Ntd', 'Cmo', 'Ko', 'Nco', 'Ncd', 'Ncp', 'ECm',
@@ -1954,9 +2009,10 @@ class TestUtils1(SimpleTestCase):
             'Konf', 'Kse', 'Kseo', 'Kss', 'Ksz', 'Na', 'Nad', 'Nao', 'Ncn',
             'Nk', 'Ntn', 'Obn', 'Plen', 'Plsn', 'Pst', 'Rozk', 'Rs', 'S',
             'Spr', 'Sst', 'Vol', 'Abc', 'Abc'
-        ]]
-        for x, y in zip(registers[0], registers[1]):
-            self.assertEqual(utils.normreg(x), y)
+        ))
+
+        for reg1, reg2 in zip(regs[0], regs[1]):
+            self.assertEqual(utils.normreg(reg1), reg2)
 
     def test_xmlbool(self):
 
@@ -2132,7 +2188,7 @@ class TestUtils2(TestCase):
         models.Preset.objects.get_or_create(
             name='Test',
             value=16,
-            valid=(today + glob.odp))
+            valid=(today + glob.ODP))
         self.assertEqual(utils.getpreset('XXX'), 0)
         self.assertEqual(utils.getpreset('Test'), 15)
 
@@ -2143,13 +2199,13 @@ class TestViews(TestCase):
 
         User.objects.create_user(
             'user',
-            'user@' + glob.localdomain,
+            'user@' + glob.LOCAL_DOMAIN,
             'none'
         )
 
         User.objects.create_superuser(
             'superuser',
-            'superuser@' + glob.localdomain,
+            'superuser@' + glob.LOCAL_DOMAIN,
             'none'
         )
 
@@ -2294,37 +2350,37 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
 
-        s = {'oldpassword': 'none',
+        src = {'oldpassword': 'none',
              'newpassword1': 'newpass',
              'newpassword2': 'newpass',
              'submit': 'Změnit'}
 
-        d = copy(s)
-        d['oldpassword'] = 'wrong'
-        res = self.client.post('/accounts/pwchange/', d)
+        dst = copy(src)
+        dst['oldpassword'] = 'wrong'
+        res = self.client.post('/accounts/pwchange/', dst)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
         self.assertEqual(res.context['error_message'], 'Nesprávné heslo')
 
-        d = copy(s)
-        d['newpassword1'] = 'different'
-        res = self.client.post('/accounts/pwchange/', d)
+        dst = copy(src)
+        dst['newpassword1'] = 'different'
+        res = self.client.post('/accounts/pwchange/', dst)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
         self.assertEqual(
             res.context['error_message'],
             'Zadaná hesla se neshodují')
 
-        d = copy(s)
-        d['newpassword1'] = d['newpassword2'] = 'short'
-        res = self.client.post('/accounts/pwchange/', d)
+        dst = copy(src)
+        dst['newpassword1'] = dst['newpassword2'] = 'short'
+        res = self.client.post('/accounts/pwchange/', dst)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
         self.assertEqual(
             res.context['error_message'],
             'Nové heslo je příliš krátké')
 
-        res = self.client.post('/accounts/pwchange/', s, follow=True)
+        res = self.client.post('/accounts/pwchange/', src, follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchanged.html')
         self.assertTrue(self.client.login(username='user', password='newpass'))
@@ -2361,20 +2417,19 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwlinksent.html')
 
-        m = mail.outbox
-        self.assertEqual(len(m), 1)
-        m = m[0]
+        msgs = mail.outbox
+        self.assertEqual(len(msgs), 1)
+        msg = msgs[0]
         self.assertEqual(
-            m.from_email,
-            'Server {} <{}>'.format(glob.localsubdomain, glob.localemail))
+            msg.from_email,
+            'Server {} <{}>'.format(glob.LOCAL_SUBDOMAIN, glob.LOCAL_EMAIL))
         self.assertEqual(
-            m.to,
-            ['user@' + glob.localdomain])
+            msg.to,
+            ['user@' + glob.LOCAL_DOMAIN])
         self.assertEqual(
-            m.subject,
+            msg.subject,
             'Link pro obnoveni hesla')
-
-        match = pw_regex.search(m.body)
+        match = pw_regex.search(msg.body)
         self.assertTrue(match)
         link = match.group(1)
         res = self.client.get('/accounts/resetpw/{}/'.format(link))
@@ -2427,64 +2482,66 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
 
-        s = {'first_name': 'Tomáš',
-             'last_name': 'Pecina',
-             'username': 'newuser',
-             'password1': 'newpass',
-             'password2': 'newpass',
-             'email': 'tomas@' + glob.localdomain,
-             'captcha': 'Praha'}
+        src = {
+            'first_name': 'Tomáš',
+            'last_name': 'Pecina',
+            'username': 'newuser',
+            'password1': 'newpass',
+            'password2': 'newpass',
+            'email': 'tomas@' + glob.LOCAL_DOMAIN,
+            'captcha': 'Praha',
+        }
 
-        d = copy(s)
-        d['first_name'] = ''
-        res = self.client.post('/accounts/useradd/', d)
+        dst = copy(src)
+        dst['first_name'] = ''
+        res = self.client.post('/accounts/useradd/', dst)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
 
-        d = copy(s)
-        d['last_name'] = ''
-        res = self.client.post('/accounts/useradd/', d)
+        dst = copy(src)
+        dst['last_name'] = ''
+        res = self.client.post('/accounts/useradd/', dst)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
 
-        d = copy(s)
-        d['username'] = ''
-        res = self.client.post('/accounts/useradd/', d)
+        dst = copy(src)
+        dst['username'] = ''
+        res = self.client.post('/accounts/useradd/', dst)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
 
-        d = copy(s)
-        d['username'] = 'user'
-        res = self.client.post('/accounts/useradd/', d)
+        dst = copy(src)
+        dst['username'] = 'user'
+        res = self.client.post('/accounts/useradd/', dst)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
 
-        d = copy(s)
-        d['password1'] = 'different'
-        res = self.client.post('/accounts/useradd/', d)
+        dst = copy(src)
+        dst['password1'] = 'different'
+        res = self.client.post('/accounts/useradd/', dst)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
-        d = copy(s)
+        dst = copy(src)
 
-        d['password1'] = d['password2'] = 'short'
-        res = self.client.post('/accounts/useradd/', d)
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'useradd.html')
-        self.assertTrue('err_message' in res.context.keys())
-
-        d = copy(s)
-        d['email'] = 'noemail'
-        res = self.client.post('/accounts/useradd/', d)
+        dst['password1'] = dst['password2'] = 'short'
+        res = self.client.post('/accounts/useradd/', dst)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
 
-        res = self.client.post('/accounts/useradd/', s, follow=True)
+        dst = copy(src)
+        dst['email'] = 'noemail'
+        res = self.client.post('/accounts/useradd/', dst)
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'useradd.html')
+        self.assertTrue('err_message' in res.context.keys())
+
+        res = self.client.post('/accounts/useradd/', src, follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradded.html')
         self.assertTrue(self.client.login(

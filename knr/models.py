@@ -42,10 +42,10 @@ class Place(models.Model):
         max_length=255)
 
     lat = models.FloatField(
-        validators=[MinValueValidator(-90.0), MaxValueValidator(90.0)])
+        validators=(MinValueValidator(-90), MaxValueValidator(90)))
 
     lon = models.FloatField(
-        validators=[MinValueValidator(-180.0), MaxValueValidator(180.0)])
+        validators=(MinValueValidator(-180), MaxValueValidator(180)))
 
     class Meta:
         unique_together = ('abbr', 'uid')
@@ -72,17 +72,17 @@ class Car(models.Model):
     cons1 = models.DecimalField(
         max_digits=3,
         decimal_places=1,
-        validators=[MinValueValidator(0)])
+        validators=(MinValueValidator(0),))
 
     cons2 = models.DecimalField(
         max_digits=3,
         decimal_places=1,
-        validators=[MinValueValidator(0)])
+        validators=(MinValueValidator(0),))
 
     cons3 = models.DecimalField(
         max_digits=3,
         decimal_places=1,
-        validators=[MinValueValidator(0)])
+        validators=(MinValueValidator(0),))
 
     class Meta:
         unique_together = ('abbr', 'uid')
@@ -107,7 +107,7 @@ class Formula(models.Model):
     flat = models.DecimalField(
         max_digits=5,
         decimal_places=2,
-        validators=[MinValueValidator(0)])
+        validators=(MinValueValidator(0),))
 
     class Meta:
         unique_together = ('abbr', 'uid')
@@ -129,7 +129,7 @@ class Rate(models.Model):
     rate = models.DecimalField(
         max_digits=5,
         decimal_places=2,
-        validators=[MinValueValidator(0)])
+        validators=(MinValueValidator(0),))
 
     class Meta:
         unique_together = ('formula', 'fuel')

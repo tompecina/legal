@@ -35,10 +35,10 @@ from django.http import QueryDict
 from django.urls import reverse
 from common.utils import getbutton, Pager, logger
 from common.glob import (
-    inerr, text_opts_keys, text_opts_abbr, text_opts_ca,
-    text_opts_ai, ic_regex, rc_full_regex)
+    INERR, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA,
+    TEXT_OPTS_AI, IC_REGEX, RC_FULL_REGEX)
 from szr.forms import EmailForm
-from sir.glob import l2n, l2s
+from sir.glob import L2N, L2S
 from sir.models import Vec
 from dir.glob import MAX_LENGTH
 from dir.forms import DebtorForm
@@ -51,11 +51,11 @@ APPVERSION = apps.get_app_config(APP).version
 
 BATCH = 50
 
-OFIELDS = ['name', 'first_name']
-OPTS = [x + '_opt' for x in OFIELDS]
+OFIELDS = ('name', 'first_name')
+OPTS = [key + '_opt' for key in OFIELDS]
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def mainpage(request):
 
@@ -68,142 +68,129 @@ def mainpage(request):
     uid = request.user.id
     page_title = 'Sledování nových dlužníků v insolvenci'
 
-    rd = request.GET.copy()
-    start = int(rd['start']) if ('start' in rd) else 0
+    rdt = request.GET.copy()
+    start = int(rdt['start']) if 'start' in rdt else 0
     if request.method == 'GET':
-        f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
+        form = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
     else:
-        f = EmailForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            p = get_object_or_404(User, pk=uid)
-            p.email = cd['email']
-            p.save()
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            user = get_object_or_404(User, pk=uid)
+            user.email = cld['email']
+            user.save()
             return redirect('dir:mainpage')
         else:
             logger.debug('Invalid form', request)
-            err_message = inerr
-    d = Debtor.objects.filter(uid=uid).order_by('desc', 'pk').values()
-    total = d.count()
-    if start >= total and total > 0:
+            err_message = INERR
+    debtors = Debtor.objects.filter(uid=uid).order_by('desc', 'pk').values()
+    total = debtors.count()
+    if start >= total and total:
         start = total - 1
-    rows = d[start:(start + BATCH)]
+    rows = debtors[start:(start + BATCH)]
     for row in rows:
-        q = QueryDict(mutable=True)
-        q['role_debtor'] = q['deleted'] = 'on'
-        if row['court']:
-            q['court'] = row['court']
-        if row['name']:
-            q['name'] = row['name']
-            q['name_opt'] = text_opts_keys[row['name_opt']]
-        if row['first_name']:
-            q['first_name'] = row['first_name']
-            q['first_name_opt'] = text_opts_keys[row['first_name_opt']]
-        if row['genid']:
-            q['genid'] = row['genid']
-        if row['taxid']:
-            q['taxid'] = row['taxid']
-        if row['birthid']:
-            q['birthid'] = row['birthid']
-        if row['date_birth']:
-            q['date_birth'] = row['date_birth']
-        if row['year_birth_from']:
-            q['year_birth_from'] = row['year_birth_from']
-        if row['year_birth_to']:
-            q['year_birth_to'] = row['year_birth_to']
-        row['search'] = q.urlencode()
+        query = QueryDict(mutable=True)
+        query['role_debtor'] = query['deleted'] = 'on'
+        for key in ('court', 'genid', 'taxid', 'birthid', 'date_birth',
+            'year_birth_from', 'year_birth_to'):
+            if row[key]:
+                query[key] = row[key]
+        for key in OFIELDS:
+            if row[key]:
+                query[key] = row[key]
+                key_opt = '{}_opt'.format(key)
+                query[key_opt] = TEXT_OPTS_KEYS[row[key_opt]]
+        row['search'] = query.urlencode()
     return render(
         request,
         'dir_mainpage.html',
         {'app': APP,
-         'f': f,
+         'form': form,
          'page_title': page_title,
          'err_message': err_message,
          'rows': rows,
-         'pager': Pager(start, total, reverse('dir:mainpage'), rd, BATCH),
+         'pager': Pager(start, total, reverse('dir:mainpage'), rdt, BATCH),
          'total': total})
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def debtorform(request, id=0):
+def debtorform(request, idx=0):
 
     logger.debug(
         'Debtor form accessed using method {}, id={}'
-        .format(request.method, id),
+        .format(request.method, idx),
         request,
         request.POST)
 
     err_message = ''
     uid = request.user.id
     uname = request.user.username
-    page_title = ('Úprava dlužníka' if id else 'Nový dlužník')
+    page_title = 'Úprava dlužníka' if idx else 'Nový dlužník'
 
-    btn = getbutton(request)
-    courts = sorted([{'id': x, 'name': l2n[x]} for x in
+    button = getbutton(request)
+    courts = sorted([{'id': x, 'name': L2N[x]} for x in
         Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()],
         key=(lambda x: strxfrm(x['name'])))
     if request.method == 'GET':
-        if id:
-            d = model_to_dict(get_object_or_404(Debtor, pk=id, uid=uid))
-            for o in OPTS:
-                d[o] = text_opts_keys[d[o]]
-            if d['birthid']:
-                d['birthid'] = \
-                    '{}/{}'.format(d['birthid'][:6], d['birthid'][6:])
-            f = DebtorForm(initial=d)
+        if idx:
+            debtor = model_to_dict(get_object_or_404(Debtor, pk=idx, uid=uid))
+            for opt in OPTS:
+                debtor[opt] = TEXT_OPTS_KEYS[debtor[opt]]
+            if debtor['birthid']:
+                debtor['birthid'] = \
+                    '{}/{}'.format(debtor['birthid'][:6], debtor['birthid'][6:])
+            form = DebtorForm(initial=debtor)
         else:
-            f = DebtorForm()
-    elif btn == 'back':
+            form = DebtorForm()
+    elif button == 'back':
         return redirect('dir:mainpage')
     else:
-        f = DebtorForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            if id:
-                p = get_object_or_404(Debtor, pk=id, uid=uid)
-                cd['pk'] = id
-                cd['timestamp_add'] = p.timestamp_add
-                cd['timestamp_update'] = p.timestamp_update
-            cd['birthid'] = cd['birthid'].replace('/', '')
-            for key in cd:
-                if cd[key] == '':
-                    cd[key] = None
-            p = Debtor(uid_id=uid, **cd)
-            for o in OPTS:
-                p.__setattr__(o, text_opts_keys.index(cd[o]))
-            p.save()
-            if id:
-                logger.info(
-                    'User "{}" ({:d}) updated debtor "{}"'
-                    .format(uname, uid, p.desc),
-                    request)
-            else:
-                logger.info(
-                    'User "{}" ({:d}) added debtor "{}"'
-                    .format(uname, uid, p.desc),
-                    request)
+        form = DebtorForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            if idx:
+                debtor = get_object_or_404(Debtor, pk=idx, uid=uid)
+                cld['pk'] = idx
+                cld['timestamp_add'] = debtor.timestamp_add
+                cld['timestamp_update'] = debtor.timestamp_update
+            cld['birthid'] = cld['birthid'].replace('/', '')
+            for key in cld:
+                if cld[key] == '':
+                    cld[key] = None
+            debtor = Debtor(uid_id=uid, **cld)
+            for opt in OPTS:
+                debtor.__setattr__(opt, TEXT_OPTS_KEYS.index(cld[opt]))
+            debtor.save()
+            logger.info(
+                'User "{}" ({:d}) {} debtor {}'
+                .format(
+                    uname,
+                    uid,
+                    'updated' if idx else 'added',
+                    debtor.desc),
+                request)
             return redirect('dir:mainpage')
         else:
             logger.debug('Invalid form', request)
-            err_message = inerr
+            err_message = INERR
     return render(
         request,
         'dir_debtorform.html',
         {'app': APP,
-         'f': f,
+         'form': form,
          'page_title': page_title,
          'courts': courts,
          'err_message': err_message})
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def debtordel(request, id=0):
+def debtordel(request, idx=0):
 
     logger.debug(
         'Debtor delete page accessed using method {}, id={}'
-        .format(request.method, id),
+        .format(request.method, idx),
         request,
         request.POST)
     uid = request.user.id
@@ -215,7 +202,7 @@ def debtordel(request, id=0):
             {'app': APP,
              'page_title': 'Smazání dlužníka'})
     else:
-        debtor = get_object_or_404(Debtor, pk=id, uid=uid)
+        debtor = get_object_or_404(Debtor, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
             logger.info(
                 'User "{}" ({:d}) deleted debtor "{}"'
@@ -226,7 +213,7 @@ def debtordel(request, id=0):
         return redirect('dir:mainpage')
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def debtordelall(request):
 
@@ -252,7 +239,7 @@ def debtordelall(request):
         return redirect('dir:mainpage')
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def debtorbatchform(request):
 
@@ -265,20 +252,20 @@ def debtorbatchform(request):
     uname = request.user.username
 
     if request.method == 'POST':
-        btn = getbutton(request)
+        button = getbutton(request)
 
-        if btn == 'load':
-            f = request.FILES.get('load')
-            if not f:
+        if button == 'load':
+            infile = request.FILES.get('load')
+            if not infile:
                 err_message = 'Nejprve zvolte soubor k načtení'
             else:
                 errors = []
                 try:
                     count = 0
-                    with f:
-                        i = 0
-                        for line in csvreader(StringIO(f.read().decode())):
-                            i += 1
+                    with infile:
+                        idx = 0
+                        for line in csvreader(StringIO(infile.read().decode())):
+                            idx += 1
                             errlen = len(errors)
                             if not line:
                                 continue
@@ -288,123 +275,123 @@ def debtorbatchform(request):
                                 = year_birth_to = None
                             name_opt = first_name_opt = 0
                             if not desc:
-                                errors.append([i, 'Prázdný popis'])
+                                errors.append((idx, 'Prázdný popis'))
                                 continue
                             if len(desc) > 255:
-                                errors.append([i, 'Příliš dlouhý popis'])
+                                errors.append((idx, 'Příliš dlouhý popis'))
                                 continue
                             for term in line[1:]:
                                 if '=' not in term:
-                                    errors.append([i, 'Chybný formát'])
+                                    errors.append((idx, 'Chybný formát'))
                                     continue
-                                key, value = map(
-                                    (lambda x: x.strip()),
+                                key, val = map(
+                                    lambda x: x.strip(),
                                     term.split('=', 1))
-                                if not value:
+                                if not val:
                                     continue
                                 if key == 'soud':
-                                    court = value
+                                    court = val
                                 elif key == 'název':
-                                    if ':' in value:
-                                        name, name_opt = value.split(':', 1)
-                                        if name_opt not in text_opts_abbr:
+                                    if ':' in val:
+                                        name, name_opt = val.split(':', 1)
+                                        if name_opt not in TEXT_OPTS_ABBR:
                                             errors.append(
-                                                [i,
+                                                (idx,
                                                  'Chybná zkratka pro posici '
-                                                 'v poli <q>název</q>'])
+                                                 'v poli <q>název</q>'))
                                             continue
-                                        name_opt = text_opts_ai[name_opt]
+                                        name_opt = TEXT_OPTS_AI[name_opt]
                                     else:
-                                        name = value
+                                        name = val
                                         name_opt = 0
                                     if len(name) > MAX_LENGTH:
                                         errors.append(
-                                            [i,
-                                             'Příliš dlouhé pole <q>název</q>'])
+                                            (idx,
+                                             'Příliš dlouhé pole <q>název</q>'))
                                         continue
                                 elif key == 'jméno':
-                                    if ':' in value:
+                                    if ':' in val:
                                         first_name, first_name_opt = \
-                                            value.split(':', 1)
-                                        if first_name_opt not in text_opts_abbr:
+                                            val.split(':', 1)
+                                        if first_name_opt not in TEXT_OPTS_ABBR:
                                             errors.append(
-                                                [i,
+                                                (idx,
                                                  'Chybná zkratka pro posici '
-                                                 'v poli <q>jméno</q>'])
+                                                 'v poli <q>jméno</q>'))
                                             continue
                                         first_name_opt = \
-                                            text_opts_ai[first_name_opt]
+                                            TEXT_OPTS_AI[first_name_opt]
                                     else:
-                                        first_name = value
+                                        first_name = val
                                         first_name_opt = 0
                                     if len(first_name) > MAX_LENGTH:
                                         errors.append(
-                                            [i,
-                                             'Příliš dlouhé pole <q>jméno</q>'])
+                                            (idx,
+                                             'Příliš dlouhé pole <q>jméno</q>'))
                                         continue
                                 elif key == 'IČO':
-                                    if not compile(ic_regex).match(value):
+                                    if not compile(IC_REGEX).match(val):
                                         errors.append(
-                                            [i,
-                                             'Chybná hodnota pro IČO'])
+                                            (idx,
+                                             'Chybná hodnota pro IČO'))
                                         continue
-                                    genid = value
+                                    genid = val
                                 elif key == 'DIČ':
-                                    if len(value) > 14:
+                                    if len(val) > 14:
                                         errors.append(
-                                            [i,
-                                             'Chybná hodnota pro DIČ'])
+                                            (idx,
+                                             'Chybná hodnota pro DIČ'))
                                         continue
-                                    taxid = value
+                                    taxid = val
                                 elif key == 'RČ':
-                                    if not compile(rc_full_regex).match(value):
+                                    if not compile(RC_FULL_REGEX).match(val):
                                         errors.append(
-                                            [i,
-                                             'Chybná hodnota pro rodné číslo'])
+                                            (idx,
+                                             'Chybná hodnota pro rodné číslo'))
                                         continue
-                                    birthid = value.replace('/', '')
+                                    birthid = val.replace('/', '')
                                 elif key == 'datumNarození':
                                     try:
-                                        t = value.split('.')
-                                        date_birth = date(
-                                            int(t[2]), int(t[1]), int(t[0]))
+                                        date_birth = date(*map(
+                                            int,
+                                            val.split('.')[2::-1]))
                                         assert date_birth.year >= 1900
                                     except:
                                         errors.append(
-                                            [i,
+                                            (idx,
                                              'Chybná hodnota pro datum '
-                                             'narození'])
+                                             'narození'))
                                         continue
                                 elif key == 'rokNarozeníOd':
                                     try:
-                                        year_birth_from = int(value)
+                                        year_birth_from = int(val)
                                         assert year_birth_from >= 1900
                                     except:
                                         errors.append(
-                                            [i,
+                                            (idx,
                                              'Chybná hodnota pro pole '
-                                             '<q>rokNarozeníOd</q>'])
+                                             '<q>rokNarozeníOd</q>'))
                                         continue
                                 elif key == 'rokNarozeníDo':
                                     try:
-                                        year_birth_to = int(value)
+                                        year_birth_to = int(val)
                                         assert year_birth_to >= 1900
                                     except:
                                         errors.append(
-                                            [i,
+                                            (idx,
                                              'Chybná hodnota pro pole '
-                                             '<q>rokNarozeníDo</q>'])
+                                             '<q>rokNarozeníDo</q>'))
                                         continue
                                 else:
                                     errors.append(
-                                        [i,
-                                         'Chybný parametr: "{}"'.format(key)])
+                                        (idx,
+                                         'Chybný parametr: "{}"'.format(key)))
                                     continue
                                 if year_birth_from and year_birth_to \
                                    and year_birth_from > year_birth_to:
                                     errors.append(
-                                        [i,
-                                         'Chybný interval pro rok narození'])
+                                        (idx,
+                                         'Chybný interval pro rok narození'))
                                     continue
 
                             if len(errors) == errlen:
@@ -427,9 +414,9 @@ def debtorbatchform(request):
                                     )
                                 except:
                                     errors.append(
-                                        [i,
+                                        (idx,
                                          'Popisu "{}" odpovídá více než '
-                                         'jeden dlužník'.format(desc)])
+                                         'jeden dlužník'.format(desc)))
                                     continue
                                 count += 1
                     logger.info(
@@ -449,7 +436,7 @@ def debtorbatchform(request):
                     err_message = 'Chyba při načtení souboru'
         else:
             logger.debug('Invalid form', request)
-            err_message = inerr
+            err_message = INERR
 
     return render(
         request,
@@ -459,39 +446,42 @@ def debtorbatchform(request):
          'err_message': err_message})
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 @login_required
 def debtorexport(request):
 
     logger.debug('Debtor export page accessed', request)
     uid = request.user.id
     uname = request.user.username
-    pp = Debtor.objects.filter(uid=uid).order_by('desc', 'pk') \
-        .distinct()
+    debtors = Debtor.objects.filter(uid=uid).order_by('desc', 'pk').distinct()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename=dir.csv'
     writer = csvwriter(response)
-    for p in pp:
-        dat = [p.desc]
-        if p.court:
-            dat.append('soud=' + l2s[p.court])
-        if p.name:
-            dat.append('název=' + p.name + text_opts_ca[p.name_opt])
-        if p.first_name:
-            dat.append('jméno=' + p.first_name + text_opts_ca[p.first_name_opt])
-        if p.genid:
-            dat.append('IČO=' + p.genid)
-        if p.taxid:
-            dat.append('DIČ=' + p.taxid)
-        if p.birthid:
-            dat.append('RČ={}/{}'.format(p.birthid[:6], p.birthid[6:]))
-        if p.date_birth:
+    for debtor in debtors:
+        dat = [debtor.desc]
+        if debtor.court:
+            dat.append('soud={}'.format(L2S[debtor.court]))
+        if debtor.name:
+            dat.append('název={}'.format(
+                debtor.name + TEXT_OPTS_CA[debtor.name_opt]))
+        if debtor.first_name:
+            dat.append('jméno={}'.format(
+                debtor.first_name + TEXT_OPTS_CA[debtor.first_name_opt]))
+        if debtor.genid:
+            dat.append('IČO={}'.format(debtor.genid))
+        if debtor.taxid:
+            dat.append('DIČ={}'.format(debtor.taxid))
+        if debtor.birthid:
+            dat.append('RČ={}/{}'.format(
+                debtor.birthid[:6],
+                debtor.birthid[6:]))
+        if debtor.date_birth:
             dat.append('datumNarození={0.day:02d}.{0.month:02d}.{0.year:d}'
-                           .format(p.date_birth))
-        if p.year_birth_from:
-            dat.append('rokNarozeníOd=' + str(p.year_birth_from))
-        if p.year_birth_to:
-            dat.append('rokNarozeníDo=' + str(p.year_birth_to))
+                           .format(debtor.date_birth))
+        if debtor.year_birth_from:
+            dat.append('rokNarozeníOd={:d}'.format(debtor.year_birth_from))
+        if debtor.year_birth_to:
+            dat.append('rokNarozeníDo={:d}'.format(debtor.year_birth_to))
         writer.writerow(dat)
     logger.info(
         'User "{}" ({:d}) exported debtors'.format(uname, uid),

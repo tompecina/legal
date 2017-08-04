@@ -24,7 +24,7 @@ from http import HTTPStatus
 from datetime import date
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
-from common.tests import stripxml, link_equal, setpr, getpr
+from common.tests import strip_xml, link_equal, setpr, getpr
 from sir.tests import populate
 from sir.cron import cron_getws2
 from sir.models import Osoba, DruhRoleVRizeni, Vec
@@ -33,135 +33,135 @@ from pir import forms, views
 
 class TestForms(SimpleTestCase):
 
-    def test_MainForm(self):
+    def test_main_form(self):
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'city_opt': 'icontains',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'party_opt': 'icontains',
              'first_name_opt': 'icontains',
              'city_opt': 'icontains',
              'date_first_from': '2.3.2015',
              'date_first_to': '2.6.2011',
              'format': 'html'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'city_opt': 'icontains',
              'date_first_from': '2.3.2015',
              'date_first_to': '3.3.2015',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'city_opt': 'icontains',
              'date_first_from': '2.3.2015',
              'date_first_to': '2.3.2015',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'party_opt': 'icontains',
              'first_name_opt': 'icontains',
              'city_opt': 'icontains',
              'date_last_from': '2.3.2015',
              'date_last_to': '2.6.2011',
              'format': 'html'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'city_opt': 'icontains',
              'date_last_from': '2.3.2015',
              'date_last_to': '3.3.2015',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'city_opt': 'icontains',
              'date_last_from': '2.3.2015',
              'date_last_to': '2.3.2015',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'party_opt': 'icontains',
              'first_name_opt': 'icontains',
              'city_opt': 'icontains',
              'year_birth_from': '1965',
              'year_birth_to': '1961',
              'format': 'html'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'city_opt': 'icontains',
              'year_birth_from': '1965',
              'year_birth_to': '1965',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'city_opt': 'icontains',
              'year_birth_from': '1965',
              'year_birth_to': '1966',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
 
 class TestViews1(SimpleTestCase):
 
     def test_o2s(self):
 
-        pp = [
-            [Osoba(),
+        cases = (
+            (Osoba(),
              False,
-             ''],
-            [Osoba(nazevOsoby='Novák'),
+             ''),
+            (Osoba(nazevOsoby='Novák'),
              False,
-             'Novák'],
-            [Osoba(
+             'Novák'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef'),
              False,
-             'Josef Novák'],
-            [Osoba(
+             'Josef Novák'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef',
                 titulPred='Ing.'),
              False,
-             'Ing. Josef Novák'],
-            [Osoba(
+             'Ing. Josef Novák'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef',
                 titulPred='Ing.',
                 titulZa='CSc.'),
              False,
-             'Ing. Josef Novák, CSc.'],
-            [Osoba(
+             'Ing. Josef Novák, CSc.'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef',
                 titulPred='Ing.',
                 titulZa='CSc.',
                 nazevOsobyObchodni='NOWACO'),
              False,
-             'Ing. Josef Novák, CSc., NOWACO'],
-            [Osoba(
+             'Ing. Josef Novák, CSc., NOWACO'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef',
                 titulPred='Ing.',
@@ -169,8 +169,8 @@ class TestViews1(SimpleTestCase):
                 nazevOsobyObchodni='NOWACO',
                 datumNarozeni=date(1970, 5, 18)),
              False,
-             'Ing. Josef Novák, CSc., NOWACO'],
-            [Osoba(
+             'Ing. Josef Novák, CSc., NOWACO'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef',
                 titulPred='Ing.',
@@ -179,8 +179,8 @@ class TestViews1(SimpleTestCase):
                 datumNarozeni=date(1970, 5, 18),
                 ic='12345678'),
              False,
-             'Ing. Josef Novák, CSc., NOWACO'],
-            [Osoba(
+             'Ing. Josef Novák, CSc., NOWACO'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef',
                 titulPred='Ing.',
@@ -188,40 +188,40 @@ class TestViews1(SimpleTestCase):
                 nazevOsobyObchodni='NOWACO',
                 ic='12345678'),
              False,
-             'Ing. Josef Novák, CSc., NOWACO'],
-            [Osoba(),
+             'Ing. Josef Novák, CSc., NOWACO'),
+            (Osoba(),
              True,
-             ''],
-            [Osoba(nazevOsoby='Novák'),
+             ''),
+            (Osoba(nazevOsoby='Novák'),
              True,
-             'Novák'],
-            [Osoba(
+             'Novák'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef'),
              True,
-             'Josef Novák'],
-            [Osoba(
+             'Josef Novák'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef',
                 titulPred='Ing.'),
              True,
-             'Ing. Josef Novák'],
-            [Osoba(
+             'Ing. Josef Novák'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef',
                 titulPred='Ing.',
                 titulZa='CSc.'),
              True,
-             'Ing. Josef Novák, CSc.'],
-            [Osoba(
+             'Ing. Josef Novák, CSc.'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef',
                 titulPred='Ing.',
                 titulZa='CSc.',
                 nazevOsobyObchodni='NOWACO'),
              True,
-             'Ing. Josef Novák, CSc., NOWACO'],
-            [Osoba(
+             'Ing. Josef Novák, CSc., NOWACO'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef',
                 titulPred='Ing.',
@@ -229,8 +229,8 @@ class TestViews1(SimpleTestCase):
                 nazevOsobyObchodni='NOWACO',
                 datumNarozeni=date(1970, 5, 18)),
              True,
-             'Ing. Josef Novák, CSc., NOWACO, nar.&nbsp;18.05.1970'],
-            [Osoba(
+             'Ing. Josef Novák, CSc., NOWACO, nar.&nbsp;18.05.1970'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef',
                 titulPred='Ing.',
@@ -239,8 +239,8 @@ class TestViews1(SimpleTestCase):
                 datumNarozeni=date(1970, 5, 18),
                 ic='12345678'),
              True,
-             'Ing. Josef Novák, CSc., NOWACO, nar.&nbsp;18.05.1970'],
-            [Osoba(
+             'Ing. Josef Novák, CSc., NOWACO, nar.&nbsp;18.05.1970'),
+            (Osoba(
                 nazevOsoby='Novák',
                 jmeno='Josef',
                 titulPred='Ing.',
@@ -248,11 +248,11 @@ class TestViews1(SimpleTestCase):
                 nazevOsobyObchodni='NOWACO',
                 ic='12345678'),
              True,
-             'Ing. Josef Novák, CSc., NOWACO, IČO:&nbsp;12345678'],
-            ]
+             'Ing. Josef Novák, CSc., NOWACO, IČO:&nbsp;12345678'),
+            )
 
-        for p in pp:
-            self.assertEqual(views.o2s(p[0], detailed=p[1]), p[2])
+        for test in cases:
+            self.assertEqual(views.o2s(test[0], detailed=test[1]), test[2])
 
 
 class TestViews2(TestCase):
@@ -402,18 +402,18 @@ class TestViews2(TestCase):
 
     def test_g2p(self):
 
-        pr = getpr()
+        prctr = getpr()
         debtor = DruhRoleVRizeni.objects.get(desc='DLUŽNÍK').id
         trustee = DruhRoleVRizeni.objects.get(desc='SPRÁVCE').id
         creditor = DruhRoleVRizeni.objects.get(desc='VĚŘITEL').id
         motioner = DruhRoleVRizeni.objects.get(desc='VĚŘIT-NAVR').id
 
-        rr = [
-            [
+        cases = (
+            (
                 {},
                 {'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'court': 'KSJIMBM',
                  'senate': '24',
                  'number': '200',
@@ -453,94 +453,94 @@ class TestViews2(TestCase):
                  'roles__osoba__datumNarozeni__year__gte': '1970',
                  'roles__osoba__datumNarozeni__year__lte': '1971',
                  'roles__druhRoleVRizeni__in': [],
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'role_debtor': 'on',
                  'role_trustee': 'on',
                  'role_creditor': 'on'},
                 {'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'name': 'Název',
                  'name_opt': 'icontains',
                  'role_debtor': 'on'},
                 {'roles__osoba__nazevOsoby__icontains': 'Název',
                  'roles__druhRoleVRizeni__in': [debtor],
                  'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'first_name': 'Jméno',
                  'first_name_opt': 'icontains',
                  'role_debtor': 'on'},
                 {'roles__osoba__jmeno__icontains': 'Jméno',
                  'roles__druhRoleVRizeni__in': [debtor],
                  'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'city': 'Město',
                  'city_opt': 'icontains',
                  'role_debtor': 'on'},
                 {'roles__osoba__adresy__mesto__icontains': 'Město',
                  'roles__druhRoleVRizeni__in': [debtor],
                  'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'genid': '12345678',
                  'role_debtor': 'on'},
                 {'roles__osoba__ic': '12345678',
                  'roles__druhRoleVRizeni__in': [debtor],
                  'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'taxid': 'CZ12345678',
                  'role_debtor': 'on'},
                 {'roles__osoba__dic': 'CZ12345678',
                  'roles__druhRoleVRizeni__in': [debtor],
                  'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'birthid': '700101/1234',
                  'role_debtor': 'on'},
                 {'roles__osoba__rc': '700101/1234',
                  'roles__druhRoleVRizeni__in': [debtor],
                  'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'date_birth': '1970-05-18',
                  'role_debtor': 'on'},
                 {'roles__osoba__datumNarozeni': date(1970, 5, 18),
                  'roles__druhRoleVRizeni__in': [debtor],
                  'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'year_birth_from': '1970',
                  'role_debtor': 'on'},
                 {'roles__osoba__datumNarozeni__year__gte': '1970',
                  'roles__druhRoleVRizeni__in': [debtor],
                  'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'year_birth_to': '1971',
                  'role_debtor': 'on'},
                 {'roles__osoba__datumNarozeni__year__lte': '1971',
                  'roles__druhRoleVRizeni__in': [debtor],
                  'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'genid': '12345678',
                  'role_trustee': 'on'},
                 {'roles__osoba__ic': '12345678',
                  'roles__druhRoleVRizeni__in': [trustee],
                  'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'genid': '12345678',
                  'role_creditor': 'on'},
                 {'roles__osoba__ic': '12345678',
                  'roles__druhRoleVRizeni__in': [creditor, motioner],
                  'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-            [
+                 'id__lte': prctr}),
+            (
                 {'genid': '12345678',
                  'role_debtor': 'on',
                  'role_trustee': 'on',
@@ -549,10 +549,10 @@ class TestViews2(TestCase):
                  'roles__druhRoleVRizeni__in':
                  [debtor, trustee, creditor, motioner],
                  'datumVyskrtnuti__isnull': True,
-                 'id__lte': pr}],
-        ]
+                 'id__lte': prctr}),
+        )
 
-        ee = [
+        err_cases = (
             {'senate': '-1'},
             {'senate': 'XXX'},
             {'number': '0'},
@@ -569,46 +569,46 @@ class TestViews2(TestCase):
             {'city': 'XXX'},
             {'date_birth': 'XXX'},
             {'date_birth': '2011-02-29'},
-        ]
+        )
 
-        for p in rr:
-            self.assertEqual(views.g2p(p[0]), p[1])
+        for test in cases:
+            self.assertEqual(views.g2p(test[0]), test[1])
 
-        for p in ee:
+        for test in err_cases:
             try:
-                views.g2p(p)
-                self.fail(p)  # pragma: no cover
+                views.g2p(test)
+                self.fail(test)  # pragma: no cover
             except:
                 pass
 
     def test_getosoby(self):
 
-        pp = [
-            [
-                [],
-                []],
-            [
-                ['debtor'],
-                ['Bártová']],
-            [
-                ['trustee'],
-                ['Vodrážková']],
-            [
-                ['creditor'],
-                ['AB 4 B.V.',
+        cases = (
+            (
+                (),
+                ()),
+            (
+                ('debtor',),
+                ('Bártová',)),
+            (
+                ('trustee',),
+                ('Vodrážková',)),
+            (
+                ('creditor',),
+                ('AB 4 B.V.',
                  'BNP Paribas Personal Finance SA, odštěpný závod',
                  'Česká spořitelna, a.s.',
                  'ESSOX s.r.o.',
                  'JET Money s.r.o.',
                  'Komerční banka, a.s.',
                  'Makovský',
-                 'Provident Financial s. r. o.']],
-            [
-                ['motioner'],
-                []],
-            [
-                ['debtor', 'trustee', 'creditor', 'motioner'],
-                ['AB 4 B.V.',
+                 'Provident Financial s. r. o.')),
+            (
+                ('motioner',),
+                ()),
+            (
+                ('debtor', 'trustee', 'creditor', 'motioner'),
+                ('AB 4 B.V.',
                  'Bártová',
                  'BNP Paribas Personal Finance SA, odštěpný závod',
                  'Česká spořitelna, a.s.',
@@ -617,15 +617,15 @@ class TestViews2(TestCase):
                  'Komerční banka, a.s.',
                  'Makovský',
                  'Provident Financial s. r. o.',
-                 'Vodrážková']],
-        ]
+                 'Vodrážková')),
+        )
 
-        for p in pp:
+        for test in cases:
             self.assertEqual(
-                list(views.getosoby(Vec.objects.get(bc=47, rocnik=2015),
-                    *(p[0])).order_by('nazevOsoby')
+                tuple(views.getosoby(Vec.objects.get(bc=47, rocnik=2015),
+                    *(test[0])).order_by('nazevOsoby')
                      .values_list('nazevOsoby', flat=True)),
-                p[1])
+                test[1])
 
     def test_htmllist(self):
 
@@ -898,13 +898,13 @@ class TestViews2(TestCase):
         self.assertTemplateUsed(res, 'pir_list.html')
         self.assertEqual(res.context['total'], 4)
 
-        v = Vec.objects.filter(link__isnull=False).first().__dict__
-        del v['id'], v['_state']
+        vec = Vec.objects.filter(link__isnull=False).first().__dict__
+        del vec['id'], vec['_state']
         for number in range(1200, 1433):
-            v['bc'] = number
-            o = Vec(**v)
-            o.save()
-        setpr(o.id)
+            vec['bc'] = number
+            obj = Vec(**vec)
+            obj.save()
+        setpr(obj.id)
 
         res = self.client.get('/pir/list/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1004,7 +1004,7 @@ class TestViews2(TestCase):
 
     def test_xmllist(self):
 
-        x0 = '''\
+        res0 = '''\
 <?xml version="1.0" encoding="utf-8"?>
 <insolvencies application="pir" created="2016-11-22T15:44:22" \
 version="1.0" xmlns="http://legal.pecina.cz" xmlns:xsi="http:\
@@ -1078,7 +1078,7 @@ v Pardubicích</court><ref><court>KSPA</court><senate>56</senate>\
 <trustees></trustees></insolvency></insolvencies>
 '''
 
-        x1 = '''\
+        res1 = '''\
 <?xml version="1.0" encoding="utf-8"?>
 <insolvencies application="pir" created="2016-11-22T15:58:43" \
 version="1.0" xmlns="http://legal.pecina.cz" xmlns:xsi="http:\
@@ -1108,7 +1108,7 @@ pobočka v Pardubicích</court><ref><court>KSPA</court>\
 </trustee></trustees></insolvency></insolvencies>
 '''
 
-        x2 = '''\
+        res2 = '''\
 <?xml version="1.0" encoding="utf-8"?>
 <insolvencies application="pir" created="2016-11-22T16:03:58" \
 version="1.0" xmlns="http://legal.pecina.cz" xmlns:xsi="http:\
@@ -1311,28 +1311,35 @@ Krajský soud v Českých Budějovicích</court><ref>\
 
         res = self.client.get('/pir/xmllist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertXMLEqual(stripxml(res.content), stripxml(x0.encode('utf-8')))
+        self.assertXMLEqual(
+            strip_xml(res.content),
+            strip_xml(res0.encode('utf-8')))
 
         res = self.client.get(
             '/pir/xmllist/?name=Bártová&name_opt=iexact&role_debtor=on')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertXMLEqual(stripxml(res.content), stripxml(x1.encode('utf-8')))
+        self.assertXMLEqual(
+            strip_xml(res.content),
+            strip_xml(res1.encode('utf-8')))
 
         res = self.client.get('/pir/xmllist/?creditors=on')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertXMLEqual(stripxml(res.content), stripxml(x2.encode('utf-8')))
+        self.assertXMLEqual(
+            strip_xml(res.content),
+            strip_xml(res2.encode('utf-8')))
 
+        exlim = views.EXLIM
         views.EXLIM = 0
         res = self.client.get('/pir/xmllist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
-        views.EXLIM = 1000
+        views.EXLIM = exlim
 
     def test_csvlist(self):
 
-        c0 = 'Soud,Spisová značka,Stav řízení\n'
+        res0 = 'Soud,Spisová značka,Stav řízení\n'
 
-        c1 = c0 + '''\
+        res1 = res0 + '''\
 Krajský soud v Praze,KSPH 36 INS 16046/2011,(není známo)
 "Krajský soud v Hradci Králové, pobočka v Pardubicích",KSPA 56 \
 INS 47/2015,Povoleno oddlužení
@@ -1410,23 +1417,28 @@ rozhodnutím o úpadku
 
         res = self.client.get('/pir/csvlist/?number=9')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c0)
+        self.assertEqual(
+            res.content.decode('utf-8').replace('\r\n', '\n'),
+            res0)
 
         res = self.client.get('/pir/csvlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c1)
+        self.assertEqual(
+            res.content.decode('utf-8').replace('\r\n', '\n'),
+            res1)
 
+        exlim = views.EXLIM
         views.EXLIM = 0
         res = self.client.get('/pir/csvlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
-        views.EXLIM = 1000
+        views.EXLIM = exlim
 
     def test_jsonlist(self):
 
-        j0 = '[]'
+        res0 = '[]'
 
-        j1 = '''\
+        res1 = '''\
 [{"court": "Krajsk\u00fd soud v Praze", "debtors": [{"addresses": \
 [{"street_number": "3208", "street": "\u010cs. arm\u00e1dy", \
 "city": "Kladno", "type": "trval\u00e1", "zip": "272 01"}, \
@@ -1484,7 +1496,7 @@ oddlu\u017een\u00ed"}, {"court": "Krajsk\u00fd soud v \
 \u00fapadku"}]\
 '''
 
-        j2 = '''\
+        res2 = '''\
 [{"creditors": [{"name": "\u010cesk\u00e1 spr\u00e1va \
 soci\u00e1ln\u00edho zabezpe\u010den\u00ed", "addresses": \
 [], "gen_id": "00006963", "business_name": \
@@ -1667,21 +1679,22 @@ v \u010cesk\u00fdch Bud\u011bjovic\u00edch", "trustees": []}]\
 
         res = self.client.get('/pir/jsonlist/?number=9')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertJSONEqual(res.content.decode('utf-8'), j0)
+        self.assertJSONEqual(res.content.decode('utf-8'), res0)
 
         res = self.client.get('/pir/jsonlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertJSONEqual(res.content.decode('utf-8'), j1)
+        self.assertJSONEqual(res.content.decode('utf-8'), res1)
 
         res = self.client.get('/pir/jsonlist/?creditors=on')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertJSONEqual(res.content.decode('utf-8'), j2)
+        self.assertJSONEqual(res.content.decode('utf-8'), res2)
 
+        exlim = views.EXLIM
         views.EXLIM = 0
         res = self.client.get('/pir/jsonlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
-        views.EXLIM = 1000
+        views.EXLIM = exlim
 
     def test_party(self):
 

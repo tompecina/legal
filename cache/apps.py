@@ -34,11 +34,11 @@ class CacheConfig(AppConfig):
         from common.utils import logger
         from .models import Cache, Asset
         logger.debug('Partial statistics generated')
-        return [
-            [
+        return (
+            (
                 'Počet položek v tabulce Cache',
-                Cache.objects.count()],
-            [
+                Cache.objects.count()),
+            (
                 'Počet položek v tabulce Asset',
-                Asset.objects.count()],
-        ]
+                Asset.objects.count()),
+        )

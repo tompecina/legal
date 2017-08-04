@@ -23,7 +23,7 @@
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from common.utils import composeref
-from common.glob import register_regex
+from common.glob import REGISTER_REGEX
 from szr.models import Court
 
 
@@ -97,11 +97,11 @@ class Hearing(models.Model):
         db_index=True)
 
     senate = models.IntegerField(
-        validators=[MinValueValidator(0)])
+        validators=(MinValueValidator(0),))
 
     register = models.CharField(
         max_length=30,
-        validators=[RegexValidator(regex=register_regex)])
+        validators=(RegexValidator(regex=REGISTER_REGEX),))
 
     number = models.PositiveIntegerField()
 

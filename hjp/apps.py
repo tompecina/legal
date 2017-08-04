@@ -34,9 +34,9 @@ class HjpConfig(AppConfig):
         from common.utils import logger
         from cache.models import Asset
         logger.debug('Partial statistics generated')
-        return [
-            [
+        return (
+            (
                 'Počet položek v tabulce Asset',
                 Asset.objects.filter(
-                    assetid__startswith=HjpConfig.name.upper()).count()],
-        ]
+                    assetid__startswith=HjpConfig.name.upper()).count()),
+        )

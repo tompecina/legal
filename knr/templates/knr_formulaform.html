@@ -4,9 +4,9 @@
 	    <tr><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
               {% include "formwarning.html" %}            </td></tr>
-{% endif %}	    <tr class="{{ f.abbr.css_classes }}"><th>{{ f.abbr.label_tag }}</th><td colspan="2">{{ f.abbr }}</td></tr>
-	    <tr class="{{ f.name.css_classes }}"><th>{{ f.name.label_tag }}</th><td colspan="2">{{ f.name }}</td></tr>
-	    <tr class="{{ f.flat.css_classes }}"><th>{{ f.flat.label_tag }}</th><td colspan="2" class="nowrap">{{ f.flat }} Kč/km</td></tr>
+{% endif %}	    <tr class="{{ form.abbr.css_classes }}"><th>{{ form.abbr.label_tag }}</th><td colspan="2">{{ form.abbr }}</td></tr>
+	    <tr class="{{ form.name.css_classes }}"><th>{{ form.name.label_tag }}</th><td colspan="2">{{ form.name }}</td></tr>
+	    <tr class="{{ form.flat.css_classes }}"><th>{{ form.flat.label_tag }}</th><td colspan="2" class="nowrap">{{ form.flat }} Kč/km</td></tr>
 	    <tr><td></td><td class="plm">Ceny:</td></tr>
 {% for rate in rates %}	    <tr class="{{ rate.css_classes }}"><th>{{ rate.label_tag }}</th><td colspan="2" class="nowrap">{{ rate }} Kč/l</td></tr>
 {% endfor %}{% endblock %}

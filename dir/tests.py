@@ -27,7 +27,7 @@ from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 from common.settings import BASE_DIR
-from common.glob import localdomain
+from common.glob import LOCAL_DOMAIN
 from common.tests import link_equal, setdl
 from sir.cron import cron_gettr, cron_proctr
 from sir.models import Vec
@@ -36,7 +36,7 @@ from dir import cron, forms, models
 
 class TestCron(TransactionTestCase):
 
-    fixtures = ['dir_test.json']
+    fixtures = ('dir_test.json',)
 
     def test_dir_notice(self):
 
@@ -49,72 +49,90 @@ class TestCron(TransactionTestCase):
         Vec.objects.update(link="https://legal.pecina.cz/link")
         self.assertEqual(
             cron.dir_notice(1),
-            'Byli nově zaznamenáni tito dlužníci, které sledujete:\n\n'
-            ' - Test 02, sp. zn. KSBR 0 INS 4/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 03, sp. zn. KSOS 0 INS 7/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 04, sp. zn. KSOS 0 INS 36/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 05, sp. zn. KSOS 0 INS 35/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 07, sp. zn. KSOS 0 INS 18/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 08, sp. zn. KSPL 0 INS 31/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 09, sp. zn. KSOS 0 INS 2/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 11, sp. zn. KSUL 0 INS 22/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 12, sp. zn. KSPH 0 INS 32/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 13, sp. zn. KSHK 0 INS 19/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 14, sp. zn. MSPH 0 INS 20/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 15, sp. zn. KSPH 0 INS 8/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 15, sp. zn. KSOS 0 INS 11/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 15, sp. zn. KSCB 0 INS 27/2008\n'
-            '   https://legal.pecina.cz/link\n\n'
-            ' - Test 15, sp. zn. KSCB 0 INS 28/2008\n'
-            '   https://legal.pecina.cz/link\n\n')
+            '''\
+Byli nově zaznamenáni tito dlužníci, které sledujete:
+
+ - Test 02, sp. zn. KSBR 0 INS 4/2008
+   https://legal.pecina.cz/link
+
+ - Test 03, sp. zn. KSOS 0 INS 7/2008
+   https://legal.pecina.cz/link
+
+ - Test 04, sp. zn. KSOS 0 INS 36/2008
+   https://legal.pecina.cz/link
+
+ - Test 05, sp. zn. KSOS 0 INS 35/2008
+   https://legal.pecina.cz/link
+
+ - Test 07, sp. zn. KSOS 0 INS 18/2008
+   https://legal.pecina.cz/link
+
+ - Test 08, sp. zn. KSPL 0 INS 31/2008
+   https://legal.pecina.cz/link
+
+ - Test 09, sp. zn. KSOS 0 INS 2/2008
+   https://legal.pecina.cz/link
+
+ - Test 11, sp. zn. KSUL 0 INS 22/2008
+   https://legal.pecina.cz/link
+
+ - Test 12, sp. zn. KSPH 0 INS 32/2008
+   https://legal.pecina.cz/link
+
+ - Test 13, sp. zn. KSHK 0 INS 19/2008
+   https://legal.pecina.cz/link
+
+ - Test 14, sp. zn. MSPH 0 INS 20/2008
+   https://legal.pecina.cz/link
+
+ - Test 15, sp. zn. KSPH 0 INS 8/2008
+   https://legal.pecina.cz/link
+
+ - Test 15, sp. zn. KSOS 0 INS 11/2008
+   https://legal.pecina.cz/link
+
+ - Test 15, sp. zn. KSCB 0 INS 27/2008
+   https://legal.pecina.cz/link
+
+ - Test 15, sp. zn. KSCB 0 INS 28/2008
+   https://legal.pecina.cz/link
+
+''')
         self.assertFalse(models.Discovered.objects.exists())
 
 
 class TestForms(SimpleTestCase):
 
-    def test_DebtorForm(self):
+    def test_debtor_form(self):
 
-        f = forms.DebtorForm(
+        form = forms.DebtorForm(
             {'desc': 'Test',
              'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'year_birth_from': '1965',
              'year_birth_to': '1964'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.DebtorForm(
+        form = forms.DebtorForm(
             {'desc': 'Test',
              'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'year_birth_from': '1965',
              'year_birth_to': '1965'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.DebtorForm(
+        form = forms.DebtorForm(
             {'desc': 'Test',
              'name_opt': 'icontains',
              'first_name_opt': 'icontains',
              'year_birth_from': '1965',
              'year_birth_to': '1966'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
 
 class TestModels(TransactionTestCase):
 
-    fixtures = ['dir_test.json']
+    fixtures = ('dir_test.json',)
 
     def test_models(self):
 
@@ -134,7 +152,7 @@ class TestModels(TransactionTestCase):
 class TestViews1(TestCase):
 
     def setUp(self):
-        User.objects.create_user('user', 'user@' + localdomain, 'none')
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
         self.user = User.objects.first()
 
     def tearDown(self):
@@ -169,12 +187,12 @@ class TestViews1(TestCase):
 
         res = self.client.post(
             '/dir/',
-            {'email': 'alt@' + localdomain,
+            {'email': 'alt@' + LOCAL_DOMAIN,
              'submit': 'Změnit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.user = User.objects.first()
-        self.assertEqual(self.user.email, 'alt@' + localdomain)
+        self.assertEqual(self.user.email, 'alt@' + LOCAL_DOMAIN)
 
         res = self.client.get('/dir/')
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -300,9 +318,9 @@ class TestViews1(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Nový dlužník')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Nový dlužník')
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -463,9 +481,9 @@ class TestViews1(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Úprava dlužníka')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Úprava dlužníka')
 
         res = self.client.post(
             '/dir/debtorform/{:d}/'.format(debtor_id),
@@ -502,7 +520,7 @@ class TestViews1(TestCase):
 class TestViews2(TestCase):
 
     def setUp(self):
-        User.objects.create_user('user', 'user@' + localdomain, 'none')
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
         self.user = User.objects.first()
 
     def tearDown(self):
@@ -661,11 +679,12 @@ class TestViews2(TestCase):
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
 
-        with open(join(BASE_DIR, 'dir', 'testdata', 'import.csv'), 'rb') as fi:
+        with open(join(BASE_DIR, 'dir', 'testdata', 'import.csv'), 'rb') \
+            as infile:
             res = self.client.post(
                 '/dir/debtorbatchform/',
                 {'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorbatchresult.html')
@@ -673,54 +692,57 @@ class TestViews2(TestCase):
         self.assertEqual(res.context['count'], 7)
         self.assertEqual(
             res.context['errors'],
-            [[3, 'Prázdný popis'],
-             [4, 'Chybný formát'],
-             [5, 'Chybná zkratka pro posici v poli <q>název</q>'],
-             [6, 'Příliš dlouhé pole <q>název</q>'],
-             [7, 'Chybná zkratka pro posici v poli <q>jméno</q>'],
-             [8, 'Příliš dlouhé pole <q>jméno</q>'],
-             [9, 'Chybná hodnota pro IČO'],
-             [10, 'Chybná hodnota pro IČO'],
-             [11, 'Chybná hodnota pro DIČ'],
-             [12, 'Chybná hodnota pro rodné číslo'],
-             [13, 'Chybná hodnota pro datum narození'],
-             [14, 'Chybná hodnota pro pole <q>rokNarozeníOd</q>'],
-             [15, 'Chybná hodnota pro pole <q>rokNarozeníOd</q>'],
-             [16, 'Chybná hodnota pro pole <q>rokNarozeníDo</q>'],
-             [17, 'Chybná hodnota pro pole <q>rokNarozeníDo</q>'],
-             [18, 'Chybný interval pro rok narození'],
-             [19, 'Chybný formát'],
-             [20, 'Chybný parametr: "xxx"'],
-             [21, 'Popisu "Test 21" odpovídá více než jeden dlužník'],
-             [28, 'Příliš dlouhý popis']])
+            [(3, 'Prázdný popis'),
+             (4, 'Chybný formát'),
+             (5, 'Chybná zkratka pro posici v poli <q>název</q>'),
+             (6, 'Příliš dlouhé pole <q>název</q>'),
+             (7, 'Chybná zkratka pro posici v poli <q>jméno</q>'),
+             (8, 'Příliš dlouhé pole <q>jméno</q>'),
+             (9, 'Chybná hodnota pro IČO'),
+             (10, 'Chybná hodnota pro IČO'),
+             (11, 'Chybná hodnota pro DIČ'),
+             (12, 'Chybná hodnota pro rodné číslo'),
+             (13, 'Chybná hodnota pro datum narození'),
+             (14, 'Chybná hodnota pro pole <q>rokNarozeníOd</q>'),
+             (15, 'Chybná hodnota pro pole <q>rokNarozeníOd</q>'),
+             (16, 'Chybná hodnota pro pole <q>rokNarozeníDo</q>'),
+             (17, 'Chybná hodnota pro pole <q>rokNarozeníDo</q>'),
+             (18, 'Chybný interval pro rok narození'),
+             (19, 'Chybný formát'),
+             (20, 'Chybný parametr: "xxx"'),
+             (21, 'Popisu "Test 21" odpovídá více než jeden dlužník'),
+             (28, 'Příliš dlouhý popis')])
 
         res = self.client.get('/dir/debtorexport/')
         self.assertEqual(
             res.content.decode('utf-8'),
-            'Test 1,název=Název 2:*\r\n'
-            'Test 21\r\n'
-            'Test 21\r\n'
-            'Test 22,soud=KSOS,název=Název:*,jméno=Jméno:<,IČO=12345678,'
-            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,'
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n'
-            'Test 23,soud=KSOS,název=Název:<,jméno=Jméno:>,IČO=12345678,'
-            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,'
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n'
-            'Test 24,soud=KSOS,název=Název:>,jméno=Jméno:=,IČO=12345678,'
-            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,'
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n'
-            'Test 25,soud=KSOS,název=Název:=,jméno=Jméno:*,IČO=12345678,'
-            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,'
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n'
-            'Test 26,soud=KSOS,název=Název:*,jméno=Jméno:*,IČO=12345678,'
-            'DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,'
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n{}\r\n'.format('T' * 255))
+            '''\
+Test 1,název=Název 2:*
+Test 21
+Test 21
+Test 22,soud=KSOS,název=Název:*,jméno=Jméno:<,IČO=12345678,\
+DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
+rokNarozeníOd=1965,rokNarozeníDo=1966
+Test 23,soud=KSOS,název=Název:<,jméno=Jméno:>,IČO=12345678,\
+DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
+rokNarozeníOd=1965,rokNarozeníDo=1966
+Test 24,soud=KSOS,název=Název:>,jméno=Jméno:=,IČO=12345678,\
+DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
+rokNarozeníOd=1965,rokNarozeníDo=1966
+Test 25,soud=KSOS,název=Název:=,jméno=Jméno:*,IČO=12345678,\
+DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
+rokNarozeníOd=1965,rokNarozeníDo=1966
+Test 26,soud=KSOS,název=Název:*,jméno=Jméno:*,IČO=12345678,\
+DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
+rokNarozeníOd=1965,rokNarozeníDo=1966
+{}
+'''.format('T' * 255).replace('\n', '\r\n'))
 
 
 class TestViews3(TransactionTestCase):
 
     def setUp(self):
-        User.objects.create_user('user', 'user@' + localdomain, 'none')
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
         self.user = User.objects.first()
 
     def tearDown(self):
@@ -771,8 +793,10 @@ class TestViews3(TransactionTestCase):
         self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
         self.assertEqual(
             res.content.decode('utf-8'),
-            'Test 1,soud=MSPH,název=Název:*,jméno=Jméno:<,IČO=12345678,'
-            'DIČ=001-12345678,RČ=700101/1234,datumNarození=15.01.1970,'
-            'rokNarozeníOd=1965,rokNarozeníDo=1966\r\n'
-            'Test 2,název=Název:>,jméno=Jméno:=\r\n'
-            'Test 3\r\n')
+            '''\
+Test 1,soud=MSPH,název=Název:*,jméno=Jméno:<,IČO=12345678,\
+DIČ=001-12345678,RČ=700101/1234,datumNarození=15.01.1970,\
+rokNarozeníOd=1965,rokNarozeníDo=1966
+Test 2,název=Název:>,jméno=Jméno:=
+Test 3
+'''.replace('\n', '\r\n'))

@@ -2,29 +2,29 @@
 #
 # common/widgets.py
 #
-# Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+# copyright (c) 2011-17 tomáš pecina <tomas@pecina.cz>
 #
-# This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+# this file is part of legal.pecina.cz, a web-based toolbox for lawyers.
 #
-# This application is free software: you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
+# this application is free software: you can redistribute it and/or
+# modify it under the terms of the gnu general public license as
+# published by the free software foundation, either version 3 of the
+# license, or (at your option) any later version.
 #
-# This application is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# this application is distributed in the hope that it will be useful,
+# but without any warranty; without even the implied warranty of
+# merchantability or fitness for a particular purpose.  see the
+# gnu general public license for more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# you should have received a copy of the gnu general public license
+# along with this program.  if not, see <http://www.gnu.org/licenses/>.
 #
 
 from django import forms
 from django.utils.safestring import mark_safe
 
 
-class aw(forms.TextInput):
+class Aw(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '15', 'maxlength': '25'}
@@ -33,7 +33,7 @@ class aw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class saw(forms.TextInput):
+class Saw(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '8', 'maxlength': '8'}
@@ -42,7 +42,7 @@ class saw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class sew(forms.TextInput):
+class Sew(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '50'}
@@ -51,7 +51,7 @@ class sew(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class msew(forms.TextInput):
+class Msew(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '35'}
@@ -60,7 +60,7 @@ class msew(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class ssew(forms.TextInput):
+class Ssew(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '20'}
@@ -69,7 +69,7 @@ class ssew(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class abbrw(forms.TextInput):
+class Abbrw(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '12'}
@@ -78,7 +78,7 @@ class abbrw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class genw(forms.TextInput):
+class Genw(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '60'}
@@ -87,7 +87,7 @@ class genw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class gpsw(forms.TextInput):
+class Gpsw(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '12', 'maxlength': '20'}
@@ -96,7 +96,7 @@ class gpsw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class consw(forms.TextInput):
+class Consw(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '4', 'maxlength': '4'}
@@ -105,7 +105,7 @@ class consw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class taw(forms.Textarea):
+class Taw(forms.Textarea):
 
     def __init__(self, **kwargs):
         attrs = {'rows': '8', 'cols': '80'}
@@ -118,7 +118,7 @@ class taw(forms.Textarea):
             super().render(*args, **kwargs).replace('>\n', '>', 1))
 
 
-class currw(forms.TextInput):
+class Currw(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '3', 'maxlength': '3', 'class': 'toupper'}
@@ -127,7 +127,7 @@ class currw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class ratew(forms.TextInput):
+class Ratew(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '15', 'maxlength': '25'}
@@ -136,7 +136,7 @@ class ratew(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class fxw(forms.TextInput):
+class Fxw(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '6', 'maxlength': '10'}
@@ -145,7 +145,7 @@ class fxw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class sdw(forms.TextInput):
+class Sdw(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '50', 'maxlength': '50'}
@@ -154,7 +154,7 @@ class sdw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class shw(forms.TextInput):
+class Shw(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '4', 'maxlength': '4'}
@@ -163,7 +163,7 @@ class shw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class yw(forms.TextInput):
+class Yw(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '4'}
@@ -172,12 +172,12 @@ class yw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class hw(forms.HiddenInput):
+class Hw(forms.HiddenInput):
 
     pass
 
 
-class emw(forms.TextInput):
+class Emw(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '40'}
@@ -186,31 +186,33 @@ class emw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-rs = forms.RadioSelect
+class Rs(forms.RadioSelect):
+
+    pass
 
 
 class CurrencyWidget(forms.widgets.MultiWidget):
 
     template_name = 'currencywidget.html'
 
-    std_curr = ['EUR', 'CHF', 'GBP', 'JPY', 'RUB', 'USD']
+    std_curr = ('EUR', 'CHF', 'GBP', 'JPY', 'RUB', 'USD')
 
     def __init__(self, czk=True, attrs=None):
-        self._currlist = (['CZK'] if czk else []) + self.std_curr
+        self._currlist = (('CZK',) if czk else ()) + self.std_curr
         super().__init__(
             (forms.Select(
-                choices=([[x, x] for x in self._currlist] + [['OTH', 'Jiná:']]),
+                choices=[(x, x) for x in self._currlist] + [('OTH', 'Jiná:')],
                 attrs={'class': 'currsel'}),
-             currw()),
+             Currw()),
             attrs)
 
     def decompress(self, value):
         if value in self._currlist:
-            return [value, None]
-        return ['OTH', value]
+            return (value, None)
+        return ('OTH', value)
 
 
-class dw(forms.DateInput):
+class Dw(forms.DateInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '10', 'maxlength': '12'}
@@ -220,10 +222,10 @@ class dw(forms.DateInput):
         super().__init__(**kwargs)
 
     def render(self, name, *args, **kwargs):
-        r = super().render(name, *args, **kwargs)
+        res = super().render(name, *args, **kwargs)
         if self._today:
             return mark_safe(
                 '{0}&nbsp;<input type="submit" name="submit_set_{1}" '
                 'value="Dnes" class="today" id="id_set_{1}" />'
-                .format(r, name))
-        return r
+                .format(res, name))
+        return res

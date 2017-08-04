@@ -26,17 +26,17 @@ from common import forms, fields, widgets
 class InsForm(forms.Form):
 
     number = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=1,
         initial='')
 
     year = fields.IntegerField(
-        widget=widgets.saw(),
+        widget=widgets.Saw(),
         min_value=2008,
         initial='')
 
     desc = fields.CharField(
-        widget=widgets.genw(),
+        widget=widgets.Genw(),
         max_length=255,
         label='Popis')
 

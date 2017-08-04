@@ -20,16 +20,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from calendar import monthrange
 from pickle import dumps, loads
 from xml.sax.saxutils import escape
 import csv
 from io import BytesIO
-from os.path import join
-import reportlab.rl_config
-from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
-from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     Paragraph, SimpleDocTemplate, Table, TableStyle, Spacer, KeepTogether)
 from reportlab.lib.styles import ParagraphStyle
@@ -41,15 +37,14 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.apps import apps
 from common import fields
-from common.settings import FONT_DIR
 from common.utils import (
-    getbutton, yfactor, mfactor, formam, xmldecorate, xmlescape, xmlunescape,
-    Lf, getXML, newXML, iso2date, CanvasXML, logger)
+    getbutton, yfactor, mfactor, famt, xml_decorate, xml_espace, xml_unespace,
+    LocalFloat, get_xml, new_xml, iso2date, register_fonts, make_pdf, logger)
 from common.glob import (
-    ydconvs, odp, mdconvs, LIM, inerr, localsubdomain, localurl)
+    YDCONVS, ODP, MDCONVS, LIM, INERR, LOCAL_SUBDOMAIN, LOCAL_URL, ASSET_EXP)
 from common.views import error
-from cache.main import getasset, setasset
-from cnb.main import getMPIrate, getFXrate
+from cache.utils import getasset, setasset
+from cnb.utils import get_mpi_rate, get_fx_rate
 from hsp.forms import MainForm, DebitForm, CreditForm, BalanceForm, FXform
 
 
@@ -58,7 +53,7 @@ APP = __package__
 APPVERSION = apps.get_app_config(APP).version
 
 
-class Debt(object):
+class Debt:
 
     def __init__(self):
         self.title = ''
@@ -71,75 +66,75 @@ class Debt(object):
         self.fxrates = []
 
 
-class Debit(object):
+class Debit:
 
     def __init__(self):
         self.description = ''
         self.model = 'fixed'
-        self.fixed_amount = 0.0
+        self.fixed_amount = 0
         self.fixed_currency = 'CZK'
         self.fixed_date = None
-        self.rate = 0.0
+        self.rate = 0
         self.day_count_convention = ''
         self.principal_debit = 0
-        self.principal_amount = 0.0
+        self.principal_amount = 0
         self.principal_currency = 'CZK'
         self.date_from = None
         self.date_to = None
 
 
-class Credit(object):
+class Credit:
 
     def __init__(self):
         self.description = ''
         self.date = None
-        self.amount = 0.0
+        self.amount = 0
         self.currency = 'CZK'
         self.debits = []
 
 
-class Balance(object):
+class Balance:
 
     def __init__(self):
         self.description = ''
         self.date = None
 
 
-class FXrate(object):
+class FXrate:
 
     def __init__(self):
         self.currency_from = None
         self.currency_to = None
-        self.rate_from = 1.0
-        self.rate_to = 1.0
+        self.rate_from = 1
+        self.rate_to = 1
         self.date_from = None
         self.date_to = None
 
 
-class Result(object):
+class Result:
 
     pass
 
 
-aid = '{} {}'.format(APP.upper(), APPVERSION)
+AID = '{} {}'.format(APP.upper(), APPVERSION)
 
 
 def getdebt(request):
 
-    a = getasset(request, aid)
-    if a:
+    asset = getasset(request, AID)
+    if asset:
         try:
-            return loads(a)
+            return loads(asset)
         except:  # pragma: no cover
             pass
     setdebt(request, Debt())
-    a = getasset(request, aid)
-    return loads(a) if a else None
+    asset = getasset(request, AID)
+    return loads(asset) if asset else None
 
 
 def setdebt(request, data):
 
-    return setasset(request, aid, dumps(data), timedelta(weeks=10))
+    return setasset(request, AID, dumps(data), ASSET_EXP)
 
 
 def n2l(num):
@@ -153,226 +148,227 @@ def n2l(num):
 DR, CR, BAL = tuple(range(3))
 
 
-def rmdsl(li):
+def rmdsl(lst):
     """
-    Remove duplicate elements from list 'li'.
+    Remove duplicate elements from list 'lst'.
     """
 
-    if li:
-        s = li[-1]
-        for i in range((len(li) - 2), -1, -1):
-            if s == li[i]:
-                del li[i]
+    if lst:
+        elem = lst[-1]
+        for idx in range((len(lst) - 2), -1, -1):
+            if elem == lst[idx]:
+                del lst[idx]
             else:
-                s = li[i]
-    return li
+                elem = lst[idx]
+    return lst
 
 
 def calcint(interest, pastdate, presdate, debt, res):
 
-    if not pastdate or pastdate < (interest.default_date - odp):
-        pastdate = (interest.default_date - odp)
+    if not pastdate or pastdate < (interest.default_date - ODP):
+        pastdate = interest.default_date - ODP
 
     if interest.date_to and interest.date_to < presdate:
         presdate = interest.date_to
 
     if pastdate >= presdate:
-        return 0.0, None
+        return .0, None
 
     principal = debt.debits[interest.principal_debit - 1].balance \
         if interest.principal_debit else interest.principal_amount
 
     if interest.model == 'per_annum':
-        return (principal * yfactor(pastdate, presdate,
-            interest.day_count_convention) * interest.rate / 100), None
+        return principal * yfactor(pastdate, presdate,
+            interest.day_count_convention) * interest.rate / 100, None
 
     if interest.model == 'per_mensem':
-        return (principal * mfactor(pastdate, presdate,
-            interest.day_count_convention) * interest.rate / 100), None
+        return principal * mfactor(pastdate, presdate,
+            interest.day_count_convention) * interest.rate / 100, None
 
     if interest.model == 'per_diem':
-        return (principal * (presdate - pastdate).days
-            * interest.rate / 1000), None
+        return principal * (presdate - pastdate).days \
+            * interest.rate / 1000, None
 
     if interest.model == 'cust1':
-        r = getMPIrate('DISC', interest.default_date, log=res.mpi)
-        if r[1]:
-            return None, r[1]
+        rate = get_mpi_rate('DISC', interest.default_date, log=res.mpi)
+        if rate[1]:
+            return None, rate[1]
         return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
-            * r[0] / 50), None
+            * rate[0] / 50), None
 
     if interest.model == 'cust2':
-        s = 0.0
-        t = pastdate
+        temp = 0
+        dat = pastdate
         while True:
-            t += odp
-            y1 = t.year
-            m1 = t.month
-            d1 = 1
-            if m1 > 6:
-                m1 = 7
+            dat += ODP
+            year1 = dat.year
+            month1 = dat.month
+            day1 = 1
+            if month1 > 6:
+                month1 = 7
             else:
-                m1 = 1
-            r = getMPIrate('REPO', date(y1, m1, d1), log=res.mpi)
-            if r[1]:
-                return None, r[1]
-            y2 = y1
-            if y1 < presdate.year or (m1 == 1 and presdate.month > 6):
-                if m1 == 1:
-                    m2 = 6
-                    d2 = 30
+                month1 = 1
+            rate = get_mpi_rate('REPO', date(year1, month1, day1), log=res.mpi)
+            if rate[1]:
+                return None, rate[1]
+            year2 = year1
+            if year1 < presdate.year or (month1 == 1 and presdate.month > 6):
+                if month1 == 1:
+                    month2 = 6
+                    day2 = 30
                 else:
-                    m2 = 12
-                    d2 = 31
-                nt = date(y2, m2, d2)
-                s += yfactor((t - odp), nt, 'ACT/ACT') * (r[0] + 7.0)
-                t = nt
+                    month2 = 12
+                    day2 = 31
+                newt = date(year2, month2, day2)
+                temp += yfactor(dat - ODP, newt, 'ACT/ACT') * (rate[0] + 7)
+                dat = newt
             else:
-                m2 = presdate.month
-                d2 = presdate.day
-                return (principal * (s + yfactor((t - odp), date(y2, m2, d2),
-                    'ACT/ACT') * (r[0] + 7)) / 100), None
+                month2 = presdate.month
+                day2 = presdate.day
+                return principal * (temp + yfactor(dat - ODP,
+                    date(year2, month2, day2), 'ACT/ACT') \
+                    * (rate[0] + 7)) / 100, None
 
     if interest.model == 'cust3':
-        y = interest.default_date.year
-        m = interest.default_date.month
-        d = interest.default_date.day
-        if m > 6:
-            m = 6
-            d = 30
+        year = interest.default_date.year
+        month = interest.default_date.month
+        day = interest.default_date.day
+        if month > 6:
+            month = 6
+            day = 30
         else:
-            m = 12
-            d = 31
-            y -= 1
-        r = getMPIrate('REPO', date(y, m, d), log=res.mpi)
-        if r[1]:
-            return None, r[1]
-        return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
-            * (r[0] + 7) / 100), None
+            month = 12
+            day = 31
+            year -= 1
+        rate = get_mpi_rate('REPO', date(year, month, day), log=res.mpi)
+        if rate[1]:
+            return None, rate[1]
+        return principal * yfactor(pastdate, presdate, 'ACT/ACT') \
+            * (rate[0] + 7) / 100, None
 
     if interest.model == 'cust5':
-        y = interest.default_date.year
-        m = interest.default_date.month
-        d = interest.default_date.day
-        if m > 6:
-            m = 6
-            d = 30
+        year = interest.default_date.year
+        month = interest.default_date.month
+        day = interest.default_date.day
+        if month > 6:
+            month = 6
+            day = 30
         else:
-            m = 12
-            d = 31
-            y -= 1
-        r = getMPIrate('REPO', date(y, m, d), log=res.mpi)
-        if r[1]:
-            return None, r[1]
-        return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
-            * (r[0] + 8) / 100), None
+            month = 12
+            day = 31
+            year -= 1
+        rate = get_mpi_rate('REPO', date(year, month, day), log=res.mpi)
+        if rate[1]:
+            return None, rate[1]
+        return principal * yfactor(pastdate, presdate, 'ACT/ACT') \
+            * (rate[0] + 8) / 100, None
 
     if interest.model == 'cust6':
-        y = interest.default_date.year
-        m = interest.default_date.month
-        if m > 6:
-            m = 7
+        year = interest.default_date.year
+        month = interest.default_date.month
+        if month > 6:
+            month = 7
         else:
-            m = 1
-        r = getMPIrate('REPO', date(y, m, 1), log=res.mpi)
-        if r[1]:
-            return None, r[1]
-        return (principal * yfactor(pastdate, presdate, 'ACT/ACT')
-            * (r[0] + 8) / 100), None
+            month = 1
+        rate = get_mpi_rate('REPO', date(year, month, 1), log=res.mpi)
+        if rate[1]:
+            return None, rate[1]
+        return principal * yfactor(pastdate, presdate, 'ACT/ACT') \
+            * (rate[0] + 8) / 100, None
 
     if interest.model == 'cust4':
-        return (principal * (presdate - pastdate).days * .0025), None
+        return principal * (presdate - pastdate).days / 400, None
 
     return None, 'Neznámý model'
 
 
-def distr(debt, dt, credit, amount, disarr, res):
+def distr(debt, dat, credit, amt, disarr, res):
 
-    if amount < LIM:
-        return 0.0, None
-    for i in credit.debits:
-        debit = debt.debits[i]
-        if debit.nb >= LIM:
+    if amt < LIM:
+        return 0, None
+    for idx in credit.debits:
+        debit = debt.debits[idx]
+        if debit.newb >= LIM:
             if credit.currency == debit.currency:
-                rt = 1.0
+                ratio = 1
             else:
                 for fxrate in debt.fxrates:
                     if fxrate.currency_from == credit.currency \
                         and fxrate.currency_to == debit.currency \
-                        and (not fxrate.date_from or fxrate.date_from <= dt) \
-                        and (not fxrate.date_to or dt <= fxrate.date_to):
-                        rt = fxrate.rate_to / fxrate.rate_from
+                        and (not fxrate.date_from or fxrate.date_from <= dat) \
+                        and (not fxrate.date_to or dat <= fxrate.date_to):
+                        ratio = fxrate.rate_to / fxrate.rate_from
                         break
                 else:
                     if credit.currency == 'CZK':
-                        rcl = 1.0
+                        rcl = 1
                     else:
-                        r, q, dr, msg = getFXrate(
+                        rate, qty, dummy, msg = get_fx_rate(
                             credit.currency,
-                            dt,
-                            log=res.fx,
+                            dat,
+                            log=res.fxinfo,
                             use_fixed=True,
                             log_fixed=res.fix)
                         if msg:
-                            return 0.0, msg
-                        rcl = r / q
+                            return .0, msg
+                        rcl = rate / qty
                     if debit.currency == 'CZK':
-                        rld = 1.0
+                        rld = 1
                     else:
-                        r, q, dr, msg = getFXrate(
+                        rate, qty, dummy, msg = get_fx_rate(
                             debit.currency,
-                            dt,
-                            log=res.fx,
+                            dat,
+                            log=res.fxinfo,
                             use_fixed=True,
                             log_fixed=res.fix)
                         if msg:
-                            return 0.0, msg
-                        rld = r / q
-                    rt = rcl / rld
-            camount = amount * rt
-            if camount < debit.nb:
-                debit.nb -= camount
-                debit.nb = round(debit.nb, debt.rounding)
-                disarr[i] += camount
-                return 0.0, None
-            disarr[i] += debit.nb
-            amount -= debit.nb / rt
-            debit.nb = 0.0
-    return amount, None
+                            return 0, msg
+                        rld = rate / qty
+                    ratio = rcl / rld
+            camt = amt * ratio
+            if camt < debit.newb:
+                debit.newb -= camt
+                debit.newb = round(debit.newb, debt.rounding)
+                disarr[idx] += camt
+                return 0, None
+            disarr[idx] += debit.newb
+            amt -= debit.newb / ratio
+            debit.newb = 0
+    return amt, None
 
 
-def calc(debt, pram=(lambda x: x)):
+def calc(debt, pram=lambda x: x):
 
     res = Result()
 
     res.msg = None
     res.rows = []
-    res.fx = []
+    res.fxinfo = []
     res.fix = []
     res.mpi = []
 
-    res.nd = len(debt.debits)
-    res.nc = len(debt.credits)
-    res.nb = len(debt.balances)
-    res.nf = len(debt.fxrates)
+    res.newd = len(debt.debits)
+    res.newc = len(debt.credits)
+    res.newb = len(debt.balances)
+    res.newfx = len(debt.fxrates)
 
     res.ids = []
-    for i, debit in enumerate(debt.debits):
-        debit.id = n2l(i)
+    for idx, debit in enumerate(debt.debits):
+        debit.id = n2l(idx)
         res.ids.append(debit.id)
 
     res.currencies = []
     for debit in debt.debits:
         if debit.model == 'fixed':
-            c = debit.fixed_currency
+            curr = debit.fixed_currency
         elif debit.principal_debit:
-            c = debt.debits[debit.principal_debit - 1].fixed_currency
+            curr = debt.debits[debit.principal_debit - 1].fixed_currency
         else:
-            c = debit.principal_currency
-        debit.currency = c
-        debit.disp_currency = c
-        if c not in res.currencies:
-            res.currencies.append(c)
+            curr = debit.principal_currency
+        debit.currency = curr
+        debit.disp_currency = curr
+        if curr not in res.currencies:
+            res.currencies.append(curr)
     res.multicurrency_debit = (len(res.currencies) > 1)
     if res.currencies and not res.multicurrency_debit:
         res.currency_debits = res.currencies[0]
@@ -384,218 +380,236 @@ def calc(debt, pram=(lambda x: x)):
     if res.currencies and not res.multicurrency:
         res.currency = res.currencies[0]
 
-    dr = {}
+    drat = {}
     cust4 = []
     ncust4 = []
-    for i, debit in enumerate(debt.debits):
+    for idx, debit in enumerate(debt.debits):
         debit.balance = 0.0
         if debit.model == 'fixed':
-            dt = debit.fixed_date
-            if dt not in dr:
-                dr[dt] = []
-            dr[dt].append(i)
+            dat = debit.fixed_date
+            if dat not in drat:
+                drat[dat] = []
+            drat[dat].append(idx)
         else:
-            debit.default_date = (debit.date_from + odp) if debit.date_from \
-                else (debt.debits[debit.principal_debit - 1].fixed_date + odp)
+            debit.default_date = debit.date_from + ODP if debit.date_from \
+                else debt.debits[debit.principal_debit - 1].fixed_date + ODP
             if debit.model == 'cust4':
                 cust4.append(debit)
                 debit.mb = debit.default_date
-                debit.mm = 25.0 if debit.currency == 'CZK' else 0.0
-                debit.ui = debit.li = 0.0
+                debit.mm = 25 if debit.currency == 'CZK' else 0
+                debit.ui = debit.li = 0
             else:
                 ncust4.append(debit)
-    ir = cust4 + ncust4
+    irs = cust4 + ncust4
 
-    cr = {}
-    for i, credit in enumerate(debt.credits):
-        credit.sp = 0.0
-        dt = credit.date
-        if dt not in cr:
-            cr[dt] = []
-        cr[dt].append(i)
-    bal = {}
-    for i, balance in enumerate(debt.balances):
-        dt = balance.date
-        if dt not in bal:
-            bal[dt] = []
-        bal[dt].append(i)
+    crd = {}
+    for idx, credit in enumerate(debt.credits):
+        credit.sp = 0
+        dat = credit.date
+        if dat not in crd:
+            crd[dat] = []
+        crd[dat].append(idx)
+    bald = {}
+    for idx, balance in enumerate(debt.balances):
+        dat = balance.date
+        if dat not in bald:
+            bald[dat] = []
+        bald[dat].append(idx)
 
-    ta = []
-    for dt, l in dr.items():
-        for i in l:
-            ta.append({'tp': DR, 'dt': dt, 'id': i, 'o': debt.debits[i]})
-    for dt, l in cr.items():
-        for i in l:
-            ta.append({'tp': CR, 'dt': dt, 'id': i, 'o': debt.credits[i]})
-    for dt, l in bal.items():
-        for i in l:
-            ta.append({'tp': BAL, 'dt': dt, 'id': i, 'o': debt.balances[i]})
-    ta.sort(key=(lambda x: x['tp']))
-    ta.sort(key=(lambda x: x['dt']))
+    tra = []
+    for dat, lst in drat.items():
+        for idx in lst:
+            tra.append({
+                'type': DR,
+                'date': dat,
+                'id': idx,
+                'object': debt.debits[idx],
+            })
+    for dat, lst in crd.items():
+        for idx in lst:
+            tra.append({
+                'type': CR,
+                'date': dat,
+                'id': idx,
+                'object': debt.credits[idx],
+            })
+    for dat, lst in bald.items():
+        for idx in lst:
+            tra.append({
+                'type': BAL,
+                'date': dat,
+                'id': idx,
+                'object': debt.balances[idx],
+            })
+    tra.sort(key=lambda x: x['type'])
+    tra.sort(key=lambda x: x['date'])
 
-    res.nd3 = (res.nd * 3)
-    if res.nd:
+    res.newd3 = res.newd * 3
+    if res.newd:
         res.hrow = True
         res.crow = res.ccol = res.multicurrency
-        res.scol = not res.multicurrency_debit and res.nd > 1
-        res.c1 = 3 if res.crow else 2
-        res.c2 = res.nd
-        res.c3 = res.nd + (1 if res.scol else 0)
-        res.c4 = (res.nd * 3) + 3 + (1 if res.scol else 0) \
+        res.scol = not res.multicurrency_debit and res.newd > 1
+        res.cell1 = 3 if res.crow else 2
+        res.cell2 = res.newd
+        res.cell3 = res.newd + (1 if res.scol else 0)
+        res.cell4 = (res.newd * 3) + 3 + (1 if res.scol else 0) \
             + (1 if res.ccol else 0)
     else:
         res.hrow = res.crow = res.ccol = res.scol = False
-        res.c1 = res.c2 = res.c3 = 1
-        res.c4 = 7
-    res.r3 = list(range(3))
+        res.cell1 = res.cell2 = res.cell3 = 1
+        res.cell4 = 7
+    res.rng3 = list(range(3))
 
-    if not ta:
+    if not tra:
         return res
 
-    dt = ta[0]['dt']
-    for i in ir:
-        dt = min(dt, i.default_date)
-    dt -= odp
-    e = 0
+    dat = tra[0]['date']
+    for itr in irs:
+        dat = min(dat, itr.default_date)
+    dat -= ODP
+    eps = 0
     cud = None
-    while dt <= ta[-1]['dt']:
-        for i in cust4:
-            if dt >= i.default_date and (not i.date_to or dt <= i.date_to):
-                if dt == i.mb:
-                    i.li = 0.0
-                    i.ui = i.mm
-                if i.principal_debit:
-                    ii = debt.debits[i.principal_debit - 1].balance
+    while dat <= tra[-1]['date']:
+        for itr in cust4:
+            if dat >= itr.default_date and \
+               (not itr.date_to or dat <= itr.date_to):
+                if dat == itr.mb:
+                    itr.li = 0
+                    itr.ui = itr.mm
+                iitr = debt.debits[itr.principal_debit - 1].balance \
+                    if itr.principal_debit else itr.principal_amount
+                iitr /= 400
+                iitr = max(iitr, 0)
+                itr.li += iitr
+                if itr.li > itr.ui:
+                    ditr = itr.li - itr.ui
+                    itr.ui = itr.li
                 else:
-                    ii = i.principal_amount
-                ii *= .0025
-                ii = max(ii, 0.0)
-                i.li += ii
-                if i.li > i.ui:
-                    di = (i.li - i.ui)
-                    i.ui = i.li
-                else:
-                    di = 0.0
-                if dt == i.mb:
-                    di += i.mm
-                    d = i.default_date.day
-                    m = (dt.month + 1)
-                    y = dt.year
-                    if m > 12:
-                        m = 1
-                        y += 1
-                    d = min(d, monthrange(y, m)[1])
-                    i.mb = date(y, m, d)
-                i.balance += di
+                    ditr = 0.0
+                if dat == itr.mb:
+                    ditr += itr.mm
+                    day = itr.default_date.day
+                    month = dat.month + 1
+                    year = dat.year
+                    if month > 12:
+                        month = 1
+                        year += 1
+                    day = min(day, monthrange(year, month)[1])
+                    itr.mb = date(year, month, day)
+                itr.balance += ditr
 
-        while e < len(ta) and ta[e]['dt'] == dt:
-            tt = ta[e]
+        while eps < len(tra) and tra[eps]['date'] == dat:
+            trn = tra[eps]
             for debit in debt.debits:
-                debit.nb = debit.balance
-            for i in ncust4:
-                ai, res.msg = calcint(i, cud, dt, debt, res)
+                debit.newb = debit.balance
+            for itr in ncust4:
+                aitr, res.msg = calcint(itr, cud, dat, debt, res)
                 if res.msg:  # pragma: no cover
                     return res
-                i.nb += ai
-            o = tt['o']
-            row = {'object': o,
-                   'date': dt,
-                   'description': o.description,
-                   'amount': pram(0.0),
-                   'pre': [],
-                   'change': [],
-                   'post': [],
-                   'pre_total': 0.0,
-                   'post_total': 0.0,
-                   'cr_distr': ([0.0] * res.nd),
-                   'sp_distr': ([0.0] * res.nd),
-                   'sps': [],
-                   'currency': '',
-                   'disp_currency': ''}
-            tp = row['type'] = tt['tp']
+                itr.newb += aitr
+            obj = trn['object']
+            row = {
+                'object': obj,
+                'date': dat,
+                'description': obj.description,
+                'amount': pram(0.0),
+                'pre': [],
+                'change': [],
+                'post': [],
+                'pre_total': 0,
+                'post_total': 0,
+                'cr_distr': [0] * res.newd,
+                'sp_distr': [0] * res.newd,
+                'sps': [],
+                'currency': '',
+                'disp_currency': '',
+            }
+            typ = row['type'] = trn['type']
             for debit in debt.debits:
-                debit.ob = debit.nb = round(debit.nb, debt.rounding)
-                if tp == BAL:
-                    row['pre'].append(pram(0.0))
+                debit.ob = debit.newb = round(debit.newb, debt.rounding)
+                if typ == BAL:
+                    row['pre'].append(pram(0))
                 else:
-                    row['pre'].append(pram(debit.nb))
-                    row['pre_total'] += debit.nb
-            if tp == DR:
-                row['id'] = o.id
-                row['amount'] = pram(o.fixed_amount)
-                o.nb += o.fixed_amount
-                o.nb = round(o.nb, debt.rounding)
+                    row['pre'].append(pram(debit.newb))
+                    row['pre_total'] += debit.newb
+            if typ == DR:
+                row['id'] = obj.id
+                row['amount'] = pram(obj.fixed_amount)
+                obj.newb += obj.fixed_amount
+                obj.newb = round(obj.newb, debt.rounding)
             for credit in debt.credits:
                 credit.nsp, res.msg = \
-                    distr(debt, dt, credit, credit.sp, row['sp_distr'], res)
+                    distr(debt, dat, credit, credit.sp, row['sp_distr'], res)
                 if res.msg:
                     return res
-            if tp == CR:
-                row['amount'] = pram(-o.amount)
-                row['debits'] = o.debits
-                sp, res.msg = \
-                    distr(debt, dt, o, o.amount, row['cr_distr'], res)
+            if typ == CR:
+                row['amount'] = pram(-obj.amount)
+                row['debits'] = obj.debits
+                spa, res.msg = \
+                    distr(debt, dat, obj, obj.amount, row['cr_distr'], res)
                 if res.msg:
                     return res
-                o.nsp += sp
+                obj.nsp += spa
             for debit in debt.debits:
-                row['post'].append(pram(debit.nb))
+                row['post'].append(pram(debit.newb))
                 if not res.multicurrency_debit:
-                    row['post_total'] += debit.nb
-                if tp == BAL:
-                    row['change'].append(pram(0.0))
+                    row['post_total'] += debit.newb
+                if typ == BAL:
+                    row['change'].append(pram(0))
                 else:
-                    row['change'].append(pram(debit.nb - debit.ob))
-            if tp == DR and o.model == 'fixed':
-                row['disp_currency'] = o.fixed_currency
-            elif tp == CR:
-                row['disp_currency'] = o.currency
+                    row['change'].append(pram(debit.newb - debit.ob))
+            if typ == DR and obj.model == 'fixed':
+                row['disp_currency'] = obj.fixed_currency
+            elif typ == CR:
+                row['disp_currency'] = obj.currency
             if not res.multicurrency_debit:
-                row['post_total'] = pram(round(row['post_total'],
-                                               debt.rounding))
+                row['post_total'] = \
+                    pram(round(row['post_total'], debt.rounding))
 
             for credit in debt.credits:
                 if credit.nsp > LIM:
-                    for sp in row['sps']:
-                        if sp['curr'] == credit.currency:
-                            sp['total'] += credit.nsp
+                    for spa in row['sps']:
+                        if spa['curr'] == credit.currency:
+                            spa['total'] += credit.nsp
                             break
                     else:
-                        row['sps'].append({'curr': credit.currency,
-                                           'total': credit.nsp})
-            row['sps'].sort(key=(lambda x: x['curr']))
+                        row['sps'].append({
+                            'curr': credit.currency,
+                            'total': credit.nsp,
+                        })
+            row['sps'].sort(key=lambda x: x['curr'])
 
-            r = []
-            for sp in row['sps']:
-                r.append('{}&nbsp;{}'.format(
-                    pram(sp['total']),
-                    sp['curr'] if (res.multicurrency or sp['curr'] != 'CZK')
+            lst = []
+            for spa in row['sps']:
+                lst.append('{}&nbsp;{}'.format(
+                    pram(spa['total']),
+                    spa['curr'] if res.multicurrency or spa['curr'] != 'CZK'
                     else 'Kč'))
-            row['sps_text'] = ', '.join(r)
+            row['sps_text'] = ', '.join(lst)
 
-            if tp != BAL:
+            if typ != BAL:
                 for debit in debt.debits:
-                    debit.balance = debit.nb
+                    debit.balance = debit.newb
                 for credit in debt.credits:
                     credit.sp = credit.nsp
-                cud = dt
+                cud = dat
 
             res.rows.append(row)
-            e += 1
+            eps += 1
 
-        dt += odp
+        dat += ODP
 
     return res
 
 
-def toxml(debt):
+def to_xml(debt):
 
-    xd = {
+    dec = {
         'debt': {
-            'xmlns': 'http://' + localsubdomain,
+            'xmlns': 'http://' + LOCAL_SUBDOMAIN,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
             'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd'
-                .format(localsubdomain, localurl, APP, APPVERSION),
+            .format(LOCAL_SUBDOMAIN, LOCAL_URL, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()},
@@ -607,288 +621,290 @@ def toxml(debt):
         'pa_rate': {'unit': 'percent per annum'},
         'pm_rate': {'unit': 'percent per month'},
         'pd_rate': {'unit': 'per mil per day'}}
-    xml = newXML('')
-    d = xmldecorate(xml.new_tag('debt'), xd)
-    xml.append(d)
-    for tt in ['title', 'note', 'internal_note']:
-        tag = xml.new_tag(tt)
-        tag.append(xmlescape(debt.__getattribute__(tt)))
-        d.append(tag)
+    xml = new_xml('')
+    tdebt = xml_decorate(xml.new_tag('debt'), dec)
+    xml.append(tdebt)
+    for key in ('title', 'note', 'internal_note'):
+        tag = xml.new_tag(key)
+        tag.append(xml_espace(debt.__getattribute__(key)))
+        tdebt.append(tag)
     tag = xml.new_tag('rounding')
     tag.append(str(debt.rounding))
-    d.append(tag)
+    tdebt.append(tag)
 
-    ts = xml.new_tag('debits')
+    tdebs = xml.new_tag('debits')
     for debit in debt.debits:
-        t = xml.new_tag('debit')
-        t['model'] = m = debit.model
+        tdeb = xml.new_tag('debit')
+        tdeb['model'] = model = debit.model
         tag = xml.new_tag('description')
-        tag.append(xmlescape(debit.description))
-        t.append(tag)
-        if m == 'fixed':
+        tag.append(xml_espace(debit.description))
+        tdeb.append(tag)
+        if model == 'fixed':
             tag = xml.new_tag('fixed_date')
             tag.append(debit.fixed_date.isoformat())
-            t.append(tag)
+            tdeb.append(tag)
             tag = xml.new_tag('fixed_amount')
             tag.append('{:.2f}'.format(debit.fixed_amount))
-            t.append(tag)
-            tag = xmldecorate(xml.new_tag('fixed_currency'), xd)
+            tdeb.append(tag)
+            tag = xml_decorate(xml.new_tag('fixed_currency'), dec)
             tag.append(debit.fixed_currency)
-            t.append(tag)
+            tdeb.append(tag)
         else:
-            if m == 'per_annum':
-                tag = xmldecorate(xml.new_tag('pa_rate'), xd)
+            if model == 'per_annum':
+                tag = xml_decorate(xml.new_tag('pa_rate'), dec)
                 tag.append('{:.6f}'.format(debit.rate))
-                t.append(tag)
+                tdeb.append(tag)
                 tag = xml.new_tag('day_count_convention')
                 tag.append(debit.day_count_convention)
-                t.append(tag)
-            elif m == 'per_mensem':
-                tag = xmldecorate(xml.new_tag('pm_rate'), xd)
+                tdeb.append(tag)
+            elif model == 'per_mensem':
+                tag = xml_decorate(xml.new_tag('pm_rate'), dec)
                 tag.append('{:.6f}'.format(debit.rate))
-                t.append(tag)
+                tdeb.append(tag)
                 tag = xml.new_tag('day_count_convention')
                 tag.append(debit.day_count_convention)
-                t.append(tag)
-            elif m == 'per_diem':
-                tag = xmldecorate(xml.new_tag('pd_rate'), xd)
+                tdeb.append(tag)
+            elif model == 'per_diem':
+                tag = xml_decorate(xml.new_tag('pd_rate'), dec)
                 tag.append('{:.6f}'.format(debit.rate))
-                t.append(tag)
+                tdeb.append(tag)
             if debit.principal_debit:
                 tag = xml.new_tag('principal_debit')
                 tag['id'] = '{:d}'.format(debit.principal_debit - 1)
-                t.append(tag)
+                tdeb.append(tag)
             else:
                 tag = xml.new_tag('principal_amount')
                 tag.append('{:.2f}'.format(debit.principal_amount))
-                t.append(tag)
-                tag = xmldecorate(xml.new_tag('principal_currency'), xd)
+                tdeb.append(tag)
+                tag = xml_decorate(xml.new_tag('principal_currency'), dec)
                 tag.append(debit.principal_currency)
-                t.append(tag)
+                tdeb.append(tag)
             if hasattr(debit, 'date_from') and debit.date_from:
                 tag = xml.new_tag('date_from')
                 tag.append(debit.date_from.isoformat())
-                t.append(tag)
+                tdeb.append(tag)
             if hasattr(debit, 'date_to') and debit.date_to:
                 tag = xml.new_tag('date_to')
                 tag.append(debit.date_to.isoformat())
-                t.append(tag)
-        ts.append(t)
-    d.append(ts)
+                tdeb.append(tag)
+        tdebs.append(tdeb)
+    tdebt.append(tdebs)
 
-    ts = xml.new_tag('credits')
+    tcreds = xml.new_tag('credits')
     for credit in debt.credits:
-        t = xml.new_tag('credit')
+        tcred = xml.new_tag('credit')
         tag = xml.new_tag('description')
-        tag.append(xmlescape(credit.description))
-        t.append(tag)
+        tag.append(xml_espace(credit.description))
+        tcred.append(tag)
         tag = xml.new_tag('date')
         tag.append(credit.date.isoformat())
-        t.append(tag)
+        tcred.append(tag)
         tag = xml.new_tag('amount')
         tag.append('{:.2f}'.format(credit.amount))
-        t.append(tag)
-        tag = xmldecorate(xml.new_tag('currency'), xd)
+        tcred.append(tag)
+        tag = xml_decorate(xml.new_tag('currency'), dec)
         tag.append(credit.currency)
-        t.append(tag)
+        tcred.append(tag)
         tag = xml.new_tag('debits')
-        t.append(tag)
-        for db in credit.debits:
-            st = xml.new_tag('debit')
-            st['id'] = db
-            tag.append(st)
-        ts.append(t)
-    d.append(ts)
+        tcred.append(tag)
+        for dbs in credit.debits:
+            tst = xml.new_tag('debit')
+            tst['id'] = dbs
+            tag.append(tst)
+        tcreds.append(tcred)
+    tdebt.append(tcreds)
 
-    ts = xml.new_tag('balances')
+    tbals = xml.new_tag('balances')
     for balance in debt.balances:
-        t = xml.new_tag('balance')
+        tbal = xml.new_tag('balance')
         tag = xml.new_tag('description')
-        tag.append(xmlescape(balance.description))
-        t.append(tag)
+        tag.append(xml_espace(balance.description))
+        tbal.append(tag)
         tag = xml.new_tag('date')
         tag.append(balance.date.isoformat())
-        t.append(tag)
-        ts.append(t)
-    d.append(ts)
+        tbal.append(tag)
+        tbals.append(tbal)
+    tdebt.append(tbals)
 
-    ts = xml.new_tag('fxrates')
+    tfxs = xml.new_tag('fxrates')
     for fxrate in debt.fxrates:
-        t = xml.new_tag('fxrate')
-        tag = xmldecorate(xml.new_tag('currency_from'), xd)
+        tfx = xml.new_tag('fxrate')
+        tag = xml_decorate(xml.new_tag('currency_from'), dec)
         tag.append(fxrate.currency_from)
-        t.append(tag)
-        tag = xmldecorate(xml.new_tag('currency_to'), xd)
+        tfx.append(tag)
+        tag = xml_decorate(xml.new_tag('currency_to'), dec)
         tag.append(fxrate.currency_to)
-        t.append(tag)
+        tfx.append(tag)
         tag = xml.new_tag('rate_from')
         tag.append('{:.3f}'.format(fxrate.rate_from))
-        t.append(tag)
+        tfx.append(tag)
         tag = xml.new_tag('rate_to')
         tag.append('{:.3f}'.format(fxrate.rate_to))
-        t.append(tag)
+        tfx.append(tag)
         if hasattr(fxrate, 'date_from') and fxrate.date_from:
             tag = xml.new_tag('date_from')
             tag.append(fxrate.date_from.isoformat())
-            t.append(tag)
+            tfx.append(tag)
         if hasattr(fxrate, 'date_to') and fxrate.date_to:
             tag = xml.new_tag('date_to')
             tag.append(fxrate.date_to.isoformat())
-            t.append(tag)
-        ts.append(t)
+            tfx.append(tag)
+        tfxs.append(tfx)
 
-    d.append(ts)
+    tdebt.append(tfxs)
     return str(xml).encode('utf-8') + b'\n'
 
 
-def fromxml(d):
+def from_xml(dat):
 
-    s = getXML(d)
-    if not s:
+    string = get_xml(dat)
+    if not string:
         return None, 'Chybný formát souboru (1)'
-    h = s.debt
-    if not (h and h['application'] in [APP, 'hjp']):
+    tdebt = string.debt
+    if not (tdebt and tdebt['application'] in [APP, 'hjp']):
         return None, 'Chybný formát souboru (2)'
 
-    if h['application'] == APP:
+    if tdebt['application'] == APP:
         debt = Debt()
-        debt.title = xmlunescape(h.title.text.strip())
-        debt.note = xmlunescape(h.note.text.strip())
-        debt.internal_note = xmlunescape(h.internal_note.text.strip())
-        debt.rounding = int(h.rounding.text.strip())
+        debt.title = xml_unespace(tdebt.title.text.strip())
+        debt.note = xml_unespace(tdebt.note.text.strip())
+        debt.internal_note = xml_unespace(tdebt.internal_note.text.strip())
+        debt.rounding = int(tdebt.rounding.text.strip())
 
-        for tt in h.debits.findAll('debit'):
+        for tdebs in tdebt.debits.findAll('debit'):
             debit = Debit()
             debt.debits.append(debit)
-            debit.description = xmlunescape(tt.description.text.strip())
-            debit.model = m = tt['model']
-            if tt.fixed_amount:
-                debit.fixed_amount = float(tt.fixed_amount.text.strip())
-            if tt.fixed_currency:
-                debit.fixed_currency = tt.fixed_currency.text.strip()
-            if tt.fixed_date:
-                debit.fixed_date = iso2date(tt.fixed_date)
-            if tt.pa_rate:
-                debit.rate = float(tt.pa_rate.text.strip())
-            if tt.pm_rate:
-                debit.rate = float(tt.pm_rate.text.strip())
-            if tt.pd_rate:
-                debit.rate = float(tt.pd_rate.text.strip())
-            if tt.day_count_convention:
+            debit.description = xml_unespace(tdebs.description.text.strip())
+            debit.model = model = tdebs['model']
+            if tdebs.fixed_amount:
+                debit.fixed_amount = float(tdebs.fixed_amount.text.strip())
+            if tdebs.fixed_currency:
+                debit.fixed_currency = tdebs.fixed_currency.text.strip()
+            if tdebs.fixed_date:
+                debit.fixed_date = iso2date(tdebs.fixed_date)
+            if tdebs.pa_rate:
+                debit.rate = float(tdebs.pa_rate.text.strip())
+            if tdebs.pm_rate:
+                debit.rate = float(tdebs.pm_rate.text.strip())
+            if tdebs.pd_rate:
+                debit.rate = float(tdebs.pd_rate.text.strip())
+            if tdebs.day_count_convention:
                 debit.day_count_convention = \
-                    tt.day_count_convention.text.strip()
-            if tt.principal_debit:
-                debit.principal_debit = (int(tt.principal_debit['id']) + 1)
-            if tt.principal_amount:
-                debit.principal_amount = float(tt.principal_amount.text.strip())
-            if tt.principal_currency:
-                debit.principal_currency = tt.principal_currency.text.strip()
-            if tt.date_from:
-                debit.date_from = iso2date(tt.date_from)
-            if tt.date_to:
-                debit.date_to = iso2date(tt.date_to)
+                    tdebs.day_count_convention.text.strip()
+            if tdebs.principal_debit:
+                debit.principal_debit = (int(tdebs.principal_debit['id']) + 1)
+            if tdebs.principal_amount:
+                debit.principal_amount = \
+                    float(tdebs.principal_amount.text.strip())
+            if tdebs.principal_currency:
+                debit.principal_currency = tdebs.principal_currency.text.strip()
+            if tdebs.date_from:
+                debit.date_from = iso2date(tdebs.date_from)
+            if tdebs.date_to:
+                debit.date_to = iso2date(tdebs.date_to)
 
-        for tt in h.credits.findAll('credit'):
+        for tcreds in tdebt.credits.findAll('credit'):
             credit = Credit()
             debt.credits.append(credit)
-            credit.description = xmlunescape(tt.description.text.strip())
-            credit.date = iso2date(tt.date)
-            credit.amount = float(tt.amount.text.strip())
-            credit.currency = tt.currency.text.strip()
-            for td in tt.debits.findAll('debit'):
-                credit.debits.append(int(td['id']))
+            credit.description = xml_unespace(tcreds.description.text.strip())
+            credit.date = iso2date(tcreds.date)
+            credit.amount = float(tcreds.amount.text.strip())
+            credit.currency = tcreds.currency.text.strip()
+            for tdeb in tcreds.debits.findAll('debit'):
+                credit.debits.append(int(tdeb['id']))
 
-        for tt in h.balances.findAll('balance'):
+        for tbals in tdebt.balances.findAll('balance'):
             balance = Balance()
             debt.balances.append(balance)
-            balance.description = xmlunescape(tt.description.text.strip())
-            balance.date = iso2date(tt.date)
+            balance.description = xml_unespace(tbals.description.text.strip())
+            balance.date = iso2date(tbals.date)
 
-        for tt in h.fxrates.findAll('fxrate'):
+        for tfxs in tdebt.fxrates.findAll('fxrate'):
             fxrate = FXrate()
             debt.fxrates.append(fxrate)
-            fxrate.currency_from = tt.currency_from.text.strip()
-            fxrate.currency_to = tt.currency_to.text.strip()
-            fxrate.rate_from = float(tt.rate_from.text.strip())
-            fxrate.rate_to = float(tt.rate_to.text.strip())
-            if tt.date_from:
-                fxrate.date_from = iso2date(tt.date_from)
-            if tt.date_to:
-                fxrate.date_to = iso2date(tt.date_to)
+            fxrate.currency_from = tfxs.currency_from.text.strip()
+            fxrate.currency_to = tfxs.currency_to.text.strip()
+            fxrate.rate_from = float(tfxs.rate_from.text.strip())
+            fxrate.rate_to = float(tfxs.rate_to.text.strip())
+            if tfxs.date_from:
+                fxrate.date_from = iso2date(tfxs.date_from)
+            if tfxs.date_to:
+                fxrate.date_to = iso2date(tfxs.date_to)
 
     else:
         debt = Debt()
-        debt.title = xmlunescape(h.title.text.strip())
-        debt.note = xmlunescape(h.note.text.strip())
-        debt.internal_note = xmlunescape(h.internal_note.text.strip())
-        debt.rounding = int(h.rounding.text.strip())
-        currency = h.currency.text.strip()
-        interest = h.interest
-        tr = list(h.transactions.children)
+        debt.title = xml_unespace(tdebt.title.text.strip())
+        debt.note = xml_unespace(tdebt.note.text.strip())
+        debt.internal_note = xml_unespace(tdebt.internal_note.text.strip())
+        debt.rounding = int(tdebt.rounding.text.strip())
+        currency = tdebt.currency.text.strip()
+        interest = tdebt.interest
+        ttrs = list(tdebt.transactions.children)
         firstfix = True
         principals = []
         interests = []
-        for tt in tr:
-            if not tt.name:
+        for ttr in ttrs:
+            if not ttr.name:
                 continue
-            if (tt.has_attr('type') and tt['type'] == 'debit') \
-               or str(tt.name) == 'debit':
-                d = Debit()
-                i = len(debt.debits)
-                principals.append(i)
-                debt.debits.append(d)
-                d.model = 'fixed'
-                d.description = xmlunescape(tt.description.text.strip())
-                d.fixed_amount = float(tt.amount.text.strip())
-                d.fixed_currency = currency
-                d.fixed_date = iso2date(tt.date)
-                m = interest['model']
-                if m != 'none' and (m != 'fixed' or firstfix):
+            if (ttr.has_attr('type') and ttr['type'] == 'debit') \
+               or str(ttr.name) == 'debit':
+                debit = Debit()
+                idx = len(debt.debits)
+                principals.append(idx)
+                debt.debits.append(debit)
+                debit.model = 'fixed'
+                debit.description = xml_unespace(ttr.description.text.strip())
+                debit.fixed_amount = float(ttr.amount.text.strip())
+                debit.fixed_currency = currency
+                debit.fixed_date = iso2date(ttr.date)
+                model = interest['model']
+                if model != 'none' and (model != 'fixed' or firstfix):
                     firstfix = False
-                    d = Debit()
+                    debit = Debit()
                     interests.append(len(debt.debits))
-                    debt.debits.append(d)
-                    d.description = 'Úrok'
-                    d.model = m
-                    d.principal_debit = (i + 1)
-                    if m == 'fixed':
-                        d.fixed_amount = float(interest.amount.text.strip())
-                        d.fixed_currency = currency
-                        d.fixed_date = iso2date(tt.date)
-                    elif m == 'per_annum':
-                        d.rate = float(interest.pa_rate.text.strip())
-                        d.day_count_convention = \
+                    debt.debits.append(debit)
+                    debit.description = 'Úrok'
+                    debit.model = model
+                    debit.principal_debit = idx + 1
+                    if model == 'fixed':
+                        debit.fixed_amount = float(interest.amount.text.strip())
+                        debit.fixed_currency = currency
+                        debit.fixed_date = iso2date(ttr.date)
+                    elif model == 'per_annum':
+                        debit.rate = float(interest.pa_rate.text.strip())
+                        debit.day_count_convention = \
                             interest.day_count_convention.text.strip()
-                    elif m == 'per_mensem':
-                        d.rate = float(interest.pm_rate.text.strip())
-                        d.day_count_convention = \
+                    elif model == 'per_mensem':
+                        debit.rate = float(interest.pm_rate.text.strip())
+                        debit.day_count_convention = \
                             interest.day_count_convention.text.strip()
-                    elif m == 'per_diem':
-                        d.rate = float(interest.pd_rate.text.strip())
+                    elif model == 'per_diem':
+                        debit.rate = float(interest.pd_rate.text.strip())
         orderi = interests + principals
         orderp = principals + interests
-        for tt in tr:
-            if not tt.name:
+        for ttr in ttrs:
+            if not ttr.name:
                 continue
-            tt_type = str(tt.name)
+            tt_type = str(ttr.name)
             if tt_type == 'credit':
-                c = Credit()
-                debt.credits.append(c)
-                c.description = xmlunescape(tt.description.text.strip())
-                c.amount = float(tt.amount.text.strip())
-                c.currency = currency
-                c.date = iso2date(tt.date)
-                c.debits = orderp[:] if (tt.repayment_preference.text.strip()
-                    == 'principal') else orderi[:]
+                credit = Credit()
+                debt.credits.append(credit)
+                credit.description = xml_unespace(ttr.description.text.strip())
+                credit.amount = float(ttr.amount.text.strip())
+                credit.currency = currency
+                credit.date = iso2date(ttr.date)
+                credit.debits = orderp[:] \
+                    if ttr.repayment_preference.text.strip() == 'principal' \
+                    else orderi[:]
             elif tt_type == 'balance':
-                b = Balance()
-                debt.balances.append(b)
-                b.description = xmlunescape(tt.description.text.strip())
-                b.date = iso2date(tt.date)
+                balance = Balance()
+                debt.balances.append(balance)
+                balance.description = xml_unespace(ttr.description.text.strip())
+                balance.date = iso2date(ttr.date)
     return debt, None
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def mainpage(request):
 
@@ -897,23 +913,22 @@ def mainpage(request):
         request,
         request.POST)
 
-    def ft(a):
-        a = round(a, debt.rounding) if debt.rounding else int(round(a))
-        if abs(a) < LIM:
+    def ftbl(amt):
+        amt = round(amt, debt.rounding) if debt.rounding else int(round(amt))
+        if abs(amt) < LIM:
             return '<span class="dr"></span>'
-        elif a > 0:
-            return '<span class="dr">{}</span>'.format(formam(a))
-        elif a:
-            return '<span class="cr">{}</span>'.format(formam(-a))
+        elif amt > 0:
+            return '<span class="dr">{}</span>'.format(famt(amt))
+        return '<span class="cr">{}</span>'.format(famt(-amt))
 
-    def fa(a, c):
-        if not a or abs(a) < LIM:
+    def lfamt(amt, curr):
+        if not amt or abs(amt) < LIM:
             return ''
-        r = formam(round(a, debt.rounding)
-            if debt.rounding else int(round(a))).replace('-', '−')
-        if res.multicurrency or c != 'CZK':
-            return '{}&nbsp;{}'.format(r, c)
-        return '{}&nbsp;Kč'.format(r)
+        temp = famt(round(amt, debt.rounding)
+            if debt.rounding else int(round(amt))).replace('-', '−')
+        if res.multicurrency or curr != 'CZK':
+            return '{}&nbsp;{}'.format(temp, curr)
+        return '{}&nbsp;Kč'.format(temp)
 
     err_message = ''
 
@@ -928,27 +943,27 @@ def mainpage(request):
             'internal_note': debt.internal_note,
             'rounding': str(debt.rounding)
         }
-        f = MainForm(initial=var)
+        form = MainForm(initial=var)
 
     else:
-        btn = getbutton(request)
+        button = getbutton(request)
 
-        if btn == 'empty':
+        if button == 'empty':
             debt = Debt()
             if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
             return redirect('hsp:mainpage')
 
-        if btn == 'load':
-            f = request.FILES.get('load')
-            if not f:
+        if button == 'load':
+            infile = request.FILES.get('load')
+            if not infile:
                 err_message = 'Nejprve zvolte soubor k načtení'
             else:
                 try:
-                    d = f.read()
-                    f.close()
-                    debt, m = fromxml(d)
-                    if m:
+                    dat = infile.read()
+                    infile.close()
+                    debt, msg = from_xml(dat)
+                    if msg:
                         raise Exception('Error reading file')
                     setdebt(request, debt)
                     return redirect('hsp:mainpage')
@@ -959,27 +974,27 @@ def mainpage(request):
         if not debt:  # pragma: no cover
             return error(request)
 
-        f = MainForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            debt.title = cd['title'].strip()
-            debt.note = cd['note'].strip()
-            debt.internal_note = cd['internal_note'].strip()
-            debt.rounding = int(cd['rounding'])
+        form = MainForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            debt.title = cld['title'].strip()
+            debt.note = cld['note'].strip()
+            debt.internal_note = cld['internal_note'].strip()
+            debt.rounding = int(cld['rounding'])
             setdebt(request, debt)
 
-            if not btn and cd['next']:
-                return redirect(cd['next'])
+            if not button and cld['next']:
+                return redirect(cld['next'])
 
-            if btn == 'xml':
+            if button == 'xml':
                 response = HttpResponse(
-                    toxml(debt),
+                    to_xml(debt),
                     content_type='text/xml; charset=utf-8')
                 response['Content-Disposition'] = \
                     'attachment; filename=Pohledavka.xml'
                 return response
 
-            if btn == 'csv':
+            if button == 'csv':
                 res = calc(debt)
                 response = \
                     HttpResponse(content_type='text/csv; charset=utf-8')
@@ -988,13 +1003,15 @@ def mainpage(request):
                 writer = csv.writer(response)
                 hdr = ['Datum', 'Popis', 'Částka', 'Měna']
                 for debit in debt.debits:
-                    hdr.append('Předchozí zůstatek {0.id} ({0.currency})'
-                                   .format(debit))
+                    hdr.append(
+                        'Předchozí zůstatek {0.id} ({0.currency})'
+                        .format(debit))
                 for debit in debt.debits:
                     hdr.append('Změna {0.id} ({0.currency})'.format(debit))
                 for debit in debt.debits:
-                    hdr.append('Nový zůstatek {0.id} ({0.currency})'
-                                   .format(debit))
+                    hdr.append(
+                        'Nový zůstatek {0.id} ({0.currency})'
+                        .format(debit))
                 writer.writerow(hdr)
                 for row in res.rows:
                     dat = [
@@ -1009,61 +1026,12 @@ def mainpage(request):
                     writer.writerow(dat)
                 return response
 
-            if btn == 'pdf':
+            if button == 'pdf':
 
-                def page1(c, d):
-                    c.saveState()
-                    c.setFont('Bookman', 7)
-                    c.drawString(
-                        64.0,
-                        48.0,
-                        '{} V{}'.format(APP.upper(), APPVERSION))
-                    c.setFont('BookmanI', 7)
-                    today = date.today()
-                    c.drawRightString(
-                        (A4[0] - 48.0),
-                        48.0,
-                        'Vytvořeno: {0.day:02d}.{0.month:02d}.{0.year:02d}'
-                            .format(today))
-                    c.restoreState()
+                register_fonts()
 
-                def page2(c, d):
-                    page1(c, d)
-                    c.saveState()
-                    c.setFont('Bookman', 8)
-                    c.drawCentredString(
-                        (A4[0] / 2),
-                        (A4[1] - 30),
-                        '– {:d} –'.format(d.page))
-                    c.restoreState()
-
-                reportlab.rl_config.warnOnMissingFontGlyphs = 0
-
-                registerFont(TTFont(
-                    'Bookman',
-                    join(FONT_DIR, 'URWBookman-Regular.ttf')))
-
-                registerFont(TTFont(
-                    'BookmanB',
-                    join(FONT_DIR, 'URWBookman-Bold.ttf')))
-
-                registerFont(TTFont(
-                    'BookmanI',
-                    join(FONT_DIR, 'URWBookman-Italic.ttf')))
-
-                registerFont(TTFont(
-                    'BookmanBI',
-                    join(FONT_DIR, 'URWBookman-BoldItalic.ttf')))
-
-                registerFontFamily(
-                    'Bookman',
-                    normal='Bookman',
-                    bold='BookmanB',
-                    italic='BookmanI',
-                    boldItalic='BookmanBI')
-
-                s1 = ParagraphStyle(
-                    name='S1',
+                style1 = ParagraphStyle(
+                    name='STYLE1',
                     fontName='Bookman',
                     fontSize=8,
                     leading=9,
@@ -1071,8 +1039,8 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False)
 
-                s2 = ParagraphStyle(
-                    name='S2',
+                style2 = ParagraphStyle(
+                    name='STYLE2',
                     fontName='BookmanB',
                     fontSize=10,
                     leading=11,
@@ -1080,16 +1048,16 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False)
 
-                s4 = ParagraphStyle(
-                    name='S4',
+                style4 = ParagraphStyle(
+                    name='STYLE4',
                     fontName='BookmanB',
                     fontSize=8,
                     leading=10,
                     allowWidows=False,
                     allowOrphans=False)
 
-                s12 = ParagraphStyle(
-                    name='S12',
+                style12 = ParagraphStyle(
+                    name='STYLE12',
                     fontName='BookmanI',
                     fontSize=8,
                     leading=9,
@@ -1099,8 +1067,8 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False)
 
-                s13 = ParagraphStyle(
-                    name='S13',
+                style13 = ParagraphStyle(
+                    name='STYLE13',
                     fontName='Bookman',
                     fontSize=8,
                     leading=12,
@@ -1108,16 +1076,16 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False)
 
-                s14 = ParagraphStyle(
-                    name='S14',
+                style14 = ParagraphStyle(
+                    name='STYLE14',
                     fontName='BookmanB',
                     fontSize=8,
                     leading=12,
                     allowWidows=False,
                     allowOrphans=False)
 
-                s15 = ParagraphStyle(
-                    name='S15',
+                style15 = ParagraphStyle(
+                    name='STYLE15',
                     fontName='BookmanB',
                     fontSize=8,
                     leading=10,
@@ -1125,8 +1093,8 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False)
 
-                s17 = ParagraphStyle(
-                    name='S17',
+                style17 = ParagraphStyle(
+                    name='STYLE17',
                     fontName='Bookman',
                     fontSize=8,
                     leading=10,
@@ -1134,16 +1102,16 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False)
 
-                s18 = ParagraphStyle(
-                    name='S18',
+                style18 = ParagraphStyle(
+                    name='STYLE18',
                     fontName='Bookman',
                     fontSize=8,
                     leading=10,
                     allowWidows=False,
                     allowOrphans=False)
 
-                s20 = ParagraphStyle(
-                    name='S20',
+                style20 = ParagraphStyle(
+                    name='STYLE20',
                     fontName='Bookman',
                     fontSize=8,
                     leading=10,
@@ -1155,8 +1123,8 @@ def mainpage(request):
                     bulletIndent=8,
                     leftIndent=16)
 
-                s22 = ParagraphStyle(
-                    name='S22',
+                style22 = ParagraphStyle(
+                    name='STYLE22',
                     fontName='BookmanI',
                     fontSize=8,
                     leading=10,
@@ -1164,8 +1132,8 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False)
 
-                s23 = ParagraphStyle(
-                    name='S23',
+                style23 = ParagraphStyle(
+                    name='STYLE23',
                     fontName='BookmanB',
                     fontSize=8,
                     leading=10,
@@ -1175,8 +1143,8 @@ def mainpage(request):
                     allowOrphans=False,
                     keepWithNext=True)
 
-                s24 = ParagraphStyle(
-                    name='S24',
+                style24 = ParagraphStyle(
+                    name='STYLE24',
                     fontName='Bookman',
                     fontSize=8,
                     leading=10,
@@ -1189,8 +1157,8 @@ def mainpage(request):
                     leftIndent=24,
                     keepWithNext=True)
 
-                s25 = ParagraphStyle(
-                    name='S25',
+                style25 = ParagraphStyle(
+                    name='STYLE25',
                     fontName='Bookman',
                     fontSize=8,
                     leading=10,
@@ -1198,8 +1166,8 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False)
 
-                s26 = ParagraphStyle(
-                    name='S26',
+                style26 = ParagraphStyle(
+                    name='STYLE26',
                     fontName='Bookman',
                     fontSize=6,
                     leading=9,
@@ -1207,472 +1175,514 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False)
 
-                d1 = [[[Paragraph('Historie peněžité pohledávky'.upper(), s1)]]]
+                doc1 = (([Paragraph('Historie peněžité pohledávky'.upper(),
+                    style1)],),)
                 if debt.title:
-                    d1[0][0].append(Paragraph(escape(debt.title), s2))
-                t1 = Table(d1, colWidths=[483.30])
-                t1.setStyle(
-                    TableStyle([
+                    doc1[0][0].append(Paragraph(escape(debt.title), style2))
+                table1 = Table(doc1, colWidths=(483.3,))
+                table1.setStyle(
+                    TableStyle((
                         ('LINEABOVE', (0, 0), (0, -1), 1.0, black),
                         ('TOPPADDING', (0, 0), (0, -1), 2),
                         ('LINEBELOW', (-1, 0), (-1, -1), 1.0, black),
                         ('BOTTOMPADDING', (-1, 0), (-1, -1), 3),
                         ('LEFTPADDING', (0, 0), (-1, -1), 2),
                         ('RIGHTPADDING', (0, 0), (-1, -1), 2),
-                    ]))
-                flow = [t1, Spacer(0, 36)]
+                    )))
+                flow = [table1, Spacer(0, 36)]
 
-                bst = [('SPAN', (0, 0), (4, 0)),
-                       ('SPAN', (5, 0), (33, 0)),
-                       ('SPAN', (1, 1), (10, 1)),
-                       ('SPAN', (12, 1), (21, 1)),
-                       ('SPAN', (23, 1), (32, 1)),
-                       ('LINEABOVE', (0, 0), (-1, 0), 1, black),
-                       ('LINEBELOW', (0, 0), (-1, 0), 1, black),
-                       ('LINEBEFORE', (0, 0), (0, -1), 1, black),
-                       ('LINEAFTER', (-1, 0), (-1, -1), 1, black),
-                       ('LINEBELOW', (0, -1), (-1, -1), 1, black),
-                       ('BACKGROUND', (0, 0), (-1, 0), '#e8e8e8'),
-                       ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
-                       ('LEFTPADDING', (0, 0), (-1, 0), 0),
-                       ('LEFTPADDING', (0, 1), (-1, -1), 3),
-                       ('LEFTPADDING', (2, 2), (2, -1), 5),
-                       ('LEFTPADDING', (13, 2), (13, -1), 5),
-                       ('LEFTPADDING', (24, 2), (24, -1), 5),
-                       ('RIGHTPADDING', (0, 0), (-1, -1), 3),
-                       ('TOPPADDING', (0, 0), (-1, 0), 2.5),
-                       ('TOPPADDING', (0, 1), (-1, 1), 10),
-                       ('TOPPADDING', (0, 2), (-1, -1), 0),
-                       ('BOTTOMPADDING', (0, 0), (-1, 0), .5),
-                       ('BOTTOMPADDING', (0, 1), (-1, 1), 1.5),
-                       ('BOTTOMPADDING', (0, -1), (-1, -1), 18),
-                      ]
+                bst = [
+                    ('SPAN', (0, 0), (4, 0)),
+                    ('SPAN', (5, 0), (33, 0)),
+                    ('SPAN', (1, 1), (10, 1)),
+                    ('SPAN', (12, 1), (21, 1)),
+                    ('SPAN', (23, 1), (32, 1)),
+                    ('LINEABOVE', (0, 0), (-1, 0), 1, black),
+                    ('LINEBELOW', (0, 0), (-1, 0), 1, black),
+                    ('LINEBEFORE', (0, 0), (0, -1), 1, black),
+                    ('LINEAFTER', (-1, 0), (-1, -1), 1, black),
+                    ('LINEBELOW', (0, -1), (-1, -1), 1, black),
+                    ('BACKGROUND', (0, 0), (-1, 0), '#e8e8e8'),
+                    ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+                    ('LEFTPADDING', (0, 0), (-1, 0), 0),
+                    ('LEFTPADDING', (0, 1), (-1, -1), 3),
+                    ('LEFTPADDING', (2, 2), (2, -1), 5),
+                    ('LEFTPADDING', (13, 2), (13, -1), 5),
+                    ('LEFTPADDING', (24, 2), (24, -1), 5),
+                    ('RIGHTPADDING', (0, 0), (-1, -1), 3),
+                    ('TOPPADDING', (0, 0), (-1, 0), 2.5),
+                    ('TOPPADDING', (0, 1), (-1, 1), 10),
+                    ('TOPPADDING', (0, 2), (-1, -1), 0),
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), .5),
+                    ('BOTTOMPADDING', (0, 1), (-1, 1), 1.5),
+                    ('BOTTOMPADDING', (0, -1), (-1, -1), 18),
+                ]
 
                 cust2eff = {
                     'cust1': 'do 27.04.2005',
                     'cust2': 'od 28.04.2005 do 30.06.2010',
                     'cust3': 'od 01.07.2010',
-                    'cust5': 'od 01.07.2013 do 31.12.2013'}
+                    'cust5': 'od 01.07.2013 do 31.12.2013',
+                }
+
                 mpitypes = {
                     'DISC': 'diskontní sazba',
-                    'REPO': '2T repo sazba'}
+                    'REPO': '2T repo sazba',
+                }
 
-                w = 483.30
-                wl = 8.0
-                wr = 8.0
-                wg = 12.0
-                wf = wc = ((w - wl - wr - (wg * 2)) / 6)
-                cw = [wl] + ([wc / 5] * 5) + ([wf / 5] * 5) + [wg] \
-                    + ([wc / 5] * 5) + ([wf / 5] * 5) + [wg] \
-                    + ([wc / 5] * 5) + ([wf / 5] * 5) + [wr]
+                wid = 483.3
+                widl = 8
+                widr = 8
+                widg = 12
+                widf = widc = (wid - widl - widr - (widg * 2)) / 6
+                cwid = (widl,) + ((widc / 5,) * 5) + ((widf / 5,) * 5) \
+                    + (widg,) + ((widc / 5,) * 5) + ((widf / 5,) * 5) \
+                    + (widg,) + ((widc / 5,) * 5) + ((widf / 5,) * 5) + (widr,)
 
                 res = calc(debt)
-                tl = .5
+                thickness = .5
 
-                r = []
+                info = []
 
                 if debt.debits:
-                    r.append(Paragraph('Závazky:', s23))
+                    info.append(Paragraph('Závazky:', style23))
                     for debit in debt.debits:
-                        r.append(Paragraph(
+                        info.append(Paragraph(
                             ('<b>{}</b>'.format(debit.description)
                              if debit.description else
                              '<i>(bez názvu)</i>'),
-                            s24,
+                            style24,
                             bulletText=(debit.id + '.')))
-                        m = debit.model
-                        if m == 'fixed':
-                            t = 'pevná částka {}, splatná {:%d.%m.%Y}' \
-                                    .format(
-                                        fa(debit.fixed_amount,
-                                           debit.fixed_currency),
-                                        debit.fixed_date)
+                        model = debit.model
+                        if model == 'fixed':
+                            txt = \
+                                'pevná částka {}, splatná {:%d.%m.%Y}' \
+                                .format(
+                                    lfamt(
+                                        debit.fixed_amount,
+                                        debit.fixed_currency),
+                                    debit.fixed_date)
                         else:
-                            if m == 'per_annum':
-                                t = 'roční úrok {0.rate:n} % <i>p. a.</i> ' \
+                            if model == 'per_annum':
+                                txt = \
+                                    'roční úrok {0.rate:n} % <i>p. a.</i> ' \
                                     '(konvence pro počítání dnů: ' \
                                     '{0.day_count_convention})'.format(debit)
-                            elif m == 'per_mensem':
-                                t = 'měsíční úrok {0.rate:n} % <i>p. m.</i> ' \
+                            elif model == 'per_mensem':
+                                txt = \
+                                    'měsíční úrok {0.rate:n} % <i>p. m.</i> ' \
                                     '(konvence pro počítání dnů: ' \
-                                    '{0.day_count_convention})' \
-                                        .format(debit)
-                            elif m == 'per_diem':
-                                t = 'denní úrok {:n} ‰ <i>p. d.</i>' \
-                                         .format(debit.rate)
-                            elif m in ['cust1', 'cust2', 'cust3', 'cust5']:
-                                t = 'zákonný úrok z prodlení podle nařízení ' \
+                                    '{0.day_count_convention})'.format(debit)
+                            elif model == 'per_diem':
+                                txt = \
+                                    'denní úrok {:n} ‰ <i>p. d.</i>' \
+                                    .format(debit.rate)
+                            elif model in ('cust1', 'cust2', 'cust3', 'cust5'):
+                                txt = \
+                                    'zákonný úrok z prodlení podle nařízení ' \
                                     'vlády č. 142/1994 Sb. ve znění účinném ' \
-                                    '{}'.format(cust2eff[m])
-                            elif m == 'cust6':
-                                t = 'zákonný úrok z prodlení podle nařízení ' \
+                                    '{}'.format(cust2eff[model])
+                            elif model == 'cust6':
+                                txt = \
+                                    'zákonný úrok z prodlení podle nařízení ' \
                                     'vlády č. 351/2013 Sb.'
                             else:
-                                t = 'zákonný poplatek z prodlení podle ' \
+                                txt = \
+                                    'zákonný poplatek z prodlení podle ' \
                                     'nařízení vlády č. 142/1994 Sb.'
                             if debit.principal_debit:
-                                t += ' ze závazku {}'.format(
-                                    n2l(debit.principal_debit - 1))
+                                txt += \
+                                    ' ze závazku {}' \
+                                    .format(n2l(debit.principal_debit - 1))
                             else:
-                                t += ' z&nbsp;částky {}'.format(
-                                    fa(debit.principal_amount,
-                                       debit.principal_currency))
+                                txt += \
+                                    ' z&nbsp;částky {}' \
+                                    .format(
+                                        lfamt(
+                                            debit.principal_amount,
+                                            debit.principal_currency))
                             if debit.date_from:
-                                t += ' od {:%d.%m.%Y}'.format(debit.date_from)
+                                txt += ' od {:%d.%m.%Y}'.format(debit.date_from)
                             elif debit.principal_debit:
-                                t += ' od splatnosti'
+                                txt += ' od splatnosti'
                             if debit.date_to:
-                                t += ' do {:%d.%m.%Y}'.format(debit.date_to)
+                                txt += ' do {:%d.%m.%Y}'.format(debit.date_to)
                             elif debit.principal_debit:
-                                t += ' do zaplacení'
-                        r.append(Paragraph(t, s25))
+                                txt += ' do zaplacení'
+                        info.append(Paragraph(txt, style25))
 
                 if debt.fxrates:
-                    r.append(Paragraph(('Pevně zadané směnné kursy:'), s23))
+                    info.append(Paragraph(
+                        'Pevně zadané směnné kursy:',
+                        style23))
                     for fxrate in debt.fxrates:
-                        t = ''
+                        txt = ''
                         if fxrate.date_from:
-                            t += ' od {:%d.%m.%Y}'.format(fxrate.date_from)
+                            txt += ' od {:%d.%m.%Y}'.format(fxrate.date_from)
                         if fxrate.date_to:
-                            t += ' do {:%d.%m.%Y}'.format(fxrate.date_to)
-                        if t:
-                            t = ' ({})'.format(t.strip())
-                        r.append(Paragraph(
+                            txt += ' do {:%d.%m.%Y}'.format(fxrate.date_to)
+                        if txt:
+                            txt = ' ({})'.format(txt.strip())
+                        info.append(Paragraph(
                             '{0.rate_from:n} {0.currency_from} = {0.rate_to:n} '
-                            '{0.currency_to}{1}'.format(fxrate, t),
-                            s20,
+                            '{0.currency_to}{1}'.format(fxrate, txt),
+                            style20,
                             bulletText='–'))
 
-                if res.fx:
-                    res.fx.sort(key=(lambda x: x['date_required']))
-                    res.fx.sort(key=(lambda x: x['currency']))
-                    rmdsl(res.fx)
-                    r.append(Paragraph(('Použité směnné kursy ČNB:'), s23))
-                    for fx in res.fx:
-                        r.append(Paragraph(
+                if res.fxinfo:
+                    res.fxinfo.sort(key=lambda x: x['date_required'])
+                    res.fxinfo.sort(key=lambda x: x['currency'])
+                    rmdsl(res.fxinfo)
+                    info.append(Paragraph(
+                        'Použité směnné kursy ČNB:',
+                        style23))
+                    for fxr in res.fxinfo:
+                        info.append(Paragraph(
                             '{0[quantity]:d} {0[currency]} = {1:.3f} CZK, '
                             'platný ke dni {0[date_required]:%d.%m.%Y}'
-                                .format(fx, Lf(fx['rate'])),
-                            s20,
+                            .format(fxr, LocalFloat(fxr['rate'])),
+                            style20,
                             bulletText='–'))
 
                 if res.fix:
-                    res.fix.sort(key=(lambda x: x['currency_to']))
-                    res.fix.sort(key=(lambda x: x['currency_from']))
+                    res.fix.sort(key=lambda x: x['currency_to'])
+                    res.fix.sort(key=lambda x: x['currency_from'])
                     rmdsl(res.fix)
-                    r.append(Paragraph(('Použité fixní směnné poměry:'), s23))
+                    info.append(Paragraph(
+                        'Použité fixní směnné poměry:',
+                        style23))
                     for fix in res.fix:
-                        r.append(Paragraph(
+                        info.append(Paragraph(
                             '{0} {1[currency_from]} = 1 {1[currency_to]}, '
                             'platný od {1[date_from]:%d.%m.%Y}'
-                                .format(formam(fix['rate']), fix),
-                            s20,
+                            .format(famt(fix['rate']), fix),
+                            style20,
                             bulletText='–'))
 
                 if res.mpi:
                     res.mpi.sort(key=(lambda x: x['date']))
                     res.mpi.sort(key=(lambda x: x['type']))
                     rmdsl(res.mpi)
-                    r += [Paragraph(('Použité úrokové sazby ČNB:'), s23)]
+                    info += [Paragraph(('Použité úrokové sazby ČNB:'), style23)]
                     for mpi in res.mpi:
-                        r.append(Paragraph(
+                        info.append(Paragraph(
                             '{} ke dni {:%d.%m.%Y}: {:.2f} % <i>p. a.</i>'
-                                .format(
-                                    mpitypes[mpi['type']],
-                                    mpi['date'],
-                                    Lf(mpi['rate'])),
-                            s20,
+                            .format(
+                                mpitypes[mpi['type']],
+                                mpi['date'],
+                                LocalFloat(mpi['rate'])),
+                            style20,
                             bulletText='–'))
 
-                r.append(Spacer(0, 50))
-                flow.extend(r)
+                info.append(Spacer(0, 50))
+                flow.extend(info)
 
                 for row in res.rows:
 
-                    tp = row['type']
+                    typ = row['type']
                     spf = bool(row['sps'])
 
-                    hdr = ([''] * 3)
-                    ln = ([0] * 3)
-                    cl = [[], [], []]
-                    cr = [[], [], []]
+                    hdr = ['',] * 3
+                    lin = ([0] * 3)
+                    cleft = [[], [], []]
+                    cright = [[], [], []]
 
-                    if tp == DR:
+                    if typ == DR:
                         hdr[0] = 'Závazek'
-                        ln[0] = 1
-                        cl[0].append(row['id'])
-                        cr[0].append((row['amount'], row['disp_currency']))
+                        lin[0] = 1
+                        cleft[0].append(row['id'])
+                        cright[0].append((row['amount'], row['disp_currency']))
 
-                    if tp == CR:
+                    if typ == CR:
                         hdr[0] = 'Splátka'
-                        ln[0] = 1
-                        cl[0].append('∑')
-                        cr[0].append((-row['amount'], row['disp_currency']))
+                        lin[0] = 1
+                        cleft[0].append('∑')
+                        cright[0].append((-row['amount'], row['disp_currency']))
                         for debit, amount in zip(debt.debits, row['cr_distr']):
                             if abs(amount) > LIM:
-                                ln[0] += 1
-                                cl[0].append(debit.id)
-                                cr[0].append((amount, debit.currency))
+                                lin[0] += 1
+                                cleft[0].append(debit.id)
+                                cright[0].append((amount, debit.currency))
 
-                    if tp in [DR, CR]:
-                        for i in row['pre']:
-                            if abs(i) > LIM:
+                    if typ in [DR, CR]:
+                        for itm in row['pre']:
+                            if abs(itm) > LIM:
                                 hdr[1] = 'Předchozí zůstatek'
                                 for debit, amount in \
                                     zip(debt.debits, row['pre']):
                                     if abs(amount) > LIM:
-                                        ln[1] += 1
-                                        cl[1].append(debit.id)
-                                        cr[1].append((amount, debit.currency))
-                                if not res.multicurrency_debit and ln[1] > 1:
-                                    ln[1] += 1
-                                    cl[1].append('∑')
-                                    cr[1].append(
+                                        lin[1] += 1
+                                        cleft[1].append(debit.id)
+                                        cright[1].append((
+                                            amount,
+                                            debit.currency))
+                                if not res.multicurrency_debit and lin[1] > 1:
+                                    lin[1] += 1
+                                    cleft[1].append('∑')
+                                    cright[1].append(
                                         (row['pre_total'],
                                          res.currency_debits))
                                 break
 
                     if spf:
                         hdr[2] = 'Přeplatek'
-                        for sp in row['sps']:
-                            ln[2] += 1
-                            cl[2].append('∑')
-                            cr[2].append((sp['total'], sp['curr']))
+                        for spa in row['sps']:
+                            lin[2] += 1
+                            cleft[2].append('∑')
+                            cright[2].append((spa['total'], spa['curr']))
                     else:
                         hdr[2] = ('Nový zůstatek' if hdr[1] else 'Zůstatek')
                         for debit, amount in zip(debt.debits, row['post']):
                             if abs(amount) > LIM:
-                                ln[2] += 1
-                                cl[2].append(debit.id)
-                                cr[2].append((amount, debit.currency))
-                        if not res.multicurrency_debit and ln[2] > 1:
-                            ln[2] += 1
-                            cl[2].append('∑')
-                            cr[2].append((row['post_total'],
+                                lin[2] += 1
+                                cleft[2].append(debit.id)
+                                cright[2].append((amount, debit.currency))
+                        if not res.multicurrency_debit and lin[2] > 1:
+                            lin[2] += 1
+                            cleft[2].append('∑')
+                            cright[2].append((row['post_total'],
                                           res.currency_debits))
 
-                    lm = max(ln)
+                    lmax = max(lin)
 
-                    for i in range(3):
-                        while len(cl[i]) < lm:
-                            cl[i].append('')
-                        while len(cr[i]) < lm:
-                            cr[i].append((None, None))
+                    for idx in range(3):
+                        while len(cleft[idx]) < lmax:
+                            cleft[idx].append('')
+                        while len(cright[idx]) < lmax:
+                            cright[idx].append((None, None))
 
-                    ast = [('RIGHTPADDING', (2, 2), (10, (1 + lm)), 0),
-                           ('RIGHTPADDING', (13, 2), (21, (1 + lm)), 0),
-                           ('RIGHTPADDING', (24, 2), (32, (1 + lm)), 0),
-                           ('BOTTOMPADDING', (0, 2), (-1, (1 + lm)), 0),
-                          ]
+                    ast = [
+                        ('RIGHTPADDING', (2, 2), (10, 1 + lmax), 0),
+                        ('RIGHTPADDING', (13, 2), (21, 1 + lmax), 0),
+                        ('RIGHTPADDING', (24, 2), (32, 1 + lmax), 0),
+                        ('BOTTOMPADDING', (0, 2), (-1, 1 + lmax), 0),
+                    ]
 
-                    for i in range(lm):
+                    for idx in range(lmax):
                         ast.extend([
-                            ('SPAN', (2, (2 + i)), (10, (2 + i))),
-                            ('SPAN', (13, (2 + i)), (21, (2 + i))),
-                            ('SPAN', (24, (2 + i)), (32, (2 + i))),
+                            ('SPAN', (2, 2 + idx), (10, 2 + idx)),
+                            ('SPAN', (13, 2 + idx), (21, 2 + idx)),
+                            ('SPAN', (24, 2 + idx), (32, 2 + idx)),
                         ])
 
-                    for i in range(3):
-                        if hdr[i]:
-                            ast.append(('LINEBELOW', ((1 + (11 * i)), 1),
-                                        ((10 + (11 * i)), 1), tl, black))
-                        if ln[i]:
-                            ast.append(('LINEAFTER', ((1 + (11 * i)), 2),
-                                        ((1 + (11 * i)), (1 + ln[i])),
-                                        tl, black))
+                    for idx in range(3):
+                        if hdr[idx]:
+                            ast.append((
+                                'LINEBELOW', (1 + (11 * idx), 1),
+                                (10 + (11 * idx), 1), thickness, black))
+                        if lin[idx]:
+                            ast.append((
+                                'LINEAFTER', (1 + (11 * idx), 2),
+                                (1 + (11 * idx), 1 + lin[idx]),
+                                thickness, black))
 
-                    d3 = []
-                    r = [Paragraph('{:%d.%m.%Y}'.format(row['date']), s13)] \
+                    doc3 = []
+                    temp1 = \
+                        [Paragraph(
+                            '{:%d.%m.%Y}'.format(row['date']),
+                            style13)] \
                         + ([''] * 4)
-                    q = Paragraph((escape(row['description']).upper()
-                        if row['description'] else '<i>(bez názvu)</i>'), s14)
-                    if tp == CR:
+                    temp2 = \
+                        Paragraph(
+                            escape(row['description']).upper()
+                            if row['description'] else '<i>(bez názvu)</i>',
+                            style14)
+                    if typ == CR:
                         if len(row['debits']) > 1:
-                            q = [q,
-                                 Paragraph('Pořadí závazků: {}'.format(
-                                     ' – '.join(map(n2l, row['debits']))), s26)]
-                    q = [q] + ([''] * 28)
-                    d3.extend([r + q])
+                            temp2 = (
+                                temp2,
+                                Paragraph(
+                                    'Pořadí závazků: {}'.format(
+                                        ' – '.join(map(n2l, row['debits']))),
+                                    style26))
+                    temp2 = [temp2] + ([''] * 28)
+                    doc3.extend([temp1 + temp2])
 
-                    r = ['', Paragraph(hdr[0], s15)] \
+                    temp = \
+                        ['', Paragraph(hdr[0], style15)] \
                         + ([''] * 10) \
-                        + [Paragraph(hdr[1], s15)] \
+                        + [Paragraph(hdr[1], style15)] \
                         + ([''] * 10) \
-                        + [Paragraph(hdr[2], s15), '']
-                    d3.extend([r])
+                        + [Paragraph(hdr[2], style15), '']
+                    doc3.extend([temp])
 
-                    for i in range(lm):
-                        r = ['', Paragraph(cl[0][i], s17)] \
-                            + [Paragraph(fa(*cr[0][i]), s18)] \
+                    for idx in range(lmax):
+                        temp = \
+                            ['', Paragraph(cleft[0][idx], style17)] \
+                            + [Paragraph(lfamt(*cright[0][idx]), style18)] \
                             + ([''] * 9) \
-                            + [Paragraph(cl[1][i], s17)] \
-                            + [Paragraph(fa(*cr[1][i]), s18)] \
+                            + [Paragraph(cleft[1][idx], style17)] \
+                            + [Paragraph(lfamt(*cright[1][idx]), style18)] \
                             + ([''] * 9) \
-                            + [Paragraph(cl[2][i], s17)] \
-                            + [Paragraph(fa(*cr[2][i]), s18)] \
+                            + [Paragraph(cleft[2][idx], style17)] \
+                            + [Paragraph(lfamt(*cright[2][idx]), style18)] \
                             + ([''] * 9)
-                        d3.extend([r])
+                        doc3.extend([temp])
 
-                    r = ([''] * 34)
-                    d3.extend([r])
+                    temp = ([''] * 34)
+                    doc3.extend([temp])
 
-                    t3 = Table(d3, colWidths=cw)
-                    t3.setStyle(TableStyle(bst + ast))
-                    flow.append(KeepTogether(t3))
+                    table3 = Table(doc3, colWidths=cwid)
+                    table3.setStyle(TableStyle(bst + ast))
+                    flow.append(KeepTogether(table3))
 
                 if res.msg:
                     flow.extend(
                         [Spacer(0, 20),
-                         Paragraph('(pro další transakce nejsou k disposici '
-                                   'data, při výpočtu došlo k chybě)', s22)])
+                         Paragraph(
+                             '(pro další transakce nejsou k disposici '
+                             'data, při výpočtu došlo k chybě)', style22)])
 
                 if debt.note:
                     flow.append(Spacer(0, 24))
-                    q = [Paragraph('Poznámka:'.upper(), s4)]
-                    for s in filter(bool, debt.note.strip().split('\n')):
-                        q.append(Paragraph(escape(s), s12))
-                    flow.append(KeepTogether(q[:2]))
-                    if len(q) > 2:
-                        flow.extend(q[2:])
+                    temp = [Paragraph('Poznámka:'.upper(), style4)]
+                    for note in filter(bool, debt.note.strip().split('\n')):
+                        temp.append(Paragraph(escape(note), style12))
+                    flow.append(KeepTogether(temp[:2]))
+                    if len(temp) > 2:
+                        flow.extend(temp[2:])
                 temp = BytesIO()
                 response = HttpResponse(content_type='application/pdf')
                 response['Content-Disposition'] = \
                     'attachment; filename=Pohledavka.pdf'
+                auth = '{} V{}'.format(APP.upper(), APPVERSION)
                 doc = SimpleDocTemplate(
                     temp,
                     pagesize=A4,
                     title='Historie peněžité pohledávky',
-                    author='{} V{}'.format(APP.upper(), APPVERSION),
-                    leftMargin=64.0,
-                    rightMargin=48.0,
-                    topMargin=48.0,
-                    bottomMargin=96.0,
+                    author=auth,
+                    leftMargin=64,
+                    rightMargin=48,
+                    topMargin=48,
+                    bottomMargin=96,
                     )
-                CanvasXML.xml = toxml(debt)
-                doc.build(
+                make_pdf(
+                    doc,
                     flow,
-                    onFirstPage=page1,
-                    onLaterPages=page2,
-                    canvasmaker=CanvasXML)
+                    string=auth,
+                    xml=to_xml(debt))
                 response.write(temp.getvalue())
                 return response
 
-    res = calc(debt, ft)
+    res = calc(debt, ftbl)
 
-    for n, debit in enumerate(debt.debits):
-        debit.id = n2l(n)
-        m = debit.model
-        if m == 'fixed':
-            t = 'pevná částka {}, splatná {:%d.%m.%Y}'.format(
-                fa(debit.fixed_amount,
-                   debit.fixed_currency),
-                debit.fixed_date)
+    for num, debit in enumerate(debt.debits):
+        debit.id = n2l(num)
+        model = debit.model
+        if model == 'fixed':
+            txt = \
+                'pevná částka {}, splatná {:%d.%m.%Y}'.format(
+                    lfamt(debit.fixed_amount, debit.fixed_currency),
+                    debit.fixed_date)
         else:
-            if m == 'per_annum':
-                t = 'roční úrok {:n} % <i>p. a.</i>'.format(debit.rate)
-            elif m == 'per_mensem':
-                t = 'měsíční úrok {:n} % <i>p. m.</i>'.format(debit.rate)
-            elif m == 'per_diem':
-                t = 'denní úrok {:n} ‰ <i>p. d.</i>'.format(debit.rate)
-            elif m in ['cust1', 'cust2', 'cust3', 'cust5', 'cust6']:
-                t = 'zákonný úrok z prodlení'
+            if model == 'per_annum':
+                txt = 'roční úrok {:n} % <i>p. a.</i>'.format(debit.rate)
+            elif model == 'per_mensem':
+                txt = 'měsíční úrok {:n} % <i>p. m.</i>'.format(debit.rate)
+            elif model == 'per_diem':
+                txt = 'denní úrok {:n} ‰ <i>p. d.</i>'.format(debit.rate)
+            elif model in ['cust1', 'cust2', 'cust3', 'cust5', 'cust6']:
+                txt = 'zákonný úrok z prodlení'
             else:
-                t = 'zákonný poplatek z prodlení'
+                txt = 'zákonný poplatek z prodlení'
             if debit.principal_debit:
-                t += ' ze závazku {}'.format(n2l(debit.principal_debit - 1))
+                txt += ' ze závazku {}'.format(n2l(debit.principal_debit - 1))
             else:
-                t += ' z&nbsp;částky {}'.format(
-                    fa(debit.principal_amount, debit.principal_currency))
+                txt += ' z&nbsp;částky {}'.format(
+                    lfamt(debit.principal_amount, debit.principal_currency))
             if debit.date_from:
-                t += ' od {:%d.%m.%Y}'.format(debit.date_from)
+                txt += ' od {:%d.%m.%Y}'.format(debit.date_from)
             elif debit.principal_debit:
-                t += ' od splatnosti'
+                txt += ' od splatnosti'
             if debit.date_to:
-                t += ' do {:%d.%m.%Y}'.format(debit.date_to)
+                txt += ' do {:%d.%m.%Y}'.format(debit.date_to)
             elif debit.principal_debit:
-                t += ' do zaplacení'
-        debit.text = t
+                txt += ' do zaplacení'
+        debit.text = txt
 
     for credit in debt.credits:
-        credit.text = 'částka {}'.format(fa(credit.amount, credit.currency))
+        credit.text = 'částka {}'.format(lfamt(credit.amount, credit.currency))
         if len(debt.debits) > 1:
             credit.text += \
                 ', pořadí: {}'.format(' → '.join(map(n2l, credit.debits)))
 
-    sc = debt.credits[:]
-    id = 1
-    for cc in sc:
-        cc.id = id
-        id += 1
-    sc.sort(key=(lambda x: x.date))
+    scr = debt.credits[:]
+    idx = 1
+    for ccr in scr:
+        ccr.id = idx
+        idx += 1
+    scr.sort(key=lambda x: x.date)
 
-    sb = debt.balances[:]
-    id = 1
-    for bb in sb:
-        bb.id = id
-        id += 1
-    sb.sort(key=(lambda x: x.date))
+    sbal = debt.balances[:]
+    idx = 1
+    for bbal in sbal:
+        bbal.id = idx
+        idx += 1
+    sbal.sort(key=lambda x: x.date)
 
     return render(
         request,
         'hsp_mainpage.html',
         {'app': APP,
          'page_title': 'Historie složené peněžité pohledávky',
-         'f': f,
+         'form': form,
          'debt': debt,
          'res': res,
-         'sc': sc,
-         'sb': sb,
+         'sc': scr,
+         'sb': sbal,
          'err_message': err_message})
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def debitform(request, id=0):
+def debitform(request, idx=0):
 
     logger.debug(
         'Debit form accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, idx),
         request,
         request.POST)
 
-    page_title = ('Úprava závazku' if id else 'Nový závazek')
+    page_title = 'Úprava závazku' if idx else 'Nový závazek'
     var = {}
     err_message = ''
-    id = int(id)
+    idx = int(idx)
     debt = getdebt(request)
     if not debt:  # pragma: no cover
         return error(request)
     fields.AmountField.rounding = debt.rounding
-    nd = len(debt.debits)
+    numd = len(debt.debits)
 
     rows = [{'value': 0, 'text': 'pevné částky:', 'sel': False}]
-    for n, d in enumerate(debt.debits):
-        if d.model == 'fixed' and (not id or n != (id - 1)):
-            row = {'value': (n + 1),
-                   'text': '{} – {}'.format(n2l(n), (d.description
-                        if d.description else '(bez názvu)')),
-                   'sel': False}
+    for num, deb in enumerate(debt.debits):
+        if deb.model == 'fixed' and (not idx or num != (idx - 1)):
+            row = {
+                'value': num + 1,
+                'text': '{} – {}'.format(
+                    n2l(num), deb.description
+                    if deb.description else '(bez názvu)'),
+                'sel': False,
+            }
             rows.append(row)
 
     if request.method == 'GET':
-        if id:
-            if id > nd:
+        if idx:
+            if idx > numd:
                 raise Http404
-            debit = debt.debits[id - 1]
+            debit = debt.debits[idx - 1]
             var['description'] = debit.description
-            var['model'] = m = debit.model
-            if m == 'fixed':
+            var['model'] = model = debit.model
+            if model == 'fixed':
                 var['fixed_amount'] = debit.fixed_amount
                 var['fixed_currency'] = debit.fixed_currency
                 var['fixed_date'] = debit.fixed_date
-            elif m == 'per_annum':
+            elif model == 'per_annum':
                 var['pa_rate'] = debit.rate
                 var['ydconv'] = debit.day_count_convention
-            elif m == 'per_mensem':
+            elif model == 'per_mensem':
                 var['pm_rate'] = debit.rate
                 var['mdconv'] = debit.day_count_convention
-            elif m == 'per_diem':
+            elif model == 'per_diem':
                 var['pd_rate'] = debit.rate
             for row in rows:
                 if row['value'] == debit.principal_debit:
@@ -1680,25 +1690,25 @@ def debitform(request, id=0):
                     break
             else:  # pragma: no cover
                 rows[0]['sel'] = True
-            if m != 'fixed':
+            if model != 'fixed':
                 var['date_from'] = debit.date_from
                 var['date_to'] = debit.date_to
                 if debit.principal_debit == 0:
                     var['principal_amount'] = debit.principal_amount
                     var['principal_currency'] = debit.principal_currency
             for debit in debt.debits:
-                if debit.principal_debit == id:
+                if debit.principal_debit == idx:
                     var['lock_fixed'] = True
                     break
-            f = DebitForm(initial=var)
+            form = DebitForm(initial=var)
         else:
             rows[0]['sel'] = True
-            f = DebitForm()
+            form = DebitForm()
     else:
-        f = DebitForm(request.POST)
+        form = DebitForm(request.POST)
 
-        btn = getbutton(request)
-        if btn == 'back':
+        button = getbutton(request)
+        if button == 'back':
             return redirect('hsp:mainpage')
         else:
             if request.POST.get('principal_debit'):
@@ -1706,44 +1716,44 @@ def debitform(request, id=0):
                     if row['value'] == int(request.POST['principal_debit']):
                         row['sel'] = True
                         break
-            if id and request.POST.get('model') != 'fixed':
+            if idx and request.POST.get('model') != 'fixed':
                 for debit in debt.debits:
-                    if debit.principal_debit == id:
+                    if debit.principal_debit == idx:
                         err_message = \
                             'Na závazek se váže úrok, vyžaduje pevnou částku'
-            if not err_message and f.is_valid():
-                cd = f.cleaned_data
+            if not err_message and form.is_valid():
+                cld = form.cleaned_data
                 debit = Debit()
-                debit.description = cd['description'].strip()
-                debit.model = m = cd['model']
-                if m == 'fixed':
-                    debit.fixed_amount = cd['fixed_amount']
-                    debit.fixed_currency = cd['fixed_currency'].upper()
-                    debit.fixed_date = cd['fixed_date']
-                elif m == 'per_annum':
-                    debit.rate = cd['pa_rate']
-                    debit.day_count_convention = cd['ydconv']
-                elif m == 'per_mensem':
-                    debit.rate = cd['pm_rate']
-                    debit.day_count_convention = cd['mdconv']
-                elif m == 'per_diem':
-                    debit.rate = cd['pd_rate']
-                if m != 'fixed':
-                    debit.date_from = cd['date_from']
-                    debit.date_to = cd['date_to']
-                    debit.principal_debit = cd['principal_debit']
+                debit.description = cld['description'].strip()
+                debit.model = model = cld['model']
+                if model == 'fixed':
+                    debit.fixed_amount = cld['fixed_amount']
+                    debit.fixed_currency = cld['fixed_currency'].upper()
+                    debit.fixed_date = cld['fixed_date']
+                elif model == 'per_annum':
+                    debit.rate = cld['pa_rate']
+                    debit.day_count_convention = cld['ydconv']
+                elif model == 'per_mensem':
+                    debit.rate = cld['pm_rate']
+                    debit.day_count_convention = cld['mdconv']
+                elif model == 'per_diem':
+                    debit.rate = cld['pd_rate']
+                if model != 'fixed':
+                    debit.date_from = cld['date_from']
+                    debit.date_to = cld['date_to']
+                    debit.principal_debit = cld['principal_debit']
                     if debit.principal_debit == 0:
-                        debit.principal_amount = cd['principal_amount']
+                        debit.principal_amount = cld['principal_amount']
                         debit.principal_currency = \
-                            cd['principal_currency'].upper()
-                if id:
-                    if id > nd:
+                            cld['principal_currency'].upper()
+                if idx:
+                    if idx > numd:
                         raise Http404
-                    debt.debits[id - 1] = debit
+                    debt.debits[idx - 1] = debit
                 else:
                     debt.debits.append(debit)
                     for credit in debt.credits:
-                        credit.debits.append(nd)
+                        credit.debits.append(numd)
                 if not setdebt(request, debt):  # pragma: no cover
                     return error(request)
                 return redirect('hsp:mainpage')
@@ -1751,35 +1761,35 @@ def debitform(request, id=0):
             else:
                 logger.debug('Invalid form', request)
                 if not err_message:
-                    err_message = inerr
+                    err_message = INERR
 
     return render(
         request,
         'hsp_debitform.html',
         {'app': APP,
-         'f': f,
+         'form': form,
          'rows': rows,
          'page_title': page_title,
-         'ydconvs': ydconvs,
-         'mdconvs': mdconvs,
+         'YDCONVS': YDCONVS,
+         'MDCONVS': MDCONVS,
          'err_message': err_message})
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def debitdel(request, id=0):
+def debitdel(request, idx=0):
 
     logger.debug(
         'Debit delete page accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, idx),
         request,
         request.POST)
-    id = int(id) - 1
+    idx = int(idx) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
         return error(request)
-    nd = len(debt.debits)
-    if id >= nd:
+    numd = len(debt.debits)
+    if idx >= numd:
         raise Http404
     if request.method == 'GET':
         return render(
@@ -1788,111 +1798,114 @@ def debitdel(request, id=0):
             {'app': APP,
              'page_title': 'Smazání závazku'})
     else:
-        btn = getbutton(request)
-        if btn == 'yes':
-            r = list(range(nd))
-            for i in range((nd - 1), -1, -1):
-                if i == id or (debt.debits[i].principal_debit - 1) == id:
-                    r[i] = None
-                    del debt.debits[i]
-            c = [x for x in r if x != None]
-            m = [(None if x is None else c.index(x)) for x in r]
+        button = getbutton(request)
+        if button == 'yes':
+            temp = list(range(numd))
+            for num in range(numd - 1, -1, -1):
+                if num == idx or (debt.debits[num].principal_debit - 1) == idx:
+                    temp[num] = None
+                    del debt.debits[num]
+            lst = [x for x in temp if x is not None]
+            temp = [None if x is None else lst.index(x) for x in temp]
             for credit in debt.credits:
-                d = []
-                for i in credit.debits:
-                    if m[i] != None:
-                        d.append(m[i])
-                credit.debits = d
+                lst = []
+                for num in credit.debits:
+                    if temp[num] != None:
+                        lst.append(temp[num])
+                credit.debits = lst
             if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
             return redirect('hsp:debitdeleted')
         return redirect('hsp:mainpage')
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def creditform(request, id=0):
+def creditform(request, idx=0):
 
     logger.debug(
         'Credit form accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, idx),
         request,
         request.POST)
 
-    page_title = ('Úprava splátky' if id else 'Nová splátka')
+    page_title = 'Úprava splátky' if idx else 'Nová splátka'
     err_message = ''
     debt = getdebt(request)
     if not debt:  # pragma: no cover
         return error(request)
     fields.AmountField.rounding = debt.rounding
     rows = []
-    nd = len(debt.debits)
+    numd = len(debt.debits)
     deb_class = ''
-    if nd > 1:
-        for n, dummy in enumerate(debt.debits):
-            row = {'n': n, 'cols': []}
-            for m, c in enumerate(debt.debits):
+    if numd > 1:
+        for num in range(len(debt.debits)):
+            row = {'n': num, 'cols': []}
+            for num2 in range(len(debt.debits)):
                 row['cols'].append(
-                    {'n': m,
-                     'id': n2l(m),
-                     'desc': debt.debits[m].description})
+                    {'n': num2,
+                     'id': n2l(num2),
+                     'desc': debt.debits[num2].description})
             rows.append(row)
-    id = int(id)
+    idx = int(idx)
     if request.method == 'GET':
-        if id:
-            if id > len(debt.credits):
+        if idx:
+            if idx > len(debt.credits):
                 raise Http404
-            credit = debt.credits[id - 1]
-            var = {'description': credit.description,
-                   'date': credit.date,
-                   'amount': credit.amount,
-                   'currency': credit.currency}
-            f = CreditForm(initial=var)
-            if nd > 1:
-                for n, d in enumerate(debt.debits):
-                    rows[n]['sel'] = credit.debits[n]
+            credit = debt.credits[idx - 1]
+            var = {
+                'description': credit.description,
+                'date': credit.date,
+                'amount': credit.amount,
+                'currency': credit.currency,
+            }
+            form = CreditForm(initial=var)
+            if numd > 1:
+                for num in range(len(debt.debits)):
+                    rows[num]['sel'] = credit.debits[num]
         else:
-            f = CreditForm()
-            if nd > 1:
-                if hasattr(debt, 'last_debits') and len(debt.last_debits) == nd:
-                    for n, d in enumerate(debt.debits):
-                        rows[n]['sel'] = debt.last_debits[n]
+            form = CreditForm()
+            if numd > 1:
+                if hasattr(debt, 'last_debits') \
+                   and len(debt.last_debits) == numd:
+                    for num in range(len(debt.debits)):
+                        rows[num]['sel'] = debt.last_debits[num]
                 else:
-                    for n, d in enumerate(debt.debits):
-                        rows[n]['sel'] = n
+                    for num in range(len(debt.debits)):
+                        rows[num]['sel'] = num
     else:
-        f = CreditForm(request.POST)
+        form = CreditForm(request.POST)
 
-        btn = getbutton(request)
-        if btn == 'back':
+        button = getbutton(request)
+        if button == 'back':
             return redirect('hsp:mainpage')
         else:
-            if nd > 1:
-                r = []
-                for n in range(nd):
-                    c = request.POST['r{:d}'.format(n)]
-                    if c in r:
+            if numd > 1:
+                lst = []
+                for num in range(numd):
+                    txt = request.POST['r{:d}'.format(num)]
+                    if txt in lst:
                         deb_class = 'err'
                         break
                     else:
-                        r.append(c)
-            if f.is_valid() and not deb_class:
-                cd = f.cleaned_data
+                        lst.append(txt)
+            if form.is_valid() and not deb_class:
+                cld = form.cleaned_data
                 credit = Credit()
-                credit.description = cd['description'].strip()
-                credit.date = cd['date']
-                credit.amount = cd['amount']
-                credit.currency = cd['currency'].upper()
-                if nd > 1:
-                    for n in range(nd):
+                credit.description = cld['description'].strip()
+                credit.date = cld['date']
+                credit.amount = cld['amount']
+                credit.currency = cld['currency'].upper()
+                if numd > 1:
+                    for num in range(numd):
                         credit.debits.append(int(
-                            request.POST['r{:d}'.format(n)]))
-                elif nd:
+                            request.POST['r{:d}'.format(num)]))
+                elif numd:
                     credit.debits = [0]
-                if id:
-                    if id > len(debt.credits):
+                if idx:
+                    if idx > len(debt.credits):
                         raise Http404
-                    debt.credits[id - 1] = credit
+                    debt.credits[idx - 1] = credit
                 else:
                     debt.credits.append(credit)
                 debt.last_debits = credit.debits
@@ -1902,37 +1915,37 @@ def creditform(request, id=0):
 
             else:
                 logger.debug('Invalid form', request)
-                err_message = inerr
-                if nd > 1:
-                    for n in range(nd):
-                        rows[n]['sel'] = \
-                            int(request.POST['r{:d}'.format(n)])
+                err_message = INERR
+                if numd > 1:
+                    for num in range(numd):
+                        rows[num]['sel'] = \
+                            int(request.POST['r{:d}'.format(num)])
 
     return render(
         request,
         'hsp_creditform.html',
         {'app': APP,
-         'f': f,
+         'form': form,
          'rows': rows,
          'page_title': page_title,
          'err_message': err_message,
          'deb_class': deb_class})
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def creditdel(request, id=0):
+def creditdel(request, idx=0):
 
     logger.debug(
         'Credit delete page accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, idx),
         request,
         request.POST)
-    id = int(id) - 1
+    idx = int(idx) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
         return error(request)
-    if id >= len(debt.credits):
+    if idx >= len(debt.credits):
         raise Http404
     if request.method == 'GET':
         return render(
@@ -1940,60 +1953,60 @@ def creditdel(request, id=0):
             'hsp_creditdel.html',
             {'app': APP,
              'page_title': 'Smazání splátky',
-             'date': debt.credits[id].date})
+             'date': debt.credits[idx].date})
     else:
-        btn = getbutton(request)
-        if btn == 'yes':
-            del debt.credits[id]
+        button = getbutton(request)
+        if button == 'yes':
+            del debt.credits[idx]
             if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
             return redirect('hsp:creditdeleted')
         return redirect('hsp:mainpage')
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def balanceform(request, id=0):
+def balanceform(request, idx=0):
 
     logger.debug(
         'Balance form accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, idx),
         request,
         request.POST)
 
-    page_title = ('Úprava kontrolního bodu' if id else 'Nový kontrolní bod')
+    page_title = 'Úprava kontrolního bodu' if idx else 'Nový kontrolní bod'
     err_message = ''
     debt = getdebt(request)
     if not debt:  # pragma: no cover
         return error(request)
-    id = int(id)
+    idx = int(idx)
     if request.method == 'GET':
-        if id:
-            if id > len(debt.balances):
+        if idx:
+            if idx > len(debt.balances):
                 raise Http404
-            balance = debt.balances[id - 1]
+            balance = debt.balances[idx - 1]
             var = {'description': balance.description, 'date': balance.date}
-            f = BalanceForm(initial=var)
+            form = BalanceForm(initial=var)
         else:
-            f = BalanceForm()
+            form = BalanceForm()
     else:
-        f = BalanceForm(request.POST)
+        form = BalanceForm(request.POST)
 
-        btn = getbutton(request)
-        if btn == 'back':
+        button = getbutton(request)
+        if button == 'back':
             return redirect('hsp:mainpage')
-        if btn == 'set_date':
-            f.data = f.data.copy()
-            f.data['date'] = date.today()
-        elif f.is_valid():
-            cd = f.cleaned_data
+        if button == 'set_date':
+            form.data = form.data.copy()
+            form.data['date'] = date.today()
+        elif form.is_valid():
+            cld = form.cleaned_data
             balance = Balance()
-            balance.description = cd['description'].strip()
-            balance.date = cd['date']
-            if id:
-                if id > len(debt.balances):
+            balance.description = cld['description'].strip()
+            balance.date = cld['date']
+            if idx:
+                if idx > len(debt.balances):
                     raise Http404
-                debt.balances[id - 1] = balance
+                debt.balances[idx - 1] = balance
             else:
                 debt.balances.append(balance)
             if not setdebt(request, debt):  # pragma: no cover
@@ -2002,31 +2015,31 @@ def balanceform(request, id=0):
 
         else:
             logger.debug('Invalid form', request)
-            err_message = inerr
+            err_message = INERR
 
     return render(
         request,
         'hsp_balanceform.html',
         {'app': APP,
-         'f': f,
+         'form': form,
          'page_title': page_title,
          'err_message': err_message})
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def balancedel(request, id=0):
+def balancedel(request, idx=0):
 
     logger.debug(
         'Balance delete page accessed using method {}, id={}'
-            .format(request.method, id),
+            .format(request.method, idx),
         request,
         request.POST)
-    id = int(id) - 1
+    idx = int(idx) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
         return error(request)
-    if id >= len(debt.balances):
+    if idx >= len(debt.balances):
         raise Http404
     if request.method == 'GET':
         return render(
@@ -2034,38 +2047,38 @@ def balancedel(request, id=0):
             'hsp_balancedel.html',
             {'app': APP,
              'page_title': 'Smazání kontrolního bodu',
-             'date': debt.balances[id].date})
+             'date': debt.balances[idx].date})
     else:
-        btn = getbutton(request)
-        if btn == 'yes':
-            del debt.balances[id]
+        button = getbutton(request)
+        if button == 'yes':
+            del debt.balances[idx]
             if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
             return redirect('hsp:balancedeleted')
         return redirect('hsp:mainpage')
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def fxrateform(request, id=0):
+def fxrateform(request, idx=0):
 
     logger.debug(
         'FX rate form accessed using method {}, id={}'
-            .format(request.method, id),
+            .format(request.method, idx),
         request,
         request.POST)
 
-    page_title = ('Úprava kursu' if id else 'Nový kurs')
+    page_title = 'Úprava kursu' if idx else 'Nový kurs'
     err_message = ''
     debt = getdebt(request)
     if not debt:  # pragma: no cover
         return error(request)
-    id = int(id)
+    idx = int(idx)
     if request.method == 'GET':
-        if id:
-            if id > len(debt.fxrates):
+        if idx:
+            if idx > len(debt.fxrates):
                 raise Http404
-            fxrate = debt.fxrates[id - 1]
+            fxrate = debt.fxrates[idx - 1]
             var = {
                 'currency_from': fxrate.currency_from,
                 'currency_to': fxrate.currency_to,
@@ -2074,28 +2087,28 @@ def fxrateform(request, id=0):
                 'date_from': fxrate.date_from,
                 'date_to': fxrate.date_to
             }
-            f = FXform(initial=var)
+            form = FXform(initial=var)
         else:
-            f = FXform()
+            form = FXform()
     else:
-        f = FXform(request.POST)
+        form = FXform(request.POST)
 
-        btn = getbutton(request)
-        if btn == 'back':
+        button = getbutton(request)
+        if button == 'back':
             return redirect('hsp:mainpage')
-        if f.is_valid():
-            cd = f.cleaned_data
+        if form.is_valid():
+            cld = form.cleaned_data
             fxrate = FXrate()
-            fxrate.currency_from = cd['currency_from'].upper()
-            fxrate.currency_to = cd['currency_to'].upper()
-            fxrate.rate_from = cd['rate_from']
-            fxrate.rate_to = cd['rate_to']
-            fxrate.date_from = cd['date_from']
-            fxrate.date_to = cd['date_to']
-            if id:
-                if id > len(debt.fxrates):
+            fxrate.currency_from = cld['currency_from'].upper()
+            fxrate.currency_to = cld['currency_to'].upper()
+            fxrate.rate_from = cld['rate_from']
+            fxrate.rate_to = cld['rate_to']
+            fxrate.date_from = cld['date_from']
+            fxrate.date_to = cld['date_to']
+            if idx:
+                if idx > len(debt.fxrates):
                     raise Http404
-                debt.fxrates[id - 1] = fxrate
+                debt.fxrates[idx - 1] = fxrate
             else:
                 debt.fxrates.append(fxrate)
             if not setdebt(request, debt):  # pragma: no cover
@@ -2104,32 +2117,32 @@ def fxrateform(request, id=0):
 
         else:
             logger.debug('Invalid form', request)
-            err_message = inerr
+            err_message = INERR
 
     return render(
         request,
         'hsp_fxrateform.html',
         {'app': APP,
-         'f': f,
+         'form': form,
          'page_title': page_title,
          'err_message': err_message,
          'display_note': True})
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def fxratedel(request, id=0):
+def fxratedel(request, idx=0):
 
     logger.debug(
         'FX rate delete page accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, idx),
         request,
         request.POST)
-    id = int(id) - 1
+    idx = int(idx) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
         return error(request)
-    if id >= len(debt.fxrates):
+    if idx >= len(debt.fxrates):
         raise Http404
     if request.method == 'GET':
         return render(
@@ -2138,11 +2151,11 @@ def fxratedel(request, id=0):
             {'app': APP,
              'page_title':
              'Smazání kursu',
-             'fxrate': debt.fxrates[id]})
+             'fxrate': debt.fxrates[idx]})
     else:
-        btn = getbutton(request)
-        if btn == 'yes':
-            del debt.fxrates[id]
+        button = getbutton(request)
+        if button == 'yes':
+            del debt.fxrates[idx]
             if not setdebt(request, debt):  # pragma: no cover
                 return error(request)
             return redirect('hsp:fxratedeleted')

@@ -36,40 +36,40 @@ class SzrConfig(AppConfig):
         from .models import Court, Proceedings
         now = datetime.now()
         logger.debug('Partial statistics generated')
-        return [
-            [
+        return (
+            (
                 'Počet soudů',
-                Court.objects.count()],
-            [
+                Court.objects.count()),
+            (
                 'Z toho okresních soudů',
-                Court.objects.filter(reports__isnull=False).count()],
-            [
+                Court.objects.filter(reports__isnull=False).count()),
+            (
                 'Počet sledovaných řízení',
-                Proceedings.objects.count()],
-            [
+                Proceedings.objects.count()),
+            (
                 'Počet nových sledovaných řízení za posledních 24 hodin',
                 Proceedings.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+            (
                 'Počet nových sledovaných řízení za poslední týden',
                 Proceedings.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+            (
                 'Počet nových sledovaných řízení za poslední měsíc',
                 Proceedings.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+            (
                 'Počet sledovaných řízení pro příští notifikaci',
-                Proceedings.objects.filter(notify=1).count()],
-        ]
+                Proceedings.objects.filter(notify=1).count()),
+        )
 
     @staticmethod
     def userinfo(user):
         from common.utils import logger
         from .models import Proceedings
         logger.debug('Partial user information generated')
-        return [
-            [
+        return (
+            (
                 'Počet sledovaných řízení',
-                Proceedings.objects.filter(uid=user).count()],
-        ]
+                Proceedings.objects.filter(uid=user).count()),
+        )

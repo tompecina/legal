@@ -11,75 +11,75 @@
 		<fieldset class="infotbl">
 		  <legend>Údaje o pohledávce</legend>
 		  <table class="mtm mrl mbm mll">
-                    <tr><th class="{{ f.title.css_classes }}">{{ f.title.label_tag }}</th><td>{{ f.title }}</td></tr>
-	            <tr><th class="{{ f.note.css_classes }}">{{ f.note.label_tag }}</th><td>{{ f.note }}</td></tr>
-                    <tr><th class="{{ f.internal_note.css_classes }}">{{ f.internal_note.label_tag }}</th><td>{{ f.internal_note }}</td></tr>
+                    <tr><th class="{{ form.title.css_classes }}">{{ form.title.label_tag }}</th><td>{{ form.title }}</td></tr>
+	            <tr><th class="{{ form.note.css_classes }}">{{ form.note.label_tag }}</th><td>{{ form.note }}</td></tr>
+                    <tr><th class="{{ form.internal_note.css_classes }}">{{ form.internal_note.label_tag }}</th><td>{{ form.internal_note }}</td></tr>
                     <tr>
-		      <th class="pts prm pbs plm {{ f.currency.css_classes }}">{{ f.currency.label_tag }}</th>
+		      <th class="pts prm pbs plm {{ form.currency.css_classes }}">{{ form.currency.label_tag }}</th>
 		      <td>
-			{{ f.currency }}
+			{{ form.currency }}
 		      </td>
 		    </tr>
                     <tr>
-		      <th class="pts prm pbs plm">{{ f.rounding.label_tag }}</th>
+		      <th class="pts prm pbs plm">{{ form.rounding.label_tag }}</th>
 		      <td>{{ rt }}
 			<select name="rounding" id="id_rounding">
-			  <option value="0" {% if f.rounding.value == '0' %} selected="selected"{% endif %}>na jednotky</option>
-			  <option value="2" {% if f.rounding.value == '2' %} selected="selected"{% endif %}>na 2 desetinná místa</option>
+			  <option value="0" {% if form.rounding.value == '0' %} selected="selected"{% endif %}>na jednotky</option>
+			  <option value="2" {% if form.rounding.value == '2' %} selected="selected"{% endif %}>na 2 desetinná místa</option>
 			</select>
 		      </td>
 		    </tr>
 		  </table>
 		</fieldset>
 		<fieldset class="intbl">
-		  <legend>{{ f.model.label }}</legend>
+		  <legend>{{ form.model.label }}</legend>
 		  <table>
 		    <tr>
-		      <th colspan="3" class="immune">{{ f.model.0 }}</th>
+		      <th colspan="3" class="immune">{{ form.model.0 }}</th>
 		    </tr>
 		    <tr id="id_fa">
-		      <th class="immune"><span class="{{ f.fixed_amount.css_classes }}">{{ f.model.1 }}:</span></th>
-		      <td colspan="2" class="{{ f.fixed_amount.css_classes }}">{{ f.fixed_amount }} <span class="curr">{{ currency }}</span></td>
+		      <th class="immune"><span class="{{ form.fixed_amount.css_classes }}">{{ form.model.1 }}:</span></th>
+		      <td colspan="2" class="{{ form.fixed_amount.css_classes }}">{{ form.fixed_amount }} <span class="curr">{{ currency }}</span></td>
 		    </tr>
 		    <tr id="id_pa">
-		      <th class="immune"><span class="{{ f.pa_rate.css_classes }}">{{ f.model.2 }}:</span></th>
-		      <td class="{{ f.pa_rate.css_classes }}">{{ f.pa_rate }} % <i>p. a.</i></td>
-		      <td>{{ f.ydconv.label_tag }}
+		      <th class="immune"><span class="{{ form.pa_rate.css_classes }}">{{ form.model.2 }}:</span></th>
+		      <td class="{{ form.pa_rate.css_classes }}">{{ form.pa_rate }} % <i>p. a.</i></td>
+		      <td>{{ form.ydconv.label_tag }}
 			<select name="ydconv" id="id_ydconv">
-{% for dconv in ydconvs %}			  <option value="{{ dconv }}"{% if f.ydconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
+{% for dconv in ydconvs %}			  <option value="{{ dconv }}"{% if form.ydconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
 {% endfor %}			</select>
 		      </td>
 		    </tr>
 		    <tr id="id_pm">
-		      <th class="immune"><span class="{{ f.pm_rate.css_classes }}">{{ f.model.3 }}:</span></th>
-		      <td class="{{ f.pm_rate.css_classes }}">{{ f.pm_rate }} % <i>p. m.</i></td>
-		      <td>{{ f.mdconv.label_tag }}
+		      <th class="immune"><span class="{{ form.pm_rate.css_classes }}">{{ form.model.3 }}:</span></th>
+		      <td class="{{ form.pm_rate.css_classes }}">{{ form.pm_rate }} % <i>p. m.</i></td>
+		      <td>{{ form.mdconv.label_tag }}
 			<select name="mdconv" id="id_mdconv">
-{% for dconv in mdconvs %}			  <option value="{{ dconv }}"{% if f.mdconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
+{% for dconv in mdconvs %}			  <option value="{{ dconv }}"{% if form.mdconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
 {% endfor %}			</select>
 		      </td>
 		    </tr>
 		    <tr id="id_pd">
-		      <th class="immune"><span class="{{ f.pd_rate.css_classes }}">{{ f.model.4 }}:</span></th>
-		      <td colspan="2" class="{{ f.pd_rate.css_classes }}">{{ f.pd_rate }} ‰ <i>p. d.</i></td>
+		      <th class="immune"><span class="{{ form.pd_rate.css_classes }}">{{ form.model.4 }}:</span></th>
+		      <td colspan="2" class="{{ form.pd_rate.css_classes }}">{{ form.pd_rate }} ‰ <i>p. d.</i></td>
 		    </tr>
 		    <tr>
-		      <th colspan="3" class="immune">{{ f.model.5 }}</th>
+		      <th colspan="3" class="immune">{{ form.model.5 }}</th>
 		    </tr>
 		    <tr>
-		      <th colspan="3" class="immune">{{ f.model.6 }}</th>
+		      <th colspan="3" class="immune">{{ form.model.6 }}</th>
 		    </tr>
 		    <tr>
-		      <th colspan="3" class="immune">{{ f.model.7 }}</th>
+		      <th colspan="3" class="immune">{{ form.model.7 }}</th>
 		    </tr>
 		    <tr>
-		      <th colspan="3" class="immune">{{ f.model.8 }}</th>
+		      <th colspan="3" class="immune">{{ form.model.8 }}</th>
 		    </tr>
 		    <tr>
-		      <th colspan="3" class="immune">{{ f.model.9 }}</th>
+		      <th colspan="3" class="immune">{{ form.model.9 }}</th>
 		    </tr>
 		    <tr>
-		      <th colspan="3" class="immune">{{ f.model.10 }}</th>
+		      <th colspan="3" class="immune">{{ form.model.10 }}</th>
 		    </tr>
 		  </table>
 	        </fieldset>
@@ -145,7 +145,7 @@
 	      <td colspan="2"></td><td colspan="4"><input type="file" name="load" accept="application/pdf,text/xml" id="id_load" /></td>
 	    </tr>
 	  </table>
-	  <div class="hidden">{{ f.next }}</div>
+	  <div class="hidden">{{ form.next }}</div>
 	  {% csrf_token %}
 	</form>
 {% endblock %}

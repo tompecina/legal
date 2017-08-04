@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-pl = (
+PS_PLACES = (
     ('US', 'Ústavní soud',
      'Joštova 625/8, 602 00 Brno, Česká republika',
      49.1975999, 16.6044449),
@@ -350,7 +350,7 @@ pl = (
      50.2284624, 12.8671638),
 )
 
-fo = (
+PS_FORMULAS = (
     ('2016', 'Vyhláška č. 385/2015 Sb.', 3.80,
      (('BA95', 29.70), ('BA98', 33.00), ('NM', 29.50))),
     ('2015', 'Vyhláška č. 328/2014 Sb.', 3.70,

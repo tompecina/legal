@@ -35,38 +35,38 @@ class KnrConfig(AppConfig):
         from cache.models import Asset
         from .models import Place, Car, Formula, Rate
         logger.debug('Partial statistics generated')
-        return [
-            [
+        return (
+            (
                 'Počet míst',
-                Place.objects.count()],
-            [
+                Place.objects.count()),
+            (
                 'Počet vozidel',
-                Car.objects.count()],
-            [
+                Car.objects.count()),
+            (
                 'Počet předpisů',
-                Formula.objects.count()],
-            [
+                Formula.objects.count()),
+            (
                 'Počet sazeb',
-                Rate.objects.count()],
-            [
+                Rate.objects.count()),
+            (
                 'Počet položek v tabulce Asset',
                 Asset.objects.filter(
-                    assetid__startswith=KnrConfig.name.upper()).count()],
-        ]
+                    assetid__startswith=KnrConfig.name.upper()).count()),
+        )
 
     @staticmethod
     def userinfo(user):
         from common.utils import logger
         from .models import Place, Car, Formula
         logger.debug('Partial user information generated')
-        return [
-            [
+        return (
+            (
                 'Počet míst',
-                Place.objects.filter(uid=user).count()],
-            [
+                Place.objects.filter(uid=user).count()),
+            (
                 'Počet vozidel',
-                Car.objects.filter(uid=user).count()],
-            [
+                Car.objects.filter(uid=user).count()),
+            (
                 'Počet předpisů',
-                Formula.objects.filter(uid=user).count()],
-        ]
+                Formula.objects.filter(uid=user).count()),
+        )

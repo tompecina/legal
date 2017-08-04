@@ -22,12 +22,12 @@
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
               {% include "formwarning.html" %}            </td></tr>
 {% endif %}	    <tr>
-    <tr class="{{ f.username.css_classes }}">
+    <tr class="{{ form.username.css_classes }}">
       <td class="right"
-	{{ f.username.label_tag }}
+	{{ form.username.label_tag }}
       </td>
       <td colspan="2">
-	{{ f.username }}
+	{{ form.username }}
       </td>
     </tr>
     <tr>

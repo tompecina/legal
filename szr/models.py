@@ -24,7 +24,7 @@ from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.contrib.auth.models import User
 from common.utils import composeref
-from common.glob import register_regex
+from common.glob import REGISTER_REGEX
 
 
 class Court(models.Model):
@@ -60,16 +60,16 @@ class Proceedings(models.Model):
         on_delete=models.CASCADE)
 
     senate = models.IntegerField(
-        validators=[MinValueValidator(0)])
+        validators=(MinValueValidator(0),))
 
     register = models.CharField(
         max_length=30,
-        validators=[RegexValidator(regex=register_regex)])
+        validators=(RegexValidator(regex=REGISTER_REGEX),))
 
     number = models.PositiveIntegerField()
 
     year = models.IntegerField(
-        validators=[MinValueValidator(1990)])
+        validators=(MinValueValidator(1990),))
 
     auxid = models.IntegerField(
         default=0)
@@ -82,7 +82,7 @@ class Proceedings(models.Model):
     hash = models.CharField(
         max_length=32,
         blank=True,
-        validators=[RegexValidator(regex=r'[0-9a-f]{32}')])
+        validators=(RegexValidator(regex=r'[0-9a-f]{32}'),))
 
     changed = models.DateTimeField(
         null=True)

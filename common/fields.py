@@ -25,17 +25,17 @@ from datetime import datetime, date
 from django import forms
 from django.core.validators import EMPTY_VALUES
 from common import widgets
-from common.utils import Lf
+from common.utils import LocalFloat
 from common.forms import ValidationError
 
 
-def prnum(x):
+def proc_num(string):
 
-    return x.replace(' ', '').replace('.', '').replace(',', '.') \
+    return string.replace(' ', '').replace('.', '').replace(',', '.') \
         .replace('−', '-')
 
 
-stypes = (str,)
+STYPES = (str,)
 
 
 class BooleanField(forms.BooleanField):
@@ -84,17 +84,17 @@ class AmountField(forms.FloatField):
     def prepare_value(self, value):
         if value in EMPTY_VALUES:
             return None
-        if not isinstance(value, stypes):
+        if not isinstance(value, STYPES):
             value = '{:.{prec}f}'.format(
-                Lf(value),
+                LocalFloat(value),
                 prec=self.rounding)
         return value
 
     def to_python(self, value):
         if value in EMPTY_VALUES:
             return None
-        if isinstance(value, stypes):
-            value = prnum(value)
+        if isinstance(value, STYPES):
+            value = proc_num(value)
         try:
             return round(float(value), self.rounding)
         except:
@@ -106,8 +106,8 @@ class DecimalField(forms.DecimalField):
     def to_python(self, value):
         if value in EMPTY_VALUES:
             return None
-        if isinstance(value, stypes):
-            value = prnum(value)
+        if isinstance(value, STYPES):
+            value = proc_num(value)
         try:
             return Decimal(value)
         except:
@@ -119,8 +119,8 @@ class FloatField(forms.FloatField):
     def to_python(self, value):
         if value in EMPTY_VALUES:
             return None
-        if isinstance(value, stypes):
-            value = prnum(value)
+        if isinstance(value, STYPES):
+            value = proc_num(value)
         try:
             return float(value)
         except:
@@ -132,8 +132,8 @@ class IntegerField(forms.IntegerField):
     def to_python(self, value):
         if value in EMPTY_VALUES:
             return None
-        if isinstance(value, stypes):
-            value = prnum(value)
+        if isinstance(value, STYPES):
+            value = proc_num(value)
         try:
             return int(float(value))
         except:
@@ -154,7 +154,7 @@ class CurrencyField(forms.MultiValueField):
 
     def compress(self, data_list):
         if data_list:
-            return data_list[1].upper() if (data_list[0] == 'OTH') \
+            return data_list[1].upper() if data_list[0] == 'OTH' \
                 else data_list[0]
         return None
 

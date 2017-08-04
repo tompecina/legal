@@ -24,17 +24,17 @@
 	    </thead>
 	    <tbody>
 	      <tr>
-		<th class="{% if f.netincome.errors or f.netincome2.errors %}err{% endif %}">
-		  {{ f.netincome.label_tag }}
+		<th class="{% if form.netincome.errors or form.netincome2.errors %}err{% endif %}">
+		  {{ form.netincome.label_tag }}
 		</th>
-		<td class="{{ f.netincome.css_classes }}">
-		  {{ f.netincome }}
+		<td class="{{ form.netincome.css_classes }}">
+		  {{ form.netincome }}
 		  <span>
 		    Kč/měsíc
 		  </span>
 		</td>
-		<td class="{{ f.netincome2.css_classes }}">
-		  {{ f.netincome2 }}
+		<td class="{{ form.netincome2.css_classes }}">
+		  {{ form.netincome2 }}
 		  <span>
 		    Kč/měsíc (druhý manžel)
 		  </span>
@@ -42,92 +42,92 @@
 	      </tr>
 	      <tr>
 		<th>
-		  {{ f.partner.label_tag }}
+		  {{ form.partner.label_tag }}
 		</th>
 		<td>
-		  {{ f.partner }}
+		  {{ form.partner }}
 		</td>
 		<td>
-		  {{ f.partner2 }}
+		  {{ form.partner2 }}
 	      </tr>
 	      <tr>
-		<th class="{% if f.deps.errors or f.deps2.errors %}err{% endif %}">
-		  {{ f.deps.label_tag }}
+		<th class="{% if form.deps.errors or form.deps2.errors %}err{% endif %}">
+		  {{ form.deps.label_tag }}
 		</th>
-		<td class="{{ f.deps.css_classes }}">
-		  {{ f.deps }}
+		<td class="{{ form.deps.css_classes }}">
+		  {{ form.deps }}
 		</td>
-		<td class="{{ f.deps2.css_classes }}">
-		  {{ f.deps2 }}
+		<td class="{{ form.deps2.css_classes }}">
+		  {{ form.deps2 }}
 		    <span>
 		      (druhý manžel)
 		    </span>
 		</td>
 	      </tr>
-	      <tr class="{{ f.subs.css_classes }}">
+	      <tr class="{{ form.subs.css_classes }}">
 		<th>
-		  {{ f.subs.label_tag }}
+		  {{ form.subs.label_tag }}
 		</th>
 		<td colspan="2">
-		  {{ f.subs }} Kč/měsíc
+		  {{ form.subs }} Kč/měsíc
 		</td>
 	      </tr>
-	      <tr class="{{ f.apt.css_classes }}">
+	      <tr class="{{ form.apt.css_classes }}">
 		<th>
-		  {{ f.apt.label_tag }}
+		  {{ form.apt.label_tag }}
 		</th>
 		<td colspan="2">
-		  {{ f.apt }} Kč/měsíc
+		  {{ form.apt }} Kč/měsíc
 		</td>
 	      </tr>
 	      <tr>
-		<th class="{% if f.fee.errors or f.fee2.errors %}err{% endif %}">
-		  {{ f.fee.label_tag }}
+		<th class="{% if form.fee.errors or form.fee2.errors %}err{% endif %}">
+		  {{ form.fee.label_tag }}
 		</th>
-		<td class="{{ f.fee.css_classes }}">
-		  {{ f.fee }}
+		<td class="{{ form.fee.css_classes }}">
+		  {{ form.fee }}
 		  <span>
 		    Kč/měsíc
 		  </span>
 		</td>
-		<td class="{{ f.fee2.css_classes }}">
-		  {{ f.fee2 }}
-		  <span>
-		    Kč/měsíc
-		  </span>
-		</td>
-	      </tr>
-	      <tr>
-		<th class="{% if f.exp.errors or f.exp2.errors %}err{% endif %}">
-		  {{ f.exp.label_tag }}
-		</th>
-		<td class="{{ f.exp.css_classes }}">
-		  {{ f.exp }}
-		  <span>
-		    Kč/měsíc
-		  </span>
-		</td>
-		<td class="{{ f.exp2.css_classes }}">
-		  {{ f.exp2 }}
+		<td class="{{ form.fee2.css_classes }}">
+		  {{ form.fee2 }}
 		  <span>
 		    Kč/měsíc
 		  </span>
 		</td>
 	      </tr>
 	      <tr>
-		<th>
-		  {{ f.vat.label_tag }}
+		<th class="{% if form.exp.errors or form.exp2.errors %}err{% endif %}">
+		  {{ form.exp.label_tag }}
 		</th>
-		<td colspan="2">
-		  {{ f.vat }}
+		<td class="{{ form.exp.css_classes }}">
+		  {{ form.exp }}
+		  <span>
+		    Kč/měsíc
+		  </span>
+		</td>
+		<td class="{{ form.exp2.css_classes }}">
+		  {{ form.exp2 }}
+		  <span>
+		    Kč/měsíc
+		  </span>
 		</td>
 	      </tr>
-	      <tr class="{{ f.vatrate.css_classes }}">
+	      <tr>
 		<th>
-		  {{ f.vatrate.label_tag }}
+		  {{ form.vat.label_tag }}
+		</th>
+		<td colspan="2">
+		  {{ form.vat }}
+		</td>
+	      </tr>
+	      <tr class="{{ form.vatrate.css_classes }}">
+		<th>
+		  {{ form.vatrate.label_tag }}
 		</th>
 		<td colspan="2" class="nowrap">
-		  {{ f.vatrate }} %
+		  {{ form.vatrate }} %
 		</td>
 	      </tr>
 	      <tr class="submit">

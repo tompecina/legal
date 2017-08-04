@@ -16,66 +16,66 @@
 	      <td class="warning">
               {% include "formwarning.html" %}            </td>
 	    </tr>
-{% endif %}	    <tr class="{{ f.username.css_classes }}">
+{% endif %}	    <tr class="{{ form.username.css_classes }}">
 	      <th>
-		{{ f.username.label_tag }}
+		{{ form.username.label_tag }}
 	      </th>
 	      <td>
-		{{ f.username }} {{ f.username.help_text }}
+		{{ form.username }} {{ form.username.help_text }}
 	      </td>
 	    </tr>
-	    <tr class="{{ f.first_name.css_classes }}">
+	    <tr class="{{ form.first_name.css_classes }}">
 	      <th>
-		{{ f.first_name.label_tag }}
+		{{ form.first_name.label_tag }}
 	      </th>
 	      <td>
-		{{ f.first_name }}
+		{{ form.first_name }}
 	      </td>
 	    </tr>
-	    <tr class="{{ f.last_name.css_classes }}">
+	    <tr class="{{ form.last_name.css_classes }}">
 	      <th>
-		{{ f.last_name.label_tag }}
+		{{ form.last_name.label_tag }}
 	      </th>
 	      <td>
-		{{ f.last_name }}
+		{{ form.last_name }}
 	      </td>
 	    </tr>
-	    <tr class="{{ f.email.css_classes }}">
+	    <tr class="{{ form.email.css_classes }}">
 	      <th>
-		{{ f.email.label_tag }}
+		{{ form.email.label_tag }}
 	      </th>
 	      <td>
-		{{ f.email }} {{ f.email.help_text }}
+		{{ form.email }} {{ form.email.help_text }}
 	      </td>
 	    </tr>
-	    <tr class="{{ f.password1.css_classes }}">
+	    <tr class="{{ form.password1.css_classes }}">
 	      <th>
-		{{ f.password1.label_tag }}
+		{{ form.password1.label_tag }}
 	      </th>
 	      <td>
-		{{ f.password1 }}
+		{{ form.password1 }}
 	      </td>
 	    </tr>
-	    <tr class="{{ f.password2.css_classes }}">
+	    <tr class="{{ form.password2.css_classes }}">
 	      <th>
-		{{ f.password2.label_tag }}
+		{{ form.password2.label_tag }}
 	      </th>
 	      <td>
-		{{ f.password2 }} {{ f.password2.help_text }}
+		{{ form.password2 }} {{ form.password2.help_text }}
 	      </td>
 	    </tr>
-	    <tr class="{{ f.captcha.css_classes }}">
+	    <tr class="{{ form.captcha.css_classes }}">
 	      <th class="bottom ptl">
-		{{ f.captcha.label_tag }}
+		{{ form.captcha.label_tag }}
 	      </th>
 	      <td class="bottom">
-		{{ f.captcha.help_text }}
+		{{ form.captcha.help_text }}
 	      </td>
 	    </tr>
-	    <tr class="{{ f.captcha.css_classes }}">
+	    <tr class="{{ form.captcha.css_classes }}">
 	      <th></th>
 	      <td>
-		{{ f.captcha }}
+		{{ form.captcha }}
 	      </td>
 	    </tr>
 	    <tr>

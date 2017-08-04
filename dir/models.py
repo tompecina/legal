@@ -24,15 +24,14 @@ from datetime import date
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User
-from common.glob import text_opts
+from common.glob import TEXT_OPTS
 from sir.models import Vec
 from dir.glob import MAX_LENGTH
 
 
-curryear = date.today().year
-
-
 class Debtor(models.Model):
+
+    curr_year = date.today().year
 
     uid = models.ForeignKey(
         User,
@@ -51,18 +50,20 @@ class Debtor(models.Model):
         null=True)
 
     name_opt = models.SmallIntegerField(
-        validators=[
+        validators=(
             MinValueValidator(0),
-            MaxValueValidator(len(text_opts) - 1)])
+            MaxValueValidator(len(TEXT_OPTS) - 1)
+        ))
 
     first_name = models.CharField(
         null=True,
         max_length=MAX_LENGTH)
 
     first_name_opt = models.SmallIntegerField(
-        validators=[
+        validators=(
             MinValueValidator(0),
-            MaxValueValidator(len(text_opts) - 1)])
+            MaxValueValidator(len(TEXT_OPTS) - 1)
+        ))
 
     genid = models.CharField(
         max_length=9,
@@ -81,15 +82,17 @@ class Debtor(models.Model):
 
     year_birth_from = models.SmallIntegerField(
         null=True,
-        validators=[
+        validators=(
             MinValueValidator(1900),
-            MaxValueValidator(curryear)])
+            MaxValueValidator(curr_year)
+        ))
 
     year_birth_to = models.SmallIntegerField(
         null=True,
-        validators=[
+        validators=(
             MinValueValidator(1900),
-            MaxValueValidator(curryear)])
+            MaxValueValidator(curr_year)
+        ))
 
     timestamp_add = models.DateTimeField(
         auto_now_add=True,

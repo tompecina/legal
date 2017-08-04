@@ -28,64 +28,64 @@ from dvt import forms
 
 class TestForms(SimpleTestCase):
 
-    def test_MainForm(self):
+    def test_main_form(self):
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'beg_date': '6.7.2016',
              'years': '',
              'months': '',
              'days': ''})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'beg_date': '6.7.2016',
              'years': '10',
              'months': '',
              'days': ''})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'beg_date': '6.7.2016',
              'years': '',
              'months': '10',
              'days': ''})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'beg_date': '6.7.2016',
              'years': '',
              'months': '',
              'days': '10'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
 
 class TestViews(SimpleTestCase):
 
     def test_main(self):
 
-        pp = [
-            ['1.7.2016', '1', '', '',
-             '01.07.2017', '01.11.2016', '01.01.2017', '01.03.2017'],
-            ['1. 7. 2016', '1', '', '',
-             '01.07.2017', '01.11.2016', '01.01.2017', '01.03.2017'],
-            ['01.07.2016', '1', '', '',
-             '01.07.2017', '01.11.2016', '01.01.2017', '01.03.2017'],
-            ['12.7.2011', '11', '5', '16',
-             '28.12.2022', '07.05.2015', '04.04.2017', '04.03.2019'],
-            ['7.7.2011', '', '1', '',
-             '07.08.2011', '17.07.2011', '22.07.2011', '27.07.2011'],
-        ]
+        cases = (
+            ('1.7.2016', '1', '', '',
+             '01.07.2017', '01.11.2016', '01.01.2017', '01.03.2017'),
+            ('1. 7. 2016', '1', '', '',
+             '01.07.2017', '01.11.2016', '01.01.2017', '01.03.2017'),
+            ('01.07.2016', '1', '', '',
+             '01.07.2017', '01.11.2016', '01.01.2017', '01.03.2017'),
+            ('12.7.2011', '11', '5', '16',
+             '28.12.2022', '07.05.2015', '04.04.2017', '04.03.2019'),
+            ('7.7.2011', '', '1', '',
+             '07.08.2011', '17.07.2011', '22.07.2011', '27.07.2011'),
+        )
 
-        ee = [
-            ['1.7.2016', '', '', ''],
-            ['XXX', '1', '', ''],
-            ['1.7.2016', 'XXX', '', ''],
-            ['1.7.2016', '', 'XXX', ''],
-            ['1.7.2016', '', '', 'XXX'],
-            ['1.7.2016', '1', 'XXX', ''],
-            ['1.7.2016', '0', '', ''],
-            ['1.7.2016', '-1', '', ''],
-        ]
+        err_cases = (
+            ('1.7.2016', '', '', ''),
+            ('XXX', '1', '', ''),
+            ('1.7.2016', 'XXX', '', ''),
+            ('1.7.2016', '', 'XXX', ''),
+            ('1.7.2016', '', '', 'XXX'),
+            ('1.7.2016', '1', 'XXX', ''),
+            ('1.7.2016', '0', '', ''),
+            ('1.7.2016', '-1', '', ''),
+        )
 
         res = self.client.get('/dvt')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -96,31 +96,30 @@ class TestViews(SimpleTestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'dvt_main.html')
 
-        for p in pp:
+        for test in cases:
             res = self.client.post(
                 '/dvt/',
-                {'beg_date': p[0],
-                 'years': p[1],
-                 'months': p[2],
-                 'days': p[3]})
+                {'beg_date': test[0],
+                 'years': test[1],
+                 'months': test[2],
+                 'days': test[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'dvt_main.html')
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
-            l = len(msg)
-            self.assertEqual(l, 4)
-            self.assertEqual(msg[0].text, 'Trest skončí: ' + p[4])
-            self.assertEqual(msg[1].text, 'Třetina trestu: ' + p[5])
-            self.assertEqual(msg[2].text, 'Polovina trestu: ' + p[6])
-            self.assertEqual(msg[3].text, 'Dvě třetiny trestu: ' + p[7])
+            self.assertEqual(len(msg), 4)
+            self.assertEqual(msg[0].text, 'Trest skončí: ' + test[4])
+            self.assertEqual(msg[1].text, 'Třetina trestu: ' + test[5])
+            self.assertEqual(msg[2].text, 'Polovina trestu: ' + test[6])
+            self.assertEqual(msg[3].text, 'Dvě třetiny trestu: ' + test[7])
 
-        for p in ee:
+        for test in err_cases:
             res = self.client.post(
                 '/dvt/',
-                {'beg_date': p[0],
-                 'years': p[1],
-                 'months': p[2],
-                 'days': p[3]})
+                {'beg_date': test[0],
+                 'years': test[1],
+                 'months': test[2],
+                 'days': test[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'dvt_main.html')
             soup = BeautifulSoup(res.content, 'html.parser')

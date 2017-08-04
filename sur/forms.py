@@ -23,22 +23,22 @@
 from django.core.validators import MinLengthValidator
 from common import forms, fields, widgets
 from common.utils import grammar
-from common.glob import text_opts, GR_C
+from common.glob import TEXT_OPTS, GR_CHAR
 from sur.glob import MIN_LENGTH, MAX_LENGTH
 
 
 class PartyForm(forms.Form):
 
     party = fields.CharField(
-        widget=widgets.sew(attrs={
+        widget=widgets.Sew(attrs={
             'data-minLen': MIN_LENGTH,
-            'data-minLenText': grammar(MIN_LENGTH, GR_C)}),
+            'data-minLenText': grammar(MIN_LENGTH, GR_CHAR)}),
         max_length=MAX_LENGTH,
         label='Vyhledávací řetězec',
-        validators=[MinLengthValidator(MIN_LENGTH)])
+        validators=(MinLengthValidator(MIN_LENGTH),))
 
     party_opt = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=text_opts,
+        widget=widgets.Rs(),
+        choices=TEXT_OPTS,
         label='Posice',
         initial='icontains')

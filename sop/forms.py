@@ -24,7 +24,7 @@ from datetime import date
 from common import forms, fields, widgets
 
 
-opts = (
+OPTS = (
     ('none', 'sine'),
     ('epr', 'EPR'),
     ('nmu', 'nemajetková újma'),
@@ -32,14 +32,15 @@ opts = (
     ('vyk', 'výkon rozhodnutí'),
     ('sm', 'smír'),
     ('inc', 'incidence'),
-    ('usch', 'úschova'))
+    ('usch', 'úschova'),
+)
 
 
 class MainForm(forms.Form):
 
     basis = fields.AmountField(
-        widget=widgets.aw(),
-        min_value=1.0,
+        widget=widgets.Aw(),
+        min_value=1,
         label='Základ',
         localize=True)
     basis.rounding = 2
@@ -50,14 +51,14 @@ class MainForm(forms.Form):
         initial='CZK')
 
     oth = fields.CharField(
-        widget=widgets.currw(),
+        widget=widgets.Currw(),
         min_length=3,
         max_length=3,
         required=False)
 
     today = date.today()
     fx_date = fields.DateField(
-        widget=widgets.dw(),
+        widget=widgets.Dw(),
         required=False,
         label='ke dni',
         initial=date(today.year, today.month, 1))
@@ -67,8 +68,8 @@ class MainForm(forms.Form):
         initial='4')
 
     opt = fields.ChoiceField(
-        widget=widgets.rs,
-        choices=opts,
+        widget=widgets.Rs(),
+        choices=OPTS,
         label='Zvláštní případy',
         initial='none')
 

@@ -4,18 +4,18 @@
 	    <tr id="id_creditform"><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
               {% include "formwarning.html" %}            </td></tr>
-{% endif %}	    <tr class="{{ f.date.css_classes }}">
-              <th>{{ f.date.label_tag }}</th>
-	      <td colspan="2">{{ f.date }}</td>
+{% endif %}	    <tr class="{{ form.date.css_classes }}">
+              <th>{{ form.date.label_tag }}</th>
+	      <td colspan="2">{{ form.date }}</td>
 	    </tr>
-	    <tr class="{{ f.description.css_classes }}">
-	      <th>{{ f.description.label_tag }}</th>
-	      <td colspan="2">{{ f.description }}</td>
+	    <tr class="{{ form.description.css_classes }}">
+	      <th>{{ form.description.label_tag }}</th>
+	      <td colspan="2">{{ form.description }}</td>
 	    </tr>
 	    <tr>
-	      <th><span class="{{ f.amount.css_classes }}">{{ f.amount.label_tag }}</span></th>
-	      <td><span class="{{ f.amount.css_classes }}">{{ f.amount }}</span></td>
-	      <td class="right"<span class="plm {{ f.currency.css_classes }}">{{ f.currency.label_tag }} {{ f.currency }}</span></td>
+	      <th><span class="{{ form.amount.css_classes }}">{{ form.amount.label_tag }}</span></th>
+	      <td><span class="{{ form.amount.css_classes }}">{{ form.amount }}</span></td>
+	      <td class="right"<span class="plm {{ form.currency.css_classes }}">{{ form.currency.label_tag }} {{ form.currency }}</span></td>
 	    </tr>
 {% if rows %}	    <tr>
 	      <th class="top ptl" class="{{ deb_class }}">Pořadí:</th>

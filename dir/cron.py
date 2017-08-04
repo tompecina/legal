@@ -22,25 +22,25 @@
 
 from django.contrib.auth.models import User
 from common.utils import text_opt, icmp, logger
-from sir.glob import l2s
+from sir.glob import L2S
 from dir.models import Debtor, Discovered
 
 
 def dir_notice(uid):
 
     text = ''
-    dd = Discovered.objects.filter(uid=uid, vec__link__isnull=False) \
+    debtors = Discovered.objects.filter(uid=uid, vec__link__isnull=False) \
         .order_by('desc', 'id').distinct()
-    if dd:
+    if debtors:
         text = 'Byli nově zaznamenáni tito dlužníci, ' \
                'které sledujete:\n\n'
-        for d in dd:
+        for debtor in debtors:
             text += ' - {0}, sp. zn. {1} {2.senat:d} INS ' \
-                    '{2.bc:d}/{2.rocnik:d}\n'.format(
-                        d.desc,
-                        l2s[d.vec.idOsobyPuvodce],
-                        d.vec)
-            text += '   {}\n\n'.format(d.vec.link)
+                '{2.bc:d}/{2.rocnik:d}\n'.format(
+                    debtor.desc,
+                    L2S[debtor.vec.idOsobyPuvodce],
+                    debtor.vec)
+            text += '   {}\n\n'.format(debtor.vec.link)
         Discovered.objects.filter(uid=uid, vec__link__isnull=False).delete()
         logger.info(
             'Non-empty notice prepared for user "{}" ({:d})'.format(
@@ -50,25 +50,27 @@ def dir_notice(uid):
 
 def dir_check(osoba, vec):
 
-    for d in Debtor.objects.all():
-        od = osoba.datumNarozeni
-        if od:
-            od = od.date()
-        if (not d.court or d.court == osoba.idOsobyPuvodce) \
-           and text_opt(d.name, osoba.nazevOsoby, d.name_opt) \
-           and text_opt(d.first_name, osoba.jmeno, d.first_name_opt) \
-           and (not d.genid or d.genid == osoba.ic) \
-           and (not d.taxid or icmp(d.taxid, osoba.dic)) \
-           and (not d.birthid or d.birthid == osoba.rc) \
-           and (not d.date_birth or d.date_birth == od) \
-           and (not d.year_birth_from or d.year_birth_from <= od.year) \
-           and (not d.year_birth_to or d.year_birth_to >= od.year):
+    for debtor in Debtor.objects.all():
+        date_birth = osoba.datumNarozeni
+        if date_birth:
+            date_birth = date_birth.date()
+        if (not debtor.court or debtor.court == osoba.idOsobyPuvodce) \
+           and text_opt(debtor.name, osoba.nazevOsoby, debtor.name_opt) \
+           and text_opt(debtor.first_name, osoba.jmeno, debtor.first_name_opt) \
+           and (not debtor.genid or debtor.genid == osoba.ic) \
+           and (not debtor.taxid or icmp(debtor.taxid, osoba.dic)) \
+           and (not debtor.birthid or debtor.birthid == osoba.rc) \
+           and (not debtor.date_birth or debtor.date_birth == date_birth) \
+           and (not debtor.year_birth_from
+                or debtor.year_birth_from <= date_birth.year) \
+           and (not debtor.year_birth_to
+                or debtor.year_birth_to >= date_birth.year):
             if Discovered.objects.update_or_create(
-                    uid_id=d.uid_id,
-                    desc=d.desc,
+                    uid_id=debtor.uid_id,
+                    desc=debtor.desc,
                     vec=vec)[1]:
                 logger.info(
                     'New debtor "{}" detected for user "{}" ({:d})'.format(
-                        d.desc,
-                        User.objects.get(pk=d.uid_id).username,
-                        d.uid_id))
+                        debtor.desc,
+                        User.objects.get(pk=debtor.uid_id).username,
+                        debtor.uid_id))

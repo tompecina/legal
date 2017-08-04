@@ -28,38 +28,38 @@ from os import unlink
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 from common.settings import BASE_DIR
-from common.tests import stripxml, link_equal
-from common.glob import localsubdomain, localurl, repourl
+from common.tests import strip_xml, link_equal
+from common.glob import LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL
 from udn import cron, forms, glob, models, views
 
 
 class TestCron(TestCase):
 
-    def checkpdf(self, ll):
-        fl = []
-        for l in ll:
-            fn = join(BASE_DIR, 'test', l)
+    def checkpdf(self, lst):
+        fil = []
+        for item in lst:
+            filename = join(BASE_DIR, 'test', item)
             try:
-                with open(fn) as fi:
-                    fc = fi.read()
-                unlink(fn)
+                with open(filename) as infile:
+                    filc = infile.read()
+                unlink(filename)
             except:  # pragma: no cover
-                fl.append('E: ' + l)
-            if not fc[:-1].endswith('/' + l):  # pragma: no cover
-                fl.append('C: ' + l)
-        self.assertFalse(fl, msg=fl)
+                fil.append('E: ' + item)
+            if not filc[:-1].endswith('/' + item):  # pragma: no cover
+                fil.append('C: ' + item)
+        self.assertFalse(fil, msg=fil)
 
 
 class TestCron1(TestCron):
 
-    fixtures = ['udn_test1.json']
+    fixtures = ('udn_test1.json',)
 
     def test_update(self):
 
         cron.cron_update()
-        d = models.Decision.objects.all()
-        self.assertEqual(len(d), 16)
-        self.checkpdf([
+        dec = models.Decision.objects.all()
+        self.assertEqual(len(dec), 16)
+        self.checkpdf((
             '0002_8As__1600055S.pdf',
             '0022_4As__1600037S.pdf',
             '0025_8As__1600041S.pdf',
@@ -74,102 +74,104 @@ class TestCron1(TestCron):
             '019110As__1500030S.pdf',
             '0208_4Ads_1500082S.pdf',
             '0233_5As__1500046S.pdf',
-            ])
+            ))
 
 
 class TestCron2(TestCron):
 
-    fixtures = ['udn_test2.json']
+    fixtures = ('udn_test2.json',)
 
     def test_find(self):
 
         cron.cron_find()
-        d = models.Decision.objects.filter(
+        dec = models.Decision.objects.filter(
             senate=8,
             register='As',
             number=159,
             year=2015,
             page=33)
-        self.assertEqual(len(d), 1)
-        self.assertTrue(d[0].anonfilename)
-        self.checkpdf(['0046_3As__1600114_20160622142215_prevedeno.pdf'])
+        self.assertEqual(len(dec), 1)
+        self.assertTrue(dec[0].anonfilename)
+        self.checkpdf(('0046_3As__1600114_20160622142215_prevedeno.pdf',))
 
 
 class TestCron3(TestCron):
 
-    fixtures = ['udn_test3.json']
+    fixtures = ('udn_test3.json',)
 
     def test_find(self):
 
         cron.cron_find()
-        d = models.Decision.objects.filter(
+        dec = models.Decision.objects.filter(
             senate=8,
             register='As',
             number=158,
             year=2015,
             page=33)
-        self.assertEqual(len(d), 1)
-        self.assertFalse(d[0].anonfilename)
+        self.assertEqual(len(dec), 1)
+        self.assertFalse(dec[0].anonfilename)
 
 
 class TestForms(SimpleTestCase):
 
-    def test_MainForm(self):
+    def test_main_form(self):
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'party_opt': 'icontains',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'party_opt': 'icontains',
              'date_from': '2.3.2005',
              'date_to': '2.6.2001',
              'format': 'html'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'party_opt': 'icontains',
              'date_from': '2.3.2005',
              'date_to': '3.3.2005',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'party_opt': 'icontains',
              'date_from': '2.3.2005',
              'date_to': '2.3.2005',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
 
 class TestGlob(SimpleTestCase):
 
     def test_filename_regex(self):
 
-        fr = compile(glob.filename_regex)
+        fre = compile(glob.FILENAME_REGEX)
 
-        pp = ['test.pdf',
-              '9.pdf',
-              'a_b.pdf',
-              '0185_6Afs_1500040S.pdf',
-              '0067_5As__1500054_20151119130217_prevedeno.pdf',
-             ]
+        cases = (
+            'test.pdf',
+            '9.pdf',
+            'a_b.pdf',
+            '0185_6Afs_1500040S.pdf',
+            '0067_5As__1500054_20151119130217_prevedeno.pdf',
+        )
 
-        ee = ['a b.pdf',
-              'a+b.pdf',
-              'a-b.pdf',
-              'a/b.pdf',
-              'a%b.pdf',
-              'a#b.pdf',
-              '.pdf',
-             ]
+        err_cases = (
+            'a b.pdf',
+            'a+b.pdf',
+            'a-b.pdf',
+            'a/b.pdf',
+            'a%b.pdf',
+            'a#b.pdf',
+            '.pdf',
+        )
 
-        for p in pp:
-            self.assertIsNotNone(fr.match(p), msg=p)
+        for test in cases:
+            self.assertIsNotNone(fre.match(test), msg=test)
 
-        for p in ee:
-            self.assertIsNone(fr.match(p), msg=p)
+        for test in err_cases:
+            self.assertIsNone(fre.match(test), msg=test)
 
 
 class TestModels(SimpleTestCase):
@@ -201,7 +203,7 @@ class TestModels(SimpleTestCase):
 
 class TestViews(TestCase):
 
-    fixtures = ['udn_test1.json']
+    fixtures = ('udn_test1.json',)
 
     def test_main(self):
 
@@ -367,11 +369,11 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'udn_list.html')
         self.assertEqual(res.context['total'], 0)
 
-        d = models.Decision.objects.get().__dict__
-        del d['id'], d['_state']
+        dec = models.Decision.objects.get().__dict__
+        del dec['id'], dec['_state']
         for page in range(200, 437):
-            d['page'] = page
-            models.Decision(**d).save()
+            dec['page'] = page
+            models.Decision(**dec).save()
 
         res = self.client.get('/udn/list/?senate=8')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -443,15 +445,15 @@ class TestViews(TestCase):
 
     def test_xmllist(self):
 
-        x0 = '''\
+        res0 = '''\
 <?xml version="1.0" encoding="utf-8"?>
 <decisions application="udn" created="2016-08-04T00:20:47" \
 version="1.1" xmlns="http://{0}" xmlns:xsi="http:\
 //www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:\
 //{0} {1}/static/udn-1.0.xsd"></decisions>
-'''.format(localsubdomain, localurl)
+'''.format(LOCAL_SUBDOMAIN, LOCAL_URL)
 
-        x1 = '''\
+        res1 = '''\
 <?xml version="1.0" encoding="utf-8"?>
 <decisions application="udn" created="2016-08-04T00:20:47" \
 version="1.1" xmlns="http://{0}" xmlns:xsi="http:\
@@ -465,9 +467,9 @@ Ochrana hospodářské soutěže a veřejné zakázky</agenda><parties><party>\
 CZECH REPUBLIC, spol. s r.o.</party><party>Zlínský kraj</party>\
 </parties><files><file type="abridged">{2}\
 udn/0158_8As__1500033S.pdf</file></files></decision></decisions>
-'''.format(localsubdomain, localurl, repourl)
+'''.format(LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL)
 
-        x2 = '''\
+        res2 = '''\
 <?xml version="1.0" encoding="utf-8"?>
 <decisions application="udn" created="2016-08-04T00:20:47" \
 version="1.1" xmlns="http://{0}" xmlns:xsi="http:\
@@ -483,7 +485,7 @@ CZECH REPUBLIC, spol. s r.o.</party><party>Zlínský kraj</party>\
 udn/0158_8As__1500033S.pdf</file><file type="anonymized">{2}\
 udn/0067_5As__1500054_20151119130217_prevedeno.pdf</file></files>\
 </decision></decisions>
-'''.format(localsubdomain, localurl, repourl)
+'''.format(LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL)
 
         res = self.client.get('/udn/xmllist')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -543,13 +545,17 @@ udn/0067_5As__1500054_20151119130217_prevedeno.pdf</file></files>\
 
         res = self.client.get('/udn/xmllist/?register=Ads')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertXMLEqual(stripxml(res.content), stripxml(x0.encode('utf-8')))
+        self.assertXMLEqual(
+            strip_xml(res.content),
+            strip_xml(res0.encode('utf-8')))
 
         res = self.client.get(
             '/udn/xmllist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertXMLEqual(stripxml(res.content), stripxml(x1.encode('utf-8')))
+        self.assertXMLEqual(
+            strip_xml(res.content),
+            strip_xml(res1.encode('utf-8')))
 
         models.Decision.objects.update(
             anonfilename='0067_5As__1500054_20151119130217_prevedeno.pdf')
@@ -558,35 +564,38 @@ udn/0067_5As__1500054_20151119130217_prevedeno.pdf</file></files>\
             '/udn/xmllist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertXMLEqual(stripxml(res.content), stripxml(x2.encode('utf-8')))
+        self.assertXMLEqual(
+            strip_xml(res.content),
+            strip_xml(res2.encode('utf-8')))
 
+        exlim = views.EXLIM
         views.EXLIM = 0
         res = self.client.get('/udn/xmllist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
-        views.EXLIM = 1000
+        views.EXLIM = exlim
 
     def test_csvlist(self):
 
-        c0 = '''\
+        res0 = '''\
 Soud,Datum,Číslo jednací,Oblast,Účastníci řízení,Zkrácené znění,\
 Anonymisované znění
 '''
 
-        c1 = '''\
+        res1 = '''\
 {}Nejvyšší správní soud,01.07.2199,8 As 158/2015-33,Ochrana \
 hospodářské soutěže a veřejné zakázky,"Úřad pro ochranu hospodářské \
 soutěže;BUREAU VERITAS CZECH REPUBLIC, spol. s r.o.;Zlínský kraj",\
 {}udn/0158_8As__1500033S.pdf,
-'''.format(c0, repourl)
+'''.format(res0, REPO_URL)
 
-        c2 = '''\
+        res2 = '''\
 {0}Nejvyšší správní soud,01.07.2199,8 As 158/2015-33,Ochrana \
 hospodářské soutěže a veřejné zakázky,"Úřad pro ochranu hospodářské \
 soutěže;BUREAU VERITAS CZECH REPUBLIC, spol. s r.o.;Zlínský kraj",{1}\
 udn/0158_8As__1500033S.pdf,{1}\
 udn/0067_5As__1500054_20151119130217_prevedeno.pdf
-'''.format(c0, repourl)
+'''.format(res0, REPO_URL)
 
         res = self.client.get('/udn/csvlist')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -646,13 +655,17 @@ udn/0067_5As__1500054_20151119130217_prevedeno.pdf
 
         res = self.client.get('/udn/csvlist/?register=Ads')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c0)
+        self.assertEqual(
+            res.content.decode('utf-8').replace('\r\n', '\n'),
+            res0)
 
         res = self.client.get(
             '/udn/csvlist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c1)
+        self.assertEqual(
+            res.content.decode('utf-8').replace('\r\n', '\n'),
+            res1)
 
         models.Decision.objects.update(
             anonfilename='0067_5As__1500054_20151119130217_prevedeno.pdf')
@@ -661,19 +674,22 @@ udn/0067_5As__1500054_20151119130217_prevedeno.pdf
             '/udn/csvlist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c2)
+        self.assertEqual(
+            res.content.decode('utf-8').replace('\r\n', '\n'),
+            res2)
 
+        exlim = views.EXLIM
         views.EXLIM = 0
         res = self.client.get('/udn/csvlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
-        views.EXLIM = 1000
+        views.EXLIM = exlim
 
     def test_jsonlist(self):
 
-        j0 = '[]'
+        res0 = '[]'
 
-        j1 = '''\
+        res1 = '''\
 [{{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk\
 \u00e9 sout\u011b\u017ee", "BUREAU VERITAS CZECH REPUBLIC, spol. \
 s r.o.", "Zl\u00ednsk\u00fd kraj"], "files": {{"abridged": "\
@@ -683,9 +699,9 @@ soud", "id": "NSS"}}, "ref": {{"senate": 8, "register": "As", \
 "number": 158, "year": 2015, "page": 33}}, "agenda": "Ochrana \
 hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee a ve\u0159ejn\u00e9 \
 zak\u00e1zky"}}]\
-'''.format(repourl)
+'''.format(REPO_URL)
 
-        j2 = '''\
+        res2 = '''\
 [{{"parties": ["\u00da\u0159ad pro ochranu hospod\u00e1\u0159sk\
 \u00e9 sout\u011b\u017ee", "BUREAU VERITAS CZECH REPUBLIC, spol. \
 s r.o.", "Zl\u00ednsk\u00fd kraj"], "files": {{"abridged": "\
@@ -696,7 +712,7 @@ spr\u00e1vn\u00ed soud", "id": "NSS"}}, "ref": {{"senate": 8, \
 "register": "As", "number": 158, "year": 2015, "page": 33}}, \
 "agenda": "Ochrana hospod\u00e1\u0159sk\u00e9 sout\u011b\u017ee \
 a ve\u0159ejn\u00e9 zak\u00e1zky"}}]\
-'''.format(repourl)
+'''.format(REPO_URL)
 
         res = self.client.get('/udn/jsonlist')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -757,13 +773,13 @@ a ve\u0159ejn\u00e9 zak\u00e1zky"}}]\
 
         res = self.client.get('/udn/jsonlist/?register=Ads')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertJSONEqual(res.content.decode('utf-8'), j0)
+        self.assertJSONEqual(res.content.decode('utf-8'), res0)
 
         res = self.client.get(
             '/udn/jsonlist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertJSONEqual(res.content.decode('utf-8'), j1)
+        self.assertJSONEqual(res.content.decode('utf-8'), res1)
 
         models.Decision.objects.update(
             anonfilename='0067_5As__1500054_20151119130217_prevedeno.pdf')
@@ -772,10 +788,11 @@ a ve\u0159ejn\u00e9 zak\u00e1zky"}}]\
             '/udn/jsonlist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertJSONEqual(res.content.decode('utf-8'), j2)
+        self.assertJSONEqual(res.content.decode('utf-8'), res2)
 
+        exlim = views.EXLIM
         views.EXLIM = 0
         res = self.client.get('/udn/jsonlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
-        views.EXLIM = 1000
+        views.EXLIM = exlim

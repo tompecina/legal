@@ -28,7 +28,7 @@ from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 from common.settings import BASE_DIR
-from common.tests import TEST_STRING, stripxml
+from common.tests import TEST_STRING, strip_xml
 from common.utils import p2c
 from cache.tests import DummyRequest
 from hjp import forms, views
@@ -41,126 +41,129 @@ TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 class TestForms(SimpleTestCase):
 
-    def test_TransForm(self):
+    def test_trans_form(self):
 
-        f = forms.TransForm(
+        form = forms.TransForm(
             {'transaction_type': 'balance',
              'repayment_preference': 'principal'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.TransForm(
+        form = forms.TransForm(
             {'transaction_type': 'balance',
              'date': '1.7.2016',
              'repayment_preference': 'principal'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.TransForm(
+        form = forms.TransForm(
             {'transaction_type': 'debit',
              'date': '1.7.2016',
              'repayment_preference': 'principal'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.TransForm(
+        form = forms.TransForm(
             {'transaction_type': 'debit',
              'date': '1.7.2016',
              'repayment_preference': 'principal',
              'amount': '2000'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.TransForm(
+        form = forms.TransForm(
             {'transaction_type': 'credit',
              'date': '1.7.2016',
              'repayment_preference': 'principal'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.TransForm(
+        form = forms.TransForm(
             {'transaction_type': 'credit',
              'date': '1.7.2016',
              'repayment_preference': 'principal',
              'amount': '2000'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-    def test_MainForm(self):
+    def test_main_form(self):
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'rounding': '0',
              'model': 'none'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'rounding': '0',
              'model': 'none',
              'note': 'n\rn',
              'internal_note': 'i\rn'})
-        self.assertTrue(f.is_valid())
-        self.assertEqual(f.cleaned_data['note'], 'nn')
-        self.assertEqual(f.cleaned_data['internal_note'], 'in')
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data['note'], 'nn')
+        self.assertEqual(form.cleaned_data['internal_note'], 'in')
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'rounding': '0',
              'model': 'fixed'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'rounding': '0',
              'model': 'fixed',
              'fixed_amount': '8000'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'rounding': '0',
              'model': 'per_annum'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'rounding': '0',
              'model': 'per_annum',
              'pa_rate': '13.65'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'rounding': '0',
              'model': 'per_mensem'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'rounding': '0',
              'model': 'per_mensem',
              'pm_rate': '0.94'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'rounding': '0',
              'model': 'per_diem'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'rounding': '0',
              'model': 'per_diem',
              'pd_rate': '0.125'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
 
 class TestViews1(SimpleTestCase):
 
     def test_xml(self):
 
-        i = 1
+        idx = 1
         while True:
             try:
-                with open('{}/hjp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
-                          'rb') as fi:
-                    d = fi.read()
+                with open(
+                        join(TEST_DIR, 'debt{:d}.xml'.format(idx)),
+                        'rb') as infile:
+                    dat = infile.read()
             except:
-                self.assertGreater(i, 1)
+                self.assertGreater(idx, 1)
                 break
-            c = views.fromxml(d)
-            self.assertIsNone(c[1])
-            self.assertIs(type(c[0]), views.Debt)
-            e = views.toxml(c[0])
-            self.assertXMLEqual(stripxml(d), stripxml(e), msg=str(i))
-            i += 1
-        self.assertEqual(views.fromxml(b'XXX'), (None, 'Chybný formát souboru'))
+            res = views.from_xml(dat)
+            self.assertIsNone(res[1])
+            self.assertIs(type(res[0]), views.Debt)
+            err = views.to_xml(res[0])
+            self.assertXMLEqual(strip_xml(dat), strip_xml(err), msg=str(idx))
+            idx += 1
+        self.assertEqual(
+            views.from_xml(b'XXX'),
+            (None, 'Chybný formát souboru'))
 
     def test_dispcurr(self):
 
@@ -178,7 +181,7 @@ class TestViews1(SimpleTestCase):
 
 class TestViews2(TestCase):
 
-    fixtures = ['hjp_test.json']
+    fixtures = ('hjp_test.json',)
 
     def setUp(self):
         User.objects.create_user('user', 'user@pecina.cz', 'none')
@@ -255,16 +258,22 @@ class TestViews2(TestCase):
         self.assertEqual(len(internal_note), 1)
         self.assertEqual(internal_note[0].text, '')
 
-        for suffix in [['xml', 'Uložit', 'text/xml; charset=utf-8'],
-                       ['pdf', 'Export do PDF', 'application/pdf']]:
-            with open(join(TEST_DIR, 'debt1.' + suffix[0]), 'rb') as fi:
+        for suf in (
+                ('xml', 'Uložit', 'text/xml; charset=utf-8'),
+                ('pdf', 'Export do PDF', 'application/pdf'),
+        ):
+            with open(
+                    join(
+                        TEST_DIR,
+                        'debt1.{}'.format(suf[0])),
+                    'rb') as infile:
                 res = self.client.post(
                     '/hjp/',
                     {'currency_0': 'EUR',
                      'rounding': '2',
                      'model': 'none',
                      'submit_load': 'Načíst',
-                     'load': fi},
+                     'load': infile},
                     follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hjp_mainpage.html')
@@ -294,10 +303,10 @@ class TestViews2(TestCase):
                  'title': TEST_STRING,
                  'note': 'nn',
                  'internal_note': 'in',
-                 'submit_' + suffix[0]: suffix[1]})
+                 'submit_' + suf[0]: suf[1]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
-            self.assertEqual(res['content-type'], suffix[2])
+            self.assertEqual(res['content-type'], suf[2])
 
             con = BytesIO(res.content)
             con.seek(0)
@@ -330,14 +339,14 @@ class TestViews2(TestCase):
             self.assertEqual(len(rounding), 1)
             self.assertTrue(rounding[0].has_attr('selected'))
 
-        with open(join(TEST_DIR, 'debt1.xml'), 'rb') as fi:
+        with open(join(TEST_DIR, 'debt1.xml'), 'rb') as infile:
             res = self.client.post(
                 '/hjp/',
                 {'currency_0': 'EUR',
                  'rounding': '2',
                  'model': 'none',
                  'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
@@ -356,26 +365,26 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertIn('content-type', res)
         self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
-        s = res.content.decode('utf-8')
-        with open(join(TEST_DIR, 'debt1.csv'), 'rb') as fi:
-            t = fi.read().decode('utf-8')
-        self.assertEqual(s, t)
+        string = res.content.decode('utf-8')
+        with open(join(TEST_DIR, 'debt1.csv'), 'rb') as infile:
+            dat = infile.read().decode('utf-8')
+        self.assertEqual(string, dat)
 
-        with open(join(TEST_DIR, 'err_debt1.xml'), 'rb') as fi:
+        with open(join(TEST_DIR, 'err_debt1.xml'), 'rb') as infile:
             res = self.client.post(
                 '/hjp/',
                 {'currency_0': 'CZK',
                  'rounding': '0',
                  'model': 'none',
                  'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        b = soup.select('input[name=submit_csv]')
-        self.assertEqual(len(b), 1)
-        self.assertTrue(b[0].has_attr('disabled'))
+        button = soup.select('input[name=submit_csv]')
+        self.assertEqual(len(button), 1)
+        self.assertTrue(button[0].has_attr('disabled'))
         self.assertContains(res, 'Chybné datum, data nejsou k disposici')
 
         res = self.client.post(
@@ -406,14 +415,14 @@ class TestViews2(TestCase):
             res.context['err_message'],
             'Nejprve zvolte soubor k načtení')
 
-        with open(join(TEST_DIR, 'err_debt2.xml'), 'rb') as fi:
+        with open(join(TEST_DIR, 'err_debt2.xml'), 'rb') as infile:
             res = self.client.post(
                 '/hjp/',
                 {'currency_0': 'CZK',
                  'rounding': '0',
                  'model': 'none',
                  'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hjp_mainpage.html')
@@ -421,14 +430,14 @@ class TestViews2(TestCase):
                 res.context['err_message'],
                 'Chyba při načtení souboru')
 
-        with open(join(TEST_DIR, 'err_debt3.xml'), 'rb') as fi:
+        with open(join(TEST_DIR, 'err_debt3.xml'), 'rb') as infile:
             res = self.client.post(
                 '/hjp/',
                 {'currency_0': 'CZK',
                  'rounding': '0',
                  'model': 'none',
                  'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hjp_mainpage.html')
@@ -444,14 +453,14 @@ class TestViews2(TestCase):
              'next': '/hjp/'})
         self.assertRedirects(res, '/hjp/')
 
-        i = 1
+        idx = 1
         while True:
             try:
-                fi = open(
-                    '{}/hjp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
+                infile = open(
+                    join(TEST_DIR, 'debt{:d}.xml'.format(idx)),
                     'rb')
             except:
-                self.assertGreater(i, 1)
+                self.assertGreater(idx, 1)
                 break
             res = self.client.post(
                 '/hjp/',
@@ -459,23 +468,23 @@ class TestViews2(TestCase):
                  'rounding': '2',
                  'model': 'none',
                  'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
-            fi.close()
+            infile.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hjp_mainpage.html')
-            d = {'submit_pdf': 'Export do PDF'}
-            f = res.context['f']
-            for n in f.fields.keys():
-                v = f[n].value()
-                if v != None:
-                    d[n] = p2c(str(v))
+            dct = {'submit_pdf': 'Export do PDF'}
+            form = res.context['form']
+            for key in form.fields:
+                val = form[key].value()
+                if val:
+                    dct[key] = p2c(str(val))
             soup = BeautifulSoup(res.content, 'html.parser')
-            d['currency_0'] = \
+            dct['currency_0'] = \
                 soup.select('#id_currency_0 option[selected]')[0]['value']
-            d['currency_1'] = d['currency']
+            dct['currency_1'] = dct['currency']
 
-            res = self.client.post('/hjp/', d)
+            res = self.client.post('/hjp/', dct)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], 'application/pdf')
@@ -490,7 +499,7 @@ class TestViews2(TestCase):
             con.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hjp_mainpage.html')
-            i += 1
+            idx += 1
 
     def test_trans(self):
 
@@ -510,7 +519,7 @@ class TestViews2(TestCase):
             '/hjp/transform/',
             {'transaction_type': 'balance',
              'submit_set_date': 'Dnes'})
-        self.assertEqual(res.context['f']['date'].value(), today)
+        self.assertEqual(res.context['form']['date'].value(), today)
 
         res = self.client.get('/hjp/transform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -518,9 +527,9 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hjp_transform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Nová transakce')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Nová transakce')
 
         res = self.client.post(
             '/hjp/transform/',
@@ -624,50 +633,50 @@ class TestViews2(TestCase):
     def test_debt(self):
 
         req = DummyRequest('test-session')
-        c = views.Debt()
-        c.title = TEST_STRING
-        self.assertTrue(views.setdebt(req, c))
+        debt = views.Debt()
+        debt.title = TEST_STRING
+        self.assertTrue(views.setdebt(req, debt))
         self.assertEqual(views.getdebt(req).title, TEST_STRING)
 
     def test_calcint(self):
 
-        pp = [
-            [date(2015, 1, 1),
+        cases = (
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
              'none',
              {},
-             0],
-            [date(2016, 1, 1),
+             0),
+            (date(2016, 1, 1),
              date(2015, 1, 1),
              date(2015, 1, 1),
              100,
              'none',
              {},
-             0],
-            [date(2015, 1, 1),
+             0),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
              'fixed',
              {'fixed_amount': 300},
-             0],
-            [date(2016, 1, 1),
+             0),
+            (date(2016, 1, 1),
              date(2015, 1, 1),
              date(2015, 1, 1),
              100,
              'fixed',
              {'fixed_amount': 300},
-             0],
-            [None,
+             0),
+            (None,
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
              'fixed',
              {'fixed_amount': 300},
-             300],
-            [date(2015, 1, 1),
+             300),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -675,8 +684,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/ACT',
              },
-             9.999925144097613],
-            [date(2014, 1, 1),
+             9.999925144097613),
+            (date(2014, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -684,8 +693,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/ACT',
              },
-             10.027322404371585],
-            [date(2014, 1, 1),
+             10.027322404371585),
+            (date(2014, 1, 1),
              date(2015, 1, 1),
              date(2016, 1, 1),
              100,
@@ -693,8 +702,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/ACT',
              },
-             0],
-            [date(2015, 1, 1),
+             0),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -702,8 +711,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/365',
              },
-             10],
-            [date(2015, 1, 1),
+             10),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -711,8 +720,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/360',
              },
-             10.13888888888889],
-            [date(2015, 1, 1),
+             10.13888888888889),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -720,8 +729,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/364',
              },
-             10.027472527472527],
-            [date(2015, 1, 1),
+             10.027472527472527),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -729,8 +738,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30U/360',
              },
-             10],
-            [date(2015, 1, 1),
+             10),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -738,8 +747,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E/360',
              },
-             10],
-            [date(2015, 1, 1),
+             10),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -747,8 +756,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E/360 ISDA',
              },
-             10],
-            [date(2015, 1, 1),
+             10),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -756,8 +765,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E+/360',
              },
-             10],
-            [date(2015, 1, 1),
+             10),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -765,8 +774,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': 'ACT',
              },
-             12],
-            [date(2015, 1, 1),
+             12),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -774,8 +783,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30U',
              },
-             12],
-            [date(2015, 1, 1),
+             12),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -783,8 +792,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E',
              },
-             12],
-            [date(2015, 1, 1),
+             12),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -792,8 +801,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E ISDA',
              },
-             12],
-            [date(2015, 1, 1),
+             12),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -801,8 +810,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E+',
              },
-             12],
-            [date(2015, 1, 31),
+             12),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -810,8 +819,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/ACT',
              },
-             .767123287671233],
-            [date(2015, 1, 31),
+             .767123287671233),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -819,8 +828,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/365',
              },
-             .767123287671233],
-            [date(2015, 1, 31),
+             .767123287671233),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -828,8 +837,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/360',
              },
-             .7777777777777777],
-            [date(2015, 1, 31),
+             .7777777777777777),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -837,8 +846,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/364',
              },
-             .7692307692307692],
-            [date(2015, 1, 31),
+             .7692307692307692),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -846,8 +855,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30U/360',
              },
-             .7777777777777777],
-            [date(2015, 1, 31),
+             .7777777777777777),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -855,8 +864,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E/360',
              },
-             .7777777777777777],
-            [date(2015, 1, 31),
+             .7777777777777777),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -864,8 +873,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E/360 ISDA',
              },
-             .8333333333333331],
-            [date(2015, 1, 31),
+             .8333333333333331),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -873,8 +882,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E+/360',
              },
-             .7777777777777777],
-            [date(2015, 1, 31),
+             .7777777777777777),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -882,8 +891,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': 'ACT',
              },
-             1],
-            [date(2015, 1, 31),
+             1),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -891,8 +900,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30U',
              },
-             .9333333333333332],
-            [date(2015, 1, 31),
+             .9333333333333332),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -900,8 +909,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E',
              },
-             .9333333333333332],
-            [date(2015, 1, 31),
+             .9333333333333332),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -909,8 +918,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E ISDA',
              },
-             1],
-            [date(2015, 1, 31),
+             1),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -918,89 +927,89 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E+',
              },
-             .9333333333333332],
-            [date(2015, 1, 1),
+             .9333333333333332),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
              'per_diem',
              {'rate': 1},
-             36.5],
-            [date(2015, 1, 31),
+             36.5),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
              'per_diem',
              {'rate': 1},
-             2.8],
-            [date(2002, 12, 14),
+             2.8),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 8, 6),
              100,
              'cust1',
              {},
              44.33816902462759,
-             [date(2001, 7, 1)]],
-            [date(2002, 12, 14),
+             (date(2001, 7, 1))),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 8, 6),
              100,
              'cust2',
              {},
-             13.607290964892584],
-            [date(2002, 12, 14),
+             13.607290964892584),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 8, 6),
              100,
              'cust3',
              {},
-             19.427118796317085],
-            [date(2006, 12, 14),
+             19.427118796317085),
+            (date(2006, 12, 14),
              date(2008, 2, 13),
              date(2002, 2, 6),
              100,
              'cust3',
              {},
-             17.618588217680962],
-            [date(2002, 12, 14),
+             17.618588217680962),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 8, 6),
              100,
              'cust4',
              {},
-             106.5],
-            [date(2002, 12, 14),
+             106.5),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 8, 6),
              100,
              'cust5',
              {},
-             20.59391271801781],
-            [date(2006, 12, 14),
+             20.59391271801781),
+            (date(2006, 12, 14),
              date(2008, 2, 13),
              date(2002, 2, 6),
              100,
              'cust5',
              {},
-             18.78538213938169],
-            [date(2002, 12, 14),
+             18.78538213938169),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 8, 6),
              100,
              'cust6',
              {},
-             18.78538213938169],
-            [date(2007, 6, 14),
+             18.78538213938169),
+            (date(2007, 6, 14),
              date(2008, 10, 13),
              date(2006, 2, 6),
              100,
              'cust6',
              {},
-             13.320982109439328],
-        ]
+             13.320982109439328),
+        )
 
-        ee = [
-            [date(2016, 1, 1),
+        err_cases = (
+            (date(2016, 1, 1),
              date(2015, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1008,97 +1017,107 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/ACT',
              },
-             'Chybný interval'],
-            [date(2015, 1, 1),
+             'Chybný interval'),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              0,
              'xxx',
              {},
-             'Neznámý model'],
-            [date(2015, 1, 1),
+             'Neznámý model'),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(1980, 1, 1),
              0,
              'cust1',
              {},
-             'Chybné datum, data nejsou k disposici'],
-            [date(1980, 1, 1),
+             'Chybné datum, data nejsou k disposici'),
+            (date(1980, 1, 1),
              date(2016, 1, 1),
              date(1980, 1, 1),
              0,
              'cust2',
              {},
-             'Chybné datum, data nejsou k disposici'],
-            [date(2015, 1, 1),
+             'Chybné datum, data nejsou k disposici'),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(1980, 1, 1),
              0,
              'cust3',
              {},
-             'Chybné datum, data nejsou k disposici'],
-            [date(2015, 1, 1),
+             'Chybné datum, data nejsou k disposici'),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(1980, 1, 1),
              0,
              'cust5',
              {},
-             'Chybné datum, data nejsou k disposici'],
-            [date(2015, 1, 1),
+             'Chybné datum, data nejsou k disposici'),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(1980, 1, 1),
              0,
              'cust6',
              {},
-             'Chybné datum, data nejsou k disposici'],
-        ]
+             'Chybné datum, data nejsou k disposici'),
+        )
 
-        for p in pp:
-            pastdate = p[0]
-            presdate = p[1]
-            default_date = p[2]
-            principal = p[3]
-            i = views.Interest()
-            i.model = p[4]
-            for k, v in p[5].items():
-                i.__setattr__(k, v)
-            d = views.Debt()
-            d.interest = i
-            c = views.calcint(pastdate, presdate, principal, d, default_date)
-            self.assertIsNotNone(c)
-            self.assertEqual(len(c), 2)
-            self.assertIsNone(c[1])
-            self.assertAlmostEqual(c[0], p[6])
+        for test in cases:
+            pastdate = test[0]
+            presdate = test[1]
+            default_date = test[2]
+            principal = test[3]
+            interest = views.Interest()
+            interest.model = test[4]
+            for key, val in test[5].items():
+                interest.__setattr__(key, val)
+            debt = views.Debt()
+            debt.interest = interest
+            calc = views.calcint(
+                pastdate,
+                presdate,
+                principal,
+                debt,
+                default_date)
+            self.assertIsNotNone(calc)
+            self.assertEqual(len(calc), 2)
+            self.assertIsNone(calc[1])
+            self.assertAlmostEqual(calc[0], test[6])
 
-        for p in ee:
-            pastdate = p[0]
-            presdate = p[1]
-            default_date = p[2]
-            principal = p[3]
-            i = views.Interest()
-            i.model = p[4]
-            for k, v in p[5].items():
-                i.__setattr__(k, v)
-            d = views.Debt()
-            d.interest = i
-            c = views.calcint(pastdate, presdate, principal, d, default_date)
-            self.assertIsNotNone(c)
-            self.assertEqual(len(c), 2)
-            self.assertIsNone(c[0])
-            self.assertEqual(c[1], p[6])
+        for test in err_cases:
+            pastdate = test[0]
+            presdate = test[1]
+            default_date = test[2]
+            principal = test[3]
+            interest = views.Interest()
+            interest.model = test[4]
+            for key, val in test[5].items():
+                interest.__setattr__(key, val)
+            debt = views.Debt()
+            debt.interest = interest
+            calc = views.calcint(
+                pastdate,
+                presdate,
+                principal,
+                debt,
+                default_date)
+            self.assertIsNotNone(calc)
+            self.assertEqual(len(calc), 2)
+            self.assertIsNone(calc[0])
+            self.assertEqual(calc[1], test[6])
 
     def test_calculation(self):
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
-        i = 1
+        idx = 1
         while True:
             try:
-                fi = open(
-                    '{}/hjp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
+                infile = open(
+                    join(TEST_DIR, 'debt{:d}.xml'.format(idx)),
                     'rb')
             except:
-                self.assertGreater(i, 1)
+                self.assertGreater(idx, 1)
                 break
 
             res = self.client.post(
@@ -1107,44 +1126,52 @@ class TestViews2(TestCase):
                  'rounding': '2',
                  'model': 'none',
                  'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
-            fi.close()
+            infile.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hjp_mainpage.html')
-            d = {'title': TEST_STRING,
-                 'note': 'nn',
-                 'internal_note': 'in',
-                 'submit_csv': 'Export do CSV'}
+            dct = {
+                'title': TEST_STRING,
+                'note': 'nn',
+                'internal_note': 'in',
+                'submit_csv': 'Export do CSV'}
             soup = BeautifulSoup(res.content, 'html.parser')
-            for f in ['currency_0', 'rounding', 'ydconv', 'mdconv']:
-                for o in soup.select('#id_' + f + ' option'):
-                    if o.has_attr('selected'):
-                        d[f] = o['value']
+            for key in (
+                    'currency_0',
+                    'rounding',
+                    'ydconv',
+                    'mdconv'
+            ):
+                for opt in soup.select('#id_{} option'.format(key)):
+                    if opt.has_attr('selected'):
+                        dct[key] = opt['value']
                         break
-            for f in ['currency_1',
-                      'fixed_amount',
-                      'pa_rate',
-                      'pm_rate',
-                      'pd_rate']:
+            for key in (
+                    'currency_1',
+                    'fixed_amount',
+                    'pa_rate',
+                    'pm_rate',
+                    'pd_rate'
+            ):
                 try:
-                    d[f] = soup.select('#id_' + f)[0]['value']
+                    dct[key] = soup.select('#id_{}'.format(key))[0]['value']
                 except:
                     pass
-            for f in ['model']:
-                for o in soup.select('input[name=' + f + ']'):
-                    if o.has_attr('checked'):
-                        d[f] = o['value']
+            for key in ('model',):
+                for opt in soup.select('input[name={}]'.format(key)):
+                    if opt.has_attr('checked'):
+                        dct[key] = opt['value']
                         break
 
-            res = self.client.post('/hjp/', d)
+            res = self.client.post('/hjp/', dct)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
-            s = res.content.decode('utf-8')
+            string = res.content.decode('utf-8')
             with open(
-                '{}/hjp/testdata/debt{:d}.csv'.format(BASE_DIR, i),
-                'rb') as fi:
-                t = fi.read().decode('utf-8')
-            self.assertEqual(s, t, msg=str(i))
-            i += 1
+                    join(TEST_DIR, 'debt{:d}.csv'.format(idx)),
+                    'rb') as infile:
+                dat = infile.read().decode('utf-8')
+            self.assertEqual(string, dat, msg=str(idx))
+            idx += 1

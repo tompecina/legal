@@ -28,7 +28,7 @@ from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 from common.settings import BASE_DIR
-from common.tests import TEST_STRING, stripxml
+from common.tests import TEST_STRING, strip_xml
 from cache.tests import DummyRequest
 from hsp import forms, views
 
@@ -40,159 +40,159 @@ TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 class TestForms(SimpleTestCase):
 
-    def test_MainForm(self):
+    def test_main_form(self):
 
-        f = forms.MainForm({'rounding': '0'})
-        self.assertTrue(f.is_valid())
+        form = forms.MainForm({'rounding': '0'})
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'rounding': '0',
              'note': 'n\rn',
              'internal_note': 'i\rn'})
-        self.assertTrue(f.is_valid())
-        self.assertEqual(f.cleaned_data['note'], 'nn')
-        self.assertEqual(f.cleaned_data['internal_note'], 'in')
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data['note'], 'nn')
+        self.assertEqual(form.cleaned_data['internal_note'], 'in')
 
-    def test_DebitForm(self):
+    def test_debit_form(self):
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'fixed',
              'fixed_currency_0': 'CZK',
              'fixed_date': '1.1.2000'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'fixed',
              'fixed_amount': '500',
              'fixed_date': '1.1.2000'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'fixed',
              'fixed_amount': '500',
              'fixed_currency_0': 'CZK'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'fixed',
              'fixed_amount': '500',
              'fixed_currency_0': 'CZK',
              'fixed_date': '1.1.2000'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'cust1',
              'principal_debit': '0',
              'principal_currency_0': 'CZK',
              'date_from': '1.1.2000'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'cust1',
              'principal_debit': '0',
              'date_from': '1.1.2000',
              'principal_amount': '80'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'cust1',
              'principal_debit': '0',
              'principal_currency_0': 'CZK',
              'principal_amount': '80'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'cust1',
              'principal_debit': '0',
              'principal_currency_0': 'CZK',
              'date_from': '1.1.2000',
              'principal_amount': '80'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.DebitForm({'model': 'per_annum'})
-        self.assertFalse(f.is_valid())
+        form = forms.DebitForm({'model': 'per_annum'})
+        self.assertFalse(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'per_annum',
              'pa_rate': '28.2'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.DebitForm({'model': 'per_mensem'})
-        self.assertFalse(f.is_valid())
+        form = forms.DebitForm({'model': 'per_mensem'})
+        self.assertFalse(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'per_mensem',
              'pm_rate': '0.84'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.DebitForm({'model': 'per_diem'})
-        self.assertFalse(f.is_valid())
+        form = forms.DebitForm({'model': 'per_diem'})
+        self.assertFalse(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'per_diem',
              'pd_rate': '0.2'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'cust1',
              'date_from': '1.1.2000',
              'date_to': '31.12.1999'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'cust1',
              'date_from': '1.1.2000',
              'date_to': '1.1.2000'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.DebitForm(
+        form = forms.DebitForm(
             {'model': 'cust1',
              'date_from': '1.1.2000',
              'date_to': '2.1.2000'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-    def test_FXform(self):
+    def test_fx_form(self):
 
-        f = forms.FXform(
+        form = forms.FXform(
             {'currency_from': 'EUR',
              'currency_to': 'EUR',
              'rate_from': '1',
              'rate_to': '1'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.FXform(
+        form = forms.FXform(
             {'currency_from': 'CZK',
              'currency_to': 'EUR',
              'rate_from': '16.6',
              'rate_to': '1'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.FXform(
+        form = forms.FXform(
             {'currency_from': 'CZK',
              'currency_to': 'EUR',
              'rate_from': '16.6',
              'rate_to': '1',
              'date_from': '1.1.2000',
              'date_to': '31.12.1999'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.FXform(
+        form = forms.FXform(
             {'currency_from': 'CZK',
              'currency_to': 'EUR',
              'rate_from': '16.6',
              'rate_to': '1',
              'date_from': '1.1.2000',
              'date_to': '1.1.2000'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.FXform(
+        form = forms.FXform(
             {'currency_from': 'CZK',
              'currency_to': 'EUR',
              'rate_from': '16.6',
              'rate_to': '1',
              'date_from': '1.1.2000',
              'date_to': '2.1.2000'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
 
 class TestViews1(SimpleTestCase):
@@ -215,26 +215,27 @@ class TestViews1(SimpleTestCase):
 
     def test_xml(self):
 
-        i = 1
+        idx = 1
         while True:
             try:
-                with open('{}/hsp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
-                          'rb') as fi:
-                    d = fi.read()
+                with open(
+                        join(TEST_DIR, 'debt{:d}.xml'.format(idx)),
+                        'rb') as infile:
+                    dat = infile.read()
             except:
-                self.assertGreater(i, 1)
+                self.assertGreater(idx, 1)
                 break
-            c = views.fromxml(d)
-            self.assertIsNone(c[1])
-            self.assertIs(type(c[0]), views.Debt)
-            e = views.toxml(c[0])
-            self.assertXMLEqual(stripxml(d), stripxml(e), msg=str(i))
-            i += 1
+            debt = views.from_xml(dat)
+            self.assertIsNone(debt[1])
+            self.assertIs(type(debt[0]), views.Debt)
+            xml = views.to_xml(debt[0])
+            self.assertXMLEqual(strip_xml(dat), strip_xml(xml), msg=str(idx))
+            idx += 1
 
 
 class TestViews2(TestCase):
 
-    fixtures = ['hsp_test.json']
+    fixtures = ('hsp_test.json',)
 
     def setUp(self):
         User.objects.create_user('user', 'user@pecina.cz', 'none')
@@ -296,14 +297,18 @@ class TestViews2(TestCase):
         self.assertEqual(len(internal_note), 1)
         self.assertEqual(internal_note[0].text, '')
 
-        for suffix in [['xml', 'Uložit', 'text/xml; charset=utf-8'],
-                       ['pdf', 'Export do PDF', 'application/pdf']]:
-            with open(join(TEST_DIR, 'debt1.' + suffix[0]), 'rb') as fi:
+        for suf in (
+                ('xml', 'Uložit', 'text/xml; charset=utf-8'),
+                ('pdf', 'Export do PDF', 'application/pdf'),
+        ):
+            with open(
+                    join(TEST_DIR, 'debt1.{}'.format(suf[0])),
+                    'rb') as infile:
                 res = self.client.post(
                     '/hsp/',
                     {'rounding': '2',
                      'submit_load': 'Načíst',
-                     'load': fi},
+                     'load': infile},
                     follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
@@ -327,10 +332,10 @@ class TestViews2(TestCase):
                  'title': TEST_STRING,
                  'note': 'nn',
                  'internal_note': 'in',
-                 'submit_' + suffix[0]: suffix[1]})
+                 'submit_' + suf[0]: suf[1]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
-            self.assertEqual(res['content-type'], suffix[2])
+            self.assertEqual(res['content-type'], suf[2])
             con = BytesIO(res.content)
             con.seek(0)
 
@@ -356,12 +361,12 @@ class TestViews2(TestCase):
             self.assertEqual(len(rounding), 1)
             self.assertTrue(rounding[0].has_attr('selected'))
 
-        with open(join(TEST_DIR, 'debt1.xml'), 'rb') as fi:
+        with open(join(TEST_DIR, 'debt1.xml'), 'rb') as infile:
             res = self.client.post(
                 '/hsp/',
                 {'rounding': '2',
                  'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
@@ -376,10 +381,10 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertIn('content-type', res)
         self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
-        s = res.content.decode('utf-8')
-        with open(join(TEST_DIR, 'debt1.csv'), 'rb') as fi:
-            t = fi.read().decode('utf-8')
-        self.assertEqual(s, t)
+        string = res.content.decode('utf-8')
+        with open(join(TEST_DIR, 'debt1.csv'), 'rb') as infile:
+            dat = infile.read().decode('utf-8')
+        self.assertEqual(string, dat)
 
         res = self.client.post(
             '/hsp/',
@@ -393,12 +398,12 @@ class TestViews2(TestCase):
             res.context['err_message'],
             'Nejprve zvolte soubor k načtení')
 
-        with open(join(TEST_DIR, 'err_debt5.xml'), 'rb') as fi:
+        with open(join(TEST_DIR, 'err_debt5.xml'), 'rb') as infile:
             res = self.client.post(
                 '/hsp/',
                 {'rounding': '0',
                  'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
@@ -406,12 +411,12 @@ class TestViews2(TestCase):
                 res.context['err_message'],
                 'Chyba při načtení souboru')
 
-        with open(join(TEST_DIR, 'err_debt6.xml'), 'rb') as fi:
+        with open(join(TEST_DIR, 'err_debt6.xml'), 'rb') as infile:
             res = self.client.post(
                 '/hsp/',
                 {'rounding': '0',
                  'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
@@ -425,32 +430,32 @@ class TestViews2(TestCase):
              'next': '/hsp/'})
         self.assertRedirects(res, '/hsp/')
 
-        i = 1
+        idx = 1
         while True:
             try:
-                fi = open(
-                    '{}/hsp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
+                infile = open(
+                    join(TEST_DIR, 'debt{:d}.xml'.format(idx)),
                     'rb')
             except:
-                self.assertGreater(i, 1)
+                self.assertGreater(idx, 1)
                 break
 
             res = self.client.post(
                 '/hsp/',
                 {'rounding': '2',
                  'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
-            fi.close()
+            infile.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
             soup = BeautifulSoup(res.content, 'html.parser')
 
             res = self.client.post(
                 '/hsp/',
-                {'title': res.context['f']['title'].value(),
-                 'note': res.context['f']['note'].value(),
-                 'rounding': str(res.context['f']['rounding'].value()),
+                {'title': res.context['form']['title'].value(),
+                 'note': res.context['form']['note'].value(),
+                 'rounding': str(res.context['form']['rounding'].value()),
                  'submit_pdf': 'Export do PDF'})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
@@ -466,16 +471,16 @@ class TestViews2(TestCase):
             con.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
-            i += 1
+            idx += 1
 
-        with open(join(TEST_DIR, 'err_debt1.xml'), 'rb') as fi:
+        with open(join(TEST_DIR, 'err_debt1.xml'), 'rb') as infile:
             res = self.client.post(
                 '/hsp/',
-                {'title': res.context['f']['title'].value(),
-                 'note': res.context['f']['note'].value(),
+                {'title': res.context['form']['title'].value(),
+                 'note': res.context['form']['note'].value(),
                  'rounding': '2',
                  'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
@@ -483,7 +488,7 @@ class TestViews2(TestCase):
 
         res = self.client.post(
             '/hsp/',
-            {'rounding': str(res.context['f']['rounding'].value()),
+            {'rounding': str(res.context['form']['rounding'].value()),
              'submit_pdf': 'Export do PDF'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertIn('content-type', res)
@@ -502,30 +507,32 @@ class TestViews2(TestCase):
 
     def test_form(self):
 
-        for b in [['debit', 'Nový závazek'],
-                  ['credit', 'Nová splátka'],
-                  ['balance', 'Nový kontrolní bod'],
-                  ['fxrate', 'Nový kurs']]:
+        for ftype in (
+                ('debit', 'Nový závazek'),
+                ('credit', 'Nová splátka'),
+                ('balance', 'Nový kontrolní bod'),
+                ('fxrate', 'Nový kurs'),
+        ):
 
-            res = self.client.get('/hsp/{}form'.format(b[0]))
+            res = self.client.get('/hsp/{}form'.format(ftype[0]))
             self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
 
-            res = self.client.get('/hsp/{}form/'.format(b[0]))
+            res = self.client.get('/hsp/{}form/'.format(ftype[0]))
             self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
-            res = self.client.get('/hsp/{}form/'.format(b[0]), follow=True)
+            res = self.client.get('/hsp/{}form/'.format(ftype[0]), follow=True)
             self.assertTemplateUsed(res, 'login.html')
             self.assertTrue(self.client.login(username='user', password='none'))
 
-            res = self.client.get('/hsp/{}form/'.format(b[0]))
+            res = self.client.get('/hsp/{}form/'.format(ftype[0]))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTrue(res.has_header('content-type'))
             self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-            self.assertTemplateUsed(res, 'hsp_{}form.html'.format(b[0]))
+            self.assertTemplateUsed(res, 'hsp_{}form.html'.format(ftype[0]))
             soup = BeautifulSoup(res.content, 'html.parser')
-            p = soup.select('h1')
-            self.assertEqual(len(p), 1)
-            self.assertEqual(p[0].text, b[1])
+            title = soup.select('h1')
+            self.assertEqual(len(title), 1)
+            self.assertEqual(title[0].text, ftype[1])
             self.client.logout()
 
     def test_debit(self):
@@ -546,9 +553,9 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_debitform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Nový závazek')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Nový závazek')
 
         res = self.client.post(
             '/hsp/creditform/',
@@ -643,8 +650,8 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_debitform.html')
 
-        for i in range(1, 7):
-            res = self.client.get('/hsp/debitform/{:d}/'.format(i))
+        for idx in range(1, 7):
+            res = self.client.get('/hsp/debitform/{:d}/'.format(idx))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_debitform.html')
 
@@ -736,9 +743,9 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_creditform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Nová splátka')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Nová splátka')
 
         res = self.client.post(
             '/hsp/debitform/',
@@ -866,8 +873,8 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_creditform.html')
 
-        for i in range(1, 4):
-            res = self.client.get('/hsp/creditform/{:d}/'.format(i))
+        for idx in range(1, 4):
+            res = self.client.get('/hsp/creditform/{:d}/'.format(idx))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_creditform.html')
 
@@ -933,12 +940,12 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_balanceform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Nový kontrolní bod')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Nový kontrolní bod')
 
         res = self.client.post('/hsp/balanceform/', {'submit_set_date': 'Dnes'})
-        self.assertEqual(res.context['f']['date'].value(), date.today())
+        self.assertEqual(res.context['form']['date'].value(), date.today())
 
         res = self.client.post(
             '/hsp/balanceform/',
@@ -983,8 +990,8 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_balanceform.html')
 
-        for i in range(1, 3):
-            res = self.client.get('/hsp/balanceform/{:d}/'.format(i))
+        for idx in range(1, 3):
+            res = self.client.get('/hsp/balanceform/{:d}/'.format(idx))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_balanceform.html')
 
@@ -1042,9 +1049,9 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_fxrateform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Nový kurs')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Nový kurs')
 
         res = self.client.post(
             '/hsp/fxrateform/',
@@ -1094,8 +1101,8 @@ class TestViews2(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_fxrateform.html')
 
-        for i in range(1, 3):
-            res = self.client.get('/hsp/fxrateform/{:d}/'.format(i))
+        for idx in range(1, 3):
+            res = self.client.get('/hsp/fxrateform/{:d}/'.format(idx))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_fxrateform.html')
 
@@ -1144,15 +1151,16 @@ class TestViews2(TestCase):
     def test_debt(self):
 
         req = DummyRequest('test-session')
-        c = views.Debt()
-        c.title = TEST_STRING
-        self.assertTrue(views.setdebt(req, c))
+        debt = views.Debt()
+        debt.title = TEST_STRING
+        self.assertTrue(views.setdebt(req, debt))
         self.assertEqual(views.getdebt(req).title, TEST_STRING)
 
     def test_calcint(self):
 
-        pp = [
-            [date(2015, 1, 1),
+
+        cases = (
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1160,8 +1168,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/ACT',
              },
-             9.999925144097613],
-            [date(2015, 1, 1),
+             9.999925144097613),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1169,8 +1177,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/365',
              },
-             10],
-            [date(2015, 1, 1),
+             10),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1178,8 +1186,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/360',
              },
-             10.13888888888889],
-            [date(2015, 1, 1),
+             10.13888888888889),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1187,8 +1195,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/364',
              },
-             10.027472527472527],
-            [date(2015, 1, 1),
+             10.027472527472527),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1196,8 +1204,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30U/360',
              },
-             10],
-            [date(2015, 1, 1),
+             10),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1205,8 +1213,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E/360',
              },
-             10],
-            [date(2015, 1, 1),
+             10),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1214,8 +1222,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E/360 ISDA',
              },
-             10],
-            [date(2015, 1, 1),
+             10),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1223,8 +1231,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E+/360',
              },
-             10],
-            [date(2015, 1, 1),
+             10),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1232,8 +1240,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': 'ACT',
              },
-             12],
-            [date(2015, 1, 1),
+             12),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1241,8 +1249,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30U',
              },
-             12],
-            [date(2015, 1, 1),
+             12),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1250,8 +1258,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E',
              },
-             12],
-            [date(2015, 1, 1),
+             12),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1259,8 +1267,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E ISDA',
              },
-             12],
-            [date(2015, 1, 1),
+             12),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1268,8 +1276,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E+',
              },
-             12],
-            [date(2015, 1, 31),
+             12),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1277,8 +1285,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/ACT',
              },
-             .767123287671233],
-            [date(2015, 1, 31),
+             .767123287671233),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1286,8 +1294,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/365',
              },
-             .767123287671233],
-            [date(2015, 1, 31),
+             .767123287671233),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1295,8 +1303,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/360',
              },
-             .7777777777777777],
-            [date(2015, 1, 31),
+             .7777777777777777),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1304,8 +1312,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/364',
              },
-             .7692307692307692],
-            [date(2015, 1, 31),
+             .7692307692307692),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1313,8 +1321,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30U/360',
              },
-             .7777777777777777],
-            [date(2015, 1, 31),
+             .7777777777777777),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1322,8 +1330,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E/360',
              },
-             .7777777777777777],
-            [date(2015, 1, 31),
+             .7777777777777777),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1331,8 +1339,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E/360 ISDA',
              },
-             .8333333333333331],
-            [date(2015, 1, 31),
+             .8333333333333331),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1340,8 +1348,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': '30E+/360',
              },
-             .7777777777777777],
-            [date(2015, 1, 31),
+             .7777777777777777),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1349,8 +1357,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': 'ACT',
              },
-             1],
-            [date(2015, 1, 31),
+             1),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1358,8 +1366,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30U',
              },
-             .9333333333333332],
-            [date(2015, 1, 31),
+             .9333333333333332),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1367,8 +1375,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E',
              },
-             .9333333333333332],
-            [date(2015, 1, 31),
+             .9333333333333332),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1376,8 +1384,8 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E ISDA',
              },
-             1],
-            [date(2015, 1, 31),
+             1),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
@@ -1385,86 +1393,86 @@ class TestViews2(TestCase):
              {'rate': 1,
               'day_count_convention': '30E+',
              },
-             .9333333333333332],
-            [date(2015, 1, 1),
+             .9333333333333332),
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              100,
              'per_diem',
              {'rate': 1},
-             36.5],
-            [date(2015, 1, 31),
+             36.5),
+            (date(2015, 1, 31),
              date(2015, 2, 28),
              date(2015, 1, 31),
              100,
              'per_diem',
              {'rate': 1},
-             2.8],
-            [date(2002, 12, 14),
+             2.8),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 8, 6),
              100,
              'cust1',
              {},
              44.33816902462759,
-             [date(2001, 7, 1)]],
-            [date(2002, 12, 14),
+             (date(2001, 7, 1))),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 8, 6),
              100,
              'cust2',
              {},
-             13.607290964892584],
-            [date(2002, 12, 14),
+             13.607290964892584),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 8, 6),
              100,
              'cust3',
              {},
-             19.427118796317085],
-            [date(2002, 12, 14),
+             19.427118796317085),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 5, 6),
              100,
              'cust3',
              {},
-             16.626813384235344],
-            [date(2002, 12, 14),
+             16.626813384235344),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 8, 6),
              100,
              'cust4',
              {},
-             106.5],
-            [date(2002, 12, 14),
+             106.5),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 8, 6),
              100,
              'cust5',
              {},
-             20.59391271801781],
-            [date(2002, 12, 14),
+             20.59391271801781),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 1, 6),
              100,
              'cust5',
              {},
-             17.79360730593607],
-            [date(2002, 12, 14),
+             17.79360730593607),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 8, 6),
              100,
              'cust6',
              {},
-             18.78538213938169],
-            [date(2002, 12, 14),
+             18.78538213938169),
+            (date(2002, 12, 14),
              date(2004, 2, 13),
              date(2001, 4, 6),
              100,
              'cust6',
              {},
-             17.79360730593607],
-            [date(2016, 1, 1),
+             17.79360730593607),
+            (date(2016, 1, 1),
              date(2015, 1, 1),
              date(2015, 1, 1),
              100,
@@ -1472,8 +1480,8 @@ class TestViews2(TestCase):
              {'rate': 10,
               'day_count_convention': 'ACT/ACT',
              },
-             0],
-            [date(2015, 1, 1),
+             0),
+            (date(2015, 1, 1),
              date(2016, 1, 10),
              date(2015, 1, 1),
              1000,
@@ -1482,192 +1490,196 @@ class TestViews2(TestCase):
               'day_count_convention': '30E/360',
               'date_to': date(2016, 1, 1),
              },
-             100],
-        ]
+             100),
+        )
 
-        ee = [
-            [date(2015, 1, 1),
+        err_cases = (
+            (date(2015, 1, 1),
              date(2016, 1, 1),
              date(2015, 1, 1),
              0,
              'xxx',
              {},
-             'Neznámý model'],
-            [date(2001, 12, 14),
+             'Neznámý model'),
+            (date(2001, 12, 14),
              date(2003, 2, 13),
              date(2000, 8, 6),
              100,
              'cust1',
              {},
-             'Sazba není k disposici'],
-            [date(1999, 12, 14),
+             'Sazba není k disposici'),
+            (date(1999, 12, 14),
              date(2003, 2, 13),
              date(1999, 8, 6),
              100,
              'cust2',
              {},
-             'Sazba není k disposici'],
-            [date(1999, 12, 14),
+             'Sazba není k disposici'),
+            (date(1999, 12, 14),
              date(2003, 2, 13),
              date(1999, 8, 6),
              100,
              'cust3',
              {},
-             'Sazba není k disposici'],
-            [date(1999, 12, 14),
+             'Sazba není k disposici'),
+            (date(1999, 12, 14),
              date(2003, 2, 13),
              date(1999, 8, 6),
              100,
              'cust5',
              {},
-             'Sazba není k disposici'],
-            [date(1999, 12, 14),
+             'Sazba není k disposici'),
+            (date(1999, 12, 14),
              date(2003, 2, 13),
              date(1999, 8, 6),
              100,
              'cust6',
              {},
-             'Sazba není k disposici'],
-        ]
+             'Sazba není k disposici'),
+        )
 
-        for p in pp:
-            pastdate = p[0]
-            presdate = p[1]
-            i = views.Debit()
-            i.default_date = p[2]
-            i.principal_debit = 0
-            i.principal_amount = p[3]
-            i.model = p[4]
-            for k, v in p[5].items():
-                i.__setattr__(k, v)
-            d = views.Debt()
-            d.interest = [i]
-            r = views.Result()
-            r.mpi = []
-            c = views.calcint(i, pastdate, presdate, d, r)
-            self.assertIsNotNone(c)
-            self.assertEqual(len(c), 2)
-            self.assertIsNone(c[1])
-            self.assertAlmostEqual(c[0], p[6])
+        for test in cases:
+            pastdate = test[0]
+            presdate = test[1]
+            debit = views.Debit()
+            debit.default_date = test[2]
+            debit.principal_debit = 0
+            debit.principal_amount = test[3]
+            debit.model = test[4]
+            for key, val in test[5].items():
+                debit.__setattr__(key, val)
+            debt = views.Debt()
+            debt.interest = [debit]
+            res = views.Result()
+            res.mpi = []
+            calc = views.calcint(debit, pastdate, presdate, debt, res)
+            self.assertIsNotNone(calc)
+            self.assertEqual(len(calc), 2)
+            self.assertIsNone(calc[1])
+            self.assertAlmostEqual(calc[0], test[6])
 
-        for p in ee:
-            pastdate = p[0]
-            presdate = p[1]
-            i = views.Debit()
-            i.default_date = p[2]
-            i.principal_debit = 0
-            i.principal_amount = p[3]
-            i.model = p[4]
-            for k, v in p[5].items():  # pragma: no cover
-                i.__setattr__(k, v)
-            d = views.Debt()
-            d.interest = [i]
-            r = views.Result()
-            r.mpi = []
-            c = views.calcint(i, pastdate, presdate, d, r)
-            self.assertIsNotNone(c)
-            self.assertEqual(len(c), 2)
-            self.assertIsNone(c[0])
-            self.assertEqual(c[1], p[6])
+        for test in err_cases:
+            pastdate = test[0]
+            presdate = test[1]
+            debit = views.Debit()
+            debit.default_date = test[2]
+            debit.principal_debit = 0
+            debit.principal_amount = test[3]
+            debit.model = test[4]
+            for key, val in test[5].items():  # pragma: no cover
+                debit.__setattr__(key, val)
+            debt = views.Debt()
+            debt.interest = [debit]
+            res = views.Result()
+            res.mpi = []
+            calc = views.calcint(debit, pastdate, presdate, debt, res)
+            self.assertIsNotNone(calc)
+            self.assertEqual(len(calc), 2)
+            self.assertIsNone(calc[0])
+            self.assertEqual(calc[1], test[6])
 
     def test_calc(self):
 
-        i = 1
+        idx = 1
         while True:
             try:
                 with open(
-                    '{}/hsp/testdata/err_debt{:d}.xml'.format(BASE_DIR, i),
-                    'rb') as fi:
-                    d = fi.read()
+                        join(TEST_DIR, 'err_debt{:d}.xml'.format(idx)),
+                        'rb') as infile:
+                    dat = infile.read()
             except:
-                self.assertGreater(i, 1)
+                self.assertGreater(idx, 1)
                 break
-            debt, m = views.fromxml(d)
-            if not m:
+            debt, msg = views.from_xml(dat)
+            if not msg:
                 self.assertIs(type(debt), views.Debt)
                 res = views.calc(debt)
                 self.assertTrue(res.msg)
-            i += 1
+            idx += 1
 
     def test_calculation(self):
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
-        i = 1
+        idx = 1
         while True:
             try:
-                fi = open(
-                    '{}/hsp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
+                infile = open(
+                    join(TEST_DIR, 'debt{:d}.xml'.format(idx)),
                     'rb')
             except:
-                self.assertGreater(i, 1)
+                self.assertGreater(idx, 1)
                 break
 
             res = self.client.post(
                 '/hsp/',
                 {'rounding': '2',
                  'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
-            fi.close()
+            infile.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
-            d = {'title': TEST_STRING,
-                 'note': 'nn',
-                 'internal_note': 'in',
-                 'submit_csv': 'Export do CSV'}
+            dct = {
+                'title': TEST_STRING,
+                'note': 'nn',
+                'internal_note': 'in',
+                'submit_csv': 'Export do CSV',
+            }
             soup = BeautifulSoup(res.content, 'html.parser')
-            for o in soup.select('#id_rounding option'):
-                if o.has_attr('selected'):
-                    d['rounding'] = o['value']
+            for opt in soup.select('#id_rounding option'):
+                if opt.has_attr('selected'):
+                    dct['rounding'] = opt['value']
                     break
 
-            res = self.client.post('/hsp/', d)
+            res = self.client.post('/hsp/', dct)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
-            s = res.content.decode('utf-8')
+            string = res.content.decode('utf-8')
             with open(
-                '{}/hsp/testdata/debt{:d}.csv'.format(BASE_DIR, i),
-                'rb') as fi:
-                t = fi.read().decode('utf-8')
-            self.assertEqual(s, t, msg=str(i))
-            i += 1
+                    join(TEST_DIR, 'debt{:d}.csv'.format(idx)),
+                    'rb') as infile:
+                dat = infile.read().decode('utf-8')
+            self.assertEqual(string, dat, msg=str(idx))
+            idx += 1
 
     def test_hjp2hsp(self):
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
-        for i in range(1, 14):
+        for idx in range(1, 14):
             with open(
-                '{}/hjp/testdata/debt{:d}.xml'.format(BASE_DIR, i),
-                'rb') as fi:
+                    join(TEST_DIR, 'debt{:d}.xml'.format(idx)),
+                    'rb') as infile:
 
                 res = self.client.post(
                     '/hsp/',
                     {'rounding': '2',
                      'submit_load': 'Načíst',
-                     'load': fi},
+                     'load': infile},
                     follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
-            d = {'title': TEST_STRING,
-                 'note': 'nn',
-                 'internal_note': 'in',
-                 'submit_csv': 'Export do CSV'}
+            dct = {
+                'title': TEST_STRING,
+                'note': 'nn',
+                'internal_note': 'in',
+                'submit_csv': 'Export do CSV',
+            }
             soup = BeautifulSoup(res.content, 'html.parser')
-            for o in soup.select('#id_rounding option'):
-                if o.has_attr('selected'):
-                    d['rounding'] = o['value']
+            for opt in soup.select('#id_rounding option'):
+                if opt.has_attr('selected'):
+                    dct['rounding'] = opt['value']
                     break
 
-            res = self.client.post('/hsp/', d)
+            res = self.client.post('/hsp/', dct)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
-            s = res.content.decode('utf-8')
+            string = res.content.decode('utf-8')
             with open(
-                '{}/hsp/testdata/debt{:d}.csv'.format(BASE_DIR, i),
-                'rb') as fi:
-                t = fi.read().decode('utf-8')
-            self.assertEqual(s, t, msg=str(i))
+                    join(TEST_DIR, 'debt{:d}.csv'.format(idx)),
+                    'rb') as infile:
+                dat = infile.read().decode('utf-8')
+            self.assertEqual(string, dat, msg=str(idx))

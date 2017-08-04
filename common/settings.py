@@ -80,7 +80,7 @@ STATICFILES_FINDERS = (
 
 SECRET_KEY = SECKEY
 
-MIDDLEWARE = [
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -89,31 +89,32 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-]
+)
 
 ROOT_URLCONF = 'common.urls'
 
-APPS = ['common',
-        'sop',
-        'lht',
-        'cin',
-        'dvt',
-        'cnb',
-        'knr',
-        'hjp',
-        'hsp',
-        'szr',
-        'sur',
-        'psj',
-        'udn',
-        'sir',
-        'dir',
-        'pir',
-        'kos',
-        'cache',
-       ]
+APPS = (
+    'common',
+    'sop',
+    'lht',
+    'cin',
+    'dvt',
+    'cnb',
+    'knr',
+    'hjp',
+    'hsp',
+    'szr',
+    'sur',
+    'psj',
+    'udn',
+    'sir',
+    'dir',
+    'pir',
+    'kos',
+    'cache',
+)
 
-TEMPLATES = [
+TEMPLATES = (
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
@@ -127,7 +128,7 @@ TEMPLATES = [
             ],
         },
     },
-]
+)
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -137,25 +138,25 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-] + [(x + '.apps.' + x.capitalize() + 'Config') for x in APPS]
+] + [x + '.apps.' + x.capitalize() + 'Config' for x in APPS]
 
 
 class AddFields(Filter):
 
     def filter(self, record):
-        a = ''
+        attrs = ''
         if hasattr(record, 'request'):
             if hasattr(record, 'params'):
-                for k in record.params:
-                    if k == 'csrfmiddlewaretoken':
+                for key in record.params:
+                    if key == 'csrfmiddlewaretoken':
                         continue
-                    if 'password' in k:
-                        v = '?'
+                    if 'password' in key:
+                        val = '?'
                     else:
-                        v = '"{}"'.format(record.params[k])
-                    a += ', {}={}'.format(k, v)
-            a += ' [{}]'.format(record.request.META['REMOTE_ADDR'])
-        record.append = a
+                        val = '"{}"'.format(record.params[key])
+                    attrs += ', {}={}'.format(key, val)
+            attrs += ' [{}]'.format(record.request.META['REMOTE_ADDR'])
+        record.append = attrs
         return True
 
 
@@ -188,12 +189,12 @@ LOGGING = {
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
+            'filters': ('require_debug_false',),
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'error_mail': {
             'level': 'ERROR',
-            'filters': ['require_debug_false', 'add_fields'],
+            'filters': ('require_debug_false', 'add_fields'),
             'class': 'django.utils.log.AdminEmailHandler',
             'formatter': 'verbose',
         },
@@ -206,7 +207,7 @@ LOGGING = {
             'interval': 100,
             'backupCount': LOGGING_BC,
             'formatter': 'verbose',
-            'filters': ['add_fields'],
+            'filters': ('add_fields',),
         },
         'info_file': {
             'level': 'INFO',
@@ -217,7 +218,7 @@ LOGGING = {
             'interval': 30,
             'backupCount': LOGGING_BC,
             'formatter': 'verbose',
-            'filters': ['add_fields'],
+            'filters': ('add_fields',),
         },
         'debug_file': {
             'level': 'DEBUG',
@@ -228,7 +229,7 @@ LOGGING = {
             'interval': 10,
             'backupCount': LOGGING_BC,
             'formatter': 'verbose',
-            'filters': ['add_fields'],
+            'filters': ('add_fields',),
         },
     },
     'formatters': {
@@ -254,7 +255,7 @@ LOGOUT_URL = '/accounts/logout/'
 DECIMAL_SEPARATOR = ','
 DATE_FORMAT = 'd.m.Y'
 SHORT_DATE_FORMAT = 'd.m.Y'
-DATE_INPUT_FORMATS = ['%d.%m.%Y']
-ALLOWED_HOSTS = ['*' if DEBUG else 'legal.pecina.cz']
+DATE_INPUT_FORMATS = ('%d.%m.%Y',)
+ALLOWED_HOSTS = ('*' if DEBUG else 'legal.pecina.cz',)
 LOCALE_PATHS = ()
 locale.setlocale(locale.LC_ALL, 'cs_CZ')

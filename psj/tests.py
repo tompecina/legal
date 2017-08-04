@@ -25,14 +25,14 @@ from datetime import date, datetime
 from locale import strxfrm
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
-from common.tests import stripxml, link_equal
+from common.tests import strip_xml, link_equal
 from szr.models import Court
 from psj import cron, forms, models, views
 
 
 class TestCron(TestCase):
 
-    fixtures = ['psj_test.json']
+    fixtures = ('psj_test.json',)
 
     def test_courtrooms(self):
 
@@ -82,38 +82,38 @@ class TestCron(TestCase):
 
 class TestForms(SimpleTestCase):
 
-    def test_MainForm(self):
+    def test_main_form(self):
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'party_opt': 'icontains',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'party_opt': 'icontains',
              'date_from': '2.3.2005',
              'date_to': '2.6.2001',
              'format': 'html'})
-        self.assertFalse(f.is_valid())
+        self.assertFalse(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'party_opt': 'icontains',
              'date_from': '2.3.2005',
              'date_to': '3.3.2005',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
-        f = forms.MainForm(
+        form = forms.MainForm(
             {'party_opt': 'icontains',
              'date_from': '2.3.2005',
              'date_to': '2.3.2005',
              'format': 'html'})
-        self.assertTrue(f.is_valid())
+        self.assertTrue(form.is_valid())
 
 
 class TestModels(TestCase):
 
-    fixtures = ['psj_test.json']
+    fixtures = ('psj_test.json',)
 
     def test_models(self):
 
@@ -157,16 +157,16 @@ class TestViews1(SimpleTestCase):
 
     def test_stripjudge(self):
 
-        jj = [
-            ['Žlouťoučký Příliš', 'Žlouťoučký Příliš'],
-            ['JUDr. Žlouťoučký Příliš', 'Žlouťoučký Příliš'],
-            ['JUDr. Ing. Žlouťoučký Příliš', 'Žlouťoučký Příliš'],
-        ]
+        cases = (
+            ('Žlouťoučký Příliš', 'Žlouťoučký Příliš'),
+            ('JUDr. Žlouťoučký Příliš', 'Žlouťoučký Příliš'),
+            ('JUDr. Ing. Žlouťoučký Příliš', 'Žlouťoučký Příliš'),
+        )
 
-        for j in jj:
+        for test in cases:
             self.assertTrue(
-                j[0],
-                views.stripjudge({'judge__name': j[0]}) == strxfrm(j[1]))
+                test[0],
+                views.stripjudge({'judge__name': test[0]}) == strxfrm(test[1]))
 
 
 def populate():
@@ -180,7 +180,7 @@ def populate():
 
 class TestViews2(TestCase):
 
-    fixtures = ['psj_test.json']
+    fixtures = ('psj_test.json',)
 
     def test_mainpage(self):
 
@@ -248,7 +248,7 @@ class TestViews2(TestCase):
 
 class TestViews3(TestCase):
 
-    fixtures = ['psj_test.json']
+    fixtures = ('psj_test.json',)
 
     def setUp(self):
         populate()
@@ -405,11 +405,11 @@ class TestViews3(TestCase):
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 1)
 
-        h = models.Hearing.objects.first().__dict__
-        del h['id'], h['_state']
+        hear = models.Hearing.objects.first().__dict__
+        del hear['id'], hear['_state']
         for number in range(200, 437):
-            h['number'] = number
-            models.Hearing(**h).save()
+            hear['number'] = number
+            models.Hearing(**hear).save()
 
         res = self.client.get('/psj/list/?senate=26')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -481,7 +481,7 @@ class TestViews3(TestCase):
 
     def test_xmllist(self):
 
-        x0 = '''\
+        res0 = '''\
 <?xml version="1.0" encoding="utf-8"?>
 <hearings application="psj" created="2016-11-18T15:43:27" \
 version="1.1" xmlns="http://legal.pecina.cz" xmlns:xsi="http:\
@@ -504,7 +504,7 @@ Ministerstvo spravedlnosti</party><party>Alois Hlásenský</party>\
 <cancelled>false</cancelled></hearing></hearings>
 '''
 
-        x1 = '''\
+        res1 = '''\
 <?xml version="1.0" encoding="utf-8"?>
 <hearings application="psj" created="2016-11-18T16:00:01" \
 version="1.1" xmlns="http://legal.pecina.cz" xmlns:xsi="http:\
@@ -578,26 +578,31 @@ version="1.1" xmlns="http://legal.pecina.cz" xmlns:xsi="http:\
         res = self.client.get('/psj/xmllist/?register=C')
         self.assertEqual(res.status_code, HTTPStatus.OK)
 
-        self.assertXMLEqual(stripxml(res.content), stripxml(x0.encode('utf-8')))
+        self.assertXMLEqual(
+            strip_xml(res.content),
+            strip_xml(res0.encode('utf-8')))
         res = self.client.get('/psj/xmllist/?party=oi&party_opt=icontains')
 
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertXMLEqual(stripxml(res.content), stripxml(x1.encode('utf-8')))
+        self.assertXMLEqual(
+            strip_xml(res.content),
+            strip_xml(res1.encode('utf-8')))
 
+        exlim = views.EXLIM
         views.EXLIM = 0
         res = self.client.get('/psj/xmllist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
-        views.EXLIM = 1000
+        views.EXLIM = exlim
 
     def test_csvlist(self):
 
-        c0 = '''\
+        res0 = '''\
 Soud,Jednací síň,Datum,Čas,Spisová značka,Řešitel,Účastníci řízení,\
 Druh jednání,Neveřejné,Zrušeno
 '''
 
-        c1 = c0 + '''\
+        res1 = res0 + '''\
 Obvodní soud Praha 2,č. 101/přízemí - přístavba,01.12.2016,09:00,\
 26 C 181/2015,JUDr. Henzlová Šárka,ČR - Ministerstvo spravedlnosti ČR;\
 Mgr. Helena Morozová,Jednání,ne,ne
@@ -606,7 +611,7 @@ Obvodní soud Praha 2,č. 101/přízemí - přístavba,01.12.2016,12:00,\
 spravedlnosti;Alois Hlásenský,Jednání,ne,ne
 '''
 
-        c2 = c0 + '''\
+        res2 = res0 + '''\
 Obvodní soud Praha 2,č. 101/přízemí - přístavba,01.12.2016,12:00,\
 26 C 94/2015,JUDr. Henzlová Šárka,Česká republika - Ministerstvo \
 spravedlnosti;Alois Hlásenský,Jednání,ne,ne
@@ -670,27 +675,34 @@ spravedlnosti;Alois Hlásenský,Jednání,ne,ne
 
         res = self.client.get('/psj/csvlist/?register=T')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c0)
+        self.assertEqual(
+            res.content.decode('utf-8').replace('\r\n', '\n'),
+            res0)
 
         res = self.client.get('/psj/csvlist/?register=C')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c1)
+        self.assertEqual(
+            res.content.decode('utf-8').replace('\r\n', '\n'),
+            res1)
 
         res = self.client.get('/psj/csvlist/?party=oi&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), c2)
+        self.assertEqual(
+            res.content.decode('utf-8').replace('\r\n', '\n'),
+            res2)
 
+        exlim = views.EXLIM
         views.EXLIM = 0
         res = self.client.get('/psj/csvlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
-        views.EXLIM = 1000
+        views.EXLIM = exlim
 
     def test_jsonlist(self):
 
-        j0 = '[]'
+        res0 = '[]'
 
-        j1 = '''\
+        res1 = '''\
 [{"court": {"name": "Obvodn\u00ed soud Praha 2", "id": "OSPHA02"}, \
 "judge": "JUDr. Henzlov\u00e1 \u0160\u00e1rka", "ref": {"senate": 26, \
 "year": 2015, "number": 181, "register": "C"}, "form": "Jedn\u00e1n\
@@ -706,7 +718,7 @@ rka", "ref": {"senate": 26, "year": 2015, "number": 94, "register": \
 Hl\u00e1sensk\u00fd"], "closed": false, "time": "2016-12-01T12:00:00"}]\
 '''
 
-        j2 = '''\
+        res2 = '''\
 [{"court": {"name": "Obvodn\u00ed soud Praha 2", "id": "OSPHA02"}, \
 "cancelled": false, "judge": "JUDr. Henzlov\u00e1 \u0160\u00e1rka", \
 "time": "2016-12-01T12:00:00", "courtroom": "\u010d. 101/p\u0159\
@@ -756,25 +768,26 @@ Ministerstvo spravedlnosti", "Alois Hl\u00e1sensk\u00fd"], "ref": \
 
         res = self.client.get('/psj/jsonlist/?register=T')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertJSONEqual(res.content.decode('utf-8'), j0)
+        self.assertJSONEqual(res.content.decode('utf-8'), res0)
 
         res = self.client.get('/psj/jsonlist/?register=C')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertJSONEqual(res.content.decode('utf-8'), j1)
+        self.assertJSONEqual(res.content.decode('utf-8'), res1)
 
         res = self.client.get('/psj/jsonlist/?party=oi&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertJSONEqual(res.content.decode('utf-8'), j2)
+        self.assertJSONEqual(res.content.decode('utf-8'), res2)
 
+        exlim = views.EXLIM
         views.EXLIM = 0
         res = self.client.get('/psj/jsonlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
-        views.EXLIM = 1000
+        views.EXLIM = exlim
 
     def test_courtinfo(self):
 
-        s0 = '''\
+        res0 = '''\
 <select id="courtroom">\
 <option value="{:d}">č. 101/přízemí - přístavba</option>\
 </select>\
@@ -794,6 +807,8 @@ Ministerstvo spravedlnosti", "Alois Hl\u00e1sensk\u00fd"], "ref": \
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'psj_court.html')
-        cr = models.Courtroom.objects.get(desc__contains='101/').id
-        ju = models.Judge.objects.get(name__contains='Hen').id
-        self.assertHTMLEqual(res.content.decode('utf_8'), s0.format(cr, ju))
+        croom = models.Courtroom.objects.get(desc__contains='101/').id
+        judge = models.Judge.objects.get(name__contains='Hen').id
+        self.assertHTMLEqual(
+            res.content.decode('utf_8'),
+            res0.format(croom, judge))

@@ -4,22 +4,22 @@
         <form method="post" enctype="multipart/form-data" id="id_maintform">
 	  <table class="basic">
 	    <tr><td colspan="3"><h1>{{ page_title }}</h1></td></tr>
-            <tr class="{{ f.beg_date.css_classes }}">
+            <tr class="{{ form.beg_date.css_classes }}">
 	      <th>
-		{{ f.beg_date.label_tag }}
+		{{ form.beg_date.label_tag }}
 	      </th>
 	      <td>
-		{{ f.beg_date }}
+		{{ form.beg_date }}
 	      </td>
 	    </tr>
 	    <tr>
-	      <th class="{{ f.years.css_classes }} {{ f.months.css_classes }} {{ f.days.css_classes }}">
+	      <th class="{{ form.years.css_classes }} {{ form.months.css_classes }} {{ form.days.css_classes }}">
 		Délka trestu:
 	      </th>
 	      <td>
-		<span class="{{ f.years.css_classes }}">{{ f.years }}</span> {{ f.years.label }}
-		<span class="plm {{ f.months.css_classes }}">{{ f.months }}</span> {{ f.months.label }}
-		<span class="plm {{ f.days.css_classes }}">{{ f.days }}</span> {{ f.days.label }}
+		<span class="{{ form.years.css_classes }}">{{ form.years }}</span> {{ form.years.label }}
+		<span class="plm {{ form.months.css_classes }}">{{ form.months }}</span> {{ form.months.label }}
+		<span class="plm {{ form.days.css_classes }}">{{ form.days }}</span> {{ form.days.label }}
 	      </td>
 	    </tr>
 	    <tr>

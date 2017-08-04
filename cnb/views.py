@@ -24,10 +24,10 @@ from datetime import date
 from django.apps import apps
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
-from common.utils import getbutton, pd, formam, unrequire, Lf, logger
-from common.glob import inerr_short
+from common.utils import getbutton, fdt, famt, unrequire, LocalFloat, logger
+from common.glob import INERR_SHORT
 from common.fields import AmountField
-from cnb.main import getFXrate, getMPIrate
+from cnb.utils import get_fx_rate, get_mpi_rate
 from cnb.forms import MainForm
 
 
@@ -36,7 +36,7 @@ APP = __package__
 APPVERSION = apps.get_app_config(APP).version
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
     logger.debug(
@@ -44,96 +44,98 @@ def mainpage(request):
         request,
         request.POST)
 
-    rate_desc = {'DISC': 'Diskontní sazba',
-                 'LOMB': 'Lombardní sazba',
-                 'REPO': 'Repo sazba pro dvoutýdenní operace'}
+    rate_desc = {
+        'DISC': 'Diskontní sazba',
+        'LOMB': 'Lombardní sazba',
+        'REPO': 'Repo sazba pro dvoutýdenní operace',
+    }
     messages = []
     today = date.today()
     AmountField.rounding = 2
 
     if request.method == 'GET':
-        f = MainForm()
+        form = MainForm()
     else:
-        f = MainForm(request.POST)
-        b = getbutton(request)
-        if b in ['set_fx_date', 'set_mpi_date']:
-            unrequire(f, ['fx_date', 'basis', 'mpi_date'])
-            f.data = f.data.copy()
-            if b == 'set_fx_date':
-                f.data['fx_date'] = today
+        form = MainForm(request.POST)
+        button = getbutton(request)
+        if button in ('set_fx_date', 'set_mpi_date'):
+            unrequire(form, ('fx_date', 'basis', 'mpi_date'))
+            form.data = form.data.copy()
+            if button == 'set_fx_date':
+                form.data['fx_date'] = today
             else:
-                f.data['mpi_date'] = today
+                form.data['mpi_date'] = today
         else:
-            fx = (b in ['show_fx', 'conv_from', 'conv_to'])
-            if b == 'show_fx':
-                unrequire(f, ['basis', 'mpi_date'])
-            elif fx:
-                unrequire(f, ['mpi_date'])
+            fxr = button in ('show_fx', 'conv_from', 'conv_to')
+            if button == 'show_fx':
+                unrequire(form, ('basis', 'mpi_date'))
+            elif fxr:
+                unrequire(form, ('mpi_date',))
             else:
-                unrequire(f, ['fx_date', 'basis'])
-            if f.is_valid():
-                cd = f.cleaned_data
-                if fx:
-                    curr = cd['curr']
-                    fx_date = cd['fx_date']
-                    rate, qty, dr, msg = getFXrate(curr, fx_date)
+                unrequire(form, ('fx_date', 'basis'))
+            if form.is_valid():
+                cld = form.cleaned_data
+                if fxr:
+                    curr = cld['curr']
+                    fx_date = cld['fx_date']
+                    rate, qty, dreq, msg = get_fx_rate(curr, fx_date)
                     if msg:
-                        messages = [[msg, None]]
-                    elif b == 'show_fx':
+                        messages = [(msg, None)]
+                    elif button == 'show_fx':
                         messages.append(
-                            ['{:d} {} = {:.3f} CZK'.format(
+                            ('{:d} {} = {:.3f} CZK'.format(
                                 qty,
                                 curr,
-                                Lf(rate)),
-                             'msg-res1'])
+                                LocalFloat(rate)),
+                             'msg-res1'))
                         messages.append(
-                            ['(Kurs vyhlášený ke dni: {})'.format(pd(dr)),
-                             'msg-note'])
+                            ('(Kurs vyhlášený ke dni: {})'.format(fdt(dreq)),
+                             'msg-note'))
                     else:
-                        basis = cd['basis']
-                        if b == 'conv_from':
+                        basis = cld['basis']
+                        if button == 'conv_from':
                             messages.append(
-                                ['{} {} = {} CZK'.format(
-                                    formam(basis),
+                                ('{} {} = {} CZK'.format(
+                                    famt(basis),
                                     curr,
-                                    formam(basis * rate / qty)),
-                                 'msg-res2'])
+                                    famt(basis * rate / qty)),
+                                 'msg-res2'))
                         else:
                             messages.append(
-                                ['{} CZK = {} {}'.format(
-                                    formam(basis),
-                                    formam(basis * qty / rate),
+                                ('{} CZK = {} {}'.format(
+                                    famt(basis),
+                                    famt(basis * qty / rate),
                                     curr),
-                                 'msg-res2'])
+                                 'msg-res2'))
                         messages.append(
-                            ['{:d} {} = {:.3f} CZK'.format(
+                            ('{:d} {} = {:.3f} CZK'.format(
                                 qty,
                                 curr,
-                                Lf(rate)),
-                             None])
+                                LocalFloat(rate)),
+                             None))
                         messages.append(
-                            ['(Kurs vyhlášený ke dni: {})'.format(pd(dr)),
-                             'msg-note'])
+                            ('(Kurs vyhlášený ke dni: {})'.format(fdt(dreq)),
+                             'msg-note'))
                 else:
-                    mpi_date = cd['mpi_date']
-                    rate, msg = getMPIrate(b, mpi_date)
+                    mpi_date = cld['mpi_date']
+                    rate, msg = get_mpi_rate(button, mpi_date)
                     if msg:
-                        messages = [[msg, None]]
+                        messages = [(msg, None)]
                     else:
                         messages.append(
-                            ['{} platná ke dni {}:'.format(
-                                rate_desc[b], pd(mpi_date)),
-                             None])
+                            ('{} platná ke dni {}:'.format(
+                                rate_desc[button], fdt(mpi_date)),
+                             None))
                         messages.append(
-                            ['{:.2f} %'.format(Lf(rate)),
-                             'msg-res0'])
+                            ('{:.2f} %'.format(LocalFloat(rate)),
+                             'msg-res0'))
             else:
                 logger.debug('Invalid form', request)
-                messages = [[inerr_short, None]]
+                messages = [(INERR_SHORT, None)]
 
     return render(request,
                   'cnb_main.html',
                   {'app': APP,
-                   'f': f,
+                   'form': form,
                    'messages': messages,
                    'page_title': 'Kursy a sazby ČNB'})

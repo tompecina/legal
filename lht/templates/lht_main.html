@@ -4,21 +4,21 @@
         <form method="post" enctype="multipart/form-data">
 	  <table class="basic">
 	    <tr><td><h1>{{ page_title }}</h1></td></tr>
-	    <tr class="{{ f.beg_date.css_classes }}"><td>{{ f.beg_date.label_tag }} {{ f.beg_date }}</td></tr>
+	    <tr class="{{ form.beg_date.css_classes }}"><td>{{ form.beg_date.label_tag }} {{ form.beg_date }}</td></tr>
 	    <tr>
 	      <td>
 		<fieldset>
-		  <legend>{{ f.preset.label }}</legend>
-{% for p in f.preset %}{% if not forloop.last %}		  <div class="opt">{{ p }}</div>
+		  <legend>{{ form.preset.label }}</legend>
+{% for p in form.preset %}{% if not forloop.last %}		  <div class="opt">{{ p }}</div>
 {% endif %}{% endfor %}		  <div class="opt pbn">
-		    <label><input type="radio" name="preset" value="none"{% if f.preset.value == "none" %} checked="checked"{% endif %} /> jiná</label>:
-		    <span class="{{ f.dur.css_classes }}">{{ f.dur }}</span>
+		    <label><input type="radio" name="preset" value="none"{% if form.preset.value == "none" %} checked="checked"{% endif %} /> jiná</label>:
+		    <span class="{{ form.dur.css_classes }}">{{ form.dur }}</span>
 		    <select name="unit" id="id_unit">
-		      <option value="d" id="id_d"{% if f.unit.value == "d" %} selected="selected"{% endif %}>dnů</option>
-		      <option value="w" id="id_w"{% if f.unit.value == "w" %} selected="selected"{% endif %}>týdnů</option>
-		      <option value="m" id="id_m"{% if f.unit.value == "m" %} selected="selected"{% endif %}>měsíců</option>
-		      <option value="y" id="id_y"{% if f.unit.value == "y" %} selected="selected"{% endif %}>let</option>
-		      <option value="b" id="id_b"{% if f.unit.value == "b" %} selected="selected"{% endif %}>pracovních dnů</option>
+		      <option value="d" id="id_d"{% if form.unit.value == "d" %} selected="selected"{% endif %}>dnů</option>
+		      <option value="w" id="id_w"{% if form.unit.value == "w" %} selected="selected"{% endif %}>týdnů</option>
+		      <option value="m" id="id_m"{% if form.unit.value == "m" %} selected="selected"{% endif %}>měsíců</option>
+		      <option value="y" id="id_y"{% if form.unit.value == "y" %} selected="selected"{% endif %}>let</option>
+		      <option value="b" id="id_b"{% if form.unit.value == "b" %} selected="selected"{% endif %}>pracovních dnů</option>
 		    </select>
 		  </div>
 		  <div class="note">(lze zadat i zápornou délku)</div>

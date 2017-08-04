@@ -36,34 +36,34 @@ class SurConfig(AppConfig):
         from .models import Party, Found
         now = datetime.now()
         logger.debug('Partial statistics generated')
-        return [
-            [
+        return (
+            (
                 'Počet účastníků řízení',
-                Party.objects.count()],
-            [
+                Party.objects.count()),
+            (
                 'Počet nových účastníků řízení za posledních 24 hodin',
                 Party.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+            (
                 'Počet nových účastníků řízení za poslední týden',
                 Party.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+            (
                 'Počet nových účastníků řízení za poslední měsíc',
                 Party.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()],
-            [
+                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+            (
                 'Počet účastníků řízení pro příští notifikaci',
-                Found.objects.count()],
-        ]
+                Found.objects.count()),
+        )
 
     @staticmethod
     def userinfo(user):
         from common.utils import logger
         from .models import Party
         logger.debug('Partial user information generated')
-        return [
-            [
+        return (
+            (
                 'Počet sledovaných účastníků',
-                Party.objects.filter(uid=user).count()],
-        ]
+                Party.objects.filter(uid=user).count()),
+        )

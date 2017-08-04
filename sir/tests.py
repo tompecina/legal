@@ -27,7 +27,7 @@ from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 from common.settings import BASE_DIR
-from common.glob import localdomain
+from common.glob import LOCAL_DOMAIN
 from common.tests import link_equal, setdl, setpr, getdl, getpr
 from sir import cron, glob, models
 
@@ -122,7 +122,7 @@ def populate():
 
 class TestCron3(TestCase):
 
-    fixtures = ['sir_test1.json']
+    fixtures = ('sir_test1.json',)
 
     def test_sir_notice(self):
 
@@ -150,18 +150,18 @@ class TestGlob(SimpleTestCase):
 
     def test_l2n(self):
 
-        self.assertEqual(len(glob.l2n), len(glob.COURTS))
-        self.assertEqual(glob.l2n['KSSCEUL'], 'Krajský soud v Ústí nad Labem')
+        self.assertEqual(len(glob.L2N), len(glob.COURTS))
+        self.assertEqual(glob.L2N['KSSCEUL'], 'Krajský soud v Ústí nad Labem')
 
     def test_l2r(self):
 
-        self.assertEqual(len(glob.l2r), len(glob.COURTS))
-        self.assertEqual(glob.l2r['KSSECULP1'], 'KSSCEUL')
+        self.assertEqual(len(glob.L2R), len(glob.COURTS))
+        self.assertEqual(glob.L2R['KSSECULP1'], 'KSSCEUL')
 
     def test_l2s(self):
 
-        self.assertEqual(len(glob.l2s), len(glob.COURTS))
-        self.assertEqual(glob.l2s['KSSCEUL'], 'KSUL')
+        self.assertEqual(len(glob.L2S), len(glob.COURTS))
+        self.assertEqual(glob.L2S['KSSCEUL'], 'KSUL')
 
     def test_selist(self):
 
@@ -170,28 +170,28 @@ class TestGlob(SimpleTestCase):
 
     def test_s2d(self):
 
-        self.assertEqual(len(glob.s2d), len(glob.STATES))
-        self.assertEqual(glob.s2d['ZRUŠENO VS'], 'Zrušeno vrchním soudem')
+        self.assertEqual(len(glob.S2D), len(glob.STATES))
+        self.assertEqual(glob.S2D['ZRUŠENO VS'], 'Zrušeno vrchním soudem')
 
     def test_r2i(self):
 
-        self.assertEqual(len(glob.r2i), len(glob.ROLES))
-        self.assertEqual(glob.r2i['trustee'], 'SPRÁVCE')
+        self.assertEqual(len(glob.R2I), len(glob.ROLES))
+        self.assertEqual(glob.R2I['trustee'], 'SPRÁVCE')
 
     def test_r2d(self):
 
-        self.assertEqual(len(glob.r2d), len(glob.ROLES))
-        self.assertEqual(glob.r2d['SPRÁVCE'], 'správce')
+        self.assertEqual(len(glob.R2D), len(glob.ROLES))
+        self.assertEqual(glob.R2D['SPRÁVCE'], 'správce')
 
     def test_a2d(self):
 
-        self.assertEqual(len(glob.a2d), len(glob.ADDRESSES))
-        self.assertEqual(glob.a2d['POBOČKA'], 'pobočka')
+        self.assertEqual(len(glob.A2D), len(glob.ADDRESSES))
+        self.assertEqual(glob.A2D['POBOČKA'], 'pobočka')
 
 
 class TestModels(TestCase):
 
-    fixtures = ['sir_test2.json']
+    fixtures = ('sir_test2.json',)
 
     def test_models(self):
 
@@ -243,7 +243,7 @@ class TestModels(TestCase):
 class TestViews1(TestCase):
 
     def setUp(self):
-        User.objects.create_user('user', 'user@' + localdomain, 'none')
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
         self.user = User.objects.first()
 
     def tearDown(self):
@@ -278,12 +278,12 @@ class TestViews1(TestCase):
 
         res = self.client.post(
             '/sir/',
-            {'email': 'alt@' + localdomain,
+            {'email': 'alt@' + LOCAL_DOMAIN,
              'submit': 'Změnit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.user = User.objects.first()
-        self.assertEqual(self.user.email, 'alt@' + localdomain)
+        self.assertEqual(self.user.email, 'alt@' + LOCAL_DOMAIN)
 
         res = self.client.get('/sir/')
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -409,9 +409,9 @@ class TestViews1(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'sir_insform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Nové řízení')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Nové řízení')
 
         res = self.client.post(
             '/sir/insform/',
@@ -494,9 +494,9 @@ class TestViews1(TestCase):
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'sir_insform.html')
         soup = BeautifulSoup(res.content, 'html.parser')
-        p = soup.select('h1')
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0].text, 'Úprava řízení')
+        title = soup.select('h1')
+        self.assertEqual(len(title), 1)
+        self.assertEqual(title[0].text, 'Úprava řízení')
 
         res = self.client.post(
             '/sir/insform/{:d}/'.format(ins_id),
@@ -659,11 +659,11 @@ class TestViews1(TestCase):
         self.assertTemplateUsed(res, 'sir_insbatchform.html')
         self.assertContains(res, 'Nejprve zvolte soubor k načtení')
 
-        with open(join(TEST_DIR, 'import.csv'), 'rb') as fi:
+        with open(join(TEST_DIR, 'import.csv'), 'rb') as infile:
             res = self.client.post(
                 '/sir/insbatchform/',
                 {'submit_load': 'Načíst',
-                 'load': fi},
+                 'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_insbatchresult.html')
@@ -671,22 +671,24 @@ class TestViews1(TestCase):
         self.assertEqual(res.context['count'], 4)
         self.assertEqual(
             res.context['errors'],
-            [[3, 'Chybné běžné číslo'],
-             [4, 'Chybný ročník'],
-             [6, 'Chybný údaj pro pole Vše'],
-             [7, 'Prázdný popis'],
-             [8, 'Popisu "Test 4" odpovídá více než jedno řízení'],
-             [11, 'Příliš dlouhý popis']])
+            [(3, 'Chybné běžné číslo'),
+             (4, 'Chybný ročník'),
+             (6, 'Chybný údaj pro pole Vše'),
+             (7, 'Prázdný popis'),
+             (8, 'Popisu "Test 4" odpovídá více než jedno řízení'),
+             (11, 'Příliš dlouhý popis')])
 
         res = self.client.get('/sir/insexport/')
         self.assertEqual(
             res.content.decode('utf-8'),
-            'Test 1,3,2010,ne\r\n'
-            'Test 2,2,2013,ano\r\n'
-            'Test 3,3,2014,ano\r\n'
-            'Test 4,4,2011,ne\r\n'
-            'Test 4,5,2012,ne\r\n'
-            '{},57,2012,ano\r\n'.format('T' * 255))
+            '''\
+Test 1,3,2010,ne
+Test 2,2,2013,ano
+Test 3,3,2014,ano
+Test 4,4,2011,ne
+Test 4,5,2012,ne
+{},57,2012,ano
+'''.format('T' * 255).replace('\n', '\r\n'))
 
     def test_insexport(self):
 
@@ -724,7 +726,7 @@ class TestViews1(TestCase):
 
 class TestViews2(TestCase):
 
-    fixtures = ['sir_test2.json']
+    fixtures = ('sir_test2.json',)
 
     def test_courts(self):
 

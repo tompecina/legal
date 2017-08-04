@@ -25,33 +25,33 @@ from urllib.parse import quote
 from bs4 import BeautifulSoup
 from django.http import QueryDict
 from common.utils import get, decomposeref, normreg, sleep, logger
-from common.glob import localurl
+from common.glob import LOCAL_URL
 from szr.models import Court
-from szr.glob import supreme_court, supreme_administrative_court
+from szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT
 from sur.cron import sur_check
 from psj.models import Courtroom, Judge, Form, Hearing, Party, Task
 
 
-list_courtrooms = \
+LIST_COURTROOMS = \
     'http://infosoud.justice.cz/InfoSoud/seznamJednacichSini?okres={}'
 
-hearingurl = localurl + '/psj/list/?court={}&senate={:d}&register={}&' \
+HEARING_URL = LOCAL_URL + '/psj/list/?court={}&senate={:d}&register={}&' \
     'number={:d}&year={:d}&date_from={}&date_to={}'
 
 
 def cron_courtrooms():
 
-    for c in Court.objects.exclude(id=supreme_administrative_court):
+    for court in Court.objects.exclude(id=SUPREME_ADMINISTRATIVE_COURT):
         try:
             sleep(1)
-            res = get(list_courtrooms.format(c.pk))
+            res = get(LIST_COURTROOMS.format(court.pk))
             soup = BeautifulSoup(res.text, 'xml')
-            for r in soup.find_all('jednaciSin'):
-                cr, crc = Courtroom.objects.get_or_create(
-                    court=c,
-                    desc=r.nazev.string)
-                if not crc:
-                    cr.save()
+            for room in soup.find_all('jednaciSin'):
+                croom, croomc = Courtroom.objects.get_or_create(
+                    court=court,
+                    desc=room.nazev.string)
+                if not croomc:
+                    croom.save()
         except:  # pragma: no cover
             logger.warning('Error downloading courtrooms')
     logger.info('Courtrooms downloaded')
@@ -59,87 +59,89 @@ def cron_courtrooms():
 
 def cron_schedule(*args):
 
-    dd = []
-    for a in args:
-        if len(a) > 2:
-            s = a.split('.')
-            dd.append(date(int(s[2]), int(s[1]), int(s[0])))
+    dates = []
+    for arg in args:
+        if len(arg) > 2:
+            string = arg.split('.')
+            dates.append(date(*map(int, string[2::-1])))
         else:
-            dd.append(date.today() + timedelta(int(a)))
+            dates.append(date.today() + timedelta(int(arg)))
     for court in Court.objects.all():
-        if court.id in [supreme_court, supreme_administrative_court]:
+        if court.id in (SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT):
             continue
-        for d in dd:
-            Task.objects.get_or_create(court=court, date=d)
+        for dat in dates:
+            Task.objects.get_or_create(court=court, date=dat)
     logger.info('Tasks scheduled')
 
 
-root_url = 'http://infosoud.justice.cz/'
+ROOT_URL = 'http://infosoud.justice.cz/'
 
-get_hear = 'InfoSoud/public/searchJednani.do?'
+GET_HEARINGS = 'InfoSoud/public/searchJednani.do?'
 
 
 def cron_update():
 
-    t = Task.objects.all()
-    if not t.exists():
+    tasks = Task.objects.all()
+    if not tasks.exists():
         return
-    t = t.earliest('timestamp_update')
-    t.save()
-    if t.court.reports:
-        c0 = 'os'
-        c1 = t.court.reports.id
-        c2 = t.court.id
+    task = tasks.earliest('timestamp_update')
+    task.save()
+    if task.court.reports:
+        court0 = 'os'
+        court1 = task.court.reports.id
+        court2 = task.court.id
     else:
-        c0 = 'os'
-        c1 = t.court.id
-        c2 = ''
-    tdate = str(t.date)
+        court0 = 'os'
+        court1 = task.court.id
+        court2 = ''
+    tdate = str(task.date)
     try:
-        for cr in Courtroom.objects.filter(court=t.court):
-            q = QueryDict(mutable=True)
-            q['type'] = 'jednani'
-            q['typSoudu'] = c0
-            q['krajOrg'] = c1
-            q['org'] = c2
-            q['sin'] = cr.desc
-            q['datum'] = '{0.day:d}.{0.month:d}.{0.year:d}'.format(t.date)
-            q['spamQuestion'] = '23'
-            q['druhVec'] = ''
-            url = root_url + get_hear + q.urlencode()
+        for croom in Courtroom.objects.filter(court=task.court):
+            query = QueryDict(mutable=True)
+            query['type'] = 'jednani'
+            query['typSoudu'] = court0
+            query['krajOrg'] = court1
+            query['org'] = court2
+            query['sin'] = croom.desc
+            query['datum'] = \
+                '{0.day:d}.{0.month:d}.{0.year:d}'.format(task.date)
+            query['spamQuestion'] = '23'
+            query['druhVec'] = ''
+            url = ROOT_URL + GET_HEARINGS + query.urlencode()
             sleep(1)
             res = get(url)
             soup = BeautifulSoup(res.text, 'html.parser')
             sched = soup.select('table tr td + td table tr td table tr')[6]
             if sched.select('b'):
                 continue
-            for tr in sched.td.table.children:
+            for ttr in sched.td.table.children:
                 try:
-                    td = tr.td
-                    tm = td.text.split(':')
-                    tm = datetime(
-                        t.date.year,
-                        t.date.month,
-                        t.date.day,
-                        int(tm[0]),
-                        int(tm[1]))
-                    td = td.find_next_sibling('td')
+                    ttd = ttr.td
+                    ttm = ttd.text.split(':')
+                    ttm = datetime(
+                        task.date.year,
+                        task.date.month,
+                        task.date.day,
+                        int(ttm[0]),
+                        int(ttm[1]))
+                    ttd = ttd.find_next_sibling('td')
                     senate, register, number, year = \
-                        decomposeref(td.text.replace(' / ', '/'))
+                        decomposeref(ttd.text.replace(' / ', '/'))
                     register = normreg(register)
-                    td = td.find_next_sibling('td')
-                    form = Form.objects.get_or_create(name=td.text.strip())[0]
-                    td = td.find_next_sibling('td')
-                    judge = Judge.objects.get_or_create(name=td.text.strip())[0]
-                    td = td.find_next_sibling('td')
-                    parties = td.select('td')
-                    td = td.find_next_sibling('td')
-                    closed = 'Ano' in td.text
-                    td = td.find_next_sibling('td')
-                    cancelled = 'Ano' in td.text
+                    ttd = ttd.find_next_sibling('td')
+                    form = Form.objects.get_or_create(name=ttd.text.strip())[0]
+                    ttd = ttd.find_next_sibling('td')
+                    judge = \
+                        Judge.objects.get_or_create(name=ttd.text.strip())[0]
+                    ttd = ttd.find_next_sibling('td')
+                    parties = ttd.select('td')
+                    ttd = ttd.find_next_sibling('td')
+                    closed = 'Ano' in ttd.text
+                    ttd = ttd.find_next_sibling('td')
+                    cancelled = 'Ano' in ttd.text
                     hearing = Hearing.objects.update_or_create(
-                        courtroom=cr,
-                        time=tm,
+                        courtroom=croom,
+                        time=ttm,
                         senate=senate,
                         register=register,
                         number=number,
@@ -150,21 +152,21 @@ def cron_update():
                             'closed': closed,
                             'cancelled': cancelled})
                     if hearing[1]:
-                        for q in parties:
-                            qts = q.text.strip()
+                        for query in parties:
+                            qts = query.text.strip()
                             if qts:
-                                p = Party.objects.get_or_create(
-                                    name=q.text.strip())[0]
-                                hearing[0].parties.add(p)
+                                party = Party.objects.get_or_create(
+                                    name=query.text.strip())[0]
+                                hearing[0].parties.add(party)
                                 sur_check(
                                     qts,
-                                    t.court,
+                                    task.court,
                                     senate,
                                     register,
                                     number,
                                     year,
-                                    hearingurl.format(
-                                        t.court.id,
+                                    HEARING_URL.format(
+                                        task.court.id,
                                         senate,
                                         quote(register),
                                         number,
@@ -173,13 +175,13 @@ def cron_update():
                                         tdate))
                 except:
                     pass
-        t.delete()
+        task.delete()
     except:
         logger.warning(
             'Failed to download hearings for {0}, '
             '{1.year:d}-{1.month:02d}-{1.day:02d}'
-                .format(t.court_id, t.date))
+                .format(task.court_id, task.date))
         return
     logger.debug(
         'Downloaded hearings for {0}, {1.year:d}-{1.month:02d}-{1.day:02d}'
-            .format(t.court_id, t.date))
+            .format(task.court_id, task.date))

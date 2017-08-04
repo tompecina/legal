@@ -32,8 +32,8 @@ from django.http import QueryDict
 from django.urls import reverse
 from common.utils import getbutton, grammar, between, Pager, logger
 from common.glob import (
-    inerr, GR_C, text_opts, text_opts_keys, text_opts_abbr, text_opts_ca,
-    text_opts_ai)
+    INERR, GR_CHAR, TEXT_OPTS, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA,
+    TEXT_OPTS_AI)
 from szr.forms import EmailForm
 from sur.forms import PartyForm
 from sur.models import Party
@@ -47,7 +47,7 @@ APPVERSION = apps.get_app_config(APP).version
 BATCH = 50
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def mainpage(request):
 
@@ -60,113 +60,111 @@ def mainpage(request):
     uid = request.user.id
     page_title = 'Sledování účastníků řízení'
 
-    rd = request.GET.copy()
-    start = int(rd['start']) if ('start' in rd) else 0
+    reqd = request.GET.copy()
+    start = int(reqd['start']) if 'start' in reqd else 0
     if request.method == 'GET':
-        f = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
+        form = EmailForm(initial=model_to_dict(get_object_or_404(User, pk=uid)))
     else:
-        f = EmailForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            p = get_object_or_404(User, pk=uid)
-            p.email = cd['email']
-            p.save()
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            user = get_object_or_404(User, pk=uid)
+            user.email = cld['email']
+            user.save()
             return redirect('sur:mainpage')
         else:
             logger.debug('Invalid form', request)
-            err_message = inerr
-    p = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'pk') \
+            err_message = INERR
+    res = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'pk') \
         .values()
-    total = p.count()
-    if start >= total and total > 0:
+    total = res.count()
+    if start >= total and total:
         start = total - 1
-    rows = p[start:(start + BATCH)]
+    rows = res[start:start + BATCH]
     for row in rows:
-        row['party_opt_text'] = text_opts[row['party_opt']][1]
-        q = QueryDict(mutable=True)
-        q['party'] = row['party']
-        q['party_opt'] = text_opts_keys[row['party_opt']]
-        row['search'] = q.urlencode()
+        row['party_opt_text'] = TEXT_OPTS[row['party_opt']][1]
+        query = QueryDict(mutable=True)
+        query['party'] = row['party']
+        query['party_opt'] = TEXT_OPTS_KEYS[row['party_opt']]
+        row['search'] = query.urlencode()
     return render(
         request,
         'sur_mainpage.html',
         {'app': APP,
-         'f': f,
+         'form': form,
          'page_title': page_title,
          'err_message': err_message,
          'rows': rows,
-         'pager': Pager(start, total, reverse('sur:mainpage'), rd, BATCH),
+         'pager': Pager(start, total, reverse('sur:mainpage'), reqd, BATCH),
          'total': total})
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def partyform(request, id=0):
+def partyform(request, idx=0):
 
     logger.debug(
         'Party form accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, idx),
         request,
         request.POST)
 
     err_message = ''
     uid = request.user.id
     uname = request.user.username
-    page_title = ('Úprava účastníka' if id else 'Nový účastník')
+    page_title = 'Úprava účastníka' if idx else 'Nový účastník'
 
-    btn = getbutton(request)
+    button = getbutton(request)
     if request.method == 'GET':
-        if id:
-            d = model_to_dict(get_object_or_404(Party, pk=id, uid=uid))
-            d['party_opt'] = text_opts_keys[d['party_opt']]
-            f = PartyForm(initial=d)
+        if idx:
+            dct = model_to_dict(get_object_or_404(Party, pk=idx, uid=uid))
+            dct['party_opt'] = TEXT_OPTS_KEYS[dct['party_opt']]
+            form = PartyForm(initial=dct)
         else:
-            f = PartyForm()
-    elif btn == 'back':
+            form = PartyForm()
+    elif button == 'back':
         return redirect('sur:mainpage')
     else:
-        f = PartyForm(request.POST)
-        if f.is_valid():
-            cd = f.cleaned_data
-            if id:
-                p = get_object_or_404(Party, pk=id, uid=uid)
-                cd['pk'] = id
-                cd['timestamp_add'] = p.timestamp_add
-                cd['timestamp_update'] = p.timestamp_update
-            p = Party(uid_id=uid, **cd)
-            p.party_opt = text_opts_keys.index(cd['party_opt'])
-            if id:
-                logger.info(
-                    'User "{}" ({:d}) updated party "{}"'
-                        .format(uname, uid, p.party),
-                    request)
-            else:
-                logger.info(
-                    'User "{}" ({:d}) added party "{}"'
-                        .format(uname, uid, p.party),
-                    request)
-            p.save()
+        form = PartyForm(request.POST)
+        if form.is_valid():
+            cld = form.cleaned_data
+            if idx:
+                res = get_object_or_404(Party, pk=idx, uid=uid)
+                cld['pk'] = idx
+                cld['timestamp_add'] = res.timestamp_add
+                cld['timestamp_update'] = res.timestamp_update
+            res = Party(uid_id=uid, **cld)
+            res.party_opt = TEXT_OPTS_KEYS.index(cld['party_opt'])
+            res.save()
+            logger.info(
+                'User "{}" ({:d}) {} party {}'
+                .format(
+                    uname,
+                    uid,
+                    'updated' if idx else 'added',
+                    res.party),
+                request)
             return redirect('sur:mainpage')
         else:
             logger.debug('Invalid form', request)
-            err_message = inerr
+            err_message = INERR
     return render(
         request,
         'sur_partyform.html',
         {'app': APP,
-         'f': f,
-         'min_chars': grammar(MIN_LENGTH, GR_C),
+         'form': form,
+         'min_chars': grammar(MIN_LENGTH, GR_CHAR),
          'page_title': page_title,
          'err_message': err_message})
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
-def partydel(request, id=0):
+def partydel(request, idx=0):
 
     logger.debug(
         'Party delete page accessed using method {}, id={}'
-            .format(request.method, id),
+        .format(request.method, idx),
         request,
         request.POST)
     uid = request.user.id
@@ -178,24 +176,24 @@ def partydel(request, id=0):
             {'app': APP,
              'page_title': 'Smazání účastníka'})
     else:
-        party = get_object_or_404(Party, pk=id, uid=uid)
+        party = get_object_or_404(Party, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
             logger.info(
                 'User "{}" ({:d}) deleted party "{}"'
-                    .format(uname, uid, party.party),
+                .format(uname, uid, party.party),
                 request)
             party.delete()
             return redirect('sur:partydeleted')
         return redirect('sur:mainpage')
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def partydelall(request):
 
     logger.debug(
         'Delete all parties page accessed using method {}'
-            .format(request.method),
+        .format(request.method),
         request)
     uid = request.user.id
     uname = request.user.username
@@ -215,7 +213,7 @@ def partydelall(request):
         return redirect('sur:mainpage')
 
 
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(('GET', 'POST'))
 @login_required
 def partybatchform(request):
 
@@ -228,20 +226,20 @@ def partybatchform(request):
     uname = request.user.username
 
     if request.method == 'POST':
-        btn = getbutton(request)
+        button = getbutton(request)
 
-        if btn == 'load':
-            f = request.FILES.get('load')
-            if not f:
+        if button == 'load':
+            infile = request.FILES.get('load')
+            if not infile:
                 err_message = 'Nejprve zvolte soubor k načtení'
             else:
                 errors = []
                 try:
                     count = 0
-                    with f:
-                        i = 0
-                        for line in csvreader(StringIO(f.read().decode())):
-                            i += 1
+                    with infile:
+                        idx = 0
+                        for line in csvreader(StringIO(infile.read().decode())):
+                            idx += 1
                             errlen = len(errors)
                             if not line:
                                 continue
@@ -251,10 +249,11 @@ def partybatchform(request):
                             else:
                                 party_opt = '*'
                             if not between(MIN_LENGTH, len(line), MAX_LENGTH):
-                                errors.append([i, 'Chybná délka řetězce'])
+                                errors.append((idx, 'Chybná délka řetězce'))
                                 continue
-                            if party_opt not in text_opts_abbr:
-                                errors.append([i, 'Chybná zkratka pro posici'])
+                            if party_opt not in TEXT_OPTS_ABBR:
+                                errors.append(
+                                    (idx, 'Chybná zkratka pro posici'))
                                 continue
                             if len(errors) == errlen:
                                 try:
@@ -262,18 +261,18 @@ def partybatchform(request):
                                         uid_id=uid,
                                         party=line,
                                         defaults={'party_opt':
-                                            text_opts_ai[party_opt]}
+                                            TEXT_OPTS_AI[party_opt]}
                                     )
                                 except:
                                     errors.append(
-                                        [i,
+                                        (idx,
                                          'Řetězci "{}" odpovídá více než '
-                                         'jeden účastník'.format(line)])
+                                         'jeden účastník'.format(line)))
                                     continue
                                 count += 1
                     logger.info(
                         'User "{}" ({:d}) imported {} party/ies'
-                            .format(uname, uid, count),
+                        .format(uname, uid, count),
                         request)
                     return render(
                         request,
@@ -288,7 +287,7 @@ def partybatchform(request):
                     err_message = 'Chyba při načtení souboru'
         else:
             logger.debug('Invalid form', request)
-            err_message = inerr
+            err_message = INERR
 
     return render(
         request,
@@ -300,21 +299,21 @@ def partybatchform(request):
          'max_length': MAX_LENGTH})
 
 
-@require_http_methods(['GET'])
+@require_http_methods(('GET',))
 @login_required
 def partyexport(request):
 
     logger.debug('Party export page accessed', request)
     uid = request.user.id
     uname = request.user.username
-    pp = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'id') \
+    res = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'id') \
         .distinct()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = \
         'attachment; filename=sur.csv'
     writer = csvwriter(response)
-    for p in pp:
-        dat = [p.party + text_opts_ca[p.party_opt]]
+    for item in res:
+        dat = (item.party + TEXT_OPTS_CA[item.party_opt],)
         writer.writerow(dat)
     logger.info(
         'User "{}" ({:d}) exported parties'.format(uname, uid),
