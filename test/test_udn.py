@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# udn/tests.py
+# test/test_udn.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -27,9 +27,9 @@ from os.path import join
 from os import unlink
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
-from common.settings import BASE_DIR
-from common.tests import strip_xml, link_equal
+from common.settings import TEST_TEMP_DIR
 from common.glob import LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL
+from test.test_common import strip_xml, link_equal
 from udn import cron, forms, glob, models, views
 
 
@@ -38,15 +38,14 @@ class TestCron(TestCase):
     def checkpdf(self, lst):
         fil = []
         for item in lst:
-            filename = join(BASE_DIR, 'test', item)
+            filename = join(TEST_TEMP_DIR, item)
             try:
                 with open(filename) as infile:
                     filc = infile.read()
-                unlink(filename)
+                if not filc[:-1].endswith('/' + item):  # pragma: no cover
+                    fil.append('C: ' + item)
             except:  # pragma: no cover
                 fil.append('E: ' + item)
-            if not filc[:-1].endswith('/' + item):  # pragma: no cover
-                fil.append('C: ' + item)
         self.assertFalse(fil, msg=fil)
 
 

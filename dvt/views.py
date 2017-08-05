@@ -27,7 +27,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from common.utils import fdt, logger
 from common.glob import INERR_SHORT
-from .forms import MainForm
+from dvt.forms import MainForm
 
 APP = __package__
 

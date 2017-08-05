@@ -8,9 +8,7 @@
 /venv-*
 migrations/
 __pycache__/
-/repo/
 /common/secrets.py
-/test/
 /htmlcov/
 *.css
 *.map

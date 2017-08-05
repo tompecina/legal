@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# knr/tests.py
+# test/test_knr.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -27,16 +27,14 @@ from os.path import join
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
-from common.settings import BASE_DIR
+from common.settings import TEST_DATA_DIR
 from common.utils import new_xml, p2c, xmlbool
-from common.tests import TEST_STRING, strip_xml
-from cache.tests import DummyRequest
+from test.test_common import TEST_STRING, strip_xml
+from test.test_cache import DummyRequest
 from knr import forms, models, views, utils
 
 
 APP = __package__
-
-TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 
 class TestForms(SimpleTestCase):
@@ -380,8 +378,8 @@ class TestViews1(SimpleTestCase):
             try:
                 with open(
                         join(
-                            TEST_DIR,
-                            'calc{:d}.xml'.format(idx)),
+                            TEST_DATA_DIR,
+                            'knr_calc{:d}.xml'.format(idx)),
                         'rb') as infile:
                     doc = infile.read()
             except:
@@ -399,8 +397,8 @@ class TestViews1(SimpleTestCase):
             try:
                 with open(
                         join(
-                            TEST_DIR,
-                            'err_calc{:d}.xml'.format(idx)),
+                            TEST_DATA_DIR,
+                            'knr_err_calc{:d}.xml'.format(idx)),
                         'rb') as infile:
                     doc = infile.read()
             except:
@@ -514,7 +512,11 @@ class TestViews2(TestCase):
                 ('xml', 'Uložit kalkulaci', 'text/xml; charset=utf-8'),
                 ('pdf', 'Export do PDF', 'application/pdf'),
         ):
-            with open(join(TEST_DIR, 'calc1.' + suf[0]), 'rb') as infile:
+            with open(
+                    join(
+                        TEST_DATA_DIR,
+                        'knr_calc1.' + suf[0]),
+                    'rb') as infile:
                 res = self.client.post(
                     '/knr/',
                     {'submit_load': 'Načíst kalkulaci',
@@ -596,7 +598,11 @@ class TestViews2(TestCase):
             res.context['err_message'],
             'Nejprve zvolte soubor k načtení')
 
-        with open(join(TEST_DIR, 'err_calc1.xml'), 'rb') as infile:
+        with open(
+                join(
+                    TEST_DATA_DIR,
+                    'knr_err_calc1.xml'),
+                'rb') as infile:
             res = self.client.post(
                 '/knr/',
                 {'submit_load': 'Načíst kalkulaci',
@@ -611,7 +617,11 @@ class TestViews2(TestCase):
         idx = 1
         while True:
             try:
-                infile = open(join(TEST_DIR, 'calc{:d}.xml'.format(idx)), 'rb')
+                infile = open(
+                    join(
+                        TEST_DATA_DIR,
+                        'knr_calc{:d}.xml'.format(idx)),
+                    'rb')
             except:
                 self.assertGreater(idx, 1)
                 break
@@ -2173,8 +2183,8 @@ class TestViews2(TestCase):
         for test in cases:
             with open(
                     join(
-                        TEST_DIR,
-                        'calc{:d}.xml'.format(test[0])),
+                        TEST_DATA_DIR,
+                        'knr_calc{:d}.xml'.format(test[0])),
                     'rb') as infile:
                 res = self.client.post(
                     '/knr/',

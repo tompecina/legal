@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# hsp/tests.py
+# test/test_hsp.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -27,15 +27,13 @@ from os.path import join
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
-from common.settings import BASE_DIR
-from common.tests import TEST_STRING, strip_xml
-from cache.tests import DummyRequest
+from common.settings import TEST_DATA_DIR
 from hsp import forms, views
+from test.test_common import TEST_STRING, strip_xml
+from test.test_cache import DummyRequest
 
 
 APP = __package__
-
-TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 
 class TestForms(SimpleTestCase):
@@ -219,7 +217,9 @@ class TestViews1(SimpleTestCase):
         while True:
             try:
                 with open(
-                        join(TEST_DIR, 'debt{:d}.xml'.format(idx)),
+                        join(
+                            TEST_DATA_DIR,
+                            'hsp_debt{:d}.xml'.format(idx)),
                         'rb') as infile:
                     dat = infile.read()
             except:
@@ -302,7 +302,9 @@ class TestViews2(TestCase):
                 ('pdf', 'Export do PDF', 'application/pdf'),
         ):
             with open(
-                    join(TEST_DIR, 'debt1.{}'.format(suf[0])),
+                    join(
+                        TEST_DATA_DIR,
+                        'hsp_debt1.{}'.format(suf[0])),
                     'rb') as infile:
                 res = self.client.post(
                     '/hsp/',
@@ -361,7 +363,7 @@ class TestViews2(TestCase):
             self.assertEqual(len(rounding), 1)
             self.assertTrue(rounding[0].has_attr('selected'))
 
-        with open(join(TEST_DIR, 'debt1.xml'), 'rb') as infile:
+        with open(join(TEST_DATA_DIR, 'hsp_debt1.xml'), 'rb') as infile:
             res = self.client.post(
                 '/hsp/',
                 {'rounding': '2',
@@ -382,7 +384,7 @@ class TestViews2(TestCase):
         self.assertIn('content-type', res)
         self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
         string = res.content.decode('utf-8')
-        with open(join(TEST_DIR, 'debt1.csv'), 'rb') as infile:
+        with open(join(TEST_DATA_DIR, 'hsp_debt1.csv'), 'rb') as infile:
             dat = infile.read().decode('utf-8')
         self.assertEqual(string, dat)
 
@@ -398,7 +400,7 @@ class TestViews2(TestCase):
             res.context['err_message'],
             'Nejprve zvolte soubor k načtení')
 
-        with open(join(TEST_DIR, 'err_debt5.xml'), 'rb') as infile:
+        with open(join(TEST_DATA_DIR, 'hsp_err_debt5.xml'), 'rb') as infile:
             res = self.client.post(
                 '/hsp/',
                 {'rounding': '0',
@@ -411,7 +413,7 @@ class TestViews2(TestCase):
                 res.context['err_message'],
                 'Chyba při načtení souboru')
 
-        with open(join(TEST_DIR, 'err_debt6.xml'), 'rb') as infile:
+        with open(join(TEST_DATA_DIR, 'hsp_err_debt6.xml'), 'rb') as infile:
             res = self.client.post(
                 '/hsp/',
                 {'rounding': '0',
@@ -434,7 +436,7 @@ class TestViews2(TestCase):
         while True:
             try:
                 infile = open(
-                    join(TEST_DIR, 'debt{:d}.xml'.format(idx)),
+                    join(TEST_DATA_DIR, 'hsp_debt{:d}.xml'.format(idx)),
                     'rb')
             except:
                 self.assertGreater(idx, 1)
@@ -473,7 +475,7 @@ class TestViews2(TestCase):
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
             idx += 1
 
-        with open(join(TEST_DIR, 'err_debt1.xml'), 'rb') as infile:
+        with open(join(TEST_DATA_DIR, 'hsp_err_debt1.xml'), 'rb') as infile:
             res = self.client.post(
                 '/hsp/',
                 {'title': res.context['form']['title'].value(),
@@ -1584,7 +1586,9 @@ class TestViews2(TestCase):
         while True:
             try:
                 with open(
-                        join(TEST_DIR, 'err_debt{:d}.xml'.format(idx)),
+                        join(
+                            TEST_DATA_DIR,
+                            'hsp_err_debt{:d}.xml'.format(idx)),
                         'rb') as infile:
                     dat = infile.read()
             except:
@@ -1605,7 +1609,9 @@ class TestViews2(TestCase):
         while True:
             try:
                 infile = open(
-                    join(TEST_DIR, 'debt{:d}.xml'.format(idx)),
+                    join(
+                        TEST_DATA_DIR,
+                        'hsp_debt{:d}.xml'.format(idx)),
                     'rb')
             except:
                 self.assertGreater(idx, 1)
@@ -1638,7 +1644,9 @@ class TestViews2(TestCase):
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
             string = res.content.decode('utf-8')
             with open(
-                    join(TEST_DIR, 'debt{:d}.csv'.format(idx)),
+                    join(
+                        TEST_DATA_DIR,
+                        'hsp_debt{:d}.csv'.format(idx)),
                     'rb') as infile:
                 dat = infile.read().decode('utf-8')
             self.assertEqual(string, dat, msg=str(idx))
@@ -1650,7 +1658,9 @@ class TestViews2(TestCase):
 
         for idx in range(1, 14):
             with open(
-                    join(TEST_DIR, 'debt{:d}.xml'.format(idx)),
+                    join(
+                        TEST_DATA_DIR,
+                        'hsp_debt{:d}.xml'.format(idx)),
                     'rb') as infile:
 
                 res = self.client.post(
@@ -1679,7 +1689,9 @@ class TestViews2(TestCase):
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
             string = res.content.decode('utf-8')
             with open(
-                    join(TEST_DIR, 'debt{:d}.csv'.format(idx)),
+                    join(
+                        TEST_DATA_DIR,
+                        'hsp_debt{:d}.csv'.format(idx)),
                     'rb') as infile:
                 dat = infile.read().decode('utf-8')
             self.assertEqual(string, dat, msg=str(idx))

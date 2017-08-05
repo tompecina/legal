@@ -33,7 +33,7 @@ class KnrConfig(AppConfig):
     def stat():
         from common.utils import logger
         from cache.models import Asset
-        from .models import Place, Car, Formula, Rate
+        from knr.models import Place, Car, Formula, Rate
         logger.debug('Partial statistics generated')
         return (
             (
@@ -57,7 +57,7 @@ class KnrConfig(AppConfig):
     @staticmethod
     def userinfo(user):
         from common.utils import logger
-        from .models import Place, Car, Formula
+        from knr.models import Place, Car, Formula
         logger.debug('Partial user information generated')
         return (
             (

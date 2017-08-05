@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# kos/tests.py
+# test/test_kos.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #

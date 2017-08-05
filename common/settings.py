@@ -24,7 +24,7 @@ from os.path import dirname, abspath, join
 import locale
 from sys import argv
 from logging import Filter
-from .secrets import DBPASSWD, SECKEY
+from common.secrets import DBPASSWD, SECKEY
 
 
 LOCAL = len(argv) > 1 and argv[1] == 'runserver'
@@ -38,6 +38,12 @@ LOCAL_ROOT = dirname(__file__)
 LOG_DIR = join(BASE_DIR, 'log')
 FONT_DIR = join(dirname(dirname(__file__)), 'common', 'fonts')
 
+if TEST:
+    TEST_DIR = join(BASE_DIR, 'test')
+    TEST_DATA_DIR = join(TEST_DIR, 'data')
+    TEST_TEMP_DIR = join(TEST_DIR, 'temp')
+    FIXTURE_DIRS = (join(TEST_DIR, 'fixtures'),)
+    
 ADMINS = (
     ('Tomas Pecina', 'tomas@pecina.cz'),
 )
@@ -242,7 +248,6 @@ LOGGING = {
         },
     },
 }
-
 
 if not (LOCAL or TEST):  # pragma: no cover
     SECURE_SSL_REDIRECT = True

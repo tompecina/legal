@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# szr/tests.py
+# test/test_szr.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -27,15 +27,13 @@ from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from common.settings import BASE_DIR
+from common.settings import TEST_DATA_DIR
 from common.glob import LOCAL_DOMAIN
-from common.tests import link_equal
+from test.test_common import link_equal
 from szr import cron, forms, models
 
 
 APP = __package__
-
-TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 
 class TestCron(TestCase):
@@ -814,7 +812,7 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'szr_procbatchform.html')
         self.assertContains(res, 'Nejprve zvolte soubor k načtení')
 
-        with open(join(TEST_DIR, 'import.csv'), 'rb') as infile:
+        with open(join(TEST_DATA_DIR, 'szr_import.csv'), 'rb') as infile:
             res = self.client.post(
                 '/szr/procbatchform/',
                 {'submit_load': 'Načíst',

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# dvt/tests.py
+# test/test_dvt.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #

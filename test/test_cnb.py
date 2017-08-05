@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# cnb/tests.py
+# test/test_cnb.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #

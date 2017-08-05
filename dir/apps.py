@@ -33,7 +33,7 @@ class DirConfig(AppConfig):
     @staticmethod
     def stat():
         from common.utils import logger
-        from .models import Debtor, Discovered
+        from dir.models import Debtor, Discovered
         now = datetime.now()
         logger.debug('Partial statistics generated')
         return (
@@ -60,7 +60,7 @@ class DirConfig(AppConfig):
     @staticmethod
     def userinfo(user):
         from common.utils import logger
-        from .models import Debtor
+        from dir.models import Debtor
         logger.debug('Partial user information generated')
         return (
             (

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# cache/tests.py
+# test/cache_tests.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #

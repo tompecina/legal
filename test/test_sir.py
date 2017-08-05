@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# sir/tests.py
+# test/test_sir.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -26,15 +26,13 @@ from os.path import join
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
-from common.settings import BASE_DIR
+from common.settings import TEST_DATA_DIR
 from common.glob import LOCAL_DOMAIN
-from common.tests import link_equal, setdl, setpr, getdl, getpr
+from test.test_common import link_equal, setdl, setpr, getdl, getpr
 from sir import cron, glob, models
 
 
 APP = __package__
-
-TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 
 class DummyTag:
@@ -659,7 +657,7 @@ class TestViews1(TestCase):
         self.assertTemplateUsed(res, 'sir_insbatchform.html')
         self.assertContains(res, 'Nejprve zvolte soubor k načtení')
 
-        with open(join(TEST_DIR, 'import.csv'), 'rb') as infile:
+        with open(join(TEST_DATA_DIR, 'sir_import.csv'), 'rb') as infile:
             res = self.client.post(
                 '/sir/insbatchform/',
                 {'submit_load': 'Načíst',

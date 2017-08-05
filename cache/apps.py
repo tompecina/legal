@@ -32,7 +32,7 @@ class CacheConfig(AppConfig):
     @staticmethod
     def stat():
         from common.utils import logger
-        from .models import Cache, Asset
+        from cache.models import Cache, Asset
         logger.debug('Partial statistics generated')
         return (
             (

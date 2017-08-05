@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# dir/tests.py
+# test/dir_tests.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -26,9 +26,9 @@ from os.path import join
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
-from common.settings import BASE_DIR
+from common.settings import TEST_DATA_DIR
 from common.glob import LOCAL_DOMAIN
-from common.tests import link_equal, setdl
+from test.test_common import link_equal, setdl
 from sir.cron import cron_gettr, cron_proctr
 from sir.models import Vec
 from dir import cron, forms, models
@@ -679,8 +679,7 @@ class TestViews2(TestCase):
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
 
-        with open(join(BASE_DIR, 'dir', 'testdata', 'import.csv'), 'rb') \
-            as infile:
+        with open(join(TEST_DATA_DIR, 'dir_import.csv'), 'rb') as infile:
             res = self.client.post(
                 '/dir/debtorbatchform/',
                 {'submit_load': 'Načíst',

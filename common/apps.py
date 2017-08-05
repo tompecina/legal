@@ -33,8 +33,8 @@ class CommonConfig(AppConfig):
     @staticmethod
     def stat():
         from django.contrib.auth.models import User
-        from .utils import logger
-        from .models import PwResetLink, Preset
+        from common.utils import logger
+        from common.models import PwResetLink, Preset
         now = datetime.now()
         logger.debug('Partial statistics generated')
         return (

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# sur/tests.py
+# test/test_sur.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -25,9 +25,9 @@ from os.path import join
 from bs4 import BeautifulSoup
 from django.test import TestCase
 from django.contrib.auth.models import User
-from common.settings import BASE_DIR
+from common.settings import TEST_DATA_DIR
 from common.glob import LOCAL_DOMAIN
-from common.tests import link_equal
+from test.test_common import link_equal
 from psj.cron import cron_schedule, cron_update as psj_update
 from psj.models import Task, Hearing
 from udn.cron import cron_update as udn_update
@@ -36,8 +36,6 @@ from sur import cron, models
 
 
 APP = __package__
-
-TEST_DIR = join(BASE_DIR, APP, 'testdata')
 
 
 class TestCron(TestCase):
@@ -559,7 +557,7 @@ class TestViews(TestCase):
             res.context['err_message'],
             'Chybné zadání, prosím, opravte údaje')
 
-        with open(join(TEST_DIR, 'import.csv'), 'rb') as infile:
+        with open(join(TEST_DATA_DIR, 'sur_import.csv'), 'rb') as infile:
             res = self.client.post(
                 '/sur/partybatchform/',
                 {'submit_load': 'Načíst',

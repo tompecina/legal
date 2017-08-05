@@ -33,7 +33,7 @@ class SirConfig(AppConfig):
     @staticmethod
     def stat():
         from common.utils import logger
-        from .models import (
+        from sir.models import (
             DruhAdresy, Adresa, DruhRoleVRizeni, Osoba, Role, DruhStavRizeni,
             Vec, Counter, Transaction, Insolvency, Tracked)
         now = datetime.now()
@@ -146,7 +146,7 @@ class SirConfig(AppConfig):
     @staticmethod
     def userinfo(user):
         from common.utils import logger
-        from .models import Insolvency
+        from sir.models import Insolvency
         logger.debug('Partial user information generated')
         return (
             (

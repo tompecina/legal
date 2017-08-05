@@ -33,7 +33,7 @@ class UdnConfig(AppConfig):
     @staticmethod
     def stat():
         from common.utils import logger
-        from .models import Agenda, Party, Decision
+        from udn.models import Agenda, Party, Decision
         now = datetime.now()
         logger.debug('Partial statistics generated')
         return (

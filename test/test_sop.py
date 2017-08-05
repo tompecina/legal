@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# sop/tests.py
+# test/test_sop.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #

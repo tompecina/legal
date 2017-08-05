@@ -33,7 +33,7 @@ class SzrConfig(AppConfig):
     @staticmethod
     def stat():
         from common.utils import logger
-        from .models import Court, Proceedings
+        from szr.models import Court, Proceedings
         now = datetime.now()
         logger.debug('Partial statistics generated')
         return (
@@ -66,7 +66,7 @@ class SzrConfig(AppConfig):
     @staticmethod
     def userinfo(user):
         from common.utils import logger
-        from .models import Proceedings
+        from szr.models import Proceedings
         logger.debug('Partial user information generated')
         return (
             (

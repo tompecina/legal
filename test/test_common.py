@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# common/tests.py
+# test/test_common.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -32,11 +32,11 @@ from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 from django.core import mail
 from django.http import QueryDict
-from cache.tests import DummyRequest
+from test.test_cache import DummyRequest
 from szr.cron import cron_update
 from szr.models import Proceedings
 from sir.models import Counter
-from common.settings import BASE_DIR
+from common.settings import TEST_DATA_DIR
 from common import cron, glob, fields, forms, models, utils, views
 
 
@@ -67,8 +67,6 @@ def strip_xml(string):
 
 def testreq(post, *args):
 
-    testdata_prefix = join(BASE_DIR, 'common', 'testdata')
-
     if post:
         req, data = args
         if isinstance(data, bytes):
@@ -87,7 +85,11 @@ def testreq(post, *args):
         hsh.update(data[key].encode())
     filename = hsh.hexdigest() + '.dat'
     try:
-        with open(join(testdata_prefix, filename), 'rb') as infile:
+        with open(
+                join(
+                    TEST_DATA_DIR,
+                    'common_{}'.format(filename)),
+                'rb') as infile:
             return DummyResponse(infile.read().decode())
     except:
         return DummyResponse(None, status=HTTPStatus.NOT_FOUND)

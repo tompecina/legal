@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# lht/tests.py
+# test/test_lht.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #

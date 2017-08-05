@@ -25,7 +25,7 @@ from re import compile
 from os.path import join
 from urllib.parse import quote
 from bs4 import BeautifulSoup
-from common.settings import BASE_DIR, TEST
+from common.settings import BASE_DIR, TEST, TEST_TEMP_DIR
 from common.utils import get, post, composeref, decomposeref, logger
 from common.glob import LOCAL_URL
 from szr.glob import SUPREME_ADMINISTRATIVE_COURT
@@ -44,7 +44,7 @@ FIND_URL = ROOT_URL + 'main0Col.aspx?cls=JudikaturaBasicSearch&pageSource=0'
 DEC_URL = LOCAL_URL + \
     '/udn/list/?senate={:d}&register={}&number={:d}&year={:d}&page={:d}'
 
-REPO_PREF = join(BASE_DIR, 'test') if TEST else join(BASE_DIR, 'repo', 'udn')
+REPO_PREF = TEST_TEMP_DIR if TEST else join(BASE_DIR, 'repo', 'udn')
 
 FRE = compile(FILENAME_REGEX)
 

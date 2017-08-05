@@ -33,7 +33,7 @@ class SurConfig(AppConfig):
     @staticmethod
     def stat():
         from common.utils import logger
-        from .models import Party, Found
+        from sur.models import Party, Found
         now = datetime.now()
         logger.debug('Partial statistics generated')
         return (
@@ -60,7 +60,7 @@ class SurConfig(AppConfig):
     @staticmethod
     def userinfo(user):
         from common.utils import logger
-        from .models import Party
+        from sur.models import Party
         logger.debug('Partial user information generated')
         return (
             (
