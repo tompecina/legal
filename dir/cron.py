@@ -21,6 +21,7 @@
 #
 
 from django.contrib.auth.models import User
+
 from common.utils import text_opt, icmp, logger
 from sir.glob import L2S
 from dir.models import Debtor, Discovered

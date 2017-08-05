@@ -21,6 +21,7 @@
 #
 
 from django.contrib.auth.models import User
+
 from common.utils import text_opt, logger
 from sur.models import Party, Found
 

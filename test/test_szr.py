@@ -23,12 +23,14 @@
 from http import HTTPStatus
 from datetime import datetime
 from os.path import join
+
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from common.settings import TEST_DATA_DIR
+
 from common.glob import LOCAL_DOMAIN
+from common.settings import TEST_DATA_DIR
 from test.test_common import link_equal
 from szr import cron, forms, models
 

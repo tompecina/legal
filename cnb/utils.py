@@ -21,8 +21,9 @@
 #
 
 from datetime import date, datetime, timedelta
-from cache.utils import getcache
+
 from common.utils import new_xml, logger
+from cache.utils import getcache
 from cnb.models import FXrate, MPIrate, MPIstat
 
 

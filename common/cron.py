@@ -21,7 +21,9 @@
 #
 
 from datetime import datetime, timedelta
+
 from django.contrib.auth.models import User
+
 from szr.cron import (
     szr_notice, cron_courts as szr_courts, cron_update as szr_update)
 from psj.cron import (
@@ -32,8 +34,8 @@ from sur.cron import sur_notice
 from sir.cron import sir_notice, cron_update as sir_update
 from dir.cron import dir_notice
 from common.settings import TEST
-from common.utils import send_mail, logger
 from common.glob import LOCAL_SUBDOMAIN, LOCAL_URL
+from common.utils import send_mail, logger
 from common.models import Pending, Lock
 
 

@@ -21,9 +21,11 @@
 #
 
 from datetime import date
+
 from django.core.validators import RegexValidator
-from common import forms, fields, widgets
+
 from common.glob import TEXT_OPTS, FORMAT_OPTS, IC_REGEX, RC_FULL_REGEX
+from common import forms, fields, widgets
 
 
 CURRYEAR = date.today().year

@@ -22,10 +22,14 @@
 
 from http import HTTPStatus
 from datetime import date, timedelta
+
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
+
 from cache.models import Cache
 from cnb import models, utils
+
+
 class TestModels(SimpleTestCase):
 
     def test_models(self):

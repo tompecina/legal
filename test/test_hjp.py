@@ -24,11 +24,13 @@ from http import HTTPStatus
 from datetime import date
 from io import BytesIO
 from os.path import join
+
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
-from common.settings import TEST_DATA_DIR
+
 from common.utils import p2c
+from common.settings import TEST_DATA_DIR
 from test.test_common import TEST_STRING, strip_xml
 from test.test_cache import DummyRequest
 from hjp import forms, views

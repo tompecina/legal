@@ -21,7 +21,9 @@
 #
 
 from http import HTTPStatus
+
 from django.test import SimpleTestCase
+
 from kos import forms
 
 

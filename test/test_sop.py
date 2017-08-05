@@ -21,8 +21,10 @@
 #
 
 from http import HTTPStatus
+
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
+
 from sop import forms
 
 

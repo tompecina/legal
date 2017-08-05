@@ -26,6 +26,7 @@ from pickle import dumps, loads
 from xml.sax.saxutils import escape
 import csv
 from io import BytesIO
+
 from reportlab.platypus import (
     Paragraph, SimpleDocTemplate, Table, TableStyle, Spacer, KeepTogether)
 from reportlab.lib.styles import ParagraphStyle
@@ -36,12 +37,13 @@ from django.shortcuts import render, redirect, HttpResponse, Http404
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.apps import apps
-from common import fields
+
+from common.glob import (
+    YDCONVS, ODP, MDCONVS, LIM, INERR, LOCAL_SUBDOMAIN, LOCAL_URL, ASSET_EXP)
 from common.utils import (
     getbutton, yfactor, mfactor, famt, xml_decorate, xml_espace, xml_unespace,
     LocalFloat, get_xml, new_xml, iso2date, register_fonts, make_pdf, logger)
-from common.glob import (
-    YDCONVS, ODP, MDCONVS, LIM, INERR, LOCAL_SUBDOMAIN, LOCAL_URL, ASSET_EXP)
+from common import fields
 from common.views import error
 from cache.utils import getasset, setasset
 from cnb.utils import get_mpi_rate, get_fx_rate

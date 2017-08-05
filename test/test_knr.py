@@ -24,9 +24,11 @@ from http import HTTPStatus
 from copy import copy
 from io import BytesIO
 from os.path import join
+
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
+
 from common.settings import TEST_DATA_DIR
 from common.utils import new_xml, p2c, xmlbool
 from test.test_common import TEST_STRING, strip_xml

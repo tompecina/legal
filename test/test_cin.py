@@ -22,7 +22,9 @@
 
 from http import HTTPStatus
 from datetime import date
+
 from bs4 import BeautifulSoup
+
 from django.test import SimpleTestCase
 
 

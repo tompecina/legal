@@ -23,11 +23,13 @@
 from http import HTTPStatus
 from datetime import date
 from os.path import join
+
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
-from common.settings import TEST_DATA_DIR
+
 from common.glob import LOCAL_DOMAIN
+from common.settings import TEST_DATA_DIR
 from test.test_common import link_equal, setdl
 from sir.cron import cron_gettr, cron_proctr
 from sir.models import Vec

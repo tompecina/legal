@@ -23,8 +23,9 @@
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.contrib.auth.models import User
-from common.utils import composeref
+
 from common.glob import REGISTER_REGEX
+from common.utils import composeref
 
 
 class Court(models.Model):

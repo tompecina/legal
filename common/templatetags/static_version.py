@@ -21,7 +21,9 @@
 #
 
 from os.path import join, getmtime
+
 from django.template import Library
+
 from common.settings import STATIC_ROOT
 
 

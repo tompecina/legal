@@ -25,6 +25,7 @@ from random import getrandbits, choice
 from datetime import datetime, timedelta
 from platform import python_version
 from os import uname
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -34,10 +35,11 @@ from django.urls import reverse
 from django.apps import apps
 from django.db import connection
 from django import get_version
+
 from common.settings import APPS
-from common.forms import UserAddForm, LostPwForm, MIN_PWLEN
-from common.utils import send_mail, logger
 from common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
+from common.utils import send_mail, logger
+from common.forms import UserAddForm, LostPwForm, MIN_PWLEN
 from common.models import PwResetLink
 
 

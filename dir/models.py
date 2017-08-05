@@ -21,9 +21,11 @@
 #
 
 from datetime import date
+
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User
+
 from common.glob import TEXT_OPTS
 from sir.models import Vec
 from dir.glob import MAX_LENGTH

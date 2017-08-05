@@ -23,9 +23,11 @@
 from datetime import datetime, timedelta
 from hashlib import md5
 from urllib.parse import quote
+
 from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 from django.db.models import Q
+
 from common.utils import get, post, sleep, logger, composeref
 from szr.models import Court, Proceedings
 from szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT

@@ -23,8 +23,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, RegexValidator
-from common.utils import composeref
+
 from common.glob import IC_REGEX, RC_REGEX, PSC_REGEX
+from common.utils import composeref
 
 
 class DruhAdresy(models.Model):

@@ -22,10 +22,12 @@
 
 from datetime import date, datetime, timedelta
 from urllib.parse import quote
+
 from bs4 import BeautifulSoup
 from django.http import QueryDict
-from common.utils import get, decomposeref, normreg, sleep, logger
+
 from common.glob import LOCAL_URL
+from common.utils import get, decomposeref, normreg, sleep, logger
 from szr.models import Court
 from szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT
 from sur.cron import sur_check

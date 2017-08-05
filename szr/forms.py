@@ -22,10 +22,11 @@
 
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-from common import forms, fields, widgets
+
 from common.glob import REGISTER_REGEX
-from szr.models import Court
+from common import forms, fields, widgets
 from szr.glob import SUPREME_COURT
+from szr.models import Court
 
 
 class EmailForm(forms.Form):

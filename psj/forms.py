@@ -21,8 +21,9 @@
 #
 
 from django.core.validators import RegexValidator
-from common import forms, fields, widgets
+
 from common.glob import REGISTER_REGEX, TEXT_OPTS, FORMAT_OPTS
+from common import forms, fields, widgets
 
 
 class MainForm(forms.Form):

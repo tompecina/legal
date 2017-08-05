@@ -23,6 +23,7 @@
 from datetime import date
 from csv import reader as csvreader, writer as csvwriter
 from io import StringIO
+
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -30,8 +31,9 @@ from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.apps import apps
 from django.urls import reverse
-from common.utils import getbutton, Pager, composeref, decomposeref, logger
+
 from common.glob import REGISTERS, INERR
+from common.utils import getbutton, Pager, composeref, decomposeref, logger
 from szr.forms import EmailForm, ProcForm
 from szr.models import Court, Proceedings
 from szr.cron import updateproc, p2s

@@ -24,10 +24,12 @@ from datetime import date, datetime, timedelta
 from re import compile
 from os.path import join
 from urllib.parse import quote
+
 from bs4 import BeautifulSoup
+
 from common.settings import BASE_DIR, TEST, TEST_TEMP_DIR
-from common.utils import get, post, composeref, decomposeref, logger
 from common.glob import LOCAL_URL
+from common.utils import get, post, composeref, decomposeref, logger
 from szr.glob import SUPREME_ADMINISTRATIVE_COURT
 from szr.models import Court
 from sur.cron import sur_check

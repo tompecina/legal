@@ -28,10 +28,12 @@ from copy import copy
 from http import HTTPStatus
 from re import compile
 from hashlib import md5
+
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 from django.core import mail
 from django.http import QueryDict
+
 from test.test_cache import DummyRequest
 from szr.cron import cron_update
 from szr.models import Proceedings

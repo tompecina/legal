@@ -27,6 +27,7 @@ from pickle import dumps, loads
 from xml.sax.saxutils import escape, unescape
 from datetime import datetime, timedelta
 from io import BytesIO
+
 from reportlab.platypus import (
     Paragraph, SimpleDocTemplate, LongTable, TableStyle, Spacer, KeepTogether)
 from reportlab.lib.styles import ParagraphStyle
@@ -41,12 +42,13 @@ from django.template import Context, Template
 from django.forms.models import model_to_dict
 from django.apps import apps
 from django.db.models import Q
-from cache.utils import getcache, getasset, setasset
+
+from common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
 from common.utils import (
     getbutton, unrequire, famt, c2p, get_xml, new_xml, xmlbool, register_fonts,
     make_pdf, lim, logger)
-from common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
 from common.views import error, unauth
+from cache.utils import getcache, getasset, setasset
 from knr.glob import FUELS
 from knr.utils import getvat
 from knr.forms import (

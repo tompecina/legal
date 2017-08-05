@@ -29,6 +29,7 @@ from math import inf
 from os.path import join
 from re import compile
 from xml.sax.saxutils import escape, unescape
+
 from bs4 import BeautifulSoup
 from pdfrw import PdfReader, PdfName
 import requests
@@ -39,9 +40,10 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.lib.pagesizes import A4
 from django.core import mail
-from common.settings import FONT_DIR, TEST
+
 from common.glob import (
     LIM, ODP, YDCONVS, MDCONVS, REGISTERS, LOCAL_SUBDOMAIN, LOCAL_EMAIL)
+from common.settings import FONT_DIR, TEST
 from common.models import Preset
 
 

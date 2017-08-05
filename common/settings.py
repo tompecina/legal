@@ -21,9 +21,10 @@
 #
 
 from os.path import dirname, abspath, join
-import locale
 from sys import argv
+import locale
 from logging import Filter
+
 from common.secrets import DBPASSWD, SECKEY
 
 

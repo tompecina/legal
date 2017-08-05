@@ -22,11 +22,13 @@
 
 from decimal import Decimal
 from datetime import datetime, date
+
 from django import forms
 from django.core.validators import EMPTY_VALUES
-from common import widgets
+
 from common.utils import LocalFloat
 from common.forms import ValidationError
+from common import widgets
 
 
 def proc_num(string):

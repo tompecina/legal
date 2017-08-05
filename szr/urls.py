@@ -21,6 +21,7 @@
 #
 
 from django.conf.urls import url
+
 from common.views import genrender
 from szr.views import (
     mainpage, procform, procdel, procdelall, procbatchform, procexport, courts)

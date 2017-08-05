@@ -20,8 +20,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from common import forms, fields, widgets
 from common.utils import more
+from common import forms, fields, widgets
 from knr.glob import FUELS
 from knr.utils import getvat
 

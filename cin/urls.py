@@ -21,6 +21,7 @@
 #
 
 from django.conf.urls import url
+
 from cin.views import mainpage
 
 

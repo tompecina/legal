@@ -22,6 +22,7 @@
 
 from csv import reader as csvreader, writer as csvwriter
 from io import StringIO
+
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -30,10 +31,11 @@ from django.forms.models import model_to_dict
 from django.apps import apps
 from django.http import QueryDict
 from django.urls import reverse
-from common.utils import getbutton, grammar, between, Pager, logger
+
 from common.glob import (
     INERR, GR_CHAR, TEXT_OPTS, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA,
     TEXT_OPTS_AI)
+from common.utils import getbutton, grammar, between, Pager, logger
 from szr.forms import EmailForm
 from sur.forms import PartyForm
 from sur.models import Party

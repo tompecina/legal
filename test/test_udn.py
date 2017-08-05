@@ -25,10 +25,12 @@ from datetime import date
 from re import compile
 from os.path import join
 from os import unlink
+
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
-from common.settings import TEST_TEMP_DIR
+
 from common.glob import LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL
+from common.settings import TEST_TEMP_DIR
 from test.test_common import strip_xml, link_equal
 from udn import cron, forms, glob, models, views
 

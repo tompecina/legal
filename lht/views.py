@@ -22,11 +22,13 @@
 
 from datetime import date, timedelta
 from calendar import monthrange
+
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
-from common.utils import fdt, holiday, getbutton, logger, between
+
 from common.glob import WD_NAMES, INERR_SHORT, ODP, ODM, UNC_DATE
+from common.utils import fdt, holiday, getbutton, logger, between
 from lht.glob import MIN_DATE, MAX_DATE, MIN_DUR, MAX_DUR
 from lht.forms import MainForm
 

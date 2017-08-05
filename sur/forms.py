@@ -21,9 +21,10 @@
 #
 
 from django.core.validators import MinLengthValidator
+
 from common import forms, fields, widgets
-from common.utils import grammar
 from common.glob import TEXT_OPTS, GR_CHAR
+from common.utils import grammar
 from sur.glob import MIN_LENGTH, MAX_LENGTH
 
 

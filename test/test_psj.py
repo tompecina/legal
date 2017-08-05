@@ -23,8 +23,10 @@
 from http import HTTPStatus
 from datetime import date, datetime
 from locale import strxfrm
+
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
+
 from test.test_common import strip_xml, link_equal
 from szr.models import Court
 from psj import cron, forms, models, views

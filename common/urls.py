@@ -23,6 +23,7 @@
 from django.conf.urls import include, url
 from django.contrib.auth.views import LoginView, settings
 from django.contrib import admin
+
 from common.views import (
     home, robots, pwchange, logout, userinfo, useradd, lostpw, resetpw,
     about, stat, genrender)

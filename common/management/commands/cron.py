@@ -21,12 +21,14 @@
 #
 
 from importlib import import_module
+
 from django.core.management.base import BaseCommand
-import common.cron
+
 import szr.cron
 import sir.cron
 import psj.cron
 import udn.cron
+import common.cron
 
 
 class Command(BaseCommand):

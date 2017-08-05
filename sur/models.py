@@ -24,8 +24,9 @@ from django.core.validators import (
     MinValueValidator, MaxValueValidator, MinLengthValidator, RegexValidator)
 from django.db import models
 from django.contrib.auth.models import User
-from common.utils import composeref
+
 from common.glob import REGISTER_REGEX, TEXT_OPTS
+from common.utils import composeref
 from szr.models import Court
 from sur.glob import MIN_LENGTH, MAX_LENGTH
 
