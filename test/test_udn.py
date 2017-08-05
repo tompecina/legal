@@ -44,6 +44,7 @@ class TestCron(TestCase):
             try:
                 with open(filename) as infile:
                     filc = infile.read()
+                unlink(filename)
                 if not filc[:-1].endswith('/' + item):  # pragma: no cover
                     fil.append('C: ' + item)
             except:  # pragma: no cover
@@ -75,6 +76,7 @@ class TestCron1(TestCron):
             '019110As__1500030S.pdf',
             '0208_4Ads_1500082S.pdf',
             '0233_5As__1500046S.pdf',
+            '003810Ads_1600040S.pdf',
             ))
 
 
