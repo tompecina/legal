@@ -23,9 +23,9 @@ env:
 before_install:
   - "gem install compass"
   - |
-    if [ \"$DJANGO_VERSION\" == nightly ]; then
+    if [ "$DJANGO_VERSION" == nightly ]; then
         pip install git+https://github.com/django/django.git
-        pip install -r <(cat requirements.txt | grep -v -e \'^Django==\')
+        pip install -r <(cat requirements.txt | grep -v -e '^Django==')
     else
         pip install -r requirements.txt
     fi
