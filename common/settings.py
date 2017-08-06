@@ -271,7 +271,5 @@ DATE_INPUT_FORMATS = ('%d.%m.%Y',)
 ALLOWED_HOSTS = ('*' if DEBUG else 'legal.pecina.cz',)
 
 LOCALE_PATHS = ()
-if TEST:
-    locale.setlocale(locale.LC_ALL, 'en_US')
-else:
+if not TEST:
     locale.setlocale(locale.LC_ALL, 'cs_CZ')
