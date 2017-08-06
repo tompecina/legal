@@ -27,8 +27,8 @@ import locale
 from logging import Filter
 
 
+TEST = 'TEST' in environ or (len(argv) > 1 and argv[1] == 'test')
 LOCAL = len(argv) > 1 and argv[1] == 'runserver'
-TEST = len(argv) > 1 and argv[1] == 'test'
 
 DEBUG = LOCAL
 DEBUG_LOG = True
@@ -37,21 +37,20 @@ BASE_DIR = dirname(dirname(abspath(__file__)))
 LOCAL_ROOT = dirname(__file__)
 LOG_DIR = join(BASE_DIR, 'log')
 FONT_DIR = join(dirname(dirname(__file__)), 'fonts')
+TEST_DIR = join(BASE_DIR, 'test')
+TEST_DATA_DIR = join(TEST_DIR, 'data')
+TEST_TEMP_DIR = join(TEST_DIR, 'temp')
 
 DBNAME = environ.get('DBNAME', 'legal')
 DBUSER = environ.get('DBUSER', 'legal')
 
 if TEST:
-    TEST_DIR = join(BASE_DIR, 'test')
-    TEST_DATA_DIR = join(TEST_DIR, 'data')
-    TEST_TEMP_DIR = join(TEST_DIR, 'temp')
-    FIXTURE_DIRS = (join(TEST_DIR, 'fixtures'),)
     DBPASSWD = environ.get('DBPASSWD', '')
-    SECKEY = 'legal'
+    SECKEY = 'empty'
+    FIXTURE_DIRS = (join(TEST_DIR, 'fixtures'),)
 else:
     from common.secrets import DBPASSWD, SECKEY
 
-    
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

@@ -6,11 +6,11 @@ python:
   - "3.5"
 env:
   - DBUSER=root
+  - TEST=1
 before_install:
   - "sudo locale-gen cs_CZ"
 install: "pip install -r requirements.txt"
 script:
-  - "touch common/secrets.py"
   - "./manage.py makemigrations"
   - "./manage.py migrate"
   - "./manage.py test"
