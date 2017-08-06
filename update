@@ -12,7 +12,6 @@ rsync -avhHzx \
       --exclude '/aux/' \
       --exclude '/update' \
       --exclude 'static/' \
-      --exclude '/collect/admin/' \
       --exclude '*.po' \
       --exclude 'migrations/' \
       --exclude '__pycache__/' \

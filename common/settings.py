@@ -80,7 +80,7 @@ USE_I18N = True
 USE_L10N = True
 MEDIA_ROOT = ''
 MEDIA_URL = ''
-STATIC_ROOT = join(LOCAL_ROOT, 'collect')
+STATIC_ROOT = join(BASE_DIR, 'collect')
 STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
