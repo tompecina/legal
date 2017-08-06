@@ -8,7 +8,9 @@ env:
   - "DBUSER=root TEST=1"
 before_install:
   - "sudo locale-gen cs_CZ"
+  - "sudo apt-get ruby-full rubygems"
+  - "sudo gem install sass"
 install:
   - "pip install -r requirements.txt"
 script:
-  - "./manage.py test"
+  - "./dosass && ./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map' && ./manage.py test --failfast"
