@@ -8,7 +8,7 @@ env:
   - "DBUSER=root TEST=1"
 before_install:
   - "sudo locale-gen cs_CZ"
-  - "sudo apt-get install ruby rubygem"
+  - "sudo apt-get install ruby rubygems"
   - "sudo gem install sass"
 install:
   - "pip install -r requirements.txt"
