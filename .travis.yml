@@ -2,31 +2,35 @@
 
 language:
   - "python"
-
 sudo:
   - false
-
 python:
+  - "3.5"
+  - "3.6"
   - "nightly"
-
 services:
   - "mysql"
-
 addons:
   apt:
     packages:
     - "ruby-dev"
-
 env:
-  - "DBUSER=root TEST=1"
-
+  general:
+    - "DBUSER=root TEST=1"
+  matrix:
+    - "DJANGO_VERSION=requirements"
+    - "DJANGO_VERSION=nightly"
 before_install:
   - "gem install compass"
-
+  - |
+    if [ \"$DJANGO_VERSION\" == nightly ]; then
+        pip install -r <(cat requirements.txt | grep -v -e \'^Django==\')
+        pip install git+https://github.com/django/django.git
+    else
+        pip install -r cat requirements.txt
+    fi
 install:
-  - "pip install -r requirements.txt"
   - "./dosass"
   - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'" 
-
 script:
-  - "./manage.py test --failfast"
+  - "./manage.py test --failfast && ./manage.py test --reverse --failfast"

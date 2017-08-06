@@ -65,7 +65,7 @@ def setasset(request, asset, data, lifespan):
     Asset(
         sessionid=sid,
         assetid=asset,
-        data=b64encode(data),
+        data=b64encode(data).decode(),
         expire=datetime.now() + lifespan if lifespan else None,
     ).save()
     return True

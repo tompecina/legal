@@ -72,6 +72,7 @@ class TestCron(TestCase):
 
     def test_courts(self):
 
+        models.Court.objects.all().delete()
         cron.cron_courts()
         court = models.Court.objects
         self.assertEqual(court.count(), 98)
