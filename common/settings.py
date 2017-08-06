@@ -34,9 +34,8 @@ DEBUG = LOCAL
 DEBUG_LOG = True
 
 BASE_DIR = dirname(dirname(abspath(__file__)))
-LOCAL_ROOT = dirname(__file__)
 LOG_DIR = join(BASE_DIR, 'log')
-FONT_DIR = join(dirname(dirname(__file__)), 'fonts')
+FONT_DIR = join(BASE_DIR, 'fonts')
 TEST_DIR = join(BASE_DIR, 'test')
 TEST_DATA_DIR = join(TEST_DIR, 'data')
 TEST_TEMP_DIR = join(TEST_DIR, 'temp')
