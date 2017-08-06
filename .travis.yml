@@ -16,7 +16,6 @@ addons:
   apt:
     packages:
     - "ruby"
-    - "rubygems"
 
 before_install:
   - "sudo locale-gen cs_CZ"
