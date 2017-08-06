@@ -15,7 +15,7 @@ addons:
     packages:
     - "ruby-dev"
 env:
-  general:
+  global:
     - "DBUSER=root TEST=1"
   matrix:
     - "DJANGO_VERSION=requirements"
