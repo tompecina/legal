@@ -1,24 +1,24 @@
 # .travis.yml
 
-sudo:
-  - false
-
-services:
-  - "mysql"
-
 language:
   - "python"
+
+sudo:
+  - false
 
 python:
   - "nightly"
 
-env:
-  - "DBUSER=root TEST=1"
+services:
+  - "mysql"
 
 addons:
   apt:
     packages:
     - "ruby-dev"
+
+env:
+  - "DBUSER=root TEST=1"
 
 before_install:
   - "gem install compass"
