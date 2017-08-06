@@ -12,10 +12,10 @@ python:
 env:
   - "DBUSER=root TEST=1"
 
-addons:
-  apt:
-    packages:
-    - "ruby-dev"
+# addons:
+#   apt:
+#     packages:
+#     - "ruby-dev"
 
 before_install:
   - "sudo locale-gen cs_CZ"
