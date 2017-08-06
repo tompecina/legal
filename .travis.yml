@@ -20,7 +20,7 @@ addons:
 
 before_install:
   - "sudo locale-gen cs_CZ"
-  - "sudo gem install sass"
+  - "sudo gem install compass"
 
 install:
   - "pip install -r requirements.txt"
