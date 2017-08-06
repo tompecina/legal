@@ -38,21 +38,20 @@ LOCAL_ROOT = dirname(__file__)
 LOG_DIR = join(BASE_DIR, 'log')
 FONT_DIR = join(dirname(dirname(__file__)), 'fonts')
 
+DBNAME = environ.get('DBNAME', 'legal')
+DBUSER = environ.get('DBUSER', 'legal')
+
 if TEST:
     TEST_DIR = join(BASE_DIR, 'test')
     TEST_DATA_DIR = join(TEST_DIR, 'data')
     TEST_TEMP_DIR = join(TEST_DIR, 'temp')
     FIXTURE_DIRS = (join(TEST_DIR, 'fixtures'),)
-    DBNAME = environ['DBNAME'] if 'DBNAME' in environ else 'legal'
-    DBUSER = environ['DBUSER'] if 'DBUSER' in environ else 'legal'
+    DBPASSWD = environ.get('DBPASSWD', '')
+    SECKEY = 'legal'
 else:
-    from common.secrets import DBNAME, DBUSER, DBPASSWD, SECKEY
+    from common.secrets import DBPASSWD, SECKEY
 
     
-ADMINS = (
-    ('Tomas Pecina', 'tomas@pecina.cz'),
-)
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -70,6 +69,10 @@ DATABASES = {
         }
     }
 }
+
+ADMINS = (
+    ('Tomas Pecina', 'tomas@pecina.cz'),
+)
 
 TIME_ZONE = 'Europe/Prague'
 LANGUAGE_CODE = 'cs-CZ'
