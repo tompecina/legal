@@ -7,7 +7,6 @@ python:
 env:
   - DBUSER=root
 before_install:
-  - "mysql -e 'CREATE DATABASE IF NOT EXISTS test_legal;'"
   - "sudo locale-gen cs_CZ"
 install: "pip install -r requirements.txt"
 script: "./manage.py test"
