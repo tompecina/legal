@@ -1,25 +1,29 @@
 # .travis.yml
 
-language:
-  - "python"
-sudo:
-  - false
+language: "python"
+
+sudo:  false
+
 python:
   - "3.5"
   - "3.6"
   - "nightly"
+
 services:
   - "mysql"
+
 addons:
   apt:
     packages:
     - "ruby-dev"
+
 env:
   global:
     - "DBUSER=root TEST=1"
   matrix:
     - "DJANGO_VERSION=requirements"
     - "DJANGO_VERSION=nightly"
+
 before_install:
   - "gem install compass"
   - |
@@ -29,8 +33,10 @@ before_install:
     else
         pip install -r requirements.txt
     fi
+
 install:
   - "./dosass"
   - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'" 
+
 script:
   - "./manage.py test --failfast && ./manage.py test --reverse --failfast"
