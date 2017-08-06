@@ -18,7 +18,6 @@ addons:
     - "ruby-dev"
 
 before_install:
-  - "sudo locale-gen cs_CZ"
   - "gem install compass"
 
 install:
