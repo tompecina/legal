@@ -16,9 +16,9 @@ addons:
   apt:
     packages:
     - "ruby-dev"
+    - "language-pack-cs"
 
 before_install:
-  - "sudo locale-gen cs_CZ"
   - "sudo gem install compass"
 
 install:
