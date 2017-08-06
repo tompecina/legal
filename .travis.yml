@@ -1,18 +1,31 @@
 # .travis.yml
+
 services:
-  - mysql
-language: python
+  - "mysql"
+
+language:
+  - "python"
+
 python:
   - "3.6"
+
 env:
   - "DBUSER=root TEST=1"
+
+addons:
+  apt:
+    packages:
+    - "ruby"
+    - "rubygems"
+
 before_install:
   - "sudo locale-gen cs_CZ"
-  - "sudo apt-get install ruby rubygems"
   - "sudo gem install sass"
+
 install:
   - "pip install -r requirements.txt"
   - "./dosass"
   - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'" 
+
 script:
   - "./manage.py test --failfast"
