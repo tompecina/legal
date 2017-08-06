@@ -21,11 +21,10 @@
 #
 
 from os.path import dirname, abspath, join
+from os import environ
 from sys import argv
 import locale
 from logging import Filter
-
-from common.secrets import DBPASSWD, SECKEY
 
 
 LOCAL = len(argv) > 1 and argv[1] == 'runserver'
@@ -44,6 +43,11 @@ if TEST:
     TEST_DATA_DIR = join(TEST_DIR, 'data')
     TEST_TEMP_DIR = join(TEST_DIR, 'temp')
     FIXTURE_DIRS = (join(TEST_DIR, 'fixtures'),)
+    DBNAME = environ['DBNAME'] if 'DBNAME' in environ else 'legal'
+    DBUSER = environ['DBUSER'] if 'DBUSER' in environ else 'legal'
+else:
+    from common.secrets import DBNAME, DBUSER, DBPASSWD, SECKEY
+
     
 ADMINS = (
     ('Tomas Pecina', 'tomas@pecina.cz'),
@@ -52,8 +56,8 @@ ADMINS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'legal',
-        'USER': 'legal',
+        'NAME': DBNAME,
+        'USER': DBUSER,
         'PASSWORD': DBPASSWD,
         'HOST': '',
         'PORT': '',
