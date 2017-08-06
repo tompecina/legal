@@ -15,7 +15,7 @@ env:
 addons:
   apt:
     packages:
-    - "ruby"
+    - "ruby-dev"
 
 before_install:
   - "sudo locale-gen cs_CZ"
