@@ -12,5 +12,7 @@ before_install:
   - "sudo gem install sass"
 install:
   - "pip install -r requirements.txt"
+  - "./dosass"
+  - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'" 
 script:
-  - "./dosass && ./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map' && ./manage.py test --failfast"
+  - "./manage.py test --failfast"
