@@ -21,8 +21,6 @@
 #
 
 from math import ceil
-from urllib.parse import quote, unquote
-from json import loads as json_loads
 from pickle import dumps, loads
 from xml.sax.saxutils import escape, unescape
 from datetime import datetime, timedelta
@@ -38,7 +36,6 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from django.template import Context, Template
 from django.forms.models import model_to_dict
 from django.apps import apps
 from django.db.models import Q
@@ -48,9 +45,9 @@ from common.utils import (
     getbutton, unrequire, famt, c2p, get_xml, new_xml, xmlbool, register_fonts,
     make_pdf, lim, logger)
 from common.views import error, unauth
-from cache.utils import getcache, getasset, setasset
+from cache.utils import getasset, setasset
 from knr.glob import FUELS
-from knr.utils import getvat
+from knr.utils import getvat, findloc, finddist, convi, convf
 from knr.forms import (
     PlaceForm, CarForm, FormulaForm, CalcForm, GeneralForm, ServiceForm,
     ServiceSubform, FlatForm, FlatSubform, AdministrativeForm,
@@ -63,56 +60,6 @@ APP = __package__
 APPVERSION = apps.get_app_config(APP).version
 
 CTRIP = ('cons1', 'cons2', 'cons3')
-
-
-def findloc(addr):
-
-    if not addr:
-        return None
-    addr = quote(unquote(addr).encode('utf-8'))
-    url = \
-        'https://maps.googleapis.com/maps/api/geocode/' \
-        'json?address={}&language=cs&sensor=false'.format(addr)
-    res = getcache(url, timedelta(weeks=1))[0]
-    if not res:
-        return None
-    res = json_loads(res)
-    if res['status'] != 'OK':
-        return None
-    res = res['results'][0]
-    loc = res['geometry']['location']
-    return res['formatted_address'], loc['lat'], loc['lng']
-
-
-def finddist(from_lat, from_lon, to_lat, to_lon):
-
-    url = \
-        'https://maps.googleapis.com/maps/api/distancematrix/' \
-        'json?origins={:f},{:f}&destinations={:f},{:f}&mode=driving&' \
-        'units=metric&language=cs&sensor=false' \
-        .format(from_lat, from_lon, to_lat, to_lon)
-    res = getcache(url, timedelta(weeks=1))[0]
-    if not res:
-        return None, None
-    res = json_loads(res)
-    if res['status'] != 'OK':
-        return None, None
-    res = res['rows'][0]['elements'][0]
-    if res['status'] != 'OK':
-        return None, None
-    return res['distance']['value'], res['duration']['value']
-
-
-def convi(arg):
-
-    return famt(int(arg))
-
-
-def convf(arg, num):
-
-    tpl = Template('{{{{ var|floatformat:"{:d}" }}}}'.format(num))
-    con = Context({'var': arg})
-    return tpl.render(con)
 
 
 B = 'B'

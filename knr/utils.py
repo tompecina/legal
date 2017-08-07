@@ -20,9 +20,66 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from common.utils import getpreset
+from datetime import timedelta
+from json import loads
+from urllib.parse import quote, unquote
+
+from django.template import Context, Template
+
+from common.utils import getpreset, famt
+from cache.utils import getcache
 
 
 def getvat():
 
     return getpreset('VAT')
+
+
+def findloc(addr):
+
+    if not addr:
+        return None
+    addr = quote(unquote(addr).encode('utf-8'))
+    url = \
+        'https://maps.googleapis.com/maps/api/geocode/' \
+        'json?address={}&language=cs&sensor=false'.format(addr)
+    res = getcache(url, timedelta(weeks=1))[0]
+    if not res:
+        return None
+    res = loads(res)
+    if res['status'] != 'OK':
+        return None
+    res = res['results'][0]
+    loc = res['geometry']['location']
+    return res['formatted_address'], loc['lat'], loc['lng']
+
+
+def finddist(from_lat, from_lon, to_lat, to_lon):
+
+    url = \
+        'https://maps.googleapis.com/maps/api/distancematrix/' \
+        'json?origins={:f},{:f}&destinations={:f},{:f}&mode=driving&' \
+        'units=metric&language=cs&sensor=false' \
+        .format(from_lat, from_lon, to_lat, to_lon)
+    res = getcache(url, timedelta(weeks=1))[0]
+    if not res:
+        return None, None
+    res = loads(res)
+    if res['status'] != 'OK':
+        return None, None
+    res = res['rows'][0]['elements'][0]
+    if res['status'] != 'OK':
+        return None, None
+    return res['distance']['value'], res['duration']['value']
+
+
+def convi(arg):
+
+    return famt(int(arg))
+
+
+def convf(arg, num):
+
+    tpl = Template('{{{{ var|floatformat:"{:d}" }}}}'.format(num))
+    con = Context({'var': arg})
+    return tpl.render(con)
