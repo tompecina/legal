@@ -27,6 +27,12 @@ import locale
 from logging import Filter
 
 
+try:
+    from common.secrets import DBPASSWD, SECKEY
+except ImportError:
+    DBPASSWD = environ.get('DBPASSWD', '')
+    SECKEY = environ.get('SECKEY', 'empty')
+    
 TEST = 'TEST' in environ or (len(argv) > 1 and argv[1] == 'test')
 LOCAL = len(argv) > 1 and argv[1] == 'runserver'
 
@@ -44,11 +50,7 @@ DBNAME = environ.get('DBNAME', 'legal')
 DBUSER = environ.get('DBUSER', 'legal')
 
 if TEST:
-    DBPASSWD = environ.get('DBPASSWD', '')
-    SECKEY = 'empty'
     FIXTURE_DIRS = (join(TEST_DIR, 'fixtures'),)
-else:
-    from common.secrets import DBPASSWD, SECKEY
 
 DATABASES = {
     'default': {
