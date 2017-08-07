@@ -29,7 +29,7 @@ from django.contrib.auth.models import User
 
 from common.glob import LOCAL_DOMAIN
 from common.settings import TEST_DATA_DIR
-from test.test_common import link_equal
+from test.utils import link_equal
 from psj.cron import cron_schedule, cron_update as psj_update
 from psj.models import Task, Hearing
 from udn.cron import cron_update as udn_update

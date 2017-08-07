@@ -31,7 +31,7 @@ from django.test import SimpleTestCase, TestCase
 
 from common.glob import LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL
 from common.settings import TEST_TEMP_DIR
-from test.test_common import strip_xml, link_equal
+from test.utils import strip_xml, link_equal
 from udn import cron, forms, glob, models, views
 
 

@@ -30,7 +30,7 @@ from django.contrib.auth.models import User
 
 from common.settings import TEST_DATA_DIR
 from common.glob import LOCAL_DOMAIN
-from test.test_common import link_equal, setdl, setpr, getdl, getpr
+from test.utils import link_equal, setdl, setpr, getdl, getpr
 from sir import cron, glob, models
 
 

@@ -30,7 +30,7 @@ from django.contrib.auth.models import User
 
 from common.glob import LOCAL_DOMAIN
 from common.settings import TEST_DATA_DIR
-from test.test_common import link_equal, setdl
+from test.utils import link_equal, setdl
 from sir.cron import cron_gettr, cron_proctr
 from sir.models import Vec
 from dir import cron, forms, models

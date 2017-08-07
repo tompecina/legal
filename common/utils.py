@@ -782,7 +782,7 @@ def get(*args, **kwargs):  # pragma: no cover
     """
 
     if TEST:
-        from test.test_common import testreq
+        from test.utils import testreq
         return testreq(False, *args)
     else:
         if 'timeout' not in kwargs:
@@ -796,7 +796,7 @@ def post(*args, **kwargs):  # pragma: no cover
     """
 
     if TEST:
-        from test.test_common import testreq
+        from test.utils import testreq
         return testreq(True, *args)
     else:
         if 'timeout' not in kwargs:

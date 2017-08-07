@@ -26,7 +26,7 @@ from datetime import date
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 
-from test.test_common import strip_xml, link_equal, setpr, getpr
+from test.utils import strip_xml, link_equal, setpr, getpr
 from test.test_sir import populate
 from sir.cron import cron_getws2
 from sir.models import Osoba, DruhRoleVRizeni, Vec

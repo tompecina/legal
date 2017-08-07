@@ -30,8 +30,8 @@ from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 
 from common.settings import TEST_DATA_DIR
-from test.test_common import TEST_STRING, strip_xml
-from test.test_cache import DummyRequest
+from test.glob import TEST_STRING
+from test.utils import DummyRequest, strip_xml
 from hsp import forms, views
 
 

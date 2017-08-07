@@ -31,7 +31,7 @@ from django.core.exceptions import ValidationError
 
 from common.glob import LOCAL_DOMAIN
 from common.settings import TEST_DATA_DIR
-from test.test_common import link_equal
+from test.utils import link_equal
 from szr import cron, forms, models
 
 

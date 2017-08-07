@@ -23,14 +23,9 @@
 from datetime import datetime, timedelta
 
 from django.test import SimpleTestCase, TestCase
+
+from test.utils import DummyRequest
 from cache import models, utils
-
-
-class DummyRequest:
-
-    def __init__(self, session_id):
-        self.COOKIES = {'sessionid': session_id}
-        self.META = {'REMOTE_ADDR': ''}
 
 
 class TestModels(SimpleTestCase):

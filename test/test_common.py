@@ -22,120 +22,22 @@
 
 from datetime import date, datetime, timedelta
 from calendar import monthrange
-from os.path import join
 from decimal import Decimal
 from copy import copy
 from http import HTTPStatus
 from re import compile
-from hashlib import md5
 
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 from django.core import mail
 from django.http import QueryDict
 
-from test.test_cache import DummyRequest
+from test.glob import TEST_STRING
+from test.utils import DummyRequest, setdl, setpr
 from szr.cron import cron_update
 from szr.models import Proceedings
-from sir.models import Counter
 from common.settings import TEST_DATA_DIR
 from common import cron, glob, fields, forms, models, utils, views
-
-
-TEST_STRING = 'Příliš žluťoučký kůň úpěnlivě přepíná ďábelské kódy'
-
-
-class DummyResponse:
-
-    def __init__(self, content, status=HTTPStatus.OK):
-        self.text = content
-        if content:
-            self.content = content.encode('utf-8')
-        self.status_code = status
-        self.ok = status == HTTPStatus.OK
-
-
-def strip_xml(string):
-
-    xml_regex = compile(r'^(<[^<]+<\w+)[^>]*(.*)$')
-
-    try:
-        string = string.decode('utf-8')
-        match = xml_regex.match(string)
-        return match.group(1) + match.group(2)
-    except:
-        return ''
-
-
-def testreq(post, *args):
-
-    if post:
-        req, data = args
-        if isinstance(data, bytes):
-            data = {'bytes': data.decode()}
-    else:
-        url = args[0]
-        if '?' in url:
-            req, query = url.split('?', 1)
-        else:
-            req = url
-            query = ''
-        data = QueryDict(query).dict()
-    hsh = md5(req.encode())
-    for key in sorted(data):
-        hsh.update(key.encode())
-        hsh.update(data[key].encode())
-    filename = hsh.hexdigest() + '.dat'
-    try:
-        with open(
-                join(
-                    TEST_DATA_DIR,
-                    'common_{}'.format(filename)),
-                'rb') as infile:
-            return DummyResponse(infile.read().decode())
-    except:
-        return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
-
-
-def link_equal(link1, link2):
-
-    link1 = link1.split('?')
-    link2 = link2.split('?')
-    if link1[0] != link2[0]:  # pragma: no cover
-        return False
-    link1 = link1[1].split('&')
-    link2 = link2[1].split('&')
-    return sorted(link1) == sorted(link2)
-
-
-def setcounter(key, num):
-
-    Counter.objects.update_or_create(id=key, defaults={'number': num})
-
-
-def setdl(num):
-
-    setcounter('DL', num)
-
-
-def setpr(num):
-
-    setcounter('PR', num)
-
-
-def getcounter(key):
-
-    return Counter.objects.get(id=key).number
-
-
-def getdl():
-
-    return getcounter('DL')
-
-
-def getpr():
-
-    return getcounter('PR')
 
 
 class TestCron(TestCase):
