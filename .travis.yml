@@ -25,9 +25,9 @@ env:
     - "DJANGO_VERSION=nightly"
 
 before_install:
-  - "wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb"
+  - "sudo update"
   - "sudo apt-get -y autoremove tidy"
-  - "sudo apt-get -y autoremove libtidy"
+  - "wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb"
   - "sudo dpkg -i tidy-*.deb"
   - "rm tidy-*.deb"
   - "sudo locale-gen cs_CZ"
