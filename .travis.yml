@@ -2,7 +2,7 @@
 
 language: "python"
 
-sudo:  false
+sudo:  "required"
 
 python:
   - "3.5"
@@ -25,6 +25,7 @@ env:
     - "DJANGO_VERSION=nightly"
 
 before_install:
+  - "sudo gen-locale cs_CZ"
   - "gem install compass"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
