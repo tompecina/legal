@@ -41,7 +41,7 @@ from django.apps import apps
 from common.glob import (
     YDCONVS, MDCONVS, LIM, INERR, LOCAL_SUBDOMAIN, LOCAL_URL, ASSET_EXP)
 from common.utils import (
-    getbutton, yfactor, mfactor, ODP, famt, xml_decorate,
+    getbutton, yfactor, mfactor, ODP, famt, dispcurr, xml_decorate,
     xml_espace, xml_unespace, normfl, LocalFloat, get_xml, new_xml,
     iso2date, register_fonts, make_pdf, logger)
 from common.views import error
@@ -98,11 +98,6 @@ def getdebt(request):
 def setdebt(request, data):
 
     return setasset(request, AID, dumps(data), ASSET_EXP)
-
-
-def dispcurr(curr):
-
-    return 'Kč' if curr == 'CZK' else curr
 
 
 def calcint(pastdate, presdate, principal, debt, default_date):

@@ -1822,6 +1822,11 @@ class TestUtils1(SimpleTestCase):
         self.assertEqual(utils.famt(-.001), '0,00')
         self.assertEqual(utils.famt(.001), '0,00')
 
+    def test_dispcurr(self):
+
+        self.assertEqual(utils.dispcurr('CZK'), 'Kč')
+        self.assertEqual(utils.dispcurr('EUR'), 'EUR')
+
     def test_getxml(self):
 
         self.assertIsNone(utils.get_xml(b'test'))

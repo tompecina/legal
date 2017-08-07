@@ -167,11 +167,6 @@ class TestViews1(SimpleTestCase):
             views.from_xml(b'XXX'),
             (None, 'Chybný formát souboru'))
 
-    def test_dispcurr(self):
-
-        self.assertEqual(views.dispcurr('CZK'), 'Kč')
-        self.assertEqual(views.dispcurr('EUR'), 'EUR')
-
     def test_getrows(self):
 
         self.assertEqual(views.getrows(views.Debt()), [])

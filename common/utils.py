@@ -593,6 +593,14 @@ def famt(amount):
     return ''.join(lst)
 
 
+def dispcurr(curr):
+    """
+    Display currency 'curr', with local abbreviation for CZK.
+    """
+
+    return 'Kč' if curr == 'CZK' else curr
+
+
 def unrequire(form, fields):
     """
     Reset the required attribute for 'fields' in 'form'.
