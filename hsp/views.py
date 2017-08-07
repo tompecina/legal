@@ -1772,8 +1772,8 @@ def debitform(request, idx=0):
          'form': form,
          'rows': rows,
          'page_title': page_title,
-         'YDCONVS': YDCONVS,
-         'MDCONVS': MDCONVS,
+         'ydconvs': YDCONVS,
+         'mdconvs': MDCONVS,
          'err_message': err_message})
 
 

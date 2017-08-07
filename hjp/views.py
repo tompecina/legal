@@ -1265,8 +1265,8 @@ def mainpage(request):
          'form': form,
          'rows': rows,
          'currency': dispcurr(debt.currency),
-         'YDCONVS': YDCONVS,
-         'MDCONVS': MDCONVS,
+         'ydconvs': YDCONVS,
+         'mdconvs': MDCONVS,
          'err_message': err_message,
          'rows_err': rows_err})
 
