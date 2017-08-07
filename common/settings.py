@@ -180,14 +180,14 @@ LOGGING = {
     'disable_existing_loggers': False,
     'loggers': {
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ('mail_admins',),
             'level': 'ERROR',
             'propagate': True,
         },
         'logger': {
             'handlers':
-                ['error_mail', 'error_file', 'info_file']
-                + (['debug_file'] if DEBUG_LOG else []),
+                ('error_mail', 'error_file', 'info_file')
+                + (('debug_file',) if DEBUG_LOG else []),
             'level': 'DEBUG',
         },
     },
