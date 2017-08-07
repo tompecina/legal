@@ -15,10 +15,10 @@
 	    <tr>
 	      <th><span class="{{ form.amount.css_classes }}">{{ form.amount.label_tag }}</span></th>
 	      <td><span class="{{ form.amount.css_classes }}">{{ form.amount }}</span></td>
-	      <td class="right"<span class="plm {{ form.currency.css_classes }}">{{ form.currency.label_tag }} {{ form.currency }}</span></td>
+	      <td class="right"><span class="plm {{ form.currency.css_classes }}">{{ form.currency.label_tag }} {{ form.currency }}</span></td>
 	    </tr>
 {% if rows %}	    <tr>
-	      <th class="top ptl" class="{{ deb_class }}">Pořadí:</th>
+	      <th class="top ptl {{ deb_class }}">Pořadí:</th>
 	      <td colspan="2" class="top ptl pbm">
 {% for row in rows %}		<div class="debord">
 		  <select name="r{{ row.n }}" id="id_r{{ row.n }}">

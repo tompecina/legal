@@ -21,9 +21,8 @@
     </tr>
 {% if err_message %}            <tr><td></td><td colspan="2" class="warning">
               {% include "formwarning.html" %}            </td></tr>
-{% endif %}	    <tr>
-    <tr class="{{ form.username.css_classes }}">
-      <td class="right"
+{% endif %}	    <tr class="{{ form.username.css_classes }}">
+      <td class="right">
 	{{ form.username.label_tag }}
       </td>
       <td colspan="2">
@@ -31,11 +30,11 @@
       </td>
     </tr>
     <tr>
-      <td class="right"</td>
+      <td class="right"></td>
       <td>
 	<input type="submit" name="submit" value="Poslat link" />
       </td>
-      <td class="right"
+      <td class="right">
 	<input type="submit" name="back" value="Zpět" />
 	{% csrf_token %}
       </td>

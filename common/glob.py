@@ -45,6 +45,8 @@ REGISTERS = (
 )
 REGISTER_REGEX = '^({})$'.format('|'.join(REGISTERS))
 
+CURRENCY_REGEX = r'^[A-Z]{3}$'
+
 UNC_DATE = date(1925, 4, 15)
 
 YDCONVS = (

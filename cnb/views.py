@@ -23,11 +23,11 @@
 from datetime import date
 
 from django.apps import apps
-from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 from common.glob import INERR_SHORT
-from common.utils import getbutton, fdt, famt, unrequire, LocalFloat, logger
+from common.utils import (
+    getbutton, fdt, famt, unrequire, LocalFloat, logger, render)
 from common.fields import AmountField
 from cnb.utils import get_fx_rate, get_mpi_rate
 from cnb.forms import MainForm

@@ -33,7 +33,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black
-from django.shortcuts import render, redirect, HttpResponse, Http404
+from django.shortcuts import redirect, HttpResponse, Http404
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.apps import apps
@@ -42,7 +42,8 @@ from common.glob import (
     YDCONVS, ODP, MDCONVS, LIM, INERR, LOCAL_SUBDOMAIN, LOCAL_URL, ASSET_EXP)
 from common.utils import (
     getbutton, yfactor, mfactor, famt, xml_decorate, xml_espace, xml_unespace,
-    LocalFloat, get_xml, new_xml, iso2date, register_fonts, make_pdf, logger)
+    LocalFloat, get_xml, new_xml, iso2date, register_fonts, make_pdf, logger,
+    render)
 from common import fields
 from common.views import error
 from cache.utils import getasset, setasset
@@ -451,15 +452,15 @@ def calc(debt, pram=lambda x: x):
         res.hrow = True
         res.crow = res.ccol = res.multicurrency
         res.scol = not res.multicurrency_debit and res.newd > 1
-        res.cell1 = 3 if res.crow else 2
-        res.cell2 = res.newd
-        res.cell3 = res.newd + (1 if res.scol else 0)
-        res.cell4 = (res.newd * 3) + 3 + (1 if res.scol else 0) \
+        res.cnt1 = 3 if res.crow else 2
+        res.cnt2 = res.newd
+        res.cnt3 = res.newd + (1 if res.scol else 0)
+        res.cnt4 = (res.newd * 3) + 3 + (1 if res.scol else 0) \
             + (1 if res.ccol else 0)
     else:
         res.hrow = res.crow = res.ccol = res.scol = False
-        res.cell1 = res.cell2 = res.cell3 = 1
-        res.cell4 = 7
+        res.cnt1 = res.cnt2 = res.cnt3 = 1
+        res.cnt4 = 6
     res.rng3 = list(range(3))
 
     if not tra:
@@ -918,7 +919,7 @@ def mainpage(request):
     def ftbl(amt):
         amt = round(amt, debt.rounding) if debt.rounding else int(round(amt))
         if abs(amt) < LIM:
-            return '<span class="dr"></span>'
+            return '<span class="dr">&nbsp;</span>'
         elif amt > 0:
             return '<span class="dr">{}</span>'.format(famt(amt))
         return '<span class="cr">{}</span>'.format(famt(-amt))

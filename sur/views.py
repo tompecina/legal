@@ -23,7 +23,7 @@
 from csv import reader as csvreader, writer as csvwriter
 from io import StringIO
 
-from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
@@ -35,7 +35,7 @@ from django.urls import reverse
 from common.glob import (
     INERR, GR_CHAR, TEXT_OPTS, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA,
     TEXT_OPTS_AI)
-from common.utils import getbutton, grammar, between, Pager, logger
+from common.utils import getbutton, grammar, between, Pager, logger, render
 from szr.forms import EmailForm
 from sur.forms import PartyForm
 from sur.models import Party

@@ -25,7 +25,7 @@ from csv import writer as csvwriter
 from json import dump
 from os.path import join
 
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import redirect, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from django.urls import reverse
@@ -34,7 +34,8 @@ from django.http import QueryDict, Http404
 from common.glob import (
     REGISTERS, INERR, TEXT_OPTS_KEYS, REPO_URL, EXLIM_TITLE,
     LOCAL_SUBDOMAIN, LOCAL_URL, DTF)
-from common.utils import Pager, new_xml, xml_decorate, composeref, logger
+from common.utils import (
+    Pager, new_xml, xml_decorate, composeref, logger, render)
 from szr.glob import (
     SUPREME_ADMINISTRATIVE_COURT, SUPREME_ADMINISTRATIVE_COURT_NAME)
 from udn.forms import MainForm

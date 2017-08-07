@@ -24,14 +24,14 @@ from datetime import datetime
 from locale import strxfrm
 from csv import writer as csvwriter
 from json import dump
-from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
-from common.utils import Pager, new_xml, xml_decorate, logger
 from common.glob import (
     INERR, TEXT_OPTS_KEYS, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF)
+from common.utils import Pager, new_xml, xml_decorate, logger, render
 from sir.glob import L2N, L2S, L2R, S2D, R2I, A2D
 from sir.models import Vec, Osoba, DruhRoleVRizeni, Counter
 from pir.forms import MainForm

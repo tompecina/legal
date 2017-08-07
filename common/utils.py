@@ -32,6 +32,7 @@ from xml.sax.saxutils import escape, unescape
 
 from bs4 import BeautifulSoup
 from pdfrw import PdfReader, PdfName
+from tidylib import tidy_document
 import requests
 import reportlab.rl_config
 from reportlab.pdfgen.canvas import Canvas
@@ -40,6 +41,8 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.lib.pagesizes import A4
 from django.core import mail
+from django.shortcuts import render as orig_render
+from django.template.loader import get_template
 
 from common.glob import (
     LIM, ODP, YDCONVS, MDCONVS, REGISTERS, LOCAL_SUBDOMAIN, LOCAL_EMAIL)
@@ -786,7 +789,7 @@ TIMEOUT = 1000
 
 def get(*args, **kwargs):  # pragma: no cover
     """
-    Test-compatible get.
+    Test-compatible get().
     """
 
     if TEST:
@@ -800,7 +803,7 @@ def get(*args, **kwargs):  # pragma: no cover
 
 def post(*args, **kwargs):  # pragma: no cover
     """
-    Test-compatible post.
+    Test-compatible post().
     """
 
     if TEST:
@@ -814,11 +817,41 @@ def post(*args, **kwargs):  # pragma: no cover
 
 def sleep(*args, **kwargs):  # pragma: no cover
     """
-    Test-compatible sleep.
+    Test-compatible sleep().
     """
 
     if not TEST:
         time.sleep(*args, **kwargs)
+
+
+def render(
+        request,
+        template_name,
+        context=None,
+        content_type=None,
+        status=None,
+        using=None,
+        **kwargs):
+    """
+    Test-compatible render().
+    """
+
+    response = orig_render(
+        request,
+        template_name,
+        context=context,
+        content_type=content_type,
+        status=status,
+        using=using,
+        **kwargs)
+
+    if TEST and not content_type:
+        err = tidy_document(response.content)[1]
+        if err:
+            raise AssertionError(
+                'Template: {} Errors: {}'.format(template_name, err))
+
+    return response
 
 
 def send_mail(subject, text, recipients):

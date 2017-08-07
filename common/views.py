@@ -26,7 +26,7 @@ from datetime import datetime, timedelta
 from platform import python_version
 from os import uname
 
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.contrib import auth
@@ -38,7 +38,7 @@ from django import get_version
 
 from common.settings import APPS
 from common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
-from common.utils import send_mail, logger
+from common.utils import send_mail, logger, render
 from common.forms import UserAddForm, LostPwForm, MIN_PWLEN
 from common.models import PwResetLink
 

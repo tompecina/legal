@@ -26,7 +26,7 @@ from json import dump
 from re import compile
 from locale import strxfrm
 
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import redirect, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 from django.urls import reverse
@@ -36,7 +36,7 @@ from common.glob import (
     REGISTERS, INERR, TEXT_OPTS_KEYS, ODP, EXLIM_TITLE,
     LOCAL_SUBDOMAIN, LOCAL_URL, DTF)
 from common.utils import (
-    Pager, new_xml, xml_decorate, composeref, xmlbool, logger)
+    Pager, new_xml, xml_decorate, composeref, xmlbool, logger, render)
 from szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT
 from szr.models import Court
 from psj.models import Hearing
@@ -376,4 +376,5 @@ def courtinfo(request, court):
         request,
         'psj_court.html',
         {'courtrooms': courtrooms,
-         'judges': judges})
+         'judges': judges},
+        content_type='text/plain; charset=utf-8')

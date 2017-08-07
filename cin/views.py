@@ -22,7 +22,6 @@
 
 from datetime import date
 
-from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 
@@ -30,7 +29,7 @@ from common.glob import (
     INERR_SHORT, GR_DAY, GR_BUSDAY, GR_MONTH, GR_YEAR, UNC_DATE)
 from common.utils import (
     fdt, holiday, ply, plm, YDCONVS, MDCONVS, yfactor, mfactor, ODP,
-    grammar, getbutton, unrequire, LocalFloat, logger)
+    grammar, getbutton, unrequire, LocalFloat, logger, render)
 from cin.forms import MainForm
 
 

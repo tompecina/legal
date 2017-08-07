@@ -33,7 +33,7 @@ from reportlab.lib.enums import TA_RIGHT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black, gray
 from django.http import HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.forms.models import model_to_dict
@@ -43,7 +43,7 @@ from django.db.models import Q
 from common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
 from common.utils import (
     getbutton, unrequire, famt, c2p, get_xml, new_xml, xmlbool, register_fonts,
-    make_pdf, lim, logger)
+    make_pdf, lim, logger, render)
 from common.views import error, unauth
 from cache.utils import getasset, setasset
 from knr.glob import FUELS

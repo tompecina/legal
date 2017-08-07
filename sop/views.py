@@ -22,12 +22,11 @@
 
 from math import floor, ceil
 
-from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 
 from common.glob import INERR_SHORT
-from common.utils import famt, LocalFloat, logger
+from common.utils import famt, LocalFloat, logger, render
 from cnb.utils import get_fx_rate
 from sop.forms import MainForm
 

@@ -28,17 +28,12 @@
 		<fieldset class="btbl">
 		  <legend>Závazky</legend>
 		  <table>
-		    <tfoot>
-		      <tr>
-			<td colspan="3"><a href="{% url 'hsp:debitform' %}">Přidat závazek</a></td>
-		      </tr>
-		    </tfoot>
 		    <tbody>
 {% for debit in debt.debits %}		      <tr class="itr">
 			<th>{{ debit.id }}</th>
 			<td class="mc">
 			  <div>{{ debit.description|default:'<i>(bez názvu)</i>' }}</div>
-			  <div>{{ debit.text|safe }}</div>
+			  <div>{{ debit.text|default:'&nbsp;'|safe }}</div>
 			</td>
 			<td class="act">
 			  <a href="{% url 'hsp:debitform' forloop.counter %}">upravit</a> <a href="{% url 'hsp:debitdel' forloop.counter %}">smazat</a>
@@ -48,22 +43,22 @@
 			<td></td>
                       </tr>
 {% endfor %}		    </tbody>
+		    <tfoot>
+		      <tr>
+			<td{% if debt.debits %} colspan="3"{% endif %}><a href="{% url 'hsp:debitform' %}">Přidat závazek</a></td>
+		      </tr>
+		    </tfoot>
 		  </table>
 	        </fieldset>
 		<fieldset class="btbl">
 		  <legend>Splátky</legend>
 		  <table>
-		    <tfoot>
-		      <tr>
-			<td colspan="3"><a href="{% url 'hsp:creditform' %}">Přidat splátku</a></td>
-		      </tr>
-		    </tfoot>
 		    <tbody>
 {% for credit in sc %}		      <tr class="itr">
 			<td class="dc">{{ credit.date|date:'d.m.Y' }}</td>
 			<td class="mc">
 			  <div>{{ credit.description|default:'<i>(bez názvu)</i>' }}</div>
-			  <div>{{ credit.text|safe }}</div>
+			  <div>{{ credit.text|default:'&nbsp;'|safe }}</div>
 			</td>
 			<td class="act">
 			  <a href="{% url 'hsp:creditform' credit.id %}">upravit</a> <a href="{% url 'hsp:creditdel' credit.id %}">smazat</a>
@@ -73,16 +68,16 @@
 			<td></td>
                       </tr>
 {% endfor %}		    </tbody>
+		    <tfoot>
+		      <tr>
+			<td{% if sc %} colspan="3"{% endif %}><a href="{% url 'hsp:creditform' %}">Přidat splátku</a></td>
+		      </tr>
+		    </tfoot>
 		  </table>
 	        </fieldset>
 		<fieldset class="btbl">
 		  <legend>Kontrolní body</legend>
 		  <table>
-		    <tfoot>
-		      <tr>
-			<td colspan="3"><a href="{% url 'hsp:balanceform' %}">Přidat kontrolní bod</a></td>
-		      </tr>
-		    </tfoot>
 		    <tbody>
 {% for balance in sb %}		      <tr class="itr">
 			<td class="dc">{{ balance.date|date:'d.m.Y' }}</td>
@@ -97,16 +92,16 @@
 			<td></td>
                       </tr>
 {% endfor %}		    </tbody>
+		    <tfoot>
+		      <tr>
+			<td{% if sb %} colspan="3"{% endif %}><a href="{% url 'hsp:balanceform' %}">Přidat kontrolní bod</a></td>
+		      </tr>
+		    </tfoot>
 		  </table>
 	        </fieldset>
 		<fieldset class="btbl">
 		  <legend>Směnné kursy odchylné od kursů ČNB</legend>
 		  <table>
-		    <tfoot>
-		      <tr>
-			<td colspan="3"><a href="{% url 'hsp:fxrateform' %}">Přidat kurs</a></td>
-		      </tr>
-		    </tfoot>
 		    <tbody>
 {% for fxrate in debt.fxrates %}		      <tr class="itr">
 			<td class="cc">
@@ -122,6 +117,11 @@
 			<td></td>
                       </tr>
 {% endfor %}		    </tbody>
+		    <tfoot>
+		      <tr>
+			<td{% if debt.fxrates %} colspan="3"{% endif %}><a href="{% url 'hsp:fxrateform' %}">Přidat kurs</a></td>
+		      </tr>
+		    </tfoot>
 		  </table>
 	        </fieldset>
 	      </td>
@@ -130,15 +130,15 @@
           <table class="mth mra mbn mla" id="id_calc">
 	    <thead>
 	      <tr class="header">
-		<th rowspan="{{ res.cell1 }}">Datum</th>
-		<th rowspan="{{ res.cell1 }}">Popis</th>
-		<th rowspan="{{ res.cell1 }}">Částka</th>
+		<th rowspan="{{ res.cnt1 }}">Datum</th>
+		<th rowspan="{{ res.cnt1 }}">Popis</th>
+		<th rowspan="{{ res.cnt1 }}">Částka</th>
 {% if res.ccol %}
-		<th rowspan="{{ res.cell1 }}">Měna</th>
+		<th rowspan="{{ res.cnt1 }}">Měna</th>
 {% endif %}
-		<th colspan="{{ res.cell2 }}">Předchozí zůstatek</th>
-		<th colspan="{{ res.cell2 }}">Změna</th>
-		<th colspan="{{ res.cell3 }}">Nový zůstatek</th>
+		<th colspan="{{ res.cnt2 }}">Předchozí zůstatek</th>
+		<th colspan="{{ res.cnt2 }}">Změna</th>
+		<th colspan="{{ res.cnt3 }}">Nový zůstatek</th>
 	      </tr>
 {% if res.hrow %}	      <tr class="header deb">
 {% for d in debt.debits %}		<th>{{ d.id }}</th>
@@ -151,15 +151,10 @@
 {% endfor %}{% endfor %}{% if res.scol %}                <th>{{ res.currency_debits }}</th>
 {% endif %}	      </tr>
 {% endif %}	    </thead>
-{% if not suppress_table_footer %}	    <tfoot>
-	      <tr class="footer">
-		<td colspan="{{ res.cell4 }}">{% if not res.multicurrency %}<span class="bold">Měna:</span> {{ res.currency }}{% else %}<span class="bold">Měny:</span> {{ res.currencies|join:', ' }}{% endif %}</td>
-	      </tr>
-	    </tfoot>
-{% endif %}	    <tbody>
+	    <tbody>
 {% for row in res.rows %}              <tr class="{% cycle 'odd' 'even' %}">
 		<td class="dt">{{ row.date|date:'d.m.Y' }}</td>
-		<td class="cs"><div>{{ row.description }}</div>{% if row.sps_text %}<div><span class="plm">(přeplatek:</span> {{ row.sps_text|safe }})</div>{% endif %}</td>
+		<td class="cs"><div>{{ row.description|default:'&nbsp;' }}</div>{% if row.sps_text %}<div><span class="plm">(přeplatek:</span> {{ row.sps_text|safe }})</div>{% endif %}</td>
 		<td class="ams">{{ row.amount|safe }}</td>
 {% if res.ccol %}		<td class="cus">{{ row.disp_currency }}</td>
 {% endif %}{% for a in row.pre %}		<td class="am{% if forloop.first %}s{% endif %}">{{ a|safe }}</td>
@@ -171,13 +166,18 @@
 {% endfor %}{% if res.scol %}		<td class="am">{{ row.post_total|safe }}</td>
 {% endif %}	      </tr>
 {% empty %}              <tr class="odd">
-		<td colspan="{{ res.cell4 }}" class="taberr">(žádné transakce)</td>
+		<td colspan="{{ res.cnt4 }}" class="taberr">(žádné transakce)</td>
 	      </tr>
 {% endfor %}{% if res.msg %}              <tr class="odd">
-		<td colspan="{{ res.cell4 }}" class="taberr"><span class="bold">Chyba:</span> {{ res.msg }}</td>
+		<td colspan="{{ res.cnt4 }}" class="taberr"><span class="bold">Chyba:</span> {{ res.msg }}</td>
 	      </tr>
 {% endif %}	    </tbody>
-	  </table>
+{% if not suppress_table_footer %}	    <tfoot>
+	      <tr class="footer">
+		<td colspan="{{ res.cnt4 }}">{% if not res.multicurrency %}<span class="bold">Měna:</span> {{ res.currency }}{% else %}<span class="bold">Měny:</span> {{ res.currencies|join:', ' }}{% endif %}</td>
+	      </tr>
+	    </tfoot>
+{% endif %}	  </table>
 	  <table class="butbar">
 	    <tr>
 	      <td><input type="submit" name="submit_update" value="Aktualisovat" /></td>

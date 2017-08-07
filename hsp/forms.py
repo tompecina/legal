@@ -20,6 +20,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from django.core.validators import RegexValidator
+
+from common.glob import CURRENCY_REGEX
 from common import forms, fields, widgets
 
 
@@ -266,25 +269,25 @@ class FXform(forms.Form):
 
     currency_from = fields.CharField(
         widget=widgets.Currw(),
-        min_length=3,
-        max_length=3)
+        max_length=3,
+        validators=(RegexValidator(regex=CURRENCY_REGEX),))
 
     currency_to = fields.CharField(
         widget=widgets.Currw(),
-        min_length=3,
-        max_length=3)
+        max_length=3,
+        validators=(RegexValidator(regex=CURRENCY_REGEX),))
 
     rate_from = fields.FloatField(
         widget=widgets.Fxw(),
-        min_value=0.001,
+        min_value=.001,
         localize=True,
-        initial=1.0)
+        initial=1)
 
     rate_to = fields.FloatField(
         widget=widgets.Fxw(),
         min_value=0.001,
         localize=True,
-        initial=1.0)
+        initial=1)
 
     date_from = fields.DateField(
         widget=widgets.Dw(),

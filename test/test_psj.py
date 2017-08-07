@@ -807,7 +807,7 @@ Ministerstvo spravedlnosti", "Alois Hl\u00e1sensk\u00fd"], "ref": \
         res = self.client.get('/psj/court/OSPHA02/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
+        self.assertEqual(res['content-type'], 'text/plain; charset=utf-8')
         self.assertTemplateUsed(res, 'psj_court.html')
         croom = models.Courtroom.objects.get(desc__contains='101/').id
         judge = models.Judge.objects.get(name__contains='Hen').id

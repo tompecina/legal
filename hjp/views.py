@@ -33,7 +33,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black
-from django.shortcuts import render, redirect, HttpResponse, Http404
+from django.shortcuts import redirect, HttpResponse, Http404
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.apps import apps
@@ -43,7 +43,7 @@ from common.glob import (
 from common.utils import (
     getbutton, yfactor, mfactor, ODP, famt, dispcurr, xml_decorate,
     xml_espace, xml_unespace, normfl, LocalFloat, get_xml, new_xml,
-    iso2date, register_fonts, make_pdf, logger)
+    iso2date, register_fonts, make_pdf, logger, render)
 from common.views import error
 from cache.utils import getasset, setasset
 from cnb.utils import get_mpi_rate

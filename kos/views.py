@@ -22,12 +22,11 @@
 
 from math import ceil
 
-from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.apps import apps
 
 from common.glob import INERR_SHORT
-from common.utils import getbutton, famt, logger
+from common.utils import getbutton, famt, logger, render
 from kos.forms import MainForm
 
 

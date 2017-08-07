@@ -6,8 +6,7 @@
 	  <table class="mth mra mbh mla">
 {% if err_message %}            <tr><td class="warning">
               {% include "formwarning.html" %}            </td></tr>
-{% endif %}	    </tr>
-	    <tr>
+{% endif %}	    <tr>
 	      <td>
 		<p>Zvolte soubor CSV pro načtení účastníků.</p>
 		<p>Soubor musí být v kodu UTF-8 a musí na každém řádku obsahovat jeden vyhledávací řetězec.<br />Přípustná délka řetězce je {{ min_length }} až {{ max_length }} znaků. Řetězce, které nevyhovují délkou, budou při importu<br />ignorovány. Jakou hodnotu bude mít importovaný řetězec v poli Posice, můžete ovlivnit<br />formátovacím příznakem, který uvedete na konci řetězce za dvojtečkou.</p>
