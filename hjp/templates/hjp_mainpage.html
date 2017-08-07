@@ -108,12 +108,7 @@
 		<th>Celkem</th>
 	      </tr>
 	    </thead>
-{% if not suppress_table_footer %}	    <tfoot>
-	      <tr class="footer">
-		<td colspan="12"><a href="{% url 'hjp:transform' %}">Přidat transakci</a></td>
-	      </tr>
-	    </tfoot>
-{% endif %}	    <tbody>
+	    <tbody>
 {% for row in rows %}              <tr class="{% cycle 'odd' 'even' %}">
 		<td class="trdt">{{ row.date|date:'d.m.Y' }}</td>
 		<td>{{ row.description }}</td>
@@ -131,7 +126,12 @@
 	      </tr>
 {% empty %}              <tr class="odd"><td colspan="12" class="taberr">(žádné transakce)</td></tr>
 {% endfor %}	    </tbody>
-	  </table>
+{% if not suppress_table_footer %}	    <tfoot>
+	      <tr class="footer">
+		<td colspan="12"><a href="{% url 'hjp:transform' %}">Přidat transakci</a></td>
+	      </tr>
+	    </tfoot>
+{% endif %}	  </table>
 	  <table class="butbar">
 	    <tr>
 	      <td><input type="submit" name="submit_update" value="Aktualisovat" /></td>

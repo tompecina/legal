@@ -10,7 +10,15 @@
 	      <th>Vše</th>
 	      <th>Akce</th>
 	    </tr>
-	  </thead>{% if not suppress_table_footer %}
+	  </thead>
+	  <tbody>{% for row in rows %}
+	    <tr class="{% cycle "odd" "even" %}">
+	      <td class="nowrap"><a href="{% url 'pir:htmllist' %}?number={{ row.number }}&amp;year={{ row.year }}">INS {{ row.number }}/{{ row.year }}</a></td>
+	      <td>{{ row.desc }}</td>
+	      <td class="center">{% if row.detailed %}ano{% else %}ne{% endif %}</td>
+	      <td class="links"><a href="{% url 'sir:insform' row.id %}">upravit</a> <a href="{% url 'sir:insdel' row.id %}">smazat</a></td>
+	    </tr>{% endfor %}
+	  </tbody>{% if not suppress_table_footer %}
           <tfoot>
 	    <tr class="footer">
 	      <td>
@@ -21,14 +29,6 @@
 	      </td>
 	    </tr>
 	  </tfoot>{% endif %}
-	  <tbody>{% for row in rows %}
-	    <tr class="{% cycle "odd" "even" %}">
-	      <td class="nowrap"><a href="{% url 'pir:htmllist' %}?number={{ row.number }}&amp;year={{ row.year }}">INS {{ row.number }}/{{ row.year }}</a></td>
-	      <td>{{ row.desc }}</td>
-	      <td class="center">{% if row.detailed %}ano{% else %}ne{% endif %}</td>
-	      <td class="links"><a href="{% url 'sir:insform' row.id %}">upravit</a> <a href="{% url 'sir:insdel' row.id %}">smazat</a></td>
-	    </tr>{% endfor %}
-	  </tbody>
 	</table>
         <p class="center">
 	  <a href="{% url 'sir:insbatchform' %}">

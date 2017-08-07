@@ -32,14 +32,7 @@
 		ISIR/infoSoud
 	      </th>
 	    </tr>
-	  </thead>{% if not suppress_table_footer %}
-          <tfoot>
-	    <tr class="footer">
-	      <td colspan="{% if creditors %}4{% else %}3{% endif %}" class="right">
-		{% include "pager.html" %}
-	      </td>
-	    </tr>
-	  </tfoot>{% endif %}
+	  </thead>
 	  <tbody>{% for row in rows %}
 	    <tr class="{% cycle "odd" "even" %}">
 	      <td>
@@ -76,6 +69,13 @@
 		</a>{% endif %}
 	      </td>
 	    </tr>{% endfor %}
-	  </tbody>
+	  </tbody>{% if not suppress_table_footer %}
+          <tfoot>
+	    <tr class="footer">
+	      <td colspan="{% if creditors %}4{% else %}3{% endif %}" class="right">
+		{% include "pager.html" %}
+	      </td>
+	    </tr>
+	  </tfoot>{% endif %}
 	</table>{% else %}        <p class="center">(žádné výsledky)</p>{% endif %}
         <p class="center"><a href="{% url 'pir:mainpage' %}">Zpět na vyhledávací formulář</a></p>{% endblock %}

@@ -40,14 +40,7 @@
 		infoSoud
 	      </th>
 	    </tr>
-	  </thead>{% if not suppress_table_footer %}
-          <tfoot>
-	    <tr class="footer">
-	      <td colspan="6" class="right">
-		{% include "pager.html" %}
-	      </td>
-	    </tr>
-	  </tfoot>{% endif %}
+	  </thead>
 	  <tbody>{% for row in rows %}
 	    <tr class="{% cycle "odd" "even" %}">
 	      <td>
@@ -91,6 +84,13 @@
 		</a>
 	      </td>
 	    </tr>{% endfor %}
-	  </tbody>
+	  </tbody>{% if not suppress_table_footer %}
+          <tfoot>
+	    <tr class="footer">
+	      <td colspan="6" class="right">
+		{% include "pager.html" %}
+	      </td>
+	    </tr>
+	  </tfoot>{% endif %}
 	</table>{% else %}        <p class="center">(žádné výsledky)</p>{% endif %}
         <p class="center"><a href="{% url 'psj:mainpage' %}">Zpět na vyhledávací formulář</a></p>{% endblock %}

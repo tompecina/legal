@@ -4,14 +4,7 @@
         <h1 class="mbn">{{ page_title }}</h1>{% if rows %}
 	<div class="subtitle">Počet výsledků: {{ total }}</div>
 	<table class="margin-auto">
-	  <thead><tr class="header"><th>Datum</th><th>Jednací číslo</th><th>Oblast</th><th>Účastníci řízení</th><th>Rozhodnutí</th></tr></thead>{% if not suppress_table_footer %}
-          <tfoot>
-	    <tr class="footer">
-	      <td colspan="5" class="right">
-		{% include "pager.html" %}
-	      </td>
-	    </tr>
-	  </tfoot>{% endif %}
+	  <thead><tr class="header"><th>Datum</th><th>Jednací číslo</th><th>Oblast</th><th>Účastníci řízení</th><th>Rozhodnutí</th></tr></thead>
 	  <tbody>{% for row in rows %}
 	    <tr class="{% cycle "odd" "even" %}">
 	      <td>{{ row.date|date:'d.m.Y' }}</td>
@@ -29,6 +22,13 @@
 		</a>{% endif %}
 	      </td>
 	    </tr>{% endfor %}
-	  </tbody>
+	  </tbody>{% if not suppress_table_footer %}
+          <tfoot>
+	    <tr class="footer">
+	      <td colspan="5" class="right">
+		{% include "pager.html" %}
+	      </td>
+	    </tr>
+	  </tfoot>{% endif %}
 	</table>{% else %}        <p class="center">(žádné výsledky)</p>{% endif %}
         <p class="center"><a href="{% url 'udn:mainpage' %}">Zpět na vyhledávací formulář</a></p>{% endblock %}

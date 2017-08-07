@@ -9,17 +9,7 @@
 	      <th class="left">Posice</th>
 	      <th>Akce</th>
 	    </tr>
-	  </thead>{% if not suppress_table_footer %}
-          <tfoot>
-	    <tr class="footer">
-	      <td>
-		<a href="{% url 'sur:partyform' %}">Přidat účastníka</a>
-	      </td>
-	      <td colspan="2" class="right">
-		{% include "pager.html" %}
-	      </td>
-	    </tr>
-	  </tfoot>{% endif %}
+	  </thead>
 	  <tbody>{% for row in rows %}
 	    <tr class="{% cycle "odd" "even" %}">
 	      <td>{{ row.party }}</td>
@@ -31,7 +21,17 @@
 		<a href="{% url 'udn:htmllist' %}?{{ row.search }}">vyhledat/NSS</a>
 	      </td>
 	    </tr>{% endfor %}
-	  </tbody>
+	  </tbody>{% if not suppress_table_footer %}
+          <tfoot>
+	    <tr class="footer">
+	      <td>
+		<a href="{% url 'sur:partyform' %}">Přidat účastníka</a>
+	      </td>
+	      <td colspan="2" class="right">
+		{% include "pager.html" %}
+	      </td>
+	    </tr>
+	  </tfoot>{% endif %}
 	</table>
         <p class="center">
 	  <a href="{% url 'sur:partybatchform' %}">Import</a>

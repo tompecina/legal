@@ -8,17 +8,7 @@
 	      <th class="left">Popis</th>
 	      <th>Akce</th>
 	    </tr>
-	  </thead>{% if not suppress_table_footer %}
-          <tfoot>
-	    <tr class="footer">
-	      <td>
-		<a href="{% url 'dir:debtorform' %}">Přidat dlužníka</a>
-	      </td>
-	      <td colspan="2" class="right">
-		{% include "pager.html" %}
-	      </td>
-	    </tr>
-	  </tfoot>{% endif %}
+	  </thead>
 	  <tbody>{% for row in rows %}
 	    <tr class="{% cycle "odd" "even" %}">
 	      <td>{{ row.desc }}</td>
@@ -28,7 +18,17 @@
 		<a href="{% url 'pir:htmllist' %}?{{ row.search }}">vyhledat</a>
 	      </td>
 	    </tr>{% endfor %}
-	  </tbody>
+	  </tbody>{% if not suppress_table_footer %}
+          <tfoot>
+	    <tr class="footer">
+	      <td>
+		<a href="{% url 'dir:debtorform' %}">Přidat dlužníka</a>
+	      </td>
+	      <td class="right">
+		{% include "pager.html" %}
+	      </td>
+	    </tr>
+	  </tfoot>{% endif %}
 	</table>
         <p class="center">
 	  <a href="{% url 'dir:debtorbatchform' %}">
