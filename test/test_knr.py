@@ -209,16 +209,7 @@ class Dummy(views.Calculation, views.Item):
     pass
 
 
-class TestUtils(TestCase):
-
-    fixtures = ('knr_test.json',)
-
-    def test_getvat(self):
-
-        self.assertAlmostEqual(utils.getvat(), 25)
-
-
-class TestViews1(SimpleTestCase):
+class TestUtils1(SimpleTestCase):
 
     def test_convi(self):
 
@@ -258,6 +249,38 @@ class TestViews1(SimpleTestCase):
         self.assertEqual(views.convf(-5458.7101589, 5), '-5458,71016')
         self.assertEqual(views.convf(-5458.7101589, 6), '-5458,710159')
         self.assertEqual(views.convf(-5458.7101589, 7), '-5458,7101589')
+
+
+class TestUtils2(TestCase):
+
+    fixtures = ('knr_test.json',)
+
+    def test_getvat(self):
+
+        self.assertAlmostEqual(utils.getvat(), 25)
+
+    def test_findloc(self):
+
+        res = views.findloc('Melantrichova 504/5, Praha 1')
+        self.assertEqual(
+            res[0],
+            'Melantrichova 504/5, 110 00 Praha 1-Staré Město, Česká republika')
+        self.assertAlmostEqual(res[1], 51.0852574)
+        self.assertAlmostEqual(res[2], 13.4211651)
+        self.assertFalse(views.findloc(''))
+        self.assertFalse(views.findloc('XXX'))
+        self.assertFalse(views.findloc('Melantrichova 504/6, Praha 1'))
+
+    def test_finddist(self):
+
+        res = views.finddist(50, 15, 51, 16)
+        self.assertEqual(res, (182046, 20265))
+        self.assertEqual(views.finddist(50, 15, 51, 17), (None, None))
+        self.assertEqual(views.finddist(50, 15, 51, 18), (None, None))
+        self.assertEqual(views.finddist(50, 15, 51, 19), (None, None))
+
+
+class TestViews1(SimpleTestCase):
 
     def dcomp(self, fmt, arg1, arg2):
         for num in fmt:
@@ -426,26 +449,6 @@ class TestViews2(TestCase):
 
     def tearDown(self):
         self.client.logout()
-
-    def test_findloc(self):
-
-        res = views.findloc('Melantrichova 504/5, Praha 1')
-        self.assertEqual(
-            res[0],
-            'Melantrichova 504/5, 110 00 Praha 1-Staré Město, Česká republika')
-        self.assertAlmostEqual(res[1], 51.0852574)
-        self.assertAlmostEqual(res[2], 13.4211651)
-        self.assertFalse(views.findloc(''))
-        self.assertFalse(views.findloc('XXX'))
-        self.assertFalse(views.findloc('Melantrichova 504/6, Praha 1'))
-
-    def test_finddist(self):
-
-        res = views.finddist(50, 15, 51, 16)
-        self.assertEqual(res, (182046, 20265))
-        self.assertEqual(views.finddist(50, 15, 51, 17), (None, None))
-        self.assertEqual(views.finddist(50, 15, 51, 18), (None, None))
-        self.assertEqual(views.finddist(50, 15, 51, 19), (None, None))
 
     def test_main(self):
 
