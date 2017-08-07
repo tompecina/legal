@@ -846,7 +846,7 @@ def render(
         **kwargs)
 
     if TEST and not content_type:
-        err = tidy_document(response.content)[1]
+        err = tidy_document(response.content.decode())[1]
         if err:
             raise AssertionError(
                 'Template: {} Errors: {}'.format(template_name, err))
