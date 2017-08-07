@@ -16,7 +16,6 @@ addons:
   apt:
     packages:
     - "ruby-dev"
-    - "libtidy"
 
 env:
   global:
@@ -26,8 +25,8 @@ env:
     - "DJANGO_VERSION=nightly"
 
 before_install:
-  - "sudo apt-get update"
-  - "sudo apt-get upgrade libtidy"
+  - "wget http://binaries.html-tidy.org/binaries/tidy-5.2.0/tidy-5.2.0-64bit.deb"
+  - "sudo dpkg -i tidy-5.2.0-64bit.deb"
   - "sudo locale-gen cs_CZ"
   - "gem install compass"
   - |
