@@ -19,7 +19,7 @@ addons:
 
 env:
   global:
-    - "DBUSER=root TEST=1"
+    - "DBUSER=root"
   matrix:
     - "DJANGO_VERSION=requirements"
     - "DJANGO_VERSION=nightly"
