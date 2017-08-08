@@ -857,7 +857,7 @@ def render(
                 'Template: {} Errors: {}'.format(template_name, err))
 
         dump_path = environ.get('DUMP_PATH')
-        if dump_path:
+        if dump_path:  # pragma: no cover
             global output_counter
             filename = '{:05d}-{}'.format(output_counter, template_name)
             output_counter += 1
