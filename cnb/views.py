@@ -27,7 +27,7 @@ from django.views.decorators.http import require_http_methods
 
 from common.glob import INERR_SHORT
 from common.utils import (
-    getbutton, fdt, famt, unrequire, LocalFloat, logger, render)
+    getbutton, fdt, famt, unrequire, LocalFloat, LOGGER, render)
 from common.fields import AmountField
 from cnb.utils import get_fx_rate, get_mpi_rate
 from cnb.forms import MainForm
@@ -41,7 +41,7 @@ APPVERSION = apps.get_app_config(APP).version
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method ' + request.method,
         request,
         request.POST)
@@ -132,7 +132,7 @@ def mainpage(request):
                             ('{:.2f} %'.format(LocalFloat(rate)),
                              'msg-res0'))
             else:
-                logger.debug('Invalid form', request)
+                LOGGER.debug('Invalid form', request)
                 messages = [(INERR_SHORT, None)]
 
     return render(request,

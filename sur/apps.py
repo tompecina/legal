@@ -33,10 +33,10 @@ class SurConfig(AppConfig):
 
     @staticmethod
     def stat():
-        from common.utils import logger
+        from common.utils import LOGGER
         from sur.models import Party, Found
         now = datetime.now()
-        logger.debug('Partial statistics generated')
+        LOGGER.debug('Partial statistics generated')
         return (
             (
                 'Počet účastníků řízení',
@@ -60,9 +60,9 @@ class SurConfig(AppConfig):
 
     @staticmethod
     def userinfo(user):
-        from common.utils import logger
+        from common.utils import LOGGER
         from sur.models import Party
-        logger.debug('Partial user information generated')
+        LOGGER.debug('Partial user information generated')
         return (
             (
                 'Počet sledovaných účastníků',

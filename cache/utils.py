@@ -25,7 +25,7 @@ from base64 import b64encode, b64decode
 
 from django.db.transaction import atomic
 
-from common.utils import get, logger
+from common.utils import get, LOGGER
 from cache.models import Cache, Asset
 
 
@@ -36,7 +36,7 @@ def getcache(url, lifespan):
         return cache[0].text, None
     res = get(url)
     if not res.ok:
-        logger.warning('Failed to access URL: "{}"'.format(url))
+        LOGGER.warning('Failed to access URL: "{}"'.format(url))
         return None, 'Chyba při komunikaci se serverem'
     txt = res.text
     Cache(

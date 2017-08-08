@@ -35,7 +35,7 @@ from sir.cron import sir_notice, cron_update as sir_update
 from dir.cron import dir_notice
 from common.settings import TEST
 from common.glob import LOCAL_SUBDOMAIN, LOCAL_URL
-from common.utils import send_mail, logger
+from common.utils import send_mail, LOGGER
 from common.models import Pending, Lock
 
 
@@ -64,10 +64,10 @@ def cron_notify():
                 'Zprava ze serveru {}'.format(LOCAL_SUBDOMAIN),
                 text,
                 [user.email])
-            logger.debug(
+            LOGGER.debug(
                 'Email sent to user "{}" ({:d})'
                 .format(User.objects.get(pk=uid).username, uid))
-    logger.info('Emails sent')
+    LOGGER.info('Emails sent')
 
 
 SCHED = (
@@ -142,7 +142,7 @@ def cron_run():
             args = getattr(job, 'args', '')
             run(job.name, args)
             Lock.objects.filter(name=lock).delete()
-            logger.debug(
+            LOGGER.debug(
                 'Scheduled job {} with arguments "{}" completed'
                 .format(job.name, args))
 
@@ -158,7 +158,7 @@ def cron_run():
                             args=args,
                             lock=lock
                         ).save()
-                        logger.debug(
+                        LOGGER.debug(
                             'Job {} with arguments "{}" scheduled'
                             .format(job['name'], args))
                     continue
@@ -171,11 +171,11 @@ def cron_run():
 def cron_unlock():
 
     Lock.objects.all().delete()
-    logger.info('Locks removed')
+    LOGGER.info('Locks removed')
 
 
 def cron_clean():
 
     Pending.objects.all().delete()
-    logger.info('Pending jobs deleted')
+    LOGGER.info('Pending jobs deleted')
     cron_unlock()

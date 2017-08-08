@@ -38,7 +38,7 @@ from django.urls import reverse
 from common.glob import (
     INERR, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA,
     TEXT_OPTS_AI, IC_REGEX, RC_FULL_REGEX)
-from common.utils import getbutton, Pager, logger, render
+from common.utils import getbutton, Pager, LOGGER, render
 from szr.forms import EmailForm
 from sir.glob import L2N, L2S
 from sir.models import Vec
@@ -61,7 +61,7 @@ OPTS = [key + '_opt' for key in OFIELDS]
 @login_required
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -83,7 +83,7 @@ def mainpage(request):
             user.save()
             return redirect('dir:mainpage')
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
     debtors = Debtor.objects.filter(uid=uid).order_by('desc', 'pk').values()
     total = debtors.count()
@@ -119,7 +119,7 @@ def mainpage(request):
 @login_required
 def debtorform(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Debtor form accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -164,7 +164,7 @@ def debtorform(request, idx=0):
             for opt in OPTS:
                 debtor.__setattr__(opt, TEXT_OPTS_KEYS.index(cld[opt]))
             debtor.save()
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) {} debtor {}'
                 .format(
                     uname,
@@ -174,7 +174,7 @@ def debtorform(request, idx=0):
                 request)
             return redirect('dir:mainpage')
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
     return render(
         request,
@@ -190,7 +190,7 @@ def debtorform(request, idx=0):
 @login_required
 def debtordel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Debtor delete page accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -206,7 +206,7 @@ def debtordel(request, idx=0):
     else:
         debtor = get_object_or_404(Debtor, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) deleted debtor "{}"'
                 .format(uname, uid, debtor.desc),
                 request)
@@ -219,7 +219,7 @@ def debtordel(request, idx=0):
 @login_required
 def debtordelall(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Delete all debtors page accessed using method {}'
         .format(request.method),
         request)
@@ -235,7 +235,7 @@ def debtordelall(request):
         if getbutton(request) == 'yes' and 'conf' in request.POST \
            and request.POST['conf'] == 'Ano':
             Debtor.objects.filter(uid=uid).delete()
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) deleted all debtors'.format(uname, uid),
                 request)
         return redirect('dir:mainpage')
@@ -245,7 +245,7 @@ def debtordelall(request):
 @login_required
 def debtorbatchform(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Debtor import page accessed using method {}'.format(request.method),
         request)
 
@@ -421,7 +421,7 @@ def debtorbatchform(request):
                                          'jeden dlužník'.format(desc)))
                                     continue
                                 count += 1
-                    logger.info(
+                    LOGGER.info(
                         'User "{}" ({:d}) imported {:d} debtor(s)'
                             .format(uname, uid, count),
                         request)
@@ -434,10 +434,10 @@ def debtorbatchform(request):
                          'errors': errors})
 
                 except:  # pragma: no cover
-                    logger.error('Error reading file', request)
+                    LOGGER.error('Error reading file', request)
                     err_message = 'Chyba při načtení souboru'
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
 
     return render(
@@ -452,7 +452,7 @@ def debtorbatchform(request):
 @login_required
 def debtorexport(request):
 
-    logger.debug('Debtor export page accessed', request)
+    LOGGER.debug('Debtor export page accessed', request)
     uid = request.user.id
     uname = request.user.username
     debtors = Debtor.objects.filter(uid=uid).order_by('desc', 'pk').distinct()
@@ -485,7 +485,7 @@ def debtorexport(request):
         if debtor.year_birth_to:
             dat.append('rokNarozeníDo={:d}'.format(debtor.year_birth_to))
         writer.writerow(dat)
-    logger.info(
+    LOGGER.info(
         'User "{}" ({:d}) exported debtors'.format(uname, uid),
         request)
     return response

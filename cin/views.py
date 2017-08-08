@@ -29,7 +29,7 @@ from common.glob import (
     INERR_SHORT, GR_DAY, GR_BUSDAY, GR_MONTH, GR_YEAR, UNC_DATE)
 from common.utils import (
     fdt, holiday, ply, plm, YDCONVS, MDCONVS, yfactor, mfactor, ODP,
-    grammar, getbutton, unrequire, LocalFloat, logger, render)
+    grammar, getbutton, unrequire, LocalFloat, LOGGER, render)
 from cin.forms import MainForm
 
 
@@ -41,7 +41,7 @@ APPVERSION = apps.get_app_config(APP).version
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -126,7 +126,7 @@ def mainpage(request):
                              'msg-m2'))
 
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             messages = [(INERR_SHORT, None)]
 
     return render(

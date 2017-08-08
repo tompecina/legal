@@ -43,7 +43,7 @@ from django.db.models import Q
 from common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
 from common.utils import (
     getbutton, unrequire, famt, c2p, get_xml, new_xml, xmlbool, register_fonts,
-    make_pdf, lim, logger, render)
+    make_pdf, lim, LOGGER, render)
 from common.views import error, unauth
 from cache.utils import getasset, setasset
 from knr.glob import FUELS
@@ -808,7 +808,7 @@ def from_xml(dat):
 @login_required
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -1244,7 +1244,7 @@ def mainpage(request):
 @login_required
 def placeform(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Place form accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -1278,18 +1278,18 @@ def placeform(request, idx=0):
                 cld['pk'] = idx
             Place(uid_id=uid, **cld).save()
             if idx:
-                logger.info(
+                LOGGER.info(
                     'User "{}" ({:d}) updated place "{}"'
                     .format(uname, uid, cld['name']),
                     request)
             else:
-                logger.info(
+                LOGGER.info(
                     'User "{}" ({:d}) added place "{}"'
                     .format(uname, uid, cld['name']),
                     request)
             return redirect('knr:placelist')
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
     return render(
         request,
@@ -1304,7 +1304,7 @@ def placeform(request, idx=0):
 @login_required
 def placelist(request):
 
-    logger.debug('Place list accessed', request)
+    LOGGER.debug('Place list accessed', request)
     rows = Place.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
         .order_by('uid', 'abbr', 'name')
     for row in rows:
@@ -1324,7 +1324,7 @@ def placelist(request):
 @login_required
 def placedel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Place delete page accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -1341,7 +1341,7 @@ def placedel(request, idx=0):
     else:
         place = get_object_or_404(Place, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) deleted place "{}"'
                 .format(uname, uid, place.name),
                 request)
@@ -1354,7 +1354,7 @@ def placedel(request, idx=0):
 @login_required
 def carform(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Car form accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -1378,18 +1378,18 @@ def carform(request, idx=0):
                 cld['pk'] = idx
             Car(uid_id=uid, **cld).save()
             if idx:
-                logger.info(
+                LOGGER.info(
                     'User "{}" ({:d}) updated car "{}"'
                     .format(uname, uid, cld['name']),
                     request)
             else:
-                logger.info(
+                LOGGER.info(
                     'User "{}" ({:d}) added car "{}"'
                     .format(uname, uid, cld['name']),
                     request)
             return redirect('knr:carlist')
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
     return render(
         request,
@@ -1405,7 +1405,7 @@ def carform(request, idx=0):
 @login_required
 def carlist(request):
 
-    logger.debug('Car list accessed', request)
+    LOGGER.debug('Car list accessed', request)
     rows = Car.objects.filter(uid=request.user.id).order_by('abbr', 'name')
     return render(
         request,
@@ -1419,7 +1419,7 @@ def carlist(request):
 @login_required
 def cardel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Car delete page accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -1437,7 +1437,7 @@ def cardel(request, idx=0):
     else:
         car = get_object_or_404(Car, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) deleted car "{}"'
                 .format(uname, uid, car.name),
                 request)
@@ -1450,7 +1450,7 @@ def cardel(request, idx=0):
 @login_required
 def formulaform(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Formula form accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -1485,7 +1485,7 @@ def formulaform(request, idx=0):
                     dct[key] = val
             res = Formula(uid_id=uid, **dct)
             res.save()
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) {} formula {}'
                 .format(
                     uname,
@@ -1502,7 +1502,7 @@ def formulaform(request, idx=0):
                 rat.save()
             return redirect('knr:formulalist')
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
     rates = []
     for fuel in FUELS:
@@ -1521,7 +1521,7 @@ def formulaform(request, idx=0):
 @login_required
 def formulalist(request):
 
-    logger.debug('Formula list accessed', request)
+    LOGGER.debug('Formula list accessed', request)
     rows = Formula.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
         .order_by('uid', 'abbr', 'name')
     for row in rows:
@@ -1548,7 +1548,7 @@ def formulalist(request):
 @login_required
 def formuladel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Formula delete page accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -1565,7 +1565,7 @@ def formuladel(request, idx=0):
     else:
         formula = get_object_or_404(Formula, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) deleted formula "{}"'
                 .format(uname, uid, formula.name),
                 request)
@@ -1660,7 +1660,7 @@ def itemform(request, idx=0):
             if dur:
                 cld['time_number'] = int(ceil(dur / 1800))
 
-    logger.debug(
+    LOGGER.debug(
         'Item form accessed using method {}, idx={}'
         .format(request.method, idx),
         request,
@@ -2075,7 +2075,7 @@ def itemform(request, idx=0):
 @login_required
 def itemlist(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Item list accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -2111,7 +2111,7 @@ def itemlist(request):
 @login_required
 def itemdel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Item delete page accessed using method {}, idx={}'
         .format(request.method, idx),
         request,
@@ -2131,7 +2131,7 @@ def itemdel(request, idx=0):
         button = getbutton(request)
         if button == 'yes':
             del calc.items[idx]
-            logger.debug('Item deleted', request)
+            LOGGER.debug('Item deleted', request)
             if not setcalc(request, calc):  # pragma: no cover
                 return error(request)
             return redirect('knr:itemdeleted')
@@ -2142,7 +2142,7 @@ def itemdel(request, idx=0):
 @login_required
 def itemmove(request, drc, idx):
 
-    logger.debug('Item move requested', request)
+    LOGGER.debug('Item move requested', request)
     idx = int(idx)
     calc = getcalc(request)
     if not calc:  # pragma: no cover
@@ -2161,7 +2161,7 @@ def itemmove(request, drc, idx):
 @login_required
 def presets(request):
 
-    logger.debug('Presets requested', request)
+    LOGGER.debug('Presets requested', request)
     if not request.user.is_superuser:
         return unauth(request)
     from knr.presets import PS_PLACES, PS_FORMULAS
@@ -2184,5 +2184,5 @@ def presets(request):
         fid = formula.id
         for rat in item[3]:
             Rate(formula_id=fid, fuel=rat[0], rate=rat[1]).save()
-    logger.info('Presets restored', request)
+    LOGGER.info('Presets restored', request)
     return redirect('knr:mainpage')

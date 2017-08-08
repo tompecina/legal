@@ -85,7 +85,7 @@ class Logger:
         Logger._proc(self._logger.debug, args, kwargs)
 
 
-logger = Logger()
+LOGGER = Logger()
 
 
 def lim(lower, arg, upper):
@@ -867,7 +867,7 @@ def send_mail(subject, text, recipients):
             recipients,
             fail_silently=True)
     except:  # pragma: no cover
-        logger.warning('Failed to send mail')
+        LOGGER.warning('Failed to send mail')
 
 
 class Pager:

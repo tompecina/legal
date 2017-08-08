@@ -31,10 +31,10 @@ class KnrConfig(AppConfig):
 
     @staticmethod
     def stat():
-        from common.utils import logger
+        from common.utils import LOGGER
         from cache.models import Asset
         from knr.models import Place, Car, Formula, Rate
-        logger.debug('Partial statistics generated')
+        LOGGER.debug('Partial statistics generated')
         return (
             (
                 'Počet míst',
@@ -56,9 +56,9 @@ class KnrConfig(AppConfig):
 
     @staticmethod
     def userinfo(user):
-        from common.utils import logger
+        from common.utils import LOGGER
         from knr.models import Place, Car, Formula
-        logger.debug('Partial user information generated')
+        LOGGER.debug('Partial user information generated')
         return (
             (
                 'Počet míst',

@@ -31,9 +31,9 @@ class HjpConfig(AppConfig):
 
     @staticmethod
     def stat():
-        from common.utils import logger
+        from common.utils import LOGGER
         from cache.models import Asset
-        logger.debug('Partial statistics generated')
+        LOGGER.debug('Partial statistics generated')
         return (
             (
                 'Počet položek v tabulce Asset',

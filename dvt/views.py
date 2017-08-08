@@ -27,7 +27,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 
 from common.glob import INERR_SHORT
-from common.utils import fdt, logger, render
+from common.utils import fdt, LOGGER, render
 from dvt.forms import MainForm
 
 APP = __package__
@@ -48,7 +48,7 @@ def calc(beg_date, years, months, days):
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -97,7 +97,7 @@ def mainpage(request):
 
 
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             messages = [(INERR_SHORT, None)]
 
     return render(request,

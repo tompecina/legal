@@ -35,7 +35,7 @@ from common.glob import (
     REGISTERS, INERR, TEXT_OPTS_KEYS, REPO_URL, EXLIM_TITLE,
     LOCAL_SUBDOMAIN, LOCAL_URL, DTF)
 from common.utils import (
-    Pager, new_xml, xml_decorate, composeref, logger, render)
+    Pager, new_xml, xml_decorate, composeref, LOGGER, render)
 from szr.glob import (
     SUPREME_ADMINISTRATIVE_COURT, SUPREME_ADMINISTRATIVE_COURT_NAME)
 from udn.forms import MainForm
@@ -56,7 +56,7 @@ EXLIM = 1000
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method ' + request.method,
         request,
         request.POST)
@@ -92,7 +92,7 @@ def mainpage(request):
                 query.urlencode()))
         else:
             err_message = INERR
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             return render(
                 request,
                 'udn_mainpage.html',
@@ -138,7 +138,7 @@ def g2p(reqd):
 @require_http_methods(('GET',))
 def htmllist(request):
 
-    logger.debug('HTML list accessed', request, request.GET)
+    LOGGER.debug('HTML list accessed', request, request.GET)
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
@@ -163,7 +163,7 @@ def htmllist(request):
 @require_http_methods(('GET',))
 def xmllist(request):
 
-    logger.debug('XML list accessed', request, request.GET)
+    LOGGER.debug('XML list accessed', request, request.GET)
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
@@ -252,7 +252,7 @@ def xmllist(request):
 @require_http_methods(('GET',))
 def csvlist(request):
 
-    logger.debug('CSV list accessed', request, request.GET)
+    LOGGER.debug('CSV list accessed', request, request.GET)
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
@@ -305,7 +305,7 @@ def csvlist(request):
 @require_http_methods(('GET',))
 def jsonlist(request):
 
-    logger.debug('JSON list accessed', request, request.GET)
+    LOGGER.debug('JSON list accessed', request, request.GET)
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)

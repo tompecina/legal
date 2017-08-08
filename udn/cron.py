@@ -29,7 +29,7 @@ from bs4 import BeautifulSoup
 
 from common.settings import BASE_DIR, TEST, TEST_TEMP_DIR
 from common.glob import LOCAL_URL
-from common.utils import get, post, composeref, decomposeref, logger
+from common.utils import get, post, composeref, decomposeref, LOGGER
 from szr.glob import SUPREME_ADMINISTRATIVE_COURT
 from szr.models import Court
 from sur.cron import sur_check
@@ -86,7 +86,7 @@ def cron_update():
                     res = get(ROOT_URL + fileurl)
                     if not res.ok:
                         continue
-                    logger.info(
+                    LOGGER.info(
                         'Writing abridged decision "{}"'
                         .format(
                             composeref(
@@ -96,7 +96,7 @@ def cron_update():
                                 year)))
                     with open(join(REPO_PREF, filename), 'wb') as outfile:
                         if not outfile.write(res.content):  # pragma: no cover
-                            logger.error(
+                            LOGGER.error(
                                 'Failed to write abridged decision "{}"'
                                 .format(
                                     composeref(
@@ -150,7 +150,7 @@ def cron_update():
             dct['__EVENTTARGET'] = pager[cpag - 1]['href'][70:-34]
             dct['__EVENTARGUMENT'] = ''
     except:  # pragma: no cover
-        logger.warning('Update failed')
+        LOGGER.warning('Update failed')
 
 
 def cron_find():
@@ -186,7 +186,7 @@ def cron_find():
             res = get(ROOT_URL + fileurl)
             if not res.ok:
                 continue
-            logger.info(
+            LOGGER.info(
                 'Writing anonymized decision "{}"'
                 .format(
                     composeref(
@@ -196,7 +196,7 @@ def cron_find():
                         dec.year)))
             with open(join(REPO_PREF, filename), 'wb') as outfile:
                 if not outfile.write(res.content):  # pragma: no cover
-                    logger.error(
+                    LOGGER.error(
                         'Failed to write anonymized decision "{}"'
                         .format(
                             composeref(
@@ -209,4 +209,4 @@ def cron_find():
             dec.save()
             return
     except:  # pragma: no cover
-        logger.warning('Find failed')
+        LOGGER.warning('Find failed')

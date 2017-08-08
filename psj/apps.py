@@ -33,10 +33,10 @@ class PsjConfig(AppConfig):
 
     @staticmethod
     def stat():
-        from common.utils import logger
+        from common.utils import LOGGER
         from psj.models import Courtroom, Party, Judge, Form, Hearing, Task
         now = datetime.now()
-        logger.debug('Partial statistics generated')
+        LOGGER.debug('Partial statistics generated')
         return (
             (
                 'Počet jednacích síní',

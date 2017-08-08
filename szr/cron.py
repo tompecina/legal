@@ -28,7 +28,7 @@ from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 from django.db.models import Q
 
-from common.utils import get, post, sleep, logger, composeref
+from common.utils import get, post, sleep, LOGGER, composeref
 from szr.models import Court, Proceedings
 from szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT
 
@@ -100,7 +100,7 @@ def cron_courts():
                 id=court['value'],
                 name=court.string.encode('utf-8'))
     except:  # pragma: no cover
-        logger.warning('Error importing courts')
+        LOGGER.warning('Error importing courts')
     Court.objects.all().update(reports=None)
     for court in Court.objects.all():
         if isreg(court):
@@ -112,9 +112,9 @@ def cron_courts():
                     Court.objects.filter(pk=item.id.string) \
                     .update(reports=court)
             except:  # pragma: no cover
-                logger.warning(
+                LOGGER.warning(
                     'Error setting hierarchy for {}'.format(court.id))
-    logger.info('Courts imported')
+    LOGGER.info('Courts imported')
 
 
 def p2s(proc):
@@ -157,7 +157,7 @@ def updateproc(proc):
             table = soup.find('tr', 'AAAA')
         assert table
     except:  # pragma: no cover
-        logger.warning(
+        LOGGER.warning(
             'Failed to check proceedings "{0.desc}" ({1}) for user '
             '"{2}" ({0.uid_id:d})'
                 .format(
@@ -177,7 +177,7 @@ def updateproc(proc):
                     datetime(*map(int, list(reversed(tbl[0].split('.')))
                     + tbl[1].split(':')))
         except:  # pragma: no cover
-            logger.warning(
+            LOGGER.warning(
                 'Failed to check proceedings "{0.desc}" ({1}) for user '
                 '"{2}" ({0.uid_id:d})'
                     .format(
@@ -188,7 +188,7 @@ def updateproc(proc):
             proc.notify |= notnew
             if changed:
                 proc.changed = changed
-                logger.info(
+                LOGGER.info(
                     'Change detected in proceedings "{0.desc}" ({1}) '
                     'for user "{2}" ({0.uid_id:d})'.format(
                         proc,
@@ -199,14 +199,14 @@ def updateproc(proc):
         if notnew:
             proc.changed = proc.updated
             if proc.changed:
-                logger.info(
+                LOGGER.info(
                     'Change detected in proceedings "{0.desc}" ({1}) '
                     'for user "{2}" ({0.uid_id:d})'.format(
                         proc,
                         p2s(proc),
                         User.objects.get(pk=proc.uid_id).username))
     proc.hash = hsh
-    logger.debug(
+    LOGGER.debug(
         'Proceedings "{0.desc}" ({1}) updated for user '
         '"{2}" ({0.uid_id:d})'.format(
             proc,
@@ -255,7 +255,7 @@ def szr_notice(uid):
                 text += '   {}\n\n'.format(NSS_GET_PROC.format(proc.auxid))
             proc.notify = False
             proc.save()
-        logger.info(
+        LOGGER.info(
             'Non-empty notice prepared for user "{}" ({:d})'
             .format(User.objects.get(pk=uid).username, uid))
     return text

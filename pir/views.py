@@ -31,7 +31,7 @@ from django.urls import reverse
 from django.http import QueryDict, Http404
 from common.glob import (
     INERR, TEXT_OPTS_KEYS, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF)
-from common.utils import Pager, new_xml, xml_decorate, logger, render
+from common.utils import Pager, new_xml, xml_decorate, LOGGER, render
 from sir.glob import L2N, L2S, L2R, S2D, R2I, A2D
 from sir.models import Vec, Osoba, DruhRoleVRizeni, Counter
 from pir.forms import MainForm
@@ -47,7 +47,7 @@ EXLIM = 1000
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -88,7 +88,7 @@ def mainpage(request):
         return redirect('{}?{}'.format(
             reverse('{}:{}list'.format(APP, cld['format'])),
             query.urlencode()))
-    logger.debug('Invalid form', request)
+    LOGGER.debug('Invalid form', request)
     err_message = INERR
     return render(
         request,
@@ -197,7 +197,7 @@ def getosoby(vec, *desc):
 @require_http_methods(('GET',))
 def htmllist(request):
 
-    logger.debug('HTML list accessed', request, request.GET)
+    LOGGER.debug('HTML list accessed', request, request.GET)
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
@@ -334,7 +334,7 @@ def xml_addparties(osoby, xml, tag, tagname):
 @require_http_methods(('GET',))
 def xmllist(request):
 
-    logger.debug('XML list accessed', request, request.GET)
+    LOGGER.debug('XML list accessed', request, request.GET)
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
@@ -428,7 +428,7 @@ def xmllist(request):
 @require_http_methods(('GET',))
 def csvlist(request):
 
-    logger.debug('CSV list accessed', request, request.GET)
+    LOGGER.debug('CSV list accessed', request, request.GET)
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
@@ -523,7 +523,7 @@ def json_addparties(osoby):
 @require_http_methods(('GET',))
 def jsonlist(request):
 
-    logger.debug('JSON list accessed', request, request.GET)
+    LOGGER.debug('JSON list accessed', request, request.GET)
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
@@ -572,7 +572,7 @@ def jsonlist(request):
 @require_http_methods(('GET',))
 def party(request, idx=0):
 
-    logger.debug('Party information page accessed, id={}'.format(idx), request)
+    LOGGER.debug('Party information page accessed, id={}'.format(idx), request)
     osoba = get_object_or_404(Osoba, id=idx)
     adresy = osoba.adresy.order_by('-id')
     num = 0

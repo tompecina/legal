@@ -27,7 +27,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 
 from common.glob import WD_NAMES, INERR_SHORT, ODP, ODM, UNC_DATE
-from common.utils import fdt, holiday, getbutton, logger, between, render
+from common.utils import fdt, holiday, getbutton, LOGGER, between, render
 from lht.glob import MIN_DATE, MAX_DATE, MIN_DUR, MAX_DUR
 from lht.forms import MainForm
 
@@ -116,7 +116,7 @@ class Period:
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -167,7 +167,7 @@ def mainpage(request):
                         'msg-note'))
 
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             messages = [(INERR_SHORT, None)]
 
     return render(request,

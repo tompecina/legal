@@ -34,10 +34,10 @@ class CommonConfig(AppConfig):
     @staticmethod
     def stat():
         from django.contrib.auth.models import User
-        from common.utils import logger
+        from common.utils import LOGGER
         from common.models import PwResetLink, Preset
         now = datetime.now()
-        logger.debug('Partial statistics generated')
+        LOGGER.debug('Partial statistics generated')
         return (
             (
                 'Počet uživatelů',
@@ -64,8 +64,8 @@ class CommonConfig(AppConfig):
 
     @staticmethod
     def userinfo(user):
-        from common.utils import logger
-        logger.debug('Partial user information generated')
+        from common.utils import LOGGER
+        LOGGER.debug('Partial user information generated')
         return (
             (
                 'Uživatelské jméno',

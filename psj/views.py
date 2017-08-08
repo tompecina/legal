@@ -36,7 +36,7 @@ from common.glob import (
     REGISTERS, INERR, TEXT_OPTS_KEYS, ODP, EXLIM_TITLE,
     LOCAL_SUBDOMAIN, LOCAL_URL, DTF)
 from common.utils import (
-    Pager, new_xml, xml_decorate, composeref, xmlbool, logger, render)
+    Pager, new_xml, xml_decorate, composeref, xmlbool, LOGGER, render)
 from szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT
 from szr.models import Court
 from psj.models import Hearing
@@ -55,7 +55,7 @@ EXLIM = 1000
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -91,7 +91,7 @@ def mainpage(request):
                 reverse('{}:{}list'.format(APP, cld['format'])),
                 query.urlencode()))
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
             return render(
                 request,
@@ -139,7 +139,7 @@ def g2p(reqd):
 @require_http_methods(('GET',))
 def htmllist(request):
 
-    logger.debug('HTML list accessed', request, request.GET)
+    LOGGER.debug('HTML list accessed', request, request.GET)
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
@@ -165,7 +165,7 @@ def htmllist(request):
 @require_http_methods(('GET',))
 def xmllist(request):
 
-    logger.debug('XML list accessed', request, request.GET)
+    LOGGER.debug('XML list accessed', request, request.GET)
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
@@ -252,7 +252,7 @@ def xmllist(request):
 @require_http_methods(('GET',))
 def csvlist(request):
 
-    logger.debug('CSV list accessed', request, request.GET)
+    LOGGER.debug('CSV list accessed', request, request.GET)
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
@@ -306,7 +306,7 @@ def csvlist(request):
 @require_http_methods(('GET',))
 def jsonlist(request):
 
-    logger.debug('JSON list accessed', request, request.GET)
+    LOGGER.debug('JSON list accessed', request, request.GET)
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
@@ -363,7 +363,7 @@ def stripjudge(name):
 @require_http_methods(('GET',))
 def courtinfo(request, court):
 
-    logger.debug(
+    LOGGER.debug(
         'Court information accessed, court="{}"'.format(court),
         request)
     courtrooms = Hearing.objects.filter(courtroom__court_id=court) \

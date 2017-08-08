@@ -34,7 +34,7 @@ from django.urls import reverse
 
 from common.glob import REGISTERS, INERR
 from common.utils import (
-    getbutton, Pager, composeref, decomposeref, logger, render)
+    getbutton, Pager, composeref, decomposeref, LOGGER, render)
 from szr.forms import EmailForm, ProcForm
 from szr.models import Court, Proceedings
 from szr.cron import updateproc, p2s
@@ -51,7 +51,7 @@ BATCH = 50
 @login_required
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -73,7 +73,7 @@ def mainpage(request):
             user.save()
             return redirect('szr:mainpage')
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
     proc = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk')
     total = proc.count()
@@ -96,7 +96,7 @@ def mainpage(request):
 @login_required
 def procform(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Proceedings form accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -139,7 +139,7 @@ def procform(request, idx=0):
             if not onlydesc:
                 updateproc(proc)
             proc.save()
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) {} proceedings "{}" ({})'
                 .format(
                     uname,
@@ -150,7 +150,7 @@ def procform(request, idx=0):
                 request)
             return redirect('szr:mainpage')
         else:  # pragma: no cover
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
     return render(
         request,
@@ -166,7 +166,7 @@ def procform(request, idx=0):
 @login_required
 def procdel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Proceedings delete page accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -182,7 +182,7 @@ def procdel(request, idx=0):
     else:
         proc = get_object_or_404(Proceedings, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) deleted proceedings "{}" ({})'
                 .format(uname, uid, proc.desc, p2s(proc)),
                 request)
@@ -195,7 +195,7 @@ def procdel(request, idx=0):
 @login_required
 def procdelall(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Delete all proceedings page accessed using method {}'
         .format(request.method),
         request)
@@ -211,7 +211,7 @@ def procdelall(request):
         if getbutton(request) == 'yes' and 'conf' in request.POST \
            and request.POST['conf'] == 'Ano':
             Proceedings.objects.filter(uid=uid).delete()
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) deleted all proceedings'.format(uname, uid),
                 request)
         return redirect('szr:mainpage')
@@ -221,7 +221,7 @@ def procdelall(request):
 @login_required
 def procbatchform(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Proceedings import page accessed using method {}'
         .format(request.method),
         request)
@@ -310,7 +310,7 @@ def procbatchform(request):
                                              'jedno řízení'.format(desc)))
                                         continue
                                 count += 1
-                    logger.info(
+                    LOGGER.info(
                         'User "{}" ({:d}) imported {:d} proceedings'
                         .format(uname, uid, count),
                         request)
@@ -323,7 +323,7 @@ def procbatchform(request):
                          'errors': errors})
 
                 except:  # pragma: no cover
-                    logger.error('Error reading file', request)
+                    LOGGER.error('Error reading file', request)
                     err_message = 'Chyba při načtení souboru'
 
     return render(
@@ -338,7 +338,7 @@ def procbatchform(request):
 @login_required
 def procexport(request):
 
-    logger.debug('Proceedings export page accessed', request)
+    LOGGER.debug('Proceedings export page accessed', request)
     uid = request.user.id
     uname = request.user.username
     res = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk') \
@@ -358,7 +358,7 @@ def procexport(request):
                 proc.year)
         )
         writer.writerow(dat)
-    logger.info(
+    LOGGER.info(
         'User "{}" ({:d}) exported proceedings'.format(uname, uid),
         request)
     return response
@@ -367,7 +367,7 @@ def procexport(request):
 @require_http_methods(('GET',))
 def courts(request):
 
-    logger.debug('List of courts accessed', request)
+    LOGGER.debug('List of courts accessed', request)
     return render(
         request,
         'szr_courts.html',

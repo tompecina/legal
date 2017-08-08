@@ -22,7 +22,7 @@
 
 from django.contrib.auth.models import User
 
-from common.utils import text_opt, logger
+from common.utils import text_opt, LOGGER
 from sur.models import Party, Found
 
 
@@ -40,7 +40,7 @@ def sur_notice(uid):
                 '{0.register} {0.number:d}/{0.year:d}\n'.format(item)
             text += '   {}\n\n'.format(item.url)
         Found.objects.filter(uid=uid).delete()
-        logger.info(
+        LOGGER.info(
             'Non-empty notice prepared for user "{}" ({:d})'
             .format(User.objects.get(pk=uid).username, uid))
     return text
@@ -59,7 +59,7 @@ def sur_check(name, court, senate, register, number, year, url):
                     number=number,
                     year=year,
                     url=url)[1]:
-                logger.info(
+                LOGGER.info(
                     'New party "{}" detected for user "{}" ({:d})'.format(
                         name,
                         User.objects.get(pk=party.uid_id).username,

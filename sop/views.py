@@ -26,7 +26,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 
 from common.glob import INERR_SHORT
-from common.utils import famt, LocalFloat, logger, render
+from common.utils import famt, LocalFloat, LOGGER, render
 from cnb.utils import get_fx_rate
 from sop.forms import MainForm
 
@@ -39,7 +39,7 @@ APPVERSION = apps.get_app_config(APP).version
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -186,7 +186,7 @@ def mainpage(request):
                     if fx_info:
                         messages.append((fx_info, 'msg-note'))
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             messages = [(INERR_SHORT, None)]
 
     return render(request,

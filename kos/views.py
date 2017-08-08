@@ -26,7 +26,7 @@ from django.views.decorators.http import require_http_methods
 from django.apps import apps
 
 from common.glob import INERR_SHORT
-from common.utils import getbutton, famt, logger, render
+from common.utils import getbutton, famt, LOGGER, render
 from kos.forms import MainForm
 
 
@@ -38,7 +38,7 @@ APPVERSION = apps.get_app_config(APP).version
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -145,7 +145,7 @@ def mainpage(request):
                 '{} Kč'.format(famt(round(tot / 0.3))),
                 'msg-total'))
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             messages = [(INERR_SHORT, None)]
 
     return render(

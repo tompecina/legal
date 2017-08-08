@@ -22,7 +22,7 @@
 
 from datetime import date, datetime, timedelta
 
-from common.utils import new_xml, logger
+from common.utils import new_xml, LOGGER
 from cache.utils import getcache
 from cnb.models import FXrate, MPIrate, MPIstat
 
@@ -33,7 +33,7 @@ DOWNLOAD_REPEAT = timedelta(hours=1)
 
 def get_fx_rate(curr, dat, log=None, use_fixed=False, log_fixed=None):
 
-    logger.debug(
+    LOGGER.debug(
         'FX rate requested, currency "{0}" for '
         '{1.year:d}-{1.month:02d}-{1.day:02d}, fixed "{2}"'
         .format(curr, dat, use_fixed))
@@ -141,7 +141,7 @@ def get_fx_rate(curr, dat, log=None, use_fixed=False, log_fixed=None):
             '{0.day:d}.{0.month:d}.{0.year:d}'.format(dat)
         txt = getcache(surl, DOWNLOAD_REPEAT)[0]
         if not txt:
-            logger.warning('No connection to CNB server')
+            LOGGER.warning('No connection to CNB server')
             return None, None, None, 'Chyba spojení se serverem ČNB'
     try:
         soup = new_xml(txt)
@@ -152,7 +152,7 @@ def get_fx_rate(curr, dat, log=None, use_fixed=False, log_fixed=None):
         dreq = soup.find('kurzy', {'banka': 'CNB'})['datum']
         dreq = date(int(dreq[6:]), int(dreq[3:5]), int(dreq[:2]))
     except:
-        logger.error(
+        LOGGER.error(
             'Invalid FX table structure for '
             '{0.year:d}-{0.month:02d}-{0.day:02d}'.format(dat))
         return None, None, None, 'Chyba struktury kursové tabulky'
@@ -185,7 +185,7 @@ def get_fx_rate(curr, dat, log=None, use_fixed=False, log_fixed=None):
             rate = lin['pomer']
         rate = float(rate.replace(',', '.'))
     except:
-        logger.error(
+        LOGGER.error(
             'Invalid FX table line for {0.year:d}-{0.month:02d}-{0.day:02d}'
             .format(dat))
         return None, None, dreq, 'Chyba řádku kursové tabulky'
@@ -201,7 +201,7 @@ def get_fx_rate(curr, dat, log=None, use_fixed=False, log_fixed=None):
 
 def get_mpi_rate(typ, dat, log=None):
 
-    logger.debug(
+    LOGGER.debug(
         'MPI rate of type "{0}" requested for '
         '{1.year:d}-{1.month:02d}-{1.day:02d}'.format(typ, dat))
 
@@ -228,12 +228,12 @@ def get_mpi_rate(typ, dat, log=None):
         surl = prefix + types[typ][0] + suffix
         txt = getcache(surl, DOWNLOAD_REPEAT)[0]
         if not txt:
-            logger.warning('No connection to CNB server')
+            LOGGER.warning('No connection to CNB server')
             return None, 'Chyba spojení se serverem ČNB'
 
         txt = txt.replace('\r', '').split('\n')
         if txt[0] != types[typ][1]:
-            logger.error('Error in rate table for {}'.format(types[typ][0]))
+            LOGGER.error('Error in rate table for {}'.format(types[typ][0]))
             return None, 'Chyba tabulky sazeb (1)'
 
         rates = []
@@ -244,7 +244,7 @@ def get_mpi_rate(typ, dat, log=None):
                     (float(lin[9:].replace(',', '.')),
                      date(int(lin[:4]), int(lin[4:6]), int(lin[6:8]))))
         except:
-            logger.error('Error in rate table for {}'.format(types[typ][0]))
+            LOGGER.error('Error in rate table for {}'.format(types[typ][0]))
             return None, 'Chyba tabulky sazeb (2)'
 
         try:
@@ -255,12 +255,12 @@ def get_mpi_rate(typ, dat, log=None):
                         rate=rat[0],
                         valid=rat[1])
         except:  # pragma: no cover
-            logger.error('Error writing in database')
+            LOGGER.error('Error writing in database')
             return None, 'Chyba zápisu do database (1)'
         try:
             MPIstat.objects.get_or_create(type=typ)[0].save()
         except:  # pragma: no cover
-            logger.error('Error writing in database')
+            LOGGER.error('Error writing in database')
             return None, 'Chyba zápisu do database (2)'
 
     res = MPIrate.objects.filter(type=typ, valid__lte=dat).order_by('-valid')

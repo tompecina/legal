@@ -42,7 +42,7 @@ from common.glob import (
     YDCONVS, ODP, MDCONVS, LIM, INERR, LOCAL_SUBDOMAIN, LOCAL_URL, ASSET_EXP)
 from common.utils import (
     getbutton, yfactor, mfactor, famt, xml_decorate, xml_espace, xml_unespace,
-    LocalFloat, get_xml, new_xml, iso2date, register_fonts, make_pdf, logger,
+    LocalFloat, get_xml, new_xml, iso2date, register_fonts, make_pdf, LOGGER,
     render)
 from common import fields
 from common.views import error
@@ -911,7 +911,7 @@ def from_xml(dat):
 @login_required
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -1640,7 +1640,7 @@ def mainpage(request):
 @login_required
 def debitform(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Debit form accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -1762,7 +1762,7 @@ def debitform(request, idx=0):
                 return redirect('hsp:mainpage')
 
             else:
-                logger.debug('Invalid form', request)
+                LOGGER.debug('Invalid form', request)
                 if not err_message:
                     err_message = INERR
 
@@ -1782,7 +1782,7 @@ def debitform(request, idx=0):
 @login_required
 def debitdel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Debit delete page accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -1826,7 +1826,7 @@ def debitdel(request, idx=0):
 @login_required
 def creditform(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Credit form accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -1917,7 +1917,7 @@ def creditform(request, idx=0):
                 return redirect('hsp:mainpage')
 
             else:
-                logger.debug('Invalid form', request)
+                LOGGER.debug('Invalid form', request)
                 err_message = INERR
                 if numd > 1:
                     for num in range(numd):
@@ -1939,7 +1939,7 @@ def creditform(request, idx=0):
 @login_required
 def creditdel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Credit delete page accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -1971,7 +1971,7 @@ def creditdel(request, idx=0):
 @login_required
 def balanceform(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Balance form accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -2017,7 +2017,7 @@ def balanceform(request, idx=0):
             return redirect('hsp:mainpage')
 
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
 
     return render(
@@ -2033,7 +2033,7 @@ def balanceform(request, idx=0):
 @login_required
 def balancedel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Balance delete page accessed using method {}, id={}'
             .format(request.method, idx),
         request,
@@ -2065,7 +2065,7 @@ def balancedel(request, idx=0):
 @login_required
 def fxrateform(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'FX rate form accessed using method {}, id={}'
             .format(request.method, idx),
         request,
@@ -2119,7 +2119,7 @@ def fxrateform(request, idx=0):
             return redirect('hsp:mainpage')
 
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
 
     return render(
@@ -2136,7 +2136,7 @@ def fxrateform(request, idx=0):
 @login_required
 def fxratedel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'FX rate delete page accessed using method {}, id={}'
         .format(request.method, idx),
         request,

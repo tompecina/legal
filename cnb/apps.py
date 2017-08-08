@@ -32,8 +32,8 @@ class CnbConfig(AppConfig):
     @staticmethod
     def stat():
         from cnb.models import FXrate, MPIrate, MPIstat
-        from common.utils import logger
-        logger.debug('Partial statistics generated')
+        from common.utils import LOGGER
+        LOGGER.debug('Partial statistics generated')
         return (
             (
                 'Počet kursových tabulek',

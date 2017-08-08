@@ -33,7 +33,7 @@ from django.apps import apps
 from django.urls import reverse
 
 from common.glob import INERR
-from common.utils import getbutton, Pager, logger, render
+from common.utils import getbutton, Pager, LOGGER, render
 from szr.forms import EmailForm
 from sir.glob import L2N, L2S
 from sir.models import Vec, Insolvency
@@ -52,7 +52,7 @@ BATCH = 50
 @login_required
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -72,7 +72,7 @@ def mainpage(request):
             user.save()
             return redirect('sir:mainpage')
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
     res = Insolvency.objects.filter(uid=uid).order_by('desc', 'pk')
     total = res.count()
@@ -95,7 +95,7 @@ def mainpage(request):
 @login_required
 def insform(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Proceedings form accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -121,7 +121,7 @@ def insform(request, idx=0):
                 cld['timestamp_update'] = res.timestamp_update
             res = Insolvency(uid_id=uid, **cld)
             res.save()
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) {} proceedings "{}" ({})'
                 .format(
                     uname,
@@ -132,7 +132,7 @@ def insform(request, idx=0):
                 request)
             return redirect('sir:mainpage')
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
     return render(
         request,
@@ -147,7 +147,7 @@ def insform(request, idx=0):
 @login_required
 def insdel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Proceedings delete page accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -163,7 +163,7 @@ def insdel(request, idx=0):
     else:
         ins = get_object_or_404(Insolvency, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) deleted proceedings "{}" ({})'
                 .format(uname, uid, ins.desc, p2s(ins)),
                 request)
@@ -176,7 +176,7 @@ def insdel(request, idx=0):
 @login_required
 def insdelall(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Delete all proceedings page accessed using method {}'
         .format(request.method),
         request)
@@ -192,7 +192,7 @@ def insdelall(request):
         if getbutton(request) == 'yes' and 'conf' in request.POST \
            and request.POST['conf'] == 'Ano':
             Insolvency.objects.filter(uid=uid).delete()
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) deleted all proceedings'.format(uname, uid),
                 request)
         return redirect('sir:mainpage')
@@ -202,7 +202,7 @@ def insdelall(request):
 @login_required
 def insbatchform(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Proceedings import page accessed using method {}'
             .format(request.method),
         request)
@@ -274,7 +274,7 @@ def insbatchform(request):
                                          'jedno řízení'.format(desc)))
                                     continue
                                 count += 1
-                    logger.info(
+                    LOGGER.info(
                         'User "{}" ({:d}) imported {:d} proceedings'
                             .format(uname, uid, count),
                         request)
@@ -287,7 +287,7 @@ def insbatchform(request):
                          'errors': errors})
 
                 except:  # pragma: no cover
-                    logger.error('Error reading file', request)
+                    LOGGER.error('Error reading file', request)
                     err_message = 'Chyba při načtení souboru'
 
     return render(
@@ -302,7 +302,7 @@ def insbatchform(request):
 @login_required
 def insexport(request):
 
-    logger.debug('Proceedings export page accessed', request)
+    LOGGER.debug('Proceedings export page accessed', request)
     uid = request.user.id
     uname = request.user.username
     res = Insolvency.objects.filter(uid=uid).order_by('desc', 'pk') \
@@ -319,7 +319,7 @@ def insexport(request):
             'ano' if idx.detailed else 'ne',
         ]
         writer.writerow(dat)
-    logger.info(
+    LOGGER.info(
         'User "{}" ({:d}) exported proceedings'.format(uname, uid),
         request)
     return response
@@ -328,7 +328,7 @@ def insexport(request):
 @require_http_methods(('GET',))
 def courts(request):
 
-    logger.debug('List of courts accessed', request)
+    LOGGER.debug('List of courts accessed', request)
     rows = sorted([{'short': L2S[x], 'name': L2N[x]} for x in
         Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()],
         key=lambda x: strxfrm(x['name']))

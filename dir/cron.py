@@ -22,7 +22,7 @@
 
 from django.contrib.auth.models import User
 
-from common.utils import text_opt, icmp, logger
+from common.utils import text_opt, icmp, LOGGER
 from sir.glob import L2S
 from dir.models import Debtor, Discovered
 
@@ -43,7 +43,7 @@ def dir_notice(uid):
                     debtor.vec)
             text += '   {}\n\n'.format(debtor.vec.link)
         Discovered.objects.filter(uid=uid, vec__link__isnull=False).delete()
-        logger.info(
+        LOGGER.info(
             'Non-empty notice prepared for user "{}" ({:d})'.format(
                 User.objects.get(pk=uid).username, uid))
     return text
@@ -70,7 +70,7 @@ def dir_check(osoba, vec):
                     uid_id=debtor.uid_id,
                     desc=debtor.desc,
                     vec=vec)[1]:
-                logger.info(
+                LOGGER.info(
                     'New debtor "{}" detected for user "{}" ({:d})'.format(
                         debtor.desc,
                         User.objects.get(pk=debtor.uid_id).username,

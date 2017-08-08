@@ -25,7 +25,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 
-from common.utils import normalize, post, logger
+from common.utils import normalize, post, LOGGER
 from dir.cron import dir_check
 from sir.glob import L2N, L2S, SELIST, BELIST
 from sir.models import (
@@ -104,7 +104,7 @@ def cron_gettr():
                 error=False))
 
         Transaction.objects.bulk_create(lst)
-        logger.debug('Read {:d} transaction(s)'.format(len(lst)))
+        LOGGER.debug('Read {:d} transaction(s)'.format(len(lst)))
 
 
 def p2s(ins):
@@ -169,7 +169,7 @@ def cron_proctr():
                                     uid_id=ins.uid_id,
                                     desc=ins.desc,
                                     vec=vec)[1]:
-                                logger.info(
+                                LOGGER.info(
                                     'Change detected in proceedings "{}" '
                                     '({}) for user "{}" ({:d})'
                                     .format(
@@ -316,13 +316,13 @@ def cron_proctr():
             trans.save()
 
     Counter.objects.update_or_create(id='DL', defaults={'number': idx})
-    logger.debug('Transactions processed')
+    LOGGER.debug('Transactions processed')
 
 
 def cron_deltr():
 
     Transaction.objects.filter(error=False).delete()
-    logger.debug('Transactions deleted')
+    LOGGER.debug('Transactions deleted')
 
 
 def cron_getws2():
@@ -377,7 +377,7 @@ def cron_getws2():
         idx = vec.id
 
     Counter.objects.update_or_create(id='PR', defaults={'number': idx})
-    logger.debug('WS2 information added')
+    LOGGER.debug('WS2 information added')
 
 
 def cron_delerr():
@@ -385,7 +385,7 @@ def cron_delerr():
     Vec.objects \
        .filter(druhStavRizeni=DruhStavRizeni.objects.get(desc='MYLNÝ ZÁP.')) \
        .delete()
-    logger.debug('Erroneous proceedings deleted')
+    LOGGER.debug('Erroneous proceedings deleted')
 
 
 def cron_update():
@@ -395,7 +395,7 @@ def cron_update():
     cron_proctr()
     cron_deltr()
     cron_delerr()
-    logger.info('Batch processed')
+    LOGGER.info('Batch processed')
 
 
 def sir_notice(uid):
@@ -415,7 +415,7 @@ def sir_notice(uid):
                         ins.vec)
             text += '   {}\n\n'.format(ins.vec.link)
         Tracked.objects.filter(uid=uid, vec__link__isnull=False).delete()
-        logger.info(
+        LOGGER.info(
             'Non-empty notice prepared for user "{}" ({:d})'
                 .format(User.objects.get(pk=uid).username, uid))
     return text

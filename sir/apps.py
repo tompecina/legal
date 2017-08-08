@@ -33,12 +33,12 @@ class SirConfig(AppConfig):
 
     @staticmethod
     def stat():
-        from common.utils import logger
+        from common.utils import LOGGER
         from sir.models import (
             DruhAdresy, Adresa, DruhRoleVRizeni, Osoba, Role, DruhStavRizeni,
             Vec, Counter, Transaction, Insolvency, Tracked)
         now = datetime.now()
-        logger.debug('Partial statistics generated')
+        LOGGER.debug('Partial statistics generated')
         return (
             (
                 'Počet druhů adresy',
@@ -146,9 +146,9 @@ class SirConfig(AppConfig):
 
     @staticmethod
     def userinfo(user):
-        from common.utils import logger
+        from common.utils import LOGGER
         from sir.models import Insolvency
-        logger.debug('Partial user information generated')
+        LOGGER.debug('Partial user information generated')
         return (
             (
                 'Počet sledovaných insolvencí',

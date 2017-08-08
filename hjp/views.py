@@ -43,7 +43,7 @@ from common.glob import (
 from common.utils import (
     getbutton, yfactor, mfactor, ODP, famt, dispcurr, xml_decorate,
     xml_espace, xml_unespace, normfl, LocalFloat, get_xml, new_xml,
-    iso2date, register_fonts, make_pdf, logger, render)
+    iso2date, register_fonts, make_pdf, LOGGER, render)
 from common.views import error
 from cache.utils import getasset, setasset
 from cnb.utils import get_mpi_rate
@@ -564,7 +564,7 @@ def from_xml(dat):
 @login_required
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -1238,7 +1238,7 @@ def mainpage(request):
                 return response
 
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
 
     for row in rows:
@@ -1270,7 +1270,7 @@ def mainpage(request):
 @login_required
 def transform(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Transaction form accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -1329,7 +1329,7 @@ def transform(request, idx=0):
             return redirect('hjp:mainpage')
 
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
 
     return render(
@@ -1346,7 +1346,7 @@ def transform(request, idx=0):
 @login_required
 def transdel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Transaction delete page accessed using method {}, id={}'
         .format(request.method, idx),
         request,

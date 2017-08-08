@@ -27,7 +27,7 @@ from bs4 import BeautifulSoup
 from django.http import QueryDict
 
 from common.glob import LOCAL_URL
-from common.utils import get, decomposeref, normreg, sleep, logger
+from common.utils import get, decomposeref, normreg, sleep, LOGGER
 from szr.models import Court
 from szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT
 from sur.cron import sur_check
@@ -55,8 +55,8 @@ def cron_courtrooms():
                 if not croomc:
                     croom.save()
         except:  # pragma: no cover
-            logger.warning('Error downloading courtrooms')
-    logger.info('Courtrooms downloaded')
+            LOGGER.warning('Error downloading courtrooms')
+    LOGGER.info('Courtrooms downloaded')
 
 
 def cron_schedule(*args):
@@ -73,7 +73,7 @@ def cron_schedule(*args):
             continue
         for dat in dates:
             Task.objects.get_or_create(court=court, date=dat)
-    logger.info('Tasks scheduled')
+    LOGGER.info('Tasks scheduled')
 
 
 ROOT_URL = 'http://infosoud.justice.cz/'
@@ -179,11 +179,11 @@ def cron_update():
                     pass
         task.delete()
     except:
-        logger.warning(
+        LOGGER.warning(
             'Failed to download hearings for {0}, '
             '{1.year:d}-{1.month:02d}-{1.day:02d}'
                 .format(task.court_id, task.date))
         return
-    logger.debug(
+    LOGGER.debug(
         'Downloaded hearings for {0}, {1.year:d}-{1.month:02d}-{1.day:02d}'
             .format(task.court_id, task.date))

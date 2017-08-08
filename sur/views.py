@@ -35,7 +35,7 @@ from django.urls import reverse
 from common.glob import (
     INERR, GR_CHAR, TEXT_OPTS, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA,
     TEXT_OPTS_AI)
-from common.utils import getbutton, grammar, between, Pager, logger, render
+from common.utils import getbutton, grammar, between, Pager, LOGGER, render
 from szr.forms import EmailForm
 from sur.forms import PartyForm
 from sur.models import Party
@@ -53,7 +53,7 @@ BATCH = 50
 @login_required
 def mainpage(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Main page accessed using method {}'.format(request.method),
         request,
         request.POST)
@@ -75,7 +75,7 @@ def mainpage(request):
             user.save()
             return redirect('sur:mainpage')
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
     res = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'pk') \
         .values()
@@ -105,7 +105,7 @@ def mainpage(request):
 @login_required
 def partyform(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Party form accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -138,7 +138,7 @@ def partyform(request, idx=0):
             res = Party(uid_id=uid, **cld)
             res.party_opt = TEXT_OPTS_KEYS.index(cld['party_opt'])
             res.save()
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) {} party {}'
                 .format(
                     uname,
@@ -148,7 +148,7 @@ def partyform(request, idx=0):
                 request)
             return redirect('sur:mainpage')
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
     return render(
         request,
@@ -164,7 +164,7 @@ def partyform(request, idx=0):
 @login_required
 def partydel(request, idx=0):
 
-    logger.debug(
+    LOGGER.debug(
         'Party delete page accessed using method {}, id={}'
         .format(request.method, idx),
         request,
@@ -180,7 +180,7 @@ def partydel(request, idx=0):
     else:
         party = get_object_or_404(Party, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) deleted party "{}"'
                 .format(uname, uid, party.party),
                 request)
@@ -193,7 +193,7 @@ def partydel(request, idx=0):
 @login_required
 def partydelall(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Delete all parties page accessed using method {}'
         .format(request.method),
         request)
@@ -209,7 +209,7 @@ def partydelall(request):
         if getbutton(request) == 'yes' and 'conf' in request.POST \
            and request.POST['conf'] == 'Ano':
             Party.objects.filter(uid=uid).delete()
-            logger.info(
+            LOGGER.info(
                 'User "{}" ({:d}) deleted all parties'.format(uname, uid),
                 request)
         return redirect('sur:mainpage')
@@ -219,7 +219,7 @@ def partydelall(request):
 @login_required
 def partybatchform(request):
 
-    logger.debug(
+    LOGGER.debug(
         'Party import page accessed using method {}'.format(request.method),
         request)
 
@@ -272,7 +272,7 @@ def partybatchform(request):
                                          'jeden účastník'.format(line)))
                                     continue
                                 count += 1
-                    logger.info(
+                    LOGGER.info(
                         'User "{}" ({:d}) imported {} party/ies'
                         .format(uname, uid, count),
                         request)
@@ -285,10 +285,10 @@ def partybatchform(request):
                          'errors': errors})
 
                 except:  # pragma: no cover
-                    logger.error('Error reading file', request)
+                    LOGGER.error('Error reading file', request)
                     err_message = 'Chyba při načtení souboru'
         else:
-            logger.debug('Invalid form', request)
+            LOGGER.debug('Invalid form', request)
             err_message = INERR
 
     return render(
@@ -305,7 +305,7 @@ def partybatchform(request):
 @login_required
 def partyexport(request):
 
-    logger.debug('Party export page accessed', request)
+    LOGGER.debug('Party export page accessed', request)
     uid = request.user.id
     uname = request.user.username
     res = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'id') \
@@ -317,7 +317,7 @@ def partyexport(request):
     for item in res:
         dat = (item.party + TEXT_OPTS_CA[item.party_opt],)
         writer.writerow(dat)
-    logger.info(
+    LOGGER.info(
         'User "{}" ({:d}) exported parties'.format(uname, uid),
         request)
     return response
