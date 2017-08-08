@@ -26,6 +26,7 @@ import time
 from datetime import date, timedelta
 from calendar import monthrange, isleap
 from math import inf
+from os import environ
 from os.path import join
 from re import compile
 from xml.sax.saxutils import escape, unescape
@@ -824,6 +825,9 @@ def sleep(*args, **kwargs):  # pragma: no cover
         time.sleep(*args, **kwargs)
 
 
+output_counter = 0
+
+
 def render(
         request,
         template_name,
@@ -846,10 +850,19 @@ def render(
         **kwargs)
 
     if TEST and not content_type:
-        err = tidy_document(response.content.decode())[1]
+        content = response.content
+        err = tidy_document(content.decode())[1]
         if err:
             raise AssertionError(
                 'Template: {} Errors: {}'.format(template_name, err))
+
+        dump_path = environ.get('DUMP_PATH')
+        if dump_path:
+            global output_counter
+            filename = '{:05d}-{}'.format(output_counter, template_name)
+            output_counter += 1
+            with open(join(dump_path, filename), 'wb') as outfile:
+                outfile.write(content)
 
     return response
 
