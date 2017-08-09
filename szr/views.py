@@ -33,8 +33,7 @@ from django.apps import apps
 from django.urls import reverse
 
 from common.glob import REGISTERS, INERR
-from common.utils import (
-    getbutton, Pager, composeref, decomposeref, LOGGER, render)
+from common.utils import getbutton, Pager, composeref, decomposeref, LOGGER, render
 from szr.forms import EmailForm, ProcForm
 from szr.models import Court, Proceedings
 from szr.cron import updateproc, p2s
@@ -51,10 +50,7 @@ BATCH = 50
 @login_required
 def mainpage(request):
 
-    LOGGER.debug(
-        'Main page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Main page accessed using method {}'.format(request.method), request, request.POST)
 
     err_message = ''
     uid = request.user.id
@@ -96,11 +92,7 @@ def mainpage(request):
 @login_required
 def procform(request, idx=0):
 
-    LOGGER.debug(
-        'Proceedings form accessed using method {}, id={}'
-        .format(request.method, idx),
-        request,
-        request.POST)
+    LOGGER.debug('Proceedings form accessed using method {}, id={}'.format(request.method, idx), request, request.POST)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -108,8 +100,7 @@ def procform(request, idx=0):
     button = getbutton(request)
     crts = Court.objects.order_by('name')
     if request.method == 'GET':
-        form = ProcForm(initial=model_to_dict(get_object_or_404(
-            Proceedings, pk=idx, uid=uid))) if idx else ProcForm()
+        form = ProcForm(initial=model_to_dict(get_object_or_404(Proceedings, pk=idx, uid=uid))) if idx else ProcForm()
     elif button == 'back':
         return redirect('szr:mainpage')
     else:
@@ -125,10 +116,9 @@ def procform(request, idx=0):
                 cld['timestamp_update'] = proc.timestamp_update
             cld['court_id'] = cld['court']
             del cld['court']
-            onlydesc = idx and proc.court.id == cld['court_id'] \
-                and proc.senate == cld['senate'] \
-                and proc.register == cld['register'] \
-                and proc.number == cld['number'] and proc.year == cld['year']
+            onlydesc = (
+                idx and proc.court.id == cld['court_id'] and proc.senate == cld['senate']
+                and proc.register == cld['register'] and proc.number == cld['number'] and proc.year == cld['year'])
             if onlydesc:
                 cld['changed'] = proc.changed
                 cld['updated'] = proc.updated
@@ -141,12 +131,7 @@ def procform(request, idx=0):
             proc.save()
             LOGGER.info(
                 'User "{}" ({:d}) {} proceedings "{}" ({})'
-                .format(
-                    uname,
-                    uid,
-                    'updated' if idx else 'added',
-                    proc.desc,
-                    p2s(proc)),
+                .format(uname, uid, 'updated' if idx else 'added', proc.desc, p2s(proc)),
                 request)
             return redirect('szr:mainpage')
         else:  # pragma: no cover
@@ -167,8 +152,7 @@ def procform(request, idx=0):
 def procdel(request, idx=0):
 
     LOGGER.debug(
-        'Proceedings delete page accessed using method {}, id={}'
-        .format(request.method, idx),
+        'Proceedings delete page accessed using method {}, id={}'.format(request.method, idx),
         request,
         request.POST)
     uid = request.user.id
@@ -183,8 +167,7 @@ def procdel(request, idx=0):
         proc = get_object_or_404(Proceedings, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
             LOGGER.info(
-                'User "{}" ({:d}) deleted proceedings "{}" ({})'
-                .format(uname, uid, proc.desc, p2s(proc)),
+                'User "{}" ({:d}) deleted proceedings "{}" ({})'.format(uname, uid, proc.desc, p2s(proc)),
                 request)
             proc.delete()
             return redirect('szr:procdeleted')
@@ -195,10 +178,7 @@ def procdel(request, idx=0):
 @login_required
 def procdelall(request):
 
-    LOGGER.debug(
-        'Delete all proceedings page accessed using method {}'
-        .format(request.method),
-        request)
+    LOGGER.debug('Delete all proceedings page accessed using method {}'.format(request.method), request)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -208,12 +188,9 @@ def procdelall(request):
             {'app': APP,
              'page_title': 'Smazání všech řízení'})
     else:
-        if getbutton(request) == 'yes' and 'conf' in request.POST \
-           and request.POST['conf'] == 'Ano':
+        if getbutton(request) == 'yes' and 'conf' in request.POST and request.POST['conf'] == 'Ano':
             Proceedings.objects.filter(uid=uid).delete()
-            LOGGER.info(
-                'User "{}" ({:d}) deleted all proceedings'.format(uname, uid),
-                request)
+            LOGGER.info('User "{}" ({:d}) deleted all proceedings'.format(uname, uid), request)
         return redirect('szr:mainpage')
 
 
@@ -221,10 +198,7 @@ def procdelall(request):
 @login_required
 def procbatchform(request):
 
-    LOGGER.debug(
-        'Proceedings import page accessed using method {}'
-        .format(request.method),
-        request)
+    LOGGER.debug('Proceedings import page accessed using method {}'.format(request.method), request)
 
     err_message = ''
     uid = request.user.id
@@ -266,8 +240,7 @@ def procbatchform(request):
                                 errors.append((idx, 'Chybná zkratka soudu'))
                                 continue
                             try:
-                                senate, register, number, year = \
-                                    decomposeref(line[2])
+                                senate, register, number, year = decomposeref(line[2])
                                 assert senate >= 0
                                 assert register in REGISTERS
                                 assert number > 0
@@ -286,8 +259,7 @@ def procbatchform(request):
                                     year=year)
                                 if not proc.exists():
                                     try:
-                                        proc = Proceedings.objects. \
-                                            update_or_create(
+                                        proc = Proceedings.objects.update_or_create(
                                                 uid_id=uid,
                                                 desc=desc,
                                                 defaults={
@@ -304,16 +276,10 @@ def procbatchform(request):
                                         updateproc(proc)
                                         proc.save()
                                     except:
-                                        errors.append(
-                                            (idx,
-                                             'Popisu "{}" odpovídá více než '
-                                             'jedno řízení'.format(desc)))
+                                        errors.append((idx, 'Popisu "{}" odpovídá více než jedno řízení'.format(desc)))
                                         continue
                                 count += 1
-                    LOGGER.info(
-                        'User "{}" ({:d}) imported {:d} proceedings'
-                        .format(uname, uid, count),
-                        request)
+                    LOGGER.info('User "{}" ({:d}) imported {:d} proceedings'.format(uname, uid, count), request)
                     return render(
                         request,
                         'szr_procbatchresult.html',
@@ -341,11 +307,9 @@ def procexport(request):
     LOGGER.debug('Proceedings export page accessed', request)
     uid = request.user.id
     uname = request.user.username
-    res = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk') \
-        .distinct()
+    res = Proceedings.objects.filter(uid=uid).order_by('desc', 'pk').distinct()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
-    response['Content-Disposition'] = \
-        'attachment; filename=szr.csv'
+    response['Content-Disposition'] = 'attachment; filename=szr.csv'
     writer = csvwriter(response)
     for proc in res:
         dat = (

@@ -40,9 +40,7 @@ def findloc(addr):
     if not addr:
         return None
     addr = quote(unquote(addr).encode('utf-8'))
-    url = \
-        'https://maps.googleapis.com/maps/api/geocode/' \
-        'json?address={}&language=cs&sensor=false'.format(addr)
+    url = 'https://maps.googleapis.com/maps/api/geocode/json?address={}&language=cs&sensor=false'.format(addr)
     res = getcache(url, timedelta(weeks=1))[0]
     if not res:
         return None
@@ -56,11 +54,9 @@ def findloc(addr):
 
 def finddist(from_lat, from_lon, to_lat, to_lon):
 
-    url = \
-        'https://maps.googleapis.com/maps/api/distancematrix/' \
-        'json?origins={:f},{:f}&destinations={:f},{:f}&mode=driving&' \
-        'units=metric&language=cs&sensor=false' \
-        .format(from_lat, from_lon, to_lat, to_lon)
+    url = (
+        'https://maps.googleapis.com/maps/api/distancematrix/json?origins={:f},{:f}&destinations={:f},{:f}'
+        '&mode=driving&units=metric&language=cs&sensor=false'.format(from_lat, from_lon, to_lat, to_lon))
     res = getcache(url, timedelta(weeks=1))[0]
     if not res:
         return None, None

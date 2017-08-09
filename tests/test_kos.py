@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/test_kos.py
+# tests/test_kos.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -604,14 +604,12 @@ class TestViews(SimpleTestCase):
                 query['partner'] = 'on'
             if test[11]:
                 query['vat'] = 'on'
-            query['submit_{}'.format('dual' if test[13] else 'single')] = \
-                'Vypočítat'
+            query['submit_{}'.format('dual' if test[13] else 'single')] = 'Vypočítat'
             res = self.client.post('/kos/', query)
             con = res.context['messages']
             self.assertEqual(
                 con[0][0],
-                ('Kalkulace pro společný návrh manželů'
-                 if test[13] else 'Kalkulace pro samostatného dlužníka'))
+                'Kalkulace pro společný návrh manželů' if test[13] else 'Kalkulace pro samostatného dlužníka')
             lines = 8 if test[13] else 7
             for idx in range(lines):
                 self.assertEqual(con[idx + 1][0].split()[-2], test[idx + 14])

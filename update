@@ -19,7 +19,7 @@ rsync -avhHzx \
       --exclude '/repo/' \
       --exclude 'test*' \
       --exclude 'fixtures/*_test*.json' \
-      --exclude '/test/' \
+      --exclude '/tests/' \
       --exclude '/htmlcov/' \
       --exclude '/dosass' \
       --exclude '*.map' \

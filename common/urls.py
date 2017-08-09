@@ -24,9 +24,7 @@ from django.conf.urls import include, url
 from django.contrib.auth.views import LoginView, settings
 from django.contrib import admin
 
-from common.views import (
-    home, robots, pwchange, logout, userinfo, useradd, lostpw, resetpw,
-    about, stat, genrender)
+from common.views import home, robots, pwchange, logout, userinfo, useradd, lostpw, resetpw, about, stat, genrender
 
 
 admin.autodiscover()
@@ -65,5 +63,4 @@ urlpatterns = [
     url(r'^about/$', about, name='about'),
     url(r'^stat/$', stat, name='stat'),
     url(r'^admin/', include((admin.site.urls[0], 'admin')))
-] + [url('^{}/'.format(a), include((a + '.urls', a)))
-     for a in settings.APPS if a != 'common']
+] + [url('^{}/'.format(a), include((a + '.urls', a))) for a in settings.APPS if a != 'common']

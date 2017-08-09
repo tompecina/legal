@@ -176,8 +176,7 @@ class MainForm(forms.Form):
         cleaned_data = super().clean()
         date_first_from = cleaned_data.get('date_first_from', None)
         date_first_to = cleaned_data.get('date_first_to', None)
-        if date_first_from and date_first_to \
-           and date_first_from > date_first_to:
+        if date_first_from and date_first_to and date_first_from > date_first_to:
             msg = 'Invalid interval'
             self._errors['date_first_from'] = self.error_class([msg])
             self._errors['date_first_to'] = self.error_class([msg])
@@ -185,8 +184,7 @@ class MainForm(forms.Form):
             del cleaned_data['date_first_to']
         date_last_from = cleaned_data.get('date_last_from', None)
         date_last_to = cleaned_data.get('date_last_to', None)
-        if date_last_from and date_last_to \
-           and date_last_from > date_last_to:
+        if date_last_from and date_last_to and date_last_from > date_last_to:
             msg = 'Invalid interval'
             self._errors['date_last_from'] = self.error_class([msg])
             self._errors['date_last_to'] = self.error_class([msg])
@@ -194,8 +192,7 @@ class MainForm(forms.Form):
             del cleaned_data['date_last_to']
         year_birth_from = cleaned_data.get('year_birth_from', None)
         year_birth_to = cleaned_data.get('year_birth_to', None)
-        if year_birth_from and year_birth_to \
-           and year_birth_from > year_birth_to:
+        if year_birth_from and year_birth_to and year_birth_from > year_birth_to:
             msg = 'Invalid interval'
             self._errors['year_birth_from'] = self.error_class([msg])
             self._errors['year_birth_to'] = self.error_class([msg])

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/test_cin.py
+# tests/test_cin.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #

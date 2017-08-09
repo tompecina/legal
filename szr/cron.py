@@ -39,14 +39,11 @@ LIST_REPORTS = 'InfoSoud/seznamOkresnichSoudu?kraj={}'
 
 ROOT_URL = 'http://infosoud.justice.cz/'
 
-GET_PROC = \
-    'InfoSoud/public/search.do?org={}&krajOrg={}&cisloSenatu={:d}' \
-    '&druhVec={}&bcVec={:d}&rocnik={:d}&typSoudu={}&autoFill=true' \
-    '&type=spzn'
+GET_PROC = (
+    'InfoSoud/public/search.do?org={}&krajOrg={}&cisloSenatu={:d}&druhVec={}&bcVec={:d}&rocnik={:d}&typSoudu={}'
+    '&autoFill=true&type=spzn')
 
-NSS_URL = \
-    'http://www.nssoud.cz/main0Col.aspx?cls=JudikaturaSimpleSearch' \
-    '&pageSource=1&menu=187'
+NSS_URL = 'http://www.nssoud.cz/main0Col.aspx?cls=JudikaturaSimpleSearch&pageSource=1&menu=187'
 
 NSS_GET_PROC = 'http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&kau_id={:d}'
 
@@ -60,8 +57,8 @@ def addauxid(proc):
             res = get(NSS_URL)
             soup = BeautifulSoup(res.text, 'html.parser')
             form = soup.find('form')
-            dct = {i['name']: i['value'] for i in form.find_all('input')
-                if i['type'] == 'hidden' and i.has_attr('value')}
+            dct = {
+                i['name']: i['value'] for i in form.find_all('input') if i['type'] == 'hidden' and i.has_attr('value')}
             if int(proc.senate):
                 ref = '{} '.format(proc.senate)
             else:
@@ -70,9 +67,9 @@ def addauxid(proc):
             dct['_ctl0:ContentPlaceMasterPage:_ctl0:txtSpisovaZnackaFull'] = ref
             res = post(NSS_URL, dct)
             soup = BeautifulSoup(res.text, 'html.parser')
-            oncl = \
-                soup.select('table#_ctl0_ContentPlaceMasterPage__ctl0_grwA') \
-                [0].select('img[src="/Image/infosoud.gif"]')[0]['onclick']
+            oncl = (
+                soup.select('table#_ctl0_ContentPlaceMasterPage__ctl0_grwA')[0]
+                .select('img[src="/Image/infosoud.gif"]')[0]['onclick'])
             proc.auxid = int(oncl.split('=')[-1].split("'")[0])
         except:
             pass
@@ -90,15 +87,11 @@ def cron_courts():
         res = get(ROOT_URL + LIST_COURTS)
         soup = BeautifulSoup(res.text, 'html.parser')
         Court.objects.get_or_create(id=SUPREME_COURT, name='Nejvyšší soud')
-        Court.objects.get_or_create(
-            id=SUPREME_ADMINISTRATIVE_COURT,
-            name='Nejvyšší správní soud')
+        Court.objects.get_or_create(id=SUPREME_ADMINISTRATIVE_COURT, name='Nejvyšší správní soud')
         upper = soup.find(id='kraj').find_all('option')[1:]
         lower = soup.find(id='soudy').find_all('option')[1:]
         for court in upper + lower:
-            Court.objects.get_or_create(
-                id=court['value'],
-                name=court.string.encode('utf-8'))
+            Court.objects.get_or_create(id=court['value'], name=court.string.encode('utf-8'))
     except:  # pragma: no cover
         LOGGER.warning('Error importing courts')
     Court.objects.all().update(reports=None)
@@ -109,19 +102,15 @@ def cron_courts():
                 res = get(ROOT_URL + LIST_REPORTS.format(court.pk))
                 soup = BeautifulSoup(res.text, 'xml')
                 for item in soup.find_all('okresniSoud'):
-                    Court.objects.filter(pk=item.id.string) \
-                    .update(reports=court)
+                    Court.objects.filter(pk=item.id.string).update(reports=court)
             except:  # pragma: no cover
-                LOGGER.warning(
-                    'Error setting hierarchy for {}'.format(court.id))
+                LOGGER.warning('Error setting hierarchy for {}'.format(court.id))
     LOGGER.info('Courts imported')
 
 
 def p2s(proc):
 
-    return '{}, {}'.format(
-        proc.court_id,
-        composeref(proc.senate, proc.register, proc.number, proc.year))
+    return '{}, {}'.format(proc.court_id, composeref(proc.senate, proc.register, proc.number, proc.year))
 
 
 def updateproc(proc):
@@ -140,10 +129,7 @@ def updateproc(proc):
             soup = BeautifulSoup(res.text, 'html.parser')
             table = soup.find('table', 'frm')
         else:
-            if court == SUPREME_COURT:
-                court_type = 'ns'
-            else:
-                court_type = 'os'
+            court_type = 'ns' if court == SUPREME_COURT else 'os'
             url = ROOT_URL + GET_PROC.format(
                 court,
                 proc.court.reports.id if proc.court.reports else proc.court.id,
@@ -158,68 +144,45 @@ def updateproc(proc):
         assert table
     except:  # pragma: no cover
         LOGGER.warning(
-            'Failed to check proceedings "{0.desc}" ({1}) for user '
-            '"{2}" ({0.uid_id:d})'
-                .format(
-                    proc,
-                    p2s(proc),
-                    User.objects.get(pk=proc.uid_id).username))
+            'Failed to check proceedings "{0.desc}" ({1}) for user "{2}" ({0.uid_id:d})'
+            .format(proc, p2s(proc), User.objects.get(pk=proc.uid_id).username))
         return False
     hsh = md5(str(table).encode()).hexdigest()
     if court != SUPREME_ADMINISTRATIVE_COURT:
         changed = None
         try:
-            tbl = \
-                table.find_next_sibling().find_next_sibling().table \
-                .tr.td.find_next_sibling().text.split()
+            tbl = table.find_next_sibling().find_next_sibling().table.tr.td.find_next_sibling().text.split()
             if len(tbl) == 4:
-                changed = \
-                    datetime(*map(int, list(reversed(tbl[0].split('.')))
-                    + tbl[1].split(':')))
+                changed = datetime(*map(int, list(reversed(tbl[0].split('.'))) + tbl[1].split(':')))
         except:  # pragma: no cover
             LOGGER.warning(
-                'Failed to check proceedings "{0.desc}" ({1}) for user '
-                '"{2}" ({0.uid_id:d})'
-                    .format(
-                        proc,
-                        p2s(proc),
-                        User.objects.get(pk=proc.uid_id).username))
+                'Failed to check proceedings "{0.desc}" ({1}) for user "{2}" ({0.uid_id:d})'
+                .format(proc, p2s(proc), User.objects.get(pk=proc.uid_id).username))
         if changed != proc.changed or hsh != proc.hash:
             proc.notify |= notnew
             if changed:
                 proc.changed = changed
                 LOGGER.info(
-                    'Change detected in proceedings "{0.desc}" ({1}) '
-                    'for user "{2}" ({0.uid_id:d})'.format(
-                        proc,
-                        p2s(proc),
-                        User.objects.get(pk=proc.uid_id).username))
+                    'Change detected in proceedings "{0.desc}" ({1}) for user "{2}" ({0.uid_id:d})'
+                    .format(proc, p2s(proc), User.objects.get(pk=proc.uid_id).username))
     elif hsh != proc.hash:
         proc.notify |= notnew
         if notnew:
             proc.changed = proc.updated
             if proc.changed:
                 LOGGER.info(
-                    'Change detected in proceedings "{0.desc}" ({1}) '
-                    'for user "{2}" ({0.uid_id:d})'.format(
-                        proc,
-                        p2s(proc),
-                        User.objects.get(pk=proc.uid_id).username))
+                    'Change detected in proceedings "{0.desc}" ({1}) for user "{2}" ({0.uid_id:d})'
+                    .format(proc, p2s(proc), User.objects.get(pk=proc.uid_id).username))
     proc.hash = hsh
     LOGGER.debug(
-        'Proceedings "{0.desc}" ({1}) updated for user '
-        '"{2}" ({0.uid_id:d})'.format(
-            proc,
-            p2s(proc),
-            User.objects.get(pk=proc.uid_id).username))
+        'Proceedings "{0.desc}" ({1}) updated for user "{2}" ({0.uid_id:d})'
+        .format(proc, p2s(proc), User.objects.get(pk=proc.uid_id).username))
     return True
 
 
 def cron_update():
 
-    proc = \
-        Proceedings.objects.filter(Q(updated__lte=datetime.now()-UPDATE_DELAY)
-        | Q(updated__isnull=True))
+    proc = Proceedings.objects.filter(Q(updated__lte=datetime.now()-UPDATE_DELAY) | Q(updated__isnull=True))
     if proc:
         proc = proc.earliest('updated')
         if updateproc(proc):
@@ -229,17 +192,12 @@ def cron_update():
 def szr_notice(uid):
 
     text = ''
-    res = \
-        Proceedings.objects.filter(uid=uid, notify=True).order_by('desc', 'id')
+    res = Proceedings.objects.filter(uid=uid, notify=True).order_by('desc', 'id')
     if res:
-        text = \
-            'V těchto soudních řízeních, která sledujete, ' \
-            'došlo ke změně:\n\n'
+        text = 'V těchto soudních řízeních, která sledujete, došlo ke změně:\n\n'
         for proc in res:
             desc = ' ({})'.format(proc.desc) if proc.desc else ''
-            text += \
-                ' - {0.court}, sp. zn. {0.senate:d} {0.register} ' \
-                '{0.number:d}/{0.year:d}{1}\n'.format(proc, desc)
+            text += ' - {0.court}, sp. zn. {0.senate:d} {0.register} {0.number:d}/{0.year:d}{1}\n'.format(proc, desc)
             if proc.court_id != SUPREME_ADMINISTRATIVE_COURT:
                 court_type = 'ns' if proc.court_id == SUPREME_COURT else 'os'
                 text += '   {}\n\n'.format(ROOT_URL + GET_PROC.format(
@@ -255,7 +213,5 @@ def szr_notice(uid):
                 text += '   {}\n\n'.format(NSS_GET_PROC.format(proc.auxid))
             proc.notify = False
             proc.save()
-        LOGGER.info(
-            'Non-empty notice prepared for user "{}" ({:d})'
-            .format(User.objects.get(pk=uid).username, uid))
+        LOGGER.info('Non-empty notice prepared for user "{}" ({:d})'.format(User.objects.get(pk=uid).username, uid))
     return text

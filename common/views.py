@@ -157,33 +157,23 @@ def lostpw(request):
                 user = users[0]
                 link = '{:032x}'.format(getrandbits(16 * 8))
                 PwResetLink(user_id=user.id, link=link).save()
-                text = '''\
-Vážený uživateli,
-někdo požádal o obnovení hesla pro Váš účet "{0}" na \
-serveru {1} ({2}).
+                text = '''Vážený uživateli,
+někdo požádal o obnovení hesla pro Váš účet "{0}" na serveru {1} ({2}).
 
-Pokud skutečně chcete své heslo obnovit, použijte, \
-prosím, následující jednorázový odkaz:
+Pokud skutečně chcete své heslo obnovit, použijte, prosím, následující jednorázový odkaz:
 
 
   {2}{3}
 
 
-V případě, že jste o obnovení hesla nežádali, \
-můžete tuto zprávu ignorovat.
+V případě, že jste o obnovení hesla nežádali, můžete tuto zprávu ignorovat.
 
 
 Server {1} ({2})
-''' \
-                .format(
-                    user.username,
-                    LOCAL_SUBDOMAIN,
-                    LOCAL_URL,
-                    reverse('resetpw', args=(link,)))
+'''.format(user.username, LOCAL_SUBDOMAIN, LOCAL_URL, reverse('resetpw', args=(link,)))
                 send_mail('Link pro obnoveni hesla', text, (user.email,))
                 LOGGER.info(
-                    'Password recovery link for user "{0.username}" '
-                    '({0.id:d}) sent'.format(user),
+                    'Password recovery link for user "{0.username}" ({0.id:d}) sent'.format(user),
                     request)
             return redirect('/accounts/pwlinksent/')
         else:
@@ -207,8 +197,7 @@ PWLEN = 10
 def resetpw(request, link):
 
     LOGGER.debug('Password reset page accessed', request)
-    PwResetLink.objects \
-        .filter(timestamp_add__lt=(datetime.now() - LINKLIFE)).delete()
+    PwResetLink.objects.filter(timestamp_add__lt=(datetime.now() - LINKLIFE)).delete()
     link = get_object_or_404(PwResetLink, link=link)
     user = link.user
     newpassword = ''

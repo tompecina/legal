@@ -23,8 +23,7 @@
 from django.conf.urls import url
 
 from common.views import genrender
-from sur.views import (
-    mainpage, partyform, partydel, partydelall, partybatchform, partyexport)
+from sur.views import mainpage, partyform, partydel, partydelall, partybatchform, partyexport
 
 
 urlpatterns = [

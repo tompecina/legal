@@ -41,9 +41,7 @@ class Period:
     def __init__(self, beg, dur, unit):
 
         def out_msg():
-            return \
-                'Výsledek musí být mezi {} a {}' \
-                .format(fdt(MIN_DATE), fdt(MAX_DATE))
+            return 'Výsledek musí být mezi {} a {}'.format(fdt(MIN_DATE), fdt(MAX_DATE))
 
         self.beg = beg
         self.dur = dur
@@ -53,15 +51,11 @@ class Period:
         self.error = True
 
         if not between(MIN_DATE, beg, MAX_DATE):
-            self.msg = \
-                'Počátek musí být mezi {} a {}' \
-                .format(fdt(MIN_DATE), fdt(MAX_DATE))
+            self.msg = 'Počátek musí být mezi {} a {}'.format(fdt(MIN_DATE), fdt(MAX_DATE))
             return
 
         if not between(MIN_DUR, dur, MAX_DUR):
-            self.msg = \
-                'Délka musí být mezi {:d} a {:d}' \
-                .format(MIN_DUR, MAX_DUR)
+            self.msg = 'Délka musí být mezi {:d} a {:d}'.format(MIN_DUR, MAX_DUR)
             return
 
         offset = ODM if dur < 0 else ODP
@@ -109,8 +103,7 @@ class Period:
         self.msg = None
         self.res = res
         self.bus = bus
-        self.unc = \
-            min(res, bus) < UNC_DATE or (beg < UNC_DATE and unit == 'b')
+        self.unc = min(res, bus) < UNC_DATE or (beg < UNC_DATE and unit == 'b')
 
 
 @require_http_methods(('GET', 'POST'))
@@ -151,20 +144,12 @@ def mainpage(request):
 
             else:
                 if per.res != per.bus:
-                    messages.append(
-                        ('{} není pracovní den'.format(
-                            fdt(per.res)), None))
+                    messages.append(('{} není pracovní den'.format(fdt(per.res)), None))
 
-                messages.append((
-                    '{} {}'.format(
-                        WD_NAMES[per.bus.weekday()],
-                        fdt(per.bus)),
-                    'msg-res'))
+                messages.append(('{} {}'.format(WD_NAMES[per.bus.weekday()], fdt(per.bus)), 'msg-res'))
 
                 if per.unc:
-                    messages.append((
-                        '(evidence pracovních dnů v tomto období není úplná)',
-                        'msg-note'))
+                    messages.append(('(evidence pracovních dnů v tomto období není úplná)', 'msg-note'))
 
         else:
             LOGGER.debug('Invalid form', request)

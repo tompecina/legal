@@ -34,11 +34,9 @@ from sur.cron import sur_check
 from psj.models import Courtroom, Judge, Form, Hearing, Party, Task
 
 
-LIST_COURTROOMS = \
-    'http://infosoud.justice.cz/InfoSoud/seznamJednacichSini?okres={}'
+LIST_COURTROOMS = 'http://infosoud.justice.cz/InfoSoud/seznamJednacichSini?okres={}'
 
-HEARING_URL = LOCAL_URL + '/psj/list/?court={}&senate={:d}&register={}&' \
-    'number={:d}&year={:d}&date_from={}&date_to={}'
+HEARING_URL = LOCAL_URL + '/psj/list/?court={}&senate={:d}&register={}&number={:d}&year={:d}&date_from={}&date_to={}'
 
 
 def cron_courtrooms():
@@ -88,12 +86,11 @@ def cron_update():
         return
     task = tasks.earliest('timestamp_update')
     task.save()
+    court0 = 'os'
     if task.court.reports:
-        court0 = 'os'
         court1 = task.court.reports.id
         court2 = task.court.id
     else:
-        court0 = 'os'
         court1 = task.court.id
         court2 = ''
     tdate = str(task.date)
@@ -105,8 +102,7 @@ def cron_update():
             query['krajOrg'] = court1
             query['org'] = court2
             query['sin'] = croom.desc
-            query['datum'] = \
-                '{0.day:d}.{0.month:d}.{0.year:d}'.format(task.date)
+            query['datum'] = '{0.day:d}.{0.month:d}.{0.year:d}'.format(task.date)
             query['spamQuestion'] = '23'
             query['druhVec'] = ''
             url = ROOT_URL + GET_HEARINGS + query.urlencode()
@@ -127,14 +123,12 @@ def cron_update():
                         int(ttm[0]),
                         int(ttm[1]))
                     ttd = ttd.find_next_sibling('td')
-                    senate, register, number, year = \
-                        decomposeref(ttd.text.replace(' / ', '/'))
+                    senate, register, number, year = decomposeref(ttd.text.replace(' / ', '/'))
                     register = normreg(register)
                     ttd = ttd.find_next_sibling('td')
                     form = Form.objects.get_or_create(name=ttd.text.strip())[0]
                     ttd = ttd.find_next_sibling('td')
-                    judge = \
-                        Judge.objects.get_or_create(name=ttd.text.strip())[0]
+                    judge = Judge.objects.get_or_create(name=ttd.text.strip())[0]
                     ttd = ttd.find_next_sibling('td')
                     parties = ttd.select('td')
                     ttd = ttd.find_next_sibling('td')
@@ -157,8 +151,7 @@ def cron_update():
                         for query in parties:
                             qts = query.text.strip()
                             if qts:
-                                party = Party.objects.get_or_create(
-                                    name=query.text.strip())[0]
+                                party = Party.objects.get_or_create(name=query.text.strip())[0]
                                 hearing[0].parties.add(party)
                                 sur_check(
                                     qts,
@@ -180,10 +173,8 @@ def cron_update():
         task.delete()
     except:
         LOGGER.warning(
-            'Failed to download hearings for {0}, '
-            '{1.year:d}-{1.month:02d}-{1.day:02d}'
-                .format(task.court_id, task.date))
+            'Failed to download hearings for {0}, {1.year:d}-{1.month:02d}-{1.day:02d}'
+            .format(task.court_id, task.date))
         return
     LOGGER.debug(
-        'Downloaded hearings for {0}, {1.year:d}-{1.month:02d}-{1.day:02d}'
-            .format(task.court_id, task.date))
+        'Downloaded hearings for {0}, {1.year:d}-{1.month:02d}-{1.day:02d}'.format(task.court_id, task.date))

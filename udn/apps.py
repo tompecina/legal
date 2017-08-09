@@ -46,52 +46,38 @@ class UdnConfig(AppConfig):
                 Party.objects.count()),
             (
                 'Počet nových účastníků řízení za posledních 24 hodin',
-                Party.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+                Party.objects.filter(timestamp_add__gte=(now - timedelta(hours=24))).count()),
             (
                 'Počet nových účastníků řízení za poslední týden',
-                Party.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+                Party.objects.filter(timestamp_add__gte=(now - timedelta(weeks=1))).count()),
             (
                 'Počet nových účastníků řízení za poslední měsíc',
-                Party.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+                Party.objects.filter(timestamp_add__gte=(now - timedelta(days=30))).count()),
             (
                 'Počet rozhodnutí',
                 Decision.objects.count()),
             (
                 'Počet nových rozhodnutí za posledních 24 hodin',
-                Decision.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+                Decision.objects.filter(timestamp_add__gte=(now - timedelta(hours=24))).count()),
             (
                 'Počet nových rozhodnutí za poslední týden',
-                Decision.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+                Decision.objects.filter(timestamp_add__gte=(now - timedelta(weeks=1))).count()),
             (
                 'Počet nových rozhodnutí za poslední měsíc',
-                Decision.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+                Decision.objects.filter(timestamp_add__gte=(now - timedelta(days=30))).count()),
             (
                 'Počet neúplných rozhodnutí',
                 Decision.objects.filter(anonfilename='').count()),
             (
                 'Počet neúplných rozhodnutí starších než 30 dnů',
-                Decision.objects.filter(
-                    anonfilename='',
-                    date__lt=(now - timedelta(days=30))).count()),
+                Decision.objects.filter(anonfilename='', date__lt=(now - timedelta(days=30))).count()),
             (
                 'Počet neúplných rozhodnutí starších než 60 dnů',
-                Decision.objects.filter(
-                    anonfilename='',
-                    date__lt=(now - timedelta(days=60))).count()),
+                Decision.objects.filter(anonfilename='', date__lt=(now - timedelta(days=60))).count()),
             (
                 'Počet neúplných rozhodnutí starších než 90 dnů',
-                Decision.objects.filter(
-                    anonfilename='',
-                    date__lt=(now - timedelta(days=90))).count()),
+                Decision.objects.filter(anonfilename='', date__lt=(now - timedelta(days=90))).count()),
             (
                 'Počet neúplných rozhodnutí starších než 1 rok',
-                Decision.objects.filter(
-                    anonfilename='',
-                    date__lt=(now - timedelta(days=365))).count()),
+                Decision.objects.filter(anonfilename='', date__lt=(now - timedelta(days=365))).count()),
         )

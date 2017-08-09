@@ -111,8 +111,7 @@ class DebtorForm(forms.Form):
         cleaned_data = super().clean()
         year_birth_from = cleaned_data.get('year_birth_from', None)
         year_birth_to = cleaned_data.get('year_birth_to', None)
-        if year_birth_from and year_birth_to \
-           and year_birth_from > year_birth_to:
+        if year_birth_from and year_birth_to and year_birth_from > year_birth_to:
             msg = 'Invalid interval'
             self._errors['year_birth_from'] = self.error_class([msg])
             self._errors['year_birth_to'] = self.error_class([msg])

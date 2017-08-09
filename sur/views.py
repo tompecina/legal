@@ -32,9 +32,7 @@ from django.apps import apps
 from django.http import QueryDict
 from django.urls import reverse
 
-from common.glob import (
-    INERR, GR_CHAR, TEXT_OPTS, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA,
-    TEXT_OPTS_AI)
+from common.glob import INERR, GR_CHAR, TEXT_OPTS, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA, TEXT_OPTS_AI
 from common.utils import getbutton, grammar, between, Pager, LOGGER, render
 from szr.forms import EmailForm
 from sur.forms import PartyForm
@@ -53,10 +51,7 @@ BATCH = 50
 @login_required
 def mainpage(request):
 
-    LOGGER.debug(
-        'Main page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Main page accessed using method {}'.format(request.method), request, request.POST)
 
     err_message = ''
     uid = request.user.id
@@ -77,8 +72,7 @@ def mainpage(request):
         else:
             LOGGER.debug('Invalid form', request)
             err_message = INERR
-    res = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'pk') \
-        .values()
+    res = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'pk').values()
     total = res.count()
     if start >= total and total:
         start = total - 1
@@ -105,11 +99,7 @@ def mainpage(request):
 @login_required
 def partyform(request, idx=0):
 
-    LOGGER.debug(
-        'Party form accessed using method {}, id={}'
-        .format(request.method, idx),
-        request,
-        request.POST)
+    LOGGER.debug('Party form accessed using method {}, id={}'.format(request.method, idx), request, request.POST)
 
     err_message = ''
     uid = request.user.id
@@ -139,12 +129,7 @@ def partyform(request, idx=0):
             res.party_opt = TEXT_OPTS_KEYS.index(cld['party_opt'])
             res.save()
             LOGGER.info(
-                'User "{}" ({:d}) {} party {}'
-                .format(
-                    uname,
-                    uid,
-                    'updated' if idx else 'added',
-                    res.party),
+                'User "{}" ({:d}) {} party {}'.format(uname, uid, 'updated' if idx else 'added', res.party),
                 request)
             return redirect('sur:mainpage')
         else:
@@ -165,8 +150,7 @@ def partyform(request, idx=0):
 def partydel(request, idx=0):
 
     LOGGER.debug(
-        'Party delete page accessed using method {}, id={}'
-        .format(request.method, idx),
+        'Party delete page accessed using method {}, id={}'.format(request.method, idx),
         request,
         request.POST)
     uid = request.user.id
@@ -180,10 +164,7 @@ def partydel(request, idx=0):
     else:
         party = get_object_or_404(Party, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
-            LOGGER.info(
-                'User "{}" ({:d}) deleted party "{}"'
-                .format(uname, uid, party.party),
-                request)
+            LOGGER.info('User "{}" ({:d}) deleted party "{}"'.format(uname, uid, party.party), request)
             party.delete()
             return redirect('sur:partydeleted')
         return redirect('sur:mainpage')
@@ -193,10 +174,7 @@ def partydel(request, idx=0):
 @login_required
 def partydelall(request):
 
-    LOGGER.debug(
-        'Delete all parties page accessed using method {}'
-        .format(request.method),
-        request)
+    LOGGER.debug('Delete all parties page accessed using method {}'.format(request.method), request)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -206,12 +184,9 @@ def partydelall(request):
             {'app': APP,
              'page_title': 'Smazání všech účastníků'})
     else:
-        if getbutton(request) == 'yes' and 'conf' in request.POST \
-           and request.POST['conf'] == 'Ano':
+        if getbutton(request) == 'yes' and 'conf' in request.POST and request.POST['conf'] == 'Ano':
             Party.objects.filter(uid=uid).delete()
-            LOGGER.info(
-                'User "{}" ({:d}) deleted all parties'.format(uname, uid),
-                request)
+            LOGGER.info('User "{}" ({:d}) deleted all parties'.format(uname, uid), request)
         return redirect('sur:mainpage')
 
 
@@ -219,9 +194,7 @@ def partydelall(request):
 @login_required
 def partybatchform(request):
 
-    LOGGER.debug(
-        'Party import page accessed using method {}'.format(request.method),
-        request)
+    LOGGER.debug('Party import page accessed using method {}'.format(request.method), request)
 
     err_message = ''
     uid = request.user.id
@@ -254,28 +227,20 @@ def partybatchform(request):
                                 errors.append((idx, 'Chybná délka řetězce'))
                                 continue
                             if party_opt not in TEXT_OPTS_ABBR:
-                                errors.append(
-                                    (idx, 'Chybná zkratka pro posici'))
+                                errors.append((idx, 'Chybná zkratka pro posici'))
                                 continue
                             if len(errors) == errlen:
                                 try:
                                     Party.objects.update_or_create(
                                         uid_id=uid,
                                         party=line,
-                                        defaults={'party_opt':
-                                            TEXT_OPTS_AI[party_opt]}
+                                        defaults={'party_opt': TEXT_OPTS_AI[party_opt]}
                                     )
                                 except:
-                                    errors.append(
-                                        (idx,
-                                         'Řetězci "{}" odpovídá více než '
-                                         'jeden účastník'.format(line)))
+                                    errors.append((idx, 'Řetězci "{}" odpovídá více než jeden účastník'.format(line)))
                                     continue
                                 count += 1
-                    LOGGER.info(
-                        'User "{}" ({:d}) imported {} party/ies'
-                        .format(uname, uid, count),
-                        request)
+                    LOGGER.info('User "{}" ({:d}) imported {} party/ies'.format(uname, uid, count), request)
                     return render(
                         request,
                         'sur_partybatchresult.html',
@@ -308,16 +273,12 @@ def partyexport(request):
     LOGGER.debug('Party export page accessed', request)
     uid = request.user.id
     uname = request.user.username
-    res = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'id') \
-        .distinct()
+    res = Party.objects.filter(uid=uid).order_by('party', 'party_opt', 'id').distinct()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
-    response['Content-Disposition'] = \
-        'attachment; filename=sur.csv'
+    response['Content-Disposition'] = 'attachment; filename=sur.csv'
     writer = csvwriter(response)
     for item in res:
         dat = (item.party + TEXT_OPTS_CA[item.party_opt],)
         writer.writerow(dat)
-    LOGGER.info(
-        'User "{}" ({:d}) exported parties'.format(uname, uid),
-        request)
+    LOGGER.info('User "{}" ({:d}) exported parties'.format(uname, uid), request)
     return response

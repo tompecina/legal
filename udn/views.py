@@ -31,13 +31,9 @@ from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
 
-from common.glob import (
-    REGISTERS, INERR, TEXT_OPTS_KEYS, REPO_URL, EXLIM_TITLE,
-    LOCAL_SUBDOMAIN, LOCAL_URL, DTF)
-from common.utils import (
-    Pager, new_xml, xml_decorate, composeref, LOGGER, render)
-from szr.glob import (
-    SUPREME_ADMINISTRATIVE_COURT, SUPREME_ADMINISTRATIVE_COURT_NAME)
+from common.glob import REGISTERS, INERR, TEXT_OPTS_KEYS, REPO_URL, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF
+from common.utils import Pager, new_xml, xml_decorate, composeref, LOGGER, render
+from szr.glob import SUPREME_ADMINISTRATIVE_COURT, SUPREME_ADMINISTRATIVE_COURT_NAME
 from udn.forms import MainForm
 from udn.models import Agenda, Decision
 
@@ -56,10 +52,7 @@ EXLIM = 1000
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    LOGGER.debug(
-        'Main page accessed using method ' + request.method,
-        request,
-        request.POST)
+    LOGGER.debug('Main page accessed using method {}'.format(request.method), request, request.POST)
 
     err_message = ''
     page_title = apps.get_app_config(APP).verbose_name
@@ -87,9 +80,7 @@ def mainpage(request):
                     query[key] = cld[key]
             query['start'] = 0
             del query['format']
-            return redirect('{}?{}'.format(
-                reverse('{}:{}list'.format(APP, cld['format'])),
-                query.urlencode()))
+            return redirect('{}?{}'.format(reverse('{}:{}list'.format(APP, cld['format'])), query.urlencode()))
         else:
             err_message = INERR
             LOGGER.debug('Invalid form', request)
@@ -184,8 +175,7 @@ def xmllist(request):
         'decisions': {
             'xmlns': 'http://' + LOCAL_SUBDOMAIN,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd'
-            .format(LOCAL_SUBDOMAIN, LOCAL_URL, APP, APPVERSION),
+            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd'.format(LOCAL_SUBDOMAIN, LOCAL_URL, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()
@@ -244,8 +234,7 @@ def xmllist(request):
     response = HttpResponse(
         str(xml).encode('utf-8') + b'\n',
         content_type='text/xml; charset=utf-8')
-    response['Content-Disposition'] = \
-                'attachment; filename=Rozhodnuti.xml'
+    response['Content-Disposition'] = 'attachment; filename=Rozhodnuti.xml'
     return response
 
 
@@ -270,8 +259,7 @@ def csvlist(request):
              'total': total,
              'back': reverse('udn:mainpage')})
     response = HttpResponse(content_type='text/csv; charset=utf-8')
-    response['Content-Disposition'] = \
-        'attachment; filename=Rozhodnuti.csv'
+    response['Content-Disposition'] = 'attachment; filename=Rozhodnuti.csv'
     writer = csvwriter(response)
     hdr = (
         'Soud',
@@ -287,12 +275,7 @@ def csvlist(request):
         dat = (
             SUPREME_ADMINISTRATIVE_COURT_NAME,
             '{:%d.%m.%Y}'.format(item.date),
-            composeref(
-                item.senate,
-                item.register,
-                item.number,
-                item.year,
-                item.page),
+            composeref(item.senate, item.register, item.number, item.year, item.page),
             item.agenda.desc,
             ';'.join([par['name'] for par in item.parties.values()]),
             join(REPO_PREFIX, item.filename),
@@ -323,8 +306,7 @@ def jsonlist(request):
              'total': total,
              'back': reverse('udn:mainpage')})
     response = HttpResponse(content_type='application/json; charset=utf-8')
-    response['Content-Disposition'] = \
-        'attachment; filename=Rozhodnuti.json'
+    response['Content-Disposition'] = 'attachment; filename=Rozhodnuti.json'
     lst = []
     court = {
         'id': SUPREME_ADMINISTRATIVE_COURT,

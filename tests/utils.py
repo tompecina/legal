@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/utils.py
+# tests/utils.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -80,11 +80,7 @@ def testreq(post, *args):
         hsh.update(data[key].encode())
     filename = hsh.hexdigest() + '.dat'
     try:
-        with open(
-                join(
-                    TEST_DATA_DIR,
-                    'common_{}'.format(filename)),
-                'rb') as infile:
+        with open(join(TEST_DATA_DIR, 'common_{}'.format(filename)), 'rb') as infile:
             return DummyResponse(infile.read().decode())
     except:
         return DummyResponse(None, status=HTTPStatus.NOT_FOUND)

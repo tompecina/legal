@@ -43,10 +43,8 @@ from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.lib.pagesizes import A4
 from django.core import mail
 from django.shortcuts import render as orig_render
-from django.template.loader import get_template
 
-from common.glob import (
-    LIM, ODP, YDCONVS, MDCONVS, REGISTERS, LOCAL_SUBDOMAIN, LOCAL_EMAIL)
+from common.glob import LIM, ODP, YDCONVS, MDCONVS, REGISTERS, LOCAL_SUBDOMAIN, LOCAL_EMAIL
 from common.settings import FONT_DIR, TEST
 from common.models import Preset
 
@@ -62,8 +60,7 @@ class Logger:
     def _proc(meth, args, kwargs):
         if 'extra' not in kwargs:
             kwargs['extra'] = {}
-        kwargs['extra']['package'] = \
-            stack()[2].frame.f_globals['__package__'].upper()
+        kwargs['extra']['package'] = stack()[2].frame.f_globals['__package__'].upper()
         if len(args) > 1:
             kwargs['extra']['request'] = args[1]
             args = list(args)
@@ -176,8 +173,7 @@ def movable_holiday(dat):
     year = dat.year
     esun = easter_sunday(year)
     for hol in holidays:
-        if dat == (esun + timedelta(hol['offset'])) \
-            and between(hol['from'], year, hol['to']):
+        if dat == (esun + timedelta(hol['offset'])) and between(hol['from'], year, hol['to']):
             return True
     return False
 
@@ -307,26 +303,18 @@ def holiday(dat):
         1971: ((1, 3), (4, 17), (10, 24), (12, 24)),
         1972: ((4, 8), (5, 6), (5, 13), (11, 11)),
         1973: ((4, 14), (9, 29), (11, 17), (12, 22), (12, 29)),
-        1974: (
-            (4, 6), (5, 12), (9, 28), (11, 16), (12, 22), (12, 28), (12, 29)),
+        1974: ((4, 6), (5, 12), (9, 28), (11, 16), (12, 22), (12, 28), (12, 29)),
         1975: ((3, 22), (4, 5), (5, 4), (9, 27), (11, 15), (12, 27), (12, 28)),
         1977: ((4, 16), (9, 24), (11, 12)),
         1978: ((3, 11), (4, 1), (5, 6), (5, 13), (9, 23), (9, 23), (10, 14)),
-        1979: (
-            (3, 31), (4, 21), (4, 28), (5, 5), (5, 6), (5, 12), (9, 22),
-            (11, 10), (12, 22), (12, 29)),
+        1979: ((3, 31), (4, 21), (4, 28), (5, 5), (5, 6), (5, 12), (9, 22), (11, 10), (12, 22), (12, 29)),
         1980: ((3, 22), (4, 12), (5, 4), (9, 20), (10, 11)),
         1981: ((1, 4), (4, 25), (10, 24), (11, 28)),
         1982: ((4, 17),),
         1983: ((4, 9), (9, 24), (10, 22)),
-        1984: (
-            (3, 31), (4, 28), (5, 12), (9, 29), (11, 10), (12, 22), (12, 29)),
-        1985: (
-            (3, 23), (4, 13), (5, 4), (5, 5), (5, 12), (9, 28), (10, 19),
-            (11, 16), (12, 21), (12, 28), (12, 29)),
-        1986: (
-            (3, 15), (11, 22), (4, 5), (5, 4), (10, 18), (10, 22), (12, 27),
-            (12, 28)),
+        1984: ((3, 31), (4, 28), (5, 12), (9, 29), (11, 10), (12, 22), (12, 29)),
+        1985: ((3, 23), (4, 13), (5, 4), (5, 5), (5, 12), (9, 28), (10, 19), (11, 16), (12, 21), (12, 28), (12, 29)),
+        1986: ((3, 15), (11, 22), (4, 5), (5, 4), (10, 18), (10, 22), (12, 27), (12, 28)),
         1987: ((1, 3), (1, 4), (4, 25), (10, 17), (12, 12), (12, 27)),
         1988: ((1, 3), (4, 9)),
         1989: ((3, 11), (5, 6)),
@@ -344,8 +332,7 @@ def holiday(dat):
         return False
 
     for hol in holidays:
-        if day == hol['day'] and month == hol['month'] and \
-           between(hol['from'], year, hol['to']):
+        if day == hol['day'] and month == hol['month'] and between(hol['from'], year, hol['to']):
             return True
 
     if movable_holiday(dat):
@@ -379,8 +366,7 @@ def plm(dat, num):
 
 def yfactor(beg, end, dconv):
     """
-    Return number of years between 'beg' and 'end', using day-count convention
-    'dconv'.
+    Return number of years between 'beg' and 'end', using day-count convention 'dconv'.
     """
 
     if end < beg or dconv not in YDCONVS:
@@ -398,16 +384,14 @@ def yfactor(beg, end, dconv):
         if dconv == 'ACT/ACT':
             leap = nleap = 0
             while beg_year < end_year:
-                num = (date((beg_year + 1), 1, 1) - \
-                    date(beg_year, beg_month, beg_day)).days
+                num = (date((beg_year + 1), 1, 1) - date(beg_year, beg_month, beg_day)).days
                 if isleap(beg_year):
                     leap += num
                 else:
                     nleap += num
                 beg_day = beg_month = 1
                 beg_year += 1
-            num = (date(end_year, end_month, end_day) - \
-                date(beg_year, beg_month, beg_day)).days
+            num = (date(end_year, end_month, end_day) - date(beg_year, beg_month, beg_day)).days
             if isleap(beg_year):
                 leap += num
             else:
@@ -447,14 +431,12 @@ def yfactor(beg, end, dconv):
             if end_day == 31:
                 end_month += 1
                 end_day = 1
-        return (360 * (end_year - beg_year) + 30 * (end_month - beg_month) \
-            + (end_day - beg_day)) / 360
+        return (360 * (end_year - beg_year) + 30 * (end_month - beg_month) + (end_day - beg_day)) / 360
 
 
 def mfactor(beg, end, dconv):
     """
-    Return number of months between 'beg' and 'end', using day-count convention
-    'dconv'.
+    Return number of months between 'beg' and 'end', using day-count convention 'dconv'.
     """
 
     if end < beg or dconv not in MDCONVS:
@@ -508,8 +490,7 @@ def mfactor(beg, end, dconv):
             if end_day == 31:
                 end_month += 1
                 end_day = 1
-        return (360 * (end_year - beg_year) + 30 * (end_month - beg_month) \
-            + (end_day - beg_day)) / 30
+        return (360 * (end_year - beg_year) + 30 * (end_month - beg_month) + (end_day - beg_day)) / 30
 
 
 def grammar(num, noun):
@@ -643,8 +624,7 @@ def xml_unespace(string):
 
 def new_xml(data):
     """
-    Create new XML soup using correct parser, either from scratch or
-    from 'data'.
+    Create new XML soup using correct parser, either from scratch or from 'data'.
     """
 
     if data:
@@ -794,7 +774,7 @@ def get(*args, **kwargs):  # pragma: no cover
     """
 
     if TEST:
-        from test.utils import testreq
+        from tests.utils import testreq
         return testreq(False, *args)
     else:
         if 'timeout' not in kwargs:
@@ -808,7 +788,7 @@ def post(*args, **kwargs):  # pragma: no cover
     """
 
     if TEST:
-        from test.utils import testreq
+        from tests.utils import testreq
         return testreq(True, *args)
     else:
         if 'timeout' not in kwargs:
@@ -853,8 +833,7 @@ def render(
         content = response.content
         err = tidy_document(content.decode())[1]
         if err:
-            raise AssertionError(
-                'Template: {} Errors: {}'.format(template_name, err))
+            raise AssertionError('Template: {} Errors: {}'.format(template_name, err))
 
         dump_path = environ.get('DUMP_PATH')
         if dump_path:  # pragma: no cover
@@ -1010,7 +989,7 @@ def text_opt(needle, haystack, opt):
         return True
     if not haystack:
         return False
-    return [icontains, istartswith, iendswith, iexact][opt](needle, haystack)
+    return (icontains, istartswith, iendswith, iexact)[opt](needle, haystack)
 
 
 def normalize(string):
@@ -1036,7 +1015,6 @@ def getpreset(key):
     """
 
     try:
-        return Preset.objects.filter(name=key, valid__lte=date.today()) \
-            .latest('valid').value
+        return Preset.objects.filter(name=key, valid__lte=date.today()).latest('valid').value
     except:
         return 0

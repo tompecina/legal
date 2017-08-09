@@ -100,9 +100,10 @@ def mainpage(request):
             LOGGER.debug('Invalid form', request)
             messages = [(INERR_SHORT, None)]
 
-    return render(request,
-                  'dvt_main.html',
-                  {'app': APP,
-                   'form': form,
-                   'messages': messages,
-                   'page_title': 'Doba výkonu trestu'})
+    return render(
+        request,
+        'dvt_main.html',
+        {'app': APP,
+         'form': form,
+         'messages': messages,
+         'page_title': 'Doba výkonu trestu'})

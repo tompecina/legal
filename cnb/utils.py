@@ -34,8 +34,7 @@ DOWNLOAD_REPEAT = timedelta(hours=1)
 def get_fx_rate(curr, dat, log=None, use_fixed=False, log_fixed=None):
 
     LOGGER.debug(
-        'FX rate requested, currency "{0}" for '
-        '{1.year:d}-{1.month:02d}-{1.day:02d}, fixed "{2}"'
+        'FX rate requested, currency "{0}" for {1.year:d}-{1.month:02d}-{1.day:02d}, fixed "{2}"'
         .format(curr, dat, use_fixed))
 
     fixed_list = {
@@ -135,10 +134,9 @@ def get_fx_rate(curr, dat, log=None, use_fixed=False, log_fixed=None):
     if rat:
         txt = rat[0].text
     else:
-        surl = \
-            'https://www.cnb.cz/cs/financni_trhy/devizovy_trh/' \
-            'kurzy_devizoveho_trhu/denni_kurz.xml?date=' \
-            '{0.day:d}.{0.month:d}.{0.year:d}'.format(dat)
+        surl = (
+            'https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml?'
+            'date={0.day:d}.{0.month:d}.{0.year:d}'.format(dat))
         txt = getcache(surl, DOWNLOAD_REPEAT)[0]
         if not txt:
             LOGGER.warning('No connection to CNB server')
@@ -153,8 +151,7 @@ def get_fx_rate(curr, dat, log=None, use_fixed=False, log_fixed=None):
         dreq = date(int(dreq[6:]), int(dreq[3:5]), int(dreq[:2]))
     except:
         LOGGER.error(
-            'Invalid FX table structure for '
-            '{0.year:d}-{0.month:02d}-{0.day:02d}'.format(dat))
+            'Invalid FX table structure for {0.year:d}-{0.month:02d}-{0.day:02d}'.format(dat))
         return None, None, None, 'Chyba struktury kursové tabulky'
     if not rat and (dreq == dat or (today - dat) > DOWNLOAD_WAIT):
         FXrate(date=dat, text=txt).save()
@@ -162,8 +159,7 @@ def get_fx_rate(curr, dat, log=None, use_fixed=False, log_fixed=None):
     frat = 1
     curr_rq = curr
     if not lin:
-        if use_fixed and curr in fixed_list \
-           and fixed_list[curr]['date_from'] <= dat:
+        if use_fixed and curr in fixed_list and fixed_list[curr]['date_from'] <= dat:
             curr = fixed_list[curr]['currency_to']
             lin = soup.find('radek', {'kod': curr})
             if not lin:
@@ -185,9 +181,7 @@ def get_fx_rate(curr, dat, log=None, use_fixed=False, log_fixed=None):
             rate = lin['pomer']
         rate = float(rate.replace(',', '.'))
     except:
-        LOGGER.error(
-            'Invalid FX table line for {0.year:d}-{0.month:02d}-{0.day:02d}'
-            .format(dat))
+        LOGGER.error('Invalid FX table line for {0.year:d}-{0.month:02d}-{0.day:02d}'.format(dat))
         return None, None, dreq, 'Chyba řádku kursové tabulky'
     if log != None:
         log.append(
@@ -201,9 +195,7 @@ def get_fx_rate(curr, dat, log=None, use_fixed=False, log_fixed=None):
 
 def get_mpi_rate(typ, dat, log=None):
 
-    LOGGER.debug(
-        'MPI rate of type "{0}" requested for '
-        '{1.year:d}-{1.month:02d}-{1.day:02d}'.format(typ, dat))
+    LOGGER.debug('MPI rate of type "{0}" requested for {1.year:d}-{1.month:02d}-{1.day:02d}'.format(typ, dat))
 
     now = datetime.now()
 

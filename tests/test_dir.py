@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/dir_tests.py
+# tests/dir_tests.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -30,7 +30,7 @@ from django.contrib.auth.models import User
 
 from common.glob import LOCAL_DOMAIN
 from common.settings import TEST_DATA_DIR
-from test.utils import link_equal, setdl
+from tests.utils import link_equal, setdl
 from sir.cron import cron_gettr, cron_proctr
 from sir.models import Vec
 from dir import cron, forms, models
@@ -51,8 +51,7 @@ class TestCron(TransactionTestCase):
         Vec.objects.update(link="https://legal.pecina.cz/link")
         self.assertEqual(
             cron.dir_notice(1),
-            '''\
-Byli nově zaznamenáni tito dlužníci, které sledujete:
+            '''Byli nově zaznamenáni tito dlužníci, které sledujete:
 
  - Test 02, sp. zn. KSBR 0 INS 4/2008
    https://legal.pecina.cz/link
@@ -143,12 +142,8 @@ class TestModels(TransactionTestCase):
         cron_proctr()
 
         Vec.objects.update(link="https://legal.pecina.cz/link")
-        self.assertEqual(
-            str(models.Debtor.objects.first()),
-            'Error 01')
-        self.assertEqual(
-            str(models.Discovered.objects.first()),
-            'Test 02')
+        self.assertEqual(str(models.Debtor.objects.first()), 'Error 01')
+        self.assertEqual(str(models.Discovered.objects.first()), 'Test 02')
 
 
 class TestViews1(TestCase):
@@ -209,11 +204,7 @@ class TestViews1(TestCase):
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertEqual(len(soup.select('table#list tbody tr')), 1)
         for number in range(200, 437):
-            models.Debtor(
-                uid=self.user,
-                name_opt=0,
-                first_name_opt=0,
-                desc=('Test {:d}'.format(number))).save()
+            models.Debtor(uid=self.user, name_opt=0, first_name_opt=0, desc=('Test {:d}'.format(number))).save()
 
         res = self.client.get('/dir/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -223,12 +214,8 @@ class TestViews1(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/dir/debtorform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/dir/?start=50'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/dir/?start=200'))
+        self.assertTrue(link_equal(links[1]['href'], '/dir/?start=50'))
+        self.assertTrue(link_equal(links[2]['href'], '/dir/?start=200'))
 
         res = self.client.get('/dir/?start=50')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -238,18 +225,10 @@ class TestViews1(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
         self.assertEqual(links[0]['href'], '/dir/debtorform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/dir/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/dir/?start=0'))
-        self.assertTrue(link_equal(
-            links[3]['href'],
-            '/dir/?start=100'))
-        self.assertTrue(link_equal(
-            links[4]['href'],
-            '/dir/?start=200'))
+        self.assertTrue(link_equal(links[1]['href'], '/dir/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/dir/?start=0'))
+        self.assertTrue(link_equal(links[3]['href'], '/dir/?start=100'))
+        self.assertTrue(link_equal(links[4]['href'], '/dir/?start=200'))
 
         res = self.client.get('/dir/?start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -259,18 +238,10 @@ class TestViews1(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
         self.assertEqual(links[0]['href'], '/dir/debtorform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/dir/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/dir/?start=50'))
-        self.assertTrue(link_equal(
-            links[3]['href'],
-            '/dir/?start=150'))
-        self.assertTrue(link_equal(
-            links[4]['href'],
-            '/dir/?start=200'))
+        self.assertTrue(link_equal(links[1]['href'], '/dir/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/dir/?start=50'))
+        self.assertTrue(link_equal(links[3]['href'], '/dir/?start=150'))
+        self.assertTrue(link_equal(links[4]['href'], '/dir/?start=200'))
 
         res = self.client.get('/dir/?start=200')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -280,12 +251,8 @@ class TestViews1(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/dir/debtorform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/dir/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/dir/?start=150'))
+        self.assertTrue(link_equal(links[1]['href'], '/dir/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/dir/?start=150'))
 
         res = self.client.get('/dir/?start=500')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -295,12 +262,8 @@ class TestViews1(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/dir/debtorform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/dir/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/dir/?start=187'))
+        self.assertTrue(link_equal(links[1]['href'], '/dir/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/dir/?start=187'))
 
     def test_debtorform(self):
 
@@ -530,11 +493,7 @@ class TestViews2(TestCase):
 
     def test_debtordel(self):
 
-        debtor_id = models.Debtor.objects.create(
-            uid=self.user,
-            name_opt=0,
-            first_name_opt=0,
-            desc='Test').id
+        debtor_id = models.Debtor.objects.create(uid=self.user, name_opt=0, first_name_opt=0, desc='Test').id
 
         res = self.client.get('/dir/debtordel/{:d}'.format(debtor_id))
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -542,9 +501,7 @@ class TestViews2(TestCase):
         res = self.client.get('/dir/debtordel/{:d}/'.format(debtor_id))
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
-        res = self.client.get(
-            '/dir/debtordel/{:d}/'.format(debtor_id),
-            follow=True)
+        res = self.client.get('/dir/debtordel/{:d}/'.format(debtor_id), follow=True)
         self.assertTemplateUsed(res, 'login.html')
         self.assertTrue(self.client.login(username='user', password='none'))
 
@@ -572,16 +529,8 @@ class TestViews2(TestCase):
 
     def test_debtordelall(self):
 
-        models.Debtor.objects.create(
-            uid=self.user,
-            name_opt=0,
-            first_name_opt=0,
-            desc='Test 1')
-        models.Debtor.objects.create(
-            uid=self.user,
-            name_opt=0,
-            first_name_opt=0,
-            desc='Test 2')
+        models.Debtor.objects.create(uid=self.user, name_opt=0, first_name_opt=0, desc='Test 1')
+        models.Debtor.objects.create(uid=self.user, name_opt=0, first_name_opt=0, desc='Test 2')
 
         self.assertEqual(models.Debtor.objects.count(), 2)
 
@@ -634,22 +583,9 @@ class TestViews2(TestCase):
 
     def test_debtorbatchform(self):
 
-        models.Debtor.objects.create(
-            uid=self.user,
-            name='Název 1',
-            name_opt=0,
-            first_name_opt=0,
-            desc='Test 1')
-        models.Debtor.objects.create(
-            uid=self.user,
-            name_opt=0,
-            first_name_opt=0,
-            desc='Test 21')
-        models.Debtor.objects.create(
-            uid=self.user,
-            name_opt=0,
-            first_name_opt=0,
-            desc='Test 21')
+        models.Debtor.objects.create(uid=self.user, name='Název 1', name_opt=0, first_name_opt=0, desc='Test 1')
+        models.Debtor.objects.create(uid=self.user, name_opt=0, first_name_opt=0, desc='Test 21')
+        models.Debtor.objects.create(uid=self.user, name_opt=0, first_name_opt=0, desc='Test 21')
 
         res = self.client.get('/dir/debtorbatchform')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -677,9 +613,7 @@ class TestViews2(TestCase):
             {'submit_xxx': 'XXX'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorbatchform.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybné zadání, prosím, opravte údaje')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
 
         with open(join(TEST_DATA_DIR, 'dir_import.csv'), 'rb') as infile:
             res = self.client.post(
@@ -712,29 +646,24 @@ class TestViews2(TestCase):
              (19, 'Chybný formát'),
              (20, 'Chybný parametr: "xxx"'),
              (21, 'Popisu "Test 21" odpovídá více než jeden dlužník'),
-             (28, 'Příliš dlouhý popis')])
+             (28, 'Příliš dlouhý popis'),
+            ])
 
         res = self.client.get('/dir/debtorexport/')
         self.assertEqual(
             res.content.decode('utf-8'),
-            '''\
-Test 1,název=Název 2:*
+            '''Test 1,název=Název 2:*
 Test 21
 Test 21
-Test 22,soud=KSOS,název=Název:*,jméno=Jméno:<,IČO=12345678,\
-DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
+Test 22,soud=KSOS,název=Název:*,jméno=Jméno:<,IČO=12345678,DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
 rokNarozeníOd=1965,rokNarozeníDo=1966
-Test 23,soud=KSOS,název=Název:<,jméno=Jméno:>,IČO=12345678,\
-DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
+Test 23,soud=KSOS,název=Název:<,jméno=Jméno:>,IČO=12345678,DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
 rokNarozeníOd=1965,rokNarozeníDo=1966
-Test 24,soud=KSOS,název=Název:>,jméno=Jméno:=,IČO=12345678,\
-DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
+Test 24,soud=KSOS,název=Název:>,jméno=Jméno:=,IČO=12345678,DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
 rokNarozeníOd=1965,rokNarozeníDo=1966
-Test 25,soud=KSOS,název=Název:=,jméno=Jméno:*,IČO=12345678,\
-DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
+Test 25,soud=KSOS,název=Název:=,jméno=Jméno:*,IČO=12345678,DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
 rokNarozeníOd=1965,rokNarozeníDo=1966
-Test 26,soud=KSOS,název=Název:*,jméno=Jméno:*,IČO=12345678,\
-DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
+Test 26,soud=KSOS,název=Název:*,jméno=Jméno:*,IČO=12345678,DIČ=001-12345678,RČ=700101/1234,datumNarození=01.01.1970,\
 rokNarozeníOd=1965,rokNarozeníDo=1966
 {}
 '''.format('T' * 255).replace('\n', '\r\n'))
@@ -795,8 +724,7 @@ class TestViews3(TransactionTestCase):
         self.assertEqual(
             res.content.decode('utf-8'),
             '''\
-Test 1,soud=MSPH,název=Název:*,jméno=Jméno:<,IČO=12345678,\
-DIČ=001-12345678,RČ=700101/1234,datumNarození=15.01.1970,\
+Test 1,soud=MSPH,název=Název:*,jméno=Jméno:<,IČO=12345678,DIČ=001-12345678,RČ=700101/1234,datumNarození=15.01.1970,\
 rokNarozeníOd=1965,rokNarozeníDo=1966
 Test 2,název=Název:>,jméno=Jméno:=
 Test 3

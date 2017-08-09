@@ -24,11 +24,8 @@ from datetime import datetime, timedelta
 
 from django.contrib.auth.models import User
 
-from szr.cron import (
-    szr_notice, cron_courts as szr_courts, cron_update as szr_update)
-from psj.cron import (
-    cron_courtrooms as psj_courtrooms, cron_schedule as psj_schedule,
-    cron_update as psj_update)
+from szr.cron import szr_notice, cron_courts as szr_courts, cron_update as szr_update
+from psj.cron import cron_courtrooms as psj_courtrooms, cron_schedule as psj_schedule, cron_update as psj_update
 from udn.cron import cron_update as udn_update, cron_find as udn_find
 from sur.cron import sur_notice
 from sir.cron import sir_notice, cron_update as sir_update
@@ -56,8 +53,7 @@ def cron_notify():
 
     for user in User.objects.all():
         uid = user.id
-        text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) \
-            + dir_notice(uid)
+        text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) + dir_notice(uid)
         if text and user.email:
             text += 'Server {} ({})\n'.format(LOCAL_SUBDOMAIN, LOCAL_URL)
             send_mail(
@@ -89,8 +85,7 @@ SCHED = (
     },
     {'name': 'psj_schedule',
      'args': '15 22 29',
-     'when': lambda t: t.weekday() in (6, 0, 1, 2, 3) and t.hour == 18 \
-         and t.minute == 31,
+     'when': lambda t: t.weekday() in (6, 0, 1, 2, 3) and t.hour == 18 and t.minute == 31,
      'lock': 'psj',
      'blocking': True,
     },
@@ -142,9 +137,7 @@ def cron_run():
             args = getattr(job, 'args', '')
             run(job.name, args)
             Lock.objects.filter(name=lock).delete()
-            LOGGER.debug(
-                'Scheduled job {} with arguments "{}" completed'
-                .format(job.name, args))
+            LOGGER.debug('Scheduled job {} with arguments "{}" completed'.format(job.name, args))
 
     for job in SCHED:
         if job['when'](now):
@@ -158,9 +151,7 @@ def cron_run():
                             args=args,
                             lock=lock
                         ).save()
-                        LOGGER.debug(
-                            'Job {} with arguments "{}" scheduled'
-                            .format(job['name'], args))
+                        LOGGER.debug('Job {} with arguments "{}" scheduled'.format(job['name'], args))
                     continue
                 Lock.objects.get_or_create(name=lock)
             run(job['name'], args)

@@ -48,16 +48,13 @@ class SirConfig(AppConfig):
                 Adresa.objects.count()),
             (
                 'Počet nových adres za posledních 24 hodin',
-                Adresa.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+                Adresa.objects.filter(timestamp_add__gte=(now - timedelta(hours=24))).count()),
             (
                 'Počet nových adres za poslední týden',
-                Adresa.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+                Adresa.objects.filter(timestamp_add__gte=(now - timedelta(weeks=1))).count()),
             (
                 'Počet nových adres za poslední měsíc',
-                Adresa.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+                Adresa.objects.filter(timestamp_add__gte=(now - timedelta(days=30))).count()),
             (
                 'Počet rolí v řízení',
                 DruhRoleVRizeni.objects.count()),
@@ -66,31 +63,25 @@ class SirConfig(AppConfig):
                 Osoba.objects.count()),
             (
                 'Počet nových osob za posledních 24 hodin',
-                Osoba.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+                Osoba.objects.filter(timestamp_add__gte=(now - timedelta(hours=24))).count()),
             (
                 'Počet nových osob za poslední týden',
-                Osoba.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+                Osoba.objects.filter(timestamp_add__gte=(now - timedelta(weeks=1))).count()),
             (
                 'Počet nových osob za poslední měsíc',
-                Osoba.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+                Osoba.objects.filter(timestamp_add__gte=(now - timedelta(days=30))).count()),
             (
                 'Počet rolí',
                 Role.objects.count()),
             (
                 'Počet nových rolí za posledních 24 hodin',
-                Role.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+                Role.objects.filter(timestamp_add__gte=(now - timedelta(hours=24))).count()),
             (
                 'Počet nových rolí za poslední týden',
-                Role.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+                Role.objects.filter(timestamp_add__gte=(now - timedelta(weeks=1))).count()),
             (
                 'Počet nových rolí za poslední měsíc',
-                Role.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+                Role.objects.filter(timestamp_add__gte=(now - timedelta(days=30))).count()),
             (
                 'Počet stavů řízení',
                 DruhStavRizeni.objects.count()),
@@ -102,31 +93,25 @@ class SirConfig(AppConfig):
                 Vec.objects.filter(datumVyskrtnuti__isnull=False).count()),
             (
                 'Počet nových řízení za posledních 24 hodin',
-                Vec.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+                Vec.objects.filter(timestamp_add__gte=(now - timedelta(hours=24))).count()),
             (
                 'Počet nových řízení za poslední týden',
-                Vec.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+                Vec.objects.filter(timestamp_add__gte=(now - timedelta(weeks=1))).count()),
             (
                 'Počet nových řízení za poslední měsíc',
-                Vec.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+                Vec.objects.filter(timestamp_add__gte=(now - timedelta(days=30))).count()),
             (
                 'Počet sledovaných řízení',
                 Insolvency.objects.count()),
             (
                 'Počet nových sledovaných řízení za posledních 24 hodin',
-                Insolvency.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+                Insolvency.objects.filter(timestamp_add__gte=(now - timedelta(hours=24))).count()),
             (
                 'Počet nových sledovaných řízení za poslední týden',
-                Insolvency.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+                Insolvency.objects.filter(timestamp_add__gte=(now - timedelta(weeks=1))).count()),
             (
                 'Počet nových sledovaných řízení za poslední měsíc',
-                Insolvency.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+                Insolvency.objects.filter(timestamp_add__gte=(now - timedelta(days=30))).count()),
             (
                 'Počet řízení pro příští notifikaci',
                 Tracked.objects.count()),

@@ -26,8 +26,7 @@ from django.apps import apps
 from django.views.decorators.http import require_http_methods
 
 from common.glob import INERR_SHORT
-from common.utils import (
-    getbutton, fdt, famt, unrequire, LocalFloat, LOGGER, render)
+from common.utils import getbutton, fdt, famt, unrequire, LocalFloat, LOGGER, render
 from common.fields import AmountField
 from cnb.utils import get_fx_rate, get_mpi_rate
 from cnb.forms import MainForm
@@ -85,10 +84,7 @@ def mainpage(request):
                         messages = [(msg, None)]
                     elif button == 'show_fx':
                         messages.append(
-                            ('{:d} {} = {:.3f} CZK'.format(
-                                qty,
-                                curr,
-                                LocalFloat(rate)),
+                            ('{:d} {} = {:.3f} CZK'.format(qty, curr, LocalFloat(rate)),
                              'msg-res1'))
                         messages.append(
                             ('(Kurs vyhlášený ke dni: {})'.format(fdt(dreq)),
@@ -97,23 +93,14 @@ def mainpage(request):
                         basis = cld['basis']
                         if button == 'conv_from':
                             messages.append(
-                                ('{} {} = {} CZK'.format(
-                                    famt(basis),
-                                    curr,
-                                    famt(basis * rate / qty)),
+                                ('{} {} = {} CZK'.format(famt(basis), curr, famt(basis * rate / qty)),
                                  'msg-res2'))
                         else:
                             messages.append(
-                                ('{} CZK = {} {}'.format(
-                                    famt(basis),
-                                    famt(basis * qty / rate),
-                                    curr),
+                                ('{} CZK = {} {}'.format(famt(basis), famt(basis * qty / rate), curr),
                                  'msg-res2'))
                         messages.append(
-                            ('{:d} {} = {:.3f} CZK'.format(
-                                qty,
-                                curr,
-                                LocalFloat(rate)),
+                            ('{:d} {} = {:.3f} CZK'.format(qty, curr, LocalFloat(rate)),
                              None))
                         messages.append(
                             ('(Kurs vyhlášený ke dni: {})'.format(fdt(dreq)),
@@ -125,8 +112,7 @@ def mainpage(request):
                         messages = [(msg, None)]
                     else:
                         messages.append(
-                            ('{} platná ke dni {}:'.format(
-                                rate_desc[button], fdt(mpi_date)),
+                            ('{} platná ke dni {}:'.format(rate_desc[button], fdt(mpi_date)),
                              None))
                         messages.append(
                             ('{:.2f} %'.format(LocalFloat(rate)),
@@ -135,9 +121,10 @@ def mainpage(request):
                 LOGGER.debug('Invalid form', request)
                 messages = [(INERR_SHORT, None)]
 
-    return render(request,
-                  'cnb_main.html',
-                  {'app': APP,
-                   'form': form,
-                   'messages': messages,
-                   'page_title': 'Kursy a sazby ČNB'})
+    return render(
+        request,
+        'cnb_main.html',
+        {'app': APP,
+         'form': form,
+         'messages': messages,
+         'page_title': 'Kursy a sazby ČNB'})

@@ -32,11 +32,8 @@ from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
 
-from common.glob import (
-    REGISTERS, INERR, TEXT_OPTS_KEYS, ODP, EXLIM_TITLE,
-    LOCAL_SUBDOMAIN, LOCAL_URL, DTF)
-from common.utils import (
-    Pager, new_xml, xml_decorate, composeref, xmlbool, LOGGER, render)
+from common.glob import REGISTERS, INERR, TEXT_OPTS_KEYS, ODP, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF
+from common.utils import Pager, new_xml, xml_decorate, composeref, xmlbool, LOGGER, render
 from szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT
 from szr.models import Court
 from psj.models import Hearing
@@ -63,8 +60,7 @@ def mainpage(request):
     err_message = ''
     page_title = apps.get_app_config(APP).verbose_name
 
-    courts = Court.objects.exclude(id=SUPREME_COURT) \
-        .exclude(id=SUPREME_ADMINISTRATIVE_COURT).order_by('name')
+    courts = Court.objects.exclude(id=SUPREME_COURT).exclude(id=SUPREME_ADMINISTRATIVE_COURT).order_by('name')
     if request.method == 'GET':
         form = MainForm()
         return render(
@@ -106,7 +102,7 @@ def mainpage(request):
 def g2p(reqd):
 
     par = {}
-    
+
     lims = {
         'senate': 0,
         'number': 1,
@@ -244,8 +240,7 @@ def xmllist(request):
     response = HttpResponse(
         str(xml).encode('utf-8') + b'\n',
         content_type='text/xml; charset=utf-8')
-    response['Content-Disposition'] = \
-                'attachment; filename=Jednani.xml'
+    response['Content-Disposition'] = 'attachment; filename=Jednani.xml'
     return response
 
 
@@ -270,8 +265,7 @@ def csvlist(request):
              'total': total,
              'back': reverse('psj:mainpage')})
     response = HttpResponse(content_type='text/csv; charset=utf-8')
-    response['Content-Disposition'] = \
-        'attachment; filename=Jednani.csv'
+    response['Content-Disposition'] = 'attachment; filename=Jednani.csv'
     writer = csvwriter(response)
     hdr = (
         'Soud',
@@ -324,8 +318,7 @@ def jsonlist(request):
              'total': total,
              'back': reverse('psj:mainpage')})
     response = HttpResponse(content_type='application/json; charset=utf-8')
-    response['Content-Disposition'] = \
-        'attachment; filename=Jednani.json'
+    response['Content-Disposition'] = 'attachment; filename=Jednani.json'
     lst = []
     for item in res:
         court = {
@@ -352,25 +345,22 @@ def jsonlist(request):
     return response
 
 
-SJRE = compile(r'^(\S*\.\S*\s)*(.*)$')
+SJ_RE = compile(r'^(\S*\.\S*\s)*(.*)$')
 
 
 def stripjudge(name):
 
-    return strxfrm(SJRE.match(name['judge__name']).group(2))
+    return strxfrm(SJ_RE.match(name['judge__name']).group(2))
 
 
 @require_http_methods(('GET',))
 def courtinfo(request, court):
 
-    LOGGER.debug(
-        'Court information accessed, court="{}"'.format(court),
-        request)
-    courtrooms = Hearing.objects.filter(courtroom__court_id=court) \
-        .values('courtroom_id', 'courtroom__desc').distinct() \
-        .order_by('courtroom__desc')
-    judges = list(Hearing.objects.filter(courtroom__court_id=court) \
-        .values('judge_id', 'judge__name').distinct())
+    LOGGER.debug('Court information accessed, court="{}"'.format(court), request)
+    courtrooms = (
+        Hearing.objects.filter(courtroom__court_id=court).values('courtroom_id', 'courtroom__desc').distinct()
+        .order_by('courtroom__desc'))
+    judges = list(Hearing.objects.filter(courtroom__court_id=court).values('judge_id', 'judge__name').distinct())
     judges.sort(key=stripjudge)
     return render(
         request,

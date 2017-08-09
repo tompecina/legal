@@ -35,9 +35,7 @@ from django.apps import apps
 from django.http import QueryDict
 from django.urls import reverse
 
-from common.glob import (
-    INERR, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA,
-    TEXT_OPTS_AI, IC_REGEX, RC_FULL_REGEX)
+from common.glob import INERR, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA, TEXT_OPTS_AI, IC_REGEX, RC_FULL_REGEX
 from common.utils import getbutton, Pager, LOGGER, render
 from szr.forms import EmailForm
 from sir.glob import L2N, L2S
@@ -93,8 +91,7 @@ def mainpage(request):
     for row in rows:
         query = QueryDict(mutable=True)
         query['role_debtor'] = query['deleted'] = 'on'
-        for key in ('court', 'genid', 'taxid', 'birthid', 'date_birth',
-            'year_birth_from', 'year_birth_to'):
+        for key in ('court', 'genid', 'taxid', 'birthid', 'date_birth', 'year_birth_from', 'year_birth_to'):
             if row[key]:
                 query[key] = row[key]
         for key in OFIELDS:
@@ -120,8 +117,7 @@ def mainpage(request):
 def debtorform(request, idx=0):
 
     LOGGER.debug(
-        'Debtor form accessed using method {}, id={}'
-        .format(request.method, idx),
+        'Debtor form accessed using method {}, id={}'.format(request.method, idx),
         request,
         request.POST)
 
@@ -133,15 +129,14 @@ def debtorform(request, idx=0):
     button = getbutton(request)
     courts = sorted([{'id': x, 'name': L2N[x]} for x in
         Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()],
-        key=(lambda x: strxfrm(x['name'])))
+        key=lambda x: strxfrm(x['name']))
     if request.method == 'GET':
         if idx:
             debtor = model_to_dict(get_object_or_404(Debtor, pk=idx, uid=uid))
             for opt in OPTS:
                 debtor[opt] = TEXT_OPTS_KEYS[debtor[opt]]
             if debtor['birthid']:
-                debtor['birthid'] = \
-                    '{}/{}'.format(debtor['birthid'][:6], debtor['birthid'][6:])
+                debtor['birthid'] = '{}/{}'.format(debtor['birthid'][:6], debtor['birthid'][6:])
             form = DebtorForm(initial=debtor)
         else:
             form = DebtorForm()
@@ -165,8 +160,7 @@ def debtorform(request, idx=0):
                 debtor.__setattr__(opt, TEXT_OPTS_KEYS.index(cld[opt]))
             debtor.save()
             LOGGER.info(
-                'User "{}" ({:d}) {} debtor {}'
-                .format(
+                'User "{}" ({:d}) {} debtor {}'.format(
                     uname,
                     uid,
                     'updated' if idx else 'added',
@@ -232,8 +226,7 @@ def debtordelall(request):
             {'app': APP,
              'page_title': 'Smazání všech dlužníků'})
     else:
-        if getbutton(request) == 'yes' and 'conf' in request.POST \
-           and request.POST['conf'] == 'Ano':
+        if getbutton(request) == 'yes' and 'conf' in request.POST and request.POST['conf'] == 'Ano':
             Debtor.objects.filter(uid=uid).delete()
             LOGGER.info(
                 'User "{}" ({:d}) deleted all debtors'.format(uname, uid),
@@ -272,8 +265,7 @@ def debtorbatchform(request):
                             if not line:
                                 continue
                             desc = line[0].strip()
-                            court = name = first_name = genid = taxid \
-                                = birthid = date_birth = year_birth_from \
+                            court = name = first_name = genid = taxid = birthid = date_birth = year_birth_from \
                                 = year_birth_to = None
                             name_opt = first_name_opt = 0
                             if not desc:
@@ -297,103 +289,69 @@ def debtorbatchform(request):
                                     if ':' in val:
                                         name, name_opt = val.split(':', 1)
                                         if name_opt not in TEXT_OPTS_ABBR:
-                                            errors.append(
-                                                (idx,
-                                                 'Chybná zkratka pro posici '
-                                                 'v poli <q>název</q>'))
+                                            errors.append((idx, 'Chybná zkratka pro posici v poli <q>název</q>'))
                                             continue
                                         name_opt = TEXT_OPTS_AI[name_opt]
                                     else:
                                         name = val
                                         name_opt = 0
                                     if len(name) > MAX_LENGTH:
-                                        errors.append(
-                                            (idx,
-                                             'Příliš dlouhé pole <q>název</q>'))
+                                        errors.append((idx, 'Příliš dlouhé pole <q>název</q>'))
                                         continue
                                 elif key == 'jméno':
                                     if ':' in val:
-                                        first_name, first_name_opt = \
-                                            val.split(':', 1)
+                                        first_name, first_name_opt = val.split(':', 1)
                                         if first_name_opt not in TEXT_OPTS_ABBR:
-                                            errors.append(
-                                                (idx,
-                                                 'Chybná zkratka pro posici '
-                                                 'v poli <q>jméno</q>'))
+                                            errors.append((idx, 'Chybná zkratka pro posici v poli <q>jméno</q>'))
                                             continue
-                                        first_name_opt = \
-                                            TEXT_OPTS_AI[first_name_opt]
+                                        first_name_opt = TEXT_OPTS_AI[first_name_opt]
                                     else:
                                         first_name = val
                                         first_name_opt = 0
                                     if len(first_name) > MAX_LENGTH:
-                                        errors.append(
-                                            (idx,
-                                             'Příliš dlouhé pole <q>jméno</q>'))
+                                        errors.append((idx, 'Příliš dlouhé pole <q>jméno</q>'))
                                         continue
                                 elif key == 'IČO':
                                     if not compile(IC_REGEX).match(val):
-                                        errors.append(
-                                            (idx,
-                                             'Chybná hodnota pro IČO'))
+                                        errors.append((idx, 'Chybná hodnota pro IČO'))
                                         continue
                                     genid = val
                                 elif key == 'DIČ':
                                     if len(val) > 14:
-                                        errors.append(
-                                            (idx,
-                                             'Chybná hodnota pro DIČ'))
+                                        errors.append((idx, 'Chybná hodnota pro DIČ'))
                                         continue
                                     taxid = val
                                 elif key == 'RČ':
                                     if not compile(RC_FULL_REGEX).match(val):
-                                        errors.append(
-                                            (idx,
-                                             'Chybná hodnota pro rodné číslo'))
+                                        errors.append((idx, 'Chybná hodnota pro rodné číslo'))
                                         continue
                                     birthid = val.replace('/', '')
                                 elif key == 'datumNarození':
                                     try:
-                                        date_birth = date(*map(
-                                            int,
-                                            val.split('.')[2::-1]))
+                                        date_birth = date(*map(int, val.split('.')[2::-1]))
                                         assert date_birth.year >= 1900
                                     except:
-                                        errors.append(
-                                            (idx,
-                                             'Chybná hodnota pro datum '
-                                             'narození'))
+                                        errors.append((idx, 'Chybná hodnota pro datum narození'))
                                         continue
                                 elif key == 'rokNarozeníOd':
                                     try:
                                         year_birth_from = int(val)
                                         assert year_birth_from >= 1900
                                     except:
-                                        errors.append(
-                                            (idx,
-                                             'Chybná hodnota pro pole '
-                                             '<q>rokNarozeníOd</q>'))
+                                        errors.append((idx, 'Chybná hodnota pro pole <q>rokNarozeníOd</q>'))
                                         continue
                                 elif key == 'rokNarozeníDo':
                                     try:
                                         year_birth_to = int(val)
                                         assert year_birth_to >= 1900
                                     except:
-                                        errors.append(
-                                            (idx,
-                                             'Chybná hodnota pro pole '
-                                             '<q>rokNarozeníDo</q>'))
+                                        errors.append((idx, 'Chybná hodnota pro pole <q>rokNarozeníDo</q>'))
                                         continue
                                 else:
-                                    errors.append(
-                                        (idx,
-                                         'Chybný parametr: "{}"'.format(key)))
+                                    errors.append((idx, 'Chybný parametr: "{}"'.format(key)))
                                     continue
-                                if year_birth_from and year_birth_to \
-                                   and year_birth_from > year_birth_to:
-                                    errors.append(
-                                        (idx,
-                                         'Chybný interval pro rok narození'))
+                                if year_birth_from and year_birth_to and year_birth_from > year_birth_to:
+                                    errors.append((idx, 'Chybný interval pro rok narození'))
                                     continue
 
                             if len(errors) == errlen:
@@ -415,15 +373,11 @@ def debtorbatchform(request):
                                             'year_birth_to': year_birth_to}
                                     )
                                 except:
-                                    errors.append(
-                                        (idx,
-                                         'Popisu "{}" odpovídá více než '
-                                         'jeden dlužník'.format(desc)))
+                                    errors.append((idx, 'Popisu "{}" odpovídá více než jeden dlužník'.format(desc)))
                                     continue
                                 count += 1
                     LOGGER.info(
-                        'User "{}" ({:d}) imported {:d} debtor(s)'
-                            .format(uname, uid, count),
+                        'User "{}" ({:d}) imported {:d} debtor(s)'.format(uname, uid, count),
                         request)
                     return render(
                         request,
@@ -478,8 +432,7 @@ def debtorexport(request):
                 debtor.birthid[:6],
                 debtor.birthid[6:]))
         if debtor.date_birth:
-            dat.append('datumNarození={0.day:02d}.{0.month:02d}.{0.year:d}'
-                           .format(debtor.date_birth))
+            dat.append('datumNarození={0.day:02d}.{0.month:02d}.{0.year:d}'.format(debtor.date_birth))
         if debtor.year_birth_from:
             dat.append('rokNarozeníOd={:d}'.format(debtor.year_birth_from))
         if debtor.year_birth_to:

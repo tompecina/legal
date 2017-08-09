@@ -26,8 +26,7 @@ from xml.sax.saxutils import escape, unescape
 from datetime import datetime, timedelta
 from io import BytesIO
 
-from reportlab.platypus import (
-    Paragraph, SimpleDocTemplate, LongTable, TableStyle, Spacer, KeepTogether)
+from reportlab.platypus import Paragraph, SimpleDocTemplate, LongTable, TableStyle, Spacer, KeepTogether
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_RIGHT
 from reportlab.lib.pagesizes import A4
@@ -42,16 +41,14 @@ from django.db.models import Q
 
 from common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
 from common.utils import (
-    getbutton, unrequire, famt, c2p, get_xml, new_xml, xmlbool, register_fonts,
-    make_pdf, lim, LOGGER, render)
+    getbutton, unrequire, famt, c2p, get_xml, new_xml, xmlbool, register_fonts, make_pdf, lim, LOGGER, render)
 from common.views import error, unauth
 from cache.utils import getasset, setasset
 from knr.glob import FUELS
 from knr.utils import getvat, findloc, finddist, convi, convf
 from knr.forms import (
-    PlaceForm, CarForm, FormulaForm, CalcForm, GeneralForm, ServiceForm,
-    ServiceSubform, FlatForm, FlatSubform, AdministrativeForm,
-    AdministrativeSubform, TimeForm, TimeSubform, TravelForm, TravelSubform)
+    PlaceForm, CarForm, FormulaForm, CalcForm, GeneralForm, ServiceForm, ServiceSubform, FlatForm, FlatSubform,
+    AdministrativeForm, AdministrativeSubform, TimeForm, TimeSubform, TravelForm, TravelSubform)
 from knr.models import Place, Car, Formula, Rate
 
 
@@ -392,8 +389,7 @@ PRESELS = (
         TYPE: 'service',
         PRESEL: {
             'description':
-            'Mimosmluvní odměna za úkony právní služby podle advokátního '
-            'tarifu',
+            'Mimosmluvní odměna za úkony právní služby podle advokátního tarifu',
             'major_number': 0,
             'minor_number': 0,
             'multiple_number': 1,
@@ -410,8 +406,7 @@ PRESELS = (
         TYPE: 'flat',
         PRESEL: {
             'description':
-            'Paušální odměna za zastupování účastníka podle vyhlášky '
-            'č. 484/2000 Sb.',
+            'Paušální odměna za zastupování účastníka podle vyhlášky č. 484/2000 Sb.',
             'multiple_flag': False,
             'multiple50_flag': False,
             'vat': False,
@@ -482,8 +477,7 @@ PRESELS = (
         TYPE: 'service',
         PRESEL: {
             'description':
-            'Mimosmluvní odměna za úkony právní služby podle advokátního '
-            'tarifu',
+            'Mimosmluvní odměna za úkony právní služby podle advokátního tarifu',
             'major_number': 0,
             'minor_number': 0,
             'multiple_number': 1,
@@ -501,8 +495,7 @@ PRESELS = (
         TYPE: 'flat',
         PRESEL: {
             'description':
-            'Paušální odměna za zastupování účastníka podle vyhlášky '
-            'č. 484/2000 Sb.',
+            'Paušální odměna za zastupování účastníka podle vyhlášky č. 484/2000 Sb.',
             'multiple_flag': False,
             'multiple50_flag': False,
             'vat': True,
@@ -733,9 +726,8 @@ def to_xml(calc):
     xml.insert(0, calculation)
     calculation['xmlns'] = 'http://' + LOCAL_SUBDOMAIN
     calculation['xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
-    calculation['xsi:schemaLocation'] = \
-        'http://{} {}/static/{}-{}.xsd' \
-        .format(LOCAL_SUBDOMAIN, LOCAL_URL, APP, APPVERSION)
+    calculation['xsi:schemaLocation'] = (
+        'http://{} {}/static/{}-{}.xsd'.format(LOCAL_SUBDOMAIN, LOCAL_URL, APP, APPVERSION))
     calculation['application'] = APP
     calculation['version'] = APPVERSION
     calculation['created'] = datetime.now().replace(microsecond=0).isoformat()
@@ -793,11 +785,8 @@ def from_xml(dat):
             continue
         item = Item()
         s2i(IFIELDS, itm, item)
-        try:
-            if itm.has_attr('type'):  # pragma: no cover
-                item.type = str(itm['type'])
-            else:
-                item.type = str(itm.name)
+        try:  # pragma: no cover
+            item.type = str(itm['type'] if itm.has_attr('type') else itm.name)
         except:  # pragma: no cover
             return None, 'Chybný formát souboru'
         calc.items.append(item)
@@ -871,8 +860,7 @@ def mainpage(request):
                     response = HttpResponse(
                         to_xml(calc),
                         content_type='text/xml; charset=utf-8')
-                    response['Content-Disposition'] = \
-                        'attachment; filename=Naklady.xml'
+                    response['Content-Disposition'] = 'attachment; filename=Naklady.xml'
                     return response
                 if button == 'pdf':
 
@@ -987,9 +975,7 @@ def mainpage(request):
                         allowWidows=False,
                         allowOrphans=False)
 
-                    doc1 = (([Paragraph(
-                        'Kalkulace nákladů řízení'.upper(),
-                        style1)],),)
+                    doc1 = (([Paragraph('Kalkulace nákladů řízení'.upper(), style1)],),)
                     if calc.title:
                         doc1[0][0].append(Paragraph(escape(calc.title), style2))
                     tbl1 = LongTable(doc1, colWidths=(483.3,))
@@ -1009,109 +995,71 @@ def mainpage(request):
                             item = calc.items[idx]
                             temp = [Paragraph('{:d}.'.format(idx + 1), style3)]
                             temp2 = [Paragraph(
-                                escape(item.description.upper()
-                                    .replace(' Č. ', ' č. ')
-                                    .replace(' SB.', ' Sb.')),
+                                escape(item.description.upper().replace(' Č. ', ' č. ').replace(' SB.', ' Sb.')),
                                 style4)]
                             if item.type == 'service':
                                 if item.multiple_number < 2:
                                     temp2.append(Paragraph(
-                                        '<b>Hlavních úkonů:</b> '
-                                        '{0.major_number:d} '
-                                        '&nbsp; <b>Vedlejších úkonů:</b> '
+                                        '<b>Hlavních úkonů:</b> {0.major_number:d} &nbsp; <b>Vedlejších úkonů:</b> '
                                         '{0.minor_number:d}'.format(item),
                                         style6))
                                 else:
                                     temp2.append(Paragraph(
-                                        '<b>Hlavních úkonů:</b> '
-                                        '{0.major_number:d} '
-                                        '&nbsp; <b>Vedlejších úkonů:</b> '
-                                        '{0.minor_number:d} &nbsp; '
-                                        '<b>Zastupovaných účastníků:</b> '
+                                        '<b>Hlavních úkonů:</b> {0.major_number:d} &nbsp; <b>Vedlejších úkonů:</b> '
+                                        '{0.minor_number:d} &nbsp; <b>Zastupovaných účastníků:</b> '
                                         '{0.multiple_number:d}'.format(item),
                                         style6))
                             if item.type == 'administrative':
                                 temp2.append(Paragraph(
-                                    '<b>Počet úkonů:</b> {:d} &nbsp; '
-                                    '<b>Sazba:</b> {} Kč'.format(
-                                        item.number,
-                                        convi(item.rate)),
+                                    '<b>Počet úkonů:</b> {:d} &nbsp; <b>Sazba:</b> {} Kč'
+                                    .format(item.number, convi(item.rate)),
                                     style6))
                             if item.type == 'time':
                                 temp2.append(Paragraph(
-                                    '<b>Počet započatých půlhodin:</b> {:d} '
-                                    '&nbsp; <b>Sazba:</b> {} Kč/půlhodinu'
-                                        .format(
-                                            item.time_number,
-                                            convi(item.time_rate)),
+                                    '<b>Počet započatých půlhodin:</b> {:d} &nbsp; <b>Sazba:</b> {} Kč/půlhodinu'
+                                        .format(item.time_number, convi(item.time_rate)),
                                     style6))
                             if item.type == 'travel':
                                 temp2.append(Paragraph(
                                     '<b>Z:</b> {} ({})'.format(
                                         escape(item.from_name),
-                                        escape(item.from_address.replace(
-                                            ', Česká republika', '').replace(
-                                                ', Česko', ''))),
+                                        escape(
+                                            item.from_address.replace(', Česká republika', '').replace(', Česko', ''))),
                                     style6))
                                 temp2.append(Paragraph(
                                     '<b>Do:</b> {} ({})'.format(
                                         escape(item.to_name),
-                                        escape(item.to_address.replace(
-                                            ', Česká republika', '').replace(
-                                                ', Česko', ''))),
+                                        escape(
+                                            item.to_address.replace(', Česká republika', '').replace(', Česko', ''))),
                                     style6))
                                 temp2.append(Paragraph(
-                                    '<b>Vzdálenost:</b> {} km &nbsp; '
-                                    '<b>Počet cest:</b> {:d}'.format(
-                                        convi(item.trip_distance),
-                                        item.trip_number),
+                                    '<b>Vzdálenost:</b> {} km &nbsp; <b>Počet cest:</b> {:d}'
+                                    .format(convi(item.trip_distance), item.trip_number),
                                     style6))
                                 if item.time_number and item.time_rate:
                                     temp2.append(Paragraph(
-                                        '<b>Počet započatých půlhodin:</b> '
-                                        '{:d} &nbsp; <b>Sazba:</b> {} '
-                                        'Kč/půlhodinu'.format(
-                                            (item.time_number
-                                            * item.trip_number),
-                                            convi(item.time_rate)),
+                                        '<b>Počet započatých půlhodin:</b> {:d} &nbsp; <b>Sazba:</b> {} Kč/půlhodinu'
+                                        .format((item.time_number * item.trip_number), convi(item.time_rate)),
                                         style6))
+                                temp2.append(Paragraph('<b>Vozidlo</b> {}'.format(escape(item.car_name)), style6))
                                 temp2.append(Paragraph(
-                                    '<b>Vozidlo</b> {}'.format(
-                                        escape(item.car_name)),
+                                    '<b>Palivo:</b> {} &nbsp; <b>Průměrná spotřeba:</b> {} l/100 km'
+                                    .format(item.fuel_name, convf(((item.cons1 + item.cons2 + item.cons3) / 3), 3)),
                                     style6))
+                                temp2.append(Paragraph('<b>Předpis:</b> {}'.format(escape(item.formula_name)), style6))
                                 temp2.append(Paragraph(
-                                    '<b>Palivo:</b> {} &nbsp; '
-                                    '<b>Průměrná spotřeba:</b> {} l/100 km'
-                                        .format(
-                                            item.fuel_name,
-                                            convf(((item.cons1 + item.cons2
-                                                + item.cons3) / 3), 3)),
-                                    style6))
-                                temp2.append(Paragraph(
-                                    '<b>Předpis:</b> {}'.format(
-                                        escape(item.formula_name)),
-                                    style6))
-                                temp2.append(Paragraph(
-                                    '<b>Paušál:</b> {} Kč/km &nbsp; '
-                                    '<b>Cena paliva:</b> {} Kč/l'.format(
-                                        convf(item.flat_rate, 2),
-                                        convf(item.fuel_price, 2)),
+                                    '<b>Paušál:</b> {} Kč/km &nbsp; <b>Cena paliva:</b> {} Kč/l'
+                                    .format(convf(item.flat_rate, 2), convf(item.fuel_price, 2)),
                                     style6))
                             if item.numerator > 1 or item.denominator > 1:
                                 temp2.append(Paragraph(
-                                    '<b>Zlomek:</b> ' \
-                                    '{0.numerator:d}/{0.denominator:d}'
-                                        .format(item),
+                                    '<b>Zlomek:</b> {0.numerator:d}/{0.denominator:d}'.format(item),
                                     style6))
                             if item.item_note:
-                                for temp3 in filter(bool, item.item_note.strip()
-                                    .split('\n')):
-                                    temp2.append(Paragraph(
-                                        escape(temp3),
-                                        style7))
+                                for temp3 in filter(bool, item.item_note.strip().split('\n')):
+                                    temp2.append(Paragraph(escape(temp3), style7))
                             temp.append(temp2)
-                            temp.append(Paragraph(
-                                '{} Kč'.format(convi(item.amount)), style5))
+                            temp.append(Paragraph('{} Kč'.format(convi(item.amount)), style5))
                             doc2.append(temp)
                         tbl2 = LongTable(doc2, colWidths=(16.15, 400.45, 66.7))
                         tbl2.setStyle(
@@ -1134,8 +1082,7 @@ def mainpage(request):
                             total_net += int(itm.amount)
                         else:
                             total_ex += int(itm.amount)
-                    total_vat = \
-                        int(round(float(total_net * calc.vat_rate) / 100))
+                    total_vat = int(round(float(total_net * calc.vat_rate) / 100))
                     total = int(total_net + total_ex + total_vat)
                     doc3 = []
                     if total_vat:
@@ -1147,27 +1094,18 @@ def mainpage(request):
                         doc3.append(
                             [None,
                              Paragraph('Základ s DPH', style8),
-                             Paragraph(
-                                 '{} Kč'.format(convi(total_net)),
-                                 style11)
+                             Paragraph('{} Kč'.format(convi(total_net)), style11)
                             ])
                         doc3.append(
                             [None,
-                             Paragraph(
-                                 'DPH {} %'.format(convf(calc.vat_rate, 0)),
-                                 style8),
-                             Paragraph(
-                                 '{} Kč'.format(convi(total_vat)),
-                                 style11)
+                             Paragraph('DPH {} %'.format(convf(calc.vat_rate, 0)), style8),
+                             Paragraph('{} Kč'.format(convi(total_vat)), style11)
                             ])
                     doc3.append(
                         [None,
                          Paragraph('Celkem'.upper(), style9),
                          Paragraph('{} Kč'.format(convi(total)), style10)])
-                    tbl3 = LongTable(
-                        doc3,
-                        colWidths=(346.6, 70, 66.7) if total_vat
-                        else (366.6, 50, 66.7))
+                    tbl3 = LongTable(doc3, colWidths=(346.6, 70, 66.7) if total_vat else (366.6, 50, 66.7))
                     lst3 = [
                         ('LINEABOVE', (1, 0), (-1, 0), 1, black),
                         ('LINEABOVE', (1, -1), (-1, -1), 1, black),
@@ -1186,17 +1124,14 @@ def mainpage(request):
                     if calc.calculation_note:
                         flow.append(Spacer(0, 24))
                         temp2 = [Paragraph('Poznámka:'.upper(), style4)]
-                        for string in filter(
-                                bool,
-                                calc.calculation_note.strip().split('\n')):
+                        for string in filter(bool, calc.calculation_note.strip().split('\n')):
                             temp2.append(Paragraph(escape(string), style12))
                         flow.append(KeepTogether(temp2[:2]))
                         if len(temp2) > 2:
                             flow.extend(temp2[2:])
                     temp = BytesIO()
                     response = HttpResponse(content_type='application/pdf')
-                    response['Content-Disposition'] = \
-                        'attachment; filename=Naklady.pdf'
+                    response['Content-Disposition'] = 'attachment; filename=Naklady.pdf'
                     auth = '{} V{}'.format(APP.upper(), APPVERSION)
                     doc = SimpleDocTemplate(
                         temp,
@@ -1225,8 +1160,7 @@ def mainpage(request):
                 var.update({'errors': True})
                 d2d(FIELDS, form.data, var)
                 for key in FIELDS:
-                    var['{}_error'.format(key)] = \
-                        'err' if form[key].errors else 'ok'
+                    var['{}_error'.format(key)] = 'err' if form[key].errors else 'ok'
         else:  # pragma: no cover
             i2d(FIELDS, calc, var)
     var['total_net'] = var['total_ex'] = var['num_items'] = 0
@@ -1255,8 +1189,7 @@ def placeform(request, idx=0):
     page_title = 'Úprava místa' if idx else 'Nové místo'
     button = getbutton(request)
     if request.method == 'GET':
-        form = PlaceForm(initial=model_to_dict(get_object_or_404(
-            Place, pk=idx, uid=uid))) if idx else PlaceForm()
+        form = PlaceForm(initial=model_to_dict(get_object_or_404(Place, pk=idx, uid=uid))) if idx else PlaceForm()
     elif button == 'back':
         return redirect('knr:placelist')
     elif button == 'search':
@@ -1277,16 +1210,9 @@ def placeform(request, idx=0):
                 get_object_or_404(Place, pk=idx, uid=uid)
                 cld['pk'] = idx
             Place(uid_id=uid, **cld).save()
-            if idx:
-                LOGGER.info(
-                    'User "{}" ({:d}) updated place "{}"'
-                    .format(uname, uid, cld['name']),
-                    request)
-            else:
-                LOGGER.info(
-                    'User "{}" ({:d}) added place "{}"'
-                    .format(uname, uid, cld['name']),
-                    request)
+            LOGGER.info(
+                'User "{}" ({:d}) {} place "{}"'.format(uname, uid, 'updated' if idx else 'added', cld['name']),
+                request)
             return redirect('knr:placelist')
         else:
             LOGGER.debug('Invalid form', request)
@@ -1305,8 +1231,7 @@ def placeform(request, idx=0):
 def placelist(request):
 
     LOGGER.debug('Place list accessed', request)
-    rows = Place.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
-        .order_by('uid', 'abbr', 'name')
+    rows = Place.objects.filter(Q(uid=None) | Q(uid=request.user.id)).order_by('uid', 'abbr', 'name')
     for row in rows:
         if row.uid:
             row.user = True
@@ -1341,10 +1266,7 @@ def placedel(request, idx=0):
     else:
         place = get_object_or_404(Place, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
-            LOGGER.info(
-                'User "{}" ({:d}) deleted place "{}"'
-                .format(uname, uid, place.name),
-                request)
+            LOGGER.info('User "{}" ({:d}) deleted place "{}"'.format(uname, uid, place.name), request)
             place.delete()
             return redirect('knr:placedeleted')
         return redirect('knr:placelist')
@@ -1355,8 +1277,7 @@ def placedel(request, idx=0):
 def carform(request, idx=0):
 
     LOGGER.debug(
-        'Car form accessed using method {}, id={}'
-        .format(request.method, idx),
+        'Car form accessed using method {}, id={}'.format(request.method, idx),
         request,
         request.POST)
     err_message = ''
@@ -1365,8 +1286,7 @@ def carform(request, idx=0):
     page_title = 'Úprava vozidla' if idx else 'Nové vozidlo'
     button = getbutton(request)
     if request.method == 'GET':
-        form = CarForm(initial=model_to_dict(
-            get_object_or_404(Car, pk=idx, uid=uid))) if idx else CarForm()
+        form = CarForm(initial=model_to_dict(get_object_or_404(Car, pk=idx, uid=uid))) if idx else CarForm()
     elif button == 'back':
         return redirect('knr:carlist')
     else:
@@ -1377,16 +1297,9 @@ def carform(request, idx=0):
                 get_object_or_404(Car, pk=idx, uid=uid)
                 cld['pk'] = idx
             Car(uid_id=uid, **cld).save()
-            if idx:
-                LOGGER.info(
-                    'User "{}" ({:d}) updated car "{}"'
-                    .format(uname, uid, cld['name']),
-                    request)
-            else:
-                LOGGER.info(
-                    'User "{}" ({:d}) added car "{}"'
-                    .format(uname, uid, cld['name']),
-                    request)
+            LOGGER.info(
+                'User "{}" ({:d}) {} car "{}"'.format(uname, uid, 'updated' if idx else 'added', cld['name']),
+                request)
             return redirect('knr:carlist')
         else:
             LOGGER.debug('Invalid form', request)
@@ -1420,8 +1333,7 @@ def carlist(request):
 def cardel(request, idx=0):
 
     LOGGER.debug(
-        'Car delete page accessed using method {}, id={}'
-        .format(request.method, idx),
+        'Car delete page accessed using method {}, id={}'.format(request.method, idx),
         request,
         request.POST)
     uid = request.user.id
@@ -1437,10 +1349,7 @@ def cardel(request, idx=0):
     else:
         car = get_object_or_404(Car, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
-            LOGGER.info(
-                'User "{}" ({:d}) deleted car "{}"'
-                .format(uname, uid, car.name),
-                request)
+            LOGGER.info('User "{}" ({:d}) deleted car "{}"'.format(uname, uid, car.name), request)
             car.delete()
             return redirect('knr:cardeleted')
         return redirect('knr:carlist')
@@ -1451,8 +1360,7 @@ def cardel(request, idx=0):
 def formulaform(request, idx=0):
 
     LOGGER.debug(
-        'Formula form accessed using method {}, id={}'
-        .format(request.method, idx),
+        'Formula form accessed using method {}, id={}'.format(request.method, idx),
         request,
         request.POST)
     err_message = ''
@@ -1486,12 +1394,7 @@ def formulaform(request, idx=0):
             res = Formula(uid_id=uid, **dct)
             res.save()
             LOGGER.info(
-                'User "{}" ({:d}) {} formula {}'
-                .format(
-                    uname,
-                    uid,
-                    'updated' if idx else 'added',
-                    res.name),
+                'User "{}" ({:d}) {} formula {}'.format(uname, uid, 'updated' if idx else 'added', res.name),
                 request)
             for fuel in FUELS:
                 rat = Rate.objects.filter(formula=res, fuel=fuel)
@@ -1522,8 +1425,7 @@ def formulaform(request, idx=0):
 def formulalist(request):
 
     LOGGER.debug('Formula list accessed', request)
-    rows = Formula.objects.filter(Q(uid=None) | Q(uid=request.user.id)) \
-        .order_by('uid', 'abbr', 'name')
+    rows = Formula.objects.filter(Q(uid=None) | Q(uid=request.user.id)).order_by('uid', 'abbr', 'name')
     for row in rows:
         rates = []
         for fuel in FUELS:
@@ -1549,8 +1451,7 @@ def formulalist(request):
 def formuladel(request, idx=0):
 
     LOGGER.debug(
-        'Formula delete page accessed using method {}, id={}'
-        .format(request.method, idx),
+        'Formula delete page accessed using method {}, id={}'.format(request.method, idx),
         request,
         request.POST)
     uid = request.user.id
@@ -1565,10 +1466,7 @@ def formuladel(request, idx=0):
     else:
         formula = get_object_or_404(Formula, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
-            LOGGER.info(
-                'User "{}" ({:d}) deleted formula "{}"'
-                .format(uname, uid, formula.name),
-                request)
+            LOGGER.info('User "{}" ({:d}) deleted formula "{}"'.format(uname, uid, formula.name), request)
             formula.delete()
             return redirect('knr:formuladeleted')
         return redirect('knr:formulalist')
@@ -1579,8 +1477,7 @@ def formuladel(request, idx=0):
 def itemform(request, idx=0):
 
     def addtravellists(var):
-        res = Place.objects.filter(Q(uid=None) | Q(uid=uid)) \
-            .order_by('abbr', 'name')
+        res = Place.objects.filter(Q(uid=None) | Q(uid=uid)).order_by('abbr', 'name')
         lst1 = []
         for obj in res:
             if obj.uid or not res.filter(abbr=obj.abbr, uid=uid):
@@ -1593,8 +1490,7 @@ def itemform(request, idx=0):
             lst2.append(
                 {'idx': obj.id,
                  'text': '{0.abbr} – {0.name}'.format(obj)})
-        res = Formula.objects.filter(Q(uid=None) | Q(uid=uid)) \
-            .order_by('abbr', 'name')
+        res = Formula.objects.filter(Q(uid=None) | Q(uid=uid)).order_by('abbr', 'name')
         lst3 = []
         for obj in res:
             if obj.uid or not res.filter(abbr=obj.abbr, uid=uid):
@@ -1648,21 +1544,15 @@ def itemform(request, idx=0):
         cld['trip_distance'] = cld['time_number'] = ''
         res = {}
         d2d(('from_lat', 'from_lon', 'to_lat', 'to_lon'), cld, res)
-        if res['from_lat'] and res['from_lon'] and res['to_lat'] \
-           and res['to_lon']:
-            dist, dur = finddist(
-                res['from_lat'],
-                res['from_lon'],
-                res['to_lat'],
-                res['to_lon'])
+        if res['from_lat'] and res['from_lon'] and res['to_lat'] and res['to_lon']:
+            dist, dur = finddist(res['from_lat'], res['from_lon'], res['to_lat'], res['to_lon'])
             if dist:
                 cld['trip_distance'] = int(ceil(dist / 1000))
             if dur:
                 cld['time_number'] = int(ceil(dur / 1800))
 
     LOGGER.debug(
-        'Item form accessed using method {}, idx={}'
-        .format(request.method, idx),
+        'Item form accessed using method {}, idx={}'.format(request.method, idx),
         request,
         request.POST)
     uid = request.user.id
@@ -1692,8 +1582,8 @@ def itemform(request, idx=0):
             return redirect('knr:itemlist')
         if button == 'new':
             presel = request.POST.get('presel')
-            if presel and presel.isdigit() and int(presel) \
-               and int(presel) < len(PRESELS) and PRESELS[int(presel)][TYPE]:
+            if (presel and presel.isdigit() and int(presel) and int(presel) < len(PRESELS)
+                and PRESELS[int(presel)][TYPE]):
                 var.update({'idx': 0, 'page_title': 'Nová položka'})
                 var.update(PRESELS[int(presel)][PRESEL])
                 var['type'] = PRESELS[int(presel)][TYPE]
@@ -1737,8 +1627,7 @@ def itemform(request, idx=0):
                         if sel:
                             idx = cld['idx']
                             var.update({'idx': idx, 'type': typ})
-                            var['page_title'] = \
-                                'Úprava položky' if idx else 'Nová položka'
+                            var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                             d2d(SUBFORM_FIELDS[typ], cld, var)
                             for key in SUBFORM_FIELDS[typ]:
                                 var['{}_error'.format(key)] = 'ok'
@@ -1748,18 +1637,12 @@ def itemform(request, idx=0):
                             if form.is_valid():
                                 cld = form.cleaned_data
                                 item = Item()
-                                cld['amount'] = \
-                                    int(round((cld['trip_distance']
-                                    * ((float((cld['cons1'] + cld['cons2']
-                                    + cld['cons3']) * cld['fuel_price'])
-                                    / 300) + float(cld['flat_rate']))
-                                    + (cld['time_number'] * cld['time_rate']))
-                                    * cld['trip_number']))
-                                if cld['numerator'] > 1 \
-                                   or cld['denominator'] > 1:
-                                    cld['amount'] = \
-                                        (cld['amount'] * cld['numerator']) \
-                                        / cld['denominator']
+                                cld['amount'] = int(round(
+                                    (cld['trip_distance'] * ((float((cld['cons1'] + cld['cons2'] + cld['cons3'])
+                                    * cld['fuel_price']) / 300) + float(cld['flat_rate'])) + (cld['time_number']
+                                    * cld['time_rate'])) * cld['trip_number']))
+                                if cld['numerator'] > 1 or cld['denominator'] > 1:
+                                    cld['amount'] = cld['amount'] * cld['numerator'] / cld['denominator']
                                 d2i(FORM_FIELDS[typ], cld, item)
                                 item.type = typ
                                 idx = cld['idx']
@@ -1778,12 +1661,10 @@ def itemform(request, idx=0):
                                     'errors': True,
                                     'idx': idx,
                                     'type': typ})
-                                var['page_title'] = 'Úprava položky' if idx \
-                                    else 'Nová položka'
+                                var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                                 d2d(SUBFORM_FIELDS[typ], form.data, var)
                                 for key in SUBFORM_FIELDS[typ]:
-                                    var['{}_error'.format(key)] = \
-                                        'err' if form[key].errors else 'ok'
+                                    var['{}_error'.format(key)] = 'err' if form[key].errors else 'ok'
                                 var['cons_error'] = 'ok'
                                 for key in CTRIP:
                                     if form[key].errors:
@@ -1797,27 +1678,22 @@ def itemform(request, idx=0):
                         cld = form.cleaned_data
                         item = Item()
                         if typ == 'service':
-                            cld['amount'] = \
-                                int(round(cld['major_number'] * cld['rate'] \
-                                + cld['minor_number'] * .5 * cld['rate']))
+                            cld['amount'] = (
+                                int(round(cld['major_number'] * cld['rate'] + cld['minor_number'] * .5 * cld['rate'])))
                             if cld['off10_flag']:
                                 cld['amount'] = int(round(.9 * cld['amount']))
                             if cld['off30_flag']:
                                 cld['amount'] = int(round(.7 * cld['amount']))
                             if cld['off30limit5000_flag']:
-                                cld['amount'] = \
-                                    min(int(round(.7 * cld['amount'])), 5000)
+                                cld['amount'] = min(int(round(.7 * cld['amount'])), 5000)
                             if cld['off20limit5000_flag']:
-                                cld['amount'] = \
-                                    min(int(round(.8 * cld['amount'])), 5000)
+                                cld['amount'] = min(int(round(.8 * cld['amount'])), 5000)
                             if cld['multiple_number'] > 1:
-                                cld['amount'] = int(round(.8
-                                    * cld['multiple_number'] * cld['amount']))
+                                cld['amount'] = int(round(.8 * cld['multiple_number'] * cld['amount']))
                         elif typ == 'flat':
                             cld['amount'] = cld['rate']
                             if cld['collection_flag']:
-                                cld['amount'] = \
-                                    max(int(round(.5 * cld['amount'])), 750)
+                                cld['amount'] = max(int(round(.5 * cld['amount'])), 750)
                             if cld['halved_flag']:
                                 cld['amount'] = lim(750, int(round(.5
                                     * cld['amount'])), 15000)
@@ -1825,8 +1701,7 @@ def itemform(request, idx=0):
                                 cld['amount'] = lim(750, int(round(.5
                                     * cld['amount'])), 20000)
                             if cld['single_flag']:
-                                cld['amount'] = \
-                                    max(int(round(.5 * cld['amount'])), 400)
+                                cld['amount'] = max(int(round(.5 * cld['amount'])), 400)
                             if cld['multiple_flag']:
                                 cld['amount'] = int(round(1.3 * cld['amount']))
                             if cld['multiple50_flag']:
@@ -1835,11 +1710,9 @@ def itemform(request, idx=0):
                         elif typ == 'administrative':
                             cld['amount'] = cld['number'] * cld['rate']
                         elif typ == 'time':
-                            cld['amount'] = \
-                                cld['time_number'] * cld['time_rate']
+                            cld['amount'] = cld['time_number'] * cld['time_rate']
                         if cld['numerator'] > 1 or cld['denominator'] > 1:
-                            cld['amount'] = (cld['amount'] * cld['numerator']) \
-                                / cld['denominator']
+                            cld['amount'] = (cld['amount'] * cld['numerator']) / cld['denominator']
                         d2i(FORM_FIELDS[typ], cld, item)
                         item.type = typ
                         idx = cld['idx']
@@ -1855,15 +1728,12 @@ def itemform(request, idx=0):
                     else:
                         idx = int(request.POST.get('idx') or 0)
                         var.update({'errors': True, 'idx': idx, 'type': typ})
-                        var['page_title'] = \
-                            'Úprava položky' if idx else 'Nová položka'
+                        var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                         d2d(SUBFORM_FIELDS[typ], form.data, var)
                         for key in SUBFORM_FIELDS[typ]:
-                            var['{}_error'.format(key)] = \
-                                'err' if form[key].errors else 'ok'
-                        var['fraction_error'] = \
-                            'err' if form['numerator'].errors \
-                            or form['denominator'].errors else 'ok'
+                            var['{}_error'.format(key)] = 'err' if form[key].errors else 'ok'
+                        var['fraction_error'] = (
+                            'err' if form['numerator'].errors or form['denominator'].errors else 'ok')
             else:
                 form = globals()[typ.title() + 'Subform'](request.POST)
                 if form.is_valid():
@@ -1880,14 +1750,11 @@ def itemform(request, idx=0):
                             elif bas <= 10000:
                                 rat = 1000
                             elif bas <= 200000:
-                                rat = 1000 \
-                                    + 25 * int(ceil((bas - 10000) / 1000))
+                                rat = 1000 + 25 * int(ceil((bas - 10000) / 1000))
                             elif bas <= 10000000:
-                                rat = 5750 \
-                                    + 25 * int(ceil((bas - 200000) / 10000))
+                                rat = 5750 + 25 * int(ceil((bas - 200000) / 10000))
                             else:
-                                rat = 30250 \
-                                    + 25 * int(ceil((bas - 10000000) / 100000))
+                                rat = 30250 + 25 * int(ceil((bas - 10000000) / 100000))
                         else:
                             if bas <= 500:
                                 rat = 300
@@ -1898,18 +1765,14 @@ def itemform(request, idx=0):
                             elif bas <= 10000:
                                 rat = 1500
                             elif bas <= 200000:
-                                rat = 1500 \
-                                    + 40 * int(ceil((bas - 10000) / 1000))
+                                rat = 1500 + 40 * int(ceil((bas - 10000) / 1000))
                             elif bas <= 10000000:
-                                rat = 9100 \
-                                    + 40 * int(ceil((bas - 200000) / 10000))
+                                rat = 9100 + 40 * int(ceil((bas - 200000) / 10000))
                             else:
-                                rat = 48300 \
-                                    + 40 * int(ceil((bas - 10000000) / 100000))
+                                rat = 48300 + 40 * int(ceil((bas - 10000000) / 100000))
                         idx = cld['idx']
                         var.update({'idx': idx, 'type': typ})
-                        var['page_title'] = \
-                            'Úprava položky' if idx else 'Nová položka'
+                        var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                         d2d(SUBFORM_FIELDS[typ], cld, var)
                         var['rate'] = rat
                         for key in SUBFORM_FIELDS[typ]:
@@ -1966,50 +1829,37 @@ def itemform(request, idx=0):
                         rat = int(ceil(rat / 10) * 10)
                         idx = cld['idx']
                         var.update({'idx': idx, 'type': typ})
-                        var['page_title'] = \
-                            'Úprava položky' if idx else 'Nová položka'
+                        var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                         d2d(SUBFORM_FIELDS[typ], cld, var)
                         var['rate'] = rat
                         for key in SUBFORM_FIELDS[typ]:
                             var['{}_error'.format(key)] = 'ok'
                     elif typ == 'administrative':
-                        if button == 'calc1':
-                            rat = 75
-                        else:
-                            rat = 300
+                        rat = 75 if button == 'calc1' else 300
                         idx = cld['idx']
                         var.update({'idx': idx, 'type': typ})
-                        var['page_title'] = \
-                            'Úprava položky' if idx else 'Nová položka'
+                        var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                         d2d(SUBFORM_FIELDS[typ], cld, var)
                         var['rate'] = rat
                         for key in SUBFORM_FIELDS[typ]:
                             var['{}_error'.format(key)] = 'ok'
                     elif typ == 'time':
-                        if button == 'calc1':
-                            rat = 50
-                        else:
-                            rat = 100
+                        rat = 50 if button == 'calc1' else 100
                         idx = cld['idx']
                         var.update({'idx': idx, 'type': typ})
-                        var['page_title'] = \
-                            'Úprava položky' if idx else 'Nová položka'
+                        var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                         d2d(SUBFORM_FIELDS[typ], cld, var)
                         var['time_rate'] = rat
                         for key in SUBFORM_FIELDS[typ]:
                             var['{}_error'.format(key)] = 'ok'
                     elif typ == 'travel':
-                        if button == 'from_apply' \
-                           and request.POST.get('from_sel'):
+                        if button == 'from_apply' and request.POST.get('from_sel'):
                             proc_from(int(request.POST.get('from_sel')), cld)
                             proc_dist(cld)
-                        elif button == 'from_search' \
-                            and request.POST.get('from_address'):
+                        elif button == 'from_search' and request.POST.get('from_address'):
                             loc = findloc(request.POST.get('from_address'))
                             if loc:
-                                cld['from_address'], \
-                                cld['from_lat'], \
-                                cld['from_lon'] = loc
+                                cld['from_address'], cld['from_lat'], cld['from_lon'] = loc
                             else:
                                 var.update(
                                     {'errors': True,
@@ -2017,22 +1867,17 @@ def itemform(request, idx=0):
                                      'prosím, upřesněte adresu.'})
                                 cld.update({'from_lat': '', 'from_lon': ''})
                             proc_dist(cld)
-                        elif button == 'to_apply' \
-                            and request.POST.get('to_sel'):
+                        elif button == 'to_apply' and request.POST.get('to_sel'):
                             proc_to(int(request.POST.get('to_sel')), cld)
                             proc_dist(cld)
-                        elif button == 'to_search' \
-                            and request.POST.get('to_address'):
+                        elif button == 'to_search' and request.POST.get('to_address'):
                             loc = findloc(request.POST.get('to_address'))
                             if loc:
-                                cld['to_address'], \
-                                cld['to_lat'], \
-                                cld['to_lon'] = loc
+                                cld['to_address'], cld['to_lat'], cld['to_lon'] = loc
                             else:
                                 var.update(
                                     {'errors': True,
-                                     'err_message': 'Hledání neúspěšné, '
-                                     'prosím, upřesněte adresu.'})
+                                     'err_message': 'Hledání neúspěšné, prosím, upřesněte adresu.'})
                                 cld.update({'to_lat': '', 'to_lon': ''})
                             proc_dist(cld)
                         elif button == 'calc':
@@ -2041,18 +1886,13 @@ def itemform(request, idx=0):
                             cld['time_rate'] = 50
                         elif button == 'calc2':
                             cld['time_rate'] = 100
-                        elif button == 'car_apply' \
-                             and request.POST.get('car_sel'):
+                        elif button == 'car_apply' and request.POST.get('car_sel'):
                             proc_car(int(request.POST.get('car_sel')), cld)
-                        elif button == 'formula_apply' \
-                            and request.POST.get('formula_sel'):
-                            proc_formula(
-                                int(request.POST.get('formula_sel')),
-                                cld)
+                        elif button == 'formula_apply' and request.POST.get('formula_sel'):
+                            proc_formula(int(request.POST.get('formula_sel')), cld)
                         idx = cld['idx']
                         var.update({'idx': idx, 'type': typ})
-                        var['page_title'] = \
-                            'Úprava položky' if idx else 'Nová položka'
+                        var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                         d2d(SUBFORM_FIELDS[typ], cld, var)
                         if not var['fuel_price']:
                             var['fuel_price'] = ''
@@ -2062,12 +1902,10 @@ def itemform(request, idx=0):
                 else:
                     idx = int(request.POST.get('idx') or 0)
                     var.update({'errors': True, 'idx': idx, 'type': typ})
-                    var['page_title'] = \
-                        'Úprava položky' if idx else 'Nová položka'
+                    var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                     d2d(SUBFORM_FIELDS[typ], form.data, var)
                     for key in SUBFORM_FIELDS[typ]:
-                        var['{}_error'.format(key)] = \
-                            'err' if form[key].errors else 'ok'
+                        var['{}_error'.format(key)] = 'err' if form[key].errors else 'ok'
     return render(request, 'knr_itemform.html', var)
 
 
@@ -2112,11 +1950,10 @@ def itemlist(request):
 def itemdel(request, idx=0):
 
     LOGGER.debug(
-        'Item delete page accessed using method {}, idx={}'
-        .format(request.method, idx),
+        'Item delete page accessed using method {}, idx={}'.format(request.method, idx),
         request,
         request.POST)
-    idx = (int(idx) - 1)
+    idx = int(idx) - 1
     var = {'app': APP, 'page_title': 'Smazání položky'}
     calc = getcalc(request)
     if not calc:  # pragma: no cover

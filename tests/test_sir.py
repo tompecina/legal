@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/test_sir.py
+# tests/test_sir.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -30,7 +30,7 @@ from django.contrib.auth.models import User
 
 from common.settings import TEST_DATA_DIR
 from common.glob import LOCAL_DOMAIN
-from test.utils import link_equal, setdl, setpr, getdl, getpr
+from tests.utils import link_equal, setdl, setpr, getdl, getpr
 from sir import cron, glob, models
 
 
@@ -83,8 +83,7 @@ class TestCron2(TransactionTestCase):
         self.assertGreater(getpr(), 0)
         self.assertEqual(
             models.Vec.objects.first().link,
-            'https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?'
-            'id=7ba95b84-15ae-4a8e-8339-1918eac00c84')
+            'https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=7ba95b84-15ae-4a8e-8339-1918eac00c84')
 
         setdl(5772013)
         cron.cron_gettr()
@@ -128,21 +127,17 @@ class TestCron3(TestCase):
 
         populate()
         self.assertEqual(models.Tracked.objects.count(), 2)
-        self.assertTrue(models.Tracked.objects.filter(
-            desc__contains='47/2015').exists())
-        self.assertTrue(models.Tracked.objects.filter(
-            desc__contains='577/2013').exists())
+        self.assertTrue(models.Tracked.objects.filter(desc__contains='47/2015').exists())
+        self.assertTrue(models.Tracked.objects.filter(desc__contains='577/2013').exists())
         self.assertEqual(cron.sir_notice(1), '')
 
         setpr(-1)
         cron.cron_getws2()
         self.assertEqual(
             cron.sir_notice(1),
-            'Došlo ke změně v těchto insolvenčních řízeních, která'
-            ' sledujete:\n\n'
+            'Došlo ke změně v těchto insolvenčních řízeních, která sledujete:\n\n'
             ' - Test 47/2015, sp. zn. KSPA 56 INS 47/2015\n'
-            '   https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?'
-            'id=7ba95b84-15ae-4a8e-8339-1918eac00c84\n\n')
+            '   https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=7ba95b84-15ae-4a8e-8339-1918eac00c84\n\n')
         self.assertEqual(models.Tracked.objects.count(), 1)
 
 
@@ -312,12 +307,8 @@ class TestViews1(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/sir/insform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/sir/?start=50'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/sir/?start=200'))
+        self.assertTrue(link_equal(links[1]['href'], '/sir/?start=50'))
+        self.assertTrue(link_equal(links[2]['href'], '/sir/?start=200'))
 
         res = self.client.get('/sir/?start=50')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -327,18 +318,10 @@ class TestViews1(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
         self.assertEqual(links[0]['href'], '/sir/insform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/sir/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/sir/?start=0'))
-        self.assertTrue(link_equal(
-            links[3]['href'],
-            '/sir/?start=100'))
-        self.assertTrue(link_equal(
-            links[4]['href'],
-            '/sir/?start=200'))
+        self.assertTrue(link_equal(links[1]['href'], '/sir/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/sir/?start=0'))
+        self.assertTrue(link_equal(links[3]['href'], '/sir/?start=100'))
+        self.assertTrue(link_equal(links[4]['href'], '/sir/?start=200'))
 
         res = self.client.get('/sir/?start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -348,18 +331,10 @@ class TestViews1(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
         self.assertEqual(links[0]['href'], '/sir/insform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/sir/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/sir/?start=50'))
-        self.assertTrue(link_equal(
-            links[3]['href'],
-            '/sir/?start=150'))
-        self.assertTrue(link_equal(
-            links[4]['href'],
-            '/sir/?start=200'))
+        self.assertTrue(link_equal(links[1]['href'], '/sir/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/sir/?start=50'))
+        self.assertTrue(link_equal(links[3]['href'], '/sir/?start=150'))
+        self.assertTrue(link_equal(links[4]['href'], '/sir/?start=200'))
 
         res = self.client.get('/sir/?start=200')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -369,12 +344,8 @@ class TestViews1(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/sir/insform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/sir/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/sir/?start=150'))
+        self.assertTrue(link_equal(links[1]['href'], '/sir/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/sir/?start=150'))
 
         res = self.client.get('/sir/?start=500')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -384,12 +355,8 @@ class TestViews1(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/sir/insform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/sir/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/sir/?start=187'))
+        self.assertTrue(link_equal(links[1]['href'], '/sir/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/sir/?start=187'))
 
     def test_insform(self):
 
@@ -719,9 +686,7 @@ Test 4,5,2012,ne
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
-        self.assertEqual(
-            res.content.decode('utf-8'),
-            'Test 1,1,2016,ne\r\nTest 2,2,2011,ano\r\n')
+        self.assertEqual(res.content.decode('utf-8'), 'Test 1,1,2016,ne\r\nTest 2,2,2011,ano\r\n')
 
 
 class TestViews2(TestCase):
@@ -738,6 +703,4 @@ class TestViews2(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'sir_courts.html')
-        self.assertEqual(
-            res.context['rows'],
-            [{'name': 'Krajský soud v Ostravě', 'short': 'KSOS'}])
+        self.assertEqual(res.context['rows'], [{'name': 'Krajský soud v Ostravě', 'short': 'KSOS'}])

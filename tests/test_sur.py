@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/test_sur.py
+# tests/test_sur.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -29,7 +29,7 @@ from django.contrib.auth.models import User
 
 from common.glob import LOCAL_DOMAIN
 from common.settings import TEST_DATA_DIR
-from test.utils import link_equal
+from tests.utils import link_equal
 from psj.cron import cron_schedule, cron_update as psj_update
 from psj.models import Task, Hearing
 from udn.cron import cron_update as udn_update
@@ -73,9 +73,7 @@ class TestCron(TestCase):
                 psj_update()
             Decision.objects.all().delete()
             udn_update()
-            self.assertEqual(
-                tuple(models.Found.objects.values_list('number', flat=True)),
-                test[2:])
+            self.assertEqual(tuple(models.Found.objects.values_list('number', flat=True)), test[2:])
 
         Hearing.objects.all().delete()
         models.Found.objects.all().delete()
@@ -89,64 +87,47 @@ class TestCron(TestCase):
         self.assertEqual(
             cron.sur_notice(1),
             '''\
-Byli nově zaznamenáni tito účastníci řízení, které \
-sledujete:
+Byli nově zaznamenáni tito účastníci řízení, které sledujete:
 
  - Anna Krayemová, Krajský soud Brno, sp. zn. 27 Co 363/2014
-   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27\
-&register=Co&number=363&year=2014&date_from=2016-12-01\
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27&register=Co&number=363&year=2014&date_from=2016-12-01\
 &date_to=2016-12-01
 
  - Dana Lauerová, Krajský soud Brno, sp. zn. 7 To 485/2016
-   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=7\
-&register=To&number=485&year=2016&date_from=2016-12-01\
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=7&register=To&number=485&year=2016&date_from=2016-12-01\
 &date_to=2016-12-01
 
- - Hana Brychtová, Nejvyšší správní soud, sp. zn. 5 As \
-233/2015
-   https://legal.pecina.cz/udn/list/?senate=5&register=As\
-&number=233&year=2015&page=46
+ - Hana Brychtová, Nejvyšší správní soud, sp. zn. 5 As 233/2015
+   https://legal.pecina.cz/udn/list/?senate=5&register=As&number=233&year=2015&page=46
 
  - Helena Polášková, Krajský soud Brno, sp. zn. 18 Co 234/2016
-   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=18\
-&register=Co&number=234&year=2016&date_from=2016-12-01\
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=18&register=Co&number=234&year=2016&date_from=2016-12-01\
 &date_to=2016-12-01
 
- - Jana Krebsová, Nejvyšší správní soud, sp. zn. 4 Ads \
-152/2015
-   https://legal.pecina.cz/udn/list/?senate=4&register=Ads\
-&number=152&year=2015&page=27
+ - Jana Krebsová, Nejvyšší správní soud, sp. zn. 4 Ads 152/2015
+   https://legal.pecina.cz/udn/list/?senate=4&register=Ads&number=152&year=2015&page=27
 
  - Jitka Krejčová, Krajský soud Brno, sp. zn. 27 Co 166/2016
-   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27\
-&register=Co&number=166&year=2016&date_from=2016-12-01\
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27&register=Co&number=166&year=2016&date_from=2016-12-01\
 &date_to=2016-12-01
 
  - Lenka Krejčová, Krajský soud Brno, sp. zn. 27 Co 166/2016
-   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27\
-&register=Co&number=166&year=2016&date_from=2016-12-01\
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27&register=Co&number=166&year=2016&date_from=2016-12-01\
 &date_to=2016-12-01
 
- - Mateřská škola a Základní škola, Ostopovice, okres Brno - \
-venkov, příspěvková organizace, Nejvyšší správní soud, \
+ - Mateřská škola a Základní škola, Ostopovice, okres Brno - venkov, příspěvková organizace, Nejvyšší správní soud, \
 sp. zn. 10 As 81/2016
-   https://legal.pecina.cz/udn/list/?senate=10&register=As\
-&number=81&year=2016&page=26
+   https://legal.pecina.cz/udn/list/?senate=10&register=As&number=81&year=2016&page=26
 
  - Milada Krajčová, Krajský soud Brno, sp. zn. 27 Co 261/2016
-   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27\
-&register=Co&number=261&year=2016&date_from=2016-12-01\
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27&register=Co&number=261&year=2016&date_from=2016-12-01\
 &date_to=2016-12-01
 
- - Odborová organizace ochrany práv zaměstnanců, Nejvyšší \
-správní soud, sp. zn. 4 Ads 208/2015
-   https://legal.pecina.cz/udn/list/?senate=4&register=Ads\
-&number=208&year=2015&page=82
+ - Odborová organizace ochrany práv zaměstnanců, Nejvyšší správní soud, sp. zn. 4 Ads 208/2015
+   https://legal.pecina.cz/udn/list/?senate=4&register=Ads&number=208&year=2015&page=82
 
- - Vladimíra Foukalová, Krajský soud Brno, sp. zn. 18 Co \
-38/2016
-   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=18\
-&register=Co&number=38&year=2016&date_from=2016-12-01\
+ - Vladimíra Foukalová, Krajský soud Brno, sp. zn. 18 Co 38/2016
+   https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=18&register=Co&number=38&year=2016&date_from=2016-12-01\
 &date_to=2016-12-01
 
 ''')
@@ -161,12 +142,8 @@ class TestModels(TestCase):
 
         models.Party(uid_id=1, party='ová', party_opt=0).save()
         udn_update()
-        self.assertEqual(
-            str(models.Party.objects.first()),
-            'ová')
-        self.assertEqual(
-            str(models.Found.objects.first()),
-            'Nejvyšší správní soud, 4 Ads 208/2015')
+        self.assertEqual(str(models.Party.objects.first()), 'ová')
+        self.assertEqual(str(models.Found.objects.first()), 'Nejvyšší správní soud, 4 Ads 208/2015')
 
 
 class TestViews(TestCase):
@@ -217,19 +194,13 @@ class TestViews(TestCase):
         res = self.client.get('/sur/')
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertFalse(soup.select('table#list'))
-        models.Party(
-            uid=self.user,
-            party_opt=0,
-            party='Test').save()
+        models.Party(uid=self.user, party_opt=0, party='Test').save()
 
         res = self.client.get('/sur/')
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertEqual(len(soup.select('table#list tbody tr')), 1)
         for number in range(200, 437):
-            models.Party(
-                uid=self.user,
-                party_opt=0,
-                party='Test {:d}'.format(number)).save()
+            models.Party(uid=self.user, party_opt=0, party='Test {:d}'.format(number)).save()
 
         res = self.client.get('/sur/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -239,12 +210,8 @@ class TestViews(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/sur/partyform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/sur/?start=50'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/sur/?start=200'))
+        self.assertTrue(link_equal(links[1]['href'], '/sur/?start=50'))
+        self.assertTrue(link_equal(links[2]['href'], '/sur/?start=200'))
 
         res = self.client.get('/sur/?start=50')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -254,18 +221,10 @@ class TestViews(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
         self.assertEqual(links[0]['href'], '/sur/partyform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/sur/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/sur/?start=0'))
-        self.assertTrue(link_equal(
-            links[3]['href'],
-            '/sur/?start=100'))
-        self.assertTrue(link_equal(
-            links[4]['href'],
-            '/sur/?start=200'))
+        self.assertTrue(link_equal(links[1]['href'], '/sur/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/sur/?start=0'))
+        self.assertTrue(link_equal(links[3]['href'], '/sur/?start=100'))
+        self.assertTrue(link_equal(links[4]['href'], '/sur/?start=200'))
 
         res = self.client.get('/sur/?start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -275,18 +234,10 @@ class TestViews(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
         self.assertEqual(links[0]['href'], '/sur/partyform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/sur/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/sur/?start=50'))
-        self.assertTrue(link_equal(
-            links[3]['href'],
-            '/sur/?start=150'))
-        self.assertTrue(link_equal(
-            links[4]['href'],
-            '/sur/?start=200'))
+        self.assertTrue(link_equal(links[1]['href'], '/sur/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/sur/?start=50'))
+        self.assertTrue(link_equal(links[3]['href'], '/sur/?start=150'))
+        self.assertTrue(link_equal(links[4]['href'], '/sur/?start=200'))
 
         res = self.client.get('/sur/?start=200')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -296,12 +247,8 @@ class TestViews(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/sur/partyform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/sur/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/sur/?start=150'))
+        self.assertTrue(link_equal(links[1]['href'], '/sur/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/sur/?start=150'))
 
         res = self.client.get('/sur/?start=500')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -311,12 +258,8 @@ class TestViews(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/sur/partyform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/sur/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/sur/?start=187'))
+        self.assertTrue(link_equal(links[1]['href'], '/sur/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/sur/?start=187'))
 
     def test_partyform(self):
 
@@ -555,9 +498,7 @@ class TestViews(TestCase):
             {'submit_xxx': 'XXX'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partybatchform.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybné zadání, prosím, opravte údaje')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
 
         with open(join(TEST_DATA_DIR, 'sur_import.csv'), 'rb') as infile:
             res = self.client.post(

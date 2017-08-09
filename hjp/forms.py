@@ -82,14 +82,10 @@ INT_OPTS = (
     ('per_annum', 'Roční úrok'),
     ('per_mensem', 'Měsíční úrok'),
     ('per_diem', 'Denní úrok'),
-    ('cust1', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
-     '(účinnost do 27.04.2005)'),
-    ('cust2', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
-     '(účinnost od 28.04.2005 do 30.06.2010)'),
-    ('cust3', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
-     '(účinnost od 01.07.2010 do 30.06.2013)'),
-    ('cust5', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. '
-     '(účinnost od 01.07.2013 do 31.12.2013)'),
+    ('cust1', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. (účinnost do 27.04.2005)'),
+    ('cust2', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. (účinnost od 28.04.2005 do 30.06.2010)'),
+    ('cust3', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. (účinnost od 01.07.2010 do 30.06.2013)'),
+    ('cust5', 'Úrok z prodlení podle nařízení č. 142/1994 Sb. (účinnost od 01.07.2013 do 31.12.2013)'),
     ('cust6', 'Úrok z prodlení podle nařízení č. 351/2013 Sb.'),
     ('cust4', 'Poplatek z prodlení podle nařízení č. 142/1994 Sb.'),
 )

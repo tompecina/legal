@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/test_psj.py
+# tests/test_psj.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -27,7 +27,7 @@ from locale import strxfrm
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 
-from test.utils import strip_xml, link_equal
+from tests.utils import strip_xml, link_equal
 from szr.models import Court
 from psj import cron, forms, models, views
 
@@ -217,9 +217,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.redirect_chain[0][1], HTTPStatus.FOUND)
-        self.assertTrue(link_equal(
-            res.redirect_chain[0][0],
-            '/psj/list/?party=Ing&party_opt=icontains&start=0'))
+        self.assertTrue(link_equal(res.redirect_chain[0][0], '/psj/list/?party=Ing&party_opt=icontains&start=0'))
 
         res = self.client.post(
             '/psj/',
@@ -229,9 +227,7 @@ class TestViews2(TestCase):
              'submit': 'Hledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_mainpage.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybné zadání, prosím, opravte údaje')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
 
         res = self.client.post(
             '/psj/',
@@ -243,9 +239,7 @@ class TestViews2(TestCase):
              'submit': 'Hledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_mainpage.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybné zadání, prosím, opravte údaje')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
 
 
 class TestViews3(TestCase):
@@ -317,9 +311,7 @@ class TestViews3(TestCase):
         res = self.client.get('/psj/list/?start=-1')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
-        res = self.client.get(
-            '/psj/list/?date_from=2015-01-01&date_to=2199-07-01&register=C&'
-            'party_opt=icontains')
+        res = self.client.get('/psj/list/?date_from=2015-01-01&date_to=2199-07-01&register=C&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 2)
@@ -364,8 +356,7 @@ class TestViews3(TestCase):
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 0)
 
-        res = self.client.get('/psj/list/?courtroom={:d}'
-            .format(models.Courtroom.objects.first().id))
+        res = self.client.get('/psj/list/?courtroom={:d}'.format(models.Courtroom.objects.first().id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 2)
@@ -375,8 +366,7 @@ class TestViews3(TestCase):
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 0)
 
-        res = self.client.get('/psj/list/?judge={:d}'
-            .format(models.Hearing.objects.first().judge_id))
+        res = self.client.get('/psj/list/?judge={:d}'.format(models.Hearing.objects.first().judge_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 2)
@@ -401,8 +391,7 @@ class TestViews3(TestCase):
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 1)
 
-        res = self.client.get(
-            '/psj/list/?party=mgr.+helena+morozová&party_opt=iexact')
+        res = self.client.get('/psj/list/?party=mgr.+helena+morozová&party_opt=iexact')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.html')
         self.assertEqual(res.context['total'], 1)
@@ -420,12 +409,8 @@ class TestViews3(TestCase):
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 2)
-        self.assertTrue(link_equal(
-            links[0]['href'],
-            '/psj/list/?senate=26&start=50'))
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/psj/list/?senate=26&start=200'))
+        self.assertTrue(link_equal(links[0]['href'], '/psj/list/?senate=26&start=50'))
+        self.assertTrue(link_equal(links[1]['href'], '/psj/list/?senate=26&start=200'))
 
         res = self.client.get('/psj/list/?senate=26&start=50')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -434,18 +419,10 @@ class TestViews3(TestCase):
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 4)
-        self.assertTrue(link_equal(
-            links[0]['href'],
-            '/psj/list/?senate=26&start=0'))
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/psj/list/?senate=26&start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/psj/list/?senate=26&start=100'))
-        self.assertTrue(link_equal(
-            links[3]['href'],
-            '/psj/list/?senate=26&start=200'))
+        self.assertTrue(link_equal(links[0]['href'], '/psj/list/?senate=26&start=0'))
+        self.assertTrue(link_equal(links[1]['href'], '/psj/list/?senate=26&start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/psj/list/?senate=26&start=100'))
+        self.assertTrue(link_equal(links[3]['href'], '/psj/list/?senate=26&start=200'))
 
         res = self.client.get('/psj/list/?senate=26&start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -454,18 +431,10 @@ class TestViews3(TestCase):
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 4)
-        self.assertTrue(link_equal(
-            links[0]['href'],
-            '/psj/list/?senate=26&start=0'))
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/psj/list/?senate=26&start=50'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/psj/list/?senate=26&start=150'))
-        self.assertTrue(link_equal(
-            links[3]['href'],
-            '/psj/list/?senate=26&start=200'))
+        self.assertTrue(link_equal(links[0]['href'], '/psj/list/?senate=26&start=0'))
+        self.assertTrue(link_equal(links[1]['href'], '/psj/list/?senate=26&start=50'))
+        self.assertTrue(link_equal(links[2]['href'], '/psj/list/?senate=26&start=150'))
+        self.assertTrue(link_equal(links[3]['href'], '/psj/list/?senate=26&start=200'))
 
         res = self.client.get('/psj/list/?senate=26&start=200')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -474,51 +443,32 @@ class TestViews3(TestCase):
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 2)
-        self.assertTrue(link_equal(
-            links[0]['href'],
-            '/psj/list/?senate=26&start=0'))
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/psj/list/?senate=26&start=150'))
+        self.assertTrue(link_equal(links[0]['href'], '/psj/list/?senate=26&start=0'))
+        self.assertTrue(link_equal(links[1]['href'], '/psj/list/?senate=26&start=150'))
 
     def test_xmllist(self):
 
-        res0 = '''\
-<?xml version="1.0" encoding="utf-8"?>
-<hearings application="psj" created="2016-11-18T15:43:27" \
-version="1.1" xmlns="http://legal.pecina.cz" xmlns:xsi="http:\
-//www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:\
-//legal.pecina.cz https://legal.pecina.cz/static/psj-1.1.xsd">\
-<hearing><court id="OSPHA02">Obvodní soud Praha 2</court><courtroom>\
-č. 101/přízemí - přístavba</courtroom><time>2016-12-01T09:00:00</time>\
-<ref><senate>26</senate><register>C</register><number>181</number>\
-<year>2015</year></ref><judge>JUDr. Henzlová Šárka</judge>\
-<parties><party>ČR - Ministerstvo spravedlnosti ČR</party>\
-<party>Mgr. Helena Morozová</party></parties><form>Jednání</form>\
-<closed>false</closed><cancelled>false</cancelled></hearing>\
-<hearing><court id="OSPHA02">Obvodní soud Praha 2</court>\
-<courtroom>č. 101/přízemí - přístavba</courtroom>\
-<time>2016-12-01T12:00:00</time><ref><senate>26</senate>\
-<register>C</register><number>94</number><year>2015</year></ref>\
-<judge>JUDr. Henzlová Šárka</judge><parties><party>Česká republika - \
-Ministerstvo spravedlnosti</party><party>Alois Hlásenský</party>\
-</parties><form>Jednání</form><closed>false</closed>\
-<cancelled>false</cancelled></hearing></hearings>
+        res0 = '''<?xml version="1.0" encoding="utf-8"?>
+<hearings application="psj" created="2016-11-18T15:43:27" version="1.1" xmlns="http://legal.pecina.cz" xmlns:xsi="ht\
+tp://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://legal.pecina.cz https://legal.pecina.cz/static/p\
+sj-1.1.xsd"><hearing><court id="OSPHA02">Obvodní soud Praha 2</court><courtroom>č. 101/přízemí - přístavba</courtroo\
+m><time>2016-12-01T09:00:00</time><ref><senate>26</senate><register>C</register><number>181</number><year>2015</year\
+></ref><judge>JUDr. Henzlová Šárka</judge><parties><party>ČR - Ministerstvo spravedlnosti ČR</party><party>Mgr. Hele\
+na Morozová</party></parties><form>Jednání</form><closed>false</closed><cancelled>false</cancelled></hearing><hearin\
+g><court id="OSPHA02">Obvodní soud Praha 2</court><courtroom>č. 101/přízemí - přístavba</courtroom><time>2016-12-01T\
+12:00:00</time><ref><senate>26</senate><register>C</register><number>94</number><year>2015</year></ref><judge>JUDr. \
+Henzlová Šárka</judge><parties><party>Česká republika - Ministerstvo spravedlnosti</party><party>Alois Hlásenský</pa\
+rty></parties><form>Jednání</form><closed>false</closed><cancelled>false</cancelled></hearing></hearings>
 '''
 
-        res1 = '''\
-<?xml version="1.0" encoding="utf-8"?>
-<hearings application="psj" created="2016-11-18T16:00:01" \
-version="1.1" xmlns="http://legal.pecina.cz" xmlns:xsi="http:\
-//www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http:\
-//legal.pecina.cz https://legal.pecina.cz/static/psj-1.1.xsd">\
-<hearing><court id="OSPHA02">Obvodní soud Praha 2</court><courtroom>\
-č. 101/přízemí - přístavba</courtroom><time>2016-12-01T12:00:00</time>\
-<ref><senate>26</senate><register>C</register><number>94</number>\
-<year>2015</year></ref><judge>JUDr. Henzlová Šárka</judge>\
-<parties><party>Česká republika - Ministerstvo spravedlnosti</party>\
-<party>Alois Hlásenský</party></parties><form>Jednání</form>\
-<closed>false</closed><cancelled>false</cancelled></hearing></hearings>
+        res1 = '''<?xml version="1.0" encoding="utf-8"?>
+<hearings application="psj" created="2016-11-18T16:00:01" version="1.1" xmlns="http://legal.pecina.cz" xmlns:xsi="ht\
+tp://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://legal.pecina.cz https://legal.pecina.cz/static/p\
+sj-1.1.xsd"><hearing><court id="OSPHA02">Obvodní soud Praha 2</court><courtroom>č. 101/přízemí - přístavba</courtroo\
+m><time>2016-12-01T12:00:00</time><ref><senate>26</senate><register>C</register><number>94</number><year>2015</year>\
+</ref><judge>JUDr. Henzlová Šárka</judge><parties><party>Česká republika - Ministerstvo spravedlnosti</party><party>\
+Alois Hlásenský</party></parties><form>Jednání</form><closed>false</closed><cancelled>false</cancelled></hearing></h\
+earings>
 '''
 
         res = self.client.get('/psj/xmllist')
@@ -580,15 +530,11 @@ version="1.1" xmlns="http://legal.pecina.cz" xmlns:xsi="http:\
         res = self.client.get('/psj/xmllist/?register=C')
         self.assertEqual(res.status_code, HTTPStatus.OK)
 
-        self.assertXMLEqual(
-            strip_xml(res.content),
-            strip_xml(res0.encode('utf-8')))
+        self.assertXMLEqual(strip_xml(res.content), strip_xml(res0.encode('utf-8')))
         res = self.client.get('/psj/xmllist/?party=oi&party_opt=icontains')
 
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertXMLEqual(
-            strip_xml(res.content),
-            strip_xml(res1.encode('utf-8')))
+        self.assertXMLEqual(strip_xml(res.content), strip_xml(res1.encode('utf-8')))
 
         exlim = views.EXLIM
         views.EXLIM = 0
@@ -599,24 +545,17 @@ version="1.1" xmlns="http://legal.pecina.cz" xmlns:xsi="http:\
 
     def test_csvlist(self):
 
-        res0 = '''\
-Soud,Jednací síň,Datum,Čas,Spisová značka,Řešitel,Účastníci řízení,\
-Druh jednání,Neveřejné,Zrušeno
+        res0 = '''Soud,Jednací síň,Datum,Čas,Spisová značka,Řešitel,Účastníci řízení,Druh jednání,Neveřejné,Zrušeno
 '''
 
-        res1 = res0 + '''\
-Obvodní soud Praha 2,č. 101/přízemí - přístavba,01.12.2016,09:00,\
-26 C 181/2015,JUDr. Henzlová Šárka,ČR - Ministerstvo spravedlnosti ČR;\
-Mgr. Helena Morozová,Jednání,ne,ne
-Obvodní soud Praha 2,č. 101/přízemí - přístavba,01.12.2016,12:00,\
-26 C 94/2015,JUDr. Henzlová Šárka,Česká republika - Ministerstvo \
-spravedlnosti;Alois Hlásenský,Jednání,ne,ne
+        res1 = res0 + '''Obvodní soud Praha 2,č. 101/přízemí - přístavba,01.12.2016,09:00,26 C 181/2015,JUDr. Henzlo\
+vá Šárka,ČR - Ministerstvo spravedlnosti ČR;Mgr. Helena Morozová,Jednání,ne,ne
+Obvodní soud Praha 2,č. 101/přízemí - přístavba,01.12.2016,12:00,26 C 94/2015,JUDr. Henzlová Šárka,Česká republika -\
+ Ministerstvo spravedlnosti;Alois Hlásenský,Jednání,ne,ne
 '''
 
-        res2 = res0 + '''\
-Obvodní soud Praha 2,č. 101/přízemí - přístavba,01.12.2016,12:00,\
-26 C 94/2015,JUDr. Henzlová Šárka,Česká republika - Ministerstvo \
-spravedlnosti;Alois Hlásenský,Jednání,ne,ne
+        res2 = res0 + '''Obvodní soud Praha 2,č. 101/přízemí - přístavba,01.12.2016,12:00,26 C 94/2015,JUDr. Henzlov\
+á Šárka,Česká republika - Ministerstvo spravedlnosti;Alois Hlásenský,Jednání,ne,ne
 '''
 
         res = self.client.get('/psj/csvlist')
@@ -677,21 +616,15 @@ spravedlnosti;Alois Hlásenský,Jednání,ne,ne
 
         res = self.client.get('/psj/csvlist/?register=T')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(
-            res.content.decode('utf-8').replace('\r\n', '\n'),
-            res0)
+        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), res0)
 
         res = self.client.get('/psj/csvlist/?register=C')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(
-            res.content.decode('utf-8').replace('\r\n', '\n'),
-            res1)
+        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), res1)
 
         res = self.client.get('/psj/csvlist/?party=oi&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertEqual(
-            res.content.decode('utf-8').replace('\r\n', '\n'),
-            res2)
+        self.assertEqual(res.content.decode('utf-8').replace('\r\n', '\n'), res2)
 
         exlim = views.EXLIM
         views.EXLIM = 0
@@ -704,31 +637,20 @@ spravedlnosti;Alois Hlásenský,Jednání,ne,ne
 
         res0 = '[]'
 
-        res1 = '''\
-[{"court": {"name": "Obvodn\u00ed soud Praha 2", "id": "OSPHA02"}, \
-"judge": "JUDr. Henzlov\u00e1 \u0160\u00e1rka", "ref": {"senate": 26, \
-"year": 2015, "number": 181, "register": "C"}, "form": "Jedn\u00e1n\
-\u00ed", "courtroom": "\u010d. 101/p\u0159\u00edzem\u00ed - p\u0159\
-\u00edstavba", "cancelled": false, "parties": ["\u010cR - Ministerstvo \
-spravedlnosti \u010cR", "Mgr. Helena Morozov\u00e1"], "closed": false, \
-"time": "2016-12-01T09:00:00"}, {"court": {"name": "Obvodn\u00ed soud \
-Praha 2", "id": "OSPHA02"}, "judge": "JUDr. Henzlov\u00e1 \u0160\u00e1\
-rka", "ref": {"senate": 26, "year": 2015, "number": 94, "register": \
-"C"}, "form": "Jedn\u00e1n\u00ed", "courtroom": "\u010d. 101/p\u0159\
-\u00edzem\u00ed - p\u0159\u00edstavba", "cancelled": false, "parties": \
-["\u010cesk\u00e1 republika - Ministerstvo spravedlnosti", "Alois \
-Hl\u00e1sensk\u00fd"], "closed": false, "time": "2016-12-01T12:00:00"}]\
-'''
+        res1 = '''[{"court": {"name": "Obvodn\u00ed soud Praha 2", "id": "OSPHA02"}, "judge": "JUDr. Henzlov\u00e1 \
+\u0160\u00e1rka", "ref": {"senate": 26, "year": 2015, "number": 181, "register": "C"}, "form": "Jedn\u00e1n\u00ed", \
+"courtroom": "\u010d. 101/p\u0159\u00edzem\u00ed - p\u0159\u00edstavba", "cancelled": false, "parties": ["\u010cR - \
+Ministerstvo spravedlnosti \u010cR", "Mgr. Helena Morozov\u00e1"], "closed": false, "time": "2016-12-01T09:00:00"}, \
+{"court": {"name": "Obvodn\u00ed soud Praha 2", "id": "OSPHA02"}, "judge": "JUDr. Henzlov\u00e1 \u0160\u00e1rka", "r\
+ef": {"senate": 26, "year": 2015, "number": 94, "register": "C"}, "form": "Jedn\u00e1n\u00ed", "courtroom": "\u010d.\
+ 101/p\u0159\u00edzem\u00ed - p\u0159\u00edstavba", "cancelled": false, "parties": ["\u010cesk\u00e1 republika - Min\
+isterstvo spravedlnosti", "Alois Hl\u00e1sensk\u00fd"], "closed": false, "time": "2016-12-01T12:00:00"}]'''
 
-        res2 = '''\
-[{"court": {"name": "Obvodn\u00ed soud Praha 2", "id": "OSPHA02"}, \
-"cancelled": false, "judge": "JUDr. Henzlov\u00e1 \u0160\u00e1rka", \
-"time": "2016-12-01T12:00:00", "courtroom": "\u010d. 101/p\u0159\
-\u00edzem\u00ed - p\u0159\u00edstavba", "closed": false, "form": \
-"Jedn\u00e1n\u00ed", "parties": ["\u010cesk\u00e1 republika - \
-Ministerstvo spravedlnosti", "Alois Hl\u00e1sensk\u00fd"], "ref": \
-{"year": 2015, "register": "C", "senate": 26, "number": 94}}]\
-'''
+        res2 = '''[{"court": {"name": "Obvodn\u00ed soud Praha 2", "id": "OSPHA02"}, "cancelled": false, "judge": "J\
+UDr. Henzlov\u00e1 \u0160\u00e1rka", "time": "2016-12-01T12:00:00", "courtroom": "\u010d. 101/p\u0159\u00edzem\u00ed\
+ - p\u0159\u00edstavba", "closed": false, "form": "Jedn\u00e1n\u00ed", "parties": ["\u010cesk\u00e1 republika - Mini\
+sterstvo spravedlnosti", "Alois Hl\u00e1sensk\u00fd"], "ref": {"year": 2015, "register": "C", "senate": 26, "number"\
+: 94}}]'''
 
         res = self.client.get('/psj/jsonlist')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -789,13 +711,8 @@ Ministerstvo spravedlnosti", "Alois Hl\u00e1sensk\u00fd"], "ref": \
 
     def test_courtinfo(self):
 
-        res0 = '''\
-<select id="courtroom">\
-<option value="{:d}">č. 101/přízemí - přístavba</option>\
-</select>\
-<select id="judge">\
-<option value="{:d}">JUDr. Henzlová Šárka</option>\
-</select>
+        res0 = '''<select id="courtroom"><option value="{:d}">č. 101/přízemí - přístavba</option></select><select id\
+="judge"><option value="{:d}">JUDr. Henzlová Šárka</option></select>
 '''
 
         res = self.client.get('/psj/court/OSPHA02')
@@ -811,6 +728,4 @@ Ministerstvo spravedlnosti", "Alois Hl\u00e1sensk\u00fd"], "ref": \
         self.assertTemplateUsed(res, 'psj_court.html')
         croom = models.Courtroom.objects.get(desc__contains='101/').id
         judge = models.Judge.objects.get(name__contains='Hen').id
-        self.assertHTMLEqual(
-            res.content.decode('utf_8'),
-            res0.format(croom, judge))
+        self.assertHTMLEqual(res.content.decode('utf_8'), res0.format(croom, judge))

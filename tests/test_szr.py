@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/test_szr.py
+# tests/test_szr.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -31,7 +31,7 @@ from django.core.exceptions import ValidationError
 
 from common.glob import LOCAL_DOMAIN
 from common.settings import TEST_DATA_DIR
-from test.utils import link_equal
+from tests.utils import link_equal
 from szr import cron, forms, models
 
 
@@ -66,9 +66,7 @@ class TestCron(TestCase):
 
     def test_isreg(self):
 
-        self.assertEqual(
-            tuple(map(cron.isreg, models.Court.objects.order_by('pk'))),
-            (True, False, False, False))
+        self.assertEqual(tuple(map(cron.isreg, models.Court.objects.order_by('pk'))), (True, False, False, False))
 
     def test_courts(self):
 
@@ -80,14 +78,12 @@ class TestCron(TestCase):
 
     def test_update(self):
 
-        self.assertEqual(models.Proceedings.objects.filter(
-            court_id='NSS', auxid=0).count(), 3)
+        self.assertEqual(models.Proceedings.objects.filter(court_id='NSS', auxid=0).count(), 3)
 
         now = datetime.now()
         for dummy in range(models.Proceedings.objects.count()):
             cron.cron_update()
-        self.assertEqual(models.Proceedings.objects.filter(
-            court_id='NSS', auxid=0).count(), 1)
+        self.assertEqual(models.Proceedings.objects.filter(court_id='NSS', auxid=0).count(), 1)
 
         ch6 = models.Proceedings.objects.get(pk=6).changed
         self.assertGreaterEqual(ch6, now)
@@ -139,28 +135,22 @@ class TestCron(TestCase):
 V těchto soudních řízeních, která sledujete, došlo ke změně:
 
  - Nejvyšší soud, sp. zn. 8 Tdo 819/2015
-   http://infosoud.justice.cz/InfoSoud/public/search.do?\
-org=NSJIMBM&krajOrg=NSJIMBM&cisloSenatu=8&druhVec=TDO&\
+   http://infosoud.justice.cz/InfoSoud/public/search.do?org=NSJIMBM&krajOrg=NSJIMBM&cisloSenatu=8&druhVec=TDO&\
 bcVec=819&rocnik=2015&typSoudu=ns&autoFill=true&type=spzn
 
  - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)
-   http://infosoud.justice.cz/InfoSoud/public/search.do?\
-org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=41&druhVec=T\
+   http://infosoud.justice.cz/InfoSoud/public/search.do?org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=41&druhVec=T\
 &bcVec=3&rocnik=2016&typSoudu=os&autoFill=true&type=spzn
 
- - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 \
-(Miloš Zbránek)
-   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&\
-kau_id=173442
+ - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 (Miloš Zbránek)
+   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&kau_id=173442
 
  - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)
-   http://infosoud.justice.cz/InfoSoud/public/search.do?\
-org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=10&druhVec=T\
+   http://infosoud.justice.cz/InfoSoud/public/search.do?org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=10&druhVec=T\
 &bcVec=8&rocnik=2014&typSoudu=os&autoFill=true&type=spzn
 
  - Obvodní soud Praha 2, sp. zn. 6 T 136/2013 (RWU)
-   http://infosoud.justice.cz/InfoSoud/public/search.do?\
-org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T\
+   http://infosoud.justice.cz/InfoSoud/public/search.do?org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T\
 &bcVec=136&rocnik=2013&typSoudu=os&autoFill=true&type=spzn
 
 ''')
@@ -185,9 +175,7 @@ class TestModels(SimpleTestCase):
             id='NSJIMBM',
             name='Nejvyšší soud')
 
-        self.assertEqual(
-            str(court),
-            'Nejvyšší soud')
+        self.assertEqual(str(court), 'Nejvyšší soud')
 
         self.assertEqual(
             str(models.Proceedings(
@@ -285,12 +273,8 @@ class TestViews(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/szr/procform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/szr/?start=50'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/szr/?start=200'))
+        self.assertTrue(link_equal(links[1]['href'], '/szr/?start=50'))
+        self.assertTrue(link_equal(links[2]['href'], '/szr/?start=200'))
 
         res = self.client.get('/szr/?start=50')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -300,18 +284,10 @@ class TestViews(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
         self.assertEqual(links[0]['href'], '/szr/procform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/szr/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/szr/?start=0'))
-        self.assertTrue(link_equal(
-            links[3]['href'],
-            '/szr/?start=100'))
-        self.assertTrue(link_equal(
-            links[4]['href'],
-            '/szr/?start=200'))
+        self.assertTrue(link_equal(links[1]['href'], '/szr/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/szr/?start=0'))
+        self.assertTrue(link_equal(links[3]['href'], '/szr/?start=100'))
+        self.assertTrue(link_equal(links[4]['href'], '/szr/?start=200'))
 
         res = self.client.get('/szr/?start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -321,18 +297,10 @@ class TestViews(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
         self.assertEqual(links[0]['href'], '/szr/procform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/szr/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/szr/?start=50'))
-        self.assertTrue(link_equal(
-            links[3]['href'],
-            '/szr/?start=150'))
-        self.assertTrue(link_equal(
-            links[4]['href'],
-            '/szr/?start=200'))
+        self.assertTrue(link_equal(links[1]['href'], '/szr/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/szr/?start=50'))
+        self.assertTrue(link_equal(links[3]['href'], '/szr/?start=150'))
+        self.assertTrue(link_equal(links[4]['href'], '/szr/?start=200'))
 
         res = self.client.get('/szr/?start=200')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -342,12 +310,8 @@ class TestViews(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/szr/procform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/szr/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/szr/?start=150'))
+        self.assertTrue(link_equal(links[1]['href'], '/szr/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/szr/?start=150'))
 
         res = self.client.get('/szr/?start=500')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -357,12 +321,8 @@ class TestViews(TestCase):
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/szr/procform/')
-        self.assertTrue(link_equal(
-            links[1]['href'],
-            '/szr/?start=0'))
-        self.assertTrue(link_equal(
-            links[2]['href'],
-            '/szr/?start=194'))
+        self.assertTrue(link_equal(links[1]['href'], '/szr/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/szr/?start=194'))
 
     def test_procform(self):
 
@@ -712,8 +672,7 @@ class TestViews(TestCase):
             year=2016,
             desc='Test 2')
 
-        self.assertEqual(models.Proceedings.objects
-            .filter(uid=self.user).count(), 2)
+        self.assertEqual(models.Proceedings.objects.filter(uid=self.user).count(), 2)
 
         res = self.client.get('/szr/procdelall')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -742,8 +701,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
-        self.assertEqual(models.Proceedings.objects
-            .filter(uid=self.user).count(), 2)
+        self.assertEqual(models.Proceedings.objects.filter(uid=self.user).count(), 2)
 
         res = self.client.post(
             '/szr/procdelall/',
@@ -752,8 +710,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
-        self.assertEqual(models.Proceedings.objects
-            .filter(uid=self.user).count(), 2)
+        self.assertEqual(models.Proceedings.objects.filter(uid=self.user).count(), 2)
 
         res = self.client.post(
             '/szr/procdelall/',
@@ -762,8 +719,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
-        self.assertFalse(models.Proceedings.objects
-            .filter(uid=self.user).exists())
+        self.assertFalse(models.Proceedings.objects.filter(uid=self.user).exists())
 
     def test_procbatchform(self):
 

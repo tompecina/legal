@@ -24,9 +24,8 @@ from django.conf.urls import url
 
 from common.views import genrender
 from knr.views import (
-    mainpage, placeform, placelist, placedel, carform, carlist, cardel,
-    formulaform, formulalist, formuladel, itemlist, itemform, itemdel,
-    itemmove, presets)
+    mainpage, placeform, placelist, placedel, carform, carlist, cardel, formulaform, formulalist, formuladel, itemlist,
+    itemform, itemdel, itemmove, presets)
 
 
 urlpatterns = [

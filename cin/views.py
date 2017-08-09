@@ -65,12 +65,9 @@ def mainpage(request):
             if beg_date >= end_date:
                 messages.append(('Počátek musí předcházet konci', None))
             else:
-                messages.append((
-                    '{} → {}'.format(fdt(beg_date), fdt(end_date)),
-                    'msg-header'))
+                messages.append(('{} → {}'.format(fdt(beg_date), fdt(end_date)), 'msg-header'))
 
-                messages.append(
-                    (grammar((end_date - beg_date).days, GR_DAY), None))
+                messages.append((grammar((end_date - beg_date).days, GR_DAY), None))
 
                 if beg_date >= UNC_DATE:
                     temp = beg_date + ODP
@@ -98,31 +95,22 @@ def mainpage(request):
                     res += ODP
                     nday += 1
                 messages.append(
-                    ('{} {} {}'.format(
-                        grammar(nyear, GR_YEAR),
-                        grammar(nmonth, GR_MONTH),
-                        grammar(nday, GR_DAY)),
+                    ('{} {} {}'.format(grammar(nyear, GR_YEAR), grammar(nmonth, GR_MONTH), grammar(nday, GR_DAY)),
                      'msg-ymd'))
 
                 for dconv in YDCONVS:
                     messages.append(
-                        ('{:.6f} let ({})'.format(
-                            LocalFloat(yfactor(beg_date, end_date, dconv)),
-                            dconv),
+                        ('{:.6f} let ({})'.format(LocalFloat(yfactor(beg_date, end_date, dconv)), dconv),
                          'msg-y'))
 
                 for dconv in MDCONVS:
                     if dconv == MDCONVS[0]:
                         messages.append(
-                            ('{:.6f} měsíců ({})'.format(
-                                LocalFloat(mfactor(beg_date, end_date, dconv)),
-                                dconv),
+                            ('{:.6f} měsíců ({})'.format(LocalFloat(mfactor(beg_date, end_date, dconv)), dconv),
                              'msg-m1'))
                     else:
                         messages.append(
-                            ('{:.6f} měsíců ({})'.format(
-                                LocalFloat(mfactor(beg_date, end_date, dconv)),
-                                dconv),
+                            ('{:.6f} měsíců ({})'.format(LocalFloat(mfactor(beg_date, end_date, dconv)), dconv),
                              'msg-m2'))
 
         else:

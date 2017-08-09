@@ -33,8 +33,7 @@ from common import widgets
 
 def proc_num(string):
 
-    return string.replace(' ', '').replace('.', '').replace(',', '.') \
-        .replace('−', '-')
+    return string.replace(' ', '').replace('.', '').replace(',', '.').replace('−', '-')
 
 
 STYPES = (str,)
@@ -156,8 +155,7 @@ class CurrencyField(forms.MultiValueField):
 
     def compress(self, data_list):
         if data_list:
-            return data_list[1].upper() if data_list[0] == 'OTH' \
-                else data_list[0]
+            return data_list[1].upper() if data_list[0] == 'OTH' else data_list[0]
         return None
 
     def validate(self, value):

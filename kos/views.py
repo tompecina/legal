@@ -66,22 +66,16 @@ def mainpage(request):
                 deps2 = cld['deps2'] + 1
                 fee = cld['fee2']
                 exp = cld['exp2']
-                messages.append([
-                    'Kalkulace pro společný návrh manželů',
-                    'msg-header'])
+                messages.append(('Kalkulace pro společný návrh manželů', 'msg-header'))
             else:
                 fee = cld['fee']
                 exp = cld['exp']
-                messages.append([
-                    'Kalkulace pro samostatného dlužníka',
-                    'msg-header'])
+                messages.append(('Kalkulace pro samostatného dlužníka', 'msg-header'))
             lim = subs + apt
             prot = lim * 2 / 3
-            messages.append((
-                'Nezabavitelná částka: {} Kč'.format(famt(round(prot))),
-                None))
+            messages.append(('Nezabavitelná částka: {} Kč'.format(famt(round(prot))), None))
             basis1 = ceil(prot * (1 + (deps / 4)))
-            rem = max((netincome - basis1), 0)
+            rem = max(netincome - basis1, 0)
             if rem > lim:
                 rep = rem - lim
                 rem = lim
@@ -92,14 +86,8 @@ def mainpage(request):
             if dual:
                 totnetincome = netincome + netincome2
                 basis2 = ceil(prot * (1 + (deps2 / 4)))
-                messages.append((
-                    'Celková základní částka pro 1. manžela: {} Kč'
-                    .format(famt(round(basis1))),
-                    None))
-                messages.append((
-                    'Celková základní částka pro 2. manžela: {} Kč'
-                    .format(famt(round(basis2))),
-                    None))
+                messages.append(('Celková základní částka pro 1. manžela: {} Kč'.format(famt(round(basis1))), None))
+                messages.append(('Celková základní částka pro 2. manžela: {} Kč'.format(famt(round(basis2))), None))
                 rem2 = max(netincome2 - basis2, 0)
                 if rem2 > lim:
                     rep2 = rem2 - lim
@@ -111,39 +99,19 @@ def mainpage(request):
                 rep += rep2
             else:
                 totnetincome = netincome
-                messages.append((
-                    'Celková základní částka: {} Kč'
-                    .format(famt(round(basis1))),
-                    None))
-            messages.append((
-                'Výše měsíční splátky: {} Kč'.format(famt(round(rep))),
-                'msg-gap'))
-            messages.append((
-                'Zůstatek ze mzdy: {} Kč'
-                .format(famt(round(totnetincome - rep))),
-                None))
+                messages.append(('Celková základní částka: {} Kč'.format(famt(round(basis1))), None))
+            messages.append(('Výše měsíční splátky: {} Kč'.format(famt(round(rep))), 'msg-gap'))
+            messages.append(('Zůstatek ze mzdy: {} Kč'.format(famt(round(totnetincome - rep))), None))
             tru = fee + exp
             if vat:
                 tru *= 1 + (vatrate / 100)
-            messages.append((
-                'Měsíční poplatky insolvenčnímu správci: {} Kč'
-                .format(famt(round(tru))),
-                None))
+            messages.append(('Měsíční poplatky insolvenčnímu správci: {} Kč'.format(famt(round(tru))), None))
             rep = max(rep - tru, 0)
-            messages.append((
-                'Měsíční splátka věřitelům: {} Kč'.format(famt(round(rep))),
-                None))
+            messages.append(('Měsíční splátka věřitelům: {} Kč'.format(famt(round(rep))), None))
             tot = 5 * 12 * rep
-            messages.append((
-                'Celková výše splátek věřitelům za 5 let: {} Kč'
-                .format(famt(round(tot))),
-                None))
-            messages.append((
-                'Pohledávky uspokojené do výše 30 %:',
-                'msg-gap'))
-            messages.append((
-                '{} Kč'.format(famt(round(tot / 0.3))),
-                'msg-total'))
+            messages.append(('Celková výše splátek věřitelům za 5 let: {} Kč'.format(famt(round(tot))), None))
+            messages.append(('Pohledávky uspokojené do výše 30 %:', 'msg-gap'))
+            messages.append(('{} Kč'.format(famt(round(tot / .3))), 'msg-total'))
         else:
             LOGGER.debug('Invalid form', request)
             messages = [(INERR_SHORT, None)]

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/test_cnb.py
+# tests/test_cnb.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -188,8 +188,7 @@ class TestUtils(TestCase):
         models.MPIstat.objects.all().delete()
 
         Cache.objects.filter(
-            url='https://www.cnb.cz/cs/faq/vyvoj_lombard_historie.txt') \
-            .update(text='XXX')
+            url='https://www.cnb.cz/cs/faq/vyvoj_lombard_historie.txt').update(text='XXX')
         self.assertEqual(
             utils.get_mpi_rate('LOMB', date(1997, 5, 16)),
             (None, 'Chyba tabulky sazeb (1)'))

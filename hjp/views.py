@@ -27,8 +27,7 @@ from xml.sax.saxutils import escape
 import csv
 from io import BytesIO
 
-from reportlab.platypus import (
-    Paragraph, SimpleDocTemplate, Table, TableStyle, Spacer, KeepTogether)
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Table, TableStyle, Spacer, KeepTogether
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.lib.pagesizes import A4
@@ -38,12 +37,10 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.apps import apps
 
-from common.glob import (
-    YDCONVS, MDCONVS, LIM, INERR, LOCAL_SUBDOMAIN, LOCAL_URL, ASSET_EXP)
+from common.glob import YDCONVS, MDCONVS, LIM, INERR, LOCAL_SUBDOMAIN, LOCAL_URL, ASSET_EXP
 from common.utils import (
-    getbutton, yfactor, mfactor, ODP, famt, dispcurr, xml_decorate,
-    xml_espace, xml_unespace, normfl, LocalFloat, get_xml, new_xml,
-    iso2date, register_fonts, make_pdf, LOGGER, render)
+    getbutton, yfactor, mfactor, ODP, famt, dispcurr, xml_decorate, xml_espace, xml_unespace, normfl, LocalFloat,
+    get_xml, new_xml, iso2date, register_fonts, make_pdf, LOGGER, render)
 from common.views import error
 from cache.utils import getasset, setasset
 from cnb.utils import get_mpi_rate
@@ -128,16 +125,14 @@ def calcint(pastdate, presdate, principal, debt, default_date):
             interest.day_count_convention) * interest.rate / 100, None
 
     if interest.model == 'per_diem':
-        return principal * (presdate - pastdate).days \
-            * interest.rate / 1000, None
+        return principal * (presdate - pastdate).days * interest.rate / 1000, None
 
     if interest.model == 'cust1':
         rate = get_mpi_rate('DISC', default_date)
         if rate[1]:
             return None, rate[1]
         debt.rates[default_date] = rate[0]
-        return principal * yfactor(pastdate, presdate, 'ACT/ACT') \
-            * rate[0] / 50, None
+        return principal * yfactor(pastdate, presdate, 'ACT/ACT') * rate[0] / 50, None
 
     if interest.model == 'cust2':
         temp = 0
@@ -147,10 +142,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
             year1 = dat.year
             month1 = dat.month
             day1 = 1
-            if month1 > 6:
-                month1 = 7
-            else:
-                month1 = 1
+            month1 = 7 if month1 > 6 else 1
             rate = get_mpi_rate('REPO', date(year1, month1, day1))
             if rate[1]:
                 return None, rate[1]
@@ -169,9 +161,9 @@ def calcint(pastdate, presdate, principal, debt, default_date):
             else:
                 month2 = presdate.month
                 day2 = presdate.day
-                return principal * (temp + yfactor(dat - ODP,
-                    date(year2, month2, day2), 'ACT/ACT') \
-                    * (rate[0] + 7)) / 100, None
+                return (
+                    principal * (temp + yfactor(dat - ODP, date(year2, month2, day2), 'ACT/ACT') * (rate[0] + 7)) / 100,
+                    None)
 
     if interest.model == 'cust3':
         year = default_date.year
@@ -188,8 +180,7 @@ def calcint(pastdate, presdate, principal, debt, default_date):
         if rate[1]:
             return None, rate[1]
         debt.rates[date(year, month, day)] = rate[0]
-        return principal * yfactor(pastdate, presdate, 'ACT/ACT') \
-            * (rate[0] + 7) / 100, None
+        return principal * yfactor(pastdate, presdate, 'ACT/ACT') * (rate[0] + 7) / 100, None
 
     if interest.model == 'cust5':
         year = default_date.year
@@ -206,22 +197,17 @@ def calcint(pastdate, presdate, principal, debt, default_date):
         if rate[1]:
             return None, rate[1]
         debt.rates[date(year, month, day)] = rate[0]
-        return principal * yfactor(pastdate, presdate, 'ACT/ACT') \
-            * (rate[0] + 8) / 100, None
+        return principal * yfactor(pastdate, presdate, 'ACT/ACT') * (rate[0] + 8) / 100, None
 
     if interest.model == 'cust6':
         year = default_date.year
         month = default_date.month
-        if month > 6:
-            month = 7
-        else:
-            month = 1
+        month = 7 if month > 6 else 1
         rate = get_mpi_rate('REPO', date(year, month, 1))
         if rate[1]:
             return None, rate[1]
         debt.rates[date(year, month, 1)] = rate[0]
-        return principal * yfactor(pastdate, presdate, 'ACT/ACT') \
-            * (rate[0] + 8) / 100, None
+        return principal * yfactor(pastdate, presdate, 'ACT/ACT') * (rate[0] + 8) / 100, None
 
     if interest.model == 'cust4':
         return principal * (presdate - pastdate).days / 400, None
@@ -265,8 +251,7 @@ def getrows(debt):
         row['description'] = trn.description
         row['trt'] = trt = trn.transaction_type
         if trt == 'credit':
-            row['rep'] = 'jistina' if trn.repayment_preference == 'principal' \
-                else 'úrok'
+            row['rep'] = 'jistina' if trn.repayment_preference == 'principal' else 'úrok'
         if trt == 'debit':
             row['change'] = amt
         elif trt == 'credit':
@@ -276,8 +261,7 @@ def getrows(debt):
         if not err:
             oldp = principal
             oldi = interest
-            if (cud and debt.interest.model != 'none' and principal > 0) \
-                or debt.interest.model == 'fixed':
+            if (cud and debt.interest.model != 'none' and principal > 0) or debt.interest.model == 'fixed':
                 itr = calcint(cud, trn.date, principal, debt, default_date)
                 if itr[1]:
                     err = True
@@ -388,10 +372,8 @@ def getrows4(debt):
             row['id'] = trn.id
             row['date'] = dat
             row['description'] = trn.description
-            amt = round(trs[idx].amount, debt.rounding) \
-                if hasattr(trs[idx], 'amount') else 0
-            row['change'] = amt if trs[idx].transaction_type == 'debit' \
-                else -amt
+            amt = round(trs[idx].amount, debt.rounding) if hasattr(trs[idx], 'amount') else 0
+            row['change'] = amt if trs[idx].transaction_type == 'debit' else -amt
             row['trt'] = trn.transaction_type
             if trn.transaction_type != 'balance':
                 row['pre_principal'] = principal
@@ -419,14 +401,12 @@ def getrows4(debt):
                 chp = chi = .0
 
             if trn.transaction_type == 'credit':
-                row['rep'] = 'jistina' \
-                    if trn.repayment_preference == 'principal' else 'úrok'
+                row['rep'] = 'jistina' if trn.repayment_preference == 'principal' else 'úrok'
             if trn.transaction_type != 'balance':
                 row['change_principal'] = -chp
                 row['change_interest'] = -chi
             else:
-                for key in ('pre_principal', 'pre_interest', 'pre_total',
-                    'change_principal', 'change_interest'):
+                for key in ('pre_principal', 'pre_interest', 'pre_total', 'change_principal', 'change_interest'):
                     row[key] = 0
             row['post_principal'] = principal
             row['post_interest'] = interest
@@ -446,8 +426,7 @@ def to_xml(debt):
         'debt': {
             'xmlns': 'http://' + LOCAL_SUBDOMAIN,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd'
-            .format(LOCAL_SUBDOMAIN, LOCAL_URL, APP, APPVERSION),
+            'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd'.format(LOCAL_SUBDOMAIN, LOCAL_URL, APP, APPVERSION),
             'application': APP,
             'version': APPVERSION,
             'created': datetime.now().replace(microsecond=0).isoformat()
@@ -555,9 +534,11 @@ def from_xml(dat):
         if transaction.transaction_type != 'balance':
             transaction.amount = float(trn.amount.text.strip())
         if transaction.transaction_type == 'credit':
-            transaction.repayment_preference = \
-                trn.repayment_preference.text.strip()
+            transaction.repayment_preference = trn.repayment_preference.text.strip()
     return debt, None
+
+
+EL = ['']
 
 
 @require_http_methods(('GET', 'POST'))
@@ -607,8 +588,7 @@ def mainpage(request):
         var['model'] = model = interest.model
         if model == 'fixed':
             var['fixed_amount'] = '{:.2f}'.format(LocalFloat(
-                interest.fixed_amount)) if debt.rounding \
-                else int(round(interest.fixed_amount))
+                interest.fixed_amount)) if debt.rounding else int(round(interest.fixed_amount))
         elif model == 'per_annum':
             var['pa_rate'] = interest.rate
             var['ydconv'] = interest.day_count_convention
@@ -685,15 +665,12 @@ def mainpage(request):
                 response = HttpResponse(
                     to_xml(debt),
                     content_type='text/xml; charset=utf-8')
-                response['Content-Disposition'] = \
-                    'attachment; filename=Pohledavka.xml'
+                response['Content-Disposition'] = 'attachment; filename=Pohledavka.xml'
                 return response
 
             if button == 'csv' and not rows_err:
-                response = \
-                    HttpResponse(content_type='text/csv; charset=utf-8')
-                response['Content-Disposition'] = \
-                    'attachment; filename=Pohledavka.csv'
+                response = HttpResponse(content_type='text/csv; charset=utf-8')
+                response['Content-Disposition'] = 'attachment; filename=Pohledavka.csv'
                 writer = csv.writer(response)
                 writer.writerow(
                     ('Datum',
@@ -852,8 +829,7 @@ def mainpage(request):
                     allowWidows=False,
                     allowOrphans=False)
 
-                doc1 = (([Paragraph('Historie peněžité pohledávky'.upper(),
-                    style1)],),)
+                doc1 = (([Paragraph('Historie peněžité pohledávky'.upper(), style1)],),)
                 if debt.title:
                     doc1[0][0].append(Paragraph(escape(debt.title), style2))
                 table1 = Table(doc1, colWidths=(483.3,))
@@ -873,106 +849,80 @@ def mainpage(request):
                 widr = 8
                 widg = 12
                 widf = widc = (wid - widl - widr - (widg * 2)) / 6
-                cwid = (widl,) + ((widc / 5,) * 5) + ((widf / 5,) * 5) \
-                    + (widg,) + ((widc / 5,) * 5) + ((widf / 5,) * 5) \
-                    + (widg,) + ((widc / 5,) * 5) + ((widf / 5,) * 5) + (widr,)
+                cwid = (
+                    (widl,) + ((widc / 5,) * 5) + ((widf / 5,) * 5) + (widg,) + ((widc / 5,) * 5)
+                    + ((widf / 5,) * 5) + (widg,) + ((widc / 5,) * 5) + ((widf / 5,) * 5) + (widr,))
 
                 thickness = .5
 
                 res = [Paragraph(('<b>Měna:</b> {}'.format(debt.currency)),
                     style19)]
                 if hasattr(debt, 'default_date') and debt.default_date:
-                    res.append(Paragraph(
-                        '<b>První den prodlení:</b> {:%d.%m.%Y}'
-                        .format(debt.default_date),
-                        style19))
+                    res.append(Paragraph('<b>První den prodlení:</b> {:%d.%m.%Y}'.format(debt.default_date), style19))
                 interest2 = None
                 interest3 = []
                 if debt.interest.model == 'none':
                     interest1 = 'bez úroku'
                 elif debt.interest.model == 'fixed':
-                    interest1 = \
-                        'pevnou částkou {}' \
-                        .format(lfamt(debt.interest.fixed_amount))
+                    interest1 = 'pevnou částkou {}'.format(lfamt(debt.interest.fixed_amount))
                 elif debt.interest.model == 'per_annum':
-                    interest1 = \
-                        'pevnou sazbou {0.rate:n} % <i>p. a.</i>, ' \
-                        'konvence pro počítání dnů: {0.day_count_convention}' \
-                        .format(debt.interest)
+                    interest1 = (
+                        'pevnou sazbou {0.rate:n} % <i>p. a.</i>, konvence pro počítání dnů: {0.day_count_convention}'
+                        .format(debt.interest))
                 elif debt.interest.model == 'per_mensem':
-                    interest1 = \
-                        'pevnou sazbou {0.rate:n} % <i>p. m.</i>, ' \
-                        'konvence pro počítání dnů: {0.day_count_convention}' \
-                        .format(debt.interest)
+                    interest1 = (
+                        'pevnou sazbou {0.rate:n} % <i>p. m.</i>, konvence pro počítání dnů: {0.day_count_convention}'
+                        .format(debt.interest))
                 elif debt.interest.model == 'per_diem':
-                    interest1 = \
-                        'pevnou sazbou {:n} ‰ <i>p. d.</i>' \
-                        .format(debt.interest.rate)
+                    interest1 = 'pevnou sazbou {:n} ‰ <i>p. d.</i>'.format(debt.interest.rate)
                 elif debt.interest.model == 'cust1':
-                    interest1 = \
-                        'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
-                        '(účinnost do 27.04.2005)'
+                    interest1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. (účinnost do 27.04.2005)'
                     if debt.rates:
                         rate = debt.rates.popitem()
-                        interest2 = \
-                            'Diskontní sazba ČNB ke dni {:%d.%m.%Y}: {:.2f}' \
-                            ' % <i>p. a.</i>' \
-                            .format(rate[0], LocalFloat(rate[1]))
+                        interest2 = (
+                            'Diskontní sazba ČNB ke dni {:%d.%m.%Y}: {:.2f} % <i>p. a.</i>'
+                            .format(rate[0], LocalFloat(rate[1])))
                 elif debt.interest.model == 'cust2':
-                    interest1 = \
-                        'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
-                        '(účinnost od 28.04.2005 do 30.06.2010)'
+                    interest1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. (účinnost od 28.04.2005 do 30.06.2010)'
                     if len(debt.rates) == 1:
                         rate = debt.rates.popitem()
-                        interest2 = \
-                            'Použita 2T repo sazba ČNB ke dni {:%d.%m.%Y}:' \
-                            ' {:.2f} % <i>p. a.</i>' \
-                            .format(rate[0], LocalFloat(rate[1]))
+                        interest2 = (
+                            'Použita 2T repo sazba ČNB ke dni {:%d.%m.%Y}: {:.2f} % <i>p. a.</i>'
+                            .format(rate[0], LocalFloat(rate[1])))
                     elif len(debt.rates) > 1:
                         interest2 = 'Použity následující 2T repo sazby ČNB:'
                         for dat in sorted(debt.rates.keys()):
                             interest3.append(
-                                '– ke dni {:%d.%m.%Y}: {:.2f} % <i>p. a.</i>' \
-                                .format(dat, LocalFloat(debt.rates[dat])))
+                                '– ke dni {:%d.%m.%Y}: {:.2f} % <i>p. a.</i>'.format(dat, LocalFloat(debt.rates[dat])))
                 elif debt.interest.model == 'cust3':
-                    interest1 = \
-                        'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
-                        '(účinnost od 01.07.2010 do 30.06.2013)'
+                    interest1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. (účinnost od 01.07.2010 do 30.06.2013)'
                     if debt.rates:
                         rate = debt.rates.popitem()
-                        interest2 = \
-                            '2T repo sazba ČNB ke dni {:%d.%m.%Y}:' \
-                            ' {:.2f} % <i>p. a.</i>' \
-                            .format(rate[0], LocalFloat(rate[1]))
+                        interest2 = (
+                            '2T repo sazba ČNB ke dni {:%d.%m.%Y}: {:.2f} % <i>p. a.</i>'
+                            .format(rate[0], LocalFloat(rate[1])))
                 elif debt.interest.model == 'cust5':
-                    interest1 = \
-                        'úrok z prodlení podle nařízení č. 142/1994 Sb. ' \
-                        '(účinnost od 01.07.2013 do 31.12.2013)'
+                    interest1 = 'úrok z prodlení podle nařízení č. 142/1994 Sb. (účinnost od 01.07.2013 do 31.12.2013)'
                     if debt.rates:
                         rate = debt.rates.popitem()
-                        interest2 = \
-                            '2T repo sazba ČNB ke dni {:%d.%m.%Y}:' \
-                            ' {:.2f} % <i>p. a.</i>' \
-                            .format(rate[0], LocalFloat(rate[1]))
+                        interest2 = (
+                            '2T repo sazba ČNB ke dni {:%d.%m.%Y}: {:.2f} % <i>p. a.</i>'
+                            .format(rate[0], LocalFloat(rate[1])))
                 elif debt.interest.model == 'cust6':
                     interest1 = 'úrok z prodlení podle nařízení č. 351/2013 Sb.'
                     if debt.rates:
                         rate = debt.rates.popitem()
-                        interest2 = \
-                            '2T repo sazba ČNB ke dni {:%d.%m.%Y}:' \
-                            ' {:.2f} % <i>p. a.</i>' \
-                            .format(rate[0], LocalFloat(rate[1]))
+                        interest2 = (
+                            '2T repo sazba ČNB ke dni {:%d.%m.%Y}: {:.2f} % <i>p. a.</i>'
+                            .format(rate[0], LocalFloat(rate[1])))
                 else:
-                    interest1 = \
-                        'poplatek z prodlení podle nařízení č. 142/1994 Sb.'
+                    interest1 = 'poplatek z prodlení podle nařízení č. 142/1994 Sb.'
                     if debt.currency != 'CZK':
-                        interest2 = \
-                            '<i>(minimální sazba 25 Kč za každý ' \
-                            'započatý měsíc prodlení není pro jinou ' \
-                            'měnu než CZK podporována)</i>'
+                        interest2 = (
+                            '<i>(minimální sazba 25 Kč za každý započatý měsíc prodlení není pro jinou měnu než CZK '
+                            'podporována)</i>')
 
-                res.append(
-                    Paragraph('<b>Úročení:</b> {}'.format(interest1), style19))
+                res.append(Paragraph('<b>Úročení:</b> {}'.format(interest1), style19))
                 if interest2:
                     res.append(Paragraph(interest2, style20))
                 for key in interest3:
@@ -1056,150 +1006,79 @@ def mainpage(request):
                         break
                     trt = row['trt']
                     doc3 = []
-                    temp1 = \
-                        [Paragraph(
-                            '{:%d.%m.%Y}'.format(row['date']),
-                            style13)] \
-                        + ([''] * 4)
-                    temp2 = \
-                        [Paragraph(
-                            escape(row['description']).upper(),
-                            style14)] \
-                        + ([''] * 28)
+                    temp1 = [Paragraph('{:%d.%m.%Y}'.format(row['date']), style13)] + (EL * 4)
+                    temp2 = [Paragraph(escape(row['description']).upper(), style14)] + (EL * 28)
                     doc3.extend([temp1 + temp2])
 
                     if trt == 'debit':
-                        temp = \
-                            ['', Paragraph('Závazek', style15)] \
-                            + ([''] * 10) \
-                            + [Paragraph('Předchozí zůstatek', style15)] \
-                            + ([''] * 10) \
-                            + [Paragraph('Nový zůstatek', style15), '']
+                        temp = (
+                            EL + [Paragraph('Závazek', style15)] + (EL * 10)
+                            + [Paragraph('Předchozí zůstatek', style15)] + (EL * 10)
+                            + [Paragraph('Nový zůstatek', style15), ''])
                     elif trt == 'credit':
-                        temp = \
-                            ['', Paragraph('<b>Splátka</b> (přednost {}'
-                            .format(row['rep']), style16)] \
-                            + ([''] * 10) \
-                            + [Paragraph('Předchozí zůstatek', style15)] \
-                            + ([''] * 10) \
-                            + [Paragraph('Nový zůstatek', style15), '']
+                        temp = (
+                            EL + [Paragraph('<b>Splátka</b> (přednost {}'.format(row['rep']), style16)] + (EL * 10)
+                            + [Paragraph('Předchozí zůstatek', style15)] + (EL * 10)
+                            + [Paragraph('Nový zůstatek', style15), ''])
                     else:
-                        temp = \
-                            ([''] * 23) \
-                            + [Paragraph('Zůstatek', style15), '']
+                        temp = (EL * 23) + [Paragraph('Zůstatek', style15), '']
                     doc3.extend([temp])
 
                     if trt != 'balance':
-                        temp = \
-                            ['', Paragraph('Částka', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(
-                                lfamt((row['change'] if (trt == 'debit')
-                                else (-row['change']))),
-                                style18)] \
-                            + ([''] * 7) \
-                            + [Paragraph('Jistina', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(
-                                lfamt(row['pre_principal']),
-                                style18)] \
-                            + ([''] * 7) \
-                            + [Paragraph('Jistina', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(
-                                lfamt(row['post_principal']),
-                                style18)] \
-                            + ([''] * 7)
+                        temp = (
+                            EL + [Paragraph('Částka', style17)] + (EL * 2)
+                            + [Paragraph(lfamt((row['change'] if (trt == 'debit') else (-row['change']))), style18)]
+                            + (EL * 7) + [Paragraph('Jistina', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['pre_principal']), style18)] + (EL * 7)
+                            + [Paragraph('Jistina', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['post_principal']), style18)] + (EL * 7))
                     else:
-                        temp = \
-                            ([''] * 23) \
-                            + [Paragraph('Jistina', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(
-                                lfamt(row['post_principal']),
-                                style18)] \
-                            + ([''] * 7)
+                        temp = (
+                            (EL * 23) + [Paragraph('Jistina', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['post_principal']), style18)] + (EL * 7))
                     doc3.extend([temp])
 
                     if trt == 'debit':
-                        temp = \
-                            ([''] * 12) \
-                            + [Paragraph('Úrok', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(lfamt(row['pre_interest']), style18)] \
-                            + ([''] * 7) \
-                            + [Paragraph('Úrok', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(
-                                lfamt(row['post_interest']),
-                                style18)] \
-                            + ([''] * 7)
+                        temp = (
+                            (EL * 12) + [Paragraph('Úrok', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['pre_interest']), style18)] + (EL * 7)
+                            + [Paragraph('Úrok', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['post_interest']), style18)] + (EL * 7))
                     elif trt == 'credit':
-                        temp = \
-                            ['', Paragraph('Jistina', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(
-                                lfamt(-row['change_principal']),
-                                style18)] \
-                            + ([''] * 7) \
-                            + [Paragraph('Úrok', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(lfamt(row['pre_interest']), style18)] \
-                            + ([''] * 7) \
-                            + [Paragraph('Úrok', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(
-                                lfamt(row['post_interest']),
-                                style18)] \
-                            + ([''] * 7)
+                        temp = (
+                            EL + [Paragraph('Jistina', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(-row['change_principal']), style18)] + (EL * 7)
+                            + [Paragraph('Úrok', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['pre_interest']), style18)] + (EL * 7)
+                            + [Paragraph('Úrok', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['post_interest']), style18)] + (EL * 7))
                     else:
-                        temp = \
-                            ([''] * 23) \
-                            + [Paragraph('Úrok', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(
-                                lfamt(row['post_interest']),
-                                style18)] \
-                            + ([''] * 7)
+                        temp = (
+                            (EL * 23) + [Paragraph('Úrok', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['post_interest']), style18)] + (EL * 7))
                     doc3.extend([temp])
 
                     if trt == 'debit':
-                        temp = \
-                            ([''] * 12) \
-                            + [Paragraph('Celkem', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(lfamt(row['pre_total']), style18)] \
-                            + ([''] * 7) \
-                            + [Paragraph('Celkem', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(lfamt(row['post_total']), style18)] \
-                            + ([''] * 7)
+                        temp = (
+                            (EL * 12) + [Paragraph('Celkem', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['pre_total']), style18)] + (EL * 7)
+                            + [Paragraph('Celkem', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['post_total']), style18)] + (EL * 7))
                     elif trt == 'credit':
-                        temp = \
-                            ['', Paragraph('Úrok', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(
-                                lfamt(-row['change_interest']),
-                                style18)] \
-                            + ([''] * 7) \
-                            + [Paragraph('Celkem', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(lfamt(row['pre_total']), style18)] \
-                            + ([''] * 7) \
-                            + [Paragraph('Celkem', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(lfamt(row['post_total']), style18)] \
-                            + ([''] * 7)
+                        temp = (
+                            EL + [Paragraph('Úrok', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(-row['change_interest']), style18)] + (EL * 7)
+                            + [Paragraph('Celkem', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['pre_total']), style18)] + (EL * 7)
+                            + [Paragraph('Celkem', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['post_total']), style18)] + (EL * 7))
                     else:
-                        temp = \
-                            ([''] * 23) \
-                            + [Paragraph('Celkem', style17)] \
-                            + ([''] * 2) \
-                            + [Paragraph(lfamt(row['post_total']), style18)] \
-                            + ([''] * 7)
+                        temp = (
+                            (EL * 23) + [Paragraph('Celkem', style17)] + (EL * 2)
+                            + [Paragraph(lfamt(row['post_total']), style18)] + (EL * 7))
                     doc3.extend([temp])
 
-                    temp = [''] * 34
+                    temp = EL * 34
                     doc3.extend([temp])
 
                     table3 = Table(doc3, colWidths=cwid)
@@ -1216,8 +1095,7 @@ def mainpage(request):
                         flow.extend(temp[2:])
                 temp = BytesIO()
                 response = HttpResponse(content_type='application/pdf')
-                response['Content-Disposition'] = \
-                    'attachment; filename=Pohledavka.pdf'
+                response['Content-Disposition'] = 'attachment; filename=Pohledavka.pdf'
                 auth = '{} V{}'.format(APP.upper(), APPVERSION)
                 doc = SimpleDocTemplate(
                     temp,
@@ -1271,8 +1149,7 @@ def mainpage(request):
 def transform(request, idx=0):
 
     LOGGER.debug(
-        'Transaction form accessed using method {}, id={}'
-        .format(request.method, idx),
+        'Transaction form accessed using method {}, id={}'.format(request.method, idx),
         request,
         request.POST)
     page_title = 'Úprava transakce' if idx else 'Nová transakce'
@@ -1291,9 +1168,9 @@ def transform(request, idx=0):
                 'transaction_type': transaction.transaction_type,
                 'date': transaction.date}
             if hasattr(transaction, 'amount'):
-                var['amount'] = \
-                    '{:.2f}'.format(LocalFloat(transaction.amount)) \
-                    if debt.rounding else int(round(transaction.amount))
+                var['amount'] = (
+                    '{:.2f}'.format(LocalFloat(transaction.amount)) if debt.rounding
+                    else int(round(transaction.amount)))
             if hasattr(transaction, 'repayment_preference'):
                 var['repayment_preference'] = transaction.repayment_preference
             form = TransForm(initial=var)
@@ -1347,8 +1224,7 @@ def transform(request, idx=0):
 def transdel(request, idx=0):
 
     LOGGER.debug(
-        'Transaction delete page accessed using method {}, id={}'
-        .format(request.method, idx),
+        'Transaction delete page accessed using method {}, id={}'.format(request.method, idx),
         request,
         request.POST)
     idx = int(idx) - 1

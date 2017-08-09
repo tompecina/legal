@@ -31,18 +31,12 @@ def sur_notice(uid):
     text = ''
     res = Found.objects.filter(uid=uid).order_by('name', 'id').distinct()
     if res:
-        text = \
-            'Byli nově zaznamenáni tito účastníci řízení, ' \
-            'které sledujete:\n\n'
+        text = 'Byli nově zaznamenáni tito účastníci řízení, které sledujete:\n\n'
         for item in res:
-            text += \
-                ' - {0.name}, {0.court}, sp. zn. {0.senate:d} ' \
-                '{0.register} {0.number:d}/{0.year:d}\n'.format(item)
+            text += ' - {0.name}, {0.court}, sp. zn. {0.senate:d} {0.register} {0.number:d}/{0.year:d}\n'.format(item)
             text += '   {}\n\n'.format(item.url)
         Found.objects.filter(uid=uid).delete()
-        LOGGER.info(
-            'Non-empty notice prepared for user "{}" ({:d})'
-            .format(User.objects.get(pk=uid).username, uid))
+        LOGGER.info('Non-empty notice prepared for user "{}" ({:d})'.format(User.objects.get(pk=uid).username, uid))
     return text
 
 
@@ -60,7 +54,5 @@ def sur_check(name, court, senate, register, number, year, url):
                     year=year,
                     url=url)[1]:
                 LOGGER.info(
-                    'New party "{}" detected for user "{}" ({:d})'.format(
-                        name,
-                        User.objects.get(pk=party.uid_id).username,
-                        party.uid_id))
+                    'New party "{}" detected for user "{}" ({:d})'
+                    .format(name, User.objects.get(pk=party.uid_id).username, party.uid_id))

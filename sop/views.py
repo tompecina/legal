@@ -39,10 +39,7 @@ APPVERSION = apps.get_app_config(APP).version
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    LOGGER.debug(
-        'Main page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Main page accessed using method {}'.format(request.method), request, request.POST)
 
     messages = []
 
@@ -64,43 +61,27 @@ def mainpage(request):
                     messages = [(msg, None)]
                 else:
                     basis *= rate / qty
-                    fx_info = '{:d} {} = {:.3f} CZK'.format(
-                        qty,
-                        curr,
-                        LocalFloat(rate))
+                    fx_info = '{:d} {} = {:.3f} CZK'.format(qty, curr, LocalFloat(rate))
             if not messages:
                 if opt == 'epr' and basis > 1000000:
                     messages = [('Nad limit pro EPR', None)]
                 else:
-                    if model < 4:
-                        basis = int(floor(basis / 100) * 100)
-                    else:
-                        basis = int(ceil(basis / 10) * 10)
+                    basis = int(floor(basis / 100) * 100 if model < 4 else ceil(basis / 10) * 10)
                     if opt == 'none' or (opt == 'nmu' and model == 1):
                         if model == 1:
-                            if basis <= 15000:
-                                sop = 600
-                            else:
-                                sop = basis / 25
+                            sop = 600 if basis <= 15000 else basis / 25
                         else:
                             if basis <= 20000:
                                 sop = 1000
                             elif basis <= 40000000:
                                 sop = basis / 20
                             else:
-                                sop = min(2000000 + ((basis - 40000000)
-                                    / 100), 4100000)
+                                sop = min(2000000 + ((basis - 40000000) / 100), 4100000)
                     elif opt == 'epr':
                         if model == 1:
-                            if basis <= 15000:
-                                sop = 300
-                            else:
-                                sop = basis / 50
+                            sop = 300 if basis <= 15000 else basis / 50
                         elif model == 2:
-                            if basis <= 20000:
-                                sop = 800
-                            else:
-                                sop = basis / 25
+                            sop = 800 if basis <= 20000 else basis / 25
                         else:
                             if basis <= 10000:
                                 sop = 400
@@ -109,70 +90,39 @@ def mainpage(request):
                             else:
                                 sop = basis / 25
                     elif opt == 'nmu':
-                        if basis <= 200000:
-                            sop = 2000
-                        else:
-                            sop = basis / 100
+                        sop = 2000 if basis <= 200000 else basis / 100
                     elif opt == 'vyz':
                         if model == 1:
-                            if basis <= 30000:
-                                sop = 300
-                            else:
-                                sop = min(basis / 100, 10000)
+                            sop = 300 if basis <= 30000 else min(basis / 100, 10000)
                         else:
-                            if basis <= 50000:
-                                sop = 500
-                            else:
-                                sop = min(basis / 100, 15000)
+                            sop = 500 if basis <= 50000 else min(basis / 100, 15000)
                     elif opt == 'vyk':
                         if model == 1:
-                            if basis <= 15000:
-                                sop = 300
-                            else:
-                                sop = min(basis / 50, 50000)
+                            sop = 300 if basis <= 15000 else min(basis / 50, 50000)
                         elif model == 2:
-                            if basis <= 25000:
-                                sop = 500
-                            else:
-                                sop = min(basis / 50, 75000)
+                            sop = 500 if basis <= 25000 else min(basis / 50, 75000)
                         else:
                             if basis <= 20000:
                                 sop = 1000
                             elif basis <= 40000000:
                                 sop = basis / 20
                             else:
-                                sop = 2000000 + ((min(basis, 250000000)
-                                    - 40000000) / 100)
+                                sop = 2000000 + ((min(basis, 250000000) - 40000000) / 100)
                     elif opt == 'sm':
                         if model == 1:
-                            if basis <= 15000:
-                                sop = 300
-                            else:
-                                sop = min(basis / 50, 20000)
+                            sop = 300 if basis <= 15000 else min(basis / 50, 20000)
                         else:
-                            if basis <= 25000:
-                                sop = 500
-                            else:
-                                sop = min(basis / 50, 30000)
+                            sop = 500 if basis <= 25000 else min(basis / 50, 30000)
                     elif opt == 'inc':
                         if model == 1:
                             sop = 1000
                         else:
-                            if basis <= 20000:
-                                sop = 1000
-                            else:
-                                sop = basis / 20
+                            sop = 1000 if basis <= 20000 else basis / 20
                     else:
                         if model == 1:
-                            if basis <= 20000:
-                                sop = 200
-                            else:
-                                sop = basis / 100
+                            sop = 200 if basis <= 20000 else basis / 100
                         else:
-                            if basis <= 25000:
-                                sop = 250
-                            else:
-                                sop = basis / 100
+                            sop = 250 if basis <= 25000 else basis / 100
                     if model < 4:
                         sop = int(ceil(sop / 10) * 10)
                     if model == 1:
@@ -180,9 +130,7 @@ def mainpage(request):
                     elif opt != 'none' and (opt != 'vyk' or model < 3):
                         sop = min(sop, 2000000)
                     messages.append(('Soudní poplatek:', None))
-                    messages.append(
-                        ('{} Kč'.format(famt(round(sop))),
-                         'msg-amount'))
+                    messages.append(('{} Kč'.format(famt(round(sop))), 'msg-amount'))
                     if fx_info:
                         messages.append((fx_info, 'msg-note'))
         else:

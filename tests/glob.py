@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/glob.py
+# tests/glob.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #

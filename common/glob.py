@@ -33,15 +33,11 @@ INERR = 'Chybné zadání, prosím, opravte údaje'
 INERR_SHORT = 'Chybné zadání'
 
 REGISTERS = (
-    'T', 'C', 'P a Nc', 'D', 'E', 'P', 'Nc', 'ERo', 'Ro', 'EC',
-    'EVC', 'EXE', 'EPR', 'PP', 'Cm', 'Sm', 'Ca', 'Cad', 'Az', 'To',
-    'Nt', 'Co', 'Ntd', 'Cmo', 'Ko', 'Nco', 'Ncd', 'Ncp', 'ECm',
-    'ICm', 'INS', 'K', 'Kv', 'EVCm', 'A', 'Ad', 'Af', 'Na', 'UL',
-    'Cdo', 'Odo', 'Tdo', 'Tz', 'Ncu', 'Ads', 'Afs', 'Ans', 'Ao',
-    'Aos', 'Aprk', 'Aprn', 'Aps', 'Ars', 'As', 'Asz', 'Azs', 'Komp',
-    'Konf', 'Kse', 'Kseo', 'Kss', 'Ksz', 'Na', 'Nad', 'Nao', 'Ncn',
-    'Nk', 'Ntn', 'Obn', 'Plen', 'Plsn', 'Pst', 'Rozk', 'Rs', 'S',
-    'Spr', 'Sst', 'Vol', 'Tm', 'Tmo', 'Ntm'
+    'T', 'C', 'P a Nc', 'D', 'E', 'P', 'Nc', 'ERo', 'Ro', 'EC', 'EVC', 'EXE', 'EPR', 'PP', 'Cm', 'Sm', 'Ca', 'Cad',
+    'Az', 'To', 'Nt', 'Co', 'Ntd', 'Cmo', 'Ko', 'Nco', 'Ncd', 'Ncp', 'ECm', 'ICm', 'INS', 'K', 'Kv', 'EVCm', 'A', 'Ad',
+    'Af', 'Na', 'UL', 'Cdo', 'Odo', 'Tdo', 'Tz', 'Ncu', 'Ads', 'Afs', 'Ans', 'Ao', 'Aos', 'Aprk', 'Aprn', 'Aps', 'Ars',
+    'As', 'Asz', 'Azs', 'Komp', 'Konf', 'Kse', 'Kseo', 'Kss', 'Ksz', 'Na', 'Nad', 'Nao', 'Ncn', 'Nk', 'Ntn', 'Obn',
+    'Plen', 'Plsn', 'Pst', 'Rozk', 'Rs', 'S', 'Spr', 'Sst', 'Vol', 'Tm', 'Tmo', 'Ntm'
 )
 REGISTER_REGEX = '^({})$'.format('|'.join(REGISTERS))
 

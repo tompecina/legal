@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/test_common.py
+# tests/test_common.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -32,11 +32,9 @@ from django.contrib.auth.models import User
 from django.core import mail
 from django.http import QueryDict
 
-from test.glob import TEST_STRING
-from test.utils import DummyRequest, setdl, setpr
+from tests.utils import DummyRequest, setdl, setpr
 from szr.cron import cron_update
 from szr.models import Proceedings
-from common.settings import TEST_DATA_DIR
 from common import cron, glob, fields, forms, models, utils, views
 
 
@@ -63,32 +61,25 @@ class TestCron(TestCase):
             'Zprava ze serveru ' + glob.LOCAL_SUBDOMAIN)
         self.assertEqual(
             msg.body,
-            '''\
-V těchto soudních řízeních, která sledujete, došlo ke změně:
+            '''V těchto soudních řízeních, která sledujete, došlo ke změně:
 
  - Nejvyšší soud, sp. zn. 8 Tdo 819/2015
-   http://infosoud.justice.cz/InfoSoud/public/search.do?\
-org=NSJIMBM&krajOrg=NSJIMBM&cisloSenatu=8&druhVec=TDO&\
+   http://infosoud.justice.cz/InfoSoud/public/search.do?org=NSJIMBM&krajOrg=NSJIMBM&cisloSenatu=8&druhVec=TDO&\
 bcVec=819&rocnik=2015&typSoudu=ns&autoFill=true&type=spzn
 
  - Městský soud Praha, sp. zn. 41 T 3/2016 (Igor Ševcov)
-   http://infosoud.justice.cz/InfoSoud/public/search.do?\
-org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=41&druhVec=T\
+   http://infosoud.justice.cz/InfoSoud/public/search.do?org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=41&druhVec=T\
 &bcVec=3&rocnik=2016&typSoudu=os&autoFill=true&type=spzn
 
- - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 \
-(Miloš Zbránek)
-   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&\
-kau_id=173442
+ - Nejvyšší správní soud, sp. zn. 11 Kss 6/2015 (Miloš Zbránek)
+   http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&kau_id=173442
 
  - Městský soud Praha, sp. zn. 10 T 8/2014 (Opencard)
-   http://infosoud.justice.cz/InfoSoud/public/search.do?\
-org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=10&druhVec=T\
+   http://infosoud.justice.cz/InfoSoud/public/search.do?org=MSPHAAB&krajOrg=MSPHAAB&cisloSenatu=10&druhVec=T\
 &bcVec=8&rocnik=2014&typSoudu=os&autoFill=true&type=spzn
 
  - Obvodní soud Praha 2, sp. zn. 6 T 136/2013 (RWU)
-   http://infosoud.justice.cz/InfoSoud/public/search.do?\
-org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T\
+   http://infosoud.justice.cz/InfoSoud/public/search.do?org=OSPHA02&krajOrg=MSPHAAB&cisloSenatu=6&druhVec=T\
 &bcVec=136&rocnik=2013&typSoudu=os&autoFill=true&type=spzn
 
 Server {} ({})
@@ -224,8 +215,7 @@ Server {} ({})
         self.assertFalse(models.Pending.objects.exists())
 
         models.Lock(name='test').save()
-        models.Lock.objects.filter(name='test').update(
-            timestamp_add=(datetime.now() - cron.EXPIRE - timedelta(1)))
+        models.Lock.objects.filter(name='test').update(timestamp_add=(datetime.now() - cron.EXPIRE - timedelta(1)))
         self.assertEqual(models.Lock.objects.count(), 2)
 
         cron.SCHED = ()
@@ -265,9 +255,7 @@ class TestFields(SimpleTestCase):
 
         fld = fields.DateField()
         self.assertIsNone(fld.to_python(()))
-        self.assertEqual(
-            fld.to_python(datetime(2012, 4, 3, 15, 32)),
-            date(2012, 4, 3))
+        self.assertEqual(fld.to_python(datetime(2012, 4, 3, 15, 32)), date(2012, 4, 3))
         self.assertEqual(fld.to_python(date(2012, 4, 3)), date(2012, 4, 3))
         self.assertEqual(fld.to_python('3.4.2012'), date(2012, 4, 3))
         self.assertEqual(fld.to_python('03.04.2012'), date(2012, 4, 3))
@@ -297,9 +285,7 @@ class TestFields(SimpleTestCase):
 
         fld = fields.DecimalField()
         self.assertIsNone(fld.to_python(()))
-        self.assertAlmostEqual(
-            fld.to_python('−11.216 530,7'),
-            Decimal(-11216530.7))
+        self.assertAlmostEqual(fld.to_python('−11.216 530,7'), Decimal(-11216530.7))
         self.assertIsInstance(fld.to_python('−11.216 530,7'), Decimal)
         self.assertAlmostEqual(fld.to_python(-11216530.7), Decimal(-11216530.7))
         self.assertIsInstance(fld.to_python(-11216530.7), Decimal)
@@ -338,9 +324,7 @@ class TestForms(TestCase):
 
     def test_user_add_form(self):
 
-        User.objects.create_user(
-            'existing',
-            'existing@' + glob.LOCAL_DOMAIN, 'none')
+        User.objects.create_user('existing', 'existing@' + glob.LOCAL_DOMAIN, 'none')
         src = {
             'first_name': 'New',
             'last_name': 'User',
@@ -395,8 +379,8 @@ class TestModels(TestCase):
 
         pwd = models.PwResetLink(
             user_id=uid,
-            link=('0' * 32))
-        self.assertEqual(str(pwd), ('0' * 32))
+            link='0' * 32)
+        self.assertEqual(str(pwd), '0' * 32)
 
         pwd = models.Preset(
             name='Test',
@@ -447,224 +431,73 @@ class TestUtils1(SimpleTestCase):
     def test_easter_sunday(self):
 
         easter_sundays = (
-            date(1700, 4, 11), date(1701, 3, 27), date(1702, 4, 16),
-            date(1703, 4, 8), date(1704, 3, 23), date(1705, 4, 12),
-            date(1706, 4, 4), date(1707, 4, 24), date(1708, 4, 8),
-            date(1709, 3, 31), date(1710, 4, 20), date(1711, 4, 5),
-            date(1712, 3, 27), date(1713, 4, 16), date(1714, 4, 1),
-            date(1715, 4, 21), date(1716, 4, 12), date(1717, 3, 28),
-            date(1718, 4, 17), date(1719, 4, 9), date(1720, 3, 31),
-            date(1721, 4, 13), date(1722, 4, 5), date(1723, 3, 28),
-            date(1724, 4, 16), date(1725, 4, 1), date(1726, 4, 21),
-            date(1727, 4, 13), date(1728, 3, 28), date(1729, 4, 17),
-            date(1730, 4, 9), date(1731, 3, 25), date(1732, 4, 13),
-            date(1733, 4, 5), date(1734, 4, 25), date(1735, 4, 10),
-            date(1736, 4, 1), date(1737, 4, 21), date(1738, 4, 6),
-            date(1739, 3, 29), date(1740, 4, 17), date(1741, 4, 2),
-            date(1742, 3, 25), date(1743, 4, 14), date(1744, 4, 5),
-            date(1745, 4, 18), date(1746, 4, 10), date(1747, 4, 2),
-            date(1748, 4, 14), date(1749, 4, 6), date(1750, 3, 29),
-            date(1751, 4, 11), date(1752, 4, 2), date(1753, 4, 22),
-            date(1754, 4, 14), date(1755, 3, 30), date(1756, 4, 18),
-            date(1757, 4, 10), date(1758, 3, 26), date(1759, 4, 15),
-            date(1760, 4, 6), date(1761, 3, 22), date(1762, 4, 11),
-            date(1763, 4, 3), date(1764, 4, 22), date(1765, 4, 7),
-            date(1766, 3, 30), date(1767, 4, 19), date(1768, 4, 3),
-            date(1769, 3, 26), date(1770, 4, 15), date(1771, 3, 31),
-            date(1772, 4, 19), date(1773, 4, 11), date(1774, 4, 3),
-            date(1775, 4, 16), date(1776, 4, 7), date(1777, 3, 30),
-            date(1778, 4, 19), date(1779, 4, 4), date(1780, 3, 26),
-            date(1781, 4, 15), date(1782, 3, 31), date(1783, 4, 20),
-            date(1784, 4, 11), date(1785, 3, 27), date(1786, 4, 16),
-            date(1787, 4, 8), date(1788, 3, 23), date(1789, 4, 12),
-            date(1790, 4, 4), date(1791, 4, 24), date(1792, 4, 8),
-            date(1793, 3, 31), date(1794, 4, 20), date(1795, 4, 5),
-            date(1796, 3, 27), date(1797, 4, 16), date(1798, 4, 8),
-            date(1799, 3, 24), date(1800, 4, 13), date(1801, 4, 5),
-            date(1802, 4, 18), date(1803, 4, 10), date(1804, 4, 1),
-            date(1805, 4, 14), date(1806, 4, 6), date(1807, 3, 29),
-            date(1808, 4, 17), date(1809, 4, 2), date(1810, 4, 22),
-            date(1811, 4, 14), date(1812, 3, 29), date(1813, 4, 18),
-            date(1814, 4, 10), date(1815, 3, 26), date(1816, 4, 14),
-            date(1817, 4, 6), date(1818, 3, 22), date(1819, 4, 11),
-            date(1820, 4, 2), date(1821, 4, 22), date(1822, 4, 7),
-            date(1823, 3, 30), date(1824, 4, 18), date(1825, 4, 3),
-            date(1826, 3, 26), date(1827, 4, 15), date(1828, 4, 6),
-            date(1829, 4, 19), date(1830, 4, 11), date(1831, 4, 3),
-            date(1832, 4, 22), date(1833, 4, 7), date(1834, 3, 30),
-            date(1835, 4, 19), date(1836, 4, 3), date(1837, 3, 26),
-            date(1838, 4, 15), date(1839, 3, 31), date(1840, 4, 19),
-            date(1841, 4, 11), date(1842, 3, 27), date(1843, 4, 16),
-            date(1844, 4, 7), date(1845, 3, 23), date(1846, 4, 12),
-            date(1847, 4, 4), date(1848, 4, 23), date(1849, 4, 8),
-            date(1850, 3, 31), date(1851, 4, 20), date(1852, 4, 11),
-            date(1853, 3, 27), date(1854, 4, 16), date(1855, 4, 8),
-            date(1856, 3, 23), date(1857, 4, 12), date(1858, 4, 4),
-            date(1859, 4, 24), date(1860, 4, 8), date(1861, 3, 31),
-            date(1862, 4, 20), date(1863, 4, 5), date(1864, 3, 27),
-            date(1865, 4, 16), date(1866, 4, 1), date(1867, 4, 21),
-            date(1868, 4, 12), date(1869, 3, 28), date(1870, 4, 17),
-            date(1871, 4, 9), date(1872, 3, 31), date(1873, 4, 13),
-            date(1874, 4, 5), date(1875, 3, 28), date(1876, 4, 16),
-            date(1877, 4, 1), date(1878, 4, 21), date(1879, 4, 13),
-            date(1880, 3, 28), date(1881, 4, 17), date(1882, 4, 9),
-            date(1883, 3, 25), date(1884, 4, 13), date(1885, 4, 5),
-            date(1886, 4, 25), date(1887, 4, 10), date(1888, 4, 1),
-            date(1889, 4, 21), date(1890, 4, 6), date(1891, 3, 29),
-            date(1892, 4, 17), date(1893, 4, 2), date(1894, 3, 25),
-            date(1895, 4, 14), date(1896, 4, 5), date(1897, 4, 18),
-            date(1898, 4, 10), date(1899, 4, 2), date(1900, 4, 15),
-            date(1901, 4, 7), date(1902, 3, 30), date(1903, 4, 12),
-            date(1904, 4, 3), date(1905, 4, 23), date(1906, 4, 15),
-            date(1907, 3, 31), date(1908, 4, 19), date(1909, 4, 11),
-            date(1910, 3, 27), date(1911, 4, 16), date(1912, 4, 7),
-            date(1913, 3, 23), date(1914, 4, 12), date(1915, 4, 4),
-            date(1916, 4, 23), date(1917, 4, 8), date(1918, 3, 31),
-            date(1919, 4, 20), date(1920, 4, 4), date(1921, 3, 27),
-            date(1922, 4, 16), date(1923, 4, 1), date(1924, 4, 20),
-            date(1925, 4, 12), date(1926, 4, 4), date(1927, 4, 17),
-            date(1928, 4, 8), date(1929, 3, 31), date(1930, 4, 20),
-            date(1931, 4, 5), date(1932, 3, 27), date(1933, 4, 16),
-            date(1934, 4, 1), date(1935, 4, 21), date(1936, 4, 12),
-            date(1937, 3, 28), date(1938, 4, 17), date(1939, 4, 9),
-            date(1940, 3, 24), date(1941, 4, 13), date(1942, 4, 5),
-            date(1943, 4, 25), date(1944, 4, 9), date(1945, 4, 1),
-            date(1946, 4, 21), date(1947, 4, 6), date(1948, 3, 28),
-            date(1949, 4, 17), date(1950, 4, 9), date(1951, 3, 25),
-            date(1952, 4, 13), date(1953, 4, 5), date(1954, 4, 18),
-            date(1955, 4, 10), date(1956, 4, 1), date(1957, 4, 21),
-            date(1958, 4, 6), date(1959, 3, 29), date(1960, 4, 17),
-            date(1961, 4, 2), date(1962, 4, 22), date(1963, 4, 14),
-            date(1964, 3, 29), date(1965, 4, 18), date(1966, 4, 10),
-            date(1967, 3, 26), date(1968, 4, 14), date(1969, 4, 6),
-            date(1970, 3, 29), date(1971, 4, 11), date(1972, 4, 2),
-            date(1973, 4, 22), date(1974, 4, 14), date(1975, 3, 30),
-            date(1976, 4, 18), date(1977, 4, 10), date(1978, 3, 26),
-            date(1979, 4, 15), date(1980, 4, 6), date(1981, 4, 19),
-            date(1982, 4, 11), date(1983, 4, 3), date(1984, 4, 22),
-            date(1985, 4, 7), date(1986, 3, 30), date(1987, 4, 19),
-            date(1988, 4, 3), date(1989, 3, 26), date(1990, 4, 15),
-            date(1991, 3, 31), date(1992, 4, 19), date(1993, 4, 11),
-            date(1994, 4, 3), date(1995, 4, 16), date(1996, 4, 7),
-            date(1997, 3, 30), date(1998, 4, 12), date(1999, 4, 4),
-            date(2000, 4, 23), date(2001, 4, 15), date(2002, 3, 31),
-            date(2003, 4, 20), date(2004, 4, 11), date(2005, 3, 27),
-            date(2006, 4, 16), date(2007, 4, 8), date(2008, 3, 23),
-            date(2009, 4, 12), date(2010, 4, 4), date(2011, 4, 24),
-            date(2012, 4, 8), date(2013, 3, 31), date(2014, 4, 20),
-            date(2015, 4, 5), date(2016, 3, 27), date(2017, 4, 16),
-            date(2018, 4, 1), date(2019, 4, 21), date(2020, 4, 12),
-            date(2021, 4, 4), date(2022, 4, 17), date(2023, 4, 9),
-            date(2024, 3, 31), date(2025, 4, 20), date(2026, 4, 5),
-            date(2027, 3, 28), date(2028, 4, 16), date(2029, 4, 1),
-            date(2030, 4, 21), date(2031, 4, 13), date(2032, 3, 28),
-            date(2033, 4, 17), date(2034, 4, 9), date(2035, 3, 25),
-            date(2036, 4, 13), date(2037, 4, 5), date(2038, 4, 25),
-            date(2039, 4, 10), date(2040, 4, 1), date(2041, 4, 21),
-            date(2042, 4, 6), date(2043, 3, 29), date(2044, 4, 17),
-            date(2045, 4, 9), date(2046, 3, 25), date(2047, 4, 14),
-            date(2048, 4, 5), date(2049, 4, 18), date(2050, 4, 10),
-            date(2051, 4, 2), date(2052, 4, 21), date(2053, 4, 6),
-            date(2054, 3, 29), date(2055, 4, 18), date(2056, 4, 2),
-            date(2057, 4, 22), date(2058, 4, 14), date(2059, 3, 30),
-            date(2060, 4, 18), date(2061, 4, 10), date(2062, 3, 26),
-            date(2063, 4, 15), date(2064, 4, 6), date(2065, 3, 29),
-            date(2066, 4, 11), date(2067, 4, 3), date(2068, 4, 22),
-            date(2069, 4, 14), date(2070, 3, 30), date(2071, 4, 19),
-            date(2072, 4, 10), date(2073, 3, 26), date(2074, 4, 15),
-            date(2075, 4, 7), date(2076, 4, 19), date(2077, 4, 11),
-            date(2078, 4, 3), date(2079, 4, 23), date(2080, 4, 7),
-            date(2081, 3, 30), date(2082, 4, 19), date(2083, 4, 4),
-            date(2084, 3, 26), date(2085, 4, 15), date(2086, 3, 31),
-            date(2087, 4, 20), date(2088, 4, 11), date(2089, 4, 3),
-            date(2090, 4, 16), date(2091, 4, 8), date(2092, 3, 30),
-            date(2093, 4, 12), date(2094, 4, 4), date(2095, 4, 24),
-            date(2096, 4, 15), date(2097, 3, 31), date(2098, 4, 20),
-            date(2099, 4, 12), date(2100, 3, 28), date(2101, 4, 17),
-            date(2102, 4, 9), date(2103, 3, 25), date(2104, 4, 13),
-            date(2105, 4, 5), date(2106, 4, 18), date(2107, 4, 10),
-            date(2108, 4, 1), date(2109, 4, 21), date(2110, 4, 6),
-            date(2111, 3, 29), date(2112, 4, 17), date(2113, 4, 2),
-            date(2114, 4, 22), date(2115, 4, 14), date(2116, 3, 29),
-            date(2117, 4, 18), date(2118, 4, 10), date(2119, 3, 26),
-            date(2120, 4, 14), date(2121, 4, 6), date(2122, 3, 29),
-            date(2123, 4, 11), date(2124, 4, 2), date(2125, 4, 22),
-            date(2126, 4, 14), date(2127, 3, 30), date(2128, 4, 18),
-            date(2129, 4, 10), date(2130, 3, 26), date(2131, 4, 15),
-            date(2132, 4, 6), date(2133, 4, 19), date(2134, 4, 11),
-            date(2135, 4, 3), date(2136, 4, 22), date(2137, 4, 7),
-            date(2138, 3, 30), date(2139, 4, 19), date(2140, 4, 3),
-            date(2141, 3, 26), date(2142, 4, 15), date(2143, 3, 31),
-            date(2144, 4, 19), date(2145, 4, 11), date(2146, 4, 3),
-            date(2147, 4, 16), date(2148, 4, 7), date(2149, 3, 30),
-            date(2150, 4, 12), date(2151, 4, 4), date(2152, 4, 23),
-            date(2153, 4, 15), date(2154, 3, 31), date(2155, 4, 20),
-            date(2156, 4, 11), date(2157, 3, 27), date(2158, 4, 16),
-            date(2159, 4, 8), date(2160, 3, 23), date(2161, 4, 12),
-            date(2162, 4, 4), date(2163, 4, 24), date(2164, 4, 8),
-            date(2165, 3, 31), date(2166, 4, 20), date(2167, 4, 5),
-            date(2168, 3, 27), date(2169, 4, 16), date(2170, 4, 1),
-            date(2171, 4, 21), date(2172, 4, 12), date(2173, 4, 4),
-            date(2174, 4, 17), date(2175, 4, 9), date(2176, 3, 31),
-            date(2177, 4, 20), date(2178, 4, 5), date(2179, 3, 28),
-            date(2180, 4, 16), date(2181, 4, 1), date(2182, 4, 21),
-            date(2183, 4, 13), date(2184, 3, 28), date(2185, 4, 17),
-            date(2186, 4, 9), date(2187, 3, 25), date(2188, 4, 13),
-            date(2189, 4, 5), date(2190, 4, 25), date(2191, 4, 10),
-            date(2192, 4, 1), date(2193, 4, 21), date(2194, 4, 6),
-            date(2195, 3, 29), date(2196, 4, 17), date(2197, 4, 9),
-            date(2198, 3, 25), date(2199, 4, 14), date(2200, 4, 6),
-            date(2201, 4, 19), date(2202, 4, 11), date(2203, 4, 3),
-            date(2204, 4, 22), date(2205, 4, 7), date(2206, 3, 30),
-            date(2207, 4, 19), date(2208, 4, 3), date(2209, 3, 26),
-            date(2210, 4, 15), date(2211, 3, 31), date(2212, 4, 19),
-            date(2213, 4, 11), date(2214, 3, 27), date(2215, 4, 16),
-            date(2216, 4, 7), date(2217, 3, 30), date(2218, 4, 12),
-            date(2219, 4, 4), date(2220, 4, 23), date(2221, 4, 15),
-            date(2222, 3, 31), date(2223, 4, 20), date(2224, 4, 11),
-            date(2225, 3, 27), date(2226, 4, 16), date(2227, 4, 8),
-            date(2228, 3, 23), date(2229, 4, 12), date(2230, 4, 4),
-            date(2231, 4, 24), date(2232, 4, 8), date(2233, 3, 31),
-            date(2234, 4, 20), date(2235, 4, 5), date(2236, 3, 27),
-            date(2237, 4, 16), date(2238, 4, 1), date(2239, 4, 21),
-            date(2240, 4, 12), date(2241, 4, 4), date(2242, 4, 17),
-            date(2243, 4, 9), date(2244, 3, 31), date(2245, 4, 13),
-            date(2246, 4, 5), date(2247, 3, 28), date(2248, 4, 16),
-            date(2249, 4, 1), date(2250, 4, 21), date(2251, 4, 13),
-            date(2252, 3, 28), date(2253, 4, 17), date(2254, 4, 9),
-            date(2255, 3, 25), date(2256, 4, 13), date(2257, 4, 5),
-            date(2258, 4, 25), date(2259, 4, 10), date(2260, 4, 1),
-            date(2261, 4, 21), date(2262, 4, 6), date(2263, 3, 29),
-            date(2264, 4, 17), date(2265, 4, 2), date(2266, 3, 25),
-            date(2267, 4, 14), date(2268, 4, 5), date(2269, 4, 18),
-            date(2270, 4, 10), date(2271, 4, 2), date(2272, 4, 21),
-            date(2273, 4, 6), date(2274, 3, 29), date(2275, 4, 18),
-            date(2276, 4, 2), date(2277, 4, 22), date(2278, 4, 14),
-            date(2279, 3, 30), date(2280, 4, 18), date(2281, 4, 10),
-            date(2282, 3, 26), date(2283, 4, 15), date(2284, 4, 6),
-            date(2285, 3, 22), date(2286, 4, 11), date(2287, 4, 3),
-            date(2288, 4, 22), date(2289, 4, 7), date(2290, 3, 30),
-            date(2291, 4, 19), date(2292, 4, 10), date(2293, 3, 26),
-            date(2294, 4, 15), date(2295, 4, 7), date(2296, 4, 19),
-            date(2297, 4, 11), date(2298, 4, 3), date(2299, 4, 16),
+            (4, 11), (3, 27), (4, 16), (4, 8), (3, 23), (4, 12), (4, 4), (4, 24), (4, 8), (3, 31), (4, 20), (4, 5),
+            (3, 27), (4, 16), (4, 1), (4, 21), (4, 12), (3, 28), (4, 17), (4, 9), (3, 31), (4, 13), (4, 5), (3, 28),
+            (4, 16), (4, 1), (4, 21), (4, 13), (3, 28), (4, 17), (4, 9), (3, 25), (4, 13), (4, 5), (4, 25), (4, 10),
+            (4, 1), (4, 21), (4, 6), (3, 29), (4, 17), (4, 2), (3, 25), (4, 14), (4, 5), (4, 18), (4, 10), (4, 2),
+            (4, 14), (4, 6), (3, 29), (4, 11), (4, 2), (4, 22), (4, 14), (3, 30), (4, 18), (4, 10), (3, 26), (4, 15),
+            (4, 6), (3, 22), (4, 11), (4, 3), (4, 22), (4, 7), (3, 30), (4, 19), (4, 3), (3, 26), (4, 15), (3, 31),
+            (4, 19), (4, 11), (4, 3), (4, 16), (4, 7), (3, 30), (4, 19), (4, 4), (3, 26), (4, 15), (3, 31), (4, 20),
+            (4, 11), (3, 27), (4, 16), (4, 8), (3, 23), (4, 12), (4, 4), (4, 24), (4, 8), (3, 31), (4, 20), (4, 5),
+            (3, 27), (4, 16), (4, 8), (3, 24), (4, 13), (4, 5), (4, 18), (4, 10), (4, 1), (4, 14), (4, 6), (3, 29),
+            (4, 17), (4, 2), (4, 22), (4, 14), (3, 29), (4, 18), (4, 10), (3, 26), (4, 14), (4, 6), (3, 22), (4, 11),
+            (4, 2), (4, 22), (4, 7), (3, 30), (4, 18), (4, 3), (3, 26), (4, 15), (4, 6), (4, 19), (4, 11), (4, 3),
+            (4, 22), (4, 7), (3, 30), (4, 19), (4, 3), (3, 26), (4, 15), (3, 31), (4, 19), (4, 11), (3, 27), (4, 16),
+            (4, 7), (3, 23), (4, 12), (4, 4), (4, 23), (4, 8), (3, 31), (4, 20), (4, 11), (3, 27), (4, 16), (4, 8),
+            (3, 23), (4, 12), (4, 4), (4, 24), (4, 8), (3, 31), (4, 20), (4, 5), (3, 27), (4, 16), (4, 1), (4, 21),
+            (4, 12), (3, 28), (4, 17), (4, 9), (3, 31), (4, 13), (4, 5), (3, 28), (4, 16), (4, 1), (4, 21), (4, 13),
+            (3, 28), (4, 17), (4, 9), (3, 25), (4, 13), (4, 5), (4, 25), (4, 10), (4, 1), (4, 21), (4, 6), (3, 29),
+            (4, 17), (4, 2), (3, 25), (4, 14), (4, 5), (4, 18), (4, 10), (4, 2), (4, 15), (4, 7), (3, 30), (4, 12),
+            (4, 3), (4, 23), (4, 15), (3, 31), (4, 19), (4, 11), (3, 27), (4, 16), (4, 7), (3, 23), (4, 12), (4, 4),
+            (4, 23), (4, 8), (3, 31), (4, 20), (4, 4), (3, 27), (4, 16), (4, 1), (4, 20), (4, 12), (4, 4), (4, 17),
+            (4, 8), (3, 31), (4, 20), (4, 5), (3, 27), (4, 16), (4, 1), (4, 21), (4, 12), (3, 28), (4, 17), (4, 9),
+            (3, 24), (4, 13), (4, 5), (4, 25), (4, 9), (4, 1), (4, 21), (4, 6), (3, 28), (4, 17), (4, 9), (3, 25),
+            (4, 13), (4, 5), (4, 18), (4, 10), (4, 1), (4, 21), (4, 6), (3, 29), (4, 17), (4, 2), (4, 22), (4, 14),
+            (3, 29), (4, 18), (4, 10), (3, 26), (4, 14), (4, 6), (3, 29), (4, 11), (4, 2), (4, 22), (4, 14), (3, 30),
+            (4, 18), (4, 10), (3, 26), (4, 15), (4, 6), (4, 19), (4, 11), (4, 3), (4, 22), (4, 7), (3, 30), (4, 19),
+            (4, 3), (3, 26), (4, 15), (3, 31), (4, 19), (4, 11), (4, 3), (4, 16), (4, 7), (3, 30), (4, 12), (4, 4),
+            (4, 23), (4, 15), (3, 31), (4, 20), (4, 11), (3, 27), (4, 16), (4, 8), (3, 23), (4, 12), (4, 4), (4, 24),
+            (4, 8), (3, 31), (4, 20), (4, 5), (3, 27), (4, 16), (4, 1), (4, 21), (4, 12), (4, 4), (4, 17), (4, 9),
+            (3, 31), (4, 20), (4, 5), (3, 28), (4, 16), (4, 1), (4, 21), (4, 13), (3, 28), (4, 17), (4, 9), (3, 25),
+            (4, 13), (4, 5), (4, 25), (4, 10), (4, 1), (4, 21), (4, 6), (3, 29), (4, 17), (4, 9), (3, 25), (4, 14),
+            (4, 5), (4, 18), (4, 10), (4, 2), (4, 21), (4, 6), (3, 29), (4, 18), (4, 2), (4, 22), (4, 14), (3, 30),
+            (4, 18), (4, 10), (3, 26), (4, 15), (4, 6), (3, 29), (4, 11), (4, 3), (4, 22), (4, 14), (3, 30), (4, 19),
+            (4, 10), (3, 26), (4, 15), (4, 7), (4, 19), (4, 11), (4, 3), (4, 23), (4, 7), (3, 30), (4, 19), (4, 4),
+            (3, 26), (4, 15), (3, 31), (4, 20), (4, 11), (4, 3), (4, 16), (4, 8), (3, 30), (4, 12), (4, 4), (4, 24),
+            (4, 15), (3, 31), (4, 20), (4, 12), (3, 28), (4, 17), (4, 9), (3, 25), (4, 13), (4, 5), (4, 18), (4, 10),
+            (4, 1), (4, 21), (4, 6), (3, 29), (4, 17), (4, 2), (4, 22), (4, 14), (3, 29), (4, 18), (4, 10), (3, 26),
+            (4, 14), (4, 6), (3, 29), (4, 11), (4, 2), (4, 22), (4, 14), (3, 30), (4, 18), (4, 10), (3, 26), (4, 15),
+            (4, 6), (4, 19), (4, 11), (4, 3), (4, 22), (4, 7), (3, 30), (4, 19), (4, 3), (3, 26), (4, 15), (3, 31),
+            (4, 19), (4, 11), (4, 3), (4, 16), (4, 7), (3, 30), (4, 12), (4, 4), (4, 23), (4, 15), (3, 31), (4, 20),
+            (4, 11), (3, 27), (4, 16), (4, 8), (3, 23), (4, 12), (4, 4), (4, 24), (4, 8), (3, 31), (4, 20), (4, 5),
+            (3, 27), (4, 16), (4, 1), (4, 21), (4, 12), (4, 4), (4, 17), (4, 9), (3, 31), (4, 20), (4, 5), (3, 28),
+            (4, 16), (4, 1), (4, 21), (4, 13), (3, 28), (4, 17), (4, 9), (3, 25), (4, 13), (4, 5), (4, 25), (4, 10),
+            (4, 1), (4, 21), (4, 6), (3, 29), (4, 17), (4, 9), (3, 25), (4, 14), (4, 6), (4, 19), (4, 11), (4, 3),
+            (4, 22), (4, 7), (3, 30), (4, 19), (4, 3), (3, 26), (4, 15), (3, 31), (4, 19), (4, 11), (3, 27), (4, 16),
+            (4, 7), (3, 30), (4, 12), (4, 4), (4, 23), (4, 15), (3, 31), (4, 20), (4, 11), (3, 27), (4, 16), (4, 8),
+            (3, 23), (4, 12), (4, 4), (4, 24), (4, 8), (3, 31), (4, 20), (4, 5), (3, 27), (4, 16), (4, 1), (4, 21),
+            (4, 12), (4, 4), (4, 17), (4, 9), (3, 31), (4, 13), (4, 5), (3, 28), (4, 16), (4, 1), (4, 21), (4, 13),
+            (3, 28), (4, 17), (4, 9), (3, 25), (4, 13), (4, 5), (4, 25), (4, 10), (4, 1), (4, 21), (4, 6), (3, 29),
+            (4, 17), (4, 2), (3, 25), (4, 14), (4, 5), (4, 18), (4, 10), (4, 2), (4, 21), (4, 6), (3, 29), (4, 18),
+            (4, 2), (4, 22), (4, 14), (3, 30), (4, 18), (4, 10), (3, 26), (4, 15), (4, 6), (3, 22), (4, 11), (4, 3),
+            (4, 22), (4, 7), (3, 30), (4, 19), (4, 10), (3, 26), (4, 15), (4, 7), (4, 19), (4, 11), (4, 3), (4, 16),
         )
 
+        year = 1700
         for dat in easter_sundays:
-            self.assertEqual(utils.easter_sunday(dat.year), dat)
+            self.assertEqual(utils.easter_sunday(year), date(year, *dat))
+            year += 1
 
     def test_movable_holiday(self):
 
         hol = (
-            date(2016, 3, 25), date(1939, 4, 10), date(1946, 4, 22),
-            date(1948, 3, 29), date(1951, 5, 3), date(1939, 5, 29),
-            date(1946, 6, 10), date(1948, 5, 17), date(1951, 5, 14),
-            date(1951, 5, 24),
+            date(2016, 3, 25), date(1939, 4, 10), date(1946, 4, 22), date(1948, 3, 29), date(1951, 5, 3),
+            date(1939, 5, 29), date(1946, 6, 10), date(1948, 5, 17), date(1951, 5, 14), date(1951, 5, 24),
         )
 
         nohol = (
-            date(1945, 3, 30), date(1947, 4, 4), date(2015, 4, 3),
-            date(1947, 4, 7), date(1952, 5, 22), date(1947, 5, 26),
-            date(1952, 6, 2), date(1952, 6, 12),
+            date(1945, 3, 30), date(1947, 4, 4), date(2015, 4, 3), date(1947, 4, 7), date(1952, 5, 22),
+            date(1947, 5, 26), date(1952, 6, 2), date(1952, 6, 12),
         )
 
         for dat in hol:
@@ -1901,25 +1734,19 @@ class TestUtils1(SimpleTestCase):
     def test_normreg(self):
 
         regs = ((
-            'T', 'C', 'P A NC', 'D', 'E', 'P', 'NC', 'ERO', 'RO', 'EC',
-            'EVC', 'EXE', 'EPR', 'PP', 'CM', 'SM', 'CA', 'CAD', 'AZ', 'TO',
-            'NT', 'CO', 'NTD', 'CMO', 'KO', 'NCO', 'NCD', 'NCP', 'ECM',
-            'ICM', 'INS', 'K', 'KV', 'EVCM', 'A', 'AD', 'AF', 'NA', 'UL',
-            'CDO', 'ODO', 'TDO', 'TZ', 'NCU', 'ADS', 'AFS', 'ANS', 'AO',
-            'AOS', 'APRK', 'APRN', 'APS', 'ARS', 'AS', 'ASZ', 'AZS', 'KOMP',
-            'KONF', 'KSE', 'KSEO', 'KSS', 'KSZ', 'NA', 'NAD', 'NAO', 'NCN',
-            'NK', 'NTN', 'OBN', 'PLEN', 'PLSN', 'PST', 'ROZK', 'RS', 'S',
-            'SPR', 'SST', 'VOL', 'ABC', 'abc'
+            'T', 'C', 'P A NC', 'D', 'E', 'P', 'NC', 'ERO', 'RO', 'EC', 'EVC', 'EXE', 'EPR', 'PP', 'CM', 'SM', 'CA',
+            'CAD', 'AZ', 'TO', 'NT', 'CO', 'NTD', 'CMO', 'KO', 'NCO', 'NCD', 'NCP', 'ECM', 'ICM', 'INS', 'K', 'KV',
+            'EVCM', 'A', 'AD', 'AF', 'NA', 'UL', 'CDO', 'ODO', 'TDO', 'TZ', 'NCU', 'ADS', 'AFS', 'ANS', 'AO', 'AOS',
+            'APRK', 'APRN', 'APS', 'ARS', 'AS', 'ASZ', 'AZS', 'KOMP', 'KONF', 'KSE', 'KSEO', 'KSS', 'KSZ', 'NA', 'NAD',
+            'NAO', 'NCN', 'NK', 'NTN', 'OBN', 'PLEN', 'PLSN', 'PST', 'ROZK', 'RS', 'S', 'SPR', 'SST', 'VOL', 'ABC',
+            'abc',
         ), (
-            'T', 'C', 'P a Nc', 'D', 'E', 'P', 'Nc', 'ERo', 'Ro', 'EC',
-            'EVC', 'EXE', 'EPR', 'PP', 'Cm', 'Sm', 'Ca', 'Cad', 'Az', 'To',
-            'Nt', 'Co', 'Ntd', 'Cmo', 'Ko', 'Nco', 'Ncd', 'Ncp', 'ECm',
-            'ICm', 'INS', 'K', 'Kv', 'EVCm', 'A', 'Ad', 'Af', 'Na', 'UL',
-            'Cdo', 'Odo', 'Tdo', 'Tz', 'Ncu', 'Ads', 'Afs', 'Ans', 'Ao',
-            'Aos', 'Aprk', 'Aprn', 'Aps', 'Ars', 'As', 'Asz', 'Azs', 'Komp',
-            'Konf', 'Kse', 'Kseo', 'Kss', 'Ksz', 'Na', 'Nad', 'Nao', 'Ncn',
-            'Nk', 'Ntn', 'Obn', 'Plen', 'Plsn', 'Pst', 'Rozk', 'Rs', 'S',
-            'Spr', 'Sst', 'Vol', 'Abc', 'Abc'
+            'T', 'C', 'P a Nc', 'D', 'E', 'P', 'Nc', 'ERo', 'Ro', 'EC', 'EVC', 'EXE', 'EPR', 'PP', 'Cm', 'Sm', 'Ca',
+            'Cad', 'Az', 'To', 'Nt', 'Co', 'Ntd', 'Cmo', 'Ko', 'Nco', 'Ncd', 'Ncp', 'ECm', 'ICm', 'INS', 'K', 'Kv',
+            'EVCm', 'A', 'Ad', 'Af', 'Na', 'UL', 'Cdo', 'Odo', 'Tdo', 'Tz', 'Ncu', 'Ads', 'Afs', 'Ans', 'Ao', 'Aos',
+            'Aprk', 'Aprn', 'Aps', 'Ars', 'As', 'Asz', 'Azs', 'Komp', 'Konf', 'Kse', 'Kseo', 'Kss', 'Ksz', 'Na', 'Nad',
+            'Nao', 'Ncn', 'Nk', 'Ntn', 'Obn', 'Plen', 'Plsn', 'Pst', 'Rozk', 'Rs', 'S', 'Spr', 'Sst', 'Vol', 'Abc',
+            'Abc',
         ))
 
         for reg1, reg2 in zip(regs[0], regs[1]):
@@ -2108,17 +1935,8 @@ class TestViews(TestCase):
 
     def setUp(self):
 
-        User.objects.create_user(
-            'user',
-            'user@' + glob.LOCAL_DOMAIN,
-            'none'
-        )
-
-        User.objects.create_superuser(
-            'superuser',
-            'superuser@' + glob.LOCAL_DOMAIN,
-            'none'
-        )
+        User.objects.create_user('user', 'user@' + glob.LOCAL_DOMAIN, 'none')
+        User.objects.create_superuser('superuser', 'superuser@' + glob.LOCAL_DOMAIN, 'none')
 
     def test_login(self):
 
@@ -2158,9 +1976,7 @@ class TestViews(TestCase):
              'password': 'wrong'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'login.html')
-        self.assertContains(
-            res,
-            'Chybné uživatelské jméno nebo heslo')
+        self.assertContains(res, 'Chybné uživatelské jméno nebo heslo')
 
         res = self.client.post(
             '/accounts/login/?next=/knr/',
@@ -2193,9 +2009,7 @@ class TestViews(TestCase):
         res = self.client.get('/knr/presets/')
         self.assertEqual(res.status_code, HTTPStatus.UNAUTHORIZED)
         self.assertTemplateUsed(res, 'unauth.html')
-        self.assertTrue(self.client.login(
-            username='superuser',
-            password='none'))
+        self.assertTrue(self.client.login(username='superuser', password='none'))
 
         res = self.client.get('/knr/presets/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -2206,10 +2020,7 @@ class TestViews(TestCase):
         req = DummyRequest(None)
         req.method = 'GET'
         res = views.error(req)
-        self.assertContains(
-            res,
-            'Interní chyba aplikace',
-            status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
+        self.assertContains(res, 'Interní chyba aplikace', status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
 
     def test_logout(self):
 
@@ -2261,10 +2072,12 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
 
-        src = {'oldpassword': 'none',
-             'newpassword1': 'newpass',
-             'newpassword2': 'newpass',
-             'submit': 'Změnit'}
+        src = {
+            'oldpassword': 'none',
+            'newpassword1': 'newpass',
+            'newpassword2': 'newpass',
+            'submit': 'Změnit',
+        }
 
         dst = copy(src)
         dst['oldpassword'] = 'wrong'
@@ -2278,18 +2091,14 @@ class TestViews(TestCase):
         res = self.client.post('/accounts/pwchange/', dst)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
-        self.assertEqual(
-            res.context['error_message'],
-            'Zadaná hesla se neshodují')
+        self.assertEqual(res.context['error_message'], 'Zadaná hesla se neshodují')
 
         dst = copy(src)
         dst['newpassword1'] = dst['newpassword2'] = 'short'
         res = self.client.post('/accounts/pwchange/', dst)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
-        self.assertEqual(
-            res.context['error_message'],
-            'Nové heslo je příliš krátké')
+        self.assertEqual(res.context['error_message'], 'Nové heslo je příliš krátké')
 
         res = self.client.post('/accounts/pwchange/', src, follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -2331,15 +2140,9 @@ class TestViews(TestCase):
         msgs = mail.outbox
         self.assertEqual(len(msgs), 1)
         msg = msgs[0]
-        self.assertEqual(
-            msg.from_email,
-            'Server {} <{}>'.format(glob.LOCAL_SUBDOMAIN, glob.LOCAL_EMAIL))
-        self.assertEqual(
-            msg.to,
-            ['user@' + glob.LOCAL_DOMAIN])
-        self.assertEqual(
-            msg.subject,
-            'Link pro obnoveni hesla')
+        self.assertEqual(msg.from_email, 'Server {} <{}>'.format(glob.LOCAL_SUBDOMAIN, glob.LOCAL_EMAIL))
+        self.assertEqual(msg.to, ['user@' + glob.LOCAL_DOMAIN])
+        self.assertEqual(msg.subject, 'Link pro obnoveni hesla')
         match = pw_regex.search(msg.body)
         self.assertTrue(match)
         link = match.group(1)
@@ -2348,9 +2151,7 @@ class TestViews(TestCase):
         newpassword = res.context['newpassword']
         self.assertEqual(len(newpassword), 10)
         self.assertFalse(self.client.login(username='user', password='none'))
-        self.assertTrue(self.client.login(
-            username='user',
-            password=newpassword))
+        self.assertTrue(self.client.login(username='user', password=newpassword))
 
     def test_resetpw(self):
 
@@ -2455,6 +2256,4 @@ class TestViews(TestCase):
         res = self.client.post('/accounts/useradd/', src, follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradded.html')
-        self.assertTrue(self.client.login(
-            username='newuser',
-            password='newpass'))
+        self.assertTrue(self.client.login(username='newuser', password='newpass'))

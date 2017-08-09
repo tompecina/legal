@@ -43,8 +43,7 @@ FORM_URL = ROOT_URL + 'main2Col.aspx?cls=RozhodnutiList&menu=185'
 
 FIND_URL = ROOT_URL + 'main0Col.aspx?cls=JudikaturaBasicSearch&pageSource=0'
 
-DEC_URL = LOCAL_URL + \
-    '/udn/list/?senate={:d}&register={}&number={:d}&year={:d}&page={:d}'
+DEC_URL = LOCAL_URL + '/udn/list/?senate={:d}&register={}&number={:d}&year={:d}&page={:d}'
 
 REPO_PREF = TEST_TEMP_DIR if TEST else join(BASE_DIR, 'repo', 'udn')
 
@@ -60,8 +59,7 @@ def cron_update():
         res = get(FORM_URL)
         soup = BeautifulSoup(res.text, 'html.parser')
         form = soup.find('form')
-        dct = {i['name']: i['value'] for i in form.find_all('input')
-             if i['type'] == 'hidden' and i.has_attr('value')}
+        dct = {i['name']: i['value'] for i in form.find_all('input') if i['type'] == 'hidden' and i.has_attr('value')}
         while True:
             dct['_ctl0:ContentPlaceMasterPage:_ctl0:ddlSortName'] = '5'
             dct['_ctl0:ContentPlaceMasterPage:_ctl0:ddlSortDirection'] = '1'
@@ -70,8 +68,7 @@ def cron_update():
             for item in soup.select('table.item'):
                 try:
                     ttr = item.select('tr')
-                    senate, register, number, year, page = \
-                        decomposeref(ttr[0].td.text.strip())
+                    senate, register, number, year, page = decomposeref(ttr[0].td.text.strip())
                     if Decision.objects.filter(
                             senate=senate,
                             register=register,
@@ -86,29 +83,15 @@ def cron_update():
                     res = get(ROOT_URL + fileurl)
                     if not res.ok:
                         continue
-                    LOGGER.info(
-                        'Writing abridged decision "{}"'
-                        .format(
-                            composeref(
-                                senate,
-                                register,
-                                number,
-                                year)))
+                    LOGGER.info('Writing abridged decision "{}"'.format(composeref(senate, register, number, year)))
                     with open(join(REPO_PREF, filename), 'wb') as outfile:
                         if not outfile.write(res.content):  # pragma: no cover
                             LOGGER.error(
                                 'Failed to write abridged decision "{}"'
-                                .format(
-                                    composeref(
-                                        senate,
-                                        register,
-                                        number,
-                                        year)))
+                                .format(composeref(senate, register, number, year)))
                             continue
-                    agenda = Agenda.objects.get_or_create(
-                        desc=ttr[2].td.text.strip())[0]
-                    dat = date(*map(int, list(reversed(ttr[3].td.text
-                        .split('.')))))
+                    agenda = Agenda.objects.get_or_create(desc=ttr[2].td.text.strip())[0]
+                    dat = date(*map(int, list(reversed(ttr[3].td.text.split('.')))))
                     dec = Decision(
                         senate=senate,
                         register=register,
@@ -131,12 +114,7 @@ def cron_update():
                                 register,
                                 number,
                                 year,
-                                DEC_URL.format(
-                                    senate,
-                                    quote(register),
-                                    number,
-                                    year,
-                                    page))
+                                DEC_URL.format(senate, quote(register), number, year, page))
                 except:  # pragma: no cover
                     pass
             pagers = soup.select('div#PagingBox2')[0]
@@ -157,28 +135,22 @@ def cron_find():
 
     now = datetime.now()
     try:
-        dec = Decision.objects.filter(
-            anonfilename='',
-            date__gte=(now - OBS)).earliest('updated')
+        dec = Decision.objects.filter(anonfilename='', date__gte=(now - OBS)).earliest('updated')
         dec.updated = now
         dec.save()
         res = get(FIND_URL)
         soup = BeautifulSoup(res.text, 'html.parser')
         form = soup.find('form')
-        dct = {i['name']: i['value'] for i in form.find_all('input')
-            if i['type'] == 'hidden' and i.has_attr('value')}
+        dct = {i['name']: i['value'] for i in form.find_all('input') if i['type'] == 'hidden' and i.has_attr('value')}
         ref = ('{} '.format(dec.senate) if dec.senate else '')
         ref += '{0.register} {0.number:d}/{0.year:d}'.format(dec)
-        dct['_ctl0:ContentPlaceMasterPage:_ctl0:txtDatumOd'] = \
-        dct['_ctl0:ContentPlaceMasterPage:_ctl0:txtDatumDo'] = \
+        dct['_ctl0:ContentPlaceMasterPage:_ctl0:txtDatumOd'] = dct['_ctl0:ContentPlaceMasterPage:_ctl0:txtDatumDo'] = \
             '{0.day:02d}.{0.month:02d}.{0.year:d}'.format(dec.date)
         dct['_ctl0:ContentPlaceMasterPage:_ctl0:txtSpisovaZnackaFull'] = ref
         dct['_ctl0_ContentPlaceMasterPage__ctl0_rbTypDatum_0'] = 'on'
         res = post(FIND_URL, dct)
         soup = BeautifulSoup(res.text, 'html.parser')
-        for anchor in \
-            soup.select('table#_ctl0_ContentPlaceMasterPage__ctl0_grwA')[0] \
-            .select('a[title^=Anonymizovan]'):
+        for anchor in soup.select('table#_ctl0_ContentPlaceMasterPage__ctl0_grwA')[0].select('a[title^=Anonymizovan]'):
             fileurl = anchor['href']
             filename = fileurl.split('/')[-1]
             if not FRE.match(filename):
@@ -188,22 +160,12 @@ def cron_find():
                 continue
             LOGGER.info(
                 'Writing anonymized decision "{}"'
-                .format(
-                    composeref(
-                        dec.senate,
-                        dec.register,
-                        dec.number,
-                        dec.year)))
+                .format(composeref(dec.senate, dec.register, dec.number, dec.year)))
             with open(join(REPO_PREF, filename), 'wb') as outfile:
                 if not outfile.write(res.content):  # pragma: no cover
                     LOGGER.error(
                         'Failed to write anonymized decision "{}"'
-                        .format(
-                            composeref(
-                                dec.senate,
-                                dec.register,
-                                dec.number,
-                                dec.year)))
+                        .format(composeref(dec.senate, dec.register, dec.number, dec.year)))
                     return
             dec.anonfilename = filename
             dec.save()

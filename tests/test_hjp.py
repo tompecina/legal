@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/test_hjp.py
+# tests/test_hjp.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -31,8 +31,8 @@ from django.contrib.auth.models import User
 
 from common.utils import p2c
 from common.settings import TEST_DATA_DIR
-from test.glob import TEST_STRING
-from test.utils import DummyRequest, strip_xml
+from tests.glob import TEST_STRING
+from tests.utils import DummyRequest, strip_xml
 from hjp import forms, views
 
 
@@ -148,11 +148,7 @@ class TestViews1(SimpleTestCase):
         idx = 1
         while True:
             try:
-                with open(
-                        join(
-                            TEST_DATA_DIR,
-                            'hjp_debt{:d}.xml'.format(idx)),
-                        'rb') as infile:
+                with open(join(TEST_DATA_DIR, 'hjp_debt{:d}.xml'.format(idx)), 'rb') as infile:
                     dat = infile.read()
             except:
                 self.assertGreater(idx, 1)
@@ -163,9 +159,7 @@ class TestViews1(SimpleTestCase):
             err = views.to_xml(res[0])
             self.assertXMLEqual(strip_xml(dat), strip_xml(err), msg=str(idx))
             idx += 1
-        self.assertEqual(
-            views.from_xml(b'XXX'),
-            (None, 'Chybný formát souboru'))
+        self.assertEqual(views.from_xml(b'XXX'), (None, 'Chybný formát souboru'))
 
     def test_getrows(self):
 
@@ -220,9 +214,7 @@ class TestViews2(TestCase):
              'submit_update': 'Aktualisovat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybné zadání, prosím, opravte údaje')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
 
         res = self.client.post(
             '/hjp/',
@@ -259,11 +251,7 @@ class TestViews2(TestCase):
                 ('xml', 'Uložit', 'text/xml; charset=utf-8'),
                 ('pdf', 'Export do PDF', 'application/pdf'),
         ):
-            with open(
-                    join(
-                        TEST_DATA_DIR,
-                        'hjp_debt1.{}'.format(suf[0])),
-                    'rb') as infile:
+            with open(join(TEST_DATA_DIR, 'hjp_debt1.{}'.format(suf[0])), 'rb') as infile:
                 res = self.client.post(
                     '/hjp/',
                     {'currency_0': 'EUR',
@@ -408,9 +396,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_mainpage.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Nejprve zvolte soubor k načtení')
+        self.assertEqual(res.context['err_message'], 'Nejprve zvolte soubor k načtení')
 
         with open(join(TEST_DATA_DIR, 'hjp_err_debt2.xml'), 'rb') as infile:
             res = self.client.post(
@@ -423,9 +409,7 @@ class TestViews2(TestCase):
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hjp_mainpage.html')
-            self.assertEqual(
-                res.context['err_message'],
-                'Chyba při načtení souboru')
+            self.assertEqual(res.context['err_message'], 'Chyba při načtení souboru')
 
         with open(join(TEST_DATA_DIR, 'hjp_err_debt3.xml'), 'rb') as infile:
             res = self.client.post(
@@ -438,9 +422,7 @@ class TestViews2(TestCase):
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hjp_mainpage.html')
-            self.assertEqual(
-                res.context['err_message'],
-                'Chyba při načtení souboru')
+            self.assertEqual(res.context['err_message'], 'Chyba při načtení souboru')
 
         res = self.client.post(
             '/hjp/',
@@ -453,9 +435,7 @@ class TestViews2(TestCase):
         idx = 1
         while True:
             try:
-                infile = open(
-                    join(TEST_DATA_DIR, 'hjp_debt{:d}.xml'.format(idx)),
-                    'rb')
+                infile = open(join(TEST_DATA_DIR, 'hjp_debt{:d}.xml'.format(idx)), 'rb')
             except:
                 self.assertGreater(idx, 1)
                 break
@@ -477,8 +457,7 @@ class TestViews2(TestCase):
                 if val:
                     dct[key] = p2c(str(val))
             soup = BeautifulSoup(res.content, 'html.parser')
-            dct['currency_0'] = \
-                soup.select('#id_currency_0 option[selected]')[0]['value']
+            dct['currency_0'] = soup.select('#id_currency_0 option[selected]')[0]['value']
             dct['currency_1'] = dct['currency']
 
             res = self.client.post('/hjp/', dct)
@@ -599,9 +578,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hjp_transform.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybné zadání, prosím, opravte údaje')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
 
         res = self.client.get('/hjp/transdel/3/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1070,12 +1047,7 @@ class TestViews2(TestCase):
                 interest.__setattr__(key, val)
             debt = views.Debt()
             debt.interest = interest
-            calc = views.calcint(
-                pastdate,
-                presdate,
-                principal,
-                debt,
-                default_date)
+            calc = views.calcint(pastdate, presdate, principal, debt, default_date)
             self.assertIsNotNone(calc)
             self.assertEqual(len(calc), 2)
             self.assertIsNone(calc[1])
@@ -1092,12 +1064,7 @@ class TestViews2(TestCase):
                 interest.__setattr__(key, val)
             debt = views.Debt()
             debt.interest = interest
-            calc = views.calcint(
-                pastdate,
-                presdate,
-                principal,
-                debt,
-                default_date)
+            calc = views.calcint(pastdate, presdate, principal, debt, default_date)
             self.assertIsNotNone(calc)
             self.assertEqual(len(calc), 2)
             self.assertIsNone(calc[0])
@@ -1110,9 +1077,7 @@ class TestViews2(TestCase):
         idx = 1
         while True:
             try:
-                infile = open(
-                    join(TEST_DATA_DIR, 'hjp_debt{:d}.xml'.format(idx)),
-                    'rb')
+                infile = open(join(TEST_DATA_DIR, 'hjp_debt{:d}.xml'.format(idx)), 'rb')
             except:
                 self.assertGreater(idx, 1)
                 break
@@ -1134,23 +1099,12 @@ class TestViews2(TestCase):
                 'internal_note': 'in',
                 'submit_csv': 'Export do CSV'}
             soup = BeautifulSoup(res.content, 'html.parser')
-            for key in (
-                    'currency_0',
-                    'rounding',
-                    'ydconv',
-                    'mdconv'
-            ):
+            for key in ('currency_0', 'rounding', 'ydconv', 'mdconv'):
                 for opt in soup.select('#id_{} option'.format(key)):
                     if opt.has_attr('selected'):
                         dct[key] = opt['value']
                         break
-            for key in (
-                    'currency_1',
-                    'fixed_amount',
-                    'pa_rate',
-                    'pm_rate',
-                    'pd_rate'
-            ):
+            for key in ('currency_1', 'fixed_amount', 'pa_rate', 'pm_rate', 'pd_rate'):
                 try:
                     dct[key] = soup.select('#id_{}'.format(key))[0]['value']
                 except:
@@ -1166,9 +1120,7 @@ class TestViews2(TestCase):
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
             string = res.content.decode('utf-8')
-            with open(
-                    join(TEST_DATA_DIR, 'hjp_debt{:d}.csv'.format(idx)),
-                    'rb') as infile:
+            with open(join(TEST_DATA_DIR, 'hjp_debt{:d}.csv'.format(idx)), 'rb') as infile:
                 dat = infile.read().decode('utf-8')
             self.assertEqual(string, dat, msg=str(idx))
             idx += 1

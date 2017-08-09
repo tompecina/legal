@@ -44,16 +44,13 @@ class CommonConfig(AppConfig):
                 User.objects.count()),
             (
                 'Počet nových uživatelů za posledních 24 hodin',
-                User.objects.filter(
-                    date_joined__gte=(now - timedelta(hours=24))).count()),
+                User.objects.filter(date_joined__gte=(now - timedelta(hours=24))).count()),
             (
                 'Počet nových uživatelů za poslední týden',
-                User.objects.filter(
-                    date_joined__gte=(now - timedelta(weeks=1))).count()),
+                User.objects.filter(date_joined__gte=(now - timedelta(weeks=1))).count()),
             (
                 'Počet nových uživatelů za poslední měsíc',
-                User.objects.filter(
-                    date_joined__gte=(now - timedelta(days=30))).count()),
+                User.objects.filter(date_joined__gte=(now - timedelta(days=30))).count()),
             (
                 'Počet dočasných linků pro obnovení hesla',
                 PwResetLink.objects.count()),

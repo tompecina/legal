@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/test_hsp.py
+# tests/test_hsp.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -30,8 +30,8 @@ from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 
 from common.settings import TEST_DATA_DIR
-from test.glob import TEST_STRING
-from test.utils import DummyRequest, strip_xml
+from tests.glob import TEST_STRING
+from tests.utils import DummyRequest, strip_xml
 from hsp import forms, views
 
 
@@ -218,11 +218,7 @@ class TestViews1(SimpleTestCase):
         idx = 1
         while True:
             try:
-                with open(
-                        join(
-                            TEST_DATA_DIR,
-                            'hsp_debt{:d}.xml'.format(idx)),
-                        'rb') as infile:
+                with open(join(TEST_DATA_DIR, 'hsp_debt{:d}.xml'.format(idx)), 'rb') as infile:
                     dat = infile.read()
             except:
                 self.assertGreater(idx, 1)
@@ -398,9 +394,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Nejprve zvolte soubor k načtení')
+        self.assertEqual(res.context['err_message'], 'Nejprve zvolte soubor k načtení')
 
         with open(join(TEST_DATA_DIR, 'hsp_err_debt5.xml'), 'rb') as infile:
             res = self.client.post(
@@ -411,9 +405,7 @@ class TestViews2(TestCase):
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
-            self.assertEqual(
-                res.context['err_message'],
-                'Chyba při načtení souboru')
+            self.assertEqual(res.context['err_message'], 'Chyba při načtení souboru')
 
         with open(join(TEST_DATA_DIR, 'hsp_err_debt6.xml'), 'rb') as infile:
             res = self.client.post(
@@ -437,9 +429,7 @@ class TestViews2(TestCase):
         idx = 1
         while True:
             try:
-                infile = open(
-                    join(TEST_DATA_DIR, 'hsp_debt{:d}.xml'.format(idx)),
-                    'rb')
+                infile = open(join(TEST_DATA_DIR, 'hsp_debt{:d}.xml'.format(idx)), 'rb')
             except:
                 self.assertGreater(idx, 1)
                 break
@@ -687,9 +677,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_debitform.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybné zadání, prosím, opravte údaje')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
 
         res = self.client.post(
             '/hsp/debitform/1/',
@@ -701,9 +689,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_debitform.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Na závazek se váže úrok, vyžaduje pevnou částku')
+        self.assertEqual(res.context['err_message'], 'Na závazek se váže úrok, vyžaduje pevnou částku')
 
         res = self.client.get('/hsp/debitdel/3/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -857,9 +843,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditform.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybné zadání, prosím, opravte údaje')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
 
         res = self.client.post(
             '/hsp/creditform/',
@@ -1085,9 +1069,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_fxrateform.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybné zadání, prosím, opravte údaje')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
 
         res = self.client.post(
             '/hsp/fxrateform/',
@@ -1161,7 +1143,6 @@ class TestViews2(TestCase):
         self.assertEqual(views.getdebt(req).title, TEST_STRING)
 
     def test_calcint(self):
-
 
         cases = (
             (date(2015, 1, 1),
@@ -1587,11 +1568,7 @@ class TestViews2(TestCase):
         idx = 1
         while True:
             try:
-                with open(
-                        join(
-                            TEST_DATA_DIR,
-                            'hsp_err_debt{:d}.xml'.format(idx)),
-                        'rb') as infile:
+                with open(join(TEST_DATA_DIR, 'hsp_err_debt{:d}.xml'.format(idx)), 'rb') as infile:
                     dat = infile.read()
             except:
                 self.assertGreater(idx, 1)
@@ -1610,11 +1587,7 @@ class TestViews2(TestCase):
         idx = 1
         while True:
             try:
-                infile = open(
-                    join(
-                        TEST_DATA_DIR,
-                        'hsp_debt{:d}.xml'.format(idx)),
-                    'rb')
+                infile = open(join(TEST_DATA_DIR, 'hsp_debt{:d}.xml'.format(idx)), 'rb')
             except:
                 self.assertGreater(idx, 1)
                 break
@@ -1645,11 +1618,7 @@ class TestViews2(TestCase):
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
             string = res.content.decode('utf-8')
-            with open(
-                    join(
-                        TEST_DATA_DIR,
-                        'hsp_debt{:d}.csv'.format(idx)),
-                    'rb') as infile:
+            with open(join(TEST_DATA_DIR, 'hsp_debt{:d}.csv'.format(idx)), 'rb') as infile:
                 dat = infile.read().decode('utf-8')
             self.assertEqual(string, dat, msg=str(idx))
             idx += 1
@@ -1659,12 +1628,7 @@ class TestViews2(TestCase):
         self.assertTrue(self.client.login(username='user', password='none'))
 
         for idx in range(1, 14):
-            with open(
-                    join(
-                        TEST_DATA_DIR,
-                        'hsp_debt{:d}.xml'.format(idx)),
-                    'rb') as infile:
-
+            with open(join(TEST_DATA_DIR, 'hsp_debt{:d}.xml'.format(idx)), 'rb') as infile:
                 res = self.client.post(
                     '/hsp/',
                     {'rounding': '2',
@@ -1690,10 +1654,6 @@ class TestViews2(TestCase):
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], 'text/csv; charset=utf-8')
             string = res.content.decode('utf-8')
-            with open(
-                    join(
-                        TEST_DATA_DIR,
-                        'hsp_debt{:d}.csv'.format(idx)),
-                    'rb') as infile:
+            with open(join(TEST_DATA_DIR, 'hsp_debt{:d}.csv'.format(idx)), 'rb') as infile:
                 dat = infile.read().decode('utf-8')
             self.assertEqual(string, dat, msg=str(idx))

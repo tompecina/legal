@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/cache_tests.py
+# tests/cache_tests.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -24,7 +24,7 @@ from datetime import datetime, timedelta
 
 from django.test import SimpleTestCase, TestCase
 
-from test.utils import DummyRequest
+from tests.utils import DummyRequest
 from cache import models, utils
 
 

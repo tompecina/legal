@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# test/test_knr.py
+# tests/test_knr.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -31,8 +31,8 @@ from django.contrib.auth.models import User
 
 from common.settings import TEST_DATA_DIR
 from common.utils import new_xml, p2c, xmlbool
-from test.glob import TEST_STRING
-from test.utils import DummyRequest, strip_xml
+from tests.glob import TEST_STRING
+from tests.utils import DummyRequest, strip_xml
 from knr import forms, models, views, utils
 
 
@@ -75,8 +75,7 @@ class TestForms(SimpleTestCase):
         self.assertTrue(form.is_valid())
 
         dst = copy(src)
-        for key in ('off10_flag', 'off30_flag', 'off30limit5000_flag',
-            'off20limit5000_flag'):
+        for key in ('off10_flag', 'off30_flag', 'off30limit5000_flag', 'off20limit5000_flag'):
             dst[key] = 'on'
         form = forms.ServiceForm(dst)
         self.assertFalse(form.is_valid())
@@ -262,9 +261,7 @@ class TestUtils2(TestCase):
     def test_findloc(self):
 
         res = views.findloc('Melantrichova 504/5, Praha 1')
-        self.assertEqual(
-            res[0],
-            'Melantrichova 504/5, 110 00 Praha 1-Staré Město, Česká republika')
+        self.assertEqual(res[0], 'Melantrichova 504/5, 110 00 Praha 1-Staré Město, Česká republika')
         self.assertAlmostEqual(res[1], 51.0852574)
         self.assertAlmostEqual(res[2], 13.4211651)
         self.assertFalse(views.findloc(''))
@@ -359,8 +356,7 @@ class TestViews1(SimpleTestCase):
 
         string = '<?xml version="1.0" encoding="utf-8"?><calculation>'
         for key in keys:
-            res = xmlbool(dct[key]) if views.TYPES[key] == views.B \
-                else str(dct[key])
+            res = xmlbool(dct[key]) if views.TYPES[key] == views.B else str(dct[key])
             string += '<{0}>{1}</{0}>'.format(key, res)
         string += '</calculation>'
         obj = Dummy()
@@ -381,16 +377,12 @@ class TestViews1(SimpleTestCase):
 
     def test_s2i(self):
 
-        string = new_xml(
-            '<?xml version="1.0" encoding="utf-8"?>\n'
-            '<vat_rate>22.0</vat_rate>\n')
+        string = new_xml('<?xml version="1.0" encoding="utf-8"?>\n<vat_rate>22.0</vat_rate>\n')
         calc = views.Calculation()
         views.s2i(['vat_rate'], string, calc)
         self.assertAlmostEqual(calc.vat_rate, 22)
 
-        string = new_xml(
-            '<?xml version="1.0" encoding="utf-8"?>\n'
-            '<vat_rate>XXX</vat_rate>\n')
+        string = new_xml('<?xml version="1.0" encoding="utf-8"?>\n<vat_rate>XXX</vat_rate>\n')
         calc = views.Calculation()
         res = calc.vat_rate
         views.s2i(['vat_rate'], string, calc)
@@ -401,11 +393,7 @@ class TestViews1(SimpleTestCase):
         idx = 1
         while True:
             try:
-                with open(
-                        join(
-                            TEST_DATA_DIR,
-                            'knr_calc{:d}.xml'.format(idx)),
-                        'rb') as infile:
+                with open(join(TEST_DATA_DIR, 'knr_calc{:d}.xml'.format(idx)), 'rb') as infile:
                     doc = infile.read()
             except:
                 self.assertGreater(idx, 1)
@@ -420,11 +408,7 @@ class TestViews1(SimpleTestCase):
         idx = 1
         while True:
             try:
-                with open(
-                        join(
-                            TEST_DATA_DIR,
-                            'knr_err_calc{:d}.xml'.format(idx)),
-                        'rb') as infile:
+                with open(join(TEST_DATA_DIR, 'knr_err_calc{:d}.xml'.format(idx)), 'rb') as infile:
                     doc = infile.read()
             except:
                 self.assertGreater(idx, 1)
@@ -517,11 +501,7 @@ class TestViews2(TestCase):
                 ('xml', 'Uložit kalkulaci', 'text/xml; charset=utf-8'),
                 ('pdf', 'Export do PDF', 'application/pdf'),
         ):
-            with open(
-                    join(
-                        TEST_DATA_DIR,
-                        'knr_calc1.' + suf[0]),
-                    'rb') as infile:
+            with open(join(TEST_DATA_DIR, 'knr_calc1.' + suf[0]), 'rb') as infile:
                 res = self.client.post(
                     '/knr/',
                     {'submit_load': 'Načíst kalkulaci',
@@ -599,15 +579,9 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_mainpage.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Nejprve zvolte soubor k načtení')
+        self.assertEqual(res.context['err_message'], 'Nejprve zvolte soubor k načtení')
 
-        with open(
-                join(
-                    TEST_DATA_DIR,
-                    'knr_err_calc1.xml'),
-                'rb') as infile:
+        with open(join(TEST_DATA_DIR, 'knr_err_calc1.xml'), 'rb') as infile:
             res = self.client.post(
                 '/knr/',
                 {'submit_load': 'Načíst kalkulaci',
@@ -615,18 +589,12 @@ class TestViews2(TestCase):
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_mainpage.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybný formát souboru')
+        self.assertEqual(res.context['err_message'], 'Chybný formát souboru')
 
         idx = 1
         while True:
             try:
-                infile = open(
-                    join(
-                        TEST_DATA_DIR,
-                        'knr_calc{:d}.xml'.format(idx)),
-                    'rb')
+                infile = open(join(TEST_DATA_DIR, 'knr_calc{:d}.xml'.format(idx)), 'rb')
             except:
                 self.assertGreater(idx, 1)
                 break
@@ -801,9 +769,7 @@ class TestViews2(TestCase):
              'submit_search': 'Vyhledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_placeform.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Hledání neúspěšné, prosím, upřesněte adresu')
+        self.assertEqual(res.context['err_message'], 'Hledání neúspěšné, prosím, upřesněte adresu')
 
         res = self.client.post(
             '/knr/placeform/',
@@ -967,9 +933,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_carform.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybné zadání, prosím, opravte údaje')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
 
         res = self.client.post(
             '/knr/carform/',
@@ -1089,9 +1053,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_formulaform.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybné zadání, prosím, opravte údaje')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
 
         res = self.client.post(
             '/knr/formulaform/',
@@ -1743,15 +1705,9 @@ class TestViews2(TestCase):
                  'numerator': '2',
                  'denominator': '3',
                  'submit_{}_search'.format(key): 'Vyhledat'})
-            self.assertAlmostEqual(
-                res.context['{}_lat'.format(key)],
-                51.0852574)
-            self.assertAlmostEqual(
-                res.context['{}_lon'.format(key)],
-                13.4211651)
-            self.assertIn(
-                'Česká republika',
-                res.context['{}_address'.format(key)])
+            self.assertAlmostEqual(res.context['{}_lat'.format(key)], 51.0852574)
+            self.assertAlmostEqual(res.context['{}_lon'.format(key)], 13.4211651)
+            self.assertIn('Česká republika', res.context['{}_address'.format(key)])
 
             res = self.client.post(
                 '/knr/itemform/',
@@ -1762,15 +1718,9 @@ class TestViews2(TestCase):
                  'denominator': '3',
                  'submit_{}_apply'.format(key): 'Použít'})
             self.assertEqual(res.context['{}_name'.format(key)], 'Test name')
-            self.assertEqual(
-                res.context['{}_address'.format(key)],
-                'Test address')
-            self.assertAlmostEqual(
-                res.context['{}_lat'.format(key)],
-                49.1975999)
-            self.assertAlmostEqual(
-                res.context['{}_lon'.format(key)],
-                16.6044449)
+            self.assertEqual(res.context['{}_address'.format(key)], 'Test address')
+            self.assertAlmostEqual(res.context['{}_lat'.format(key)], 49.1975999)
+            self.assertAlmostEqual(res.context['{}_lon'.format(key)], 16.6044449)
 
             res = self.client.post(
                 '/knr/itemform/',
@@ -1782,9 +1732,7 @@ class TestViews2(TestCase):
                  'submit_{}_search'.format(key): 'Vyhledat'})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'knr_itemform.html')
-            self.assertEqual(
-                res.context['err_message'],
-                'Hledání neúspěšné, prosím, upřesněte adresu.')
+            self.assertEqual(res.context['err_message'], 'Hledání neúspěšné, prosím, upřesněte adresu.')
 
         res = self.client.post(
             '/knr/itemform/',
@@ -2127,17 +2075,17 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
         res = self.client.get('/knr/itemlist/')
-        bef = [res.context['rows'][i]['description'] for i in [0, 1]]
+        bef = [res.context['rows'][i]['description'] for i in (0, 1)]
         res = self.client.get('/knr/itemdown/1/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_itemlist.html')
-        aft = [res.context['rows'][i]['description'] for i in [0, 1]]
+        aft = [res.context['rows'][i]['description'] for i in (0, 1)]
         self.assertNotEqual(bef, aft)
 
         res = self.client.get('/knr/itemdown/1/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_itemlist.html')
-        aft = [res.context['rows'][i]['description'] for i in [0, 1]]
+        aft = [res.context['rows'][i]['description'] for i in (0, 1)]
         self.assertEqual(bef, aft)
 
         res = self.client.get('/knr/itemup/1/')
@@ -2158,9 +2106,7 @@ class TestViews2(TestCase):
         res = self.client.get('/knr/presets/')
         self.assertEqual(res.status_code, HTTPStatus.UNAUTHORIZED)
 
-        self.assertTrue(self.client.login(
-            username='superuser',
-            password='none'))
+        self.assertTrue(self.client.login(username='superuser', password='none'))
 
         res = self.client.get('/knr/presets/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -2186,11 +2132,7 @@ class TestViews2(TestCase):
         )
 
         for test in cases:
-            with open(
-                    join(
-                        TEST_DATA_DIR,
-                        'knr_calc{:d}.xml'.format(test[0])),
-                    'rb') as infile:
+            with open(join(TEST_DATA_DIR, 'knr_calc{:d}.xml'.format(test[0])), 'rb') as infile:
                 res = self.client.post(
                     '/knr/',
                     {'submit_load': 'Načíst kalkulaci',
@@ -2202,6 +2144,4 @@ class TestViews2(TestCase):
             ttd = soup.select('table.vattbl td')
             self.assertEqual(len(ttd), 4)
             for idx in range(4):
-                self.assertEqual(
-                    ttd[idx].text,
-                    '{} Kč'.format(views.convi(test[1][idx])))
+                self.assertEqual(ttd[idx].text, '{} Kč'.format(views.convi(test[1][idx])))

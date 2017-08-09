@@ -49,16 +49,13 @@ class SzrConfig(AppConfig):
                 Proceedings.objects.count()),
             (
                 'Počet nových sledovaných řízení za posledních 24 hodin',
-                Proceedings.objects.filter(
-                    timestamp_add__gte=(now - timedelta(hours=24))).count()),
+                Proceedings.objects.filter(timestamp_add__gte=(now - timedelta(hours=24))).count()),
             (
                 'Počet nových sledovaných řízení za poslední týden',
-                Proceedings.objects.filter(
-                    timestamp_add__gte=(now - timedelta(weeks=1))).count()),
+                Proceedings.objects.filter(timestamp_add__gte=(now - timedelta(weeks=1))).count()),
             (
                 'Počet nových sledovaných řízení za poslední měsíc',
-                Proceedings.objects.filter(
-                    timestamp_add__gte=(now - timedelta(days=30))).count()),
+                Proceedings.objects.filter(timestamp_add__gte=(now - timedelta(days=30))).count()),
             (
                 'Počet sledovaných řízení pro příští notifikaci',
                 Proceedings.objects.filter(notify=1).count()),
