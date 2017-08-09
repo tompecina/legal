@@ -30,4 +30,5 @@ rsync -avhHzx \
       --delete \
       ./ $remote:/var/www/django/legal/
 
+ssh $remote 'cd /var/www/django/legal && source activate && pip install -r requirements.txt'
 ssh $remote 'touch /var/www/django/legal/common/wsgi.py'
