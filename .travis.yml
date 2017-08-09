@@ -18,7 +18,7 @@ env:
   global:
     - "TEST=1"
     - "DBUSER=root"
-    - "LD_LIBRARY_PATH=~/tidy-html5/build/cmake/"
+    - "LD_LIBRARY_PATH=./tidy-html5/build/cmake/"
   matrix:
     - "DJANGO_VERSION=stable"
     - "DJANGO_VERSION=nightly"
