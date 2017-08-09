@@ -26,10 +26,10 @@ env:
     # - "DJANGO_VERSION=nightly"
 
 before_install:
-  - "sudo apt-get -y autoremove libtidy-0.99-0 tidy"
-  - "wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb"
-  - "sudo dpkg -i tidy-*.deb"
-  - "sudo locale-gen cs_CZ"
+  # - "sudo apt-get -y autoremove libtidy-0.99-0 tidy"
+  # - "wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb"
+  # - "sudo dpkg -i tidy-*.deb"
+  # - "sudo locale-gen cs_CZ"
   - "gem install sass"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
