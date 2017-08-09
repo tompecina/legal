@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAEA,SAAU;EACN,MAAM,ECaL,IAAI",
-"sources": ["dir.scss","../../common/static/_include.scss"],
-"names": [],
-"file": "dir.css"
-}

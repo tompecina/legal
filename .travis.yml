@@ -28,7 +28,7 @@ before_install:
   - "cmake ../.. -DCMAKE_BUILD_TYPE=Bin"
   - "make"
   - "tidy=$(pwd)"
-  - "cp libtidy.so.5.5.31 libtidy-0.99.so.0"
+  - "ln -s libtidy.so.5.5.31 libtidy-0.99.so.0"
   - "cd -"
   - "gem install sass"
   - |

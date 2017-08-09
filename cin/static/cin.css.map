@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAGI,qBAAe;EAClB,WAAW,EAAE,IAAI;EACjB,aAAa,ECST,GAAG;ADPJ,kBAAY;EACf,aAAa,ECOT,GAAG;ADLJ,gBAAU;EACb,UAAU,EAAE,IAAI;EAChB,WAAW,ECYP,IAAI;ADVL,oCAAuB;EAC1B,UAAU,EAAE,IAAI;EAChB,WAAW,ECQP,IAAI;ADNL,iBAAW;EACd,UAAU,ECJN,GAAG",
-"sources": ["cin.scss","../../common/static/_include.scss"],
-"names": [],
-"file": "cin.css"
-}
