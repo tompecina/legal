@@ -262,13 +262,17 @@ class FXform(forms.Form):
 
     currency_from = fields.CharField(
         widget=widgets.Currw(),
+        min_length=3,
         max_length=3,
         validators=(RegexValidator(regex=CURRENCY_REGEX),))
+    del currency_from.widget.attrs['minlength']
 
     currency_to = fields.CharField(
         widget=widgets.Currw(),
+        min_length=3,
         max_length=3,
         validators=(RegexValidator(regex=CURRENCY_REGEX),))
+    del currency_to.widget.attrs['minlength']
 
     rate_from = fields.FloatField(
         widget=widgets.Fxw(),
