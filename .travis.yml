@@ -2,12 +2,13 @@
 
 language: "python"
 
-sudo:  "required"
+# sudo:  "required"
+sudo:  "false"
 
 python:
   - "3.5"
-  - "3.6"
-  - "nightly"
+  # - "3.6"
+  # - "nightly"
 
 services:
   - "mysql"
@@ -21,11 +22,10 @@ env:
   global:
     - "DBUSER=root"
   matrix:
-    - "DJANGO_VERSION=requirements"
-    - "DJANGO_VERSION=nightly"
+    - "DJANGO_VERSION=stable"
+    # - "DJANGO_VERSION=nightly"
 
 before_install:
-  - "mysql --version"
   - "sudo apt-get -y autoremove libtidy-0.99-0 tidy"
   - "wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb"
   - "sudo dpkg -i tidy-*.deb"
