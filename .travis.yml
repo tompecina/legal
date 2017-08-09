@@ -27,10 +27,8 @@ before_install:
   - "cd tidy-html5/build/cmake/"
   - "cmake ../.. -DCMAKE_BUILD_TYPE=Bin"
   - "make"
-  - "pwd"
-  - "ln -s libtidy.so.5.5.31 libtidy-0.99.so.0"
-  - "ls -l"
   - "cd -"
+  - "ln -s /home/travis/tompecina/legal/tidy-html5/build/cmake/libtidy.so.5.5.31 ./libtidy-0.99.so.0"
   - "gem install sass"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
@@ -45,4 +43,4 @@ install:
   - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'" 
 
 script:
-  - "LD_PRELOAD=/home/travis/tompecina/legal/tidy-html5/build/cmake/libtidy-0.99.so.0 ./manage.py test tests --failfast && ./manage.py test tests --reverse --failfast"
+  - "LD_PRELOAD=./libtidy-0.99.so.0 ./manage.py test tests --failfast && ./manage.py test tests --reverse --failfast"
