@@ -27,9 +27,13 @@ before_install:
   - "cd tidy-html5/build/cmake/"
   - "cmake ../.. -DCMAKE_BUILD_TYPE=Bin"
   - "make"
+  - "pwd"
+  - "tidy=$(pwd)"
+  - "ls -l"
   - "cd -"
-  - "ls /home/travis/tompecina/legal/tidy-html5/build/cmake/"
-  - "cp /home/travis/tompecina/legal/tidy-html5/build/cmake/libtidy.so.5.5* ./libtidy-0.99.so.0"
+  - "ls -l"
+  - "ls -l $tidy"
+  - "cp $pwd/libtidy.so.5.5.31 ./libtidy-0.99.so.0"
   - "ls -l"
   - "gem install sass"
   - |
@@ -45,5 +49,5 @@ install:
   - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'" 
 
 script:
-  - "export LD_PRELOAD=/home/travis/tompecina/legal/libtidy-0.99.so.0"
+  - "export LD_PRELOAD=./libtidy-0.99.so.0"
   - "./manage.py test tests --failfast && ./manage.py test tests --reverse --failfast"
