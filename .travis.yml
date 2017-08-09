@@ -29,11 +29,8 @@ before_install:
   - "make"
   - "pwd"
   - "tidy=$(pwd)"
-  - "ls -l"
   - "cd -"
-  - "ls -l"
-  - "ls -l $tidy"
-  - "cp $pwd/libtidy.so.5.5.31 ./libtidy-0.99.so.0"
+  - "cp $tidy/libtidy.so.5.5.31 ./libtidy-0.99.so.0"
   - "ls -l"
   - "gem install sass"
   - |
