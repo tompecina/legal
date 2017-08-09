@@ -11,7 +11,5 @@ migrations/
 __pycache__/
 /common/secrets.py
 /htmlcov/
-*.css
-*.map
 *.log
 *.log.*

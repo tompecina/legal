@@ -1,0 +1,24 @@
+h1 {
+  text-align: left;
+  margin-bottom: 24px; }
+
+thead tr:first-child th {
+  padding-left: 2px; }
+thead tr:last-child th {
+  text-align: left;
+  padding: 3px 32px 6px 4px; }
+thead tr:last-child th:last-child {
+  padding-right: 0; }
+
+td.msg div.msg-header {
+  font-size: 120%;
+  font-weight: bold;
+  margin-bottom: 12px; }
+td.msg div.msg-gap {
+  margin-top: 12px; }
+td.msg div.msg-total {
+  font-size: 110%;
+  font-weight: bold;
+  margin-top: 2px; }
+
+/*# sourceMappingURL=kos.css.map */

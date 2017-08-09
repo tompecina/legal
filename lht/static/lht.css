@@ -1,0 +1,15 @@
+fieldset {
+  margin: 12px auto; }
+
+div.note {
+  text-align: center;
+  font-size: 80%;
+  padding-bottom: 3px; }
+
+td.msg div.msg-res {
+  font-size: 120%;
+  font-weight: bold; }
+td.msg div.msg-note {
+  font-size: 80%; }
+
+/*# sourceMappingURL=lht.css.map */

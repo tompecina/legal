@@ -1,0 +1,87 @@
+fieldset {
+  margin-top: 0;
+  margin-bottom: 18px; }
+
+.btbl table {
+  width: 100%; }
+.btbl th, .btbl tbody td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #7b9cd1; }
+.btbl th {
+  text-align: center;
+  font-size: 135%;
+  padding-left: 16px; }
+.btbl td.mc {
+  width: 100%; }
+.btbl td.act {
+  text-align: center; }
+.btbl div:first-child {
+  font-weight: bold; }
+.btbl tfoot tr td {
+  height: 36px; }
+
+td.cc {
+  white-space: nowrap;
+  font-weight: bold; }
+
+tr.header:first-child th {
+  padding-bottom: 0; }
+
+table.intbl {
+  margin: 5px auto;
+  width: 100%; }
+
+.intbl th, .intbl td {
+  text-align: left;
+  padding: 3px 8px 6px; }
+.intbl td.hr {
+  padding: 6px 0 8px; }
+.intbl hr {
+  margin: 0; }
+.intbl td span {
+  padding-left: 8px; }
+
+tr.curr th {
+  font-weight: normal;
+  padding-top: 1px; }
+
+tr.deb th {
+  padding-top: 1px;
+  padding-bottom: 1px; }
+
+td.taberr {
+  text-align: center;
+  font-style: italic;
+  background-color: #fff;
+  background-image: url("/static/cb.svg");
+  background-repeat: repeat;
+  border-top: 1px solid #c4e0ff;
+  padding: 6px 8px; }
+
+td.dat, td.dt, td.cus {
+  text-align: center; }
+
+td.am, td.ams {
+  text-align: right;
+  white-space: nowrap; }
+
+td.ams, td.cs, td.cus {
+  border-left: 1px solid #c4e0ff; }
+
+th.sum {
+  font-weight: bold; }
+
+td.act {
+  word-spacing: 4px;
+  white-space: nowrap; }
+
+span.cr {
+  color: #e00000; }
+
+table.nttbl {
+  margin: 24px auto 12px; }
+
+table.nttbl p {
+  margin: 6px 16px; }
+
+/*# sourceMappingURL=hsp.css.map */

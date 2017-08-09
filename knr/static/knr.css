@@ -1,0 +1,15 @@
+table.vattbl th, table.vattbl td {
+  text-align: right;
+  white-space: nowrap;
+  padding: 1px 4px; }
+table.vattbl th {
+  width: 100%;
+  padding-right: 4px; }
+
+fieldset {
+  float: right; }
+
+fieldset.itemfs {
+  margin: 6px 0 6px auto; }
+
+/*# sourceMappingURL=knr.css.map */

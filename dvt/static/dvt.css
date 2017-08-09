@@ -1,0 +1,16 @@
+fieldset {
+  margin: 12px auto; }
+
+div.note {
+  text-align: center;
+  font-size: 80%;
+  padding-bottom: 3px; }
+
+td.msg div.msg-res {
+  font-size: 110%;
+  font-weight: bold;
+  margin-bottom: 3px; }
+td.msg div.msg-normal {
+  margin-bottom: 2px; }
+
+/*# sourceMappingURL=dvt.css.map */

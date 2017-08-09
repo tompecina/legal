@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAEA,QAAS;EACL,MAAM,EAAE,SAAQ;EAChB,qBAAa;IAChB,UAAU,EAAE,MAAM;;AAGnB,cAAe;EACX,SAAS,EC2BJ,IAAI;ED1BT,WAAW,EAAE,IAAI;;AAErB,YAAa;EACT,SAAS,ECmBL,GAAG;EDlBP,WAAW,ECAV,GAAG",
+"sources": ["sop.scss","../../common/static/_include.scss"],
+"names": [],
+"file": "sop.css"
+}

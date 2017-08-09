@@ -1,0 +1,15 @@
+td.msg div.msg-header {
+  font-weight: bold;
+  margin-bottom: 3px; }
+td.msg div.msg-ymd {
+  margin-bottom: 6px; }
+td.msg div.msg-y {
+  text-align: left;
+  margin-left: 16px; }
+td.msg div.msg-m1, td.msg div.msg-m2 {
+  text-align: left;
+  margin-left: 16px; }
+td.msg div.msg-m1 {
+  margin-top: 6px; }
+
+/*# sourceMappingURL=cin.css.map */

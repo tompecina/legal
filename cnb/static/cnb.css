@@ -1,0 +1,17 @@
+fieldset {
+  margin: 12px auto; }
+  fieldset div {
+    padding: 3px 8px;
+    text-align: center; }
+
+td.msg div.msg-res0, td.msg div.msg-res1, td.msg div.msg-res2 {
+  font-weight: bold;
+  font-size: 110%; }
+td.msg div.msg-res1 {
+  margin-bottom: 2px; }
+td.msg div.msg-res2 {
+  margin-bottom: 6px; }
+td.msg div.msg-note {
+  font-size: 85%; }
+
+/*# sourceMappingURL=cnb.css.map */

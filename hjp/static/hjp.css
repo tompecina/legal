@@ -1,0 +1,48 @@
+fieldset.intbl {
+  margin: 24px 0;
+  padding: 0 16px; }
+
+.intbl table {
+  margin: 6px auto;
+  width: 100%; }
+.intbl th, .intbl td {
+  text-align: left;
+  padding: 3px 0 8px; }
+.intbl hr {
+  margin: 0; }
+
+.intbl tr.disabled th * {
+  color: #000040;
+  font-weight: normal; }
+
+.dr, .drs {
+  color: #e00000; }
+
+td.cr, td.dr, td.crs, td.drs {
+  text-align: right; }
+
+tr.header:first-child th {
+  padding-bottom: 0; }
+
+td.taberr {
+  text-align: center;
+  font-style: italic;
+  background-color: #fff;
+  background-image: url("/static/cb.svg");
+  background-repeat: repeat;
+  border-top: 1px solid #c4e0ff; }
+
+#id_calc td + td {
+  border-left: 1px solid #c4e0ff; }
+
+#id_calc td + td.crs, #id_calc td + td.drs {
+  border-left: none; }
+
+td.dat {
+  text-align: center; }
+
+td.act {
+  word-spacing: 4px;
+  white-space: nowrap; }
+
+/*# sourceMappingURL=hjp.css.map */
