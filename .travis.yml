@@ -43,4 +43,4 @@ install:
   - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'" 
 
 script:
-  - "./manage.py tests --failfast && ./manage.py tests --reverse --failfast"
+  - "./manage.py test tests --failfast && ./manage.py test tests --reverse --failfast"
