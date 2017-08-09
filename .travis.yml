@@ -2,7 +2,7 @@
 
 language: "python"
 
-sudo:  "required"
+sudo:  "false"
 
 python:
   - "3.5"
@@ -18,9 +18,13 @@ env:
     - "DJANGO_VERSION=nightly"
 
 before_install:
-  - "sudo apt-get -y autoremove libtidy-0.99-0 tidy"
-  - "wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb"
-  - "sudo dpkg -i tidy-*.deb"
+  - "git clone --depth=1 https://github.com/htacg/tidy-html5.git"
+  - "cd tidy-html5/build/cmake/"
+  - "cmake ../.. -DCMAKE_BUILD_TYPE=Bin"
+  - "make"
+  - "export tidy=$(pwd)"
+  - "cp libtidy.so.5.5.31 libtidy-0.99.so.0"
+  - "cd -"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
         pip install git+https://github.com/django/django.git
@@ -33,4 +37,5 @@ install:
   - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'" 
 
 script:
+  - "export LD_LIBRARY_PATH=$tidy LD_PRELOAD=$tidy/libtidy-0.99.so.0"
   - "./manage.py test tests --failfast && ./manage.py test tests --reverse --failfast"
