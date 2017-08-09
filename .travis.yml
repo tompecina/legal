@@ -24,10 +24,10 @@ env:
 
 before_install:
   - "git clone https://github.com/htacg/tidy-html5.git"
-  - "cd ~/tidy-html5/build/cmake/"
+  - "cd tidy-html5/build/cmake"
   - "cmake ../.. -DCMAKE_BUILD_TYPE=Bin"
   - "make"
-  - "cd ~/legal"
+  - "cd -"
   - "gem install sass"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
