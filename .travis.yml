@@ -9,16 +9,11 @@ python:
   - "3.6"
   - "nightly"
 
-addons:
-  apt:
-    packages:
-    - "ruby-dev"
-
 env:
   global:
     - "TEST=1"
     - "DBUSER=root"
-    - "LD_LIBRARY_PATH=./tidy-html5/build/cmake/"
+    - "LD_LIBRARY_PATH=/home/travis/legal/tidy-html5/build/cmake"
   matrix:
     - "DJANGO_VERSION=stable"
     - "DJANGO_VERSION=nightly"
@@ -28,6 +23,7 @@ before_install:
   - "cd tidy-html5/build/cmake"
   - "cmake ../.. -DCMAKE_BUILD_TYPE=Bin"
   - "make"
+  - "ls ../.."
   - "cd -"
   - "gem install sass"
   - |
