@@ -2,25 +2,33 @@
 
 language: "python"
 
-sudo:  "required"
+sudo:  "false"
 
 python:
   - "3.5"
   - "3.6"
   - "nightly"
 
+addons:
+  apt:
+    packages:
+    - "ruby-dev"
+
 env:
   global:
+    - "TEST=1"
     - "DBUSER=root"
   matrix:
-    - "DJANGO_VERSION=requirements"
+    - "DJANGO_VERSION=stable"
     - "DJANGO_VERSION=nightly"
 
 before_install:
-  - "sudo apt-get -y autoremove libtidy-0.99-0 tidy"
-  - "wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb"
-  - "sudo dpkg -i tidy-*.deb"
-  - "sudo locale-gen cs_CZ"
+  - "git clone --depth=1 https://github.com/htacg/tidy-html5.git"
+  - "cd tidy-html5/build/cmake/"
+  - "cmake ../.. -DCMAKE_BUILD_TYPE=Bin"
+  - "make"
+  - "ln -s libtidy.so.5.5.31 libtidy-0.99.so.0"
+  - "cd -"
   - "gem install sass"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
@@ -35,4 +43,4 @@ install:
   - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'" 
 
 script:
-  - "./manage.py test tests --failfast && ./manage.py test tests --reverse --failfast"
+  - "LD_PRELOAD=/home/travis/tompecina/legal/tidy-html5/build/cmake/libtidy-0.99.so.0 ./manage.py test tests --failfast && ./manage.py test tests --reverse --failfast"
