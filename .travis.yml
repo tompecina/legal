@@ -2,7 +2,7 @@
 
 language: "python"
 
-sudo:  "false"
+sudo:  "required"
 
 python:
   - "3.5"
@@ -11,21 +11,16 @@ python:
 
 env:
   global:
-    - "TEST=1"
     - "DBUSER=root"
-    - "LD_LIBRARY_PATH=/home/travis/legal/tidy-html5/build/cmake:$LD_LIBRARY_PATH"
   matrix:
-    - "DJANGO_VERSION=stable"
+    - "DJANGO_VERSION=requirements"
     - "DJANGO_VERSION=nightly"
 
 before_install:
-  - "git clone https://github.com/htacg/tidy-html5.git"
-  - "cd tidy-html5/build/cmake"
-  - "cmake ../.. -DCMAKE_BUILD_TYPE=Bin"
-  - "make"
-  - "ls"
-  - "echo $LD_LIBRARY_PATH"
-  - "cd -"
+  - "sudo apt-get -y autoremove libtidy-0.99-0 tidy"
+  - "wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb"
+  - "sudo dpkg -i tidy-*.deb"
+  - "sudo locale-gen cs_CZ"
   - "gem install sass"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
