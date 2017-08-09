@@ -2,16 +2,12 @@
 
 language: "python"
 
-# sudo:  "required"
 sudo:  "false"
 
 python:
   - "3.5"
-  # - "3.6"
-  # - "nightly"
-
-services:
-  - "mysql"
+  - "3.6"
+  - "nightly"
 
 addons:
   apt:
@@ -21,15 +17,17 @@ addons:
 env:
   global:
     - "DBUSER=root"
+    - "LD_LIBRARY_PATH=~/tidy-html5/build/cmake/"
   matrix:
     - "DJANGO_VERSION=stable"
-    # - "DJANGO_VERSION=nightly"
+    - "DJANGO_VERSION=nightly"
 
 before_install:
-  # - "sudo apt-get -y autoremove libtidy-0.99-0 tidy"
-  # - "wget https://github.com/htacg/tidy-html5/releases/download/5.4.0/tidy-5.4.0-64bit.deb"
-  # - "sudo dpkg -i tidy-*.deb"
-  # - "sudo locale-gen cs_CZ"
+  - "git clone https://github.com/htacg/tidy-html5.git"
+  - "cd tidy-html5/build/cmake/"
+  - "cmake ../.. -DCMAKE_BUILD_TYPE=Bin"
+  - "make"
+  - "cd ~/legal"
   - "gem install sass"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
