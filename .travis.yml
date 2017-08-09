@@ -9,6 +9,11 @@ python:
   - "3.6"
   - "nightly"
 
+addons:
+  apt:
+    packages:
+    - "ruby-dev"
+
 env:
   global:
     - "TEST=1"
@@ -25,6 +30,7 @@ before_install:
   - "export tidy=$(pwd)"
   - "cp libtidy.so.5.5.31 libtidy-0.99.so.0"
   - "cd -"
+  - "gem install sass"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
         pip install git+https://github.com/django/django.git
@@ -34,6 +40,7 @@ before_install:
     fi
 
 install:
+  - "./dosass"
   - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'" 
 
 script:
