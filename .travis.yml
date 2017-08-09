@@ -27,6 +27,8 @@ before_install:
   - "cd tidy-html5/build/cmake/"
   - "cmake ../.. -DCMAKE_BUILD_TYPE=Bin"
   - "make"
+  - "pwd"
+  - "ls -l"
   - "ln -s libtidy.so.5.5.31 libtidy-0.99.so.0"
   - "cd -"
   - "gem install sass"
