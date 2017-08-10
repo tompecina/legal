@@ -26,6 +26,7 @@ from datetime import date, timedelta
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 
+from tests.utils import check_html
 from cache.models import Cache
 from cnb import models, utils
 
@@ -225,14 +226,11 @@ class TestViews(TestCase):
 
         cases = (
             ('EUR', '', '1.7.2016', '', '', 0,
-             ('1 EUR = 17,095 CZK',
-              '(Kurs vyhlášený ke dni: 01.07.2016)')),
+             ('1 EUR = 17,095 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('USD', '', '1.7.2016', '', '', 0,
-             ('1 USD = 34,335 CZK',
-              '(Kurs vyhlášený ke dni: 01.07.2016)')),
+             ('1 USD = 34,335 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('OTH', 'THB', '1.7.2016', '', '', 0,
-             ('100 THB = 99,430 CZK',
-              '(Kurs vyhlášený ke dni: 01.07.2016)')),
+             ('100 THB = 99,430 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('OTH', 'VAL', '1.7.2016', '', '', 0,
              ('Kurs není v kursové tabulce',)),
             ('OTH', '', '1.7.2016', '', '', 0,
@@ -240,29 +238,17 @@ class TestViews(TestCase):
             ('EUR', '', '1.17.2016', '', '', 0,
              ('Chybné zadání',)),
             ('EUR', '', '1.7.2016', '516', '', 1,
-             ('516,00 EUR = 8.821,02 CZK',
-              '1 EUR = 17,095 CZK',
-              '(Kurs vyhlášený ke dni: 01.07.2016)')),
+             ('516,00 EUR = 8.821,02 CZK', '1 EUR = 17,095 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('USD', '', '1.7.2016', '179.500', '', 1,
-             ('179.500,00 USD = 6.163.132,50 CZK',
-              '1 USD = 34,335 CZK',
-              '(Kurs vyhlášený ke dni: 01.07.2016)')),
+             ('179.500,00 USD = 6.163.132,50 CZK', '1 USD = 34,335 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('USD', '', '1.7.2016', '179 500', '', 1,
-             ('179.500,00 USD = 6.163.132,50 CZK',
-              '1 USD = 34,335 CZK',
-              '(Kurs vyhlášený ke dni: 01.07.2016)')),
-            ('USD', '', '1.7.2016', '179 500,00', '', 1,
-             ('179.500,00 USD = 6.163.132,50 CZK',
-              '1 USD = 34,335 CZK',
+             ('179.500,00 USD = 6.163.132,50 CZK', '1 USD = 34,335 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
+            ('USD', '', '1.7.2016', '179 500,00', '', 1, ('179.500,00 USD = 6.163.132,50 CZK', '1 USD = 34,335 CZK',
               '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('USD', '', '1.7.2016', '0.179 500,00', '', 1,
-             ('179.500,00 USD = 6.163.132,50 CZK',
-              '1 USD = 34,335 CZK',
-              '(Kurs vyhlášený ke dni: 01.07.2016)')),
+             ('179.500,00 USD = 6.163.132,50 CZK', '1 USD = 34,335 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('OTH', 'THB', '1.7.2016', '116', '', 1,
-             ('116,00 THB = 115,34 CZK',
-              '100 THB = 99,430 CZK',
-              '(Kurs vyhlášený ke dni: 01.07.2016)')),
+             ('116,00 THB = 115,34 CZK', '100 THB = 99,430 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('OTH', 'VAL', '1.7.2016', '4000', '', 1,
              ('Kurs není v kursové tabulce',)),
             ('OTH', '', '1.7.2016', '515', '', 1,
@@ -274,17 +260,11 @@ class TestViews(TestCase):
             ('OTH', 'USD', '1.7.2016', '-515', '', 1,
              ('Chybné zadání',)),
             ('EUR', '', '1.7.2016', '516', '', 2,
-             ('516,00 CZK = 30,18 EUR',
-              '1 EUR = 17,095 CZK',
-              '(Kurs vyhlášený ke dni: 01.07.2016)')),
+             ('516,00 CZK = 30,18 EUR', '1 EUR = 17,095 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('USD', '', '1.7.2016', '179.500', '', 2,
-             ('179.500,00 CZK = 5.227,90 USD',
-              '1 USD = 34,335 CZK',
-              '(Kurs vyhlášený ke dni: 01.07.2016)')),
+             ('179.500,00 CZK = 5.227,90 USD', '1 USD = 34,335 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('OTH', 'THB', '1.7.2016', '116', '', 2,
-             ('116,00 CZK = 116,66 THB',
-              '100 THB = 99,430 CZK',
-              '(Kurs vyhlášený ke dni: 01.07.2016)')),
+             ('116,00 CZK = 116,66 THB', '100 THB = 99,430 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('OTH', 'VAL', '1.7.2016', '4000', '', 2,
              ('Kurs není v kursové tabulce',)),
             ('OTH', '', '1.7.2016', '515', '', 2,
@@ -296,11 +276,9 @@ class TestViews(TestCase):
             ('OTH', 'USD', '1.7.2016', '-515', '', 2,
              ('Chybné zadání',)),
             ('EUR', '', '', '', '19.11.2014', 3,
-             ('Diskontní sazba platná ke dni 19.11.2014:',
-              '0,06 %')),
+             ('Diskontní sazba platná ke dni 19.11.2014:', '0,06 %')),
             ('EUR', '', '', '', '21.6.1996', 4,
-             ('Lombardní sazba platná ke dni 21.06.1996:',
-              '4,00 %')),
+             ('Lombardní sazba platná ke dni 21.06.1996:', '4,00 %')),
             ('EUR', '', '', '', '1.5.2008', 5,
              ('Chyba spojení se serverem ČNB',)),
             ('OTH', 'USD', '', '', '29.2.2014', 3,
@@ -319,6 +297,7 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'cnb_main.html')
+        self.assertEqual(check_html(res.content), '304eedb3')
 
         today = date.today()
 

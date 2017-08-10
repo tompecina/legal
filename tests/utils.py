@@ -25,9 +25,11 @@ from os.path import join
 from re import compile
 from hashlib import md5
 
+from bs4 import BeautifulSoup
+from bs4.element import Tag, NavigableString
 from django.http import QueryDict
 
-from common.settings import TEST_DATA_DIR
+from common.settings import TEST_DATA_DIR, STATIC_URL
 from common.models import Lock, Pending
 from sir.models import Counter
 
@@ -144,3 +146,30 @@ def getdl():
 def getpr():
 
     return getcounter('PR')
+
+
+def check_html(html):
+    store = []
+    soup = BeautifulSoup(html, 'html.parser')
+    for desc in soup.descendants:
+        if isinstance(desc, Tag):
+            name = desc.name
+            attrs = desc.attrs
+            store.append(name)
+            for key in sorted(attrs):
+                tag = str(attrs.get('name'))
+                if name == 'input' and tag == 'csrfmiddlewaretoken' and key == 'value':
+                    continue
+                store.append(key)
+                val = attrs[key]
+                if isinstance(val, list):
+                    store.extend(sorted(val))
+                elif (isinstance(val, str)
+                    and not (val.startswith(STATIC_URL) or ('date' in tag and key == 'value'))):
+                    store.append(val)
+        elif isinstance(desc, NavigableString):
+            store.append(str(desc))
+    string = ' '.join(' '.join(store).split())
+    
+    return md5(string.encode()).hexdigest()[:8]
+    

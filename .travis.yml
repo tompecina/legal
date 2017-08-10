@@ -18,12 +18,12 @@ env:
     - "DJANGO_VERSION=nightly"
 
 before_install:
-  - "git clone --depth=1 https://github.com/htacg/tidy-html5.git"
-  - "cd tidy-html5/build/cmake/"
-  - "cmake ../.. -DCMAKE_BUILD_TYPE=Release && make"
-  - "tidy=$(pwd)"
-  - "ln -s libtidy.so.5.5.31 libtidy-0.99.so.0"
-  - "cd -"
+  - "project=$(pwd)"
+  - "cd ../.. && mkdir lib && export LD_LIBRARY_PATH=$(pwd)/lib"
+  - "git clone --depth=1 https://github.com/htacg/tidy-html5.git htacg/tidy-html5"
+  - "cd htacg/tidy-html5/build/cmake && cmake ../.. -DCMAKE_BUILD_TYPE=Release && make"
+  - "ln -s $(pwd)/libtidy.so.5.5.31 $LD_LIBRARY_PATH/libtidy-0.99.so.0"
+  - "cd $project"
   - "gem install sass"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
@@ -38,4 +38,4 @@ install:
   - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'" 
 
 script:
-  - "LD_LIBRARY_PATH=$tidy ./manage.py test tests --failfast"
+  - "./manage.py test tests --failfast"
