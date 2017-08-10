@@ -28,6 +28,7 @@ from hashlib import md5
 from django.http import QueryDict
 
 from common.settings import TEST_DATA_DIR
+from common.models import Lock, Pending
 from sir.models import Counter
 
 
@@ -46,6 +47,24 @@ class DummyResponse:
             self.content = content.encode('utf-8')
         self.status_code = status
         self.ok = status == HTTPStatus.OK
+
+
+class TestObj:
+    pass
+
+    
+TEST_OBJ = TestObj()
+
+
+def testfunc(*args):
+    TEST_OBJ.testlock = list(Lock.objects.all())
+    TEST_OBJ.testpending = list(Pending.objects.all())
+    if not args:
+        TEST_OBJ.testresult = 6
+    elif len(args) == 1:
+        TEST_OBJ.testresult = int(args[0]) * 2
+    else:
+        TEST_OBJ.testresult = int(args[0]) - int(args[1])
 
 
 def strip_xml(string):

@@ -32,7 +32,7 @@ from django.contrib.auth.models import User
 from django.core import mail
 from django.http import QueryDict
 
-from tests.utils import DummyRequest, setdl, setpr
+from tests.utils import DummyRequest, setdl, setpr, testfunc, TEST_OBJ
 from szr.cron import cron_update
 from szr.models import Proceedings
 from common import cron, glob, fields, forms, models, utils, views
@@ -87,130 +87,130 @@ Server {} ({})
 
     def test_run(self):
 
-        cron.test_result = 0
-        cron.run('test_func', '')
-        self.assertEqual(cron.test_result, 6)
+        TEST_OBJ.testresult = 0
+        cron.run('testfunc', '')
+        self.assertEqual(TEST_OBJ.testresult, 6)
 
-        cron.run('test_func', '1')
-        self.assertEqual(cron.test_result, 2)
+        cron.run('testfunc', '1')
+        self.assertEqual(TEST_OBJ.testresult, 2)
 
-        cron.run('test_func', '5 2')
-        self.assertEqual(cron.test_result, 3)
+        cron.run('testfunc', '5 2')
+        self.assertEqual(TEST_OBJ.testresult, 3)
 
     def test_cron_run(self):
 
         cron.cron_clean()
 
         cron.SCHED = (
-            {'name': 'test_func',
+            {'name': 'testfunc',
              'when': lambda t: True,
             },
         )
-        cron.test_result = 0
+        TEST_OBJ.testresult = 0
         cron.cron_run()
-        self.assertEqual(cron.test_result, 6)
+        self.assertEqual(TEST_OBJ.testresult, 6)
         self.assertFalse(models.Lock.objects.exists())
         self.assertFalse(models.Pending.objects.exists())
-        self.assertFalse(cron.test_lock)
-        self.assertFalse(cron.test_pending)
+        self.assertFalse(TEST_OBJ.testlock)
+        self.assertFalse(TEST_OBJ.testpending)
 
         cron.SCHED = (
-            {'name': 'test_func',
+            {'name': 'testfunc',
              'when': lambda t: True,
              'lock': 'test',
              'blocking': False,
             },
         )
-        cron.test_result = 0
+        TEST_OBJ.testresult = 0
         cron.cron_run()
-        self.assertEqual(cron.test_result, 6)
+        self.assertEqual(TEST_OBJ.testresult, 6)
         self.assertFalse(models.Lock.objects.exists())
         self.assertFalse(models.Pending.objects.exists())
-        self.assertEqual(len(cron.test_lock), 1)
-        self.assertFalse(cron.test_pending)
-        self.assertEqual(cron.test_lock[0].name, 'test')
+        self.assertEqual(len(TEST_OBJ.testlock), 1)
+        self.assertFalse(TEST_OBJ.testpending)
+        self.assertEqual(TEST_OBJ.testlock[0].name, 'test')
 
         cron.SCHED = (
-            {'name': 'test_func',
+            {'name': 'testfunc',
              'when': lambda t: True,
              'lock': 'test',
              'blocking': True,
             },
         )
-        cron.test_result = 0
+        TEST_OBJ.testresult = 0
         cron.cron_run()
-        self.assertEqual(cron.test_result, 6)
+        self.assertEqual(TEST_OBJ.testresult, 6)
         self.assertFalse(models.Lock.objects.exists())
         self.assertFalse(models.Pending.objects.exists())
-        self.assertEqual(len(cron.test_lock), 1)
-        self.assertFalse(cron.test_pending)
-        self.assertEqual(cron.test_lock[0].name, 'test')
+        self.assertEqual(len(TEST_OBJ.testlock), 1)
+        self.assertFalse(TEST_OBJ.testpending)
+        self.assertEqual(TEST_OBJ.testlock[0].name, 'test')
         models.Lock(name='test').save()
 
         cron.SCHED = (
-            {'name': 'test_func',
+            {'name': 'testfunc',
              'when': lambda t: True,
              'lock': 'test',
              'blocking': False,
             },
         )
-        cron.test_result = 0
+        TEST_OBJ.testresult = 0
         cron.cron_run()
-        self.assertEqual(cron.test_result, 0)
+        self.assertEqual(TEST_OBJ.testresult, 0)
         self.assertEqual(models.Lock.objects.count(), 1)
         self.assertFalse(models.Pending.objects.exists())
 
         cron.SCHED = (
-            {'name': 'test_func',
+            {'name': 'testfunc',
              'when': lambda t: True,
              'lock': 'test',
              'blocking': True,
             },
         )
-        cron.test_result = 0
+        TEST_OBJ.testresult = 0
         cron.cron_run()
-        self.assertEqual(cron.test_result, 0)
+        self.assertEqual(TEST_OBJ.testresult, 0)
         self.assertEqual(models.Lock.objects.count(), 1)
         self.assertEqual(models.Pending.objects.count(), 1)
 
         cron.SCHED = (
-            {'name': 'test_func',
+            {'name': 'testfunc',
              'args': '1',
              'when': lambda t: True,
              'lock': 'test',
              'blocking': True,
             },
         )
-        cron.test_result = 0
+        TEST_OBJ.testresult = 0
         cron.cron_run()
-        self.assertEqual(cron.test_result, 0)
+        self.assertEqual(TEST_OBJ.testresult, 0)
         self.assertEqual(models.Lock.objects.count(), 1)
         self.assertEqual(models.Pending.objects.count(), 2)
         pend = models.Pending.objects.latest('timestamp_add')
-        self.assertEqual(pend.name, 'test_func')
+        self.assertEqual(pend.name, 'testfunc')
         self.assertEqual(pend.args, '1')
         self.assertEqual(pend.lock, 'test')
 
         cron.cron_unlock()
         cron.SCHED = ()
-        cron.test_result = 0
+        TEST_OBJ.testresult = 0
         cron.cron_run()
-        self.assertEqual(cron.test_result, 2)
+        self.assertEqual(TEST_OBJ.testresult, 2)
         self.assertFalse(models.Lock.objects.exists())
         self.assertFalse(models.Pending.objects.exists())
 
         models.Lock(name='another').save()
         cron.SCHED = (
-            {'name': 'test_func',
+            {'name': 'testfunc',
              'args': '4',
              'when': lambda t: True,
              'lock': 'test',
              'blocking': True,
             },
         )
-        cron.test_result = 0
+        TEST_OBJ.testresult = 0
         cron.cron_run()
-        self.assertEqual(cron.test_result, 8)
+        self.assertEqual(TEST_OBJ.testresult, 8)
         self.assertEqual(models.Lock.objects.count(), 1)
         self.assertFalse(models.Pending.objects.exists())
 
@@ -219,9 +219,9 @@ Server {} ({})
         self.assertEqual(models.Lock.objects.count(), 2)
 
         cron.SCHED = ()
-        cron.test_result = 0
+        TEST_OBJ.testresult = 0
         cron.cron_run()
-        self.assertEqual(cron.test_result, 0)
+        self.assertEqual(TEST_OBJ.testresult, 0)
         self.assertEqual(models.Lock.objects.count(), 1)
         self.assertFalse(models.Pending.objects.exists())
 

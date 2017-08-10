@@ -36,19 +36,6 @@ from common.utils import send_mail, LOGGER
 from common.models import Pending, Lock
 
 
-if TEST:
-    def test_func(*args):
-        global test_result, test_lock, test_pending
-        test_lock = list(Lock.objects.all())
-        test_pending = list(Pending.objects.all())
-        if not args:
-            test_result = 6
-        elif len(args) == 1:
-            test_result = int(args[0]) * 2
-        else:
-            test_result = int(args[0]) - int(args[1])
-
-
 def cron_notify():
 
     for user in User.objects.all():
@@ -114,6 +101,10 @@ SCHED = (
 )
 
 EXPIRE = timedelta(minutes=30)
+
+
+if TEST:
+    from tests.utils import testfunc
 
 
 def run(name, args):
