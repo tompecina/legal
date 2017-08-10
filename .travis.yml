@@ -9,11 +9,6 @@ python:
   - "3.6"
   - "nightly"
 
-addons:
-  apt:
-    packages:
-    - "ruby-dev"
-
 env:
   global:
     - "TEST=1"
