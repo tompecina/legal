@@ -20,8 +20,7 @@ env:
 before_install:
   - "git clone --depth=1 https://github.com/htacg/tidy-html5.git"
   - "cd tidy-html5/build/cmake/"
-  - "cmake ../.. -DCMAKE_BUILD_TYPE=Release"
-  - "make"
+  - "cmake ../.. -DCMAKE_BUILD_TYPE=Release && make"
   - "tidy=$(pwd)"
   - "ln -s libtidy.so.5.5.31 libtidy-0.99.so.0"
   - "cd -"
