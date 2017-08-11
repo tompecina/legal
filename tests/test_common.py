@@ -2204,7 +2204,6 @@ class TestViews(TestCase):
         res = self.client.get('/about/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'about.html')
-        check_html(self, res.content)
 
         res = self.client.post('/about/')
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)

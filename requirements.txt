@@ -26,4 +26,4 @@ reportlab==3.4.0
 requests==2.18.3
 six==1.10.0
 urllib3==1.22
-wrapt==1.10.10
+wrapt==1.10.11
