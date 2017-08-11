@@ -25,6 +25,7 @@ from http import HTTPStatus
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 
+from tests.utils import check_html
 from sop import forms
 
 
@@ -262,7 +263,9 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'sop_main.html')
+        check_html(self, res.content)
 
+        num = 1
         for test in cases:
             res = self.client.post(
                 '/sop/',
@@ -278,7 +281,10 @@ class TestViews(TestCase):
             msg = soup.find('td', 'msg').select('div')
             self.assertGreater(len(msg), 1)
             self.assertEqual(msg[1].text, '{} Kč'.format(test[6]))
+            check_html(self, res.content, key=num)
+            num += 1
 
+        num = 1
         for test in err_cases:
             res = self.client.post(
                 '/sop/',
@@ -293,3 +299,5 @@ class TestViews(TestCase):
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertEqual(len(msg), 1)
+            check_html(self, res.content, key=num)
+            num += 1

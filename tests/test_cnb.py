@@ -54,8 +54,6 @@ class TestModels(SimpleTestCase):
             'LOMB')
 
 
-
-
 class TestUtils(TestCase):
 
     def test_get_fx_rate(self):
@@ -225,18 +223,12 @@ class TestViews(TestCase):
         )
 
         cases = (
-            ('EUR', '', '1.7.2016', '', '', 0,
-             ('1 EUR = 17,095 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
-            ('USD', '', '1.7.2016', '', '', 0,
-             ('1 USD = 34,335 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
-            ('OTH', 'THB', '1.7.2016', '', '', 0,
-             ('100 THB = 99,430 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
-            ('OTH', 'VAL', '1.7.2016', '', '', 0,
-             ('Kurs není v kursové tabulce',)),
-            ('OTH', '', '1.7.2016', '', '', 0,
-             ('Chybné zadání',)),
-            ('EUR', '', '1.17.2016', '', '', 0,
-             ('Chybné zadání',)),
+            ('EUR', '', '1.7.2016', '', '', 0, ('1 EUR = 17,095 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
+            ('USD', '', '1.7.2016', '', '', 0, ('1 USD = 34,335 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
+            ('OTH', 'THB', '1.7.2016', '', '', 0, ('100 THB = 99,430 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
+            ('OTH', 'VAL', '1.7.2016', '', '', 0, ('Kurs není v kursové tabulce',)),
+            ('OTH', '', '1.7.2016', '', '', 0, ('Chybné zadání',)),
+            ('EUR', '', '1.17.2016', '', '', 0, ('Chybné zadání',)),
             ('EUR', '', '1.7.2016', '516', '', 1,
              ('516,00 EUR = 8.821,02 CZK', '1 EUR = 17,095 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('USD', '', '1.7.2016', '179.500', '', 1,
@@ -249,44 +241,28 @@ class TestViews(TestCase):
              ('179.500,00 USD = 6.163.132,50 CZK', '1 USD = 34,335 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('OTH', 'THB', '1.7.2016', '116', '', 1,
              ('116,00 THB = 115,34 CZK', '100 THB = 99,430 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
-            ('OTH', 'VAL', '1.7.2016', '4000', '', 1,
-             ('Kurs není v kursové tabulce',)),
-            ('OTH', '', '1.7.2016', '515', '', 1,
-             ('Chybné zadání',)),
-            ('EUR', '', '1.17.2016', '968,50', '', 1,
-             ('Chybné zadání',)),
-            ('OTH', 'USD', '1.7.2016', '0', '', 1,
-             ('Chybné zadání',)),
-            ('OTH', 'USD', '1.7.2016', '-515', '', 1,
-             ('Chybné zadání',)),
+            ('OTH', 'VAL', '1.7.2016', '4000', '', 1, ('Kurs není v kursové tabulce',)),
+            ('OTH', '', '1.7.2016', '515', '', 1, ('Chybné zadání',)),
+            ('EUR', '', '1.17.2016', '968,50', '', 1, ('Chybné zadání',)),
+            ('OTH', 'USD', '1.7.2016', '0', '', 1, ('Chybné zadání',)),
+            ('OTH', 'USD', '1.7.2016', '-515', '', 1, ('Chybné zadání',)),
             ('EUR', '', '1.7.2016', '516', '', 2,
              ('516,00 CZK = 30,18 EUR', '1 EUR = 17,095 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('USD', '', '1.7.2016', '179.500', '', 2,
              ('179.500,00 CZK = 5.227,90 USD', '1 USD = 34,335 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
             ('OTH', 'THB', '1.7.2016', '116', '', 2,
              ('116,00 CZK = 116,66 THB', '100 THB = 99,430 CZK', '(Kurs vyhlášený ke dni: 01.07.2016)')),
-            ('OTH', 'VAL', '1.7.2016', '4000', '', 2,
-             ('Kurs není v kursové tabulce',)),
-            ('OTH', '', '1.7.2016', '515', '', 2,
-             ('Chybné zadání',)),
-            ('EUR', '', '1.17.2016', '968,50', '', 2,
-             ('Chybné zadání',)),
-            ('OTH', 'USD', '1.7.2016', '0', '', 2,
-             ('Chybné zadání',)),
-            ('OTH', 'USD', '1.7.2016', '-515', '', 2,
-             ('Chybné zadání',)),
-            ('EUR', '', '', '', '19.11.2014', 3,
-             ('Diskontní sazba platná ke dni 19.11.2014:', '0,06 %')),
-            ('EUR', '', '', '', '21.6.1996', 4,
-             ('Lombardní sazba platná ke dni 21.06.1996:', '4,00 %')),
-            ('EUR', '', '', '', '1.5.2008', 5,
-             ('Chyba spojení se serverem ČNB',)),
-            ('OTH', 'USD', '', '', '29.2.2014', 3,
-             ('Chybné zadání',)),
-            ('OTH', 'USD', '', '', '29.2.2014', 4,
-             ('Chybné zadání',)),
-            ('OTH', 'USD', '', '', '29.2.2014', 5,
-             ('Chybné zadání',)),
+            ('OTH', 'VAL', '1.7.2016', '4000', '', 2, ('Kurs není v kursové tabulce',)),
+            ('OTH', '', '1.7.2016', '515', '', 2, ('Chybné zadání',)),
+            ('EUR', '', '1.17.2016', '968,50', '', 2, ('Chybné zadání',)),
+            ('OTH', 'USD', '1.7.2016', '0', '', 2, ('Chybné zadání',)),
+            ('OTH', 'USD', '1.7.2016', '-515', '', 2, ('Chybné zadání',)),
+            ('EUR', '', '', '', '19.11.2014', 3, ('Diskontní sazba platná ke dni 19.11.2014:', '0,06 %')),
+            ('EUR', '', '', '', '21.6.1996', 4, ('Lombardní sazba platná ke dni 21.06.1996:', '4,00 %')),
+            ('EUR', '', '', '', '1.5.2008', 5, ('Chyba spojení se serverem ČNB',)),
+            ('OTH', 'USD', '', '', '29.2.2014', 3, ('Chybné zadání',)),
+            ('OTH', 'USD', '', '', '29.2.2014', 4, ('Chybné zadání',)),
+            ('OTH', 'USD', '', '', '29.2.2014', 5, ('Chybné zadání',)),
         )
 
         res = self.client.get('/cnb')
@@ -297,14 +273,16 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'cnb_main.html')
-        self.assertEqual(check_html(res.content), '304eedb3')
+        check_html(self, res.content)
 
         today = date.today()
 
-        for button in ['fx_date', 'mpi_date']:
+        for button in ('fx_date', 'mpi_date'):
             res = self.client.post('/cnb/', {'submit_set_' + button: True})
             self.assertEqual(res.context['form'][button].value(), today)
+            check_html(self, res.content, key=button)
 
+        num = 1
         for test in cases:
             res = self.client.post(
                 '/cnb/',
@@ -316,9 +294,11 @@ class TestViews(TestCase):
                  button_names[test[5]]: button_values[test[5]]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'cnb_main.html')
+            check_html(self, res.content, key=num)
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             length = len(msg)
             self.assertEqual(length, len(test[6]))
             for idx in range(length):
                 self.assertEqual(msg[idx].text, test[6][idx])
+            num += 1

@@ -27,11 +27,11 @@ from os.path import join
 from os import unlink
 
 from bs4 import BeautifulSoup
-from django.test import SimpleTestCase, TestCase
+from django.test import SimpleTestCase, TransactionTestCase, TestCase
 
 from common.glob import LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL
 from common.settings import TEST_TEMP_DIR
-from tests.utils import strip_xml, link_equal
+from tests.utils import strip_xml, link_equal, check_html
 from udn import cron, forms, glob, models, views
 
 
@@ -204,7 +204,7 @@ class TestModels(SimpleTestCase):
             '4 As 26/2015-88')
 
 
-class TestViews(TestCase):
+class TestViews1(TestCase):
 
     fixtures = ('udn_test1.json',)
 
@@ -218,6 +218,7 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'udn_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/udn/',
@@ -231,6 +232,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'udn_list.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/udn/',
@@ -242,6 +244,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'udn_list.html')
         self.assertEqual(res.redirect_chain[0][1], HTTPStatus.FOUND)
+        check_html(self, res.content)
         self.assertTrue(link_equal(res.redirect_chain[0][0], '/udn/list/?party=Ing&party_opt=icontains&start=0'))
 
         res = self.client.post(
@@ -253,6 +256,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'udn_mainpage.html')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/udn/',
@@ -266,154 +270,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'udn_mainpage.html')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
-
-    def test_htmllist(self):
-
-        res = self.client.get('/udn/list')
-        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
-
-        res = self.client.post('/udn/list/')
-        self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
-
-        res = self.client.get('/udn/list/')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'udn_list.html')
-
-        res = self.client.get('/udn/list/?senate=-1')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?senate=XXX')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?register=0')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?register=XXX')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?number=0')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?number=XXX')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?year=1989')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?year=XXX')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?page=0')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?page=XXX')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?agenda=0')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?agenda=XXX')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?date_from=2015-X-01')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?date_to=2015-X-01')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?party_opt=X')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/udn/list/?start=-1')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get(
-            '/udn/list/?date_from=2015-01-01&date_to=2199-07-01&register=As&agenda=1&party_opt=icontains')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/udn/list/?start=100')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/udn/list/?register=Ads')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/udn/list/?date_from=2199-07-01')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/udn/list/?date_from=2199-07-02')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/udn/list/?date_to=2199-07-01')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/udn/list/?date_to=2199-06-30')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        dec = models.Decision.objects.get().__dict__
-        del dec['id'], dec['_state']
-        for page in range(200, 437):
-            dec['page'] = page
-            models.Decision(**dec).save()
-
-        res = self.client.get('/udn/list/?senate=8')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
-        self.assertEqual(len(res.context['rows']), 50)
-        soup = BeautifulSoup(res.content, 'html.parser')
-        links = soup.select('tr.footer a')
-        self.assertEqual(len(links), 2)
-        self.assertTrue(link_equal(links[0]['href'], '/udn/list/?senate=8&start=50'))
-        self.assertTrue(link_equal(links[1]['href'], '/udn/list/?senate=8&start=200'))
-
-        res = self.client.get('/udn/list/?senate=8&start=50')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
-        self.assertEqual(len(res.context['rows']), 50)
-        soup = BeautifulSoup(res.content, 'html.parser')
-        links = soup.select('tr.footer a')
-        self.assertEqual(len(links), 4)
-        self.assertTrue(link_equal(links[0]['href'], '/udn/list/?senate=8&start=0'))
-        self.assertTrue(link_equal(links[1]['href'], '/udn/list/?senate=8&start=0'))
-        self.assertTrue(link_equal(links[2]['href'], '/udn/list/?senate=8&start=100'))
-        self.assertTrue(link_equal(links[3]['href'], '/udn/list/?senate=8&start=200'))
-
-        res = self.client.get('/udn/list/?senate=8&start=100')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
-        self.assertEqual(len(res.context['rows']), 50)
-        soup = BeautifulSoup(res.content, 'html.parser')
-        links = soup.select('tr.footer a')
-        self.assertEqual(len(links), 4)
-        self.assertTrue(link_equal(links[0]['href'], '/udn/list/?senate=8&start=0'))
-        self.assertTrue(link_equal(links[1]['href'], '/udn/list/?senate=8&start=50'))
-        self.assertTrue(link_equal(links[2]['href'], '/udn/list/?senate=8&start=150'))
-        self.assertTrue(link_equal(links[3]['href'], '/udn/list/?senate=8&start=200'))
-
-        res = self.client.get('/udn/list/?senate=8&start=200')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
-        self.assertEqual(len(res.context['rows']), 38)
-        soup = BeautifulSoup(res.content, 'html.parser')
-        links = soup.select('tr.footer a')
-        self.assertEqual(len(links), 2)
-        self.assertTrue(link_equal(links[0]['href'], '/udn/list/?senate=8&start=0'))
-        self.assertTrue(link_equal(links[1]['href'], '/udn/list/?senate=8&start=150'))
+        check_html(self, res.content)
 
     def test_xmllist(self):
 
@@ -522,6 +379,7 @@ aj</party></parties><files><file type="abridged">{2}udn/0158_8As__1500033S.pdf</
         res = self.client.get('/udn/xmllist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
+        check_html(self, res.content)
         views.EXLIM = exlim
 
     def test_csvlist(self):
@@ -617,6 +475,7 @@ aj</party></parties><files><file type="abridged">{2}udn/0158_8As__1500033S.pdf</
         res = self.client.get('/udn/csvlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
+        check_html(self, res.content)
         views.EXLIM = exlim
 
     def test_jsonlist(self):
@@ -713,4 +572,170 @@ e": "Nejvy\u0161\u0161\u00ed spr\u00e1vn\u00ed soud", "id": "NSS"}}, "ref": {{"s
         res = self.client.get('/udn/jsonlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
+        check_html(self, res.content)
         views.EXLIM = exlim
+
+
+class TestViews2(TransactionTestCase):
+
+    fixtures = ('udn_test1.json',)
+
+    def test_htmllist(self):
+
+        res = self.client.get('/udn/list')
+        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
+        res = self.client.post('/udn/list/')
+        self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
+
+        res = self.client.get('/udn/list/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTrue(res.has_header('content-type'))
+        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
+        self.assertTemplateUsed(res, 'udn_list.html')
+        check_html(self, res.content)
+
+        res = self.client.get('/udn/list/?senate=-1')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?senate=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?register=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?register=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?number=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?number=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?year=1989')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?year=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?page=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?page=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?agenda=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?agenda=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?date_from=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?date_to=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?party_opt=X')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/udn/list/?start=-1')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get(
+            '/udn/list/?date_from=2015-01-01&date_to=2199-07-01&register=As&agenda=1&party_opt=icontains')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/udn/list/?start=100')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/udn/list/?register=Ads')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/udn/list/?date_from=2199-07-01')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/udn/list/?date_from=2199-07-02')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/udn/list/?date_to=2199-07-01')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/udn/list/?date_to=2199-06-30')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        dec = models.Decision.objects.get().__dict__
+        del dec['id'], dec['_state']
+        for page in range(200, 437):
+            dec['page'] = page
+            models.Decision(**dec).save()
+
+        res = self.client.get('/udn/list/?senate=8')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(len(res.context['rows']), 50)
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 2)
+        self.assertTrue(link_equal(links[0]['href'], '/udn/list/?senate=8&start=50'))
+        self.assertTrue(link_equal(links[1]['href'], '/udn/list/?senate=8&start=200'))
+
+        res = self.client.get('/udn/list/?senate=8&start=50')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(len(res.context['rows']), 50)
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 4)
+        self.assertTrue(link_equal(links[0]['href'], '/udn/list/?senate=8&start=0'))
+        self.assertTrue(link_equal(links[1]['href'], '/udn/list/?senate=8&start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/udn/list/?senate=8&start=100'))
+        self.assertTrue(link_equal(links[3]['href'], '/udn/list/?senate=8&start=200'))
+
+        res = self.client.get('/udn/list/?senate=8&start=100')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(len(res.context['rows']), 50)
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 4)
+        self.assertTrue(link_equal(links[0]['href'], '/udn/list/?senate=8&start=0'))
+        self.assertTrue(link_equal(links[1]['href'], '/udn/list/?senate=8&start=50'))
+        self.assertTrue(link_equal(links[2]['href'], '/udn/list/?senate=8&start=150'))
+        self.assertTrue(link_equal(links[3]['href'], '/udn/list/?senate=8&start=200'))
+
+        res = self.client.get('/udn/list/?senate=8&start=200')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(len(res.context['rows']), 38)
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 2)
+        self.assertTrue(link_equal(links[0]['href'], '/udn/list/?senate=8&start=0'))
+        self.assertTrue(link_equal(links[1]['href'], '/udn/list/?senate=8&start=150'))

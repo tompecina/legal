@@ -21,15 +21,17 @@
 #
 
 from http import HTTPStatus
+from os import environ
 from os.path import join
 from re import compile
 from hashlib import md5
+from inspect import stack
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag, NavigableString
 from django.http import QueryDict
 
-from common.settings import TEST_DATA_DIR, STATIC_URL
+from common.settings import TEST_DIR, TEST_DATA_DIR, STATIC_URL
 from common.models import Lock, Pending
 from sir.models import Counter
 
@@ -148,7 +150,39 @@ def getpr():
     return getcounter('PR')
 
 
-def check_html(html):
+WRITE_CHECKFILE = environ.get('WRITE_CHECKFILE')
+
+CHECKFILE = open(join(TEST_DIR, 'test.chk'), 'w' if WRITE_CHECKFILE else 'r')
+
+
+class CheckArray(dict):
+
+    def __init__(self):
+
+        if WRITE_CHECKFILE:
+            return
+        for line in CHECKFILE:
+            fields = line.split()
+            filepos = fields[0]
+            if len(fields) == 2:
+                hsh = fields[1]
+            else:
+                filepos += '-' + fields[1]
+                hsh = fields[2]
+            self[filepos] = hsh
+        CHECKFILE.close()
+
+
+CHECKARRAY = CheckArray()
+
+
+def check_html(runner, html, key=None):
+
+    caller = stack()[1]
+    filepos = '{}:{:d}'.format(caller.filename.rpartition('/')[2], caller.lineno)
+    if key:
+        filepos += '-{}'.format(key)
+
     store = []
     soup = BeautifulSoup(html, 'html.parser')
     for desc in soup.descendants:
@@ -170,6 +204,10 @@ def check_html(html):
         elif isinstance(desc, NavigableString):
             store.append(str(desc))
     string = ' '.join(' '.join(store).split())
-    
-    return md5(string.encode()).hexdigest()[:8]
-    
+    hsh = md5(string.encode()).hexdigest()
+
+    if WRITE_CHECKFILE:
+        print(filepos, hsh, file=CHECKFILE)
+    else:
+        runner.assertIn(filepos, CHECKARRAY, msg=filepos)
+        runner.assertEqual(CHECKARRAY[filepos], hsh, msg=filepos)

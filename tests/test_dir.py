@@ -25,12 +25,12 @@ from datetime import date
 from os.path import join
 
 from bs4 import BeautifulSoup
-from django.test import SimpleTestCase, TransactionTestCase, TestCase
+from django.test import SimpleTestCase, TransactionTestCase
 from django.contrib.auth.models import User
 
 from common.glob import LOCAL_DOMAIN
 from common.settings import TEST_DATA_DIR
-from tests.utils import link_equal, setdl
+from tests.utils import link_equal, setdl, check_html
 from sir.cron import cron_gettr, cron_proctr
 from sir.models import Vec
 from dir import cron, forms, models
@@ -146,7 +146,7 @@ class TestModels(TransactionTestCase):
         self.assertEqual(str(models.Discovered.objects.first()), 'Test 02')
 
 
-class TestViews1(TestCase):
+class TestViews1(TransactionTestCase):
 
     def setUp(self):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
@@ -165,6 +165,7 @@ class TestViews1(TestCase):
 
         res = self.client.get('/dir/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/dir/')
@@ -172,6 +173,7 @@ class TestViews1(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'dir_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/',
@@ -181,6 +183,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/',
@@ -190,6 +193,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.user = User.objects.first()
         self.assertEqual(self.user.email, 'alt@' + LOCAL_DOMAIN)
+        check_html(self, res.content)
 
         res = self.client.get('/dir/')
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -210,6 +214,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
         self.assertEqual(len(res.context['rows']), 50)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
@@ -221,6 +226,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
         self.assertEqual(len(res.context['rows']), 50)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
@@ -234,6 +240,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
         self.assertEqual(len(res.context['rows']), 50)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
@@ -247,6 +254,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
         self.assertEqual(len(res.context['rows']), 38)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
@@ -258,12 +266,22 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
         self.assertEqual(len(res.context['rows']), 1)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/dir/debtorform/')
         self.assertTrue(link_equal(links[1]['href'], '/dir/?start=0'))
         self.assertTrue(link_equal(links[2]['href'], '/dir/?start=187'))
+
+class TestViews2(TransactionTestCase):
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.first()
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_debtorform(self):
 
@@ -275,6 +293,7 @@ class TestViews1(TestCase):
 
         res = self.client.get('/dir/debtorform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/dir/debtorform/')
@@ -282,6 +301,7 @@ class TestViews1(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'dir_debtorform.html')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
         self.assertEqual(len(title), 1)
@@ -296,6 +316,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -307,6 +328,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -318,6 +340,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -330,6 +353,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -342,6 +366,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -354,6 +379,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -366,6 +392,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -378,6 +405,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -390,6 +418,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -402,6 +431,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -415,6 +445,7 @@ class TestViews1(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -422,6 +453,7 @@ class TestViews1(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/',
@@ -432,6 +464,7 @@ class TestViews1(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
+        check_html(self, res.content)
 
         debtor_id = models.Debtor.objects.create(
             uid=self.user,
@@ -449,6 +482,7 @@ class TestViews1(TestCase):
         title = soup.select('h1')
         self.assertEqual(len(title), 1)
         self.assertEqual(title[0].text, 'Úprava dlužníka')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/{:d}/'.format(debtor_id),
@@ -468,6 +502,7 @@ class TestViews1(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
+        check_html(self, res.content)
 
         debtor = models.Debtor.objects.get(pk=debtor_id)
         self.assertEqual(debtor.desc, 'Test 8')
@@ -482,7 +517,7 @@ class TestViews1(TestCase):
         self.assertEqual(debtor.year_birth_to, 1966)
 
 
-class TestViews2(TestCase):
+class TestViews3(TransactionTestCase):
 
     def setUp(self):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
@@ -503,11 +538,13 @@ class TestViews2(TestCase):
 
         res = self.client.get('/dir/debtordel/{:d}/'.format(debtor_id), follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/dir/debtordel/{:d}/'.format(debtor_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtordel.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtordel/{:d}/'.format(debtor_id),
@@ -515,6 +552,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtordel/{:d}/'.format(debtor_id),
@@ -523,6 +561,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtordeleted.html')
         self.assertFalse(models.Debtor.objects.filter(pk=debtor_id).exists())
+        check_html(self, res.content)
 
         res = self.client.post('/dir/debtordel/{:d}/'.format(debtor_id))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -542,11 +581,13 @@ class TestViews2(TestCase):
 
         res = self.client.get('/dir/debtordelall/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/dir/debtordelall/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtordelall.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtordelall/',
@@ -554,6 +595,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtordelall/',
@@ -561,6 +603,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
+        check_html(self, res.content)
         self.assertEqual(models.Debtor.objects.count(), 2)
 
         res = self.client.post(
@@ -570,6 +613,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
+        check_html(self, res.content)
         self.assertEqual(models.Debtor.objects.count(), 2)
 
         res = self.client.post(
@@ -579,7 +623,18 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.html')
+        check_html(self, res.content)
         self.assertFalse(models.Debtor.objects.exists())
+
+
+class TestViews4(TransactionTestCase):
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.first()
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_debtorbatchform(self):
 
@@ -595,11 +650,13 @@ class TestViews2(TestCase):
 
         res = self.client.get('/dir/debtorbatchform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/dir/debtorbatchform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorbatchform.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorbatchform/',
@@ -607,6 +664,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorbatchform.html')
         self.assertContains(res, 'Nejprve zvolte soubor k načtení')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorbatchform/',
@@ -614,6 +672,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_debtorbatchform.html')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         with open(join(TEST_DATA_DIR, 'dir_import.csv'), 'rb') as infile:
             res = self.client.post(
@@ -648,6 +707,7 @@ class TestViews2(TestCase):
              (21, 'Popisu "Test 21" odpovídá více než jeden dlužník'),
              (28, 'Příliš dlouhý popis'),
             ])
+        check_html(self, res.content)
 
         res = self.client.get('/dir/debtorexport/')
         self.assertEqual(
@@ -669,7 +729,7 @@ rokNarozeníOd=1965,rokNarozeníDo=1966
 '''.format('T' * 255).replace('\n', '\r\n'))
 
 
-class TestViews3(TransactionTestCase):
+class TestViews5(TransactionTestCase):
 
     def setUp(self):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
@@ -715,6 +775,7 @@ class TestViews3(TransactionTestCase):
 
         res = self.client.get('/dir/debtorexport/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/dir/debtorexport/')

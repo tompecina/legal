@@ -26,6 +26,7 @@ from datetime import date
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase
 
+from tests.utils import check_html
 from lht import forms, views
 
 
@@ -256,7 +257,9 @@ class TestViews(SimpleTestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'lht_main.html')
+        check_html(self, res.content)
 
+        num = 1
         for test in cases:
             res = self.client.post(
                 '/lht/',
@@ -272,7 +275,10 @@ class TestViews(SimpleTestCase):
             self.assertEqual(length, len(test[4]))
             for idx in range(length):
                 self.assertEqual(msg[idx].text, test[4][idx])
+            check_html(self, res.content, key=num)
+            num += 1
 
+        num = 1
         for test in err_cases:
             res = self.client.post(
                 '/lht/',
@@ -285,9 +291,12 @@ class TestViews(SimpleTestCase):
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertTrue(msg[0].text)
+            check_html(self, res.content, key=num)
+            num += 1
 
         res = self.client.post(
             '/lht/',
             {'submit_set_beg_date': 'Dnes'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertEqual(res.context['form']['beg_date'].value(), date.today())
+        check_html(self, res.content)

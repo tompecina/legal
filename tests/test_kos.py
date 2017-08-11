@@ -24,6 +24,7 @@ from http import HTTPStatus
 
 from django.test import SimpleTestCase
 
+from tests.utils import check_html
 from kos import forms
 
 
@@ -580,12 +581,15 @@ class TestViews(SimpleTestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'kos_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post('/kos/', {'submit_single': 'Vypočítat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'kos_mainpage.html')
         self.assertEqual(res.context['messages'], [('Chybné zadání', None)])
+        check_html(self, res.content)
 
+        num = 1
         for test in cases:
             query = {
                 'netincome': test[0],
@@ -614,3 +618,5 @@ class TestViews(SimpleTestCase):
             for idx in range(lines):
                 self.assertEqual(con[idx + 1][0].split()[-2], test[idx + 14])
             self.assertEqual(con[-1][0].split()[-2], test[-1])
+            check_html(self, res.content, key=num)
+            num += 1

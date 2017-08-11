@@ -24,9 +24,9 @@ from http import HTTPStatus
 from datetime import date
 
 from bs4 import BeautifulSoup
-from django.test import SimpleTestCase, TestCase
+from django.test import SimpleTestCase, TransactionTestCase
 
-from tests.utils import strip_xml, link_equal, setpr, getpr
+from tests.utils import strip_xml, link_equal, setpr, getpr, check_html
 from tests.test_sir import populate
 from sir.cron import cron_getws2
 from sir.models import Osoba, DruhRoleVRizeni, Vec
@@ -257,139 +257,12 @@ class TestViews1(SimpleTestCase):
             self.assertEqual(views.o2s(test[0], detailed=test[1]), test[2])
 
 
-class TestViews2(TestCase):
+class TestViews2(TransactionTestCase):
 
     def setUp(self):
         populate()
         setpr(-1)
         cron_getws2()
-
-    def test_mainpage(self):
-
-        res = self.client.get('/pir')
-        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
-
-        res = self.client.get('/pir/')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'pir_mainpage.html')
-
-        res = self.client.post(
-            '/pir/',
-            {'court': 'KSJIMBM',
-             'senate': '81',
-             'number': '200',
-             'year': '2015',
-             'date_first_from': '1.1.2015',
-             'date_first_to': '1.7.2016',
-             'date_last_from': '1.1.2015',
-             'date_last_to': '1.7.2016',
-             'name': 'Název',
-             'first_name': 'Jméno',
-             'city': 'Město',
-             'name_opt': 'icontains',
-             'first_name_opt': 'icontains',
-             'city_opt': 'icontains',
-             'genid': '12345678',
-             'taxid': 'CZ12345678',
-             'birthid': '700101/1234',
-             'date_birth': '1.1.1970',
-             'year_birth_from': '1950',
-             'year_birth_to': '1970',
-             'role_debtor': 'on',
-             'role_trustee': 'on',
-             'role_creditor': 'on',
-             'deleted': 'on',
-             'creditors': 'on',
-             'format': 'html',
-             'submit': 'Hledat'},
-            follow=True)
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-
-        res = self.client.post(
-            '/pir/',
-            {'name_opt': 'icontains',
-             'first_name_opt': 'icontains',
-             'city_opt': 'icontains',
-             'format': 'html',
-             'submit': 'Hledat'},
-            follow=True)
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.redirect_chain[0][1], HTTPStatus.FOUND)
-        self.assertTrue(link_equal(res.redirect_chain[0][0], '/pir/list/?start=0'))
-
-        res = self.client.post(
-            '/pir/',
-            {'name': 'Název',
-             'first_name': 'Jméno',
-             'city': 'Město',
-             'name_opt': 'icontains',
-             'first_name_opt': 'icontains',
-             'city_opt': 'icontains',
-             'format': 'html',
-             'submit': 'Hledat'},
-            follow=True)
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.redirect_chain[0][1], HTTPStatus.FOUND)
-        self.assertTrue(link_equal(
-            res.redirect_chain[0][0],
-            '/pir/list/?name=N%C3%A1zev&name_opt=icontains&first_name=Jm%C3%A9no&first_name_opt=icontains'
-            '&city=M%C4%9Bsto&city_opt=icontains&start=0'))
-
-        res = self.client.post(
-            '/pir/',
-            {'date_first_from': 'XXX',
-             'name_opt': 'icontains',
-             'first_name_opt': 'icontains',
-             'city_opt': 'icontains',
-             'format': 'html',
-             'submit': 'Hledat'})
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_mainpage.html')
-        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
-
-        res = self.client.post(
-            '/pir/',
-            {'date_first_from': '1.1.2015',
-             'date_first_to': '1.7.2014',
-             'name_opt': 'icontains',
-             'first_name_opt': 'icontains',
-             'city_opt': 'icontains',
-             'format': 'html',
-             'submit': 'Hledat'})
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_mainpage.html')
-        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
-
-        res = self.client.post(
-            '/pir/',
-            {'date_last_from': '1.1.2015',
-             'date_last_to': '1.7.2014',
-             'name_opt': 'icontains',
-             'first_name_opt': 'icontains',
-             'city_opt': 'icontains',
-             'format': 'html',
-             'submit': 'Hledat'})
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_mainpage.html')
-        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
-
-        res = self.client.post(
-            '/pir/',
-            {'year_birth_from': '1966',
-             'year_birth_to': '1965',
-             'name_opt': 'icontains',
-             'first_name_opt': 'icontains',
-             'city_opt': 'icontains',
-             'format': 'html',
-             'submit': 'Hledat'})
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_mainpage.html')
-        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
 
     def test_g2p(self):
 
@@ -618,338 +491,156 @@ class TestViews2(TestCase):
                     *(test[0])).order_by('nazevOsoby').values_list('nazevOsoby', flat=True)),
                 test[1])
 
-    def test_htmllist(self):
 
-        res = self.client.get('/pir/list')
+class TestViews3(TransactionTestCase):
+
+    def setUp(self):
+        populate()
+        setpr(-1)
+        cron_getws2()
+
+    def test_mainpage(self):
+
+        res = self.client.get('/pir')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
 
-        res = self.client.post('/pir/list/')
-        self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
-
-        res = self.client.get('/pir/list/')
+        res = self.client.get('/pir/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertTemplateUsed(res, 'pir_mainpage.html')
+        check_html(self, res.content)
 
-        res = self.client.get('/pir/list/?senate=-1')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?senate=XXX')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?number=0')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?number=XXX')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?year=2007')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?year=XXX')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?date_first_from=2015-X-01')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?date_first_to=2015-X-01')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?date_last_from=2015-X-01')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?date_last_to=2015-X-01')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?name_opt=X')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?first_name_opt=X')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?city_opt=X')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?name=X')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?first_name=X')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?city=X')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?date_birth=1970-X-01')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?year_birth_from=XXX')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?year_birth_to=XXX')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/?start=-1')
-        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
-
-        res = self.client.get('/pir/list/')
+        res = self.client.post(
+            '/pir/',
+            {'court': 'KSJIMBM',
+             'senate': '81',
+             'number': '200',
+             'year': '2015',
+             'date_first_from': '1.1.2015',
+             'date_first_to': '1.7.2016',
+             'date_last_from': '1.1.2015',
+             'date_last_to': '1.7.2016',
+             'name': 'Název',
+             'first_name': 'Jméno',
+             'city': 'Město',
+             'name_opt': 'icontains',
+             'first_name_opt': 'icontains',
+             'city_opt': 'icontains',
+             'genid': '12345678',
+             'taxid': 'CZ12345678',
+             'birthid': '700101/1234',
+             'date_birth': '1.1.1970',
+             'year_birth_from': '1950',
+             'year_birth_to': '1970',
+             'role_debtor': 'on',
+             'role_trustee': 'on',
+             'role_creditor': 'on',
+             'deleted': 'on',
+             'creditors': 'on',
+             'format': 'html',
+             'submit': 'Hledat'},
+            follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 3)
-        self.assertFalse(res.context['creditors'])
+        check_html(self, res.content)
 
-        res = self.client.get('/pir/list/?creditors=on')
+        res = self.client.post(
+            '/pir/',
+            {'name_opt': 'icontains',
+             'first_name_opt': 'icontains',
+             'city_opt': 'icontains',
+             'format': 'html',
+             'submit': 'Hledat'},
+            follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 3)
-        self.assertTrue(res.context['creditors'])
+        self.assertEqual(res.redirect_chain[0][1], HTTPStatus.FOUND)
+        check_html(self, res.content)
+        self.assertTrue(link_equal(res.redirect_chain[0][0], '/pir/list/?start=0'))
 
-        res = self.client.get('/pir/list/?court=KSVYCHKP1')
+        res = self.client.post(
+            '/pir/',
+            {'name': 'Název',
+             'first_name': 'Jméno',
+             'city': 'Město',
+             'name_opt': 'icontains',
+             'first_name_opt': 'icontains',
+             'city_opt': 'icontains',
+             'format': 'html',
+             'submit': 'Hledat'},
+            follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
+        self.assertEqual(res.redirect_chain[0][1], HTTPStatus.FOUND)
+        check_html(self, res.content)
+        self.assertTrue(link_equal(
+            res.redirect_chain[0][0],
+            '/pir/list/?name=N%C3%A1zev&name_opt=icontains&first_name=Jm%C3%A9no&first_name_opt=icontains'
+            '&city=M%C4%9Bsto&city_opt=icontains&start=0'))
 
-        res = self.client.get('/pir/list/?senate=56')
+        res = self.client.post(
+            '/pir/',
+            {'date_first_from': 'XXX',
+             'name_opt': 'icontains',
+             'first_name_opt': 'icontains',
+             'city_opt': 'icontains',
+             'format': 'html',
+             'submit': 'Hledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
+        self.assertTemplateUsed(res, 'pir_mainpage.html')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
-        res = self.client.get('/pir/list/?number=47')
+        res = self.client.post(
+            '/pir/',
+            {'date_first_from': '1.1.2015',
+             'date_first_to': '1.7.2014',
+             'name_opt': 'icontains',
+             'first_name_opt': 'icontains',
+             'city_opt': 'icontains',
+             'format': 'html',
+             'submit': 'Hledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
+        self.assertTemplateUsed(res, 'pir_mainpage.html')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
-        res = self.client.get('/pir/list/?year=2015')
+        res = self.client.post(
+            '/pir/',
+            {'date_last_from': '1.1.2015',
+             'date_last_to': '1.7.2014',
+             'name_opt': 'icontains',
+             'first_name_opt': 'icontains',
+             'city_opt': 'icontains',
+             'format': 'html',
+             'submit': 'Hledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
+        self.assertTemplateUsed(res, 'pir_mainpage.html')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
-        res = self.client.get('/pir/list/?date_first_from=2015-01-05')
+        res = self.client.post(
+            '/pir/',
+            {'year_birth_from': '1966',
+             'year_birth_to': '1965',
+             'name_opt': 'icontains',
+             'first_name_opt': 'icontains',
+             'city_opt': 'icontains',
+             'format': 'html',
+             'submit': 'Hledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 2)
+        self.assertTemplateUsed(res, 'pir_mainpage.html')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
-        res = self.client.get('/pir/list/?date_first_from=2015-01-06')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
 
-        res = self.client.get('/pir/list/?date_first_to=2015-01-05')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 2)
+class TestViews4(TransactionTestCase):
 
-        res = self.client.get('/pir/list/?date_first_to=2015-01-04')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/pir/list/?date_last_from=2016-07-20')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 3)
-
-        res = self.client.get('/pir/list/?date_last_from=2016-07-21')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 2)
-
-        res = self.client.get('/pir/list/?date_last_to=2016-07-20')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/pir/list/?date_last_to=2016-07-19')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/pir/list/?name=Bártová&name_opt=iexact&role_debtor=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/pir/list/?name=Bártová&name_opt=iexact')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/pir/list/?first_name=Veronika&first_name_opt=iexact&role_debtor=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/pir/list/?first_name=Veronika&first_name_opt=iexact')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/pir/list/?city=Litomyšl&city_opt=iexact&role_debtor=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/pir/list/?city=Litomyšl&city_opt=iexact')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/pir/list/?genid=03814742&role_creditor=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/pir/list/?genid=03814742')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/pir/list/?taxid=004-13584324&role_creditor=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/pir/list/?taxid=004-13584324')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/pir/list/?birthid=8060143487&role_debtor=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/pir/list/?birthid=8060143487')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/pir/list/?date_birth=1980-10-14&role_debtor=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/pir/list/?date_birth=1980-10-14')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/pir/list/?year_birth_from=1980&role_debtor=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 1)
-
-        res = self.client.get('/pir/list/?year_birth_from=1980')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/pir/list/?year_birth_to=1980&role_debtor=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 3)
-
-        res = self.client.get('/pir/list/?year_birth_to=1980')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/pir/list/?name=b&name_opt=icontains')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 0)
-
-        res = self.client.get('/pir/list/?name=k&name_opt=icontains&role_debtor=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 2)
-
-        res = self.client.get('/pir/list/?name=k&name_opt=icontains&role_debtor=on&role_trustee=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 3)
-
-        res = self.client.get('/pir/list/?name=k&name_opt=icontains&role_creditor=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 3)
-
-        res = self.client.get('/pir/list/?deleted=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(res.context['total'], 4)
-
-        vec = Vec.objects.filter(link__isnull=False).first().__dict__
-        del vec['id'], vec['_state']
-        for number in range(1200, 1433):
-            vec['bc'] = number
-            obj = Vec(**vec)
-            obj.save()
-        setpr(obj.id)
-
-        res = self.client.get('/pir/list/')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(len(res.context['rows']), 20)
-        soup = BeautifulSoup(res.content, 'html.parser')
-        links = soup.select('tr.footer a')
-        self.assertEqual(len(links), 2)
-        self.assertTrue(link_equal(links[0]['href'], '/pir/list/?start=20'))
-        self.assertTrue(link_equal(links[1]['href'], '/pir/list/?start=220'))
-
-        res = self.client.get('/pir/list/?creditors=on')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(len(res.context['rows']), 10)
-        soup = BeautifulSoup(res.content, 'html.parser')
-        links = soup.select('tr.footer a')
-        self.assertEqual(len(links), 2)
-        self.assertTrue(link_equal(links[0]['href'], '/pir/list/?creditors=on&start=10'))
-        self.assertTrue(link_equal(links[1]['href'], '/pir/list/?creditors=on&start=230'))
-
-        res = self.client.get('/pir/list/?start=20')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(len(res.context['rows']), 20)
-        soup = BeautifulSoup(res.content, 'html.parser')
-        links = soup.select('tr.footer a')
-        self.assertEqual(len(links), 4)
-        self.assertTrue(link_equal(links[0]['href'], '/pir/list/?start=0'))
-        self.assertTrue(link_equal(links[1]['href'], '/pir/list/?start=0'))
-        self.assertTrue(link_equal(links[2]['href'], '/pir/list/?start=40'))
-        self.assertTrue(link_equal(links[3]['href'], '/pir/list/?start=220'))
-
-        res = self.client.get('/pir/list/?start=40')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(len(res.context['rows']), 20)
-        soup = BeautifulSoup(res.content, 'html.parser')
-        links = soup.select('tr.footer a')
-        self.assertEqual(len(links), 4)
-        self.assertTrue(link_equal(links[0]['href'], '/pir/list/?start=0'))
-        self.assertTrue(link_equal(links[1]['href'], '/pir/list/?start=20'))
-        self.assertTrue(link_equal(links[2]['href'], '/pir/list/?start=60'))
-        self.assertTrue(link_equal(links[3]['href'], '/pir/list/?start=220'))
-
-        res = self.client.get('/pir/list/?start=220')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(len(res.context['rows']), 16)
-        soup = BeautifulSoup(res.content, 'html.parser')
-        links = soup.select('tr.footer a')
-        self.assertEqual(len(links), 2)
-        self.assertTrue(link_equal(links[0]['href'], '/pir/list/?start=0'))
-        self.assertTrue(link_equal(links[1]['href'], '/pir/list/?start=200'))
-
-        res = self.client.get('/pir/list/?start=236')
-        self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'pir_list.html')
-        self.assertEqual(len(res.context['rows']), 1)
-        soup = BeautifulSoup(res.content, 'html.parser')
-        links = soup.select('tr.footer a')
-        self.assertEqual(len(links), 2)
-        self.assertTrue(link_equal(links[0]['href'], '/pir/list/?start=0'))
-        self.assertTrue(link_equal(links[1]['href'], '/pir/list/?start=215'))
+    def setUp(self):
+        populate()
+        setpr(-1)
+        cron_getws2()
 
     def test_xmllist(self):
 
@@ -1249,6 +940,7 @@ Krajský soud v Českých Budějovicích,KSCB 27 INS 19124/2016,Před rozhodnut�
         res = self.client.get('/pir/csvlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
+        check_html(self, res.content)
         views.EXLIM = exlim
 
     def test_jsonlist(self):
@@ -1421,7 +1113,15 @@ enate": 27, "year": 2016, "court": "KSCB", "number": 19124, "register": "INS"}, 
         res = self.client.get('/pir/jsonlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'exlim.html')
+        check_html(self, res.content)
         views.EXLIM = exlim
+
+class TestViews5(TransactionTestCase):
+
+    def setUp(self):
+        populate()
+        setpr(-1)
+        cron_getws2()
 
     def test_party(self):
 
@@ -1443,3 +1143,390 @@ enate": 27, "year": 2016, "court": "KSCB", "number": 19124, "register": "INS"}, 
         self.assertEqual(con['subtitle'], 'Anděla Hanzlíková')
         self.assertEqual(con['birthid'], '755819/0112')
         self.assertEqual(len(con['adresy']), 3)
+        check_html(self, res.content)
+
+
+class TestViews6(TransactionTestCase):
+
+    def setUp(self):
+        populate()
+        setpr(-1)
+        cron_getws2()
+
+    def test_htmllist(self):
+
+        res = self.client.get('/pir/list')
+        self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
+        res = self.client.post('/pir/list/')
+        self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
+
+        res = self.client.get('/pir/list/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTrue(res.has_header('content-type'))
+        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
+        self.assertTemplateUsed(res, 'pir_list.html')
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?senate=-1')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?senate=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?number=0')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?number=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?year=2007')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?year=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?date_first_from=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?date_first_to=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?date_last_from=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?date_last_to=2015-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?name_opt=X')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?first_name_opt=X')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?city_opt=X')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?name=X')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?first_name=X')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?city=X')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?date_birth=1970-X-01')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?year_birth_from=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?year_birth_to=XXX')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/?start=-1')
+        self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+        res = self.client.get('/pir/list/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 3)
+        self.assertFalse(res.context['creditors'])
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?creditors=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 3)
+        self.assertTrue(res.context['creditors'])
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?court=KSVYCHKP1')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?senate=56')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?number=47')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?year=2015')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?date_first_from=2015-01-05')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 2)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?date_first_from=2015-01-06')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?date_first_to=2015-01-05')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 2)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?date_first_to=2015-01-04')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?date_last_from=2016-07-20')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 3)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?date_last_from=2016-07-21')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 2)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?date_last_to=2016-07-20')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?date_last_to=2016-07-19')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?name=Bártová&name_opt=iexact&role_debtor=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?name=Bártová&name_opt=iexact')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?first_name=Veronika&first_name_opt=iexact&role_debtor=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?first_name=Veronika&first_name_opt=iexact')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?city=Litomyšl&city_opt=iexact&role_debtor=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?city=Litomyšl&city_opt=iexact')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?genid=03814742&role_creditor=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?genid=03814742')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?taxid=004-13584324&role_creditor=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?taxid=004-13584324')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?birthid=8060143487&role_debtor=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?birthid=8060143487')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?date_birth=1980-10-14&role_debtor=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?date_birth=1980-10-14')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?year_birth_from=1980&role_debtor=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 1)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?year_birth_from=1980')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?year_birth_to=1980&role_debtor=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 3)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?year_birth_to=1980')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?name=b&name_opt=icontains')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 0)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?name=k&name_opt=icontains&role_debtor=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 2)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?name=k&name_opt=icontains&role_debtor=on&role_trustee=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 3)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?name=k&name_opt=icontains&role_creditor=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 3)
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?deleted=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(res.context['total'], 4)
+        check_html(self, res.content)
+
+        vec = Vec.objects.filter(link__isnull=False).first().__dict__
+        del vec['id'], vec['_state']
+        for number in range(1200, 1433):
+            vec['bc'] = number
+            obj = Vec(**vec)
+            obj.save()
+        setpr(obj.id)
+
+        res = self.client.get('/pir/list/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(len(res.context['rows']), 20)
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 2)
+        self.assertTrue(link_equal(links[0]['href'], '/pir/list/?start=20'))
+        self.assertTrue(link_equal(links[1]['href'], '/pir/list/?start=220'))
+        check_html(self, res.content)
+
+        res = self.client.get('/pir/list/?creditors=on')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(len(res.context['rows']), 10)
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 2)
+        self.assertTrue(link_equal(links[0]['href'], '/pir/list/?creditors=on&start=10'))
+        self.assertTrue(link_equal(links[1]['href'], '/pir/list/?creditors=on&start=230'))
+
+        res = self.client.get('/pir/list/?start=20')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(len(res.context['rows']), 20)
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 4)
+        self.assertTrue(link_equal(links[0]['href'], '/pir/list/?start=0'))
+        self.assertTrue(link_equal(links[1]['href'], '/pir/list/?start=0'))
+        self.assertTrue(link_equal(links[2]['href'], '/pir/list/?start=40'))
+        self.assertTrue(link_equal(links[3]['href'], '/pir/list/?start=220'))
+
+        res = self.client.get('/pir/list/?start=40')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(len(res.context['rows']), 20)
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 4)
+        self.assertTrue(link_equal(links[0]['href'], '/pir/list/?start=0'))
+        self.assertTrue(link_equal(links[1]['href'], '/pir/list/?start=20'))
+        self.assertTrue(link_equal(links[2]['href'], '/pir/list/?start=60'))
+        self.assertTrue(link_equal(links[3]['href'], '/pir/list/?start=220'))
+
+        res = self.client.get('/pir/list/?start=220')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(len(res.context['rows']), 16)
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 2)
+        self.assertTrue(link_equal(links[0]['href'], '/pir/list/?start=0'))
+        self.assertTrue(link_equal(links[1]['href'], '/pir/list/?start=200'))
+
+        res = self.client.get('/pir/list/?start=236')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'pir_list.html')
+        self.assertEqual(len(res.context['rows']), 1)
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        links = soup.select('tr.footer a')
+        self.assertEqual(len(links), 2)
+        self.assertTrue(link_equal(links[0]['href'], '/pir/list/?start=0'))
+        self.assertTrue(link_equal(links[1]['href'], '/pir/list/?start=215'))

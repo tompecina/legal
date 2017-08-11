@@ -32,7 +32,7 @@ from django.contrib.auth.models import User
 from django.core import mail
 from django.http import QueryDict
 
-from tests.utils import DummyRequest, setdl, setpr, testfunc, TEST_OBJ
+from tests.utils import DummyRequest, setdl, setpr, testfunc, TEST_OBJ, check_html
 from szr.cron import cron_update
 from szr.models import Proceedings
 from common import cron, glob, fields, forms, models, utils, views
@@ -1944,6 +1944,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
+        check_html(self, res.content)
 
         res = self.client.get('/knr')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -1953,12 +1954,16 @@ class TestViews(TestCase):
 
         res = self.client.get('/knr/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+        check_html(self, res.content)
+
         self.assertFalse(self.client.login(username='user', password='wrong'))
         self.assertFalse(self.client.login(username='nouser', password='none'))
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/knr/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
+        check_html(self, res.content)
+
         self.client.logout()
 
         res = self.client.get('/knr/')
@@ -1977,6 +1982,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'login.html')
         self.assertContains(res, 'Chybné uživatelské jméno nebo heslo')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/accounts/login/?next=/knr/',
@@ -1985,6 +1991,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_mainpage.html')
+        check_html(self, res.content)
 
     def test_robots(self):
 
@@ -1993,6 +2000,7 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/plain; charset=utf-8')
         self.assertTemplateUsed(res, 'robots.txt')
+        check_html(self, res.content)
 
         res = self.client.post('/robots.txt')
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
@@ -2004,16 +2012,20 @@ class TestViews(TestCase):
 
         res = self.client.get('/knr/presets/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/knr/presets/')
         self.assertEqual(res.status_code, HTTPStatus.UNAUTHORIZED)
         self.assertTemplateUsed(res, 'unauth.html')
+        check_html(self, res.content)
+
         self.assertTrue(self.client.login(username='superuser', password='none'))
 
         res = self.client.get('/knr/presets/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_mainpage.html')
+        check_html(self, res.content)
 
     def test_error(self):
 
@@ -2021,6 +2033,7 @@ class TestViews(TestCase):
         req.method = 'GET'
         res = views.error(req)
         self.assertContains(res, 'Interní chyba aplikace', status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
+        check_html(self, res.content)
 
     def test_logout(self):
 
@@ -2028,6 +2041,7 @@ class TestViews(TestCase):
 
         res = self.client.get('/szr/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
+        check_html(self, res.content)
 
         res = self.client.get('/accounts/logout/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
@@ -2040,6 +2054,7 @@ class TestViews(TestCase):
 
         res = self.client.get('/szr/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+        check_html(self, res.content)
 
     def test_user(self):
 
@@ -2051,15 +2066,18 @@ class TestViews(TestCase):
 
         res = self.client.get('/accounts/user/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/accounts/user/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
+        check_html(self, res.content)
 
     def test_pwchange(self):
 
 
         self.assertTrue(self.client.login(username='user', password='none'))
+
         res = self.client.post(
             '/accounts/pwchange/',
             {'back': 'Zpět'},
@@ -2067,10 +2085,12 @@ class TestViews(TestCase):
 
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'home.html')
+        check_html(self, res.content)
 
         res = self.client.get('/accounts/pwchange/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
+        check_html(self, res.content)
 
         src = {
             'oldpassword': 'none',
@@ -2085,6 +2105,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
         self.assertEqual(res.context['error_message'], 'Nesprávné heslo')
+        check_html(self, res.content)
 
         dst = copy(src)
         dst['newpassword1'] = 'different'
@@ -2092,6 +2113,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
         self.assertEqual(res.context['error_message'], 'Zadaná hesla se neshodují')
+        check_html(self, res.content)
 
         dst = copy(src)
         dst['newpassword1'] = dst['newpassword2'] = 'short'
@@ -2099,14 +2121,18 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchange.html')
         self.assertEqual(res.context['error_message'], 'Nové heslo je příliš krátké')
+        check_html(self, res.content)
 
         res = self.client.post('/accounts/pwchange/', src, follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwchanged.html')
+        check_html(self, res.content)
+
         self.assertTrue(self.client.login(username='user', password='newpass'))
 
         res = self.client.get('/hsp/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
+        check_html(self, res.content)
 
     def test_pwlost(self):
 
@@ -2115,6 +2141,7 @@ class TestViews(TestCase):
         res = self.client.get('/accounts/lostpw/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'lostpw.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/accounts/lostpw/',
@@ -2123,12 +2150,14 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'login.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/accounts/lostpw/',
             {'username': ''})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'lostpw.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/accounts/lostpw/',
@@ -2136,6 +2165,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pwlinksent.html')
+        check_html(self, res.content)
 
         msgs = mail.outbox
         self.assertEqual(len(msgs), 1)
@@ -2150,6 +2180,7 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'pwreset.html')
         newpassword = res.context['newpassword']
         self.assertEqual(len(newpassword), 10)
+
         self.assertFalse(self.client.login(username='user', password='none'))
         self.assertTrue(self.client.login(username='user', password=newpassword))
 
@@ -2163,6 +2194,7 @@ class TestViews(TestCase):
         res = self.client.get('/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'home.html')
+        check_html(self, res.content)
 
         res = self.client.post('/')
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
@@ -2172,6 +2204,7 @@ class TestViews(TestCase):
         res = self.client.get('/about/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'about.html')
+        check_html(self, res.content)
 
         res = self.client.post('/about/')
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
@@ -2184,6 +2217,7 @@ class TestViews(TestCase):
         res = self.client.get('/stat/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'stat.html')
+        check_html(self, res.content)
 
         res = self.client.post('/stat/')
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
@@ -2193,6 +2227,7 @@ class TestViews(TestCase):
         res = self.client.get('/accounts/useradd/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
+        check_html(self, res.content)
 
         src = {
             'first_name': 'Tomáš',
@@ -2210,6 +2245,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
+        check_html(self, res.content)
 
         dst = copy(src)
         dst['last_name'] = ''
@@ -2217,6 +2253,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
+        check_html(self, res.content)
 
         dst = copy(src)
         dst['username'] = ''
@@ -2224,6 +2261,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
+        check_html(self, res.content)
 
         dst = copy(src)
         dst['username'] = 'user'
@@ -2231,6 +2269,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
+        check_html(self, res.content)
 
         dst = copy(src)
         dst['password1'] = 'different'
@@ -2238,13 +2277,15 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
-        dst = copy(src)
+        check_html(self, res.content)
 
+        dst = copy(src)
         dst['password1'] = dst['password2'] = 'short'
         res = self.client.post('/accounts/useradd/', dst)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
+        check_html(self, res.content)
 
         dst = copy(src)
         dst['email'] = 'noemail'
@@ -2252,8 +2293,11 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradd.html')
         self.assertTrue('err_message' in res.context.keys())
+        check_html(self, res.content)
 
         res = self.client.post('/accounts/useradd/', src, follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'useradded.html')
+        check_html(self, res.content)
+
         self.assertTrue(self.client.login(username='newuser', password='newpass'))

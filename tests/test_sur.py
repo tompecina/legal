@@ -24,12 +24,12 @@ from http import HTTPStatus
 from os.path import join
 
 from bs4 import BeautifulSoup
-from django.test import TestCase
+from django.test import TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 
 from common.glob import LOCAL_DOMAIN
 from common.settings import TEST_DATA_DIR
-from tests.utils import link_equal
+from tests.utils import link_equal, check_html
 from psj.cron import cron_schedule, cron_update as psj_update
 from psj.models import Task, Hearing
 from udn.cron import cron_update as udn_update
@@ -134,7 +134,7 @@ sp. zn. 10 As 81/2016
         self.assertEqual(cron.sur_notice(1), '')
 
 
-class TestModels(TestCase):
+class TestModels(TransactionTestCase):
 
     fixtures = ('sur_test.json',)
 
@@ -146,7 +146,7 @@ class TestModels(TestCase):
         self.assertEqual(str(models.Found.objects.first()), 'Nejvyšší správní soud, 4 Ads 208/2015')
 
 
-class TestViews(TestCase):
+class TestViews1(TransactionTestCase):
 
     def setUp(self):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
@@ -165,6 +165,7 @@ class TestViews(TestCase):
 
         res = self.client.get('/sur/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/sur/')
@@ -172,6 +173,7 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/',
@@ -181,6 +183,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/',
@@ -190,13 +193,16 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.user = User.objects.first()
         self.assertEqual(self.user.email, 'alt@' + LOCAL_DOMAIN)
+        check_html(self, res.content)
 
         res = self.client.get('/sur/')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertFalse(soup.select('table#list'))
         models.Party(uid=self.user, party_opt=0, party='Test').save()
 
         res = self.client.get('/sur/')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertEqual(len(soup.select('table#list tbody tr')), 1)
         for number in range(200, 437):
@@ -206,6 +212,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
         self.assertEqual(len(res.context['rows']), 50)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
@@ -217,6 +224,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
         self.assertEqual(len(res.context['rows']), 50)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
@@ -230,6 +238,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
         self.assertEqual(len(res.context['rows']), 50)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
@@ -243,6 +252,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
         self.assertEqual(len(res.context['rows']), 38)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
@@ -254,12 +264,23 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
         self.assertEqual(len(res.context['rows']), 1)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
         self.assertEqual(links[0]['href'], '/sur/partyform/')
         self.assertTrue(link_equal(links[1]['href'], '/sur/?start=0'))
         self.assertTrue(link_equal(links[2]['href'], '/sur/?start=187'))
+
+
+class TestViews2(TransactionTestCase):
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.first()
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_partyform(self):
 
@@ -271,6 +292,7 @@ class TestViews(TestCase):
 
         res = self.client.get('/sur/partyform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/sur/partyform/')
@@ -278,6 +300,7 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'sur_partyform.html')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
         self.assertEqual(len(title), 1)
@@ -291,6 +314,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partyform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/partyform/',
@@ -300,6 +324,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partyform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/partyform/',
@@ -310,6 +335,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partyform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/partyform/',
@@ -317,6 +343,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/partyform/',
@@ -326,6 +353,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+        check_html(self, res.content)
 
         party_id = models.Party.objects.create(
             uid=self.user,
@@ -337,6 +365,7 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'sur_partyform.html')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
         self.assertEqual(len(title), 1)
@@ -352,6 +381,17 @@ class TestViews(TestCase):
         self.assertTemplateUsed(res, 'sur_mainpage.html')
         party = models.Party.objects.get(pk=party_id)
         self.assertEqual(party.party, 'Test 8')
+        check_html(self, res.content)
+
+
+class TestViews3(TransactionTestCase):
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.first()
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_partydel(self):
 
@@ -370,11 +410,14 @@ class TestViews(TestCase):
             '/sur/partydel/{:d}/'.format(party_id),
             follow=True)
         self.assertTemplateUsed(res, 'login.html')
+        check_html(self, res.content)
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/sur/partydel/{:d}/'.format(party_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partydel.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/partydel/{:d}/'.format(party_id),
@@ -382,6 +425,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/partydel/{:d}/'.format(party_id),
@@ -390,9 +434,20 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partydeleted.html')
         self.assertFalse(models.Party.objects.filter(pk=party_id).exists())
+        check_html(self, res.content)
 
         res = self.client.post('/sur/partydel/{:d}/'.format(party_id))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+
+class TestViews4(TransactionTestCase):
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.first()
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_partydelall(self):
 
@@ -416,11 +471,13 @@ class TestViews(TestCase):
 
         res = self.client.get('/sur/partydelall/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/sur/partydelall/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partydelall.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/partydelall/',
@@ -428,6 +485,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/partydelall/',
@@ -435,6 +493,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+        check_html(self, res.content)
         self.assertEqual(models.Party.objects.count(), 2)
 
         res = self.client.post(
@@ -444,6 +503,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+        check_html(self, res.content)
         self.assertEqual(models.Party.objects.count(), 2)
 
         res = self.client.post(
@@ -453,7 +513,18 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.html')
+        check_html(self, res.content)
         self.assertFalse(models.Party.objects.exists())
+
+
+class TestViews5(TransactionTestCase):
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.first()
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_partybatchform(self):
 
@@ -480,11 +551,13 @@ class TestViews(TestCase):
 
         res = self.client.get('/sur/partybatchform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/sur/partybatchform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partybatchform.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/partybatchform/',
@@ -492,6 +565,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partybatchform.html')
         self.assertContains(res, 'Nejprve zvolte soubor k načtení')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/partybatchform/',
@@ -499,6 +573,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_partybatchform.html')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         with open(join(TEST_DATA_DIR, 'sur_import.csv'), 'rb') as infile:
             res = self.client.post(
@@ -516,6 +591,7 @@ class TestViews(TestCase):
              (3, 'Chybná délka řetězce'),
              (4, 'Chybná zkratka pro posici'),
              (5, 'Řetězci "Test 05" odpovídá více než jeden účastník')])
+        check_html(self, res.content)
 
         res = self.client.get('/sur/partyexport/')
         self.assertEqual(
@@ -531,6 +607,16 @@ Test 09:>
 Test 10:=
 {}:*
 '''.format('T' * 80).replace('\n', '\r\n'))
+
+
+class TestViews5(TransactionTestCase):
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.first()
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_partyexport(self):
 
@@ -562,6 +648,7 @@ Test 10:=
 
         res = self.client.get('/sur/partyexport/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/sur/partyexport/')

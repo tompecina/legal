@@ -27,6 +27,7 @@ from bs4 import BeautifulSoup
 
 from django.test import SimpleTestCase
 
+from tests.utils import check_html
 
 class TestViews(SimpleTestCase):
 
@@ -164,12 +165,15 @@ class TestViews(SimpleTestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'cin_main.html')
+        check_html(self, res.content)
 
         today = date.today()
         for button in ('beg_date', 'end_date'):
             res = self.client.post('/cin/', {'submit_set_' + button: 'Dnes'})
             self.assertEqual(res.context['form'][button].value(), today)
+            check_html(self, res.content, key=button)
 
+        num = 1
         for test in cases:
             res = self.client.post(
                 '/cin/',
@@ -177,9 +181,11 @@ class TestViews(SimpleTestCase):
                  'end_date': test[1]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'cin_main.html')
+            check_html(self, res.content, key=num)
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             length = len(msg)
             self.assertEqual(length, len(test[2]))
             for idx in range(length):
                 self.assertEqual(msg[idx].text, test[2][idx])
+            num += 1

@@ -31,7 +31,7 @@ from django.contrib.auth.models import User
 
 from common.settings import TEST_DATA_DIR
 from tests.glob import TEST_STRING
-from tests.utils import DummyRequest, strip_xml
+from tests.utils import DummyRequest, strip_xml, check_html
 from hsp import forms, views
 
 
@@ -251,6 +251,7 @@ class TestViews2(TestCase):
 
         res = self.client.get('/hsp/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/hsp/')
@@ -258,6 +259,7 @@ class TestViews2(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/',
@@ -265,6 +267,7 @@ class TestViews2(TestCase):
              'submit_update': 'Aktualisovat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/',
@@ -273,6 +276,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/',
@@ -280,10 +284,11 @@ class TestViews2(TestCase):
              'title': 'test',
              'note': 'n',
              'internal_note': 'in',
-             'submit_empty': 'Vyprázdnit kalkulaci'},
+             'submit_empty': 'Vyprázdnit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('#id_title')
         self.assertEqual(len(title), 1)
@@ -312,6 +317,7 @@ class TestViews2(TestCase):
                     follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
+            check_html(self, res.content, key=suf[0])
             soup = BeautifulSoup(res.content, 'html.parser')
             title = soup.select('#id_title')
             self.assertEqual(len(title), 1)
@@ -347,6 +353,7 @@ class TestViews2(TestCase):
             con.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
+            check_html(self, res.content)
             soup = BeautifulSoup(res.content, 'html.parser')
             title = soup.select('#id_title')
             self.assertEqual(len(title), 1)
@@ -370,6 +377,7 @@ class TestViews2(TestCase):
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/',
@@ -395,6 +403,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
         self.assertEqual(res.context['err_message'], 'Nejprve zvolte soubor k načtení')
+        check_html(self, res.content)
 
         with open(join(TEST_DATA_DIR, 'hsp_err_debt5.xml'), 'rb') as infile:
             res = self.client.post(
@@ -406,6 +415,7 @@ class TestViews2(TestCase):
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
             self.assertEqual(res.context['err_message'], 'Chyba při načtení souboru')
+            check_html(self, res.content)
 
         with open(join(TEST_DATA_DIR, 'hsp_err_debt6.xml'), 'rb') as infile:
             res = self.client.post(
@@ -416,9 +426,8 @@ class TestViews2(TestCase):
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
-            self.assertEqual(
-                res.context['err_message'],
-                'Chyba při načtení souboru')
+            self.assertEqual(res.context['err_message'], 'Chyba při načtení souboru')
+            check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/',
@@ -443,6 +452,7 @@ class TestViews2(TestCase):
             infile.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
+            check_html(self, res.content, key=idx)
             soup = BeautifulSoup(res.content, 'html.parser')
 
             res = self.client.post(
@@ -478,6 +488,7 @@ class TestViews2(TestCase):
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
 
         res = self.client.post(
@@ -498,6 +509,7 @@ class TestViews2(TestCase):
         con.close()
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
     def test_form(self):
 
@@ -516,6 +528,7 @@ class TestViews2(TestCase):
 
             res = self.client.get('/hsp/{}form/'.format(ftype[0]), follow=True)
             self.assertTemplateUsed(res, 'login.html')
+
             self.assertTrue(self.client.login(username='user', password='none'))
 
             res = self.client.get('/hsp/{}form/'.format(ftype[0]))
@@ -523,10 +536,12 @@ class TestViews2(TestCase):
             self.assertTrue(res.has_header('content-type'))
             self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
             self.assertTemplateUsed(res, 'hsp_{}form.html'.format(ftype[0]))
+            check_html(self, res.content, key=ftype[0])
             soup = BeautifulSoup(res.content, 'html.parser')
             title = soup.select('h1')
             self.assertEqual(len(title), 1)
             self.assertEqual(title[0].text, ftype[1])
+
             self.client.logout()
 
     def test_debit(self):
@@ -539,6 +554,7 @@ class TestViews2(TestCase):
 
         res = self.client.get('/hsp/debitform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/hsp/debitform/')
@@ -546,6 +562,7 @@ class TestViews2(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_debitform.html')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
         self.assertEqual(len(title), 1)
@@ -560,6 +577,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/debitform/',
@@ -571,6 +589,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/debitform/',
@@ -582,6 +601,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/debitform/',
@@ -593,6 +613,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/debitform/',
@@ -604,6 +625,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/debitform/',
@@ -614,6 +636,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/debitform/',
@@ -627,6 +650,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/debitform/',
@@ -634,6 +658,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.get('/hsp/debitform/100/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -643,11 +668,13 @@ class TestViews2(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_debitform.html')
+        check_html(self, res.content)
 
         for idx in range(1, 7):
             res = self.client.get('/hsp/debitform/{:d}/'.format(idx))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_debitform.html')
+            check_html(self, res.content, key=idx)
 
         res = self.client.post(
             '/hsp/debitform/3/',
@@ -658,6 +685,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/debitform/100/',
@@ -678,6 +706,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_debitform.html')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/debitform/1/',
@@ -690,10 +719,12 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_debitform.html')
         self.assertEqual(res.context['err_message'], 'Na závazek se váže úrok, vyžaduje pevnou částku')
+        check_html(self, res.content)
 
         res = self.client.get('/hsp/debitdel/3/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_debitdel.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/debitdel/6/',
@@ -701,6 +732,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/debitdel/6/',
@@ -708,12 +740,15 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_debitdeleted.html')
+        check_html(self, res.content)
 
         res = self.client.get('/hsp/debitdel/6/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        check_html(self, res.content)
 
         res = self.client.post('/hsp/debitdel/6/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        check_html(self, res.content)
 
     def test_credit(self):
 
@@ -725,6 +760,7 @@ class TestViews2(TestCase):
 
         res = self.client.get('/hsp/creditform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/hsp/creditform/')
@@ -732,6 +768,7 @@ class TestViews2(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
         self.assertEqual(len(title), 1)
@@ -747,10 +784,12 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.get('/hsp/creditform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/creditform/',
@@ -761,6 +800,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/creditdel/1/',
@@ -768,6 +808,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditdeleted.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/debitform/',
@@ -779,10 +820,12 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.get('/hsp/creditform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/creditform/',
@@ -795,10 +838,12 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.get('/hsp/creditform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/creditform/',
@@ -811,10 +856,12 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.get('/hsp/creditform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/creditform/',
@@ -827,10 +874,12 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.get('/hsp/creditform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/creditform/',
@@ -844,6 +893,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditform.html')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/creditform/',
@@ -851,20 +901,24 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.get('/hsp/creditform/100/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+        check_html(self, res.content)
 
         res = self.client.get('/hsp/creditform/1/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_creditform.html')
+        check_html(self, res.content)
 
         for idx in range(1, 4):
             res = self.client.get('/hsp/creditform/{:d}/'.format(idx))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_creditform.html')
+            check_html(self, res.content, key=idx)
 
         res = self.client.post(
             '/hsp/creditform/3/',
@@ -877,6 +931,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/creditform/100/',
@@ -892,6 +947,7 @@ class TestViews2(TestCase):
         res = self.client.get('/hsp/creditdel/3/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditdel.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/creditdel/3/',
@@ -899,6 +955,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/creditdel/3/',
@@ -906,6 +963,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_creditdeleted.html')
+        check_html(self, res.content)
 
         res = self.client.post('/hsp/creditdel/3/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -920,6 +978,7 @@ class TestViews2(TestCase):
 
         res = self.client.get('/hsp/balanceform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/hsp/balanceform/')
@@ -927,6 +986,7 @@ class TestViews2(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_balanceform.html')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
         self.assertEqual(len(title), 1)
@@ -934,6 +994,7 @@ class TestViews2(TestCase):
 
         res = self.client.post('/hsp/balanceform/', {'submit_set_date': 'Dnes'})
         self.assertEqual(res.context['form']['date'].value(), date.today())
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/balanceform/',
@@ -942,6 +1003,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/balanceform/',
@@ -950,6 +1012,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/balanceform/',
@@ -958,9 +1021,8 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_balanceform.html')
-        self.assertEqual(
-            res.context['err_message'],
-            'Chybné zadání, prosím, opravte údaje')
+        self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/balanceform/',
@@ -968,6 +1030,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.get('/hsp/balanceform/100/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -977,11 +1040,13 @@ class TestViews2(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_balanceform.html')
+        check_html(self, res.content)
 
         for idx in range(1, 3):
             res = self.client.get('/hsp/balanceform/{:d}/'.format(idx))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_balanceform.html')
+            check_html(self, res.content, key=idx)
 
         res = self.client.post(
             '/hsp/balanceform/2/',
@@ -990,6 +1055,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/balanceform/100/',
@@ -1001,6 +1067,7 @@ class TestViews2(TestCase):
         res = self.client.get('/hsp/balancedel/2/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_balancedel.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/balancedel/2/',
@@ -1008,6 +1075,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/balancedel/2/',
@@ -1015,6 +1083,8 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_balancedeleted.html')
+        check_html(self, res.content)
+        check_html(self, res.content)
 
         res = self.client.post('/hsp/balancedel/2/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -1029,6 +1099,7 @@ class TestViews2(TestCase):
 
         res = self.client.get('/hsp/fxrateform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/hsp/fxrateform/')
@@ -1036,6 +1107,7 @@ class TestViews2(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_fxrateform.html')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
         self.assertEqual(len(title), 1)
@@ -1051,6 +1123,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/fxrateform/',
@@ -1062,6 +1135,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/fxrateform/',
@@ -1070,6 +1144,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_fxrateform.html')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/fxrateform/',
@@ -1077,6 +1152,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.get('/hsp/fxrateform/100/')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -1086,11 +1162,13 @@ class TestViews2(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'hsp_fxrateform.html')
+        check_html(self, res.content)
 
         for idx in range(1, 3):
             res = self.client.get('/hsp/fxrateform/{:d}/'.format(idx))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_fxrateform.html')
+            check_html(self, res.content, key=idx)
 
         res = self.client.post(
             '/hsp/fxrateform/2/',
@@ -1102,6 +1180,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/fxrateform/100/',
@@ -1116,6 +1195,7 @@ class TestViews2(TestCase):
         res = self.client.get('/hsp/fxratedel/2/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_fxratedel.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/fxratedel/2/',
@@ -1123,6 +1203,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/hsp/fxratedel/2/',
@@ -1130,6 +1211,7 @@ class TestViews2(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'hsp_fxratedeleted.html')
+        check_html(self, res.content)
 
         res = self.client.post('/hsp/fxratedel/2/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -1601,6 +1683,7 @@ class TestViews2(TestCase):
             infile.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
+            check_html(self, res.content, key=idx)
             dct = {
                 'title': TEST_STRING,
                 'note': 'nn',
@@ -1637,6 +1720,7 @@ class TestViews2(TestCase):
                     follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(res, 'hsp_mainpage.html')
+            check_html(self, res.content, key=idx)
             dct = {
                 'title': TEST_STRING,
                 'note': 'nn',

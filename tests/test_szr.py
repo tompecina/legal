@@ -25,13 +25,13 @@ from datetime import datetime
 from os.path import join
 
 from bs4 import BeautifulSoup
-from django.test import SimpleTestCase, TestCase
+from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 from common.glob import LOCAL_DOMAIN
 from common.settings import TEST_DATA_DIR
-from tests.utils import link_equal
+from tests.utils import link_equal, check_html
 from szr import cron, forms, models
 
 
@@ -188,7 +188,7 @@ class TestModels(SimpleTestCase):
             'Nejvyšší soud, 7 Tdo 315/2000')
 
 
-class TestViews(TestCase):
+class TestViews1(TransactionTestCase):
 
     fixtures = ('szr_test.json',)
 
@@ -209,6 +209,7 @@ class TestViews(TestCase):
 
         res = self.client.get('/szr/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/szr/')
@@ -216,6 +217,7 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'szr_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/',
@@ -225,6 +227,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/',
@@ -234,13 +237,17 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.user = User.objects.get(username='user')
         self.assertEqual(self.user.email, 'alt@' + LOCAL_DOMAIN)
+        check_html(self, res.content)
 
         res = self.client.get('/szr/')
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertFalse(soup.select('table#list'))
+        check_html(self, res.content)
+
         self.client.force_login(User.objects.get(pk=1))
 
         res = self.client.get('/szr/')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertEqual(len(soup.select('table#list tbody tr')), 7)
         models.Proceedings(
@@ -253,6 +260,7 @@ class TestViews(TestCase):
             desc='Test').save()
 
         res = self.client.get('/szr/')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertEqual(len(soup.select('table#list tbody tr')), 8)
         for number in range(200, 437):
@@ -269,6 +277,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         self.assertEqual(len(res.context['rows']), 50)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
@@ -280,6 +289,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         self.assertEqual(len(res.context['rows']), 50)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
@@ -293,6 +303,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         self.assertEqual(len(res.context['rows']), 50)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 5)
@@ -306,6 +317,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         self.assertEqual(len(res.context['rows']), 45)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
@@ -317,6 +329,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         self.assertEqual(len(res.context['rows']), 1)
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('tr.footer a')
         self.assertEqual(len(links), 3)
@@ -334,6 +347,7 @@ class TestViews(TestCase):
 
         res = self.client.get('/szr/procform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.client.force_login(User.objects.get(pk=1))
 
         res = self.client.get('/szr/procform/')
@@ -341,6 +355,7 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'szr_procform.html')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
         self.assertEqual(len(title), 1)
@@ -357,6 +372,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -370,6 +386,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -384,6 +401,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -398,6 +416,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -411,6 +430,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -425,6 +445,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -438,6 +459,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -452,6 +474,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -466,6 +489,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -479,6 +503,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -493,6 +518,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -507,6 +533,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procform.html')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -514,6 +541,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -527,6 +555,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -539,6 +568,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/',
@@ -551,6 +581,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
+        check_html(self, res.content)
 
         proc_id = models.Proceedings.objects.create(
             uid_id=1,
@@ -566,6 +597,7 @@ class TestViews(TestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'szr_procform.html')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
         self.assertEqual(len(title), 1)
@@ -589,6 +621,7 @@ class TestViews(TestCase):
         self.assertEqual(proc.number, 110)
         self.assertEqual(proc.year, 2016)
         self.assertEqual(proc.desc, 'Test 8')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procform/{:d}/'.format(proc_id),
@@ -608,6 +641,7 @@ class TestViews(TestCase):
         self.assertEqual(proc.number, 110)
         self.assertEqual(proc.year, 2016)
         self.assertEqual(proc.desc, 'Test 9')
+        check_html(self, res.content)
 
     def test_procdel(self):
 
@@ -628,11 +662,13 @@ class TestViews(TestCase):
 
         res = self.client.get('/szr/procdel/{:d}/'.format(proc_id), follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/szr/procdel/{:d}/'.format(proc_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procdel.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procdel/{:d}/'.format(proc_id),
@@ -640,6 +676,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procdel/{:d}/'.format(proc_id),
@@ -648,6 +685,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procdeleted.html')
         self.assertFalse(models.Proceedings.objects.filter(pk=proc_id).exists())
+        check_html(self, res.content)
 
         res = self.client.post('/szr/procdel/{:d}/'.format(proc_id))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -682,11 +720,13 @@ class TestViews(TestCase):
 
         res = self.client.get('/szr/procdelall/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/szr/procdelall/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procdelall.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procdelall/',
@@ -694,6 +734,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procdelall/',
@@ -702,6 +743,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         self.assertEqual(models.Proceedings.objects.filter(uid=self.user).count(), 2)
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procdelall/',
@@ -711,6 +753,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         self.assertEqual(models.Proceedings.objects.filter(uid=self.user).count(), 2)
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procdelall/',
@@ -720,6 +763,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         self.assertFalse(models.Proceedings.objects.filter(uid=self.user).exists())
+        check_html(self, res.content)
 
     def test_procbatchform(self):
 
@@ -758,11 +802,13 @@ class TestViews(TestCase):
 
         res = self.client.get('/szr/procbatchform/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/szr/procbatchform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procbatchform.html')
+        check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procbatchform/',
@@ -770,6 +816,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'szr_procbatchform.html')
         self.assertContains(res, 'Nejprve zvolte soubor k načtení')
+        check_html(self, res.content)
 
         with open(join(TEST_DATA_DIR, 'szr_import.csv'), 'rb') as infile:
             res = self.client.post(
@@ -794,6 +841,7 @@ class TestViews(TestCase):
              (13, 'Popisu "Test 13" odpovídá více než jedno řízení'),
              (14, 'Prázdný popis'),
              (16, 'Příliš dlouhý popis')])
+        check_html(self, res.content)
 
         res = self.client.get('/szr/procexport/')
         self.assertEqual(
@@ -835,6 +883,7 @@ Test 13,MSPHAAB,52 C 5/2012
 
         res = self.client.get('/szr/procexport/', follow=True)
         self.assertTemplateUsed(res, 'login.html')
+
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/szr/procexport/')
@@ -844,6 +893,17 @@ Test 13,MSPHAAB,52 C 5/2012
         self.assertEqual(
             res.content.decode('utf-8'),
             'Test 1,MSPHAAB,52 C 1/2016\r\nTest 2,MSPHAAB,Nc 512/2009\r\n')
+
+class TestViews2(TestCase):
+
+    fixtures = ('szr_test.json',)
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.get(username='user')
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_courts(self):
 
@@ -862,3 +922,4 @@ Test 13,MSPHAAB,52 C 5/2012
              {'id': 'NSS', 'name': 'Nejvyšší správní soud'},
              {'id': 'OSPHA02', 'name': 'Obvodní soud Praha 2'},
             ))
+        check_html(self, res.content)

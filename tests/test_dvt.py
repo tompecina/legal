@@ -25,6 +25,7 @@ from http import HTTPStatus
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase
 
+from tests.utils import check_html
 from dvt import forms
 
 
@@ -92,7 +93,9 @@ class TestViews(SimpleTestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
         self.assertTemplateUsed(res, 'dvt_main.html')
+        check_html(self, res.content)
 
+        num = 1
         for test in cases:
             res = self.client.post(
                 '/dvt/',
@@ -105,11 +108,14 @@ class TestViews(SimpleTestCase):
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertEqual(len(msg), 4)
-            self.assertEqual(msg[0].text, 'Trest skončí: ' + test[4])
-            self.assertEqual(msg[1].text, 'Třetina trestu: ' + test[5])
-            self.assertEqual(msg[2].text, 'Polovina trestu: ' + test[6])
-            self.assertEqual(msg[3].text, 'Dvě třetiny trestu: ' + test[7])
+            self.assertEqual(msg[0].text, 'Trest skončí: {}'.format(test[4]))
+            self.assertEqual(msg[1].text, 'Třetina trestu: {}'.format(test[5]))
+            self.assertEqual(msg[2].text, 'Polovina trestu: {}'.format(test[6]))
+            self.assertEqual(msg[3].text, 'Dvě třetiny trestu: {}'.format(test[7]))
+            check_html(self, res.content, key=num)
+            num += 1
 
+        num = 1
         for test in err_cases:
             res = self.client.post(
                 '/dvt/',
@@ -122,3 +128,5 @@ class TestViews(SimpleTestCase):
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertEqual(msg[0].text, 'Chybné zadání')
+            check_html(self, res.content, key=num)
+            num += 1
