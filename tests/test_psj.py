@@ -180,7 +180,7 @@ def populate():
     cron.cron_update()
 
 
-class TestViews2(TestCase):
+class TestViews2(TransactionTestCase):
 
     fixtures = ('psj_test.json',)
 
@@ -474,7 +474,7 @@ class TestViews3(TransactionTestCase):
         self.assertTrue(link_equal(links[1]['href'], '/psj/list/?senate=26&start=150'))
 
 
-class TestViews4(TestCase):
+class TestViews4(TransactionTestCase):
 
     fixtures = ('psj_test.json',)
 
