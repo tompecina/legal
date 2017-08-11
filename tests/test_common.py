@@ -2225,7 +2225,7 @@ class TestViews(TestCase):
 
         res = self.client.get('/accounts/useradd/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'useradd.html'); print(res.content.decode())
+        self.assertTemplateUsed(res, 'useradd.html')
         check_html(self, res.content)
 
         src = {
