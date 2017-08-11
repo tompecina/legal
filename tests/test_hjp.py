@@ -26,7 +26,7 @@ from io import BytesIO
 from os.path import join
 
 from bs4 import BeautifulSoup
-from django.test import SimpleTestCase, TransactionTestCase
+from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 
 from common.utils import p2c
@@ -170,15 +170,15 @@ class TestViews1(SimpleTestCase):
         self.assertEqual(views.getrows4(views.Debt()), [])
 
 
-class TestViews2(TransactionTestCase):
+class TestViews2(TestCase):
 
     fixtures = ('hjp_test.json',)
 
     def setUp(self):
         User.objects.create_user('user', 'user@pecina.cz', 'none')
 
-    def tearDown(self):
-        self.client.logout()
+    # def tearDown(self):
+    #     self.client.logout()
 
     def test_main(self):
 

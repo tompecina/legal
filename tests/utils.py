@@ -56,7 +56,7 @@ class DummyResponse:
 class TestObj:
     pass
 
-    
+
 TEST_OBJ = TestObj()
 
 
@@ -190,16 +190,16 @@ def check_html(runner, html, key=None):
             name = desc.name
             attrs = desc.attrs
             store.append(name)
-            for key in sorted(attrs):
+            for attr in sorted(attrs):
                 tag = str(attrs.get('name'))
-                if name == 'input' and tag == 'csrfmiddlewaretoken' and key == 'value':
+                if name == 'input' and tag == 'csrfmiddlewaretoken' and attr == 'value':
                     continue
-                store.append(key)
-                val = attrs[key]
+                store.append(attr)
+                val = attrs[attr]
                 if isinstance(val, list):
                     store.extend(sorted(val))
                 elif (isinstance(val, str)
-                    and not (val.startswith(STATIC_URL) or ('date' in tag and key == 'value'))):
+                    and not (val.startswith(STATIC_URL) or ('date' in tag and attr == 'value'))):
                     if '?' in val:
                         part = val.rpartition('?')
                         store.append(part[0])

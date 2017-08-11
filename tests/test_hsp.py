@@ -238,9 +238,6 @@ class TestViews2(TestCase):
     def setUp(self):
         User.objects.create_user('user', 'user@pecina.cz', 'none')
 
-    def tearDown(self):
-        self.client.logout()
-
     def test_main(self):
 
         res = self.client.get('/hsp')

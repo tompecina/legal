@@ -25,7 +25,7 @@ from datetime import date
 from os.path import join
 
 from bs4 import BeautifulSoup
-from django.test import SimpleTestCase, TransactionTestCase
+from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 
 from common.glob import LOCAL_DOMAIN
@@ -152,9 +152,6 @@ class TestViews1(TransactionTestCase):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
         self.user = User.objects.first()
 
-    def tearDown(self):
-        self.client.logout()
-
     def test_mainpage(self):
 
         res = self.client.get('/dir')
@@ -277,15 +274,11 @@ class TestViews1(TransactionTestCase):
         self.assertTrue(link_equal(links[1]['href'], '/dir/?start=0'))
         self.assertTrue(link_equal(links[2]['href'], '/dir/?start=187'))
 
-
 class TestViews2(TransactionTestCase):
 
     def setUp(self):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
         self.user = User.objects.first()
-
-    def tearDown(self):
-        self.client.logout()
 
     def test_debtorform(self):
 
@@ -486,7 +479,7 @@ class TestViews2(TransactionTestCase):
         title = soup.select('h1')
         self.assertEqual(len(title), 1)
         self.assertEqual(title[0].text, 'Úprava dlužníka')
-        check_html(self, res.content);
+        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtorform/{:d}/'.format(debtor_id),
@@ -520,15 +513,11 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(debtor.year_birth_from, 1965)
         self.assertEqual(debtor.year_birth_to, 1966)
 
-
 class TestViews3(TransactionTestCase):
 
     def setUp(self):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
         self.user = User.objects.first()
-
-    def tearDown(self):
-        self.client.logout()
 
     def test_debtordel(self):
 
@@ -570,15 +559,11 @@ class TestViews3(TransactionTestCase):
         res = self.client.post('/dir/debtordel/{:d}/'.format(debtor_id))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
-
 class TestViews4(TransactionTestCase):
 
     def setUp(self):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
         self.user = User.objects.first()
-
-    def tearDown(self):
-        self.client.logout()
 
     def test_debtordelall(self):
 
@@ -640,15 +625,11 @@ class TestViews4(TransactionTestCase):
         check_html(self, res.content)
         self.assertFalse(models.Debtor.objects.exists())
 
-
 class TestViews5(TransactionTestCase):
 
     def setUp(self):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
         self.user = User.objects.first()
-
-    def tearDown(self):
-        self.client.logout()
 
     def test_debtorbatchform(self):
 
@@ -743,14 +724,11 @@ rokNarozeníOd=1965,rokNarozeníDo=1966
 '''.format('T' * 255).replace('\n', '\r\n'))
 
 
-class TestViews6(TransactionTestCase):
+class TestViews6(TestCase):
 
     def setUp(self):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
         self.user = User.objects.first()
-
-    def tearDown(self):
-        self.client.logout()
 
     def test_debtorexport(self):
 

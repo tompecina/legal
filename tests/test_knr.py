@@ -431,9 +431,6 @@ class TestViews2(TransactionTestCase):
         models.Car.objects.all().update(uid=self.user)
         models.Formula.objects.exclude(uid=None).update(uid=self.user)
 
-    def tearDown(self):
-        self.client.logout()
-
     def test_main(self):
 
         res = self.client.get('/knr')

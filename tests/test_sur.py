@@ -609,7 +609,7 @@ Test 10:=
 '''.format('T' * 80).replace('\n', '\r\n'))
 
 
-class TestViews5(TransactionTestCase):
+class TestViews6(TransactionTestCase):
 
     def setUp(self):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
