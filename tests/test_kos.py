@@ -582,7 +582,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'kos_mainpage.html');
+        self.assertTemplateUsed(res, 'kos_mainpage.html')
         check_html(self, res.content)
 
         res = self.client.post('/kos/', {'submit_single': 'Vypočítat'})

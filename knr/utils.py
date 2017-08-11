@@ -32,7 +32,7 @@ from cache.utils import getcache
 
 def getvat():
 
-    return getpreset('VAT')
+    return getpreset('VAT')()
 
 
 def findloc(addr):

@@ -4,7 +4,61 @@
     "pk": 1,
     "fields": {
         "name": "VAT",
-        "value": 25.0,
+        "value": 21.0,
+        "valid": "2016-01-01"
+    }
+},
+{
+    "model": "common.preset",
+    "pk": 2,
+    "fields": {
+        "name": "APT",
+        "value": 5858.0,
+        "valid": "2016-01-01"
+    }
+},
+{
+    "model": "common.preset",
+    "pk": 3,
+    "fields": {
+        "name": "EXP",
+        "value": 150.0,
+        "valid": "2016-01-01"
+    }
+},
+{
+    "model": "common.preset",
+    "pk": 4,
+    "fields": {
+        "name": "EXP2",
+        "value": 225.0,
+        "valid": "2016-01-01"
+    }
+},
+{
+    "model": "common.preset",
+    "pk": 5,
+    "fields": {
+        "name": "FEE",
+        "value": 750.0,
+        "valid": "2016-01-01"
+    }
+},
+{
+    "model": "common.preset",
+    "pk": 6,
+    "fields": {
+        "name": "FEE2",
+        "value": 1125.0,
+        "valid": "2016-01-01"
+    }
+},
+{
+    "model": "common.preset",
+    "pk": 7,
+    "fields": {
+        "name": "SUBS",
+        "value": 3410.0,
         "valid": "2016-01-01"
     }
 }

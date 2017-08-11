@@ -1927,8 +1927,8 @@ class TestUtils2(TestCase):
             name='Test',
             value=16,
             valid=(today + glob.ODP))
-        self.assertEqual(utils.getpreset('XXX'), 0)
-        self.assertEqual(utils.getpreset('Test'), 15)
+        self.assertEqual(utils.getpreset('XXX')(), 0)
+        self.assertEqual(utils.getpreset('Test')(), 15)
 
 
 class TestViews(TestCase):

@@ -1014,7 +1014,10 @@ def getpreset(key):
     Get current preset.
     """
 
-    try:
-        return Preset.objects.filter(name=key, valid__lte=date.today()).latest('valid').value
-    except:
-        return 0
+    def _getpreset():
+        try:
+            return Preset.objects.filter(name=key, valid__lte=date.today()).latest('valid').value
+        except:
+            return 0
+
+    return _getpreset
