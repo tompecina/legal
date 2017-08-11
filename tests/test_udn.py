@@ -204,7 +204,7 @@ class TestModels(SimpleTestCase):
             '4 As 26/2015-88')
 
 
-class TestViews1(TestCase):
+class TestViews1(TransactionTestCase):
 
     fixtures = ('udn_test1.json',)
 

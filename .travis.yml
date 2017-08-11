@@ -13,6 +13,7 @@ env:
   global:
     - "TEST=1"
     - "DBUSER=root"
+    - "HTML_CHECK=1"
   matrix:
     - "DJANGO_VERSION=stable"
     - "DJANGO_VERSION=nightly"

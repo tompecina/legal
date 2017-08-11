@@ -150,8 +150,8 @@ def getpr():
     return getcounter('PR')
 
 
-WRITE_CHECKFILE = environ.get('WRITE_CHECKFILE')
-
+HTML_CHECK = bool(environ.get('HTML_CHECK'))
+WRITE_CHECKFILE = bool(environ.get('WRITE_CHECKFILE'))
 CHECKFILE = open(join(TEST_DIR, 'test.chk'), 'w' if WRITE_CHECKFILE else 'r')
 
 
@@ -208,6 +208,6 @@ def check_html(runner, html, key=None):
 
     if WRITE_CHECKFILE:
         print(filepos, hsh, file=CHECKFILE)
-    else:
+    elif HTML_CHECK:
         runner.assertIn(filepos, CHECKARRAY, msg=filepos)
         runner.assertEqual(CHECKARRAY[filepos], hsh, msg=filepos)
