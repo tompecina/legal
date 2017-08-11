@@ -337,6 +337,18 @@ class TestViews1(TransactionTestCase):
         self.assertTrue(link_equal(links[1]['href'], '/szr/?start=0'))
         self.assertTrue(link_equal(links[2]['href'], '/szr/?start=194'))
 
+
+class TestViews2(TransactionTestCase):
+
+    fixtures = ('szr_test.json',)
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.get(username='user')
+
+    def tearDown(self):
+        self.client.logout()
+
     def test_procform(self):
 
         res = self.client.get('/szr/procform')
@@ -643,6 +655,18 @@ class TestViews1(TransactionTestCase):
         self.assertEqual(proc.desc, 'Test 9')
         check_html(self, res.content)
 
+
+class TestViews3(TransactionTestCase):
+
+    fixtures = ('szr_test.json',)
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.get(username='user')
+
+    def tearDown(self):
+        self.client.logout()
+
     def test_procdel(self):
 
         proc_id = models.Proceedings.objects.create(
@@ -689,6 +713,18 @@ class TestViews1(TransactionTestCase):
 
         res = self.client.post('/szr/procdel/{:d}/'.format(proc_id))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
+
+
+class TestViews4(TransactionTestCase):
+
+    fixtures = ('szr_test.json',)
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.get(username='user')
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_procdelall(self):
 
@@ -764,6 +800,18 @@ class TestViews1(TransactionTestCase):
         self.assertTemplateUsed(res, 'szr_mainpage.html')
         self.assertFalse(models.Proceedings.objects.filter(uid=self.user).exists())
         check_html(self, res.content)
+
+
+class TestViews5(TransactionTestCase):
+
+    fixtures = ('szr_test.json',)
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.get(username='user')
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_procbatchform(self):
 
@@ -855,6 +903,18 @@ Test 13,MSPHAAB,52 C 5/2012
 {},MSPHAAB,45 A 27/2014
 '''.format('T' * 255).replace('\n', '\r\n'))
 
+
+class TestViews6(TransactionTestCase):
+
+    fixtures = ('szr_test.json',)
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.get(username='user')
+
+    def tearDown(self):
+        self.client.logout()
+
     def test_procexport(self):
 
         models.Proceedings.objects.create(
@@ -894,7 +954,8 @@ Test 13,MSPHAAB,52 C 5/2012
             res.content.decode('utf-8'),
             'Test 1,MSPHAAB,52 C 1/2016\r\nTest 2,MSPHAAB,Nc 512/2009\r\n')
 
-class TestViews2(TestCase):
+
+class TestViews7(TransactionTestCase):
 
     fixtures = ('szr_test.json',)
 
