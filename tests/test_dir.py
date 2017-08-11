@@ -274,6 +274,7 @@ class TestViews1(TransactionTestCase):
         self.assertTrue(link_equal(links[1]['href'], '/dir/?start=0'))
         self.assertTrue(link_equal(links[2]['href'], '/dir/?start=187'))
 
+
 class TestViews2(TransactionTestCase):
 
     def setUp(self):
@@ -566,6 +567,16 @@ class TestViews3(TransactionTestCase):
         res = self.client.post('/dir/debtordel/{:d}/'.format(debtor_id))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
+
+class TestViews4(TransactionTestCase):
+
+    def setUp(self):
+        User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
+        self.user = User.objects.first()
+
+    def tearDown(self):
+        self.client.logout()
+
     def test_debtordelall(self):
 
         models.Debtor.objects.create(uid=self.user, name_opt=0, first_name_opt=0, desc='Test 1')
@@ -627,7 +638,7 @@ class TestViews3(TransactionTestCase):
         self.assertFalse(models.Debtor.objects.exists())
 
 
-class TestViews4(TransactionTestCase):
+class TestViews5(TransactionTestCase):
 
     def setUp(self):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
@@ -729,7 +740,7 @@ rokNarozeníOd=1965,rokNarozeníDo=1966
 '''.format('T' * 255).replace('\n', '\r\n'))
 
 
-class TestViews5(TransactionTestCase):
+class TestViews6(TransactionTestCase):
 
     def setUp(self):
         User.objects.create_user('user', 'user@' + LOCAL_DOMAIN, 'none')
