@@ -13,9 +13,8 @@ env:
   global:
     - "TEST=1"
     - "DBUSER=root"
-    - "CHECK_HTML=1"
   matrix:
-    - "DJANGO_VERSION=stable"
+    - "DJANGO_VERSION=stable CHECK_HTML=1"
     - "DJANGO_VERSION=nightly"
 
 before_install:
