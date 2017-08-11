@@ -150,8 +150,7 @@ def get_fx_rate(curr, dat, log=None, use_fixed=False, log_fixed=None):
         dreq = soup.find('kurzy', {'banka': 'CNB'})['datum']
         dreq = date(int(dreq[6:]), int(dreq[3:5]), int(dreq[:2]))
     except:
-        LOGGER.error(
-            'Invalid FX table structure for {0.year:d}-{0.month:02d}-{0.day:02d}'.format(dat))
+        LOGGER.error('Invalid FX table structure for {0.year:d}-{0.month:02d}-{0.day:02d}'.format(dat))
         return None, None, None, 'Chyba struktury kursové tabulky'
     if not rat and (dreq == dat or (today - dat) > DOWNLOAD_WAIT):
         FXrate(date=dat, text=txt).save()

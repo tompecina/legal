@@ -68,9 +68,7 @@ def unauth(request):
 @require_http_methods(('GET', 'POST'))
 def error(request):
 
-    LOGGER.debug(
-        'Internal server error page generated',
-        request)
+    LOGGER.debug('Internal server error page generated', request)
     var = {
         'page_title': 'Interní chyba aplikace',
         'suppress_topline': True,
@@ -85,16 +83,12 @@ def error(request):
 @require_http_methods(('GET', 'POST'))
 def logout(request):
 
-    LOGGER.debug(
-        'Logout page accessed using method {}'.format(request.method),
-        request)
+    LOGGER.debug('Logout page accessed using method {}'.format(request.method), request)
     uid = request.user.id
     username = request.user.username
     auth.logout(request)
     if username:
-        LOGGER.info(
-            'User "{}" ({:d}) logged out'.format(username, uid),
-            request)
+        LOGGER.info('User "{}" ({:d}) logged out'.format(username, uid), request)
     return redirect('home')
 
 
@@ -102,10 +96,7 @@ def logout(request):
 @login_required
 def pwchange(request):
 
-    LOGGER.debug(
-        'Password change page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Password change page accessed using method {}'.format(request.method), request, request.POST)
     var = {'page_title': 'Změna hesla'}
     user = request.user
     uid = user.id
@@ -128,9 +119,7 @@ def pwchange(request):
         else:
             user.set_password(var['newpassword1'])
             user.save()
-            LOGGER.info(
-                'User "{}" ({:d}) changed password'.format(username, uid),
-                request)
+            LOGGER.info('User "{}" ({:d}) changed password'.format(username, uid), request)
             return redirect('/accounts/pwchanged/')
     return render(request, 'pwchange.html', var)
 
@@ -138,10 +127,7 @@ def pwchange(request):
 @require_http_methods(('GET', 'POST'))
 def lostpw(request):
 
-    LOGGER.debug(
-        'Lost password page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Lost password page accessed using method {}'.format(request.method), request, request.POST)
     err_message = None
     page_title = 'Ztracené heslo'
     if request.method == 'GET':
@@ -172,9 +158,7 @@ V případě, že jste o obnovení hesla nežádali, můžete tuto zprávu ignor
 Server {1} ({2})
 '''.format(user.username, LOCAL_SUBDOMAIN, LOCAL_URL, reverse('resetpw', args=(link,)))
                 send_mail('Link pro obnoveni hesla', text, (user.email,))
-                LOGGER.info(
-                    'Password recovery link for user "{0.username}" ({0.id:d}) sent'.format(user),
-                    request)
+                LOGGER.info('Password recovery link for user "{0.username}" ({0.id:d}) sent'.format(user), request)
             return redirect('/accounts/pwlinksent/')
         else:
             LOGGER.debug('Invalid form', request)
@@ -206,9 +190,7 @@ def resetpw(request, link):
     user.set_password(newpassword)
     user.save()
     link.delete()
-    LOGGER.info(
-        'Password for user "{}" ({:d}) reset'.format(user.username, user.id),
-        request)
+    LOGGER.info('Password for user "{}" ({:d}) reset'.format(user.username, user.id), request)
     return render(
         request,
         'pwreset.html',
@@ -299,9 +281,7 @@ def getuserinfo(user):
         conf = apps.get_app_config(idx)
         if hasattr(conf, 'userinfo'):
             res.extend(conf.userinfo(user))
-    LOGGER.debug(
-        'User information combined for user "{0.username}" ({0.id:d})'
-        .format(user))
+    LOGGER.debug('User information combined for user "{0.username}" ({0.id:d})'.format(user))
     return res
 
 
@@ -321,10 +301,7 @@ def userinfo(request):
 @require_http_methods(('GET', 'POST'))
 def useradd(request):
 
-    LOGGER.debug(
-        'User add page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('User add page accessed using method {}'.format(request.method), request, request.POST)
     err_message = None
     if request.method == 'GET':
         form = UserAddForm()
@@ -341,9 +318,7 @@ def useradd(request):
                 user.last_name = cld['last_name']
                 user.save()
                 logout(request)
-                LOGGER.info(
-                    'New user "{0.username}" ({0.id:d}) created'.format(user),
-                    request)
+                LOGGER.info('New user "{0.username}" ({0.id:d}) created'.format(user), request)
                 return redirect('useradded')
             LOGGER.error('Failed to create user', request)
             return error(request)  # pragma: no cover
@@ -366,7 +341,5 @@ def useradd(request):
 @require_http_methods(('GET',))
 def genrender(request, template=None, **kwargs):
 
-    LOGGER.debug(
-        'Generic page rendered using template "{}"'.format(template),
-        request)
+    LOGGER.debug('Generic page rendered using template "{}"'.format(template), request)
     return render(request, template, kwargs)

@@ -52,10 +52,7 @@ EXLIM = 1000
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    LOGGER.debug(
-        'Main page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Main page accessed using method {}'.format(request.method), request, request.POST)
 
     err_message = ''
     page_title = apps.get_app_config(APP).verbose_name

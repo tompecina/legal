@@ -545,10 +545,7 @@ EL = ['']
 @login_required
 def mainpage(request):
 
-    LOGGER.debug(
-        'Main page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Main page accessed using method {}'.format(request.method), request, request.POST)
 
     def cellam(amt, slb=False):
         amt = (float(amt) if debt.rounding else int(round(amt)))

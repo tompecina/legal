@@ -48,10 +48,7 @@ def calc(beg_date, years, months, days):
 @require_http_methods(('GET', 'POST'))
 def mainpage(request):
 
-    LOGGER.debug(
-        'Main page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Main page accessed using method {}'.format(request.method), request, request.POST)
 
     messages = []
 

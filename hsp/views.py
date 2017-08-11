@@ -884,10 +884,7 @@ EL = ['']
 @login_required
 def mainpage(request):
 
-    LOGGER.debug(
-        'Main page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Main page accessed using method {}'.format(request.method), request, request.POST)
 
     def ftbl(amt):
         amt = round(amt, debt.rounding) if debt.rounding else int(round(amt))
@@ -1544,11 +1541,7 @@ def mainpage(request):
 @login_required
 def debitform(request, idx=0):
 
-    LOGGER.debug(
-        'Debit form accessed using method {}, id={}'
-        .format(request.method, idx),
-        request,
-        request.POST)
+    LOGGER.debug('Debit form accessed using method {}, id={}'.format(request.method, idx), request, request.POST)
 
     page_title = 'Úprava závazku' if idx else 'Nový závazek'
     var = {}
@@ -1682,11 +1675,7 @@ def debitform(request, idx=0):
 @login_required
 def debitdel(request, idx=0):
 
-    LOGGER.debug(
-        'Debit delete page accessed using method {}, id={}'
-        .format(request.method, idx),
-        request,
-        request.POST)
+    LOGGER.debug('Debit delete page accessed using method {}, id={}'.format(request.method, idx), request, request.POST)
     idx = int(idx) - 1
     debt = getdebt(request)
     if not debt:  # pragma: no cover
@@ -1726,10 +1715,7 @@ def debitdel(request, idx=0):
 @login_required
 def creditform(request, idx=0):
 
-    LOGGER.debug(
-        'Credit form accessed using method {}, id={}'.format(request.method, idx),
-        request,
-        request.POST)
+    LOGGER.debug('Credit form accessed using method {}, id={}'.format(request.method, idx), request, request.POST)
 
     page_title = 'Úprava splátky' if idx else 'Nová splátka'
     err_message = ''
@@ -1959,10 +1945,7 @@ def balancedel(request, idx=0):
 @login_required
 def fxrateform(request, idx=0):
 
-    LOGGER.debug(
-        'FX rate form accessed using method {}, id={}'.format(request.method, idx),
-        request,
-        request.POST)
+    LOGGER.debug('FX rate form accessed using method {}, id={}'.format(request.method, idx), request, request.POST)
 
     page_title = 'Úprava kursu' if idx else 'Nový kurs'
     err_message = ''

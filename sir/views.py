@@ -52,10 +52,7 @@ BATCH = 50
 @login_required
 def mainpage(request):
 
-    LOGGER.debug(
-        'Main page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Main page accessed using method {}'.format(request.method), request, request.POST)
     err_message = ''
     uid = request.user.id
     page_title = 'Sledování změn v insolvenčních řízeních'
@@ -168,9 +165,7 @@ def insdel(request, idx=0):
 @login_required
 def insdelall(request):
 
-    LOGGER.debug(
-        'Delete all proceedings page accessed using method {}'.format(request.method),
-        request)
+    LOGGER.debug('Delete all proceedings page accessed using method {}'.format(request.method), request)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -182,9 +177,7 @@ def insdelall(request):
     else:
         if getbutton(request) == 'yes' and 'conf' in request.POST and request.POST['conf'] == 'Ano':
             Insolvency.objects.filter(uid=uid).delete()
-            LOGGER.info(
-                'User "{}" ({:d}) deleted all proceedings'.format(uname, uid),
-                request)
+            LOGGER.info('User "{}" ({:d}) deleted all proceedings'.format(uname, uid), request)
         return redirect('sir:mainpage')
 
 
@@ -192,9 +185,7 @@ def insdelall(request):
 @login_required
 def insbatchform(request):
 
-    LOGGER.debug(
-        'Proceedings import page accessed using method {}'.format(request.method),
-        request)
+    LOGGER.debug('Proceedings import page accessed using method {}'.format(request.method), request)
 
     err_message = ''
     uid = request.user.id

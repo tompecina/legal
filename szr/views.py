@@ -323,9 +323,7 @@ def procexport(request):
                 proc.year)
         )
         writer.writerow(dat)
-    LOGGER.info(
-        'User "{}" ({:d}) exported proceedings'.format(uname, uid),
-        request)
+    LOGGER.info('User "{}" ({:d}) exported proceedings'.format(uname, uid), request)
     return response
 
 

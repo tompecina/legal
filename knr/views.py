@@ -797,10 +797,7 @@ def from_xml(dat):
 @login_required
 def mainpage(request):
 
-    LOGGER.debug(
-        'Main page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Main page accessed using method {}'.format(request.method), request, request.POST)
 
     calc = getcalc(request)
     if not calc:  # pragma: no cover
@@ -1178,11 +1175,7 @@ def mainpage(request):
 @login_required
 def placeform(request, idx=0):
 
-    LOGGER.debug(
-        'Place form accessed using method {}, id={}'
-        .format(request.method, idx),
-        request,
-        request.POST)
+    LOGGER.debug('Place form accessed using method {}, id={}'.format(request.method, idx), request, request.POST)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -1250,8 +1243,7 @@ def placelist(request):
 def placedel(request, idx=0):
 
     LOGGER.debug(
-        'Place delete page accessed using method {}, id={}'
-        .format(request.method, idx),
+        'Place delete page accessed using method {}, id={}'.format(request.method, idx),
         request,
         request.POST)
     uid = request.user.id
@@ -1276,10 +1268,7 @@ def placedel(request, idx=0):
 @login_required
 def carform(request, idx=0):
 
-    LOGGER.debug(
-        'Car form accessed using method {}, id={}'.format(request.method, idx),
-        request,
-        request.POST)
+    LOGGER.debug('Car form accessed using method {}, id={}'.format(request.method, idx), request, request.POST)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -1332,10 +1321,7 @@ def carlist(request):
 @login_required
 def cardel(request, idx=0):
 
-    LOGGER.debug(
-        'Car delete page accessed using method {}, id={}'.format(request.method, idx),
-        request,
-        request.POST)
+    LOGGER.debug('Car delete page accessed using method {}, id={}'.format(request.method, idx), request, request.POST)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -1359,10 +1345,7 @@ def cardel(request, idx=0):
 @login_required
 def formulaform(request, idx=0):
 
-    LOGGER.debug(
-        'Formula form accessed using method {}, id={}'.format(request.method, idx),
-        request,
-        request.POST)
+    LOGGER.debug('Formula form accessed using method {}, id={}'.format(request.method, idx), request, request.POST)
     err_message = ''
     uid = request.user.id
     uname = request.user.username
@@ -1913,10 +1896,7 @@ def itemform(request, idx=0):
 @login_required
 def itemlist(request):
 
-    LOGGER.debug(
-        'Item list accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Item list accessed using method {}'.format(request.method), request, request.POST)
     calc = getcalc(request)
     if not calc:  # pragma: no cover
         return error(request)

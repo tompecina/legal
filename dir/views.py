@@ -59,10 +59,7 @@ OPTS = [key + '_opt' for key in OFIELDS]
 @login_required
 def mainpage(request):
 
-    LOGGER.debug(
-        'Main page accessed using method {}'.format(request.method),
-        request,
-        request.POST)
+    LOGGER.debug('Main page accessed using method {}'.format(request.method), request, request.POST)
 
     err_message = ''
     uid = request.user.id
@@ -160,11 +157,7 @@ def debtorform(request, idx=0):
                 debtor.__setattr__(opt, TEXT_OPTS_KEYS.index(cld[opt]))
             debtor.save()
             LOGGER.info(
-                'User "{}" ({:d}) {} debtor {}'.format(
-                    uname,
-                    uid,
-                    'updated' if idx else 'added',
-                    debtor.desc),
+                'User "{}" ({:d}) {} debtor {}'.format(uname, uid, 'updated' if idx else 'added', debtor.desc),
                 request)
             return redirect('dir:mainpage')
         else:
@@ -210,10 +203,7 @@ def debtordel(request, idx=0):
 @login_required
 def debtordelall(request):
 
-    LOGGER.debug(
-        'Delete all debtors page accessed using method {}'
-        .format(request.method),
-        request)
+    LOGGER.debug('Delete all debtors page accessed using method {}'.format(request.method), request)
     uid = request.user.id
     uname = request.user.username
     if request.method == 'GET':
@@ -225,9 +215,7 @@ def debtordelall(request):
     else:
         if getbutton(request) == 'yes' and 'conf' in request.POST and request.POST['conf'] == 'Ano':
             Debtor.objects.filter(uid=uid).delete()
-            LOGGER.info(
-                'User "{}" ({:d}) deleted all debtors'.format(uname, uid),
-                request)
+            LOGGER.info('User "{}" ({:d}) deleted all debtors'.format(uname, uid), request)
         return redirect('dir:mainpage')
 
 
@@ -235,9 +223,7 @@ def debtordelall(request):
 @login_required
 def debtorbatchform(request):
 
-    LOGGER.debug(
-        'Debtor import page accessed using method {}'.format(request.method),
-        request)
+    LOGGER.debug('Debtor import page accessed using method {}'.format(request.method), request)
 
     err_message = ''
     uid = request.user.id
@@ -373,9 +359,7 @@ def debtorbatchform(request):
                                     errors.append((idx, 'Popisu "{}" odpovídá více než jeden dlužník'.format(desc)))
                                     continue
                                 count += 1
-                    LOGGER.info(
-                        'User "{}" ({:d}) imported {:d} debtor(s)'.format(uname, uid, count),
-                        request)
+                    LOGGER.info('User "{}" ({:d}) imported {:d} debtor(s)'.format(uname, uid, count), request)
                     return render(
                         request,
                         'dir_debtorbatchresult.html',
@@ -435,7 +419,5 @@ def debtorexport(request):
         if debtor.year_birth_to:
             dat.append('rokNarozeníDo={:d}'.format(debtor.year_birth_to))
         writer.writerow(dat)
-    LOGGER.info(
-        'User "{}" ({:d}) exported debtors'.format(uname, uid),
-        request)
+    LOGGER.info('User "{}" ({:d}) exported debtors'.format(uname, uid), request)
     return response
