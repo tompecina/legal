@@ -146,14 +146,15 @@ def insdel(request, idx=0):
         request.POST)
     uid = request.user.id
     uname = request.user.username
+    ins = get_object_or_404(Insolvency, pk=idx, uid=uid)
     if request.method == 'GET':
         return render(
             request,
             'sir_insdel.html',
             {'app': APP,
-             'page_title': 'Smazání řízení'})
+             'page_title': 'Smazání řízení',
+             'desc': ins.desc})
     else:
-        ins = get_object_or_404(Insolvency, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
             LOGGER.info(
                 'User "{}" ({:d}) deleted proceedings "{}" ({})'.format(uname, uid, ins.desc, p2s(ins)),

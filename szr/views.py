@@ -157,14 +157,15 @@ def procdel(request, idx=0):
         request.POST)
     uid = request.user.id
     uname = request.user.username
+    proc = get_object_or_404(Proceedings, pk=idx, uid=uid)
     if request.method == 'GET':
         return render(
             request,
             'szr_procdel.html',
             {'app': APP,
-             'page_title': 'Smazání řízení'})
+             'page_title': 'Smazání řízení',
+             'desc': proc.desc})
     else:
-        proc = get_object_or_404(Proceedings, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
             LOGGER.info(
                 'User "{}" ({:d}) deleted proceedings "{}" ({})'.format(uname, uid, proc.desc, p2s(proc)),

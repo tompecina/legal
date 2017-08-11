@@ -35,7 +35,7 @@ urlpatterns = [
         genrender,
         kwargs={
             'template': 'sur_partydeleted.html',
-            'page_title': 'Smazání vyhledávacího řetězce'},
+            'page_title': 'Smazání účastníka'},
         name='partydeleted'),
     url(r'^partydelall/$', partydelall, name='partydelall'),
     url(r'^partybatchform/$', partybatchform, name='partybatchform'),

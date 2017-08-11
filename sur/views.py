@@ -155,14 +155,15 @@ def partydel(request, idx=0):
         request.POST)
     uid = request.user.id
     uname = request.user.username
+    party = get_object_or_404(Party, pk=idx, uid=uid)
     if request.method == 'GET':
         return render(
             request,
             'sur_partydel.html',
             {'app': APP,
-             'page_title': 'Smazání účastníka'})
+             'page_title': 'Smazání účastníka',
+             'desc': party.party})
     else:
-        party = get_object_or_404(Party, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
             LOGGER.info('User "{}" ({:d}) deleted party "{}"'.format(uname, uid, party.party), request)
             party.delete()

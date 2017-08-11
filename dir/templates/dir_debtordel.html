@@ -2,7 +2,7 @@
 
 {% block page_contents %}
 	  <h1>{{ page_title }}</h1>
-          <p class="center">Opravdu chcete tohoto dlužníka smazat?</p>
+          <p class="center">Opravdu chcete dlužníka "{{ desc }}" smazat?</p>
           <form method="post" enctype="multipart/form-data">
 	    <p class="center"><input type="submit" name="submit_yes" value="Ano" /><input type="submit" name="submit_no" value="Ne" class="mll" /></p>
 	    {% csrf_token %}

@@ -185,25 +185,22 @@ def debtorform(request, idx=0):
 def debtordel(request, idx=0):
 
     LOGGER.debug(
-        'Debtor delete page accessed using method {}, id={}'
-        .format(request.method, idx),
+        'Debtor delete page accessed using method {}, id={}'.format(request.method, idx),
         request,
         request.POST)
     uid = request.user.id
     uname = request.user.username
+    debtor = get_object_or_404(Debtor, pk=idx, uid=uid)
     if request.method == 'GET':
         return render(
             request,
             'dir_debtordel.html',
             {'app': APP,
-             'page_title': 'Smazání dlužníka'})
+             'page_title': 'Smazání dlužníka',
+             'desc': debtor.desc})
     else:
-        debtor = get_object_or_404(Debtor, pk=idx, uid=uid)
         if getbutton(request) == 'yes':
-            LOGGER.info(
-                'User "{}" ({:d}) deleted debtor "{}"'
-                .format(uname, uid, debtor.desc),
-                request)
+            LOGGER.info('User "{}" ({:d}) deleted debtor "{}"'.format(uname, uid, debtor.desc), request)
             debtor.delete()
             return redirect('dir:debtordeleted')
         return redirect('dir:mainpage')
