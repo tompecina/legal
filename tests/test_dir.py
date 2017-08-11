@@ -196,8 +196,10 @@ class TestViews1(TransactionTestCase):
         check_html(self, res.content)
 
         res = self.client.get('/dir/')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertFalse(soup.select('table#list'))
+
         models.Debtor(
             uid=self.user,
             name_opt=0,
@@ -205,6 +207,7 @@ class TestViews1(TransactionTestCase):
             desc='Test').save()
 
         res = self.client.get('/dir/')
+        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertEqual(len(soup.select('table#list tbody tr')), 1)
         for number in range(200, 437):
@@ -483,7 +486,7 @@ class TestViews2(TransactionTestCase):
         title = soup.select('h1')
         self.assertEqual(len(title), 1)
         self.assertEqual(title[0].text, 'Úprava dlužníka')
-        check_html(self, res.content)
+        check_html(self, res.content);
 
         res = self.client.post(
             '/dir/debtorform/{:d}/'.format(debtor_id),

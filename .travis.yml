@@ -13,14 +13,14 @@ env:
   global:
     - "TEST=1"
     - "DBUSER=root"
-    - "HTML_CHECK=1"
+    - "CHECK_HTML=1"
   matrix:
     - "DJANGO_VERSION=stable"
     - "DJANGO_VERSION=nightly"
 
 before_install:
   - "project=$(pwd)"
-  - "cd ../.. && mkdir lib && export LD_LIBRARY_PATH=$(pwd)/lib"
+  - "cd ../.. && mkdir -p lib && export LD_LIBRARY_PATH=$(pwd)/lib"
   - "git clone --depth=1 https://github.com/htacg/tidy-html5.git htacg/tidy-html5"
   - "cd htacg/tidy-html5/build/cmake && cmake ../.. -DCMAKE_BUILD_TYPE=Release && make"
   - "ln -s $(pwd)/libtidy.so.5.5.31 $LD_LIBRARY_PATH/libtidy-0.99.so.0"
