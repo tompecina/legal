@@ -22,7 +22,7 @@
 
 from http import HTTPStatus
 
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, TestCase
 
 from tests.utils import check_html
 from kos import forms
@@ -410,7 +410,9 @@ class TestForms(SimpleTestCase):
             {'vatrate': ['Toto pole je třeba vyplnit.']})
 
 
-class TestViews(SimpleTestCase):
+class TestViews(TestCase):
+
+    fixtures = ('kos_test.json',)
 
     def test_mainpage(self):
 
@@ -580,7 +582,7 @@ class TestViews(SimpleTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'kos_mainpage.html')
+        self.assertTemplateUsed(res, 'kos_mainpage.html');
         check_html(self, res.content)
 
         res = self.client.post('/kos/', {'submit_single': 'Vypočítat'})

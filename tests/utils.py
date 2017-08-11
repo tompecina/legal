@@ -200,9 +200,13 @@ def check_html(runner, html, key=None):
                     store.extend(sorted(val))
                 elif (isinstance(val, str)
                     and not (val.startswith(STATIC_URL) or ('date' in tag and key == 'value'))):
-                    if '/list/?' in val:
-                        val = val.partition('?')[0]
-                    store.append(val)
+                    if '?' in val:
+                        part = val.rpartition('?')
+                        store.append(part[0])
+                        for arg in sorted(part[2].split('&')):
+                            store.append(arg)
+                    else:
+                        store.append(val)
         elif isinstance(desc, NavigableString):
             store.append(str(desc))
     string = ' '.join(' '.join(store).split())
