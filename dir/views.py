@@ -35,7 +35,7 @@ from django.apps import apps
 from django.http import QueryDict
 from django.urls import reverse
 
-from common.glob import INERR, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA, TEXT_OPTS_AI, IC_REGEX, RC_FULL_REGEX
+from common.glob import INERR, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA, TEXT_OPTS_AI, IC_RE_STR, RC_FULL_RE_STR
 from common.utils import getbutton, Pager, LOGGER, render
 from szr.forms import EmailForm
 from sir.glob import L2N, L2S
@@ -295,7 +295,7 @@ def debtorbatchform(request):
                                         errors.append((idx, 'Příliš dlouhé pole <q>jméno</q>'))
                                         continue
                                 elif key == 'IČO':
-                                    if not compile(IC_REGEX).match(val):
+                                    if not compile(IC_RE_STR).match(val):
                                         errors.append((idx, 'Chybná hodnota pro IČO'))
                                         continue
                                     genid = val
@@ -305,7 +305,7 @@ def debtorbatchform(request):
                                         continue
                                     taxid = val
                                 elif key == 'RČ':
-                                    if not compile(RC_FULL_REGEX).match(val):
+                                    if not compile(RC_FULL_RE_STR).match(val):
                                         errors.append((idx, 'Chybná hodnota pro rodné číslo'))
                                         continue
                                     birthid = val.replace('/', '')

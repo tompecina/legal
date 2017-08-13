@@ -1,3 +1,7 @@
+'use strict';
+
+/* css_classes: curr trdt */
+
 $(function() {
 
     function submit_mainform() {

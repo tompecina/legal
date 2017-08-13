@@ -1,8 +1,12 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
-	<form method="post" enctype="multipart/form-data">
-	  <table class="basic">{% block form_contents %}{% endblock %}	    {% include "submit.html" %}	  </table>
-	  {% csrf_token %}
-	</form>
+<form method="post" enctype="multipart/form-data">
+<table class="basic">
+<tbody>
+{% block form_contents %}{% endblock %}
+{% include 'submit.html' %}
+</tbody>
+</table>{% csrf_token %}
+</form>
 {% endblock %}

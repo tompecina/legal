@@ -1,29 +1,27 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
-        <table class="margin-none-auto">
-	  <tr>
-	    <td>
-              <h1>{{ page_title }}</h1>
-	      <table class="list">
-		<thead>
-		  <tr class="header">
-		    <th class="left">
-		      Zkratka
-		    </th>
-		    <th>
-		      Soud
-		    </th>
-		  </tr>
-		</thead>
-                <tbody>
-{% for row in rows %}		  <tr class="{% cycle 'odd' 'even' %}">
-		    <td>{{ row.id }}</td>
-		    <td>{{ row.name }}</td>
-                  </tr>
-{% endfor %}		</tbody>
-	      </table>
-	    </td>
-	  </tr>
-	</table>
+<table class="margin-none-auto">
+<tbody>
+<tr>
+<td>
+<h1>{{ page_title }}</h1>
+<table class="list">
+<thead>
+<tr class="header">
+<th class="left">Zkratka</th>
+<th>Soud</th>
+</tr>
+</thead>
+<tbody>
+{% for row in rows %}<tr class="{% cycle 'odd' 'even' %}">
+<td>{{ row.id }}</td>
+<td>{{ row.name }}</td>
+</tr>
+{% endfor %}</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
 {% endblock %}

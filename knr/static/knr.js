@@ -1,3 +1,5 @@
+'use strict';
+
 $(function() {
 
     function mainpage_reset_onclick() {

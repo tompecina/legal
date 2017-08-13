@@ -24,7 +24,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, RegexValidator
 
-from common.glob import IC_REGEX, RC_REGEX, PSC_REGEX
+from common.glob import IC_RE_STR, RC_RE_STR, PSC_RE_STR
 from common.utils import composeref
 
 
@@ -67,7 +67,7 @@ class Adresa(models.Model):
     psc = models.CharField(
         null=True,
         max_length=5,
-        validators=(RegexValidator(regex=PSC_REGEX),),
+        validators=(RegexValidator(regex=PSC_RE_STR),),
         db_index=True)
 
     telefon = models.CharField(
@@ -134,7 +134,7 @@ class Osoba(models.Model):
     ic = models.CharField(
         null=True,
         max_length=9,
-        validators=(RegexValidator(regex=IC_REGEX),),
+        validators=(RegexValidator(regex=IC_RE_STR),),
         db_index=True)
 
     dic = models.CharField(
@@ -149,7 +149,7 @@ class Osoba(models.Model):
     rc = models.CharField(
         max_length=10,
         null=True,
-        validators=(RegexValidator(regex=RC_REGEX),),
+        validators=(RegexValidator(regex=RC_RE_STR),),
         db_index=True)
 
     adresy = models.ManyToManyField(
@@ -262,7 +262,7 @@ class Vec(models.Model):
 class Counter(models.Model):
 
     id = models.CharField(
-        max_length=30,
+        max_length=150,
         primary_key=True)
 
     number = models.IntegerField()

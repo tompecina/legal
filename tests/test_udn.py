@@ -150,7 +150,7 @@ class TestGlob(SimpleTestCase):
 
     def test_filename_regex(self):
 
-        fre = compile(glob.FILENAME_REGEX)
+        fre = compile(glob.FILENAME_RE_STR)
 
         cases = (
             'test.pdf',

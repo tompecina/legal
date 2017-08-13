@@ -29,9 +29,10 @@ from inspect import stack
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag, NavigableString
+from tinycss import make_parser
 from django.http import QueryDict
 
-from common.settings import TEST_DIR, TEST_DATA_DIR, STATIC_URL
+from common.settings import TEST_DIR, TEST_DATA_DIR, STATIC_URL, APPS, STATIC_ROOT
 from common.models import Lock, Pending
 from sir.models import Counter
 
@@ -159,27 +160,87 @@ class CheckArray(dict):
 
     def __init__(self):
 
-        if WRITE_CHECKFILE:
-            return
-        for line in CHECKFILE:
-            fields = line.split()
-            filepos = fields[0]
-            if len(fields) == 2:
-                hsh = fields[1]
-            else:
-                filepos += '-' + fields[1]
-                hsh = fields[2]
-            self[filepos] = hsh
-        CHECKFILE.close()
+        if not WRITE_CHECKFILE:
+            for line in CHECKFILE:
+                fields = line.split()
+                filepos = fields[0]
+                if len(fields) == 2:
+                    hsh = fields[1]
+                else:
+                    filepos += '-' + fields[1]
+                    hsh = fields[2]
+                self[filepos] = hsh
+            CHECKFILE.close()
 
 
-CHECKARRAY = CheckArray()
+def parse_tokens(tokens):
+
+    classes = set()
+    dot = False
+    for token in tokens:
+        if token.is_container:
+            dot = False
+            classes.update(parse_tokens(token.content))
+        elif token.type == 'DELIM' and token.value == '.':
+            dot = True
+        else:
+            if dot and token.type == 'IDENT':
+                classes.add(token.value)
+            dot = False
+    return classes
 
 
-def check_html(runner, html, key=None):
+CSS_CLASSES_RE = compile(r'/\* css_classes:([^*]*)\*/')
+
+
+def parse_comments(data):
+
+    classes = set()
+    for line in data.splitlines():
+        match = CSS_CLASSES_RE.match(line)
+        if match:
+            classes = classes.union(set(match.group(1).split()))
+    return classes
+
+
+class ClassArray(dict):
+
+    def __init__(self):
+
+        parser = make_parser()
+        for app in APPS:
+            try:
+                with open(join(STATIC_ROOT, '{}.css'.format(app)), 'r') as infile:
+                    css = infile.read()
+            except FileNotFoundError:
+                pass
+            stylesheet = parser.parse_stylesheet(css)
+            self[app] = parse_comments(css)
+            for ruleset in stylesheet.rules:
+                selector = ruleset.selector
+                self[app].update(parse_tokens(selector))
+
+            try:
+                with open(join(STATIC_ROOT, '{}.js'.format(app)), 'r') as infile:
+                    js = infile.read()
+            except FileNotFoundError:
+                pass
+            self[app] = self[app].union(parse_comments(js))
+
+        for app in APPS:
+            if app != 'common':
+                self[app] = self[app].union(self['common'])
+
+
+CHECK_ARRAY = CheckArray()
+CLASS_ARRAY = ClassArray()
+
+
+def check_html(runner, html, key=None, app=None, check_html=True, check_classes=True):
 
     caller = stack()[1]
     filepos = '{}:{:d}'.format(caller.filename.rpartition('/')[2], caller.lineno)
+    app = app or filepos.partition('_')[2].partition('.')[0]
     if key:
         filepos += '-{}'.format(key)
 
@@ -196,6 +257,10 @@ def check_html(runner, html, key=None):
                     continue
                 store.append(attr)
                 val = attrs[attr]
+                if check_classes and attr == 'class':
+                    for cls in val:
+                        if cls:
+                            runner.assertIn(cls, CLASS_ARRAY[app], msg=filepos)
                 if isinstance(val, list):
                     store.extend(sorted(val))
                 elif (isinstance(val, str)
@@ -212,8 +277,9 @@ def check_html(runner, html, key=None):
     string = ' '.join(' '.join(store).split())
     hsh = md5(string.encode()).hexdigest()
 
-    if WRITE_CHECKFILE:
-        print(filepos, hsh, file=CHECKFILE)
-    elif CHECK_HTML:
-        runner.assertIn(filepos, CHECKARRAY, msg=filepos)
-        runner.assertEqual(CHECKARRAY[filepos], hsh, msg=filepos)
+    if check_html:
+        if WRITE_CHECKFILE:
+            print(filepos, hsh, file=CHECKFILE)
+        elif CHECK_HTML:
+            runner.assertIn(filepos, CHECK_ARRAY, msg=filepos)
+            runner.assertEqual(CHECK_ARRAY[filepos], hsh, msg=filepos)

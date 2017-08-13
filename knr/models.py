@@ -33,7 +33,7 @@ class Place(models.Model):
         on_delete=models.CASCADE)
 
     abbr = models.CharField(
-        max_length=30)
+        max_length=150)
 
     name = models.CharField(
         max_length=255)
@@ -61,13 +61,13 @@ class Car(models.Model):
         on_delete=models.CASCADE)
 
     abbr = models.CharField(
-        max_length=30)
+        max_length=150)
 
     name = models.CharField(
         max_length=255)
 
     fuel = models.CharField(
-        max_length=30)
+        max_length=150)
 
     cons1 = models.DecimalField(
         max_digits=3,
@@ -99,7 +99,7 @@ class Formula(models.Model):
         on_delete=models.CASCADE)
 
     abbr = models.CharField(
-        max_length=30)
+        max_length=150)
 
     name = models.CharField(
         max_length=255)
@@ -124,7 +124,7 @@ class Rate(models.Model):
         db_index=False)
 
     fuel = models.CharField(
-        max_length=30)
+        max_length=150)
 
     rate = models.DecimalField(
         max_digits=5,

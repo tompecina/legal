@@ -1,177 +1,261 @@
-{% extends "knr_form.html" %}
+{% extends 'knr_form.html' %}
 
 {% block form_contents %}
-{% ifequal type "general" %}	    <tr><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
-{% if errors %}            <tr><td></td><td colspan="2" class="warning">
-              {% include "formwarning.html" %}            </td></tr>
-{% endif %}	    <tr><th class="{{ description_error }}"><label for="id_description">Popis</label>:</th><td colspan="2"><input type="text" name="description" value="{{ description }}" size="80" maxlength="255" id="id_description" class="{{ description_error }}" /></td></tr>
-	    <tr><th class="{{ amount_error }}"><label for="id_amount">Částka</label>:</th><td colspan="2" class="nowrap"><input type="text" name="amount" value="{% ifequal amount_error "ok" %}{{ amount|stringformat:"u" }}{% else %}{{ amount }}{% endifequal %}" size="9" maxlength="12" id="id_amount" class="{{ amount_error }}" /> Kč</td></tr>
-	    <tr><th class="ok"><label for="id_vat">DPH</label>:</th><td colspan="2"><input type="checkbox" name="vat" id="id_vat" class="ok"{% if vat %} checked="checked"{% endif %} /></td></tr>
-            <tr><th class="{{ fraction_error }}">Zlomek:</th><td colspan="2"><input type="text" name="numerator" value="{% ifequal numerator_error "ok" %}{{ numerator|stringformat:"u" }}{% else %}{{ numerator }}{% endifequal %}" size="2" maxlength="3" id="id_numerator" class="{{ numerator_error }}" /> / <input type="text" name="denominator" value="{% ifequal denominator_error "ok" %}{{ denominator|stringformat:"u" }}{% else %}{{ denominator }}{% endifequal %}" size="2" maxlength="3" id="id_denominator" class="{{ denominator_error }}" /></td></tr>
-	    <tr><th class="{{ item_note_error }}"><label for="id_item_note">Poznámka</label>:</th><td colspan="2"><textarea name="item_note" rows="8" cols="80" id="id_item_note" class="{{ item_note_error }}">{{ item_note }}</textarea></td></tr>{% endifequal %}{% ifequal type "service" %}	    <tr><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
-{% if errors %}            <tr><td></td><td colspan="2" class="warning">
-              {% include "formwarning.html" %}            </td></tr>
-{% endif %}	    <tr><th class="{{ description_error }}"><label for="id_description">Popis</label>:</th><td colspan="2"><input type="text" name="description" value="{{ description }}" size="80" maxlength="255" id="id_description" class="{{ description_error }}" /></td></tr>
-	    <tr>
-	      <th class="{{ major_number_error }}"><label for="id_major_number">Hlavních úkonů</label>:</th>
-	      <td class="nowrap"><input type="text" name="major_number" value="{% ifequal major_number_error "ok" %}{{ major_number|stringformat:"u" }}{% else %}{{ major_number }}{% endifequal %}" size="3" maxlength="3" id="id_major_number" class="{{ major_number_error }}" /><label for="id_rate" class="{{ rate_error }}"> à </label><input type="text" name="rate" value="{% ifequal rate_error "ok" %}{{ rate|stringformat:"u" }}{% else %}{{ rate }}{% endifequal %}" size="9" maxlength="12" id="id_rate" class="{{ rate_error }}" /> Kč</td>
-	      <td rowspan="7" class="right">
-		<fieldset class="itemfs">
-		  <legend class="center">Vypočítat sazbu</legend>
-		  <div class="center nowrap"><label for="id_basis" class="{{ basis_error }}">TH: </label><input type="text" name="basis" value="{% ifequal basis_error "ok" %}{{ basis|stringformat:"u" }}{% else %}{{ basis }}{% endifequal %}" size="9" maxlength="12" id="id_basis" class="{{ basis_error }}" /> Kč</div>
-		  <div class="center mts mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
-		  <div class="center"><input type="submit" name="submit_calc2" value="Od 01.09.2006" /></div>
-		</fieldset>
-	      </td>
-	    </tr>
-	    <tr><th class="{{ minor_number_error }}"><label for="id_minor_number">Vedlejších úkonů</label>:</th><td class="nowrap"><input type="text" name="minor_number" value="{% ifequal minor_number_error "ok" %}{{ minor_number|stringformat:"u" }}{% else %}{{ minor_number }}{% endifequal %}" size="3" maxlength="3" id="id_minor_number" class="{{ minor_number_error }}" /></td></tr>
-	    <tr><th class="{{ multiple_number_error }}"><label for="id_multiple_number">Počet zastupovaných účastníků</label>:</th><td><input type="text" name="multiple_number" value="{% ifequal multiple_number_error "ok" %}{{ multiple_number|stringformat:"u" }}{% else %}{{ multiple_number }}{% endifequal %}" size="3" maxlength="6" id="id_multiple_number" class="{{ multiple_number_error }}" /></td></tr>
-	    <tr><th class="{{ off30limit5000_flag_error }}"><label for="id_off30limit5000_flag">Snížení o 30 % (nejvýš 5 000 Kč)</label>:</th><td class="nowrap"><input type="checkbox" name="off30limit5000_flag" id="id_off30limit5000_flag" class="{{ off30limit5000_flag_error }}"{% if off30limit5000_flag %} checked="checked"{% endif %} /> (§ 12a)</td></tr>
-	    <tr><th class="{{ off20limit5000_flag_error }}"><label for="id_off20limit5000_flag">Snížení o 20 % (nejvýš 5 000 Kč)</label>:</th><td class="nowrap"><input type="checkbox" name="off20limit5000_flag" id="id_off20limit5000_flag" class="{{ off20limit5000_flag_error }}"{% if off20limit5000_flag %} checked="checked"{% endif %} /> (§ 12a)</td></tr>
-	    <tr><th class="{{ off30_flag_error }}"><label for="id_off30_flag">Snížení o 30 %</label>:</th><td class="nowrap"><input type="checkbox" name="off30_flag" id="id_off30_flag" class="{{ off30_flag_error }}"{% if off30_flag %} checked="checked"{% endif %} /> (§ 12b, 12c)</td></tr>
-	    <tr><th class="{{ off10_flag_error }}"><label for="id_off10_flag">Snížení o 10 %</label>:</th><td class="nowrap"><input type="checkbox" name="off10_flag" id="id_off10_flag" class="{{ off10_flag_error }}"{% if off10_flag %} checked="checked"{% endif %} /> (§ 15a)</td></tr>
-	    <tr><th class="ok"><label for="id_vat">DPH</label>:</th><td colspan="2"><input type="checkbox" name="vat" id="id_vat" class="ok"{% if vat %} checked="checked"{% endif %} /></td></tr>
-            <tr><th class="{{ fraction_error }}">Zlomek:</th><td colspan="2"><input type="text" name="numerator" value="{% ifequal numerator_error "ok" %}{{ numerator|stringformat:"u" }}{% else %}{{ numerator }}{% endifequal %}" size="2" maxlength="3" id="id_numerator" class="{{ numerator_error }}" /> / <input type="text" name="denominator" value="{% ifequal denominator_error "ok" %}{{ denominator|stringformat:"u" }}{% else %}{{ denominator }}{% endifequal %}" size="2" maxlength="3" id="id_denominator" class="{{ denominator_error }}" /></td></tr>
-	    <tr><th class="{{ item_note_error }}"><label for="id_item_note">Poznámka</label>:</th><td colspan="2"><textarea name="item_note" rows="8" cols="80" id="id_item_note" class="{{ item_note_error }}">{{ item_note }}</textarea></td></tr>{% endifequal %}{% ifequal type "flat" %}	    <tr><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
-{% if errors %}            <tr><td></td><td colspan="2" class="warning">
-	      {% include "formwarning.html" %}            </td></tr>
-{% endif %}            <tr><th class="{{ description_error }}"><label for="id_description">Popis</label>:</th><td colspan="2"><input type="text" name="description" value="{{ description }}" size="80" maxlength="255" id="id_description" class="{{ description_error }}" /></td></tr>
-	    <tr>
-	      <th class="{{ rate_error }}"><label for="id_rate">Částka</label>:</th>
-	      <td class="nowrap"><input type="text" name="rate" value="{% ifequal rate_error "ok" %}{{ rate|stringformat:"u" }}{% else %}{{ rate }}{% endifequal %}" size="9" maxlength="12" id="id_rate" class="{{ rate_error }}" /> Kč</td><td rowspan="8" class="right">
-		<fieldset class="itemfs">
-		  <legend class="center">Vypočítat</legend>
-		  <div class="center nowrap"><label for="id_basis" class="{{ basis_error }}">Základ: </label><input type="text" name="basis" value="{% ifequal basis_error "ok" %}{{ basis|stringformat:"u" }}{% else %}{{ basis }}{% endifequal %}" size="9" maxlength="12" id="id_basis" class="{{ basis_error }}" /> Kč</div>
-		  <div class="center mts mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
-		  <div class="center"><input type="submit" name="submit_calc2" value="01.09.2006 až 29.02.2012" /></div>
-		  <div class="center"><input type="submit" name="submit_calc3" value="Od 01.03.2012" /></div>
-		</fieldset>
-	      </td>
-	    </tr>
-	    <tr><th class="ok"><label for="id_collection_flag">Výkon rozhodnutí</label>:</th><td class="nowrap"><input type="checkbox" name="collection_flag" id="id_collection_flag" class="ok"{% if collection_flag %} checked="checked"{% endif %} /> (§ 12/1/a/1)</td></tr>
-	    <tr><th class="{{ halved_flag_error }}"><label for="id_halved_flag">Odmítnuto/zastaveno</label>:</th><td class="nowrap"><input type="checkbox" name="halved_flag" id="id_halved_flag" class="{{ halved_flag_error }}"{% if halved_flag %} checked="checked"{% endif %} /> (§ 13/1)</td></tr>
-	    <tr><th class="{{ halved_appeal_flag_error }}"><label for="id_halved_appeal_flag"><span class="italic">Ditto</span> v odvolání/dovolání</label>:</th><td class="nowrap"><input type="checkbox" name="halved_appeal_flag" id="id_halved_appeal_flag" class="{{ halved_appeal_flag_error }}"{% if halved_appeal_flag %} checked="checked"{% endif %} /> (§ 14/1)</td></tr>
-	    <tr><th class="ok"><label for="id_single_flag">Pouze jeden úkon</label>:</th><td class="nowrap"><input type="checkbox" name="single_flag" id="id_single_flag" class="ok"{% if single_flag %} checked="checked"{% endif %} /> (§ 18/1)</td></tr>
-	    <tr><th class="{{ multiple_flag_error }}">Více zastupovaných účastníků:</th><td class="nowrap"><input type="checkbox" name="multiple_flag" id="id_multiple_flag" class="ok"{% if multiple_flag %} checked="checked"{% endif %} /> +30 % (§ 19a)</td></tr>
-	    <tr><th class="{{ multiple_flag_error }}"></th><td class="nowrap"><input type="checkbox" name="multiple50_flag" id="id_multiple50_flag" class="ok"{% if multiple50_flag %} checked="checked"{% endif %} /> +50 % (§ 19a)</td></tr>
-	    <tr><th class="ok"><label for="id_vat">DPH</label>:</th><td class="nowrap"><input type="checkbox" name="vat" id="id_vat" class="ok"{% if vat %} checked="checked"{% endif %} /></td></tr>
-            <tr><th class="{{ fraction_error }}">Zlomek:</th><td colspan="2"><input type="text" name="numerator" value="{% ifequal numerator_error "ok" %}{{ numerator|stringformat:"u" }}{% else %}{{ numerator }}{% endifequal %}" size="2" maxlength="3" id="id_numerator" class="{{ numerator_error }}" /> / <input type="text" name="denominator" value="{% ifequal denominator_error "ok" %}{{ denominator|stringformat:"u" }}{% else %}{{ denominator }}{% endifequal %}" size="2" maxlength="3" id="id_denominator" class="{{ denominator_error }}" /></td></tr>
-	    <tr><th class="{{ item_note_error }}"><label for="id_item_note">Poznámka</label>:</th><td colspan="2"><textarea name="item_note" rows="8" cols="80" id="id_item_note" class="{{ item_note_error }}">{{ item_note }}</textarea></td></tr>{% endifequal %}{% ifequal type "administrative" %}	    <tr><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
-{% if errors %}            <tr><td></td><td colspan="2" class="warning">
-              {% include "formwarning.html" %}            </td></tr>
-{% endif %}            <tr><th class="{{ description_error }}"><label for="id_description">Popis</label>:</th><td colspan="2"><input type="text" name="description" value="{{ description }}" size="80" maxlength="255" id="id_description" class="{{ description_error }}" /></td></tr>
-	    <tr>
-	      <th class="{{ number_error }}"><label for="id_number">Počet úkonů</label>:</th>
-	      <td class="nowrap"><input type="text" name="number" value="{% ifequal number_error "ok" %}{{ number|stringformat:"u" }}{% else %}{{ number }}{% endifequal %}" size="3" maxlength="3" id="id_number" class="{{ number_error }}" /><label for="id_rate" class="{{ rate_error }}"> à </label><input type="text" name="rate" value="{% ifequal rate_error "ok" %}{{ rate|stringformat:"u" }}{% else %}{{ rate }}{% endifequal %}" size="9" maxlength="12" id="id_rate" class="{{ rate_error }}" /> Kč</td>
-	      <td rowspan="2" class="right">
-		<fieldset class="itemfs">
-		  <legend class="center">Sazba</legend>
-		  <div class="center mtn mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
-		  <div class="center"><input type="submit" name="submit_calc2" value="Od 01.09.2006" /></div>
-	        </fieldset>
-	      </td>
-	    </tr>
-	    <tr><th class="ok"><label for="id_vat">DPH</label>:</th><td><input type="checkbox" name="vat" id="id_vat" class="ok"{% if vat %} checked="checked"{% endif %} /></td></tr>
-            <tr><th class="{{ fraction_error }}">Zlomek:</th><td colspan="2"><input type="text" name="numerator" value="{% ifequal numerator_error "ok" %}{{ numerator|stringformat:"u" }}{% else %}{{ numerator }}{% endifequal %}" size="2" maxlength="3" id="id_numerator" class="{{ numerator_error }}" /> / <input type="text" name="denominator" value="{% ifequal denominator_error "ok" %}{{ denominator|stringformat:"u" }}{% else %}{{ denominator }}{% endifequal %}" size="2" maxlength="3" id="id_denominator" class="{{ denominator_error }}" /></td></tr>
-	    <tr><th class="{{ item_note_error }}"><label for="id_item_note">Poznámka</label>:</th><td colspan="2"><textarea name="item_note" rows="8" cols="80" id="id_item_note" class="{{ item_note_error }}">{{ item_note }}</textarea></td></tr>{% endifequal %}{% ifequal type "time" %}	    <tr><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
-{% if errors %}            <tr><td></td><td colspan="2" class="warning">
-              {% include "formwarning.html" %}            </td></tr>
-{% endif %}            <tr><th class="{{ description_error }}"><label for="id_description">Popis</label>:</th><td colspan="2"><input type="text" name="description" value="{{ description }}" size="80" maxlength="255" id="id_description" class="{{ description_error }}" /></td></tr>
-	    <tr>
-	      <th class="{{ time_number_error }}"><label for="id_time_number">Počet započatých půlhodin</label>:</th>
-	      <td class="nowrap"><input type="text" name="time_number" value="{% ifequal time_number_error "ok" %}{{ time_number|stringformat:"u" }}{% else %}{{ time_number }}{% endifequal %}" size="3" maxlength="3" id="id_time_number" class="{{ time_number_error }}" /><label for="id_time_rate" class="{{ time_rate_error }}"> à </label><input type="text" name="time_rate" value="{% ifequal time_rate_error "ok" %}{{ time_rate|stringformat:"u" }}{% else %}{{ time_rate }}{% endifequal %}" size="9" maxlength="12" id="id_time_rate" class="{{ time_rate_error }}" /> Kč</td>
-	      <td rowspan="2" class="right">
-		<fieldset class="itemfs">
-		  <legend class="center">Sazba</legend>
-		  <div class="center mtn mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
-		  <div class="center"><input type="submit" name="submit_calc2" value="Od 1. 9. 2006" /></div>
-	        </fieldset>
-	      </td>
-	    </tr>
-	    <tr><th class="ok"><label for="id_vat">DPH</label>:</th><td><input type="checkbox" name="vat" id="id_vat" class="ok"{% if vat %} checked="checked"{% endif %} /></td></tr>
-            <tr><th class="{{ fraction_error }}">Zlomek:</th><td colspan="2"><input type="text" name="numerator" value="{% ifequal numerator_error "ok" %}{{ numerator|stringformat:"u" }}{% else %}{{ numerator }}{% endifequal %}" size="2" maxlength="3" id="id_numerator" class="{{ numerator_error }}" /> / <input type="text" name="denominator" value="{% ifequal denominator_error "ok" %}{{ denominator|stringformat:"u" }}{% else %}{{ denominator }}{% endifequal %}" size="2" maxlength="3" id="id_denominator" class="{{ denominator_error }}" /></td></tr>
-	    <tr><th class="{{ item_note_error }}"><label for="id_item_note">Poznámka</label>:</th><td colspan="2"><textarea name="item_note" rows="8" cols="80" id="id_item_note" class="{{ item_note_error }}">{{ item_note }}</textarea></td></tr>{% endifequal %}{% ifequal type "travel" %}	    <tr><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
-{% if errors %}            <tr><td></td><td colspan="2" class="warning">
-              {% include "formwarning.html" %}            </td></tr>
-{% endif %}	    <tr><th class="{{ description_error }}"><label for="id_description">Popis</label>:</th><td colspan="2"><input type="text" name="description" value="{{ description }}" size="80" maxlength="255" id="id_description" class="{{ description_error }}" /></td></tr>
-	    <tr><td colspan="3"><hr /></td></tr>
-	    <tr>
-	      <th class="ok"><label for="id_from_sel" class="ok">Z</label>:</th>
-	      <td colspan="2" class="nowrap">
-		<select name="from_sel" id="id_from_sel"{% if not from_sels %} disabled="disabled"{% endif %}>
-		  <option value="" selected="selected">Vyberte nebo zadejte:</option>
-		  <option value="">{{ sep }}</option>
-{% for p in from_sels %}                  <option value="{{ p.idx }}">{{ p.text }}</option>
-{% endfor %}                </select>
-                <input type="submit" name="submit_from_apply" value="Použít" id="id_from_apply"{% if not from_sels %} disabled="disabled"{% endif %} />
-	      </td>
-	    </tr>
-	    <tr><th class="{{ from_name_error }}"><label for="id_from_name">Název</label>:</th><td colspan="2"><input type="text" name="from_name" value="{{ from_name }}" size="80" maxlength="255" id="id_from_name" class="{{ from_name_error }}" /></td></tr>
-	    <tr><th class="{{ from_address_error }}"><label for="id_from_address">Adresa</label>:</th><td colspan="2" class="nowrap"><input type="text" name="from_address" value="{{ from_address }}" size="70" maxlength="255" id="id_from_address" class="{{ from_address_error }}" /> <input type="submit" name="submit_from_search" value="Vyhledat" id="id_from_search" /></td></tr>
-	    <tr><th class="{{ from_lat_error }}"><label for="id_from_lat">Zeměpisná šířka</label>:</th><td colspan="2"><input type="text" name="from_lat" value="{% ifequal from_lat_error "ok"%}{{ from_lat|floatformat:"7" }}{% else %}{{ from_lat }}{% endifequal %}" size="12" maxlength="20" id="id_from_lat" class="{{ from_lat_error }}" /></td></tr>
-	    <tr><th class="{{ from_lon_error }}"><label for="id_from_lon">Zeměpisná délka</label>:</th><td colspan="2"><input type="text" name="from_lon" value="{% ifequal from_lon_error "ok"%}{{ from_lon|floatformat:"7" }}{% else %}{{ from_lon }}{% endifequal %}" size="12" maxlength="20" id="id_from_lon" class="{{ from_lon_error }}" /></td></tr>
-	    <tr><td colspan="3"><hr /></td></tr>
-	    <tr>
-	      <th class="ok"><label for="id_to_sel">Do</label>:</th>
-	      <td colspan="2" class="nowrap">
-		<select name="to_sel" id="id_to_sel"{% if not to_sels %} disabled="disabled"{% endif %}>
-		  <option value="" selected="selected">Vyberte nebo zadejte:</option>
-		  <option value="">{{ sep }}</option>
-{% for p in to_sels %}                  <option value="{{ p.idx }}">{{ p.text }}</option>
-{% endfor %}                </select>
-		<input type="submit" name="submit_to_apply" value="Použít" id="id_to_apply"{% if not to_sels %} disabled="disabled"{% endif %} />
-	      </td>
-	    </tr>
-	    <tr><th class="{{ to_name_error }}"><label for="id_to_name">Název</label>:</th><td colspan="2"><input type="text" name="to_name" value="{{ to_name }}" size="80" maxlength="255" id="id_to_name" class="{{ to_name_error }}" /></td></tr>
-	    <tr><th class="{{ to_address_error }}"><label for="id_to_address">Adresa</label>:</th><td colspan="2" class="nowrap"><input type="text" name="to_address" value="{{ to_address }}" size="70" maxlength="255" id="id_to_address" class="{{ to_address_error }}" /> <input type="submit" name="submit_to_search" value="Vyhledat" id="id_to_search" /></td></tr>
-	    <tr><th class="{{ to_lat_error }}"><label for="id_to_lat">Zeměpisná šířka</label>:</th><td colspan="2"><input type="text" name="to_lat" value="{% ifequal to_lat_error "ok"%}{{ to_lat|floatformat:"7" }}{% else %}{{ to_lat }}{% endifequal %}" size="12" maxlength="20" id="id_to_lat" class="{{ to_lat_error }}" /></td></tr>
-	    <tr><th class="{{ to_lon_error }}"><label for="id_to_lon">Zeměpisná délka</label>:</th><td colspan="2"><input type="text" name="to_lon" value="{% ifequal to_lon_error "ok"%}{{ to_lon|floatformat:"7" }}{% else %}{{ to_lon }}{% endifequal %}" size="12" maxlength="20" id="id_to_lon" class="{{ to_lon_error }}" /></td></tr>
-	    <tr><td colspan="3"><hr /></td></tr>
-	    <tr>
-	      <th class="{{ trip_distance_error }}"><label for="id_trip_distance">Délka jedné cesty</label>:</th>
-	      <td class="nowrap"><input type="text" name="trip_distance" value="{% ifequal trip_distance_error "ok" %}{{ trip_distance|stringformat:"u" }}{% else %}{{ trip_distance }}{% endifequal %}" size="3" maxlength="6" id="id_trip_distance" class="{{ trip_distance_error }}" /> km <input type="submit" name="submit_calc" id="id_calc" value="Vypočítat" /></td>
-	      <td rowspan="3" class="right">
-		<fieldset class="itemfs">
-		  <legend class="center">Sazba</legend>
-		  <div class="center mtn mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006" /></div>
-		  <div class="center"><input type="submit" name="submit_calc2" value="Od 01.09.2006" /></div>
-	        </fieldset>
-	      </td>
-	    </tr>
-	    <tr><th class="{{ time_number_error }}"><label for="id_time_number">Počet započatých půlhodin</label>:</th><td class="nowrap"><input type="text" name="time_number" value="{% ifequal time_number_error "ok" %}{{ time_number|stringformat:"u" }}{% else %}{{ time_number }}{% endifequal %}" size="3" maxlength="3" id="id_time_number" class="{{ time_number_error }}" /><label for="id_time_rate" class="{{ time_rate_error }}"> à </label><input type="text" name="time_rate" value="{% ifequal time_rate_error "ok" %}{{ time_rate|stringformat:"u" }}{% else %}{{ time_rate }}{% endifequal %}" size="9" maxlength="12" id="id_time_rate" class="{{ time_rate_error }}" /> Kč</td></tr>
-	    <tr><th class="{{ trip_number_error }}"><label for="id_trip_number">Počet cest</label>:</th><td><input type="text" name="trip_number" value="{% ifequal trip_number_error "ok" %}{{ trip_number|stringformat:"u" }}{% else %}{{ trip_number }}{% endifequal %}" size="3" maxlength="3" id="id_trip_number" class="{{ trip_number_error }}" /></td></tr>
-	    <tr><td colspan="3"><hr /></td></tr>
-	    <tr>
-	      <th class="ok"><label for="id_car_sel">Vozidlo</label>:</th>
-	      <td colspan="2" class="nowrap">
-		<select name="car_sel" id="id_car_sel"{% if not car_sels %} disabled="disabled"{% endif %}>
-		  <option value="" selected="selected">Vyberte nebo zadejte:</option>
-		  <option value="">{{ sep }}</option>
-{% for p in car_sels %}                  <option value="{{ p.idx }}">{{ p.text }}</option>
-{% endfor %}                </select>
-		<input type="submit" name="submit_car_apply" value="Použít" id="id_car_apply"{% if not car_sels %} disabled="disabled"{% endif %} />
-	      </td>
-	    </tr>
-	    <tr><th class="{{ car_name_error }}"><label for="id_car_name">Název</label>:</th><td colspan="2"><input type="text" name="car_name" value="{{ car_name }}" size="80" maxlength="255" id="id_car_name" class="{{ car_name_error }}" /></td></tr>
-	    <tr><th class="{{ fuel_name_error }}"><label for="id_fuel_name">Palivo</label>:</th><td colspan="2"><select name="fuel_name" id="id_fuel_name" class="ok">{% for f in fuel_names %}<option value="{{ f }}"{% ifequal f fuel_name %} selected="selected"{% endifequal %}>{{ f }}</option>{% endfor %}</select></td></tr>
-	    <tr><th class="{{ cons_error }}"><label for="id_cons1">Spotřeba</label>:</th><td colspan="2" class="nowrap"><input type="text" name="cons1" value="{% ifequal cons1_error "ok"%}{{ cons1|floatformat:"1" }}{% else %}{{ cons1 }}{% endifequal %}" size="4" maxlength="4" id="id_cons1" class="{{ cons1_error }}" /> / <input type="text" name="cons2" value="{% ifequal cons2_error "ok"%}{{ cons2|floatformat:"1" }}{% else %}{{ cons2 }}{% endifequal %}" size="4" maxlength="4" id="id_cons2" class="{{ cons2_error }}" /> / <input type="text" name="cons3" value="{% ifequal cons3_error "ok"%}{{ cons3|floatformat:"1" }}{% else %}{{ cons3 }}{% endifequal %}" size="4" maxlength="4" id="id_cons3" class="{{ cons3_error }}" /> l/100 km</td></tr>
-	    <tr><td colspan="3"><hr /></td></tr>
-	    <tr>
-	      <th class="ok"><label for="id_formula_sel">Předpis</label>:</th>
-	      <td colspan="2" class="nowrap">
-		<select name="formula_sel" id="id_formula_sel"{% if not formula_sels %} disabled="disabled"{% endif %}>
-		  <option value="" selected="selected">Vyberte nebo zadejte:</option>
-		  <option value="">{{ sep }}</option>
-{% for p in formula_sels %}                  <option value="{{ p.idx }}">{{ p.text }}</option>
-{% endfor %}                </select>
-		<input type="submit" name="submit_formula_apply" value="Použít" id="id_formula_apply"{% if not formula_sels %} disabled="disabled"{% endif %} />
-	      </td>
-	    </tr>
-	    <tr><th class="{{ formula_name_error }}"><label for="id_formula_name">Název</label>:</th><td colspan="2"><input type="text" name="formula_name" value="{{ formula_name }}" size="80" maxlength="255" id="id_formula_name" class="{{ formula_name_error }}" /></td></tr>
-	    <tr><th class="{{ flat_rate_error }}"><label for="id_flat_rate">Paušální náhrada</label>:</th><td colspan="2" class="nowrap"><input type="text" name="flat_rate" value="{% ifequal flat_rate_error "ok"%}{{ flat_rate|floatformat:"2" }}{% else %}{{ flat_rate }}{% endifequal %}" size="8" maxlength="12" id="id_flat_rate" class="{{ flat_rate_error }}" /> Kč/km</td></tr>
-	    <tr><th class="{{ fuel_price_error }}"><label for="id_fuel_price">Cena paliva</label>:</th><td colspan="2" class="nowrap"><input type="text" name="fuel_price" value="{% ifequal fuel_price_error "ok"%}{{ fuel_price|floatformat:"2" }}{% else %}{{ fuel_price }}{% endifequal %}" size="8" maxlength="12" id="id_fuel_price" class="{{ fuel_price_error }}" /> Kč/l</td></tr>
-	    <tr><td colspan="3"><hr /></td></tr>
-	    <tr><th class="ok"><label for="id_vat">DPH</label>:</th><td colspan="2"><input type="checkbox" name="vat" id="id_vat" class="ok"{% if vat %} checked="checked"{% endif %} /></td></tr>
-            <tr><th class="{{ fraction_error }}">Zlomek:</th><td colspan="2"><input type="text" name="numerator" value="{% ifequal numerator_error "ok" %}{{ numerator|stringformat:"u" }}{% else %}{{ numerator }}{% endifequal %}" size="2" maxlength="3" id="id_numerator" class="{{ numerator_error }}" /> / <input type="text" name="denominator" value="{% ifequal denominator_error "ok" %}{{ denominator|stringformat:"u" }}{% else %}{{ denominator }}{% endifequal %}" size="2" maxlength="3" id="id_denominator" class="{{ denominator_error }}" /></td></tr>
-	    <tr><th class="{{ item_note_error }}"><label for="id_item_note">Poznámka</label>:</th><td colspan="2"><textarea name="item_note" rows="8" cols="80" id="id_item_note" class="{{ item_note_error }}">{{ item_note }}</textarea></td></tr>{% endifequal %}
+<tr>
+<td></td>
+<td colspan="2"><h1 class="left">{{ page_title }}</h1></td>
+</tr>
+{% if errors %}<tr>
+<td></td>
+<td colspan="2" class="warning">{% include 'formwarning.html' %}</td>
+</tr>
+{% endif %}<tr>
+<th class="{{ description_error }}"><label for="id_description">Popis</label>:</th>
+<td colspan="2"><input type="text" name="description" value="{{ description }}" size="80" maxlength="255" id="id_description" class="{{ description_error }}"></td>
+</tr>
+{% if type == 'general' %}<tr>
+<th class="{{ amount_error }}"><label for="id_amount">Částka</label>:</th>
+<td colspan="2" class="nowrap"><input type="text" name="amount" value="{% if amount_error == 'ok' %}{{ amount|stringformat:'d' }}{% else %}{{ amount }}{% endif %}" size="9" maxlength="12" id="id_amount" class="{{ amount_error }}"> Kč</td>
+</tr>
+{% elif type == 'service' %}<tr>
+<th class="{{ major_number_error }}"><label for="id_major_number">Hlavních úkonů</label>:</th>
+<td class="nowrap"><input type="text" name="major_number" value="{% if major_number_error == 'ok' %}{{ major_number|stringformat:'d' }}{% else %}{{ major_number }}{% endif %}" size="3" maxlength="3" id="id_major_number" class="{{ major_number_error }}"><label for="id_rate" class="{{ rate_error }}"> à </label><input type="text" name="rate" value="{% if rate_error == 'ok' %}{{ rate|stringformat:'d' }}{% else %}{{ rate }}{% endif %}" size="9" maxlength="12" id="id_rate" class="{{ rate_error }}"> Kč</td>
+<td rowspan="7" class="right">
+<fieldset class="itemfs">
+<legend class="center">Vypočítat sazbu</legend>
+<div class="center nowrap"><label for="id_basis" class="{{ basis_error }}">TH: </label><input type="text" name="basis" value="{% if basis_error == 'ok' %}{{ basis|stringformat:'d' }}{% else %}{{ basis }}{% endif %}" size="9" maxlength="12" id="id_basis" class="{{ basis_error }}"> Kč</div>
+<div class="center mts mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006"></div>
+<div class="center"><input type="submit" name="submit_calc2" value="Od 01.09.2006"></div>
+</fieldset>
+</td>
+</tr>
+<tr>
+<th class="{{ minor_number_error }}"><label for="id_minor_number">Vedlejších úkonů</label>:</th>
+<td class="nowrap"><input type="text" name="minor_number" value="{% if minor_number_error == 'ok' %}{{ minor_number|stringformat:'d' }}{% else %}{{ minor_number }}{% endif %}" size="3" maxlength="3" id="id_minor_number" class="{{ minor_number_error }}"></td>
+</tr>
+<tr>
+<th class="{{ multiple_number_error }}"><label for="id_multiple_number">Počet zastupovaných účastníků</label>:</th>
+<td><input type="text" name="multiple_number" value="{% if multiple_number_error == 'ok' %}{{ multiple_number|stringformat:'d' }}{% else %}{{ multiple_number }}{% endif %}" size="3" maxlength="6" id="id_multiple_number" class="{{ multiple_number_error }}"></td>
+</tr>
+<tr>
+<th class="{{ off30limit5000_flag_error }}"><label for="id_off30limit5000_flag">Snížení o 30 % (nejvýš 5 000 Kč)</label>:</th>
+<td class="nowrap"><input type="checkbox" name="off30limit5000_flag" id="id_off30limit5000_flag" class="{{ off30limit5000_flag_error }}"{% if off30limit5000_flag %} checked="checked"{% endif %}> (§ 12a)</td>
+</tr>
+<tr>
+<th class="{{ off20limit5000_flag_error }}"><label for="id_off20limit5000_flag">Snížení o 20 % (nejvýš 5 000 Kč)</label>:</th>
+<td class="nowrap"><input type="checkbox" name="off20limit5000_flag" id="id_off20limit5000_flag" class="{{ off20limit5000_flag_error }}"{% if off20limit5000_flag %} checked="checked"{% endif %}> (§ 12a)</td>
+</tr>
+<tr>
+<th class="{{ off30_flag_error }}"><label for="id_off30_flag">Snížení o 30 %</label>:</th>
+<td class="nowrap"><input type="checkbox" name="off30_flag" id="id_off30_flag" class="{{ off30_flag_error }}"{% if off30_flag %} checked="checked"{% endif %}> (§ 12b, 12c)</td>
+</tr>
+<tr>
+<th class="{{ off10_flag_error }}"><label for="id_off10_flag">Snížení o 10 %</label>:</th>
+<td class="nowrap"><input type="checkbox" name="off10_flag" id="id_off10_flag" class="{{ off10_flag_error }}"{% if off10_flag %} checked="checked"{% endif %}> (§ 15a)</td>
+</tr>
+{% elif type == 'flat' %}<tr>
+<th class="{{ rate_error }}"><label for="id_rate">Částka</label>:</th>
+<td class="nowrap"><input type="text" name="rate" value="{% if rate_error == 'ok' %}{{ rate|stringformat:'d' }}{% else %}{{ rate }}{% endif %}" size="9" maxlength="12" id="id_rate" class="{{ rate_error }}"> Kč</td>
+<td rowspan="7" class="right">
+<fieldset class="itemfs">
+<legend class="center">Vypočítat</legend>
+<div class="center nowrap"><label for="id_basis" class="{{ basis_error }}">Základ: </label><input type="text" name="basis" value="{% if basis_error == 'ok' %}{{ basis|stringformat:'d' }}{% else %}{{ basis }}{% endif %}" size="9" maxlength="12" id="id_basis" class="{{ basis_error }}"> Kč</div>
+<div class="center mts mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006"></div>
+<div class="center"><input type="submit" name="submit_calc2" value="01.09.2006 až 29.02.2012"></div>
+<div class="center"><input type="submit" name="submit_calc3" value="Od 01.03.2012"></div>
+</fieldset>
+</td>
+</tr>
+<tr>
+<th class="ok"><label for="id_collection_flag">Výkon rozhodnutí</label>:</th>
+<td class="nowrap"><input type="checkbox" name="collection_flag" id="id_collection_flag" class="ok"{% if collection_flag %} checked="checked"{% endif %}> (§ 12/1/a/1)</td>
+</tr>
+<tr>
+<th class="{{ halved_flag_error }}"><label for="id_halved_flag">Odmítnuto/zastaveno</label>:</th>
+<td class="nowrap"><input type="checkbox" name="halved_flag" id="id_halved_flag" class="{{ halved_flag_error }}"{% if halved_flag %} checked="checked"{% endif %}> (§ 13/1)</td>
+</tr>
+<tr>
+<th class="{{ halved_appeal_flag_error }}"><label for="id_halved_appeal_flag"><span class="italic">Ditto</span> v odvolání/dovolání</label>:</th>
+<td class="nowrap"><input type="checkbox" name="halved_appeal_flag" id="id_halved_appeal_flag" class="{{ halved_appeal_flag_error }}"{% if halved_appeal_flag %} checked="checked"{% endif %}> (§ 14/1)</td>
+</tr>
+<tr>
+<th class="ok"><label for="id_single_flag">Pouze jeden úkon</label>:</th>
+<td class="nowrap"><input type="checkbox" name="single_flag" id="id_single_flag" class="ok"{% if single_flag %} checked="checked"{% endif %}> (§ 18/1)</td>
+</tr>
+<tr>
+<th class="{{ multiple_flag_error }}">Více zastupovaných účastníků:</th>
+<td class="nowrap"><input type="checkbox" name="multiple_flag" id="id_multiple_flag" class="ok"{% if multiple_flag %} checked="checked"{% endif %}> +30 % (§ 19a)</td>
+</tr>
+<tr>
+<th class="{{ multiple_flag_error }}"></th>
+<td class="nowrap"><input type="checkbox" name="multiple50_flag" id="id_multiple50_flag" class="ok"{% if multiple50_flag %} checked="checked"{% endif %}> +50 % (§ 19a)</td>
+</tr>
+{% elif type == 'administrative' %}<tr>
+<th class="{{ number_error }}"><label for="id_number">Počet úkonů</label>:</th>
+<td class="nowrap"><input type="text" name="number" value="{% if number_error == 'ok' %}{{ number|stringformat:'d' }}{% else %}{{ number }}{% endif %}" size="3" maxlength="3" id="id_number" class="{{ number_error }}"><label for="id_rate" class="{{ rate_error }}"> à </label><input type="text" name="rate" value="{% if rate_error == 'ok' %}{{ rate|stringformat:'d' }}{% else %}{{ rate }}{% endif %}" size="9" maxlength="12" id="id_rate" class="{{ rate_error }}"> Kč</td>
+<td class="right">
+<fieldset class="itemfs">
+<legend class="center">Sazba</legend>
+<div class="center mtn mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006"></div>
+<div class="center"><input type="submit" name="submit_calc2" value="Od 01.09.2006"></div>
+</fieldset>
+</td>
+</tr>
+{% elif type == 'time' %}<tr>
+<th class="{{ time_number_error }}"><label for="id_time_number">Počet započatých půlhodin</label>:</th>
+<td class="nowrap"><input type="text" name="time_number" value="{% if time_number_error == 'ok' %}{{ time_number|stringformat:'d' }}{% else %}{{ time_number }}{% endif %}" size="3" maxlength="3" id="id_time_number" class="{{ time_number_error }}"><label for="id_time_rate" class="{{ time_rate_error }}"> à </label><input type="text" name="time_rate" value="{% if time_rate_error == 'ok' %}{{ time_rate|stringformat:'d' }}{% else %}{{ time_rate }}{% endif %}" size="9" maxlength="12" id="id_time_rate" class="{{ time_rate_error }}"> Kč</td>
+<td class="right">
+<fieldset class="itemfs">
+<legend class="center">Sazba</legend>
+<div class="center mtn mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006"></div>
+<div class="center"><input type="submit" name="submit_calc2" value="Od 1. 9. 2006"></div>
+</fieldset>
+</td>
+</tr>
+{% elif type == 'travel' %}<tr>
+<td colspan="3"><hr></td>
+</tr>
+<tr>
+<th class="ok"><label for="id_from_sel" class="ok">Z</label>:</th>
+<td colspan="2" class="nowrap">
+<select name="from_sel" id="id_from_sel"{% if not from_sels %} disabled="disabled"{% endif %}>
+<option value="" selected="selected">Vyberte nebo zadejte:</option>
+<option value="">{{ sep }}</option>
+{% for p in from_sels %}<option value="{{ p.idx }}">{{ p.text }}</option>
+{% endfor %}</select>
+<input type="submit" name="submit_from_apply" value="Použít" id="id_from_apply"{% if not from_sels %} disabled="disabled"{% endif %}></td>
+</tr>
+<tr>
+<th class="{{ from_name_error }}"><label for="id_from_name">Název</label>:</th><td colspan="2"><input type="text" name="from_name" value="{{ from_name }}" size="80" maxlength="255" id="id_from_name" class="{{ from_name_error }}"></td>
+</tr>
+<tr>
+<th class="{{ from_address_error }}"><label for="id_from_address">Adresa</label>:</th>
+<td colspan="2" class="nowrap"><input type="text" name="from_address" value="{{ from_address }}" size="70" maxlength="255" id="id_from_address" class="{{ from_address_error }}"> <input type="submit" name="submit_from_search" value="Vyhledat" id="id_from_search"></td>
+</tr>
+<tr>
+<th class="{{ from_lat_error }}"><label for="id_from_lat">Zeměpisná šířka</label>:</th>
+<td colspan="2"><input type="text" name="from_lat" value="{% if from_lat_error == 'ok' %}{{ from_lat|floatformat:'7' }}{% else %}{{ from_lat }}{% endif %}" size="12" maxlength="20" id="id_from_lat" class="{{ from_lat_error }}"></td>
+</tr>
+<tr>
+<th class="{{ from_lon_error }}"><label for="id_from_lon">Zeměpisná délka</label>:</th>
+<td colspan="2"><input type="text" name="from_lon" value="{% if from_lon_error == 'ok' %}{{ from_lon|floatformat:'7' }}{% else %}{{ from_lon }}{% endif %}" size="12" maxlength="20" id="id_from_lon" class="{{ from_lon_error }}"></td>
+</tr>
+<tr>
+<td colspan="3"><hr></td>
+</tr>
+<tr>
+<th class="ok"><label for="id_to_sel">Do</label>:</th>
+<td colspan="2" class="nowrap">
+<select name="to_sel" id="id_to_sel"{% if not to_sels %} disabled="disabled"{% endif %}>
+<option value="" selected="selected">Vyberte nebo zadejte:</option>
+<option value="">{{ sep }}</option>
+{% for p in to_sels %}<option value="{{ p.idx }}">{{ p.text }}</option>
+{% endfor %}</select>
+<input type="submit" name="submit_to_apply" value="Použít" id="id_to_apply"{% if not to_sels %} disabled="disabled"{% endif %}>
+</td>
+</tr>
+<tr>
+<th class="{{ to_name_error }}"><label for="id_to_name">Název</label>:</th>
+<td colspan="2"><input type="text" name="to_name" value="{{ to_name }}" size="80" maxlength="255" id="id_to_name" class="{{ to_name_error }}"></td>
+</tr>
+<tr>
+<th class="{{ to_address_error }}"><label for="id_to_address">Adresa</label>:</th>
+<td colspan="2" class="nowrap"><input type="text" name="to_address" value="{{ to_address }}" size="70" maxlength="255" id="id_to_address" class="{{ to_address_error }}"> <input type="submit" name="submit_to_search" value="Vyhledat" id="id_to_search"></td>
+</tr>
+<tr>
+<th class="{{ to_lat_error }}"><label for="id_to_lat">Zeměpisná šířka</label>:</th>
+<td colspan="2"><input type="text" name="to_lat" value="{% if to_lat_error == 'ok' %}{{ to_lat|floatformat:'7' }}{% else %}{{ to_lat }}{% endif %}" size="12" maxlength="20" id="id_to_lat" class="{{ to_lat_error }}"></td>
+</tr>
+<tr>
+<th class="{{ to_lon_error }}"><label for="id_to_lon">Zeměpisná délka</label>:</th>
+<td colspan="2"><input type="text" name="to_lon" value="{% if to_lon_error == 'ok' %}{{ to_lon|floatformat:'7' }}{% else %}{{ to_lon }}{% endif %}" size="12" maxlength="20" id="id_to_lon" class="{{ to_lon_error }}"></td>
+</tr>
+<tr>
+<td colspan="3"><hr></td>
+</tr>
+<tr>
+<th class="{{ trip_distance_error }}"><label for="id_trip_distance">Délka jedné cesty</label>:</th>
+<td class="nowrap"><input type="text" name="trip_distance" value="{% if trip_distance_error == 'ok' %}{{ trip_distance|stringformat:'d' }}{% else %}{{ trip_distance }}{% endif %}" size="3" maxlength="6" id="id_trip_distance" class="{{ trip_distance_error }}"> km <input type="submit" name="submit_calc" id="id_calc" value="Vypočítat"></td>
+<td rowspan="3" class="right">
+<fieldset class="itemfs">
+<legend class="center">Sazba</legend>
+<div class="center mtn mri mbs mli"><input type="submit" name="submit_calc1" value="Do 31.08.2006"></div>
+<div class="center"><input type="submit" name="submit_calc2" value="Od 01.09.2006"></div>
+</fieldset>
+</td>
+</tr>
+<tr>
+<th class="{{ time_number_error }}"><label for="id_time_number">Počet započatých půlhodin</label>:</th>
+<td class="nowrap"><input type="text" name="time_number" value="{% if time_number_error == 'ok' %}{{ time_number|stringformat:'d' }}{% else %}{{ time_number }}{% endif %}" size="3" maxlength="3" id="id_time_number" class="{{ time_number_error }}"><label for="id_time_rate" class="{{ time_rate_error }}"> à </label><input type="text" name="time_rate" value="{% if time_rate_error == 'ok' %}{{ time_rate|stringformat:'d' }}{% else %}{{ time_rate }}{% endif %}" size="9" maxlength="12" id="id_time_rate" class="{{ time_rate_error }}"> Kč</td>
+</tr>
+<tr>
+<th class="{{ trip_number_error }}"><label for="id_trip_number">Počet cest</label>:</th><td><input type="text" name="trip_number" value="{% if trip_number_error == 'ok' %}{{ trip_number|stringformat:'d' }}{% else %}{{ trip_number }}{% endif %}" size="3" maxlength="3" id="id_trip_number" class="{{ trip_number_error }}"></td>
+</tr>
+<tr>
+<td colspan="3"><hr></td>
+</tr>
+<tr>
+<th class="ok"><label for="id_car_sel">Vozidlo</label>:</th>
+<td colspan="2" class="nowrap">
+<select name="car_sel" id="id_car_sel"{% if not car_sels %} disabled="disabled"{% endif %}>
+<option value="" selected="selected">Vyberte nebo zadejte:</option>
+<option value="">{{ sep }}</option>
+{% for p in car_sels %}<option value="{{ p.idx }}">{{ p.text }}</option>
+{% endfor %}</select>
+<input type="submit" name="submit_car_apply" value="Použít" id="id_car_apply"{% if not car_sels %} disabled="disabled"{% endif %}>
+</td>
+</tr>
+<tr>
+<th class="{{ car_name_error }}"><label for="id_car_name">Název</label>:</th>
+<td colspan="2"><input type="text" name="car_name" value="{{ car_name }}" size="80" maxlength="255" id="id_car_name" class="{{ car_name_error }}"></td>
+</tr>
+<tr>
+<th class="{{ fuel_name_error }}"><label for="id_fuel_name">Palivo</label>:</th>
+<td colspan="2"><select name="fuel_name" id="id_fuel_name" class="ok">{% for f in fuel_names %}<option value="{{ f }}"{% if f == fuel_name %} selected="selected"{% endif %}>{{ f }}</option>{% endfor %}</select></td>
+</tr>
+<tr>
+<th class="{{ cons_error }}"><label for="id_cons1">Spotřeba</label>:</th>
+<td colspan="2" class="nowrap"><input type="text" name="cons1" value="{% if cons1_error == 'ok' %}{{ cons1|floatformat:'1' }}{% else %}{{ cons1 }}{% endif %}" size="4" maxlength="4" id="id_cons1" class="{{ cons1_error }}"> / <input type="text" name="cons2" value="{% if cons2_error == 'ok' %}{{ cons2|floatformat:'1' }}{% else %}{{ cons2 }}{% endif %}" size="4" maxlength="4" id="id_cons2" class="{{ cons2_error }}"> / <input type="text" name="cons3" value="{% if cons3_error == 'ok' %}{{ cons3|floatformat:'1' }}{% else %}{{ cons3 }}{% endif %}" size="4" maxlength="4" id="id_cons3" class="{{ cons3_error }}"> l/100 km</td>
+</tr>
+<tr>
+<td colspan="3"><hr></td>
+</tr>
+<tr>
+<th class="ok"><label for="id_formula_sel">Předpis</label>:</th>
+<td colspan="2" class="nowrap">
+<select name="formula_sel" id="id_formula_sel"{% if not formula_sels %} disabled="disabled"{% endif %}>
+<option value="" selected="selected">Vyberte nebo zadejte:</option>
+<option value="">{{ sep }}</option>
+{% for p in formula_sels %}<option value="{{ p.idx }}">{{ p.text }}</option>
+{% endfor %}</select>
+<input type="submit" name="submit_formula_apply" value="Použít" id="id_formula_apply"{% if not formula_sels %} disabled="disabled"{% endif %}>
+</td>
+</tr>
+<tr>
+<th class="{{ formula_name_error }}"><label for="id_formula_name">Název</label>:</th>
+<td colspan="2"><input type="text" name="formula_name" value="{{ formula_name }}" size="80" maxlength="255" id="id_formula_name" class="{{ formula_name_error }}"></td>
+</tr>
+<tr>
+<th class="{{ flat_rate_error }}"><label for="id_flat_rate">Paušální náhrada</label>:</th>
+<td colspan="2" class="nowrap"><input type="text" name="flat_rate" value="{% if flat_rate_error == 'ok' %}{{ flat_rate|floatformat:'2' }}{% else %}{{ flat_rate }}{% endif %}" size="8" maxlength="12" id="id_flat_rate" class="{{ flat_rate_error }}"> Kč/km</td>
+</tr>
+<tr>
+<th class="{{ fuel_price_error }}"><label for="id_fuel_price">Cena paliva</label>:</th>
+<td colspan="2" class="nowrap"><input type="text" name="fuel_price" value="{% if fuel_price_error == 'ok' %}{{ fuel_price|floatformat:'2' }}{% else %}{{ fuel_price }}{% endif %}" size="8" maxlength="12" id="id_fuel_price" class="{{ fuel_price_error }}"> Kč/l</td>
+</tr>
+<tr>
+<td colspan="3"><hr></td>
+</tr>
+{% endif %}<tr>
+<th class="ok"><label for="id_vat">DPH</label>:</th>
+<td colspan="2"><input type="checkbox" name="vat" id="id_vat" class="ok"{% if vat %} checked="checked"{% endif %}></td>
+</tr>
+<tr>
+<th class="{{ fraction_error }}">Zlomek:</th>
+<td colspan="2"><input type="text" name="numerator" value="{% if numerator_error == 'ok' %}{{ numerator|stringformat:'d' }}{% else %}{{ numerator }}{% endif %}" size="2" maxlength="3" id="id_numerator" class="{{ numerator_error }}"> / <input type="text" name="denominator" value="{% if denominator_error == 'ok' %}{{ denominator|stringformat:'d' }}{% else %}{{ denominator }}{% endif %}" size="2" maxlength="3" id="id_denominator" class="{{ denominator_error }}"></td>
+</tr>
+<tr>
+<th class="{{ item_note_error }}"><label for="id_item_note">Poznámka</label>:</th>
+<td colspan="2"><textarea name="item_note" rows="8" cols="80" id="id_item_note" class="{{ item_note_error }}">{{ item_note }}</textarea></td>
+</tr>
 {% endblock %}

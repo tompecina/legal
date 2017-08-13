@@ -543,7 +543,7 @@ def normfl(val):
     return .0 if abs(val) < LIM else val
 
 
-NEG_ZERO_REGEX = r'^-0\.0*$'
+NEG_ZERO_RE_STR = r'^-0\.0*$'
 
 
 class LocalFloat(float):
@@ -553,7 +553,7 @@ class LocalFloat(float):
 
     def __format__(self, fmt):
         string = super().__format__(fmt)
-        if compile(NEG_ZERO_REGEX).match(string):
+        if compile(NEG_ZERO_RE_STR).match(string):
             string = string.replace('-', '', 1)
         return p2c(string)
 
@@ -1009,7 +1009,7 @@ def icmp(string1, string2):
     return string1 == string2
 
 
-def getpreset(key):
+def getpreset(key, as_func=False):
     """
     Get current preset.
     """
@@ -1020,4 +1020,4 @@ def getpreset(key):
         except:
             return 0
 
-    return _getpreset
+    return _getpreset if as_func else _getpreset()

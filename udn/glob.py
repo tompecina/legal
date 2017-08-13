@@ -20,4 +20,4 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-FILENAME_REGEX = r'^[\w_]+\.pdf$'
+FILENAME_RE_STR = r'^[\w_]+\.pdf$'

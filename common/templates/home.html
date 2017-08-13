@@ -1,21 +1,15 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
-        <table class="basic">
-	  <tr>
-	    <td class="homeitem">
-              <h1>{{ page_title }}</h1>
-{% for app in apps %}              <div>
-		<a href="{% url app.url %}">{{ app.name }}</a>
-	      </div>
-{% endfor %}	      <hr />
-              <div class="homeitem">
-		<a href="{% url 'about' %}">O aplikaci</a>
-	      </div>
-              <div class="homeitem">
-		<a href="{% url 'stat' %}">Statistické údaje</a>
-	      </div>
-	    </td>
-	  </tr>
-	</table>
+<table class="basic">
+<tr>
+<td class="homeitem">
+<h1>{{ page_title }}</h1>
+{% for app in apps %}<div><a href="{% url app.url %}">{{ app.name }}</a></div>
+{% endfor %}<hr>
+<div class="homeitem"><a href="{% url 'about' %}">O aplikaci</a></div>
+<div class="homeitem"><a href="{% url 'stat' %}">Statistické údaje</a></div>
+</td>
+</tr>
+</table>
 {% endblock %}

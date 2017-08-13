@@ -1,24 +1,18 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
-        <h1>{{ page_title }}</h1>
-	<table class="detail mth mra mbg mls">
-	  <thead>
-	    <tr>
-	      <th colspan="2">
-		{{ user.username }}
-	      </th>
-	    </tr>
-	  </thead>
-	  <tbody>
-{% for ui in userinfo %}	    <tr{% if forloop.first %} class="first"{% endif %}{% if forloop.last %} class="last"{% endif %}>
-	      <th>
-		{{ ui.0 }}:
-	      </th>
-	      <td>
-		{{ ui.1|safe }}
-	      </td>
-	    </tr>
-{% endfor %}	  </tbody>
-	</table>
+<h1>{{ page_title }}</h1>
+<table class="detail mth mra mbh mls">
+<thead>
+<tr>
+<th colspan="2">{{ user.username }}</th>
+</tr>
+</thead>
+<tbody>
+{% for ui in userinfo %}<tr>
+<th>{{ ui.0 }}:</th>
+<td>{{ ui.1|safe }}</td>
+</tr>
+{% endfor %}</tbody>
+</table>
 {% endblock %}

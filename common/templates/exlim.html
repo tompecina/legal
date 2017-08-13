@@ -1,17 +1,7 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
-<h1>
-  {{ page_title }}
-</h1>
-<p class="center">
-  Bylo nalezeno {{ total }} záznamů, avšak maximální počet pro export je {{ limit }} záznamů.
-  <br />
-  Prosím, zužte kriteria pro výběr.
-</p>
-<p class="center">
-  <a href="{{ back }}">
-    Zpět na formulář
-  </a>
-</p>
+<h1>{{ page_title }}</h1>
+<p class="center">Bylo nalezeno {{ total }} záznamů, avšak maximální počet pro export je {{ limit }} záznamů.<br>Prosím, zužte kriteria pro výběr.</p>
+<p class="center"><a href="{{ back }}">Zpět na formulář</a></p>
 {% endblock %}

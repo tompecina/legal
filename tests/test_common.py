@@ -361,7 +361,7 @@ class TestGlob(SimpleTestCase):
 
     def test_register_regex(self):
 
-        register_re = compile(glob.REGISTER_REGEX)
+        register_re = compile(glob.REGISTER_RE_STR)
 
         for reg in glob.REGISTERS:
             self.assertIsNotNone(register_re.match(reg), msg=reg)
@@ -1926,10 +1926,16 @@ class TestUtils2(TestCase):
         models.Preset.objects.get_or_create(
             name='Test',
             value=16,
-            valid=(today + glob.ODP))
-        self.assertEqual(utils.getpreset('XXX')(), 0)
-        self.assertEqual(utils.getpreset('Test')(), 15)
-
+            valid=today + glob.ODP)
+        self.assertEqual(utils.getpreset('XXX'), 0)
+        self.assertEqual(utils.getpreset('Test'), 15)
+        self.assertEqual(utils.getpreset('XXX', as_func=False), 0)
+        self.assertEqual(utils.getpreset('Test', as_func=False), 15)
+        self.assertEqual(utils.getpreset('XXX', as_func=True)(), 0)
+        self.assertEqual(utils.getpreset('Test', as_func=True)(), 15)
+        models.Preset.objects.filter(name='Test', valid=today).update(value=17)
+        self.assertEqual(utils.getpreset('Test'), 17)
+        self.assertEqual(utils.getpreset('Test', as_func=True)(), 17)
 
 class TestViews(TestCase):
 
@@ -1962,7 +1968,7 @@ class TestViews(TestCase):
 
         res = self.client.get('/knr/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        check_html(self, res.content)
+        check_html(self, res.content, app='knr')
 
         self.client.logout()
 
@@ -1991,7 +1997,7 @@ class TestViews(TestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_mainpage.html')
-        check_html(self, res.content)
+        check_html(self, res.content, app='knr')
 
     def test_robots(self):
 
@@ -2025,7 +2031,7 @@ class TestViews(TestCase):
         res = self.client.get('/knr/presets/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'knr_mainpage.html')
-        check_html(self, res.content)
+        check_html(self, res.content, app='knr')
 
     def test_error(self):
 
@@ -2071,7 +2077,7 @@ class TestViews(TestCase):
 
         res = self.client.get('/accounts/user/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        check_html(self, res.content)
+        check_html(self, res.content, check_html=False)
 
     def test_pwchange(self):
 
@@ -2132,7 +2138,7 @@ class TestViews(TestCase):
 
         res = self.client.get('/hsp/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        check_html(self, res.content)
+        check_html(self, res.content, app='hsp')
 
     def test_pwlost(self):
 
@@ -2204,6 +2210,7 @@ class TestViews(TestCase):
         res = self.client.get('/about/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'about.html')
+        check_html(self, res.content, check_html=False)
 
         res = self.client.post('/about/')
         self.assertEqual(res.status_code, HTTPStatus.METHOD_NOT_ALLOWED)

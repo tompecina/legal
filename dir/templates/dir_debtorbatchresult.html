@@ -1,25 +1,19 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
 <h1>{{ page_title }}</h1>
-<p class="center">Počet načtených dlužníků: {{ count }}</p>{% if errors %}
-<table class="margin-none-auto">
-  <tbody>
-    <tr>
-      <td>
-        <p>Při importu došlo k chybám:</p>
-        <ul>{% for error in errors %}
-          <li>
-	    Řádek {{ error.0 }}: {{ error.1|safe }}
-	  </li>
-{% endfor %}        </ul>
-      </td>
-    </tr>
-  </tbody>
+<p class="center">Počet načtených dlužníků: {{ count }}</p>
+{% if errors %}<table class="margin-none-auto">
+<tbody>
+<tr>
+<td>
+<p>Při importu došlo k chybám:</p>
+<ul>
+{% for error in errors %}<li>Řádek {{ error.0 }}: {{ error.1|safe }}</li>
+{% endfor %}</ul>
+</td>
+</tr>
+</tbody>
 </table>
-{% endif %}<p class="center">
-  <a href="{% url 'dir:mainpage' %}">
-    Zpět na seznam sledovaných dlužníků
-  </a>
-</p>
+{% endif %}<p class="center"><a href="{% url 'dir:mainpage' %}">Zpět na seznam sledovaných dlužníků</a></p>
 {% endblock %}

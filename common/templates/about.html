@@ -1,42 +1,38 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
-        <table class="margin-none-auto">
-	  <tr>
-	    <td>
-              <h1>{{ page_title }}</h1>
-	      <table class="about">
-		<thead>
-		  <tr class="header">
-		    <th colspan="3">
-		      Verse
-		    </th>
-		  </tr>
-		</thead>
-                <tbody>
-{% for app in apps %}		  <tr class="{% cycle 'odd' 'even' %}">
-		    <td>{{ app.id|upper }}</td>
-		    <td>{{ app.name }}</td>
-		    <td>{{ app.version }}</td>
-                  </tr>
-{% endfor %}		</tbody>
-	      </table>
-	      <table class="about">
-		<thead>
-		  <tr class="header">
-		    <th colspan="2">
-		      Prostředí
-		    </th>
-		  </tr>
-		</thead>
-                <tbody>
-{% for env in env %}		  <tr class="{% cycle 'odd' 'even' %}">
-		    <td>{{ env.name }}</td>
-		    <td>{{ env.version }}</td>
-                  </tr>
-{% endfor %}		</tbody>
-	      </table>
-	    </td>
-	  </tr>
-	</table>
+<table class="margin-none-auto">
+<tr>
+<td>
+<h1>{{ page_title }}</h1>
+<table class="about">
+<thead>
+<tr class="header">
+<th colspan="3">Verse</th>
+</tr>
+</thead>
+<tbody>
+{% for app in apps %}<tr class="{% cycle 'odd' 'even' %}">
+<td>{{ app.id|upper }}</td>
+<td>{{ app.name }}</td>
+<td>{{ app.version }}</td>
+</tr>
+{% endfor %}</tbody>
+</table>
+<table class="about">
+<thead>
+<tr class="header">
+<th colspan="2">Prostředí</th>
+</tr>
+</thead>
+<tbody>
+{% for env in env %}<tr class="{% cycle 'odd' 'even' %}">
+<td>{{ env.name }}</td>
+<td>{{ env.version }}</td>
+</tr>
+{% endfor %}</tbody>
+</table>
+</td>
+</tr>
+</table>
 {% endblock %}

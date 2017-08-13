@@ -33,7 +33,7 @@ from common.utils import get, post, composeref, decomposeref, LOGGER
 from szr.glob import SUPREME_ADMINISTRATIVE_COURT
 from szr.models import Court
 from sur.cron import sur_check
-from udn.glob import FILENAME_REGEX
+from udn.glob import FILENAME_RE_STR
 from udn.models import Decision, Party, Agenda
 
 
@@ -47,7 +47,7 @@ DEC_URL = LOCAL_URL + '/udn/list/?senate={:d}&register={}&number={:d}&year={:d}&
 
 REPO_PREF = TEST_TEMP_DIR if TEST else join(BASE_DIR, 'repo', 'udn')
 
-FRE = compile(FILENAME_REGEX)
+FRE = compile(FILENAME_RE_STR)
 
 OBS = timedelta(days=360)
 

@@ -43,7 +43,7 @@ class Asset(models.Model):
         max_length=32)
 
     assetid = models.CharField(
-        max_length=30)
+        max_length=150)
 
     data = models.TextField()
 

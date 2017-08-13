@@ -1,24 +1,27 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
-	<form id="id_partyform" method="post" enctype="multipart/form-data">
-	  <table class="basic">	    <tr><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
-{% if err_message %}            <tr><td></td><td colspan="2" class="warning">
-              {% include "formwarning.html" %}            </td></tr>
-{% endif %}	    <tr class="{{ form.party.css_classes }}">
-	      <th>{{ form.party.label_tag }}</th>
-	      <td colspan="2" class="nowrap">
-		{{ form.party }} (min. {{ min_chars }})
-	      </td>
-	    </tr>
-	    <tr>
-	      <th>{{ form.party_opt.label_tag }}</th>
-	      <td colspan="2" class="nowrap">
-{% for p in form.party_opt %}		  {{ p }}
-{% endfor %}	      </td>
-	    </tr>
-	    {% include "submit.html" %}	  </table>
-{% if type %}          <div class="hidden"><input type="hidden" name="idx" value="{{ idx }}" /><input type="hidden" name="type" id="id_type" value="{{ type }}" /></div>
-{% endif %}	  {% csrf_token %}
-	</form>
+<form id="id_partyform" method="post" enctype="multipart/form-data">
+<table class="basic">
+<tbody>
+<tr>
+<td></td>
+<td colspan="2"><h1 class="left">{{ page_title }}</h1></td>
+</tr>
+{% if err_message %}<tr>
+<td></td>
+<td colspan="2" class="warning">{% include 'formwarning.html' %}</td>
+</tr>
+{% endif %}<tr class="{{ form.party.css_classes }}">
+<th>{{ form.party.label_tag }}</th>
+<td colspan="2" class="nowrap">{{ form.party }} (min. {{ min_chars }})</td>
+</tr>
+<tr>
+<th>{{ form.party_opt.label_tag }}</th>
+<td colspan="2" class="nowrap">{% for p in form.party_opt %}{{ p }}{% endfor %}</td>
+</tr>
+{% include 'submit.html' %}</table>
+{% if type %}<div class="hidden"><input type="hidden" name="idx" value="{{ idx }}"><input type="hidden" name="type" id="id_type" value="{{ type }}"></div>
+{% endif %}{% csrf_token %}
+</form>
 {% endblock %}

@@ -11,6 +11,11 @@ table.vattbl {
 	padding-right: $hs;
     }
 }
+table.basic {
+    th, td {
+	vertical-align: top;
+    }
+}
 fieldset {
     float: right;
 }

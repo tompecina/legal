@@ -66,7 +66,7 @@ class MainForm(forms.Form):
         min_value=0,
         label='Zákonné životní minimum',
         localize=True,
-        initial=getpreset('SUBS'))
+        initial=getpreset('SUBS', as_func=True))
     subs.rounding = 0
 
     apt = fields.AmountField(
@@ -74,7 +74,7 @@ class MainForm(forms.Form):
         min_value=0,
         label='Normativní náklady na bydlení',
         localize=True,
-        initial=getpreset('APT'))
+        initial=getpreset('APT', as_func=True))
     apt.rounding = 0
 
     fee = fields.AmountField(
@@ -82,14 +82,14 @@ class MainForm(forms.Form):
         min_value=0,
         label='Měsíční odměna správce',
         localize=True,
-        initial=getpreset('FEE'))
+        initial=getpreset('FEE', as_func=True))
     fee.rounding = 0
 
     fee2 = fields.AmountField(
         widget=widgets.Saw(),
         min_value=0,
         localize=True,
-        initial=getpreset('FEE2'))
+        initial=getpreset('FEE2', as_func=True))
     fee2.rounding = 0
 
     exp = fields.AmountField(
@@ -97,7 +97,7 @@ class MainForm(forms.Form):
         min_value=0,
         label='Měsíční hotové výdaje správce',
         localize=True,
-        initial=getpreset('EXP'))
+        initial=getpreset('EXP', as_func=True))
     exp.rounding = 0
 
     exp2 = fields.AmountField(
@@ -105,7 +105,7 @@ class MainForm(forms.Form):
         min_value=0,
         label='Měsíční hotové výdaje správce',
         localize=True,
-        initial=getpreset('EXP2'))
+        initial=getpreset('EXP2', as_func=True))
     exp2.rounding = 0
 
     vat = fields.BooleanField(
@@ -119,5 +119,5 @@ class MainForm(forms.Form):
         decimal_places=2,
         min_value=0,
         label='Sazba DPH z odměny správce',
-        initial=getpreset('VAT'),
+        initial=getpreset('VAT', as_func=True),
         localize=True)

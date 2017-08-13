@@ -21,6 +21,7 @@
 #
 
 from datetime import date, timedelta
+from re import compile
 
 
 MIN_PWLEN = 6
@@ -39,9 +40,10 @@ REGISTERS = (
     'As', 'Asz', 'Azs', 'Komp', 'Konf', 'Kse', 'Kseo', 'Kss', 'Ksz', 'Na', 'Nad', 'Nao', 'Ncn', 'Nk', 'Ntn', 'Obn',
     'Plen', 'Plsn', 'Pst', 'Rozk', 'Rs', 'S', 'Spr', 'Sst', 'Vol', 'Tm', 'Tmo', 'Ntm'
 )
-REGISTER_REGEX = '^({})$'.format('|'.join(REGISTERS))
+REGISTER_RE_STR = '^({})$'.format('|'.join(REGISTERS))
 
-CURRENCY_REGEX = r'^[A-Z]{3}$'
+CURRENCY_RE_STR = r'^[A-Z]{3}$'
+CURRENCY_RE = compile(CURRENCY_RE_STR)
 
 UNC_DATE = date(1925, 4, 15)
 
@@ -116,9 +118,9 @@ FORMAT_OPTS = (
     ('json', 'JSON'),
 )
 
-IC_REGEX = r'^\d{1,9}$'
-RC_REGEX = r'^\d{9,10}$'
-RC_FULL_REGEX = r'^\d{6}/\d{3,4}$'
-PSC_REGEX = r'^\d{5}$'
+IC_RE_STR = r'^\d{1,9}$'
+RC_RE_STR = r'^\d{9,10}$'
+RC_FULL_RE_STR = r'^\d{6}/\d{3,4}$'
+PSC_RE_STR = r'^\d{5}$'
 
 DTF = '%Y-%m-%d'

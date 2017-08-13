@@ -1,15 +1,15 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
 <h1>
-  {{ page_title }}
+{{ page_title }}
 </h1>
 <p class="center">
-  Vaše heslo bylo úspěšně změněno.
+Vaše heslo bylo úspěšně změněno.
 </p>
 <p class="center">
-  <a href="{% url 'home' %}">
-    Na hlavní stranu
-  </a>
+<a href="{% url 'home' %}">
+Na hlavní stranu
+</a>
 </p>
 {% endblock %}

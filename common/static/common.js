@@ -1,5 +1,7 @@
 'use strict';
 
+/* css_classes: immune disabled currsel today err */
+
 $.fn.c = (
     function(v) {
 	if (v === undefined) {

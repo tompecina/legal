@@ -1,26 +1,28 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
-        <form method="post" enctype="multipart/form-data">
-	  <table class="basic">
-	    <tr><td></td><td><h1 class="left">{{ page_title }}</h1></td></tr>
-	    <tr class="{{ form.beg_date.css_classes }}"><td class="right">{{ form.beg_date.label_tag }}</td><td>{{ form.beg_date }} (nezapočítává se)</td></tr>
-	    <tr class="{{ form.end_date.css_classes }}"><td class="right">{{ form.end_date.label_tag }}</td><td>{{ form.end_date }} (započítává se)</td></tr>
-	    <tr>
-	      <td></td>
-	      <td class="ptm">
-		<input type="submit" name="submit" value="Vypočítat" />
-		{% csrf_token %}
-	      </td>
-	    </tr>
-{% if messages %}	    <tr>
-	      <td></td>
-	      <td class="msg">
-		<hr />
-{% for message in messages %}		<div{% if message.1 %} class="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
-{% endfor %}                <hr />
-	      </td>
-	    </tr>
-{% endif %}	  </table>
-	</form>
+<form method="post" enctype="multipart/form-data">
+<table class="basic">
+<tr>
+<td></td>
+<td><h1 class="left">{{ page_title }}</h1></td>
+</tr>
+<tr class="{{ form.beg_date.css_classes }}">
+<td class="right">{{ form.beg_date.label_tag }}</td>
+<td>{{ form.beg_date }} (nezapočítává se)</td>
+</tr>
+<tr class="{{ form.end_date.css_classes }}">
+<td class="right">{{ form.end_date.label_tag }}</td>
+<td>{{ form.end_date }} (započítává se)</td>
+</tr>
+<tr>
+<td></td>
+<td class="ptm"><input type="submit" name="submit" value="Vypočítat">{% csrf_token %}</td>
+</tr>
+{% if messages %}<tr>
+<td></td>
+<td class="msg"><hr>{% for message in messages %}<div{% if message.1 %} class="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>{% endfor %}<hr></td>
+</tr>
+{% endif %}</table>
+</form>
 {% endblock %}

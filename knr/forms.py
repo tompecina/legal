@@ -30,7 +30,7 @@ class PlaceForm(forms.Form):
 
     abbr = fields.CharField(
         widget=widgets.Abbrw(),
-        max_length=30,
+        max_length=150,
         label='Zkratka')
 
     name = fields.CharField(
@@ -62,7 +62,7 @@ class CarForm(forms.Form):
 
     abbr = fields.CharField(
         widget=widgets.Abbrw(),
-        max_length=30,
+        max_length=150,
         label='Zkratka')
 
     name = fields.CharField(
@@ -72,7 +72,7 @@ class CarForm(forms.Form):
 
     fuel = fields.CharField(
         widget=widgets.Abbrw(),
-        max_length=30,
+        max_length=150,
         label='Palivo',
         initial='BA95')
 
@@ -90,7 +90,7 @@ class FormulaForm(forms.Form):
 
     abbr = fields.CharField(
         widget=widgets.Abbrw(),
-        max_length=30,
+        max_length=150,
         label='Zkratka')
 
     name = fields.CharField(
@@ -477,6 +477,14 @@ class AdministrativeSubform(forms.Form):
     vat = fields.BooleanField(
         required=False)
 
+    numerator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.Shw())
+
+    denominator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.Shw())
+
     item_note = fields.CharField(
         required=False)
 
@@ -527,6 +535,14 @@ class TimeSubform(forms.Form):
 
     vat = fields.BooleanField(
         required=False)
+
+    numerator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.Shw())
+
+    denominator = fields.IntegerField(
+        min_value=1,
+        widget=widgets.Shw())
 
     item_note = fields.CharField(
         required=False)
@@ -599,7 +615,7 @@ class TravelForm(forms.Form):
         max_length=255)
 
     fuel_name = fields.CharField(
-        max_length=30)
+        max_length=150)
 
     cons1 = fields.DecimalField(
         max_digits=3,

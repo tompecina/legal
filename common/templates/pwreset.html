@@ -1,15 +1,7 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
-<h1>
-  {{ page_title }}
-</h1>
-<p class="center">
-  Vaše nové heslo je: {{ newpassword }}
-</p>
-<p class="center">
-  <a href="{% url 'login' %}">
-    Přihlášení
-  </a>
-</p>
+<h1>{{ page_title }}</h1>
+<p class="center">Vaše nové heslo je: {{ newpassword }}</p>
+<p class="center"><a href="{% url 'login' %}">Přihlášení</a></p>
 {% endblock %}

@@ -23,9 +23,9 @@
 from django.db import models
 from django.core.validators import MinValueValidator, RegexValidator
 
-from common.glob import REGISTER_REGEX
+from common.glob import REGISTER_RE_STR
 from common.utils import composeref
-from udn.glob import FILENAME_REGEX
+from udn.glob import FILENAME_RE_STR
 
 
 class Agenda(models.Model):
@@ -62,7 +62,7 @@ class Decision(models.Model):
 
     register = models.CharField(
         max_length=30,
-        validators=(RegexValidator(regex=REGISTER_REGEX),))
+        validators=(RegexValidator(regex=REGISTER_RE_STR),))
 
     number = models.PositiveIntegerField()
 
@@ -83,12 +83,12 @@ class Decision(models.Model):
 
     filename = models.CharField(
         max_length=255,
-        validators=(RegexValidator(regex=FILENAME_REGEX),))
+        validators=(RegexValidator(regex=FILENAME_RE_STR),))
 
     anonfilename = models.CharField(
         max_length=255,
         blank=True,
-        validators=(RegexValidator(regex=FILENAME_REGEX),))
+        validators=(RegexValidator(regex=FILENAME_RE_STR),))
 
     updated = models.DateTimeField(
         null=True,

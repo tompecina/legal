@@ -1,55 +1,36 @@
 {% load static %}{% load static_version %}<!DOCTYPE html>
 <html lang="cs">
-  <head>
-    <title>
-      {% block pagetitle %}{{ page_title|default:"Přihlášení" }}{% endblock %}
-    </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta charset="utf-8" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <meta name="GENERATOR" content="Quanta Plus" />
-    <meta name="AUTHOR" content="Tomáš Pecina" />
-    <link rel="stylesheet" type="text/css" href="{% static 'jquery-ui-1.12.1.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'common.css' %}{% ts_common_css %}" />
-{% if app %}    <link rel="stylesheet" type="text/css" href="{% static '' %}{{ app }}.css{% ts_app_css %}" />
-{% endif %}    <script type="text/javascript" src="{% static 'jquery-3.2.1.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'jquery-ui-1.12.1.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'datepicker-cs.js' %}"></script>
-    <script type="text/javascript" src="{% static 'common.js' %}{% ts_common_js %}"></script>
-{% if app %}    <script type="text/javascript" src="{% static '' %}{{ app }}.js{% ts_app_js %}"></script>
-{% endif %}  </head>
-  <body>
-{% if page_title and not suppress_topline %}    <table class="width-full">
-      <tr class="topline">
-	<td class="width-half">
-	  {% if user.is_authenticated %}<a href="{% url 'user' %}">
-{% endif %}  Uživatel: {% if user.is_authenticated %}{{ user.get_full_name }}{% else %}(nepřihlášen){% endif %}
-          {% if user.is_authenticated %}</a>
-{% endif %}	</td>
-{% if not suppress_home %}	<td class="center">
-	  <a href="{% url 'home' %}">
-	    <svg width="8" height="10">
-	      <path d="M 0,10 8,10 4,0 Z" />
-	    </svg>
-	  </a>
-      </td>
-{% endif %}	<td class="width-half right">
-	  {% if user.is_authenticated %}<a href="{% url 'pwchange' %}">
-	    změnit heslo
-	  </a>
-	  /
-	  <a href="{% url 'logout' %}">
-	    odhlásit
-	  </a>{% else %}<a href="{% url 'login' %}?next={{ request.get_full_path }}">
-	    přihlásit
-	  </a>{% endif %}
-	</td>
-      </tr>
-    </table>{% endif %}
-    <table class="width-most margin-auto">
-      <tr>
-	<td>{% block page_contents %}{% endblock %}        </td>
-      </tr>
-    </table>
-{% include "notice.html" %}  </body>
+<head>
+<title>{% block pagetitle %}{{ page_title|default:"Přihlášení" }}{% endblock %}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="AUTHOR" content="Tomáš Pecina">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="stylesheet" type="text/css" href="{% static 'jquery-ui-1.12.1.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'common.css' %}{% ts_common_css %}">
+{% if app %}<link rel="stylesheet" type="text/css" href="{% static '' %}{{ app }}.css{% ts_app_css %}">
+{% endif %}<script type="text/javascript" src="{% static 'jquery-3.2.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'jquery-ui-1.12.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'datepicker-cs.js' %}"></script>
+<script type="text/javascript" src="{% static 'common.js' %}{% ts_common_js %}"></script>
+{% if app %}<script type="text/javascript" src="{% static '' %}{{ app }}.js{% ts_app_js %}"></script>
+{% endif %}</head>
+<body>
+{% if page_title and not suppress_topline %}<table class="width-full">
+<tbody>
+<tr class="topline">
+<td class="width-half">{% if user.is_authenticated %}<a href="{% url 'user' %}">{% endif %}Uživatel: {% if user.is_authenticated %}{{ user.get_full_name }}{% else %}(nepřihlášen){% endif %}{% if user.is_authenticated %}</a>{% endif %}</td>
+{% if not suppress_home %}<td class="center"><a href="{% url 'home' %}"><svg width="8" height="10"><path d="M 0,10 8,10 4,0 Z"/></svg></a></td>
+{% endif %}<td class="width-half right">{% if user.is_authenticated %}<a href="{% url 'pwchange' %}">změnit heslo</a> / <a href="{% url 'logout' %}">odhlásit</a>{% else %}<a href="{% url 'login' %}?next={{ request.get_full_path }}">přihlásit</a>{% endif %}</td>
+</tr>
+</tbody>
+</table>
+{% endif %}<table class="width-most margin-auto">
+<tbody>
+<tr>
+<td>{% block page_contents %}{% endblock %}</td>
+</tr>
+</tbody>
+</table>
+{% include 'notice.html' %}</body>
 </html>

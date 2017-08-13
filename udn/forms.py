@@ -22,7 +22,7 @@
 
 from django.core.validators import RegexValidator
 
-from common.glob import REGISTER_REGEX, TEXT_OPTS, FORMAT_OPTS
+from common.glob import REGISTER_RE_STR, TEXT_OPTS, FORMAT_OPTS
 from common import forms, fields, widgets
 
 
@@ -45,7 +45,7 @@ class MainForm(forms.Form):
     register = fields.CharField(
         widget=widgets.Saw(),
         max_length=30,
-        validators=(RegexValidator(regex=REGISTER_REGEX),),
+        validators=(RegexValidator(regex=REGISTER_RE_STR),),
         initial='',
         required=False)
 

@@ -45,7 +45,7 @@ class PwResetLink(models.Model):
 class Preset(models.Model):
 
     name = models.CharField(
-        max_length=30,
+        max_length=150,
         db_index=True,
         unique_for_date='valid')
 
@@ -61,7 +61,7 @@ class Preset(models.Model):
 class Lock(models.Model):
 
     name = models.CharField(
-        max_length=30,
+        max_length=150,
         primary_key=True)
 
     timestamp_add = models.DateTimeField(
@@ -74,13 +74,13 @@ class Lock(models.Model):
 class Pending(models.Model):
 
     name = models.CharField(
-        max_length=30)
+        max_length=150)
 
     args = models.CharField(
         max_length=255)
 
     lock = models.CharField(
-        max_length=30)
+        max_length=150)
 
     timestamp_add = models.DateTimeField(
         auto_now_add=True,

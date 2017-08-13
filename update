@@ -2,8 +2,7 @@
 
 remote='legal.pecina.cz'
 
-./dosass
-./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'
+./make-static
 rsync -avhHzx \
       --exclude '.*' \
       --exclude '*.pyc' \

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./dosass && ./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'

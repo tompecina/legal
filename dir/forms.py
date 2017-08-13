@@ -24,7 +24,7 @@ from datetime import date
 
 from django.core.validators import RegexValidator
 
-from common.glob import TEXT_OPTS, IC_REGEX, RC_FULL_REGEX
+from common.glob import TEXT_OPTS, IC_RE_STR, RC_FULL_RE_STR
 from common import forms, fields, widgets
 from dir.glob import MAX_LENGTH
 
@@ -72,7 +72,7 @@ class DebtorForm(forms.Form):
         widget=widgets.Ssew(),
         required=False,
         max_length=9,
-        validators=(RegexValidator(regex=IC_REGEX),),
+        validators=(RegexValidator(regex=IC_RE_STR),),
         label='IČO')
 
     taxid = fields.CharField(
@@ -85,7 +85,7 @@ class DebtorForm(forms.Form):
         widget=widgets.Ssew(),
         required=False,
         max_length=11,
-        validators=(RegexValidator(regex=RC_FULL_REGEX),),
+        validators=(RegexValidator(regex=RC_FULL_RE_STR),),
         label='Rodné číslo')
 
     date_birth = fields.DateField(

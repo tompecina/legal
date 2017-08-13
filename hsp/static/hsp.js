@@ -1,3 +1,7 @@
+'use strict';
+
+/* css_classes: itr currsel debord curr_from curr_to immune */
+
 $(function() {
 
     function submit_mainform() {

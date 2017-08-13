@@ -1014,7 +1014,7 @@ def mainpage(request):
                             if item.type == 'time':
                                 temp2.append(Paragraph(
                                     '<b>Počet započatých půlhodin:</b> {:d} &nbsp; <b>Sazba:</b> {} Kč/půlhodinu'
-                                        .format(item.time_number, convi(item.time_rate)),
+                                    .format(item.time_number, convi(item.time_rate)),
                                     style6))
                             if item.type == 'travel':
                                 temp2.append(Paragraph(
@@ -1678,11 +1678,9 @@ def itemform(request, idx=0):
                             if cld['collection_flag']:
                                 cld['amount'] = max(int(round(.5 * cld['amount'])), 750)
                             if cld['halved_flag']:
-                                cld['amount'] = lim(750, int(round(.5
-                                    * cld['amount'])), 15000)
+                                cld['amount'] = lim(750, int(round(.5 * cld['amount'])), 15000)
                             if cld['halved_appeal_flag']:
-                                cld['amount'] = lim(750, int(round(.5
-                                    * cld['amount'])), 20000)
+                                cld['amount'] = lim(750, int(round(.5 * cld['amount'])), 20000)
                             if cld['single_flag']:
                                 cld['amount'] = max(int(round(.5 * cld['amount'])), 400)
                             if cld['multiple_flag']:

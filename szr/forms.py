@@ -23,7 +23,7 @@
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 
-from common.glob import REGISTER_REGEX
+from common.glob import REGISTER_RE_STR
 from common import forms, fields, widgets
 from szr.glob import SUPREME_COURT
 from szr.models import Court
@@ -62,7 +62,7 @@ class ProcForm(forms.Form):
         widget=widgets.Saw(),
         max_length=30,
         initial='',
-        validators=(RegexValidator(regex=REGISTER_REGEX),))
+        validators=(RegexValidator(regex=REGISTER_RE_STR),))
 
     number = fields.IntegerField(
         widget=widgets.Saw(),

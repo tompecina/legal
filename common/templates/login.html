@@ -1,62 +1,31 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
 <form method="post" enctype="multipart/form-data">
-  <table class="margin-auto">
-    <tr>
-      <td></td>
-      <td>
-	<h1 class="left">
-	  Přihlášení
-	</h1>
-      </td>
-    </tr>
-    {% if request.method == 'POST' %}<tr>
-      <td></td>
-      <td class="warning">
-	<div class="warning">
-	  Chybné uživatelské jméno nebo heslo
-	</div>
-      </td>
-    </tr>{% endif %}
-    <tr>
-      <td class="right">
-	<label for="id_username">Uživatelské jméno</label>:
-      </td>
-      <td>
-	<input type="text" name="username" id="id_username" />
-      </td>
-    </tr>
-    <tr>
-      <td class="right">
-	<label for="id_password">Heslo</label>:
-      </td>
-      <td>
-	<input type="password" name="password" id="id_password" />
-      </td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>
-	<input type="submit" name="submit" value="Přihlásit se" />
-	<input type="hidden" name="this_is_the_login_form" />
-	{% csrf_token %}
-      </td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>
-	<p class="mtl">
-	  <a href="{% url 'useradd' %}">
-	    Registrace nového uživatele
-	  </a>
-	  <br />
-	  <a href="{% url 'lostpw' %}">
-	    Ztracené heslo
-	  </a>
-	</p>
-      </td>
-    </tr>
-  </table>
+<table class="margin-auto">
+<tr>
+<td></td>
+<td><h1 class="left">Přihlášení</h1></td>
+</tr>
+{% if request.method == 'POST' %}<tr>
+<td></td>
+<td class="warning"><div class="warning">Chybné uživatelské jméno nebo heslo</div></td>
+</tr>
+{% endif %}<tr>
+<td class="right"><label for="id_username">Uživatelské jméno</label>:</td>
+<td><input type="text" name="username" id="id_username"></td>
+</tr>
+<tr>
+<td class="right"><label for="id_password">Heslo</label>:</td>
+<td><input type="password" name="password" id="id_password"></td>
+</tr>
+<tr>
+<td></td>
+<td><input type="submit" name="submit" value="Přihlásit se"><input type="hidden" name="this_is_the_login_form">{% csrf_token %}</td>
+</tr>
+<tr>
+<td></td>
+<td><p class="mtl"><a href="{% url 'useradd' %}">Registrace nového uživatele</a><br><a href="{% url 'lostpw' %}">Ztracené heslo</a></p></td></tr>
+</table>
 </form>
 {% endblock %}

@@ -1,4 +1,9 @@
+/* css_classes: ok */
+
 @import "include";
+
+
+// common classes
 
 body, h1, h2, input[type="file"], legend, .immune {
     color: $very-dark-blue;
@@ -253,15 +258,15 @@ a svg:hover {
 }
 span.pager {
     span:first-child {
-	padding-right: $hm;
+	padding-right: ($hm+$hs);
     }
     span:last-child {
-	padding-left: $hm;
+	padding-left: ($hm+$hs);
     }
     span.num {
 	padding: {
-	    left: $hm;
-	    right: $hm;
+	    left: ($hm+$hs);
+	    right: ($hm+$hs);
 	}
     }
 }
@@ -341,7 +346,7 @@ table.detail {
 tr.submit td {
     padding-top: $vm;
 }
-table.butbar {
+table.btnbar {
     margin: $vh auto;
     td {
 	padding: $vn $hl;
@@ -372,120 +377,6 @@ td.links {
     word-spacing: $hs;
     white-space: nowrap;
 }
-.margin-auto {
-    margin: auto;
-}
-.width-full {
-    width: 100%;
-}
-.width-half {
-    width: 50%;
-}
-.width-two-thirds {
-    width: 67%;
-}
-.width-most {
-    width: 85%;
-}
-.float-right {
-    float: right;
-}
-.mbn {
-    margin-bottom: 0;
-}
-.mbh {
-    margin-bottom: $vh;
-}
-.mbl {
-    margin-bottom: $vl;
-}
-.mbm {
-    margin-bottom: $vm;
-}
-.mts {
-    margin-top: $vs;
-}
-.mtm {
-    margin-top: $vm;
-}
-.mtl {
-    margin-top: $vl;
-}
-.mth {
-    margin-top: $vh;
-}
-.mtg {
-    margin-top: $vg;
-}
-.mra {
-    margin-right: auto;
-}
-.mrn {
-    margin-right: 0;
-}
-.mrl {
-    margin-right: $hl;
-}
-.mll {
-    margin-left: $hl;
-}
-.mls {
-    margin-left: $hs;
-}
-.mla {
-    margin-left: auto;
-}
-.mln {
-    margin-left: 0;
-}
-.mri {
-    margin-right: inherit;
-}
-.mli {
-    margin-left: inherit;
-}
-.ptn {
-    padding-top: 0;
-}
-.pts {
-    padding-top: $vs;
-}
-.pbs {
-    padding-bottom: $vs;
-}
-.pbn {
-    padding-bottom: 0;
-}
-.ptm {
-    padding-top: $vm;
-}
-.ptl {
-    padding-top: $vl;
-}
-.pbl {
-    padding-bottom: $vl;
-}
-.pbm {
-    padding-bottom: $vm;
-}
-.prm {
-    padding-right: $hm;
-}
-.prs {
-    padding-right: $hs;
-}
-.pls {
-    padding-left: $hs;
-}
-.plm {
-    padding-left: $hm;
-}
-.pln {
-    padding-left: 0;
-}
-.margin-none-auto {
-    margin: 0 auto;
-}
 td.msg hr:first-child {
     margin-top: $vh;
 }
@@ -494,6 +385,130 @@ table.detail {
 }
 .italic {
     font-style: italic;
+}
+
+
+// manual overrides
+
+.margin-auto {
+    margin: auto !important;
+}
+.width-full {
+    width: 100% !important;
+}
+.width-half {
+    width: 50% !important;
+}
+.width-two-thirds {
+    width: 67% !important;
+}
+.width-most {
+    width: 85% !important;
+}
+.float-right {
+    float: right !important;
+}
+.mbn {
+    margin-bottom: 0 !important;
+}
+.mbh {
+    margin-bottom: $vh !important;
+}
+.mbl {
+    margin-bottom: $vl !important;
+}
+.mbm {
+    margin-bottom: $vm !important;
+}
+.mbs {
+    margin-bottom: $vs !important;
+}
+.mtn {
+    margin-top: 0 !important;
+}
+.mts {
+    margin-top: $vs !important;
+}
+.mtm {
+    margin-top: $vm !important;
+}
+.mtl {
+    margin-top: $vl !important;
+}
+.mth {
+    margin-top: $vh !important;
+}
+.mtg {
+    margin-top: $vg !important;
+}
+.mra {
+    margin-right: auto !important;
+}
+.mrn {
+    margin-right: 0 !important;
+}
+.mrl {
+    margin-right: $hl !important;
+}
+.mll {
+    margin-left: $hl !important;
+}
+.mls {
+    margin-left: $hs !important;
+}
+.mla {
+    margin-left: auto !important;
+}
+.mln {
+    margin-left: 0 !important;
+}
+.mri {
+    margin-right: inherit !important;
+}
+.mli {
+    margin-left: inherit !important;
+}
+.ptn {
+    padding-top: 0 !important;
+}
+.pts {
+    padding-top: $vs !important;
+}
+.pbs {
+    padding-bottom: $vs !important;
+}
+.pbn {
+    padding-bottom: 0 !important;
+}
+.ptm {
+    padding-top: $vm !important;
+}
+.ptl {
+    padding-top: $vl !important;
+}
+.pbl {
+    padding-bottom: $vl !important;
+}
+.pbm {
+    padding-bottom: $vm !important;
+}
+.prm {
+    padding-right: $hm !important;
+}
+.prs {
+    padding-right: $hs !important;
+}
+.pls {
+    padding-left: $hs !important;
+}
+.plm {
+    padding-left: $hm !important;
+}
+.pln {
+    padding-left: 0 !important;
+}
+.margin-none-auto {
+    margin: 0 auto !important;
 }
 
 // jQuery UI

@@ -22,7 +22,7 @@
 
 from django.core.validators import RegexValidator
 
-from common.glob import CURRENCY_REGEX
+from common.glob import CURRENCY_RE
 from common import forms, fields, widgets
 
 
@@ -263,15 +263,13 @@ class FXform(forms.Form):
     currency_from = fields.CharField(
         widget=widgets.Currw(),
         min_length=3,
-        max_length=3,
-        validators=(RegexValidator(regex=CURRENCY_REGEX),))
+        max_length=3)
     del currency_from.widget.attrs['minlength']
 
     currency_to = fields.CharField(
         widget=widgets.Currw(),
         min_length=3,
-        max_length=3,
-        validators=(RegexValidator(regex=CURRENCY_REGEX),))
+        max_length=3)
     del currency_to.widget.attrs['minlength']
 
     rate_from = fields.FloatField(
@@ -282,7 +280,7 @@ class FXform(forms.Form):
 
     rate_to = fields.FloatField(
         widget=widgets.Fxw(),
-        min_value=0.001,
+        min_value=.001,
         localize=True,
         initial=1)
 
@@ -295,15 +293,19 @@ class FXform(forms.Form):
         required=False)
 
     def clean_currency_from(self):
-        data = self.cleaned_data['currency_from']
-        if data == self.data['currency_to']:
-            raise forms.ValidationError('Currencies should be different')
+        data = self.cleaned_data['currency_from'].upper()
+        if not CURRENCY_RE.match(data):
+            raise forms.ValidationError('Invalid currency format')
+        if data == self.data['currency_to'].upper():
+            raise forms.ValidationError('Currencies must be different')
         return data
 
     def clean_currency_to(self):
-        data = self.cleaned_data['currency_to']
-        if data == self.data['currency_from']:
-            raise forms.ValidationError('Currencies should be different')
+        data = self.cleaned_data['currency_to'].upper()
+        if not CURRENCY_RE.match(data):
+            raise forms.ValidationError('Invalid currency format')
+        if data == self.data['currency_from'].upper():
+            raise forms.ValidationError('Currencies must be different')
         return data
 
     def clean(self):

@@ -53,7 +53,7 @@ class UserAddForm(UserChangeForm, UserCreationForm, Form):
         self.fields['username'].label = 'Uživatelské jméno'
         self.fields['username'].help_text = '(pouze písmena, číslice a znaky @/./+/-/_)'
         self.fields['password1'].label = 'Heslo'
-        self.fields['password2'].label = 'Potvrzení  hesla'
+        self.fields['password2'].label = 'Potvrzení hesla'
         self.fields['password2'].help_text = '(zadejte heslo znovu, pro kontrolu)'
         self.fields['email'].label = 'E-mail'
         self.fields['email'].help_text = '(nepovinný)'

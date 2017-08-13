@@ -22,13 +22,14 @@
 
 from http import HTTPStatus
 from os.path import join
+from os import unlink
 
 from bs4 import BeautifulSoup
 from django.test import TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 
 from common.glob import LOCAL_DOMAIN
-from common.settings import TEST_DATA_DIR
+from common.settings import TEST_DATA_DIR, TEST_TEMP_DIR
 from tests.utils import link_equal, check_html
 from psj.cron import cron_schedule, cron_update as psj_update
 from psj.models import Task, Hearing
@@ -38,6 +39,28 @@ from sur import cron, models
 
 
 APP = __package__
+
+
+def cleanup():
+    for filename in (
+            '0002_8As__1600055S.pdf',
+            '0022_4As__1600037S.pdf',
+            '0025_8As__1600041S.pdf',
+            '0037_4Afs_1600033S.pdf',
+            '003810Ads_1600040S.pdf',
+            '0065_4Afs_1600032S.pdf',
+            '0066_4Afs_1600033S.pdf',
+            '0079_8As__1600023S.pdf',
+            '008110As__1600026S.pdf',
+            '0095_4Afs_1600035S.pdf',
+            '0108_5As__1600008S.pdf',
+            '0152_4Ads_1500027S.pdf',
+            '0158_8As__1500033S.pdf',
+            '019110As__1500030S.pdf',
+            '0208_4Ads_1500082S.pdf',
+            '0233_5As__1500046S.pdf',
+    ):
+        unlink(join(TEST_TEMP_DIR, filename))
 
 
 class TestCron(TestCase):
@@ -86,8 +109,7 @@ class TestCron(TestCase):
         udn_update()
         self.assertEqual(
             cron.sur_notice(1),
-            '''\
-Byli nově zaznamenáni tito účastníci řízení, které sledujete:
+            '''Byli nově zaznamenáni tito účastníci řízení, které sledujete:
 
  - Anna Krayemová, Krajský soud Brno, sp. zn. 27 Co 363/2014
    https://legal.pecina.cz/psj/list/?court=KSJIMBM&senate=27&register=Co&number=363&year=2014&date_from=2016-12-01\
@@ -132,6 +154,7 @@ sp. zn. 10 As 81/2016
 
 ''')
         self.assertEqual(cron.sur_notice(1), '')
+        cleanup()
 
 
 class TestModels(TransactionTestCase):
@@ -144,6 +167,7 @@ class TestModels(TransactionTestCase):
         udn_update()
         self.assertEqual(str(models.Party.objects.first()), 'ová')
         self.assertEqual(str(models.Found.objects.first()), 'Nejvyšší správní soud, 4 Ads 208/2015')
+        cleanup()
 
 
 class TestViews1(TransactionTestCase):

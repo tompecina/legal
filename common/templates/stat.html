@@ -1,24 +1,22 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
-        <table class="margin-none-auto">
-	  <tr>
-	    <td>
-              <h1>{{ page_title }}</h1>
-	      <table class="detail">
-                <tbody>{% for app in apps %}
-		  <tr class="header">
-		    <th colspan="2">
-		      {{ app.abbr|upper }}: {{ app.name }}
-		    </th>
-		  </tr>{% for row in app.stat %}
-		  <tr{% if forloop.first or forloop.last %} class="{% if forloop.first %}first {% endif %}{% if forloop.last %}last {% endif %}"{% endif %}>
-		    <th>{{ row.0 }}:</th>
-		    <td>{{ row.1 }}</td>
-                  </tr>
-{% endfor %}{% endfor %}		</tbody>
-	      </table>
-	    </td>
-	  </tr>
-	</table>
+<table class="margin-none-auto">
+<tr>
+<td>
+<h1>{{ page_title }}</h1>
+<table class="detail">
+<tbody>
+{% for app in apps %}<tr class="header">
+<th colspan="2">{{ app.abbr|upper }}: {{ app.name }}</th>
+</tr>
+{% for row in app.stat %}<tr>
+<th>{{ row.0 }}:</th>
+<td>{{ row.1 }}</td>
+</tr>
+{% endfor %}{% endfor %}</tbody>
+</table>
+</td>
+</tr>
+</table>
 {% endblock %}

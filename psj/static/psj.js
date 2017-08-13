@@ -1,3 +1,5 @@
+'use strict';
+
 function courtchanged(event) {
 
     $('#id_courtroom option').slice(1).remove();

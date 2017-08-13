@@ -1,30 +1,35 @@
-{% extends "hsp_form.html" %}
+{% extends 'hsp_form.html' %}
 
 {% block form_contents %}
-	    <tr id="id_creditform"><td></td><td colspan="2"><h1 class="left">{{ page_title }}</h1></td></tr>
-{% if err_message %}            <tr><td></td><td colspan="2" class="warning">
-              {% include "formwarning.html" %}            </td></tr>
-{% endif %}	    <tr class="{{ form.date.css_classes }}">
-              <th>{{ form.date.label_tag }}</th>
-	      <td colspan="2">{{ form.date }}</td>
-	    </tr>
-	    <tr class="{{ form.description.css_classes }}">
-	      <th>{{ form.description.label_tag }}</th>
-	      <td colspan="2">{{ form.description }}</td>
-	    </tr>
-	    <tr>
-	      <th><span class="{{ form.amount.css_classes }}">{{ form.amount.label_tag }}</span></th>
-	      <td><span class="{{ form.amount.css_classes }}">{{ form.amount }}</span></td>
-	      <td class="right"><span class="plm {{ form.currency.css_classes }}">{{ form.currency.label_tag }} {{ form.currency }}</span></td>
-	    </tr>
-{% if rows %}	    <tr>
-	      <th class="top ptl {{ deb_class }}">Pořadí:</th>
-	      <td colspan="2" class="top ptl pbm">
-{% for row in rows %}		<div class="debord">
-		  <select name="r{{ row.n }}" id="id_r{{ row.n }}">
-{% for col in row.cols %}		    <option value="{{ col.n }}"{% if row.sel == col.n  %} selected="selected"{% endif %}>{{ col.id }} – {{ col.desc|default:'(bez názvu)' }}</option>
-{% endfor %}		  </select>
-		</div>
-{% endfor %}	      </td>
-	    </tr>
+<tr id="id_creditform">
+<td></td>
+<td colspan="2"><h1 class="left">{{ page_title }}</h1></td>
+</tr>
+{% if err_message %}<tr>
+<td></td>
+<td colspan="2" class="warning">{% include 'formwarning.html' %}</td>
+</tr>
+{% endif %}<tr class="{{ form.date.css_classes }}">
+<th>{{ form.date.label_tag }}</th>
+<td colspan="2">{{ form.date }}</td>
+</tr>
+<tr class="{{ form.description.css_classes }}">
+<th>{{ form.description.label_tag }}</th>
+<td colspan="2">{{ form.description }}</td>
+</tr>
+<tr>
+<th><span class="{{ form.amount.css_classes }}">{{ form.amount.label_tag }}</span></th>
+<td><span class="{{ form.amount.css_classes }}">{{ form.amount }}</span></td>
+<td class="right"><span class="plm {{ form.currency.css_classes }}">{{ form.currency.label_tag }} {{ form.currency }}</span></td>
+</tr>
+{% if rows %}<tr>
+<th class="top ptl {{ deb_class }}">Pořadí:</th>
+<td colspan="2" class="top ptl pbm">
+{% for row in rows %}<div class="debord">
+<select name="r{{ row.n }}" id="id_r{{ row.n }}">
+{% for col in row.cols %}<option value="{{ col.n }}"{% if row.sel == col.n %} selected="selected"{% endif %}>{{ col.id }} – {{ col.desc|default:'(bez názvu)' }}</option>
+{% endfor %}</select>
+</div>
+{% endfor %}</td>
+</tr>
 {% endif %}{% endblock %}

@@ -24,7 +24,7 @@ from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.contrib.auth.models import User
 
-from common.glob import REGISTER_REGEX
+from common.glob import REGISTER_RE_STR
 from common.utils import composeref
 
 
@@ -65,7 +65,7 @@ class Proceedings(models.Model):
 
     register = models.CharField(
         max_length=30,
-        validators=(RegexValidator(regex=REGISTER_REGEX),))
+        validators=(RegexValidator(regex=REGISTER_RE_STR),))
 
     number = models.PositiveIntegerField()
 

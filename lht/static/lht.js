@@ -1,3 +1,7 @@
+'use strict';
+
+/* css_classes: opt immune */
+
 $(function() {
 
     function updatefields() {

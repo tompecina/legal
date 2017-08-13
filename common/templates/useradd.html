@@ -1,90 +1,52 @@
-{% extends "main.html" %}
+{% extends 'main.html' %}
 
 {% block page_contents %}
-	<form method="post" enctype="multipart/form-data">
-	  <table class="basic">
-	    <tr id="id_transform">
-	      <td></td>
-	      <td>
-		<h1 class="left">
-		  {{ page_title }}
-		</h1>
-	      </td>
-	    </tr>
-{% if err_message %}            <tr>
-	      <td></td>
-	      <td class="warning">
-              {% include "formwarning.html" %}            </td>
-	    </tr>
-{% endif %}	    <tr class="{{ form.username.css_classes }}">
-	      <th>
-		{{ form.username.label_tag }}
-	      </th>
-	      <td>
-		{{ form.username }} {{ form.username.help_text }}
-	      </td>
-	    </tr>
-	    <tr class="{{ form.first_name.css_classes }}">
-	      <th>
-		{{ form.first_name.label_tag }}
-	      </th>
-	      <td>
-		{{ form.first_name }}
-	      </td>
-	    </tr>
-	    <tr class="{{ form.last_name.css_classes }}">
-	      <th>
-		{{ form.last_name.label_tag }}
-	      </th>
-	      <td>
-		{{ form.last_name }}
-	      </td>
-	    </tr>
-	    <tr class="{{ form.email.css_classes }}">
-	      <th>
-		{{ form.email.label_tag }}
-	      </th>
-	      <td>
-		{{ form.email }} {{ form.email.help_text }}
-	      </td>
-	    </tr>
-	    <tr class="{{ form.password1.css_classes }}">
-	      <th>
-		{{ form.password1.label_tag }}
-	      </th>
-	      <td>
-		{{ form.password1 }}
-	      </td>
-	    </tr>
-	    <tr class="{{ form.password2.css_classes }}">
-	      <th>
-		{{ form.password2.label_tag }}
-	      </th>
-	      <td>
-		{{ form.password2 }} {{ form.password2.help_text }}
-	      </td>
-	    </tr>
-	    <tr class="{{ form.captcha.css_classes }}">
-	      <th class="bottom ptl">
-		{{ form.captcha.label_tag }}
-	      </th>
-	      <td class="bottom">
-		{{ form.captcha.help_text }}
-	      </td>
-	    </tr>
-	    <tr class="{{ form.captcha.css_classes }}">
-	      <th></th>
-	      <td>
-		{{ form.captcha }}
-	      </td>
-	    </tr>
-	    <tr>
-	      <td></td>
-	      <td>
-		<input type="submit" name="submit" value="Registrovat" />
-		{% csrf_token %}
-	      </td>
-	    </tr>
-	  </table>
-	</form>
+<form method="post" enctype="multipart/form-data">
+<table class="basic">
+<tr id="id_transform">
+<td></td>
+<td><h1 class="left">{{ page_title }}</h1></td>
+</tr>
+{% if err_message %}<tr>
+<td></td>
+<td class="warning">{% include 'formwarning.html' %}</td>
+</tr>
+{% endif %}<tr class="{{ form.username.css_classes }}">
+<th>{{ form.username.label_tag }}</th>
+<td>{{ form.username }} {{ form.username.help_text }}</td>
+</tr>
+<tr class="{{ form.first_name.css_classes }}">
+<th>{{ form.first_name.label_tag }}</th>
+<td>{{ form.first_name }}</td>
+</tr>
+<tr class="{{ form.last_name.css_classes }}">
+<th>{{ form.last_name.label_tag }}</th>
+<td>{{ form.last_name }}</td>
+</tr>
+<tr class="{{ form.email.css_classes }}">
+<th>{{ form.email.label_tag }}</th>
+<td>{{ form.email }} {{ form.email.help_text }}</td>
+</tr>
+<tr class="{{ form.password1.css_classes }}">
+<th>{{ form.password1.label_tag }}</th>
+<td>{{ form.password1 }}</td>
+</tr>
+<tr class="{{ form.password2.css_classes }}">
+<th>{{ form.password2.label_tag }}</th>
+<td>{{ form.password2 }} {{ form.password2.help_text }}</td>
+</tr>
+<tr class="{{ form.captcha.css_classes }}">
+<th class="bottom ptl">{{ form.captcha.label_tag }}</th>
+<td class="bottom">{{ form.captcha.help_text }}</td>
+</tr>
+<tr class="{{ form.captcha.css_classes }}">
+<th></th>
+<td>{{ form.captcha }}</td>
+</tr>
+<tr>
+<td></td>
+<td><input type="submit" name="submit" value="Registrovat">{% csrf_token %}</td>
+</tr>
+</table>
+</form>
 {% endblock %}
