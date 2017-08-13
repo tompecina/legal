@@ -3,7 +3,7 @@
 {% block page_contents %}
 <h1 class="mbn">{{ page_title }}</h1>
 <div class="subtitle">{{ subtitle|safe }}</div>
-<table class="detail mth mra mbh mls">
+<table class="detail">
 <thead>
 <tr>
 <th colspan="2">Základní údaje</th>
@@ -48,7 +48,7 @@
 </tr>
 </tbody>
 </table>{% if adresy %}
-<table class="detail basic">
+<table class="detail">
 <thead>
 <tr>
 <th colspan="2">{% if adresy|length_is:'1' %}Adresa{% else %}Adresy{% endif %}</th>
