@@ -42,4 +42,4 @@ class Command(BaseCommand):
         module = options['module']
         method = 'cron_' + options['method']
         custargs = options['custargs']
-        getattr(import_module(module).cron, method)(*custargs)
+        getattr(import_module('legal.{}'.format(module)).cron, method)(*custargs)

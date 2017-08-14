@@ -65,4 +65,4 @@ urlpatterns = [
     url(r'^about/$', about, name='about'),
     url(r'^stat/$', stat, name='stat'),
     url(r'^admin/', include((admin.site.urls[0], 'admin')))
-] + [url('^{}/'.format(a), include('legal.{}.urls'.format(a), namespace=a)) for a in APPS]
+] + [url('^{}/'.format(a), include(('legal.{}.urls'.format(a), a), namespace=a)) for a in APPS]

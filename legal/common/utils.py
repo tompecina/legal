@@ -60,7 +60,7 @@ class Logger:
     def _proc(meth, args, kwargs):
         if 'extra' not in kwargs:
             kwargs['extra'] = {}
-        kwargs['extra']['package'] = stack()[2].frame.f_globals['__package__'].upper()
+        kwargs['extra']['package'] = stack()[2].frame.f_globals['__package__'].upper().rpartition('.')[2]
         if len(args) > 1:
             kwargs['extra']['request'] = args[1]
             args = list(args)

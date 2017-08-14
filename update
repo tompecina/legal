@@ -26,6 +26,10 @@ rsync -avhHzx \
       --exclude '*.log.*' \
       --exclude '#*' \
       --exclude '/nohup.out' \
+      --exclude '/setup.py' \
+      --exclude '/build/' \
+      --exclude '/dist/' \
+      --exclude '/MANIFEST*' \
       --delete \
       ./ $remote:/var/www/django/legal/
 
