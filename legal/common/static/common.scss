@@ -36,7 +36,32 @@ h2 {
 table {
     border-collapse: collapse;
 }
-tr.header, tr.footer, tr.topline {
+table.topline {
+    width: 100%;
+    td {
+	text-align: center;
+	background-color: $medium-blue;
+	font-size: $small;
+	white-space: nowrap;
+    }
+    td:first-child {
+	width: 50%;
+	text-align: left;
+    }
+    td:last-child {
+	width: 50%;
+	text-align: right;
+    }
+}
+table.container {
+    width: 80%;
+    margin: 0 auto;
+}
+p.notice {
+    font-size: $tiny;
+    text-align: center;
+}
+tr.header, tr.footer {
     background-color: $medium-blue;
 }
 th {
@@ -105,10 +130,6 @@ th {
 .hidden {
     display: none;
 }
-.topline * {
-    font-size: $small;
-    white-space: nowrap;
-}
 .subtitle {
     font: {
 	style: italic;
@@ -119,10 +140,6 @@ th {
 	top: $vt;
 	bottom: $vh;
     }
-}
-p.foot {
-    font-size: $tiny;
-    text-align: center;
 }
 fieldset {
     border: {

@@ -16,16 +16,7 @@
 {% if app %}<script type="text/javascript" src="{% static '' %}{{ app }}.js{% ts_app_js %}"></script>
 {% endif %}</head>
 <body>
-{% if page_title and not suppress_topline %}<table class="width-full">
-<tbody>
-<tr class="topline">
-<td class="width-half">{% if user.is_authenticated %}<a href="{% url 'user' %}">{% endif %}Uživatel: {% if user.is_authenticated %}{{ user.get_full_name }}{% else %}(nepřihlášen){% endif %}{% if user.is_authenticated %}</a>{% endif %}</td>
-{% if not suppress_home %}<td class="center"><a href="{% url 'home' %}"><svg width="8" height="10"><path d="M 0,10 8,10 4,0 Z"/></svg></a></td>
-{% endif %}<td class="width-half right">{% if user.is_authenticated %}<a href="{% url 'pwchange' %}">změnit heslo</a> / <a href="{% url 'logout' %}">odhlásit</a>{% else %}<a href="{% url 'login' %}?next={{ request.get_full_path }}">přihlásit</a>{% endif %}</td>
-</tr>
-</tbody>
-</table>
-{% endif %}<table class="width-most margin-auto">
+{% if page_title and not suppress_topline %}{% include 'topline.html' %}{% endif %}<table class="container">
 <tbody>
 <tr>
 <td>{% block page_contents %}{% endblock %}</td>
