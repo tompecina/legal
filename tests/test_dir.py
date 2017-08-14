@@ -28,12 +28,13 @@ from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 
-from common.glob import LOCAL_DOMAIN
-from common.settings import TEST_DATA_DIR
+from legal.settings import TEST_DATA_DIR
+from legal.common.glob import LOCAL_DOMAIN
+from legal.sir.cron import cron_gettr, cron_proctr
+from legal.sir.models import Vec
+from legal.dir import cron, forms, models
+
 from tests.utils import link_equal, setdl, check_html
-from sir.cron import cron_gettr, cron_proctr
-from sir.models import Vec
-from dir import cron, forms, models
 
 
 class TestCron(TransactionTestCase):

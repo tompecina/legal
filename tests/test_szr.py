@@ -29,13 +29,14 @@ from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from common.glob import LOCAL_DOMAIN
-from common.settings import TEST_DATA_DIR
+from legal.settings import TEST_DATA_DIR
+from legal.common.glob import LOCAL_DOMAIN
+from legal.szr import cron, forms, models
+
 from tests.utils import link_equal, check_html
-from szr import cron, forms, models
 
 
-APP = __package__
+APP = __package__.rpartition('.')[2]
 
 
 class TestCron(TestCase):

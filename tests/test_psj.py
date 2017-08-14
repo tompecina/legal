@@ -27,9 +27,10 @@ from locale import strxfrm
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 
+from legal.szr.models import Court
+from legal.psj import cron, forms, models, views
+
 from tests.utils import strip_xml, link_equal, check_html
-from szr.models import Court
-from psj import cron, forms, models, views
 
 
 class TestCron(TestCase):

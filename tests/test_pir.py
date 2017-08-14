@@ -26,11 +26,12 @@ from datetime import date
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TransactionTestCase
 
+from legal.sir.cron import cron_getws2
+from legal.sir.models import Osoba, DruhRoleVRizeni, Vec
+from legal.pir import forms, views
+
 from tests.utils import strip_xml, link_equal, setpr, getpr, check_html
 from tests.test_sir import populate
-from sir.cron import cron_getws2
-from sir.models import Osoba, DruhRoleVRizeni, Vec
-from pir import forms, views
 
 
 class TestForms(SimpleTestCase):

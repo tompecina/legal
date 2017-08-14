@@ -26,8 +26,9 @@ from datetime import date
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase
 
+from legal.lht import forms, views
+
 from tests.utils import check_html
-from lht import forms, views
 
 
 class TestForms(SimpleTestCase):

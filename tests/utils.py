@@ -32,9 +32,9 @@ from bs4.element import Tag, NavigableString
 from tinycss import make_parser
 from django.http import QueryDict
 
-from common.settings import TEST_DIR, TEST_DATA_DIR, STATIC_URL, APPS, STATIC_ROOT
-from common.models import Lock, Pending
-from sir.models import Counter
+from legal.settings import TEST_DIR, TEST_DATA_DIR, STATIC_URL, APPS, STATIC_ROOT
+from legal.common.models import Lock, Pending
+from legal.sir.models import Counter
 
 
 class DummyRequest:

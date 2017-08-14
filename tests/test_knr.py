@@ -29,14 +29,15 @@ from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 
-from common.settings import TEST_DATA_DIR
-from common.utils import new_xml, p2c, xmlbool
+from legal.settings import TEST_DATA_DIR
+from legal.common.utils import new_xml, p2c, xmlbool
+from legal.knr import forms, models, views, utils
+
 from tests.glob import TEST_STRING
 from tests.utils import DummyRequest, strip_xml, check_html
-from knr import forms, models, views, utils
 
 
-APP = __package__
+APP = __package__.rpartition('.')[2]
 
 
 class TestForms(SimpleTestCase):

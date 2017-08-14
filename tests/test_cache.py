@@ -24,8 +24,9 @@ from datetime import datetime, timedelta
 
 from django.test import SimpleTestCase, TestCase
 
+from legal.cache import models, utils
+
 from tests.utils import DummyRequest
-from cache import models, utils
 
 
 class TestModels(SimpleTestCase):

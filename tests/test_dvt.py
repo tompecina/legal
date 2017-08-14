@@ -25,8 +25,9 @@ from http import HTTPStatus
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase
 
+from legal.dvt import forms
+
 from tests.utils import check_html
-from dvt import forms
 
 
 class TestForms(SimpleTestCase):

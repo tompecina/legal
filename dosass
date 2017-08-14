@@ -3,5 +3,5 @@
 apps='cin cnb common dvt hjp hsp knr lht psj sop szr sur udn sir dir pir kos'
 
 for b in $apps; do
-    sass --update -I common/static $b/static/$b.scss:$b/static/$b.css
+    sass --update -I legal/common/static legal/$b/static/$b.scss:legal/$b/static/$b.css
 done

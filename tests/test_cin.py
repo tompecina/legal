@@ -29,6 +29,7 @@ from django.test import SimpleTestCase
 
 from tests.utils import check_html
 
+
 class TestViews(SimpleTestCase):
 
     def test_main(self):

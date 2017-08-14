@@ -24,8 +24,9 @@ from http import HTTPStatus
 
 from django.test import SimpleTestCase, TestCase
 
+from legal.kos import forms
+
 from tests.utils import check_html
-from kos import forms
 
 
 class TestForms(SimpleTestCase):

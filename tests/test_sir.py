@@ -28,13 +28,14 @@ from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 
-from common.settings import TEST_DATA_DIR
-from common.glob import LOCAL_DOMAIN
+from legal.settings import TEST_DATA_DIR
+from legal.common.glob import LOCAL_DOMAIN
+from legal.sir import cron, glob, models
+
 from tests.utils import link_equal, setdl, setpr, getdl, getpr, check_html
-from sir import cron, glob, models
 
 
-APP = __package__
+APP = __package__.rpartition('.')[2]
 
 
 class DummyTag:

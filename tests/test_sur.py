@@ -28,17 +28,18 @@ from bs4 import BeautifulSoup
 from django.test import TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 
-from common.glob import LOCAL_DOMAIN
-from common.settings import TEST_DATA_DIR, TEST_TEMP_DIR
+from legal.settings import TEST_DATA_DIR, TEST_TEMP_DIR
+from legal.common.glob import LOCAL_DOMAIN
+from legal.psj.cron import cron_schedule, cron_update as psj_update
+from legal.psj.models import Task, Hearing
+from legal.udn.cron import cron_update as udn_update
+from legal.udn.models import Decision
+from legal.sur import cron, models
+
 from tests.utils import link_equal, check_html
-from psj.cron import cron_schedule, cron_update as psj_update
-from psj.models import Task, Hearing
-from udn.cron import cron_update as udn_update
-from udn.models import Decision
-from sur import cron, models
 
 
-APP = __package__
+APP = __package__.rpartition('.')[2]
 
 
 def cleanup():

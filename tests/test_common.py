@@ -32,10 +32,11 @@ from django.contrib.auth.models import User
 from django.core import mail
 from django.http import QueryDict
 
+from legal.szr.cron import cron_update
+from legal.szr.models import Proceedings
+from legal.common import cron, glob, fields, forms, models, utils, views
+
 from tests.utils import DummyRequest, setdl, setpr, TEST_OBJ, check_html
-from szr.cron import cron_update
-from szr.models import Proceedings
-from common import cron, glob, fields, forms, models, utils, views
 
 
 class TestCron(TestCase):

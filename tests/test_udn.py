@@ -29,10 +29,11 @@ from os import unlink
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 
-from common.glob import LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL
-from common.settings import TEST_TEMP_DIR
+from legal.settings import TEST_TEMP_DIR
+from legal.common.glob import LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL
+from legal.udn import cron, forms, glob, models, views
+
 from tests.utils import strip_xml, link_equal, check_html
-from udn import cron, forms, glob, models, views
 
 
 class TestCron(TestCase):
