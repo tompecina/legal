@@ -9,12 +9,12 @@
 /venv-*
 migrations/
 __pycache__/
-/legal/secrets.py
+/secrets.py
 /htmlcov/
 *.css
 *.map
 *.log
 *.log.*
 /build
-/MANIFEST
 /dist
+/MANIFEST

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+remote='legal.pecina.cz'
+
+./make-static
+rsync -avhHzx \
+      --exclude '.*' \
+      --exclude '*.pyc' \
+      --exclude '*~' \
+      --exclude '*.po' \
+      --exclude 'static/' \
+      --exclude 'migrations/' \
+      --exclude '__pycache__/' \
+      --exclude '#*' \
+      --delete \
+      legal fonts jquery $remote:/var/www/django/legal/
+rsync -avhHzx secrets.py $remote:/var/www/django/legal/legal/
+ssh $remote 'cd /var/www/django/legal && source activate && pip install -q -r requirements.txt'
+ssh $remote 'touch /var/www/django/legal/wsgi.py'
