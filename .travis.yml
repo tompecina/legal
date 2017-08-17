@@ -28,6 +28,7 @@ before_install:
   - "npm install uglify-js"
   - "export PATH=\"$HOME\"/node_modules/.bin:\"$PATH\""
   - "echo $PATH"
+  - "ls -l ~/node_modules/.bin"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
         pip install git+https://github.com/django/django.git
