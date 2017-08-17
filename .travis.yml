@@ -34,7 +34,7 @@ before_install:
     fi
 
 install:
-  - "./dosass"
+  - "./make-static"
 
 script:
   - "./manage.py test tests --failfast && ./manage.py test tests --reverse --failfast"
