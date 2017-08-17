@@ -34,7 +34,8 @@ before_install:
     fi
 
 install:
-  - "./make-static"
+  - "./dosass"
+  - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'"
 
 script:
   - "./manage.py test tests --failfast && ./manage.py test tests --reverse --failfast"
