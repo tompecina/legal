@@ -93,7 +93,7 @@ class TestViews(SimpleTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'dvt_main.html')
+        self.assertTemplateUsed(res, 'dvt_mainpage.html')
         check_html(self, res.content)
 
         num = 1
@@ -105,7 +105,7 @@ class TestViews(SimpleTestCase):
                  'months': test[2],
                  'days': test[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'dvt_main.html')
+            self.assertTemplateUsed(res, 'dvt_mainpage.html')
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertEqual(len(msg), 4)
@@ -125,7 +125,7 @@ class TestViews(SimpleTestCase):
                  'months': test[2],
                  'days': test[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'dvt_main.html')
+            self.assertTemplateUsed(res, 'dvt_mainpage.html')
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertEqual(msg[0].text, 'Chybné zadání')

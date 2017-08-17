@@ -2,13 +2,14 @@
 
 {% block page_contents %}
 <form method="post" enctype="multipart/form-data">
-<table class="basic">
+<table class="form">
 <tbody>
 {% block form_contents %}{% endblock %}
 {% include 'submit.html' %}
 </tbody>
 </table>
-{% if display_note %}<table class="nttbl">
+{% if display_note %}
+<table class="nttbl">
 <tr>
 <td>
 <fieldset>
@@ -18,6 +19,7 @@
 </td>
 </tr>
 </table>
-{% endif %}{% csrf_token %}
+{% endif %}
+{% csrf_token %}
 </form>
 {% endblock %}

@@ -42,7 +42,7 @@ class UserAddForm(UserChangeForm, UserCreationForm, Form):
 
     captcha = forms.CharField(
         label='Kontrolní otázka',
-        help_text='Jaké je hlavní město České republiky?')
+        help_text='Jak se jmenuje hlavní město České republiky?')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -2,11 +2,12 @@
 
 {% block page_contents %}
 <form method="post" enctype="multipart/form-data">
-<table class="basic">
+<table class="form">
 <tbody>
 {% block form_contents %}{% endblock %}
 {% include 'submit.html' %}
 </tbody>
-</table>{% csrf_token %}
+</table>
+{% csrf_token %}
 </form>
 {% endblock %}

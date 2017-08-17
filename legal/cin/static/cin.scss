@@ -1,22 +1,44 @@
+//
+// cin/static/cin.scss
+//
+// Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+//
+// This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+//
+// This application is free software: you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This application is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 @import "include";
 
-td.msg {
-    div.msg-header {
-	font-weight: bold;
+
+td.msg div {
+    &.msg-header {
 	margin-bottom: $vs;
+	font-weight: bold;
     }
-    div.msg-ymd {
+    &.msg-ymd {
 	margin-bottom: $vm;
     }
-    div.msg-y {
-	text-align: left;
+    &.msg-y {
 	margin-left: $hl;
-    }
-    div.msg-m1, div.msg-m2 {
 	text-align: left;
-	margin-left: $hl;
     }
-    div.msg-m1 {
+    &.msg-m1, &.msg-m2 {
+	margin-left: $hl;
+	text-align: left;
+    }
+    &.msg-m1 {
 	margin-top: $vm;
     }
 }

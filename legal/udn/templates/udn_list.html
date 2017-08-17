@@ -1,11 +1,12 @@
 {% extends 'main.html' %}
 
 {% block page_contents %}
-<h1 class="mbn">{{ page_title }}</h1>
-{% if rows %}<div class="subtitle">Počet výsledků: {{ total }}</div>
-<table class="margin-auto">
+<h1 class="list">{{ page_title }}</h1>
+{% if rows %}
+<div class="subtitle">Počet výsledků: {{ total }}</div>
+<table class="list">
 <thead>
-<tr class="header">
+<tr>
 <th>Datum</th>
 <th>Jednací číslo</th>
 <th>Oblast</th>
@@ -14,25 +15,36 @@
 </tr>
 </thead>
 <tbody>
-{% for row in rows %}<tr class="{% cycle 'odd' 'even' %}">
+{% for row in rows %}
+<tr class="{% cycle 'odd' 'even' %}">
 <td>{{ row.date|date:'d.m.Y' }}</td>
 <td class="nowrap">{% if row.senate %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}-{{ row.page }}</td>
 <td>{{ row.agenda }}</td>
 <td>
-{% for party in row.parties.all %}<div>{{ party.name }}</div>
-{% endfor %}</td>
+{% for party in row.parties.all %}
+<div>{{ party.name }}</div>
+{% endfor %}
+</td>
 <td class="center nowrap">
 <a href="/repo/udn/{{ row.filename }}" target="_blank">[Z]</a>
-{% if row.anonfilename %}<a href="/repo/udn/{{ row.anonfilename }}" target="_blank">[A]</a>
-{% endif %}</td>
+{% if row.anonfilename %}
+<a href="/repo/udn/{{ row.anonfilename }}" target="_blank">[A]</a>
+{% endif %}
+</td>
 </tr>
-{% endfor %}</tbody>
-{% if not suppress_table_footer %}<tfoot>
-<tr class="footer">
-<td colspan="5" class="right">{% include 'pager.html' %}</td>
+{% endfor %}
+</tbody>
+{% if not suppress_table_footer %}
+<tfoot>
+<tr>
+<td colspan="5" class="pager">
+{% include 'pager.html' %}</td>
 </tr>
 </tfoot>
-{% endif %}</table>
-{% else %}<p class="center">(žádné výsledky)</p>
-{% endif %}<p class="center"><a href="{% url 'udn:mainpage' %}">Zpět na vyhledávací formulář</a></p>
+{% endif %}
+</table>
+{% else %}
+<p>(žádné výsledky)</p>
+{% endif %}
+<p><a href="{% url 'udn:mainpage' %}">Zpět na vyhledávací formulář</a></p>
 {% endblock %}

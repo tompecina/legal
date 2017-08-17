@@ -4,50 +4,58 @@
 <tr id="id_debitform">
 <td colspan="3"><h1>{{ page_title }}</h1></td>
 </tr>
-{% if err_message %}<tr>
-<td colspan="3" class="warning">{% include 'formwarning.html' %}</td>
+{% if err_message %}
+<tr>
+<td colspan="3">{% include 'formwarning.html' %}</td>
 </tr>
-{% endif %}<tr>
+{% endif %}
+<tr>
 <td>{{ form.lock_fixed }}</td>
 <td colspan="2">
 <table class="intbl">
+<tbody>
 <tr class="{{ form.description.css_classes }}">
-<td colspan="3">{{ form.description.label_tag }} {{ form.description }}</td>
+<td colspan="3">{{ form.description.label_tag }}<span>{{ form.description }}</span></td>
 </tr>
 <tr>
 <td colspan="3" class="hr"><hr></td>
 </tr>
 <tr id="id_fa">
-<th class="immune"><span class="{{ form.fixed_amount.css_classes }}">{{ form.model.0 }}:</span></th>
+<th class="immune"><span class="{{ form.fixed_amount.css_classes }}">{{ form.model.0 }}</span><span>:</span></th>
 <td colspan="2">
-<span class="pln {{ form.fixed_amount.css_classes }}">{{ form.fixed_amount }}</span>
-<span class="{{ form.fixed_currency.css_classes }}">{{ form.fixed_currency.label_tag }} {{ form.fixed_currency }}</span>
-<span class="{{ form.fixed_date.css_classes }}">{{ form.fixed_date.label_tag }} {{ form.fixed_date }}</span>
+<span class="{{ form.fixed_amount.css_classes }}">{{ form.fixed_amount }}</span>
+<span class="{{ form.fixed_currency.css_classes }}">{{ form.fixed_currency.label_tag }}</span>
+<span>{{ form.fixed_currency }}</span>
+<span class="{{ form.fixed_date.css_classes }}">{{ form.fixed_date.label_tag }}</span><span>{{ form.fixed_date }}</span>
 </td>
 </tr>
 <tr id="id_pa">
-<th class="immune"><span class="{{ form.pa_rate.css_classes }}">{{ form.model.1 }}:</span></th>
-<td class="{{ form.pa_rate.css_classes }}">{{ form.pa_rate }} % <i>p. a.</i></td>
+<th class="immune"><span class="{{ form.pa_rate.css_classes }}">{{ form.model.1 }}</span><span>:</span></th>
+<td class="{{ form.pa_rate.css_classes }}">{{ form.pa_rate }}<span>% <i>p. a.</i></span></td>
 <td>
 <span>{{ form.ydconv.label_tag }}</span>
 <select name="ydconv" id="id_ydconv">
-{% for dconv in ydconvs %}<option value="{{ dconv }}"{% if form.ydconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
-{% endfor %}</select>
+{% for dconv in ydconvs %}
+<option value="{{ dconv }}"{% if form.ydconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
+{% endfor %}
+</select>
 </td>
 </tr>
 <tr id="id_pm">
-<th class="immune"><span class="{{ form.pm_rate.css_classes }}">{{ form.model.2 }}:</span></th>
-<td class="{{ form.pm_rate.css_classes }}">{{ form.pm_rate }} % <i>p. m.</i></td>
+<th class="immune"><span class="{{ form.pm_rate.css_classes }}">{{ form.model.2 }}</span><span>:</span></th>
+<td class="{{ form.pm_rate.css_classes }}">{{ form.pm_rate }}<span>% <i>p. m.</i></span></td>
 <td>
 <span>{{ form.mdconv.label_tag }}</span>
 <select name="mdconv" id="id_mdconv">
-{% for dconv in mdconvs %}<option value="{{ dconv }}"{% if form.mdconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
-{% endfor %}</select>
+{% for dconv in mdconvs %}
+<option value="{{ dconv }}"{% if form.mdconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
+{% endfor %}
+</select>
 </td>
 </tr>
 <tr id="id_pd">
-<th class="immune"><span class="{{ form.pd_rate.css_classes }}">{{ form.model.3 }}:</span></th>
-<td colspan="2" class="{{ form.pd_rate.css_classes }}">{{ form.pd_rate }} ‰ <i>p. d.</i></td>
+<th class="immune"><span class="{{ form.pd_rate.css_classes }}">{{ form.model.3 }}</span><span>:</span></th>
+<td colspan="2" class="{{ form.pd_rate.css_classes }}">{{ form.pd_rate }}<span>‰ <i>p. d.</i></span></td>
 </tr>
 <tr id="id_cust1">
 <th colspan="3" class="immune">{{ form.model.4 }}</th>
@@ -72,15 +80,24 @@
 <td colspan="3">
 <span>{{ form.principal_debit.label_tag }}</span>
 <select name="principal_debit" id="id_principal_debit">
-{% for row in rows %}<option value="{{ row.value }}"{% if row.sel %} selected="selected"{% endif %} id="id_principal_debit_{{ row.value }}">{{ row.text }}</option>
-{% endfor %}</select>
+{% for row in rows %}
+<option value="{{ row.value }}"{% if row.sel %} selected="selected"{% endif %} id="id_principal_debit_{{ row.value }}">{{ row.text }}</option>
+{% endfor %}
+</select>
 <span class="{{ form.principal_amount.css_classes }}">{{ form.principal_amount }}</span>
-<span class="{{ form.principal_currency.css_classes }}">{{ form.principal_currency.label_tag }} {{ form.principal_currency }}</span>
+<span class="{{ form.principal_currency.css_classes }}">{{ form.principal_currency.label_tag }}</span>
+<span>{{ form.principal_currency }}</span>
 </td>
 </tr>
 <tr id="id_pr2">
-<td colspan="3"><span class="{{ form.date_from.css_classes }}">{{ form.date_from.label_tag }} {{ form.date_from }}</span> <span class="{{ form.date_to.css_classes }}">{{ form.date_to.label_tag }} {{ form.date_to }}</span></td>
+<td colspan="3">
+<span class="{{ form.date_from.css_classes }}">{{ form.date_from.label_tag }}</span>
+<span>{{ form.date_from }}</span>
+<span class="{{ form.date_to.css_classes }}">{{ form.date_to.label_tag }}</span>
+<span>{{ form.date_to }}</span>
+</td>
 </tr>
+</tbody>
 </table>
 </td>
 </tr>

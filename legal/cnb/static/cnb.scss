@@ -1,24 +1,54 @@
+//
+// cnb/static/cnb.scss
+//
+// Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+//
+// This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+//
+// This application is free software: you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This application is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 @import "include";
+
 
 fieldset {
     margin: $vl auto;
     div {
-	padding: $vs $hm;
+	margin: $vs $hm;
 	text-align: center;
     }
 }
-td.msg {
-    div.msg-res0, div.msg-res1, div.msg-res2 {
-	font-weight: bold;
+
+td.msg div {
+    &.msg-res0, &.msg-res1, &.msg-res2 {
 	font-size: $larger;
+	font-weight: bold;
     }
-    div.msg-res1 {
+    &.msg-res1 {
         margin-bottom: $vt;
     }
-    div.msg-res2 {
+    &.msg-res2 {
 	margin-bottom: $vm;
     }
-    div.msg-note {
+    &.msg-note {
 	font-size: $smaller;
+    }
+}
+
+table.centered div:first-of-type {
+    padding-top: $vm;
+    span:nth-of-type(3) {
+	margin-left: $hm;
     }
 }

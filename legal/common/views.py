@@ -69,10 +69,7 @@ def unauth(request):
 def error(request):
 
     LOGGER.debug('Internal server error page generated', request)
-    var = {
-        'page_title': 'Interní chyba aplikace',
-        'suppress_topline': True,
-    }
+    var = {'page_title': 'Interní chyba aplikace'}
     return render(
         request,
         'error.html',
@@ -254,7 +251,7 @@ def getappstat():
         conf = apps.get_app_config(app)
         if hasattr(conf, 'stat'):
             appstat.append(
-                {'abbr': conf.name,
+                {'abbr': conf.name.rpartition('.')[2],
                  'name': conf.verbose_name,
                  'stat': conf.stat(),
                 })
@@ -334,7 +331,6 @@ def useradd(request):
         {'form': form,
          'page_title': 'Registrace nového uživatele',
          'err_message': err_message,
-         'suppress_topline': True,
         })
 
 

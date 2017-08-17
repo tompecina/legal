@@ -2,18 +2,21 @@
 
 {% block page_contents %}
 <form method="post" enctype="multipart/form-data">
-<table class="basic">
-<tr id="id_transform">
+<table class="form">
+<tbody>
+<tr>
 <td></td>
-<td><h1 class="left">{{ page_title }}</h1></td>
+<td><h1>{{ page_title }}</h1></td>
 </tr>
-{% if err_message %}<tr>
+{% if err_message %}
+<tr>
 <td></td>
-<td class="warning">{% include 'formwarning.html' %}</td>
+<td>{% include 'formwarning.html' %}</td>
 </tr>
-{% endif %}<tr class="{{ form.username.css_classes }}">
+{% endif %}
+<tr class="{{ form.username.css_classes }}">
 <th>{{ form.username.label_tag }}</th>
-<td>{{ form.username }} {{ form.username.help_text }}</td>
+<td>{{ form.username }}<span>{{ form.username.help_text }}</span></td>
 </tr>
 <tr class="{{ form.first_name.css_classes }}">
 <th>{{ form.first_name.label_tag }}</th>
@@ -25,19 +28,19 @@
 </tr>
 <tr class="{{ form.email.css_classes }}">
 <th>{{ form.email.label_tag }}</th>
-<td>{{ form.email }} {{ form.email.help_text }}</td>
+<td>{{ form.email }}<span>{{ form.email.help_text }}</span></td>
 </tr>
 <tr class="{{ form.password1.css_classes }}">
 <th>{{ form.password1.label_tag }}</th>
 <td>{{ form.password1 }}</td>
 </tr>
-<tr class="{{ form.password2.css_classes }}">
+<tr class="ga {{ form.password2.css_classes }}">
 <th>{{ form.password2.label_tag }}</th>
-<td>{{ form.password2 }} {{ form.password2.help_text }}</td>
+<td>{{ form.password2 }}<span>{{ form.password2.help_text }}</span></td>
 </tr>
 <tr class="{{ form.captcha.css_classes }}">
-<th class="bottom ptl">{{ form.captcha.label_tag }}</th>
-<td class="bottom">{{ form.captcha.help_text }}</td>
+<th>{{ form.captcha.label_tag }}</th>
+<td>{{ form.captcha.help_text }}</td>
 </tr>
 <tr class="{{ form.captcha.css_classes }}">
 <th></th>
@@ -47,6 +50,7 @@
 <td></td>
 <td><input type="submit" name="submit" value="Registrovat">{% csrf_token %}</td>
 </tr>
+</tbody>
 </table>
 </form>
 {% endblock %}

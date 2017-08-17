@@ -21,7 +21,7 @@
 #
 
 from django.conf.urls import include, url
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib import admin
 
 from legal.settings import APPS
@@ -43,9 +43,15 @@ urlpatterns = [
             'page_title': 'Změna hesla'},
         name='pwchanged'),
     url(r'^accounts/login/$',
-        LoginView.as_view(template_name='login.html'),
+        LoginView.as_view(
+            template_name='login.html',
+            extra_context={'page_title': 'Přihlášení', 'suppress_login': True}),
         name='login'),
-    url(r'^accounts/logout/$', logout, name='logout'),
+    url(r'^accounts/logout/$',
+        LogoutView.as_view(
+            template_name='logout.html',
+            extra_context={'page_title': 'Odhlášení'}),
+        name='logout'),
     url(r'^accounts/user/$', userinfo, name='user'),
     url(r'^accounts/useradd/$', useradd, name='useradd'),
     url(r'^accounts/useradded/$',

@@ -27,8 +27,12 @@ class MainForm(forms.Form):
 
     beg_date = fields.DateField(
         widget=widgets.Dw(today=True),
-        label='Počátek')
+        label='Počátek',
+        help_text='(nezapočítává se)',
+    )
 
     end_date = fields.DateField(
         widget=widgets.Dw(today=True),
-        label='Konec')
+        label='Konec',
+        help_text='(započítává se)',
+    )

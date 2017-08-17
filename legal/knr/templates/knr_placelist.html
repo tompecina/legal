@@ -1,20 +1,33 @@
 {% extends 'knr_list.html' %}
 
-{% block table_header %}<th class="left">Zkratka</th>
+{% block table_header %}
+<th>Zkratka</th>
 <th>Název</th>
 <th>Adresa</th>
 <th>Lat</th>
 <th>Lon</th>
-<th>Akce</th>{% endblock %}
+<th>Akce</th>
+{% endblock %}
 
-{% block table_footer %}<td colspan="6"><a href="{% url 'knr:placeform' %}">Přidat místo</a></td>{% endblock %}
+{% block table_footer %}
+<td colspan="6"><a href="{% url 'knr:placeform' %}">Přidat místo</a></td>
+{% endblock %}
 
-{% block table_row %}<td>{{ row.abbr }}</td>
+{% block table_row %}
+<td>{{ row.abbr }}</td>
 <td>{{ row.name }}</td>
 <td>{{ row.addr }}</td>
 <td>{{ row.lat|floatformat:'7' }}</td>
 <td>{{ row.lon|floatformat:'7' }}</td>
-<td class="links">{% if row.user %}<a href="{% url 'knr:placeform' row.id %}">upravit</a> <a href="{% url 'knr:placedel' row.id %}">smazat</a>{% endif %}</td>{% endblock %}
+<td class="act">
+{% if row.user %}
+<a href="{% url 'knr:placeform' row.id %}">upravit</a>
+<a href="{% url 'knr:placedel' row.id %}">smazat</a>
+{% endif %}
+</td>
+{% endblock %}
 
-{% block empty %}<p class="center">(nejsou zadána žádná místa)</p>
-<p class="center"><a href="{% url 'knr:placeform' %}">Vytvořit nové místo</a></p>{% endblock %}
+{% block empty %}
+<p>(nejsou zadána žádná místa)</p>
+<p><a href="{% url 'knr:placeform' %}">Vytvořit nové místo</a></p>
+{% endblock %}

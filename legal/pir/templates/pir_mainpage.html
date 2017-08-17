@@ -2,76 +2,81 @@
 
 {% block page_contents %}
 <form method="post" enctype="multipart/form-data">
-<table class="basic">
+<table class="form">
+<tbody>
 <tr>
 <td></td>
-<td colspan="2">
-<h1 class="left">{{ page_title }}</h1>
-</td>
+<td colspan="2"><h1>{{ page_title }}</h1></td>
 </tr>
-{% if err_message %}<tr><td></td><td colspan="2" class="warning">
-{% include 'formwarning.html' %}</td></tr>
-{% endif %}<tr>
+{% if err_message %}
+<tr>
+<td></td>
+<td colspan="2">{% include 'formwarning.html' %}</td>
+</tr>
+{% endif %}
+<tr>
 <th>{{ form.court.label_tag }}</th>
 <td colspan="2">
 <select name="court" id="id_court">
 <option value="">(všechny)</option>
-{% for court in courts %}<option value="{{ court.id }}">{{ court.name }}</option>
-{% endfor %}</select>
+{% for court in courts %}
+<option value="{{ court.id }}">{{ court.name }}</option>
+{% endfor %}
+</select>
 </td>
 </tr>
 <tr>
-<th{% if form.senate.errors or form.register.errors or form.number.errors or form.year.errors or form.page.errors %} class="err"{% endif %}>
-Spisová značka:
-</th>
+<th{% if form.senate.errors or form.register.errors or form.number.errors or form.year.errors or form.page.errors %} class="err"{% endif %}>Spisová značka:</th>
 <td colspan="2" class="nowrap">
 <input id="id_senate" size="4" type="text" name="senate" maxlength="8" value="{{ form.senate.value }}" class="{{ form.senate.css_classes }}">
-INS
+<span>INS</span>
 <input id="id_number" size="4" type="text" name="number" maxlength="8" value="{{ form.number.value }}" class="{{ form.number.css_classes }}">
-/
+<span>/</span>
 <input id="id_year" size="4" type="text" name="year" maxlength="4" value="{{ form.year.value }}" class="{{ form.year.css_classes }}">
 </td>
 </tr>
 <tr>
-<th{% if form.date_first_from.errors or form.date_first_to.errors %} class="err"{% endif %}>
-Datum prvního záznamu:
-</th>
+<th{% if form.date_first_from.errors or form.date_first_to.errors %} class="err"{% endif %}>Datum prvního záznamu:</th>
 <td colspan="2" class="nowrap">
 <span class="{{ form.date_first_from.css_classes }}" id="id_date_first_from_span">{{ form.date_first_from }}</span>
-–
+<span>–</span>
 <span class="{{ form.date_first_to.css_classes }}" id="id_date_first_to_span">{{ form.date_first_to }}</span>
 </td>
 </tr>
 <tr>
-<th{% if form.date_last_from.errors or form.date_last_to.errors %} class="err"{% endif %}>
-Datum posledního záznamu:
-</th>
+<th{% if form.date_last_from.errors or form.date_last_to.errors %} class="err"{% endif %}>Datum posledního záznamu:</th>
 <td colspan="2" class="nowrap">
 <span class="{{ form.date_last_from.css_classes }}" id="id_date_last_from_span">{{ form.date_last_from }}</span>
-–
+<span>–</span>
 <span class="{{ form.date_last_to.css_classes }}" id="id_date_last_to_span">{{ form.date_last_to }}</span>
 </td>
 </tr>
 <tr>
 <th>{{ form.name.label_tag }}</th>
-<td colspan="2" class="nowrap">
+<td colspan="2" class="inlop">
 <span>{{ form.name }}</span>
-{% for p in form.name_opt %}{{ p }}
-{% endfor %}</td>
+{% for p in form.name_opt %}
+{{ p }}
+{% endfor %}
+</td>
 </tr>
 <tr>
 <th>{{ form.first_name.label_tag }}</th>
-<td colspan="2" class="nowrap">
+<td colspan="2" class="inlop">
 <span>{{ form.first_name }}</span>
-{% for p in form.first_name_opt %}{{ p }}
-{% endfor %}</td>
+{% for p in form.first_name_opt %}
+{{ p }}
+{% endfor %}
+</td>
 </tr>
 <tr>
 <th>{{ form.city.label_tag }}</th>
-<td colspan="2" class="nowrap">
+<td colspan="2" class="inlop">
 <span>{{ form.city }}</span>
-{% for p in form.city_opt %}{{ p }}
-{% endfor %}</td>
+{% for p in form.city_opt %}
+{{ p }}
+{% endfor %}
+</td>
 </tr>
 <tr>
 <th>{{ form.genid.label_tag }}</th>
@@ -89,7 +94,7 @@ Datum posledního záznamu:
 <th>{{ form.birthid.label_tag }}</th>
 <td colspan="2">
 <span>{{ form.birthid }}</span>
-(včetně lomítka)
+<span>(včetně lomítka)</span>
 </td>
 </tr>
 <tr>
@@ -99,19 +104,15 @@ Datum posledního záznamu:
 </td>
 </tr>
 <tr>
-<th{% if form.year_birth_from.errors or form.year_birth_to.errors %} class="err"{% endif %}>
-Rok narození:
-</th>
+<th{% if form.year_birth_from.errors or form.year_birth_to.errors %} class="err"{% endif %}>Rok narození:</th>
 <td colspan="2" class="nowrap">
 <span class="{{ form.year_birth_from.css_classes }}" id="id_year_birth_from_span">{{ form.year_birth_from }}</span>
-–
+<span>–</span>
 <span class="{{ form.year_birth_to.css_classes }}" id="id_year_birth_to_span">{{ form.year_birth_to }}</span>
 </td>
 </tr>
 <tr>
-<th>
-Procesní postavení:
-</th>
+<th>Procesní postavení:</th>
 <td colspan="2" class="nowrap">
 {{ form.role_debtor }}
 <span>{{ form.role_debtor.label_tag }}</span>
@@ -122,9 +123,7 @@ Procesní postavení:
 </td>
 </tr>
 <tr>
-<th>
-Výpis:
-</th>
+<th>Výpis:</th>
 <td colspan="2" class="nowrap">
 {{ form.deleted }}
 <span>{{ form.deleted.label_tag }}</span>
@@ -132,20 +131,15 @@ Výpis:
 <span>{{ form.creditors.label_tag }}</span>
 <tr>
 <th>{{ form.format.label_tag }}</th>
-<td colspan="2">
-{% for p in form.format %}{{ p }}
-{% endfor %}</td>
-</tr>
-<tr class="submit">
-<td></td>
-<td>
-<input type="submit" name="submit" value="Hledat">
-</td>
-<td class="right">
-<input type="reset" name="reset" value="Vymazat">
-{% csrf_token %}
+<td colspan="2" class="inlop">
+{% for p in form.format %}
+{{ p }}
+{% endfor %}
 </td>
 </tr>
+{% include 'search.html' %}
+</tbody>
 </table>
+{% csrf_token %}
 </form>
 {% endblock %}

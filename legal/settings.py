@@ -275,6 +275,9 @@ DATE_FORMAT = 'd.m.Y'
 SHORT_DATE_FORMAT = 'd.m.Y'
 DATE_INPUT_FORMATS = ('%d.%m.%Y',)
 
+JQUERY_VERSION = '3.2.1'
+JQUERY_UI_VERSION = '1.12.1'
+
 LOCALE_PATHS = ()
 if not TEST:
     setlocale(LC_ALL, 'cs_CZ')

@@ -1,3 +1,24 @@
+//
+// hsp/static/hsp.js
+//
+// Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+//
+// This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+//
+// This application is free software: you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This application is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 'use strict';
 
 /* css_classes: itr currsel debord curr_from curr_to immune */
@@ -116,7 +137,7 @@ $(function() {
 
     function credit_reorder() {
 	var $t = $(this);
-	var $s = $('div.debord select');
+	var $s = $('tr.debord td div select');
 	var ci = $s.index($t);
 	var nv = $t.val();
 	var pv = $t.data('pv');
@@ -161,7 +182,7 @@ $(function() {
 	    .first().change();
     }
     if ($('#id_creditform').length) {
-	$dl = $('div.debord select').each(
+	var $dl = $('tr.debord td div select').each(
 	    function() { $(this).data('pv', $(this).val()); } )
 	    .change(credit_reorder);
     }

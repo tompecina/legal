@@ -2,18 +2,26 @@
 
 {% block page_contents %}
 <form method="post" enctype="multipart/form-data">
-<table class="basic">
+<table class="form">
+<tbody>
 <tr>
 <td></td>
-<td colspan="2"><h1 class="left">{{ page_title }}</h1></td>
+<td colspan="2"><h1>{{ page_title }}</h1></td>
 </tr>
-{% if err_message %}<tr>
+{% if err_message %}
+<tr>
 <td></td>
-<td colspan="2" class="warning">{% include 'formwarning.html' %}</td>
+<td colspan="2">{% include 'formwarning.html' %}</td>
 </tr>
-{% endif %}<tr>
+{% endif %}
+<tr>
 <th{% if form.number.errors or form.year.errors %} class="err"{% endif %}>Spisová značka:</th>
-<td colspan="2" class="nowrap">INS <input id="id_number" size="4" type="text" name="number" maxlength="8" value="{{ form.number.value }}" class="{{ form.number.css_classes }}"> / <input id="id_year" size="4" type="text" name="year" maxlength="4" value="{{ form.year.value }}" class="{{ form.year.css_classes }}"></td>
+<td colspan="2" class="nowrap">
+<span>INS</span>
+<input id="id_number" size="4" type="text" name="number" maxlength="8" value="{{ form.number.value }}" class="{{ form.number.css_classes }}">
+<span>/</span>
+<input id="id_year" size="4" type="text" name="year" maxlength="4" value="{{ form.year.value }}" class="{{ form.year.css_classes }}">
+</td>
 </tr>
 <tr class="{{ form.desc.css_classes }}">
 <th>{{ form.desc.label_tag }}</th>
@@ -21,10 +29,11 @@
 </tr>
 <tr>
 <th>{{ form.detailed.label_tag }}</th>
-<td colspan="2" class="nowrap">{{ form.detailed }} (jinak pouze rozhodnutí o úpadku)</td>
+<td colspan="2" class="nowrap">{{ form.detailed }}<span>(jinak pouze rozhodnutí o úpadku)</span></td>
 </tr>
-{% include 'submit.html' %}</table>
-{% if type %}<div class="hidden"><input type="hidden" name="idx" value="{{ idx }}"><input type="hidden" name="type" id="id_type" value="{{ type }}"></div>
-{% endif %}{% csrf_token %}
+{% include 'submit.html' %}
+</tbody>
+</table>
+{% csrf_token %}
 </form>
 {% endblock %}

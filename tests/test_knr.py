@@ -2264,7 +2264,7 @@ class TestViews2(TransactionTestCase):
             self.assertTemplateUsed(res, 'knr_mainpage.html')
             check_html(self, res.content, key=test[0])
             soup = BeautifulSoup(res.content, 'html.parser')
-            ttd = soup.select('table.vattbl td')
+            ttd = soup.select('.vattbl td')
             self.assertEqual(len(ttd), 4)
             for idx in range(4):
                 self.assertEqual(ttd[idx].text, '{} Kč'.format(views.convi(test[1][idx])))

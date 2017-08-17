@@ -2,25 +2,27 @@
 
 {% block page_contents %}
 <form method="post" enctype="multipart/form-data">
-<table class="margin-auto">
+<table class="form">
 <tr>
 <td></td>
-<td colspan="2"><h1 class="left">{{ page_title }}</h1></td>
+<td colspan="2"><h1>{{ page_title }}</h1></td>
 </tr>
+<tr class="ga">
+<td></td>
+<td colspan="2">Po zadání uživatelského jména obdržíte e-mailem link pro obnovení hesla.<br>Pokud není pro daného uživatele e-mail zadán, heslo nelze nijak obnovit.</td>
+</tr>
+{% if err_message %}
 <tr>
 <td></td>
-<td colspan="2" class="pbl">Po zadání uživatelského jména obdržíte e-mailem link pro obnovení hesla.<br>Pokud není pro daného uživatele e-mail zadán, heslo nelze nijak obnovit.</td>
+<td colspan="2">{% include 'formwarning.html' %}</td>
 </tr>
-{% if err_message %}<tr>
-<td></td>
-<td colspan="2" class="warning">{% include 'formwarning.html' %}</td>
-</tr>
-{% endif %}<tr class="{{ form.username.css_classes }}">
-<td class="right">{{ form.username.label_tag }}</td>
+{% endif %}
+<tr class="{{ form.username.css_classes }}">
+<th>{{ form.username.label_tag }}</th>
 <td colspan="2">{{ form.username }}</td>
 </tr>
 <tr>
-<td class="right"></td>
+<td></td>
 <td><input type="submit" name="submit" value="Poslat link"></td>
 <td class="right"><input type="submit" name="back" value="Zpět">{% csrf_token %}</td>
 </tr>

@@ -1,27 +1,21 @@
 {% extends 'main.html' %}
 
 {% block page_contents %}
-<table class="margin-none-auto">
-<tbody>
-<tr>
-<td>
 <h1>{{ page_title }}</h1>
-<table class="list">
+<table id="#id_courts" class="list">
 <thead>
-<tr class="header">
+<tr>
 <th>Zkratka</th>
 <th>Soud</th>
 </tr>
 </thead>
 <tbody>
-{% for row in rows %}<tr class="{% cycle 'odd' 'even' %}">
+{% for row in rows %}
+<tr>
 <td class="center">{{ row.short }}</td>
 <td>{{ row.name }}</td>
 </tr>
-{% endfor %}</tbody>
-</table>
-</td>
-</tr>
+{% endfor %}
 </tbody>
 </table>
 {% endblock %}

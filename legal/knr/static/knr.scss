@@ -1,24 +1,121 @@
+//
+// knr/static/knr.scss
+//
+// Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+//
+// This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+//
+// This application is free software: you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This application is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 @import "include";
 
-table.vattbl {
+
+table.form {
+    tbody tr {
+	th, td {
+	    vertical-align: top;
+	}
+	th {
+	    padding-top: $vs;
+	}
+    }
+    label + span {
+	margin: 0
+    }
+    td.box {
+	vertical-align: top;
+	fieldset {
+	    float: right;
+	    margin: $vm 0 $vm auto;
+	    padding: $vs $hs;
+	    legend, div {
+		text-align: center;
+		white-space: nowrap;
+	    }
+	    input {
+		margin-top: 0;
+		margin-bottom: $vt;
+	    }
+	}
+    }
+}
+
+fieldset.vattbl {
+    float: right;
+    table {
+	width: 100%;
+    }
     th, td {
+	padding: $vn $hs;
 	text-align: right;
 	white-space: nowrap;
-	padding: $vn $hs;
     }
     th {
 	width: 100%;
 	padding-right: $hs;
     }
-}
-table.basic {
-    th, td {
-	vertical-align: top;
+    table tbody tr:last-child {
+	th, td {
+	    font-weight: bold;
+	}
     }
 }
-fieldset {
-    float: right;
+
+table.bgrid {
+    width: 66%;
+    margin: $vh auto 0;
+    tbody {
+	th, td {
+	    padding: ($vm+$vs) $hm;
+	}
+	tr.ga {
+	    th, td {
+		padding-bottom: $vg;
+	    }
+	}
+	tr.load {
+	    th, td {
+		padding-bottom: 0;
+	    }
+	}
+	tr.load + tr {
+	    th, td {
+		padding-top: 0;
+	    }
+	}
+    }
 }
-fieldset.itemfs {
-    margin: $vm 0 $vm auto;
+
+table.list {
+    margin-top: $vh;
+    thead tr th:first-child {
+	text-align: left;
+    }
+    tbody {
+	tr {
+	    td {
+		&.up-arrow, &.down-arrow {
+		    padding-left: $hs;
+		}
+		&.up-arrow {
+		    padding-right: $hs;
+		}
+	    }
+	}
+	tr.preset + tr:not(.preset) {
+	    border-top: $vm solid $medium-blue;
+	}
+    }
 }

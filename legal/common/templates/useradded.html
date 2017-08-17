@@ -2,6 +2,6 @@
 
 {% block page_contents %}
 <h1>{{ page_title }}</h1>
-<p class="center">Nový uživatel byl úspěšně zaregistrován.</p>
-<p class="center"><a href="{% url 'login' %}">Přihlášení</a></p>
+<p>Nový uživatel byl úspěšně zaregistrován.</p>
+<p class="back"><a href="{% url 'login' %}?next={% url 'home' %}">Přihlášení</a></p>
 {% endblock %}

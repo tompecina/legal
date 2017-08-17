@@ -1,98 +1,78 @@
-/* css_classes: ok */
+//
+// common/static/common.scss
+//
+// Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+//
+// This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+//
+// This application is free software: you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This application is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
 
 @import "include";
 
 
-// common classes
+// general rules
 
-body, h1, h2, input[type="file"], legend, .immune {
-    color: $very-dark-blue;
-    background-color: $light-blue;
-    font-family: Verdana, "DejaVu Sans", sans-serif;
-}
 body {
     margin: 0;
+    background-color: $light-blue;
     font-size: $normal;
+    font-family: Verdana, "DejaVu Sans", sans-serif;
 }
-h1, h2 {
-    text-align: center;
+
+body, .immune {
+    color: $very-dark-blue;
 }
+
 h1 {
-    font: {
-	size: $gigantic;
-	weight: bold;
-    }
+    text-align: center;
+    font-size: $gigantic;
     margin: {
 	top: $vg;
 	bottom: $vl;
     }
 }
-h2 {
-    font: {
-	size: $large;
-	weight: normal;
-    }
-}
+
 table {
     border-collapse: collapse;
-}
-table.topline {
-    width: 100%;
-    td {
+    & > thead > tr > th {
 	text-align: center;
-	background-color: $medium-blue;
-	font-size: $small;
-	white-space: nowrap;
+	font-weight: bold;
     }
-    td:first-child {
-	width: 50%;
-	text-align: left;
+    & > tbody, & > tfoot {
+	& > tr > th {
+	    text-align: right;
+	    font-weight: normal;
+	    padding: $vt $hs $vt 0;
+	}
     }
-    td:last-child {
-	width: 50%;
-	text-align: right;
+    & > thead, & > tbody, & > tfoot {
+	 & > tr > td {
+	    text-align: left;
+	    padding: $vt $ht;
+	}
+    }
+    & > tfoot > tr {
+	& > th {
+	    text-align: right;
+	}
+	& > td {
+	    text-align: left;
+	}
     }
 }
-table.container {
-    width: 80%;
-    margin: 0 auto;
-}
-p.notice {
-    font-size: $tiny;
-    text-align: center;
-}
-tr.header, tr.footer {
-    background-color: $medium-blue;
-}
-th {
-    font-weight: normal;
-    text-align: right;
-    vertical-align: middle;
-    padding: 4px 3px 6px;
-}
-thead th {
-    font-weight: bold;
-    text-align: center;
-}
-td {
-    vertical-align: middle;
-    padding: $vn ($ht+$hn);
-}
-hr.tablediv {
-    margin-top: $vt;
-    margin-bottom: $vn;
-    border-bottom: 0;
-}
-div.warning {
-    border: {
-	style: solid;
-	width: $bd;
-    }
-    padding: $vm $hh;
-    text-align: center;
-    margin-bottom: $vl;
-    background-color: $medium-blue;
-}
+
 a {
     color: $dark-blue;
     text-decoration: none;
@@ -100,47 +80,13 @@ a {
 	color: $red;
     }
 }
-.grayed, span.grayed {
-    color: $gray;
+
+hr {
+    border: none;
+    height: $bs;
+    background-color: $border-blue;
 }
-tr.even {
-    background-color: $gray;
-}
-tr.odd {
-    background-color: $white;
-}
-tr.preset.grayed {
-    color: $neutral-gray;
-}
-tr.preset + tr:not(.preset) {
-    border-top: $vm solid $medium-blue;
-}
-tr.even td, tr.odd td, thead th, tr.footer td {
-    padding: ($vs+$vn) ($hm+$hs);
-}
-tr.even td:first-child, tr.odd td:first-child, thead th:first-child, tr.footer td:first-child {
-    padding-left: ($hl+$hs);
-}
-tr.even td:last-child, tr.odd td:last-child, thead th:last-child {
-    padding-right: ($hl+$hs);
-}
-th {
-    padding: $vs $hs;
-}
-.hidden {
-    display: none;
-}
-.subtitle {
-    font: {
-	style: italic;
-	size: $normal;
-    }
-    text-align: center;
-    margin: {
-	top: $vt;
-	bottom: $vh;
-    }
-}
+
 fieldset {
     border: {
 	style: solid;
@@ -148,6 +94,12 @@ fieldset {
 	color: $border-blue;
     }
     padding: $vt $hm $vs;
+    legend {
+	padding: 0 $hs;
+    }
+    div {
+	margin: $vm $hm;
+    }
     hr {
 	margin: {
 	    left: (-$hm);
@@ -155,160 +107,229 @@ fieldset {
 	}
     }
 }
-legend {
-    padding: 0 $hs;
-}
-hr {
-    border: none;
-    height: $bs;
-    background-color: $border-blue;
-}
-.err th, .err label, th.err, span.err {
-    color: $red;
-    font-weight: bold;
-}
-input[type="text"], input[type="password"], textarea {
+
+input[type="text"], input[type="email"], input[type="password"], textarea, input[type="submit"], input[type="reset"], select {
     font-size: $reduced;
 }
-.err input[type="text"],
-.err input[type="password"],
-.err textarea, input[type="text"].err,
-input[type="password"].err {
-    background: $pink;
+
+input[type="text"], input[type="email"], input[type="password"], textarea {
+    padding: $vt $hs 0;
+    border: {
+	style: inset;
+	width: $bs;
+	color: $gray;
+    }
 }
+
 input {
     margin: $vs 0 $vt;
     padding: $vn $ht;
+    &[type="submit"], &[type="reset"] {
+	padding: $vt $hm 0;
+    }
+    &[type="file"] {
+	padding-left: 0;
+    }
+    &[type="radio"] {
+	margin: $vs ($ht+$hn) 0 $hs;
+    }
+    &[type="checkbox"] {
+	vertical-align: middle;
+	& + span {
+	    margin-right: $hl;
+	}
+    }
 }
-input[type="submit"], input[type="reset"] {
-    padding: $vt $hm 0;
-}
-input[type="file"] {
-    padding-left: 0;
-}
-select, input[type="submit"], input[type="reset"] {
-    font-size: $reduced;
-}
-input[type="radio"] {
-    margin: $vs ($ht+$hn) 0 $hs;
-}
-label input[type=radio] {
-    margin-left: $hm;
-}
-label:first-child input[type="radio"] {
-    margin-left: ($ht+$hn);
-}
-input[type="checkbox"] + span {
-    margin-right: $hl;
-}
+
 select {
     padding: $vn $ht;
 }
-.bold, .bold * {
-    font-weight: bold;
-}
-td.msg div {
-    text-align: center;
-    padding: 0 $hm;
-    white-space: nowrap;
-}
-.inlop {
-    white-space: nowrap;
-}
-.inlop input[type="radio"] {
-    margin: {
-	right: $hn;
-	left: $hn;
+
+label {
+    & input[type="radio"] {
+	margin-left: $hm;
+    }
+    &:first-child input[type="radio"] {
+	margin-left: ($ht+$hn);
     }
 }
-.inlop label {
-    margin-left: $hl;
-}
-.inlop label:first-child {
-    margin-left: 0;
-}
-.disabled {
-    color: gray;
-}
-.toupper {
-    text-transform: uppercase;
-}
-.homeitem {
-    h1 {
-	margin-bottom: $vh;
+
+form {
+    span, label, input {
+	vertical-align: initial;
     }
-    div {
-	text-align: center;
-	margin-bottom: $vm;
+    input + span, span + input, span + span {
+	margin-left: $hm;
     }
-    div:last-child {
-	margin-bottom: $vh;
-    }
-    hr {
-	margin: $vl (-$hm);
+    input + label, label + input, label + span, span + select, select + span, input + select, select + input,
+    input + input, label + select, a + a {
+	margin-left: ($hs+$ht);
     }
 }
-table.about {
-    margin: $vh auto $vg;
+
+a + span, span + a {
+    margin-left: ($hs+$ht);
 }
-table.about th {
-    padding: ($vs+$vt) $hl;
-}
-table.about td {
-    padding: ($vs+$vt) $hl ($vs+$vt) $hm;
-}
-table.list {
-    margin: $vh auto $vh;
-}
-.hl {
-    color: $red;
-}
-span.pager {
-    color: $dark-blue;
-}
+
 svg {
     fill: $dark-blue;
     stroke: none;
 }
+
 a svg:hover {
     fill: $red;
 }
-span.pager {
-    span:first-child {
-	padding-right: ($hm+$hs);
+
+
+// specific rules
+
+tr.ga {
+    th, td {
+	padding-bottom: $vl;
     }
-    span:last-child {
-	padding-left: ($hm+$hs);
-    }
-    span.num {
-	padding: {
-	    left: ($hm+$hs);
-	    right: ($hm+$hs);
+}
+
+table.topline {
+    width: 100%;
+    tbody tr {
+	td {
+	    padding: $vt $hs $vs;
+	    text-align: center;
+	    background-color: $medium-blue;
+	    font-size: $small;
+	    white-space: nowrap;
+	    span + span, span + a, a + span {
+		margin-left: $hs;
+	    }
+	    &:first-child, &:last-child {
+		width: 50%;
+	    }
+	    &:first-child {
+		text-align: left;
+	    }
+	    &:last-child {
+		text-align: right;
+	    }
 	}
     }
 }
-span.grayed svg {
-    fill: $gray;
+
+table.container {
+    width: 85%;
+    margin: 0 auto;
+    & > tbody > tr > td > p {
+	text-align: center;
+    }
 }
-.opt {
-    padding: $vs $hm;
+
+p.notice {
+    margin: {
+	top: $vg;
+	bottom: $vl;
+    }
+    text-align: center;
+    font-size: $tiny;
 }
-tr.bgrid td, tr.bgridwg td, tr.bgrid th, tr.bgridwg th {
-    padding: $vm $hs;
+
+table {
+    &.centered, &.form, &.list, &.detail {
+	margin: 0 auto;
+    }
 }
-tr.bgridwg td, tr.bgridwg th {
-    padding-bottom: $vg;
+
+table.form {
+    thead, tbody {
+	tr td h1 {
+	    text-align: left;
+	}
+    }
 }
+
+table.list, table.detail {
+    thead, tfoot {
+	tr {
+	    th, td {
+		background-color: $medium-blue;
+	    }
+	}
+    }
+}
+
+table.list {
+    thead th, tbody td, tfoot td {
+	padding: ($vs+$vn) ($hm+$hs);
+    }
+    tbody {
+	tr:nth-child(even) td {
+	    background-color: $gray;
+	}
+	tr:nth-child(odd) td {
+	    background-color: $white;
+	}
+    }
+    thead tr th:first-child, tbody tr td:first-child, tfoot tr td:first-child {
+	padding-left: ($hl+$hs);
+    }
+    thead tr th:last-child, tbody tr td:last-child, tfoot tr td:last-child {
+	padding-right: ($hl+$hs);
+    }
+    tbody tr td.act {
+	text-align: center;
+	white-space: nowrap;
+	a + a {
+	    margin-left: $hm;
+	}
+    }
+    tfoot tr td.pager {
+	text-align: right;
+	span {
+	    color: $dark-blue;
+	    span:first-child {
+		padding-right: ($hm+$hs);
+	    }
+	    span:last-child {
+		padding-left: ($hm+$hs);
+	    }
+	    span.num {
+		padding: {
+		    left: ($hm+$hs);
+		    right: ($hm+$hs);
+		}
+	    }
+	}
+	span.disabled svg {
+	    fill: $gray;
+	}
+    }
+    hr {
+	margin: {
+	    top: $vt;
+	    bottom: $vn;
+	}
+	border-bottom: 0;
+    }
+}
+
+h1 + table.list {
+    margin-top: $vh;
+}
+
 table.detail {
-    thead tr {
-	background-color: $medium-blue;
-	th {
-	    font-size: $large;
+    thead tr th {
+	padding: {
+	    top: $vm;
+	    bottom: $vm;
 	}
+	background-color: $medium-blue;
+	font-size: $large;
+	font-weight: bold;
+	text-align: center;
+	font-size: $large;
     }
     tbody {
 	tr {
 	    th, td {
+		font-weight: normal;
 		background-color: $white;
 		padding: {
 		    top: 0;
@@ -327,209 +348,145 @@ table.detail {
 		    right: $hl;
 		}
 	    }
-	}
-	tr.header th {
-	    padding: {
-		top: $vs;
-		bottom: $vs;
+	    &.even {
+		th, td {
+		    background-color: $gray;
+		}
+	    }
+	    &.odd {
+		th, td {
+		    background-color: $white;
+		}
 	    }
 	}
-	tr.odd {
+	tr:first-child, tr.odd + tr.even, tr.even + tr.odd {
 	    th, td {
-		background-color: $white;
-	    }
-	}
-	tr.even {
-	    th, td {
-		background-color: $gray;
-	    }
-	}
-	tr.header + tr,	tr:not(.header):first-child,
-	tr.odd + tr.even, tr.even + tr.odd {
-	    th, td {
-		padding-top: $vm;
-	    }
-	}
-	tr.header {
-	    th {
-		background-color: $medium-blue;
-		font-size: $large;
-		font-weight: bold;
-		text-align: center;
+		padding-top: $vs;
 	    }
 	}
     }
+    & + & {
+	margin-top: ($vh+$vl);
+    }
 }
+
+table.email {
+    margin: $vh auto;
+}
+
+h1.list {
+    margin-bottom: 0;
+    & + div.subtitle {
+	font: {
+	    style: italic;
+	    size: $normal;
+	}
+	text-align: center;
+	margin: {
+	    top: $vt;
+	    bottom: $vh;
+	}
+    }
+}
+
 tr.submit td {
     padding-top: $vm;
 }
-table.btnbar {
-    margin: $vh auto;
-    td {
-	padding: $vn $hl;
+
+span {
+    &.currwidget, &.dw-today {
+	white-space: nowrap;
+    }
+    &.currwidget select:first-child, &.dw-today input:first-child {
+	margin-right: $hs;
     }
 }
-table.basic {
-    margin: auto auto $vh auto;
+
+p.back {
+    margin-top: ($vh+$vl);
+    margin-bottom: $vl;
 }
+
+p.confirm {
+    text-align: center;
+    input:last-child {
+	margin-left: $hm;
+    }
+}
+
+div.warning {
+    padding: $vm $hh;
+    margin-bottom: $vl;
+    border: {
+	style: solid;
+	width: $bd;
+    }
+    background-color: $medium-blue;
+    text-align: center;
+}
+
+.highlight {
+    color: $red;
+}
+
+.disabled {
+    color: $neutral-gray;
+}
+
+.err th, .err label, th.err, span.err {
+    color: $red;
+}
+
+.err input[type="text"], .err input[type="email"], .err input[type="password"], .err textarea, input[type="text"].err, input[type="email"].err, input[type="password"].err {
+    background: $pink;
+}
+
+td.msg {
+    div {
+	text-align: center;
+	padding: 0 $hm;
+	white-space: nowrap;
+    }
+    hr:first-child {
+	margin-top: ($vh+$vl);
+    }
+}
+
+input.toupper {
+    text-transform: uppercase;
+}
+
+td.inlop {
+    white-space: nowrap;
+    input[type="radio"] {
+	margin: {
+	    right: $hn;
+	    left: $hn;
+	}
+    }
+    label {
+	margin-left: $hl;
+	&:first-child {
+	    margin-left: 0;
+	}
+    }
+}
+
+
+// manual styling
+
 .center {
     text-align: center;
 }
-.left {
-    text-align: left;
-}
+
 .right {
     text-align: right;
 }
-.bottom {
-    vertical-align: bottom;
-}
-.top {
-    vertical-align: top;
-}
+
 .nowrap {
     white-space: nowrap;
 }
-td.links {
-    word-spacing: $hs;
-    white-space: nowrap;
-}
-td.msg hr:first-child {
-    margin-top: $vh;
-}
-table.detail {
-    margin: $vh auto $vg;
-}
-.italic {
-    font-style: italic;
-}
 
-
-// manual overrides
-
-.margin-auto {
-    margin: auto !important;
-}
-.width-full {
-    width: 100% !important;
-}
-.width-half {
-    width: 50% !important;
-}
-.width-two-thirds {
-    width: 67% !important;
-}
-.width-most {
-    width: 85% !important;
-}
-.float-right {
-    float: right !important;
-}
-.mbn {
-    margin-bottom: 0 !important;
-}
-.mbg {
-    margin-bottom: $vg !important;
-}
-.mbh {
-    margin-bottom: $vh !important;
-}
-.mbl {
-    margin-bottom: $vl !important;
-}
-.mbm {
-    margin-bottom: $vm !important;
-}
-.mbs {
-    margin-bottom: $vs !important;
-}
-.mtn {
-    margin-top: 0 !important;
-}
-.mts {
-    margin-top: $vs !important;
-}
-.mtm {
-    margin-top: $vm !important;
-}
-.mtl {
-    margin-top: $vl !important;
-}
-.mth {
-    margin-top: $vh !important;
-}
-.mtg {
-    margin-top: $vg !important;
-}
-.mra {
-    margin-right: auto !important;
-}
-.mrn {
-    margin-right: 0 !important;
-}
-.mrl {
-    margin-right: $hl !important;
-}
-.mll {
-    margin-left: $hl !important;
-}
-.mls {
-    margin-left: $hs !important;
-}
-.mla {
-    margin-left: auto !important;
-}
-.mln {
-    margin-left: 0 !important;
-}
-.mri {
-    margin-right: inherit !important;
-}
-.mli {
-    margin-left: inherit !important;
-}
-.ptn {
-    padding-top: 0 !important;
-}
-.pts {
-    padding-top: $vs !important;
-}
-.pbs {
-    padding-bottom: $vs !important;
-}
-.pbn {
-    padding-bottom: 0 !important;
-}
-.ptm {
-    padding-top: $vm !important;
-}
-.ptl {
-    padding-top: $vl !important;
-}
-.pbl {
-    padding-bottom: $vl !important;
-}
-.pbm {
-    padding-bottom: $vm !important;
-}
-.prm {
-    padding-right: $hm !important;
-}
-.prs {
-    padding-right: $hs !important;
-}
-.pls {
-    padding-left: $hs !important;
-}
-.plm {
-    padding-left: $hm !important;
-}
-.pln {
-    padding-left: 0 !important;
-}
-.margin-none-auto {
-    margin: 0 auto !important;
-}
 
 // jQuery UI
 .ui-widget-header,

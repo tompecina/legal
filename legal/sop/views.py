@@ -138,7 +138,7 @@ def mainpage(request):
             messages = [(INERR_SHORT, None)]
 
     return render(request,
-                  'sop_main.html',
+                  'sop_mainpage.html',
                   {'app': APP,
                    'page_title': 'Soudní poplatek',
                    'messages': messages,

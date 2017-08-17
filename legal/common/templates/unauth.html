@@ -2,6 +2,7 @@
 
 {% block page_contents %}
 <h1>{{ page_title }}</h1>
-<p class="center">Nemáte přístup k této operaci. Pravděpodobně se pokoušíte pracovat s tabulkou, jejímž nejste vlastníkem, nebo jinak obejít bezpečnostní systém aplikace.</p>
-<p class="center">Domníváte-li se, že tomu tak není, obraťte se na <a href="mailto:tomas@pecina.cz?subject={{ 'Chyba v aplikaci Legal'|urlencode }}">autora aplikace</a>.</p>
+<p>Nemáte přístup k této operaci. Pravděpodobně se pokoušíte pracovat s tabulkou, jejímž nejste vlastníkem, nebo jinak obejít bezpečnostní systém aplikace.</p>
+<p>Domníváte-li se, že tomu tak není, obraťte se na <a href="mailto:tomas@pecina.cz?subject={{ 'Chyba v aplikaci Legal'|urlencode }}">autora aplikace</a>.</p>
+{% include 'back_home.html' %}
 {% endblock %}

@@ -1,44 +1,74 @@
 {% extends 'main.html' %}
 
 {% block page_contents %}
-<h1 class="mbn">{{ page_title }}</h1>{% if rows %}
+<h1 class="list">{{ page_title }}</h1>
+{% if rows %}
 <div class="subtitle">Počet výsledků: {{ total }}</div>
-<table class="margin-auto">
+<table class="list">
 <thead>
-<tr class="header">
-<th><div>Insolvenční soud</div><div>Spisová značka</div><div>Stav řízení</div></th>
-<th><div>Dlužníci</div><div>Správce</div></th>
-{% if creditors %}<th>Věřitelé</th>
-{% endif %}<th>ISIR/infoSoud</th>
+<tr>
+<th>
+<div>Insolvenční soud</div>
+<div>Spisová značka</div>
+<div>Stav řízení</div>
+</th>
+<th>
+<div>Dlužníci</div>
+<div>Správce</div>
+</th>
+{% if creditors %}
+<th>Věřitelé</th>
+{% endif %}
+<th>ISIR/infoSoud</th>
 </tr>
 </thead>
 <tbody>
-{% for row in rows %}<tr class="{% cycle 'odd' 'even' %}">
+{% for row in rows %}
+<tr>
 <td>
-<div>{{ row.court }}</div>
+<div>
+{{ row.court }}
+</div>
 <div class="nowrap">{{ row.court_short }} {% if row.senat %}{{ row.senat }} {% endif %}INS {{ row.bc }}/{{ row.rocnik }}</div>
-<div class="nowrap">{{ row.state }}</div>
+<div>{{ row.state }}</div>
 </td>
 <td>
-{% for debtor in row.debtors %}<div>{{ debtor.text|safe }}&nbsp;<a href="{% url 'pir:party' debtor.id %}">[O]</a></div>
-{% endfor %}<hr class="tablediv">
-{% for trustee in row.trustees %}<div>{{ trustee.text|safe }}&nbsp;<a href="{% url 'pir:party' trustee.id %}">[O]</a></div>
-{% endfor %}</td>
-{% if creditors %}<td>
-{% for creditor in row.creditors %}<div>{{ creditor.text|safe }}&nbsp;<a href="{% url 'pir:party' creditor.id %}">[O]</a></div>
-{% endfor %}</td>
-{% endif %}<td class="center nowrap">
-{% if row.link and not row.datumVyskrtnuti %}<a href="{{ row.link }}" target="_blank">[I]</a>
-{% endif %}{% if row.senat %}<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.court_reg }}&amp;krajOrg={{ row.court_reg }}&amp;cisloSenatu={{ row.senat }}&amp;druhVec=INS&amp;bcVec={{ row.bc }}&amp;rocnik={{ row.rocnik }}&amp;typSoudu=os&amp;autoFill=true&amp;type=spzn" target="_blank">[Ř]</a>
-{% endif %}</td>
+{% for debtor in row.debtors %}
+<div>{{ debtor.text|safe }}&nbsp;<a href="{% url 'pir:party' debtor.id %}">[O]</a></div>
+{% endfor %}
+<hr>
+{% for trustee in row.trustees %}
+<div>{{ trustee.text|safe }}&nbsp;<a href="{% url 'pir:party' trustee.id %}">[O]</a></div>
+{% endfor %}
+</td>
+{% if creditors %}
+<td>
+{% for creditor in row.creditors %}
+<div>{{ creditor.text|safe }}&nbsp;<a href="{% url 'pir:party' creditor.id %}">[O]</a></div>
+{% endfor %}
+</td>
+{% endif %}
+<td class="act">
+{% if row.link and not row.datumVyskrtnuti %}
+<a href="{{ row.link }}" target="_blank">[I]</a>
+{% endif %}
+{% if row.senat %}
+<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.court_reg }}&amp;krajOrg={{ row.court_reg }}&amp;cisloSenatu={{ row.senat }}&amp;druhVec=INS&amp;bcVec={{ row.bc }}&amp;rocnik={{ row.rocnik }}&amp;typSoudu=os&amp;autoFill=true&amp;type=spzn" target="_blank">[Ř]</a>
+{% endif %}
+</td>
 </tr>
-{% endfor %}</tbody>
-{% if not suppress_table_footer %}<tfoot>
-<tr class="footer">
-<td colspan="{% if creditors %}4{% else %}3{% endif %}" class="right">{% include 'pager.html' %}</td>
+{% endfor %}
+</tbody>
+{% if not suppress_table_footer %}
+<tfoot>
+<tr>
+<td colspan="{% if creditors %}4{% else %}3{% endif %}" class="pager">{% include 'pager.html' %}</td>
 </tr>
 </tfoot>
-{% endif %}</table>
-{% else %}<p class="center">(žádné výsledky)</p>
-{% endif %}<p class="center"><a href="{% url 'pir:mainpage' %}">Zpět na vyhledávací formulář</a></p>
+{% endif %}
+</table>
+{% else %}
+<p>(žádné výsledky)</p>
+{% endif %}
+<p><a href="{% url 'pir:mainpage' %}">Zpět na vyhledávací formulář</a></p>
 {% endblock %}

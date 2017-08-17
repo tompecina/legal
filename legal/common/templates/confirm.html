@@ -1,0 +1,8 @@
+<form method="post" enctype="multipart/form-data">
+{% block yes %}{% endblock %}
+<p class="confirm">
+<input type="submit" name="submit_yes" value="Ano">
+<input type="submit" name="submit_no" value="Ne">
+</p>
+{% csrf_token %}
+</form>

@@ -2,18 +2,22 @@
 
 {% block page_contents %}
 <h1>{{ page_title }}</h1>
-<p class="center">Počet načtených řízení: {{ count }}</p>
-{% if errors %}<table class="margin-none-auto">
+<p>Počet načtených řízení: {{ count }}</p>
+{% if errors %}
+<table class="centered">
 <tbody>
 <tr>
 <td>
 <p>Při importu došlo k chybám:</p>
-<ul>{% for error in errors %}
+<ul>
+{% for error in errors %}
 <li>Řádek {{ error.0 }}: {{ error.1|safe }}</li>
-{% endfor %}</ul>
+{% endfor %}
+</ul>
 </td>
 </tr>
 </tbody>
 </table>
-{% endif %}<p class="center"><a href="{% url 'szr:mainpage' %}">Zpět na seznam sledovaných řízení</a></p>
+{% endif %}
+<p><a href="{% url 'szr:mainpage' %}">Zpět na seznam sledovaných řízení</a></p>
 {% endblock %}

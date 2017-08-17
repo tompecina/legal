@@ -273,7 +273,7 @@ class TestViews(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'cnb_main.html')
+        self.assertTemplateUsed(res, 'cnb_mainpage.html')
         check_html(self, res.content)
 
         today = date.today()
@@ -294,7 +294,7 @@ class TestViews(TestCase):
                  'mpi_date': test[4],
                  button_names[test[5]]: button_values[test[5]]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'cnb_main.html')
+            self.assertTemplateUsed(res, 'cnb_mainpage.html')
             check_html(self, res.content, key=num)
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')

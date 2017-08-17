@@ -805,6 +805,8 @@ def sleep(*args, **kwargs):  # pragma: no cover
         time.sleep(*args, **kwargs)
 
 
+DUMP_PATH = environ.get('DUMP_PATH')
+
 output_counter = 0
 
 
@@ -831,17 +833,17 @@ def render(
 
     if TEST and not content_type:
         content = response.content
-        err = tidy_document(content.decode())[1]
-        if err:
-            raise AssertionError('Template: {} Errors: {}'.format(template_name, err))
 
-        dump_path = environ.get('DUMP_PATH')
-        if dump_path:  # pragma: no cover
+        if DUMP_PATH:  # pragma: no cover
             global output_counter
             filename = '{:05d}-{}'.format(output_counter, template_name)
             output_counter += 1
-            with open(join(dump_path, filename), 'wb') as outfile:
+            with open(join(DUMP_PATH, filename), 'wb') as outfile:
                 outfile.write(content)
+
+        err = tidy_document(content.decode())[1]
+        if err:
+            raise AssertionError('Template: {} Errors: {}'.format(template_name, err))
 
     return response
 

@@ -2,26 +2,33 @@
 
 {% block page_contents %}
 <form id="id_partyform" method="post" enctype="multipart/form-data">
-<table class="basic">
+<table class="form">
 <tbody>
 <tr>
 <td></td>
-<td colspan="2"><h1 class="left">{{ page_title }}</h1></td>
+<td colspan="2"><h1>{{ page_title }}</h1></td>
 </tr>
-{% if err_message %}<tr>
+{% if err_message %}
+<tr>
 <td></td>
-<td colspan="2" class="warning">{% include 'formwarning.html' %}</td>
+<td colspan="2">{% include 'formwarning.html' %}</td>
 </tr>
-{% endif %}<tr class="{{ form.party.css_classes }}">
+{% endif %}
+<tr class="{{ form.party.css_classes }}">
 <th>{{ form.party.label_tag }}</th>
-<td colspan="2" class="nowrap">{{ form.party }} (min. {{ min_chars }})</td>
+<td colspan="2" class="nowrap">{{ form.party }}<span>(min. {{ min_chars }})</span></td>
 </tr>
 <tr>
 <th>{{ form.party_opt.label_tag }}</th>
-<td colspan="2" class="nowrap">{% for p in form.party_opt %}{{ p }}{% endfor %}</td>
+<td colspan="2" class="inlop">
+{% for p in form.party_opt %}
+{{ p }}
+{% endfor %}
+</td>
 </tr>
-{% include 'submit.html' %}</table>
-{% if type %}<div class="hidden"><input type="hidden" name="idx" value="{{ idx }}"><input type="hidden" name="type" id="id_type" value="{{ type }}"></div>
-{% endif %}{% csrf_token %}
+{% include 'submit.html' %}
+</tbody>
+</table>
+{% csrf_token %}
 </form>
 {% endblock %}

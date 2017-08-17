@@ -1,18 +1,35 @@
 {% extends 'knr_list.html' %}
 
-{% block table_header %}<th class="left">Zkratka</th>
+{% block table_header %}
+<th>Zkratka</th>
 <th>Název</th>
 <th>Paušál</th>
-{% for fuel in fuels %}<th>{{ fuel }}</th>
-{% endfor %}<th>Akce</th>{% endblock %}
+{% for fuel in fuels %}
+<th>{{ fuel }}</th>
+{% endfor %}
+<th>Akce</th>
+{% endblock %}
 
-{% block table_footer %}<td colspan="{{ colspan }}"><a href="{% url 'knr:formulaform' %}">Přidat předpis</a></td>{% endblock %}
+{% block table_footer %}
+<td colspan="{{ colspan }}"><a href="{% url 'knr:formulaform' %}">Přidat předpis</a></td>
+{% endblock %}
 
-{% block table_row %}<td>{{ row.abbr }}</td>
+{% block table_row %}
+<td>{{ row.abbr }}</td>
 <td>{{ row.name }}</td>
 <td class="center">{{ row.flat }}</td>
-{% for rate in row.rates %}<td class="center">{{ rate|default:'–' }}</td>
-{% endfor %}<td class="links">{% if row.user %}<a href="{% url 'knr:formulaform' row.id %}">upravit</a> <a href="{% url 'knr:formuladel' row.id %}">smazat</a>{% endif %}</td>{% endblock %}
+{% for rate in row.rates %}
+<td class="center">{{ rate|default:'–' }}</td>
+{% endfor %}
+<td class="act">
+{% if row.user %}
+<a href="{% url 'knr:formulaform' row.id %}">upravit</a>
+<a href="{% url 'knr:formuladel' row.id %}">smazat</a>
+{% endif %}
+</td>
+{% endblock %}
 
-{% block empty %}<p class="center">(nejsou zadány žádné předpisy)</p>
-<p class="center"><a href="{% url 'knr:formulaform' %}">Vytvořit nový předpis</a></p>{% endblock %}
+{% block empty %}
+<p>(nejsou zadány žádné předpisy)</p>
+<p><a href="{% url 'knr:formulaform' %}">Vytvořit nový předpis</a></p>
+{% endblock %}

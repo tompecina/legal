@@ -1,0 +1,121 @@
+//
+// common/static/acc.scss
+//
+// Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+//
+// This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+//
+// This application is free software: you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This application is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
+@import "include";
+
+
+table {
+    &.home, &.about, &.stat {
+	margin: 0 auto;
+    }
+}
+
+table.home {
+    h1 {
+	margin-bottom: $vh;
+    }
+    div {
+	text-align: center;
+	margin-bottom: $vm;
+	&:last-child {
+	    margin-bottom: $vh;
+	}
+    }
+    hr {
+	margin: $vl (-$hm);
+    }
+}
+
+table.about {
+    margin-top: $vh;
+    thead tr th {
+	padding: ($vs+$vt) $hl;
+	background-color: $medium-blue;
+	text-align: center;
+	font-size: $large;
+    }
+    tbody {
+	tr td {
+	    padding: ($vs+$vt) $hl ($vs+$vt) $hm;
+	}
+	tr:nth-child(odd) td {
+	    background-color: $white;
+	}
+	tr:nth-child(even) td {
+	    background-color: $gray;
+	}
+	tr td:first-child {
+	    padding-left: ($hl+$hs);
+	}
+    }
+    & + & {
+	margin-top: ($vh+$vl);
+    }
+}
+
+table.stat {
+    margin-top: $vh;
+    thead tr th {
+	font-size: $large;
+    }
+    tbody {
+	tr.header th {
+	    padding: {
+		top: $vs;
+		bottom: $vs;
+	    }
+	    background-color: $medium-blue;
+	    text-align: center;
+	    font-size: $large;
+	    font-weight: bold;
+	}
+	tr {
+	    th, td {
+		background-color: $white;
+		padding: {
+		    top: 0;
+		    bottom: $vm;
+		}
+	    }
+	    th {
+		padding: {
+		    left: $hl;
+		    right: $ht;
+		}
+	    }
+	    td {
+		padding: {
+		    left: $hs;
+		    right: $hl;
+		}
+	    }
+	    &.header + tr, &:not(.header):first-child {
+		th, td {
+		    padding-top: $vm;
+		}
+	    }
+	}
+    }
+}
+
+span.new-pwd {
+    font-weight: bold;
+}

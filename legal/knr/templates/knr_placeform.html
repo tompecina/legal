@@ -3,13 +3,15 @@
 {% block form_contents %}
 <tr>
 <td></td>
-<td colspan="2"><h1 class="left">{{ page_title }}</h1></td>
+<td colspan="2"><h1>{{ page_title }}</h1></td>
 </tr>
-{% if err_message %}<tr>
+{% if err_message %}
+<tr>
 <td></td>
-<td colspan="2" class="warning">{% include 'formwarning.html' %}</td>
+<td colspan="2">{% include 'formwarning.html' %}</td>
 </tr>
-{% endif %}<tr class="{{ form.abbr.css_classes }}">
+{% endif %}
+<tr class="{{ form.abbr.css_classes }}">
 <th>{{ form.abbr.label_tag }}</th>
 <td colspan="2">{{ form.abbr }}</td>
 </tr>
@@ -19,7 +21,7 @@
 </tr>
 <tr class="{{ form.addr.css_classes }}">
 <th>{{ form.addr.label_tag }}</th>
-<td colspan="2" class="nowrap">{{ form.addr }} <input type="submit" name="submit_search" value="Vyhledat" id="id_search"></td>
+<td colspan="2" class="nowrap">{{ form.addr }}<input type="submit" name="submit_search" value="Vyhledat" id="id_search"></td>
 </tr>
 <tr class="{{ form.lat.css_classes }}">
 <th>{{ form.lat.label_tag }}</th>

@@ -334,5 +334,6 @@ def courts(request):
     return render(
         request,
         'szr_courts.html',
-        {'page_title': 'Přehled soudů',
+        {'app': APP,
+         'page_title': 'Přehled soudů',
          'rows': Court.objects.order_by('name').values('id', 'name')})

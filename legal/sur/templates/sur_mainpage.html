@@ -2,49 +2,52 @@
 
 {% block page_contents %}
 <h1>{{ page_title }}</h1>
-{% if rows %}<table id="list" class="margin-auto">
+{% if rows %}
+<table id="list" class="list">
 <thead>
-<tr class="header">
-<th class="left">Řetězec</th>
-<th class="left">Posice</th>
+<tr>
+<th>Řetězec</th>
+<th>Posice</th>
 <th>Akce</th>
 </tr>
 </thead>
 <tbody>
-{% for row in rows %}<tr class="{% cycle 'odd' 'even' %}">
+{% for row in rows %}
+<tr>
 <td>{{ row.party }}</td>
 <td class="nowrap">{{ row.party_opt_text }}</td>
-<td class="links">
+<td class="act">
 <a href="{% url 'sur:partyform' row.id %}">upravit</a>
 <a href="{% url 'sur:partydel' row.id %}">smazat</a>
 <a href="{% url 'psj:htmllist' %}?{{ row.search }}">vyhledat/IS</a>
 <a href="{% url 'udn:htmllist' %}?{{ row.search }}">vyhledat/NSS</a>
 </td>
-</tr>{% endfor %}
-</tbody>{% if not suppress_table_footer %}
-<tfoot>
-<tr class="footer">
-<td><a href="{% url 'sur:partyform' %}">Přidat účastníka</a></td>
-<td colspan="2" class="right">{% include 'pager.html' %}</td>
 </tr>
-</tfoot>{% endif %}
-</table>
-<p class="center">
-<a href="{% url 'sur:partybatchform' %}">Import</a> / <a href="{% url 'sur:partyexport' %}">Export</a> / <a href="{% url 'sur:partydelall' %}">Smazat vše</a></p>
-{% else %}<p class="center">(nesledujete žádné účastníky řízení)</p>
-<p class="center"><a href="{% url 'sur:partyform' %}">Přidat účastníka</a> / <a href="{% url 'sur:partybatchform' %}">Import</a></p>
-{% endif %}<form method="post" enctype="multipart/form-data">
-<table class="mth mra mbh mla">
-<tbody>
-{% if err_message %}<tr>
-<td colspan="3" class="warning">{% include 'formwarning.html' %}</td>
-</tr>
-{% endif %}<tr>
-<th class="{{ form.email_error }}">{{ form.email.label_tag }}</th>
-<td>{{ form.email }}</td>
-<td><input type="submit" name="submit" value="Změnit">{% csrf_token %}</td>
-</tr>
+{% endfor %}
 </tbody>
+{% if not suppress_table_footer %}
+<tfoot>
+<tr>
+<td><a href="{% url 'sur:partyform' %}">Přidat účastníka</a></td>
+<td colspan="2" class="pager">{% include 'pager.html' %}</td>
+</tr>
+</tfoot>
+{% endif %}
 </table>
-</form>
+<p>
+<a href="{% url 'sur:partybatchform' %}">Import</a>
+<span>/</span>
+<a href="{% url 'sur:partyexport' %}">Export</a>
+<span>/</span>
+<a href="{% url 'sur:partydelall' %}">Smazat vše</a>
+</p>
+{% else %}
+<p>(nesledujete žádné účastníky řízení)</p>
+<p>
+<a href="{% url 'sur:partyform' %}">Přidat účastníka</a>
+<span>/</span>
+<a href="{% url 'sur:partybatchform' %}">Import</a>
+</p>
+{% endif %}
+{% include 'email_form.html' %}
 {% endblock %}

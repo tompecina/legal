@@ -2,5 +2,6 @@
 
 {% block page_contents %}
 <h1>{{ page_title }}</h1>
-<p class="center"> Omlouváme se, ale došlo k interní chybě; je možné, že nemáte povoleno užívání HTTP cookies. Zkuste akci provést znovu, v případě přetrvávajících problémů se obraťte na <a href="mailto:tomas@pecina.cz?subject={{ 'Chyba v aplikaci Legal'|urlencode }}"> autora aplikace</a>.</p>
+<p> Omlouváme se, ale došlo k interní chybě; je možné, že nemáte povoleno užívání HTTP cookies. Zkuste akci provést znovu, v případě přetrvávajících problémů se obraťte na <a href="mailto:tomas@pecina.cz?subject={{ 'Chyba v aplikaci Legal'|urlencode }}"> autora aplikace</a>.</p>
+{% include 'back_home.html' %}
 {% endblock %}

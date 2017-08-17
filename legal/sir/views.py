@@ -304,4 +304,6 @@ def courts(request):
     return render(
         request,
         'sir_courts.html',
-        {'page_title': 'Přehled insolvenčních soudů', 'rows': rows})
+        {'app': APP,
+         'page_title': 'Přehled insolvenčních soudů',
+         'rows': rows})

@@ -260,7 +260,7 @@ class TestViews(SimpleTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'lht_main.html')
+        self.assertTemplateUsed(res, 'lht_mainpage.html')
         check_html(self, res.content)
 
         num = 1
@@ -272,7 +272,7 @@ class TestViews(SimpleTestCase):
                  'dur': test[2],
                  'unit': test[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'lht_main.html')
+            self.assertTemplateUsed(res, 'lht_mainpage.html')
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             length = len(msg)
@@ -292,7 +292,7 @@ class TestViews(SimpleTestCase):
                  'dur': test[2],
                  'unit': test[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'lht_main.html')
+            self.assertTemplateUsed(res, 'lht_mainpage.html')
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertTrue(msg[0].text)

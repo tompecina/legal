@@ -3,15 +3,19 @@
 {% block page_contents %}
 <form method="post" enctype="multipart/form-data" id="id_mainform">
 <h1>{{ page_title }}</h1>
-<table class="mth mra mbh mla">
-{% if err_message %}<tr>
-<td class="warning">{% include 'formwarning.html' %}</td>
+<table class="centered">
+<tbody>
+{% if err_message %}
+<tr>
+<td>{% include 'formwarning.html' %}</td>
 </tr>
-{% endif %}<tr>
+{% endif %}
+<tr>
 <td>
 <fieldset>
 <legend>Údaje o pohledávce</legend>
-<table class="mtm mrl mbm mll">
+<table class="gen">
+<tbody>
 <tr>
 <th class="{{ form.title.css_classes }}">{{ form.title.label_tag }}</th>
 <td>{{ form.title }}</td>
@@ -25,52 +29,60 @@
 <td>{{ form.internal_note }}</td>
 </tr>
 <tr>
-<th class="pts prm pbs plm {{ form.currency.css_classes }}">{{ form.currency.label_tag }}</th>
+<th class="{{ form.currency.css_classes }}">{{ form.currency.label_tag }}</th>
 <td>{{ form.currency }}</td>
 </tr>
 <tr>
-<th class="pts prm pbs plm">{{ form.rounding.label_tag }}</th>
+<th>{{ form.rounding.label_tag }}</th>
 <td>
-{{ rt }}<select name="rounding" id="id_rounding">
+{{ rt }}
+<select name="rounding" id="id_rounding">
 <option value="0" {% if form.rounding.value == '0' %} selected="selected"{% endif %}>na jednotky</option>
 <option value="2" {% if form.rounding.value == '2' %} selected="selected"{% endif %}>na 2 desetinná místa</option>
 </select>
 </td>
 </tr>
+</tbody>
 </table>
 </fieldset>
 <fieldset class="intbl">
 <legend>{{ form.model.label }}</legend>
 <table>
+<tbody>
 <tr>
 <th colspan="3" class="immune">{{ form.model.0 }}</th>
 </tr>
 <tr id="id_fa">
 <th class="immune"><span class="{{ form.fixed_amount.css_classes }}">{{ form.model.1 }}:</span></th>
-<td colspan="2" class="{{ form.fixed_amount.css_classes }}">{{ form.fixed_amount }} <span class="curr">{{ currency }}</span></td>
+<td colspan="2" class="{{ form.fixed_amount.css_classes }}">{{ form.fixed_amount }}<span class="curr">{{ currency }}</span></td>
 </tr>
 <tr id="id_pa">
 <th class="immune"><span class="{{ form.pa_rate.css_classes }}">{{ form.model.2 }}:</span></th>
-<td class="{{ form.pa_rate.css_classes }}">{{ form.pa_rate }} % <i>p. a.</i></td>
+<td class="{{ form.pa_rate.css_classes }}">{{ form.pa_rate }}<span>% <i>p. a.</i></span></td>
 <td>
 {{ form.ydconv.label_tag }}
 <select name="ydconv" id="id_ydconv">
-{% for dconv in ydconvs %}<option value="{{ dconv }}"{% if form.ydconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
-{% endfor %}</select>
+{% for dconv in ydconvs %}
+<option value="{{ dconv }}"{% if form.ydconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
+{% endfor %}
+</select>
 </td>
 </tr>
 <tr id="id_pm">
 <th class="immune"><span class="{{ form.pm_rate.css_classes }}">{{ form.model.3 }}:</span></th>
-<td class="{{ form.pm_rate.css_classes }}">{{ form.pm_rate }} % <i>p. m.</i></td>
-<td>{{ form.mdconv.label_tag }}
+<td class="{{ form.pm_rate.css_classes }}">{{ form.pm_rate }}<span>% <i>p. m.</i></span></td>
+<td>
+{{ form.mdconv.label_tag }}
 <select name="mdconv" id="id_mdconv">
-{% for dconv in mdconvs %}<option value="{{ dconv }}"{% if form.mdconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
-{% endfor %}</select>
+{% for dconv in mdconvs %}
+<option value="{{ dconv }}"{% if form.mdconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
+{% endfor %}
+</select>
 </td>
 </tr>
 <tr id="id_pd">
 <th class="immune"><span class="{{ form.pd_rate.css_classes }}">{{ form.model.4 }}:</span></th>
-<td colspan="2" class="{{ form.pd_rate.css_classes }}">{{ form.pd_rate }} ‰ <i>p. d.</i></td>
+<td colspan="2" class="{{ form.pd_rate.css_classes }}">{{ form.pd_rate }}<span>‰ <i>p. d.</i></span></td>
 </tr>
 <tr>
 <th colspan="3" class="immune">{{ form.model.5 }}</th>
@@ -94,10 +106,11 @@
 </fieldset>
 </td>
 </tr>
+</tbody>
 </table>
-<table id="id_calc" class="mth mra mbn mla">
+<table id="id_calc" class="list">
 <thead>
-<tr class="header">
+<tr>
 <th rowspan="2">Datum</th>
 <th rowspan="2">Popis</th>
 <th rowspan="2">Přednost</th>
@@ -107,7 +120,7 @@
 <th colspan="3">Nový zůstatek</th>
 <th rowspan="2">Akce</th>
 </tr>
-<tr class="header">
+<tr>
 <th>Jistina</th>
 <th>Úrok</th>
 <th>Jistina</th>
@@ -118,32 +131,46 @@
 </tr>
 </thead>
 <tbody>
-{% for row in rows %}<tr class="{% cycle 'odd' 'even' %}">
+{% for row in rows %}
+<tr>
 <td class="trdt">{{ row.date|date:'d.m.Y' }}</td>
 <td>{{ row.description }}</td>
 <td class="dat">{{ row.rep }}</td>
 {{ row.change|safe }}
-{% if row.err %}{% if row.msg %}<td colspan="7" rowspan="{{ forloop.revcounter }}" class="taberr">{{ row.msg }}</td>
-{% endif %}{% else %}{{ row.pre_principal|safe }}
+{% if row.err %}
+{% if row.msg %}
+<td colspan="7" rowspan="{{ forloop.revcounter }}" class="taberr">{{ row.msg }}</td>
+{% endif %}
+{% else %}
+{{ row.pre_principal|safe }}
 {{ row.pre_interest|safe }}
 {{ row.change_principal|safe }}
 {{ row.change_interest|safe }}
 {{ row.post_principal|safe }}
 {{ row.post_interest|safe }}
 {{ row.post_total|safe }}
-{% endif %}<td class="act"><a href="{% url 'hjp:transform' row.id %}">upravit</a> <a href="{% url 'hjp:transdel' row.id %}">smazat</a></td>
+{% endif %}
+<td class="act">
+<a href="{% url 'hjp:transform' row.id %}">upravit</a>
+<a href="{% url 'hjp:transdel' row.id %}">smazat</a>
+</td>
 </tr>
-{% empty %}<tr class="odd">
+{% empty %}
+<tr>
 <td colspan="12" class="taberr">(žádné transakce)</td>
 </tr>
-{% endfor %}</tbody>
-{% if not suppress_table_footer %}<tfoot>
-<tr class="footer">
+{% endfor %}
+</tbody>
+{% if not suppress_table_footer %}
+<tfoot>
+<tr>
 <td colspan="12"><a href="{% url 'hjp:transform' %}">Přidat transakci</a></td>
 </tr>
 </tfoot>
-{% endif %}</table>
+{% endif %}
+</table>
 <table class="btnbar">
+<tbody>
 <tr>
 <td><input type="submit" name="submit_update" value="Aktualisovat"></td>
 <td><input type="submit" name="submit_empty" value="Vyprázdnit" id="id_reset"></td>
@@ -155,7 +182,9 @@
 <tr>
 <td colspan="2"></td><td colspan="4"><input type="file" name="load" accept="application/pdf,text/xml" id="id_load"></td>
 </tr>
+</tbody>
 </table>
-<div class="hidden">{{ form.next }}</div>{% csrf_token %}
+{{ form.next }}
+{% csrf_token %}
 </form>
 {% endblock %}

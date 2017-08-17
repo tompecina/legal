@@ -225,6 +225,6 @@ class Dw(forms.DateInput):
         res = super().render(name, *args, **kwargs)
         if self._today:
             return mark_safe(
-                '{0}&nbsp;<input type="submit" name="submit_set_{1}" value="Dnes" class="today" id="id_set_{1}" />'
+                '<span class="dw-today">{0}<input type="submit" name="submit_set_{1}" value="Dnes" class="today" id="id_set_{1}"></span>'
                 .format(res, name))
         return res

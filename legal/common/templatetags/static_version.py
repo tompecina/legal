@@ -57,3 +57,15 @@ def ts_app_css(context):
 def ts_app_js(context):
 
     return ver(context['app'] + '.js')
+
+
+@register.simple_tag
+def ts_acc_css():
+
+    return ver('acc.css')
+
+
+@register.simple_tag
+def ts_acc_js():
+
+    return ver('acc.js')

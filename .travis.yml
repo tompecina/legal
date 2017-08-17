@@ -25,6 +25,11 @@ before_install:
   - "ln -s $(pwd)/libtidy.so.5.5.31 $LD_LIBRARY_PATH/libtidy-0.99.so.0"
   - "cd $project"
   - "gem install sass"
+  - "npm install uglifyjs"
+  - "localbin=~/.local/bin"
+  - "mkdir -p $localbin"
+  - "ln -s ~/node_modules/uglify-js/bin/uglifyjs $localbin"
+  - "
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
         pip install git+https://github.com/django/django.git

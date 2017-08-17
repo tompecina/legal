@@ -2,6 +2,9 @@
 
 apps='cin cnb common dvt hjp hsp knr lht psj sop szr sur udn sir dir pir kos'
 
+par='--update --style=compressed -I legal/common/static'
+
 for b in $apps; do
-    sass --update --style=compact -I legal/common/static legal/$b/static/$b.scss:legal/$b/static/$b.css
+    sass $par legal/$b/static/$b.scss:legal/$b/static/$b.css || exit
 done
+sass $par legal/common/static/acc.scss:legal/common/static/acc.css

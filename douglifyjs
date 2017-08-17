@@ -1,0 +1,9 @@
+#!/bin/bash
+
+par='--comments=/css_classes/'
+
+path='./collect'
+
+for f in $path/*.js; do
+    uglifyjs $par $f -o $f || exit
+done

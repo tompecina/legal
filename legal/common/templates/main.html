@@ -1,27 +1,39 @@
-{% load static %}{% load static_version %}<!DOCTYPE html>
+{% spaceless %}
+{% load static %}
+{% load static_version %}
+{% load jquery %}
+<!DOCTYPE html>
 <html lang="cs">
 <head>
-<title>{% block pagetitle %}{{ page_title|default:"Přihlášení" }}{% endblock %}</title>
+<title>{% block pagetitle %}{{ page_title }}{% endblock %}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <meta name="AUTHOR" content="Tomáš Pecina">
 <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'jquery-ui-1.12.1.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '' %}{% jquery_ui_css %}">
 <link rel="stylesheet" type="text/css" href="{% static 'common.css' %}{% ts_common_css %}">
-{% if app %}<link rel="stylesheet" type="text/css" href="{% static '' %}{{ app }}.css{% ts_app_css %}">
-{% endif %}<script type="text/javascript" src="{% static 'jquery-3.2.1.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'jquery-ui-1.12.1.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'datepicker-cs.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static '' %}{% if app %}{{ app }}.css{% ts_app_css %}{% else %}acc.css{% ts_acc_css %}{% endif %}">
+<script type="text/javascript" src="{% static '' %}{% jquery_js %}"></script>
+<script type="text/javascript" src="{% static '' %}{% jquery_ui_js %}"></script>
+<script type="text/javascript" src="{% static '' %}{% datepicker_js %}"></script>
 <script type="text/javascript" src="{% static 'common.js' %}{% ts_common_js %}"></script>
-{% if app %}<script type="text/javascript" src="{% static '' %}{{ app }}.js{% ts_app_js %}"></script>
-{% endif %}</head>
+<script type="text/javascript" src="{% static '' %}{% if app %}{{ app }}.js{% ts_app_js %}{% else %}acc.js{% ts_acc_js %}{% endif %}"></script>
+</head>
 <body>
-{% if page_title and not suppress_topline %}{% include 'topline.html' %}{% endif %}<table class="container">
+{% include 'topline.html' %}
+<table class="container">
 <tbody>
 <tr>
-<td>{% block page_contents %}{% endblock %}</td>
+<td>
+{% block page_contents %}{% endblock %}
+</td>
 </tr>
-</tbody>
+<tfoot>
+<tr>
+<td>{% include 'notice.html' %}</td>
+</tr>
+</tfoot>
 </table>
-{% include 'notice.html' %}</body>
+</body>
 </html>
+{% endspaceless %}

@@ -2,36 +2,40 @@
 
 {% block page_contents %}
 <form method="post" enctype="multipart/form-data">
-<table class="margin-auto">
+<table class="form">
+<tbody>
 <tr>
 <td></td>
-<td><h1 class="left">{{ page_title }}</h1></td>
+<td><h1>{{ page_title }}</h1></td>
 </tr>
-{% if errors %}<tr>
+{% if errors %}
+<tr>
 <td></td>
-<td class="warning">{% include 'formwarning.html' %}</td>
+<td>{% include 'formwarning.html' %}</td>
 </tr>
-{% endif %}<tr>
-<th class="{{ title_error }}"><label for="id_title">Popis</label>:</th>
-<td class="nowrap"><input type="text" name="title" value="{{ title }}" size="50" maxlength="255" id="id_title" class="{{ title_error }}"> (např. označení soudu a sp. zn.)</td>
+{% endif %}
+<tr>
+<th class="{{ title_error }}"><label for="id_title">Popis</label><span>:</span></th>
+<td class="nowrap"><input type="text" name="title" value="{{ title }}" size="50" maxlength="255" id="id_title" class="{{ title_error }}"><span>(např. označení soudu a sp. zn.)</span></td>
 </tr>
 <tr>
-<th class="{{ calculation_note_error }}"><label for="id_calculation_note">Poznámka</label>:</th>
+<th class="{{ calculation_note_error }}"><label for="id_calculation_note">Poznámka</label><span>:</span></th>
 <td><textarea name="calculation_note" rows="8" cols="80" id="id_calculation_note" class="{{ calculation_note_error }}">{{ calculation_note }}</textarea></td>
 </tr>
 <tr>
-<th class="{{ internal_note_error }}"><label for="id_internal_note">Interní poznámka</label>:</th>
+<th class="{{ internal_note_error }}"><label for="id_internal_note">Interní poznámka</label><span>:</span></th>
 <td><textarea name="internal_note" rows="8" cols="80" id="id_internal_note" class="{{ internal_note_error }}">{{ internal_note }}</textarea></td>
 </tr>
 <tr>
-<th class="{{ vat_rate_error }}"><label for="id_vat_rate" class="nowrap">Sazba DPH</label>:</th>
-<td class="nowrap"><input type="text" name="vat_rate" value="{% ifequal vat_rate_error 'ok' %}{{ vat_rate|floatformat:'2' }}{% else %}{{ vat_rate }}{% endifequal %}" size="5" maxlength="5" id="id_vat_rate" class="{{ vat_rate_error }}"> %</td>
+<th class="{{ vat_rate_error }}"><label for="id_vat_rate" class="nowrap">Sazba DPH</label><span>:</span></th>
+<td><input type="text" name="vat_rate" value="{% if not vat_rate_error %}{{ vat_rate|floatformat:'2' }}{% else %}{{ vat_rate }}{% endif %}" size="5" maxlength="5" id="id_vat_rate" class="{{ vat_rate_error }}"> %</td>
 </tr>
 <tr>
 <td></td>
 <td>
-<fieldset class="float-right">
-<table class="vattbl width-full">
+<fieldset class="vattbl">
+<table>
+<tbody>
 <tr>
 <th>Základ bez DPH:</th>
 <td>{{ total_ex|safe }} Kč</td>
@@ -44,57 +48,62 @@
 <th>DPH:</th>
 <td>{{ total_vat|safe }} Kč</td>
 </tr>
-<tr class="bold">
+<tr>
 <th>Celkem:</th>
 <td>{{ total|safe }} Kč</td>
 </tr>
+</tbody>
 </table>
 </fieldset>
 </td>
 </tr>
+</tbody>
 </table>
-<table class="width-two-thirds mth mra mbn mla">
-<tr class="bgrid">
+<table class="bgrid">
+<tbody>
+<tr>
 <th><input type="submit" name="submit_update" value="Aktualisovat"></th>
 <td>uložit hodnoty a pokračovat v úpravách</td>
 </tr>
-<tr class="bgridwg">
+<tr class="ga">
 <th><input type="submit" name="submit_edit" value="Upravit položky"></th>
 <td>uložit hodnoty a přejít k položkám kalkulace</td>
 </tr>
-<tr class="bgrid">
+<tr>
 <th><input type="submit" name="submit_empty" value="Vyprázdnit kalkulaci" id="id_reset"></th>
 <td>začít novou kalkulaci</td>
 </tr>
-<tr class="bgrid">
-<th class="pbn"><input type="submit" name="submit_load" value="Načíst kalkulaci" id="id_load_button"></th>
-<td class="pbn">načíst kalkulaci ze souboru PDF nebo XML (nejprve vyberte soubor)</td>
+<tr class="load">
+<th><input type="submit" name="submit_load" value="Načíst kalkulaci" id="id_load_button"></th>
+<td>načíst kalkulaci ze souboru PDF nebo XML (nejprve vyberte soubor)</td>
 </tr>
-<tr class="bgrid">
-<th class="pbn"></th>
-<td class="ptn"><input type="file" name="load" accept="application/pdf,text/xml" id="id_load"></td>
+<tr>
+<th></th>
+<td><input type="file" name="load" accept="application/pdf,text/xml" id="id_load"></td>
 </tr>
-<tr class="bgridwg">
+<tr>
 <th><input type="submit" name="submit_xml" value="Uložit kalkulaci"></th>
 <td>uložit kalkulaci do souboru XML</td>
 </tr>
-<tr class="bgridwg">
+<tr class="ga">
 <th><input type="submit" name="submit_pdf" value="Export do PDF"></th>
 <td>vytvořit z kalkulace soubor PDF</td>
 </tr>
-<tr class="bgrid">
+<tr>
 <th><input type="submit" name="submit_place" value="Upravit místa"></th>
 <td>zobrazit přehled přednastavených míst, která lze opakovaně používat při stanovení náhrady za použití motorového vozidla</td>
 </tr>
-<tr class="bgrid">
+<tr>
 <th><input type="submit" name="submit_car" value="Upravit vozidla"></th>
 <td>zobrazit přehled přednastavených motorových vozidel, která lze opakovaně používat při stanovení náhrady za použití motorového vozidla</td>
 </tr>
-<tr class="bgridwg">
+<tr class="ga">
 <th><input type="submit" name="submit_formula" value="Upravit předpisy"></th>
 <td>zobrazit kalkulační předpisy (vyhlášky) používané pro stanovení náhrady za použití motorového vozidla</td>
 </tr>
+</tbody>
 </table>
-<div class="hidden"><input type="hidden" name="type" id="id_type" value="mainpage"><input type="hidden" name="type" id="id_items" value="{{ num_items }}"></div>{% csrf_token %}
+<input type="hidden" name="type" id="id_type" value="mainpage"><input type="hidden" name="type" id="id_items" value="{{ num_items }}">
+{% csrf_token %}
 </form>
 {% endblock %}

@@ -38,6 +38,7 @@ from django.views.decorators.http import require_http_methods
 from django.forms.models import model_to_dict
 from django.apps import apps
 from django.db.models import Q
+from django.db.utils import IntegrityError
 
 from legal.common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
 from legal.common.utils import (
@@ -810,11 +811,11 @@ def mainpage(request):
     if request.method == 'GET':
         i2d(FIELDS, calc, var)
         for key in FIELDS:
-            var['{}_error'.format(key)] = 'ok'
+            var['{}_error'.format(key)] = ''
     else:
         form = CalcForm(request.POST)
         for key in FIELDS:
-            var['{}_error'.format(key)] = 'ok'
+            var['{}_error'.format(key)] = ''
         d2d(FIELDS, form.data, var)
         button = getbutton(request)
         if button == 'empty':
@@ -850,7 +851,7 @@ def mainpage(request):
                     return error(request)
                 var.update(cld)
                 for key in FIELDS:
-                    var['{}_error'.format(key)] = 'ok'
+                    var['{}_error'.format(key)] = ''
                 if button == 'edit':
                     return redirect('knr:itemlist')
                 if button == 'xml':
@@ -1157,7 +1158,7 @@ def mainpage(request):
                 var.update({'errors': True})
                 d2d(FIELDS, form.data, var)
                 for key in FIELDS:
-                    var['{}_error'.format(key)] = 'err' if form[key].errors else 'ok'
+                    var['{}_error'.format(key)] = 'err' if form[key].errors else ''
         else:  # pragma: no cover
             i2d(FIELDS, calc, var)
     var['total_net'] = var['total_ex'] = var['num_items'] = 0
@@ -1202,11 +1203,16 @@ def placeform(request, idx=0):
             if idx:
                 get_object_or_404(Place, pk=idx, uid=uid)
                 cld['pk'] = idx
-            Place(uid_id=uid, **cld).save()
-            LOGGER.info(
-                'User "{}" ({:d}) {} place "{}"'.format(uname, uid, 'updated' if idx else 'added', cld['name']),
-                request)
-            return redirect('knr:placelist')
+            try:
+                Place(uid_id=uid, **cld).save()
+            except IntegrityError:
+                LOGGER.debug('Invalid form', request)
+                err_message = 'Místo s touto zkratkou již existuje, prosím, zvolte jinou'
+            else:
+                LOGGER.info(
+                    'User "{}" ({:d}) {} place "{}"'.format(uname, uid, 'updated' if idx else 'added', cld['name']),
+                    request)
+                return redirect('knr:placelist')
         else:
             LOGGER.debug('Invalid form', request)
             err_message = INERR
@@ -1285,11 +1291,16 @@ def carform(request, idx=0):
             if idx:
                 get_object_or_404(Car, pk=idx, uid=uid)
                 cld['pk'] = idx
-            Car(uid_id=uid, **cld).save()
-            LOGGER.info(
-                'User "{}" ({:d}) {} car "{}"'.format(uname, uid, 'updated' if idx else 'added', cld['name']),
-                request)
-            return redirect('knr:carlist')
+            try:
+                Car(uid_id=uid, **cld).save()
+            except IntegrityError:
+                LOGGER.debug('Invalid form', request)
+                err_message = 'Vozidlo s touto zkratkou již existuje, prosím, zvolte jinou'
+            else:
+                LOGGER.info(
+                    'User "{}" ({:d}) {} car "{}"'.format(uname, uid, 'updated' if idx else 'added', cld['name']),
+                    request)
+                return redirect('knr:carlist')
         else:
             LOGGER.debug('Invalid form', request)
             err_message = INERR
@@ -1375,18 +1386,23 @@ def formulaform(request, idx=0):
                 if not key.startswith('rate_'):
                     dct[key] = val
             res = Formula(uid_id=uid, **dct)
-            res.save()
-            LOGGER.info(
-                'User "{}" ({:d}) {} formula {}'.format(uname, uid, 'updated' if idx else 'added', res.name),
-                request)
-            for fuel in FUELS:
-                rat = Rate.objects.filter(formula=res, fuel=fuel)
-                rat = rat[0] if rat else Rate(formula=res, fuel=fuel)
-                rat.rate = cld['rate_{}'.format(fuel)]
-                if not rat.rate:
-                    rat.rate = 0
-                rat.save()
-            return redirect('knr:formulalist')
+            try:
+                res.save()
+            except IntegrityError:
+                LOGGER.debug('Invalid form', request)
+                err_message = 'Předpis s touto zkratkou již existuje, prosím, zvolte jinou'
+            else:
+                for fuel in FUELS:
+                    rat = Rate.objects.filter(formula=res, fuel=fuel)
+                    rat = rat[0] if rat else Rate(formula=res, fuel=fuel)
+                    rat.rate = cld['rate_{}'.format(fuel)]
+                    if not rat.rate:
+                        rat.rate = 0
+                    rat.save()
+                LOGGER.info(
+                    'User "{}" ({:d}) {} formula {}'.format(uname, uid, 'updated' if idx else 'added', res.name),
+                    request)
+                return redirect('knr:formulalist')
         else:
             LOGGER.debug('Invalid form', request)
             err_message = INERR
@@ -1553,10 +1569,10 @@ def itemform(request, idx=0):
             i2d(FORM_FIELDS[calc.type], calc, var)
             var['type'] = calc.type
             for key in SUBFORM_FIELDS[calc.type]:
-                var['{}_error'.format(key)] = 'ok'
+                var['{}_error'.format(key)] = ''
             if var['type'] == 'travel':
                 addtravellists(var)
-                var['cons_error'] = 'ok'
+                var['cons_error'] = ''
         else:
             return redirect('knr:itemlist')
     else:
@@ -1571,10 +1587,10 @@ def itemform(request, idx=0):
                 var.update(PRESELS[int(presel)][PRESEL])
                 var['type'] = PRESELS[int(presel)][TYPE]
                 for key in SUBFORM_FIELDS[var['type']]:
-                    var['{}_error'.format(key)] = 'ok'
+                    var['{}_error'.format(key)] = ''
                 if var['type'] == 'travel':
                     addtravellists(var)
-                    var['cons_error'] = 'ok'
+                    var['cons_error'] = ''
             else:
                 return redirect('knr:itemlist')
         else:
@@ -1613,8 +1629,8 @@ def itemform(request, idx=0):
                             var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                             d2d(SUBFORM_FIELDS[typ], cld, var)
                             for key in SUBFORM_FIELDS[typ]:
-                                var['{}_error'.format(key)] = 'ok'
-                            var['cons_error'] = 'ok'
+                                var['{}_error'.format(key)] = ''
+                            var['cons_error'] = ''
                         else:
                             form = TravelForm(request.POST)
                             if form.is_valid():
@@ -1647,8 +1663,8 @@ def itemform(request, idx=0):
                                 var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                                 d2d(SUBFORM_FIELDS[typ], form.data, var)
                                 for key in SUBFORM_FIELDS[typ]:
-                                    var['{}_error'.format(key)] = 'err' if form[key].errors else 'ok'
-                                var['cons_error'] = 'ok'
+                                    var['{}_error'.format(key)] = 'err' if form[key].errors else ''
+                                var['cons_error'] = ''
                                 for key in CTRIP:
                                     if form[key].errors:
                                         var['cons_error'] = 'err'
@@ -1712,9 +1728,8 @@ def itemform(request, idx=0):
                         var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                         d2d(SUBFORM_FIELDS[typ], form.data, var)
                         for key in SUBFORM_FIELDS[typ]:
-                            var['{}_error'.format(key)] = 'err' if form[key].errors else 'ok'
-                        var['fraction_error'] = (
-                            'err' if form['numerator'].errors or form['denominator'].errors else 'ok')
+                            var['{}_error'.format(key)] = 'err' if form[key].errors else ''
+                        var['fraction_error'] = 'err' if form['numerator'].errors or form['denominator'].errors else ''
             else:
                 form = globals()[typ.title() + 'Subform'](request.POST)
                 if form.is_valid():
@@ -1757,7 +1772,7 @@ def itemform(request, idx=0):
                         d2d(SUBFORM_FIELDS[typ], cld, var)
                         var['rate'] = rat
                         for key in SUBFORM_FIELDS[typ]:
-                            var['{}_error'.format(key)] = 'ok'
+                            var['{}_error'.format(key)] = ''
                     elif typ == 'flat':
                         bas = cld['basis']
                         if button == 'calc1':
@@ -1814,7 +1829,7 @@ def itemform(request, idx=0):
                         d2d(SUBFORM_FIELDS[typ], cld, var)
                         var['rate'] = rat
                         for key in SUBFORM_FIELDS[typ]:
-                            var['{}_error'.format(key)] = 'ok'
+                            var['{}_error'.format(key)] = ''
                     elif typ == 'administrative':
                         rat = 75 if button == 'calc1' else 300
                         idx = cld['idx']
@@ -1823,7 +1838,7 @@ def itemform(request, idx=0):
                         d2d(SUBFORM_FIELDS[typ], cld, var)
                         var['rate'] = rat
                         for key in SUBFORM_FIELDS[typ]:
-                            var['{}_error'.format(key)] = 'ok'
+                            var['{}_error'.format(key)] = ''
                     elif typ == 'time':
                         rat = 50 if button == 'calc1' else 100
                         idx = cld['idx']
@@ -1832,7 +1847,7 @@ def itemform(request, idx=0):
                         d2d(SUBFORM_FIELDS[typ], cld, var)
                         var['time_rate'] = rat
                         for key in SUBFORM_FIELDS[typ]:
-                            var['{}_error'.format(key)] = 'ok'
+                            var['{}_error'.format(key)] = ''
                     elif typ == 'travel':
                         if button == 'from_apply' and request.POST.get('from_sel'):
                             proc_from(int(request.POST.get('from_sel')), cld)
@@ -1878,15 +1893,15 @@ def itemform(request, idx=0):
                         if not var['fuel_price']:
                             var['fuel_price'] = ''
                         for key in SUBFORM_FIELDS[typ]:
-                            var['{}_error'.format(key)] = 'ok'
-                        var['cons_error'] = 'ok'
+                            var['{}_error'.format(key)] = ''
+                        var['cons_error'] = ''
                 else:
                     idx = int(request.POST.get('idx') or 0)
                     var.update({'errors': True, 'idx': idx, 'type': typ})
                     var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                     d2d(SUBFORM_FIELDS[typ], form.data, var)
                     for key in SUBFORM_FIELDS[typ]:
-                        var['{}_error'.format(key)] = 'err' if form[key].errors else 'ok'
+                        var['{}_error'.format(key)] = 'err' if form[key].errors else ''
     return render(request, 'knr_itemform.html', var)
 
 

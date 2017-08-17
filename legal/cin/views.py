@@ -116,7 +116,7 @@ def mainpage(request):
 
     return render(
         request,
-        'cin_main.html',
+        'cin_mainpage.html',
         {'app': APP,
          'form': form,
          'messages': messages,

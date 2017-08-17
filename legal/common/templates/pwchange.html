@@ -2,31 +2,35 @@
 
 {% block page_contents %}
 <form method="post" enctype="multipart/form-data">
-<table class="margin-auto">
+<table class="form">
+<tbody>
 <tr>
 <td></td>
-<td colspan="2"><h1 class="left">{{ page_title }}</h1></td>
+<td colspan="2"><h1>{{ page_title }}</h1></td>
 </tr>
-{% if error_message %}<tr>
-<td colspan="3" class="warning"><div class="warning">{{ error_message }}</div></td>
+{% if error_message %}
+<tr>
+<td colspan="3">{% include 'formwarning.html' %}</td>
 </tr>
-{% endif %}<tr>
-<td class="right"><label for="id_oldpassword">Staré heslo</label>:</td>
+{% endif %}
+<tr class="ga">
+<th><label for="id_oldpassword">Staré heslo</label>:</th>
 <td colspan="2"><input type="password" name="oldpassword" value="{{ oldpassword }}" id="id_oldpassword"></td>
 </tr>
 <tr>
-<td class="right ptm"><label for="id_newpassword1">Nové heslo</label>:</td>
-<td colspan="2" class="ptm"><input type="password" name="newpassword1" value="{{ newpassword1 }}" id="id_newpassword1"></td>
+<th><label for="id_newpassword1">Nové heslo</label>:</th>
+<td colspan="2"><input type="password" name="newpassword1" value="{{ newpassword1 }}" id="id_newpassword1"></td>
 </tr>
 <tr>
-<td class="right"><label for="id_newpassword2">Nové heslo znovu</label>:</td>
+<th><label for="id_newpassword2">Nové heslo znovu</label>:</th>
 <td colspan="2"><input type="password" name="newpassword2" value="{{ newpassword2 }}" id="id_newpassword2"></td>
 </tr>
 <tr>
-<td class="right"></td>
+<td></td>
 <td><input type="submit" name="submit" value="Změnit"></td>
 <td class="right"><input type="submit" name="back" value="Zpět">{% csrf_token %}</td>
 </tr>
+</tbody>
 </table>
 </form>
 {% endblock %}

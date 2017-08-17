@@ -2051,10 +2051,9 @@ class TestViews(TestCase):
         check_html(self, res.content)
 
         res = self.client.get('/accounts/logout/')
-        self.assertEqual(res.status_code, HTTPStatus.FOUND)
-
-        res = self.client.get('/accounts/logout/', follow=True)
-        self.assertTemplateUsed(res, 'home.html')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'logout.html')
+        check_html(self, res.content)
 
         res = self.client.get('/szr/')
         self.assertEqual(res.status_code, HTTPStatus.FOUND)

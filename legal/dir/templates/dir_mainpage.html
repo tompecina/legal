@@ -2,41 +2,49 @@
 
 {% block page_contents %}
 <h1>{{ page_title }}</h1>
-{% if rows %}<table id="list" class="margin-auto">
+{% if rows %}
+<table id="list" class="list">
 <thead>
-<tr class="header">
-<th class="left">Popis</th>
+<tr>
+<th>Popis</th>
 <th>Akce</th>
 </tr>
 </thead>
 <tbody>
-{% for row in rows %}<tr class="{% cycle 'odd' 'even' %}">
+{% for row in rows %}
+<tr>
 <td>{{ row.desc }}</td>
-<td class="links"><a href="{% url 'dir:debtorform' row.id %}">upravit</a> <a href="{% url 'dir:debtordel' row.id %}">smazat</a> <a href="{% url 'pir:htmllist' %}?{{ row.search }}">vyhledat</a></td>
+<td class="act">
+<a href="{% url 'dir:debtorform' row.id %}">upravit</a>
+<a href="{% url 'dir:debtordel' row.id %}">smazat</a>
+<a href="{% url 'pir:htmllist' %}?{{ row.search }}">vyhledat</a>
+</td>
 </tr>
-{% endfor %}</tbody>{% if not suppress_table_footer %}
+{% endfor %}
+</tbody>
+{% if not suppress_table_footer %}
 <tfoot>
-<tr class="footer">
+<tr>
 <td><a href="{% url 'dir:debtorform' %}">Přidat dlužníka</a></td>
-<td class="right">{% include 'pager.html' %}</td>
+<td class="pager">{% include 'pager.html' %}</td>
 </tr>
 </tfoot>
-{% endif %}</table>
-<p class="center"><a href="{% url 'dir:debtorbatchform' %}">Import</a> / <a href="{% url 'dir:debtorexport' %}">Export</a> / <a href="{% url 'dir:debtordelall' %}">Smazat vše</a></p>
-{% else %}<p class="center">(nesledujete žádné dlužníky)</p>
-<p class="center"><a href="{% url 'dir:debtorform' %}">Přidat dlužníka</a> / <a href="{% url 'dir:debtorbatchform' %}">Import</a></p>
-{% endif %}<form method="post" enctype="multipart/form-data">
-<table class="mth mra mbh mla">
-<tbody>
-{% if err_message %}<tr>
-<td colspan="3" class="warning">{% include 'formwarning.html' %}</td>
-</tr>
-{% endif %}<tr>
-<th class="{{ form.email_error }}">{{ form.email.label_tag }}</th>
-<td>{{ form.email }}</td>
-<td><input type="submit" name="submit" value="Změnit">{% csrf_token %}</td>
-</tr>
-</tbody>
+{% endif %}
 </table>
-</form>
+<p>
+<a href="{% url 'dir:debtorbatchform' %}">Import</a>
+<span>/</span>
+<a href="{% url 'dir:debtorexport' %}">Export</a>
+<span>/</span>
+<a href="{% url 'dir:debtordelall' %}">Smazat vše</a>
+</p>
+{% else %}
+<p>(nesledujete žádné dlužníky)</p>
+<p>
+<a href="{% url 'dir:debtorform' %}">Přidat dlužníka</a>
+<span>/</span>
+<a href="{% url 'dir:debtorbatchform' %}">Import</a>
+</p>
+{% endif %}
+{% include 'email_form.html' %}
 {% endblock %}

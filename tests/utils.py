@@ -190,7 +190,7 @@ def parse_tokens(tokens):
     return classes
 
 
-CSS_CLASSES_RE = compile(r'/\* css_classes:([^*]*)\*/')
+CSS_CLASSES_RE = compile(r'^.*/\* css_classes:([^*]*)\*/.*$')
 
 
 def parse_comments(data):
@@ -208,7 +208,7 @@ class ClassArray(dict):
     def __init__(self):
 
         parser = make_parser()
-        for app in APPS:
+        for app in APPS + ('acc',):
             try:
                 with open(join(STATIC_ROOT, '{}.css'.format(app)), 'r') as infile:
                     css = infile.read()
@@ -230,6 +230,7 @@ class ClassArray(dict):
         for app in APPS:
             if app != 'common':
                 self[app] = self[app].union(self['common'])
+        self['common'] = self['common'].union(self['acc'])
 
 
 CHECK_ARRAY = CheckArray()

@@ -1,109 +1,171 @@
+//
+// hsp/static/hsp.scss
+//
+// Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+//
+// This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+//
+// This application is free software: you can redistribute it and/or
+// modify it under the terms of the GNU General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This application is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 /* css_classes: dc dr */
 
+
 @import "include";
+
+
+table.gen {
+    margin: $vm $hl;
+}
 
 fieldset {
     margin: {
 	top: 0;
 	bottom: ($vl+$vm);
     }
+    &.btbl {
+	table {
+	    width: 100%;
+	    tbody tr {
+		th, td {
+		    padding: $vl $hm;
+		    border-bottom: $bs solid $border-blue;
+		}
+		th {
+		    text-align: center;
+		    font-size: $huge;
+		    padding-left: $hl;
+		}
+		td div:first-child {
+		    font-weight: bold;
+		}
+		td.mc {
+		    width: 100%;
+		}
+		td.cc {
+		    white-space: nowrap;
+		    font-weight: bold;
+		}
+	    }
+	    tfoot tr td {
+		height: ($vh+$vl);
+	    }
+	}
+    }
 }
-.btbl {
-    table {
-	width: 100%;
+
+table.list {
+    margin: $vh auto 0;
+    thead {
+	tr.deb th {
+	    padding: {
+		top: $vn;
+		bottom: $vn;
+	    }
+	}
+	tr.curr th {
+	    font-weight: normal;
+	    padding-top: $vn;
+	}
+	tr th.sum {
+	    font-weight: bold;
+	}
     }
-    th, tbody td {
-	padding: $vl $hm;
-	border-bottom: $bs solid $border-blue;
+    tbody tr {
+	td {
+	    padding: ($vs+$vn) ($hm+$hs);
+	    span.cr {
+		color: $red;
+	    }
+	    span.sps {
+		padding-left: $hm;
+		margin-right: $hs;
+	    }
+	}
+	td:first-child {
+	    padding-left: ($hl+$hs);
+	}
+	td.dr {
+	    color: $red;
+	}
+	td.cr, td.dr {
+	    text-align: right;
+	}
+	td.dat, td.dt, td.cus {
+	    text-align: center;
+	}
+	td.am, td.ams {
+	    text-align: right;
+	    white-space: nowrap;
+	}
+	td.ams, td.cs, td.cus {
+	    border-left: $bs solid $medium-blue;
+	}
+	td.taberr {
+	    border-top: $bs solid $medium-blue;
+	    text-align: center;
+	    font-style: italic;
+	    background: {
+		color: $white;
+		image: url("/static/cb.svg");
+		repeat: repeat;
+	    }
+	    span.err {
+		color: inherit;
+		font-weight: bold;
+	    }
+	}
     }
-    th {
-	text-align: center;
-	font-size: $huge;
-	padding-left: $hl;
-    }
-    td.mc {
-	width: 100%;
-    }
-    td.act {
-	text-align: center;
-    }
-    div:first-child {
+    tfoot span:first-child {
 	font-weight: bold;
     }
-    tfoot tr td {
-	height: ($vh+$vl);
+}
+
+table.btnbar {
+    margin: $vh auto;
+    tbody tr td {
+	padding: $vn $hl;
     }
 }
-td.cc {
-    white-space: nowrap;
-    font-weight: bold;
-}
-tr.header:first-child th {
-    padding-bottom: 0;
-}
-table.intbl {
-    margin: 5px auto;
-    width: 100%;
-}
-.intbl {
+
+table.intbl tbody tr {
     th, td {
+	padding: $vm $hm;
 	text-align: left;
-	padding: $vs $hm $vm;
+    }
+    th span + span {
+	margin-left: 0;
+    }
+    td hr {
+	    margin: 0;
     }
     td.hr {
 	padding: $vm 0 $hm;
     }
-    hr {
-	margin: 0;
-    }
-    td span {
-	padding-left: $hm;
-    }
 }
-tr.curr th {
-    font-weight: normal;
-    padding-top: $vn;
+
+input#id_date_from {
+    margin-right: ($hm+$hs);
 }
-tr.deb th {
-    padding: {
-	top: $vn;
-	bottom: $vn;
-    }
+
+table.form tbody tr.debord th {
+    vertical-align: top;
 }
-td.taberr {
-    text-align: center;
-    font-style: italic;
-    background: {
-	color: $white;
-	image: url('/static/cb.svg');
-	repeat: repeat;
-    }
-    border-top: $bs solid $medium-blue;
-    padding: $vm $hm;
-}
-td.dat, td.dt, td.cus {
-    text-align: center;
-}
-td.am, td.ams {
-    text-align: right;
-    white-space: nowrap;
-}
-td.ams, td.cs, td.cus {
-    border-left: $bs solid $medium-blue;
-}
-th.sum {
-    font-weight: bold;
-}
-td.act {
-    word-spacing: $hs;
-    white-space: nowrap;
-}
-span.cr {
-    color: $red;
-}
+
 table.nttbl {
     margin: $vh auto $vl;
-}
-table.nttbl p {
-    margin: $vm $hl;
+    tbody tr td fieldset p {
+	margin: $vm $hl;
+    }
 }

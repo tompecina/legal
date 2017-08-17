@@ -1,17 +1,25 @@
 {% extends 'knr_list.html' %}
 
-{% block table_header %}<th class="left">Zkratka</th><th>Název</th>
+{% block table_header %}
+<th>Zkratka</th>
+<th>Název</th>
 <th>Palivo</th>
 <th>Spotřeba</th>
 <th>Akce</th>{% endblock %}
 
 {% block table_footer %}<td colspan="5"><a href="{% url 'knr:carform' %}">Přidat vozidlo</a></td>{% endblock %}
 
-{% block table_row %}<td>{{ row.abbr }}</td>
+{% block table_row %}
+<td>{{ row.abbr }}</td>
 <td>{{ row.name }}</td>
 <td class="center">{{ row.fuel }}</td>
 <td class="center">{{ row.cons1 }} / {{ row.cons2 }} / {{ row.cons3 }}</td>
-<td class="links"><a href="{% url 'knr:carform' row.id %}">upravit</a> <a href="{% url 'knr:cardel' row.id %}">smazat</a></td>{% endblock %}
+<td class="act">
+<a href="{% url 'knr:carform' row.id %}">upravit</a>
+<a href="{% url 'knr:cardel' row.id %}">smazat</a></td>
+{% endblock %}
 
-{% block empty %}<p class="center">(nejsou zadána žádná vozidla)</p>
-<p class="center"><a href="{% url 'knr:carform' %}">Vytvořit nové vozidlo</a></p>{% endblock %}
+{% block empty %}
+<p>(nejsou zadána žádná vozidla)</p>
+<p><a href="{% url 'knr:carform' %}">Vytvořit nové vozidlo</a></p>
+{% endblock %}
