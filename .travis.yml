@@ -27,6 +27,7 @@ before_install:
   - "gem install sass"
   - "npm install uglify-js"
   - "export PATH=\"$HOME\"/node_modules/.bin:\"$PATH\""
+  - "echo $PATH"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
         pip install git+https://github.com/django/django.git

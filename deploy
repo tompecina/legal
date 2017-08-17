@@ -1,6 +1,7 @@
 #!/bin/bash
 
 remote='legal.pecina.cz'
+user="$USER"
 
 ./make-static
 rsync -avhHzx \
@@ -13,7 +14,7 @@ rsync -avhHzx \
       --exclude '__pycache__/' \
       --exclude '#*' \
       --delete \
-      legal collect fonts $remote:/var/www/django/legal/
-rsync -avhHzx secrets.py $remote:/var/www/django/legal/legal/
-ssh $remote 'cd /var/www/django/legal && source activate && pip install -q -r requirements.txt'
-ssh $remote 'touch /var/www/django/legal/legal/wsgi.py'
+      legal collect fonts $user@$remote:/var/www/django/legal/
+rsync -avhHzx secrets.py $user@$remote:/var/www/django/legal/legal/
+ssh $user@$remote 'cd /var/www/django/legal && source activate && pip install -q -r requirements.txt'
+ssh $user@$remote 'touch /var/www/django/legal/legal/wsgi.py'
