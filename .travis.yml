@@ -29,7 +29,6 @@ before_install:
   - "localbin=~/.local/bin"
   - "mkdir -p $localbin"
   - "ln -s ~/node_modules/uglify-js/bin/uglifyjs $localbin"
-  - "
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
         pip install git+https://github.com/django/django.git
