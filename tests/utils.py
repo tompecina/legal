@@ -32,7 +32,7 @@ from bs4.element import Tag, NavigableString
 from tinycss import make_parser
 from django.http import QueryDict
 
-from legal.settings import TEST_DIR, TEST_DATA_DIR, STATIC_URL, APPS, STATIC_ROOT
+from legal.settings import TEST_DIR, TEST_DATA_DIR, STATIC_URL, APPS, BASE_DIR
 from legal.common.models import Lock, Pending
 from legal.sir.models import Counter
 
@@ -190,7 +190,7 @@ def parse_tokens(tokens):
     return classes
 
 
-CSS_CLASSES_RE = compile(r'^.*/\* css_classes:([^*]*)\*/.*$')
+CSS_CLASSES_RE = compile(r'// +css_classes: +(.*) *$')
 
 
 def parse_comments(data):
@@ -210,18 +210,33 @@ class ClassArray(dict):
         parser = make_parser()
         for app in APPS + ('acc',):
             try:
-                with open(join(STATIC_ROOT, '{}.css'.format(app)), 'r') as infile:
+                with open(
+                        join(BASE_DIR, 'legal', 'common' if app == 'acc' else app, 'static', '{}.scss'.format(app)),
+                        'r'
+                ) as infile:
+                    scss = infile.read()
+            except FileNotFoundError:
+                pass
+            self[app] = parse_comments(scss)
+
+            try:
+                with open(
+                        join(BASE_DIR, 'legal', 'common' if app == 'acc' else app, 'static', '{}.css'.format(app)),
+                        'r'
+                ) as infile:
                     css = infile.read()
             except FileNotFoundError:
                 pass
             stylesheet = parser.parse_stylesheet(css)
-            self[app] = parse_comments(css)
             for ruleset in stylesheet.rules:
                 selector = ruleset.selector
                 self[app].update(parse_tokens(selector))
 
             try:
-                with open(join(STATIC_ROOT, '{}.js'.format(app)), 'r') as infile:
+                with open(
+                        join(BASE_DIR, 'legal', 'common' if app == 'acc' else app, 'static', '{}.js'.format(app)),
+                        'r'
+                ) as infile:
                     js = infile.read()
             except FileNotFoundError:
                 pass

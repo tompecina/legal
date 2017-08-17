@@ -21,7 +21,7 @@
 
 'use strict';
 
-/* css_classes: immune disabled currsel today err */
+// css_classes: immune disabled currsel today err
 
 $.fn.c = (
     function(v) {

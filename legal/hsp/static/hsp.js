@@ -21,7 +21,7 @@
 
 'use strict';
 
-/* css_classes: itr currsel debord curr_from curr_to immune */
+// css_classes: itr currsel debord curr_from curr_to immune
 
 $(function() {
 

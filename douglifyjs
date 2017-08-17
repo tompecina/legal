@@ -1,6 +1,6 @@
 #!/bin/bash
 
-par='--comments=/css_classes/'
+par=''
 
 path='./collect'
 

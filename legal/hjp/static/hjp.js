@@ -21,7 +21,7 @@
 
 'use strict';
 
-/* css_classes: curr trdt */
+// css_classes: curr trdt
 
 $(function() {
 

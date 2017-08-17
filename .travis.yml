@@ -9,11 +9,6 @@ python:
   - "3.6"
   - "nightly"
 
-addons:
-  apt:
-    package:
-      - "node-uglify"
-
 env:
   global:
     - "TEST=1"
@@ -39,7 +34,7 @@ before_install:
     fi
 
 install:
-  - "./make-static"
+  - "./dosass"
 
 script:
   - "./manage.py test tests --failfast && ./manage.py test tests --reverse --failfast"

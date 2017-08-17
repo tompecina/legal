@@ -21,7 +21,7 @@
 
 'use strict';
 
-/* css_classes: immune */
+// css_classes: immune
 
 $(function() {
 
