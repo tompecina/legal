@@ -25,13 +25,7 @@ before_install:
   - "ln -s $(pwd)/libtidy.so.5.5.31 $LD_LIBRARY_PATH/libtidy-0.99.so.0"
   - "cd $project"
   - "gem install sass"
-  - "ls -lR ~ > before.lst"
-  - "npm install uglify-js"
-  - "ls -lR ~ > after.lst"
-  - "diff before.lst after.lst"
-  - "export PATH=\"$HOME\"/node_modules/.bin:\"$PATH\""
-  - "echo $PATH"
-  - "ls -l ~/node_modules/.bin"
+  - "npm install uglify-js && export PATH=$(pwd)/node_modules/.bin:\"$PATH\""
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
         pip install git+https://github.com/django/django.git
@@ -41,10 +35,7 @@ before_install:
     fi
 
 install:
-  - "./dosass"
-  - "./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map'"
-  - "echo $PATH"
-  - "./douglifyjs --help"
+  - "./make-static"
 
 script:
   - "./manage.py test tests --failfast && ./manage.py test tests --reverse --failfast"
