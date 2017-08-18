@@ -2,10 +2,12 @@
 
 remote='legal.pecina.cz'
 user="legal"
-opts='-vrlpthHzx'
+opts='-vrlpthHzx --delete'
 files='legal collect fonts activate manage.py requirements.txt'
 exc='.* *.pyc *~ *.po static/ migrations/ __pycache__/ #*'
 basedir='/var/www/django/legal'
+
+export RSYNC_RSH='ssh -o "StrictHostKeyChecking no"'
 
 ./make-static
 
@@ -14,12 +16,12 @@ for e in $exc; do
     excludes="--exclude $e $excludes"
 done
 
-rsync $opts $excludes --delete $files $user@$remote:$basedir/
+rsync $opts $excludes $files $user@$remote:$basedir/
 
 if [ -e secrets.py ]; then
     rsync $opts secrets.py $user@$remote:$basedir/legal/
 fi
 
-ssh $user@$remote 'source activate && pip install -q -r requirements.txt'
+ssh -o "StrictHostKeyChecking no" $user@$remote 'source activate && pip install -q -r requirements.txt'
 
-ssh $user@$remote 'touch legal/wsgi.py'
+ssh -o "StrictHostKeyChecking no" $user@$remote 'touch legal/wsgi.py'
