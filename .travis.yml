@@ -12,6 +12,7 @@ env:
   global:
     - "TEST=1"
     - "DBUSER=root"
+    - secure: "XW0mhJZ65VCNHuu6S/a/oRKb1OWVG48yxQgxHhegh6v39IposlUltsR0Poi2nHMUK81SYiD1hOrqMohDInZtmNqnvfNOmdWQfXhUXRrVyIcllqdc4q5nAHsEhO26kNOE+WR3AgcE5Ug/atkkv0XMQE7jAk1tXhUmUfkaGX83MyPUy4rgxmsCEFoeQ4p6XaEzmyP2re7IVi7Xi6o1HuweJjyVZJHP+HphmyfbLJnrKd7+OquqkbVAn2cKyAInHWblPaG4x9YjBioaOBdN1NiEShrMa64uO8alcvOkmhXpjZ095biIq42OaYY5L9uX+N0Sh/ATP0JBQYX06o9zR7lHqtYSg/7iA1PNLB58H0ab7kx+DtywDxOi8jD7qje++s+ZrdNqTR3XfNk6dVbvlg62MyYdNNWkNeiTxciglC/3s8FKBPLvyqZ810S2sgafxJRjFHWcs8EVLyGQOdoyN45Or6PVtwA88bHO+6FGvOkfIaar+3njztmMUEM5+blrZ6WpNw6gNnCpMu7r+RVvRqtbYQLS5bE/dv/l7qMj75SVmbi+4+heHYonRIlJLPPPiizkB3XFr87ugCO8SXA+QBWfd6pgp/dRCIdFNrvfsPuAtlQISaoVQvXsEevI7u5OHS0eC1MhTf/wFh2aH/KVFJ0dkn3kzAvm+0Y0PKbhP3D+fyY="
   matrix:
     - "DJANGO_VERSION=stable CHECK_HTML=1"
     - "DJANGO_VERSION=nightly"
@@ -47,4 +48,4 @@ script:
   - "./full-test"
 
 after_success:
-  - "echo 'Success!'"
+  - "RSYNC_PASSWORD=$SSHPASSWD ./deploy"

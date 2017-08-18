@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./dosass && ./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map' && ./douglifyjs
+./dosass && ./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map' && ./douglifyjs && cp jquery/*.js collect

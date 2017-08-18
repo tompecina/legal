@@ -3,7 +3,7 @@
 remote='legal.pecina.cz'
 user="legal"
 opts='-vrlpthHzx'
-files='legal collect fonts jquery activate manage.py requirements.txt'
+files='legal collect fonts activate manage.py requirements.txt'
 exc='.* *.pyc *~ *.po static/ migrations/ __pycache__/ #*'
 basedir='/var/www/django/legal'
 

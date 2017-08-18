@@ -72,7 +72,7 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 SECRET_KEY = SECKEY
 
-STATICFILES_DIRS = (join(BASE_DIR, 'jquery'),)
+STATICFILES_DIRS = ()
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
