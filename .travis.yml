@@ -2,19 +2,21 @@
 
 language: "python"
 
-sudo:  "false"
-
-python:
-  - "3.5"
-  - "3.6"
+sudo: "false"
 
 env:
   global:
     - "TEST=1"
     - "DBUSER=root"
-  matrix:
-    - "DJANGO_VERSION=stable CHECK_HTML=1"
-    - "DJANGO_VERSION=nightly"
+
+matrix:
+  include:
+    - python: "3.5"
+      env: "DJANGO_VERSION=stable CHECK_HTML=1"
+    - python: "3.6"
+      env: "DJANGO_VERSION=stable CHECK_HTML=1 DEPLOY=1"
+    - python: "3.6"
+      env: "DJANGO_VERSION=nightly"
 
 before_install:
   - "openssl aes-256-cbc -K $encrypted_447d660d3eed_key -iv $encrypted_447d660d3eed_iv -in .travis_id_rsa.enc -out .travis_id_rsa -d"
@@ -51,4 +53,4 @@ script:
   - "./full-test"
 
 after_success:
-  - "./deploy"
+  - "if [ -n \"$DEPLOY\" ]; then ./deploy; fi"
