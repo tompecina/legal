@@ -1,20 +1,25 @@
 #!/bin/bash
 
 remote='legal.pecina.cz'
-user="$USER"
+user="legal"
+opts='-vrlpthHzx'
+files='legal collect fonts jquery activate manage.py requirements.txt'
+exc='.* *.pyc *~ *.po static/ migrations/ __pycache__/ #*'
+basedir='/var/www/django/legal'
 
 ./make-static
-rsync -avhHzx \
-      --exclude '.*' \
-      --exclude '*.pyc' \
-      --exclude '*~' \
-      --exclude '*.po' \
-      --exclude 'static/' \
-      --exclude 'migrations/' \
-      --exclude '__pycache__/' \
-      --exclude '#*' \
-      --delete \
-      legal collect fonts $user@$remote:/var/www/django/legal/
-rsync -avhHzx secrets.py $user@$remote:/var/www/django/legal/legal/
-ssh $user@$remote 'cd /var/www/django/legal && source activate && pip install -q -r requirements.txt'
-ssh $user@$remote 'touch /var/www/django/legal/legal/wsgi.py'
+
+excludes=''
+for e in $exc; do
+    excludes="--exclude $e $excludes"
+done
+
+rsync $opts $excludes --delete $files $user@$remote:$basedir/
+
+if [ -e secrets.py ]; then
+    rsync $opts secrets.py $user@$remote:$basedir/legal/
+fi
+
+ssh $user@$remote 'source activate && pip install -q -r requirements.txt'
+
+ssh $user@$remote 'touch legal/wsgi.py'

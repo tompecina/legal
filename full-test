@@ -1,0 +1,3 @@
+#!/bin/bash
+
+DUMP_PATH=tests/temp ./manage.py test tests --failfast && ./manage.py test tests --reverse --failfast && java -jar aux/vnu.jar --no-langdetect tests/temp/*.html

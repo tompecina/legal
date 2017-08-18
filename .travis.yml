@@ -29,9 +29,9 @@ before_install:
   - "gem install sass"
   - "npm install uglify-js"
   - "export PATH=$(pwd)/node_modules/.bin:\"$PATH\""
-  - "npm install vnu-jar"
-  - "ln -s $(pwd)/node_modules/vnu-jar/build/dist/vnu.jar $LD_LIBRARY_PATH"
   - "popd"
+  - "mkdir -p aux"
+  - "wget https://www.pecina.cz/files/vnu.jar -O aux/vnu.jar"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
         pip install git+https://github.com/django/django.git
@@ -44,7 +44,7 @@ install:
   - "./make-static"
 
 script:
-  - >
-    DUMP_PATH=tests/temp ./manage.py test tests --failfast
-    && ./manage.py test tests --reverse --failfast
-    && java -jar $LD_LIBRARY_PATH/vnu.jar --no-langdetect tests/temp/*.html
+  - "./full-test"
+
+after_success:
+  - "echo 'Success!'"
