@@ -606,7 +606,7 @@ def xml_decorate(tag, table):
     return tag
 
 
-def xml_espace(string):
+def xml_escape(string):
     """
     XML-escape and strip 'string'.
     """
@@ -614,7 +614,7 @@ def xml_espace(string):
     return escape(string).strip()
 
 
-def xml_unespace(string):
+def xml_unescape(string):
     """
     Strip and XML-unescape 'string'.
     """
@@ -766,7 +766,6 @@ def make_pdf(doc, flow, string=None, xml=None):
 
 
 TIMEOUT = 1000
-
 
 def get(*args, **kwargs):  # pragma: no cover
     """

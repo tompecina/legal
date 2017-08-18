@@ -33,6 +33,7 @@ from tinycss import make_parser
 from django.http import QueryDict
 
 from legal.settings import TEST_DIR, TEST_DATA_DIR, STATIC_URL, APPS, BASE_DIR
+from legal.common.utils import new_xml
 from legal.common.models import Lock, Pending
 from legal.sir.models import Counter
 
@@ -84,30 +85,128 @@ def strip_xml(string):
         return ''
 
 
+class Request:
+
+    def __init__(self, method, url, parameters=None):
+        self.method = method
+        if method == 'GET':
+            if '?' in url:
+                self.url, query = url.split('?', 1)
+                self.parameters = QueryDict(query).dict()
+            else:
+                self.url = url
+                self.parameters = parameters
+        elif method == 'POST':
+            self.url = url
+            self.parameters = parameters.decode() if isinstance(parameters, bytes) else parameters
+        else:
+            raise ValueError('Invalid method')
+        self.hashable_parameters = frozenset(self.parameters) if isinstance(self.parameters, dict) else self.parameters
+
+    def __eq__(self, other):
+        return self.method == other.method and self.url == other.url and self.parameters == other.parameters
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __hash__(self):
+        return hash((self.method, self.url, self.hashable_parameters))
+
+    def to_xml(self, xml):
+        t_request = xml.new_tag('request')
+        t_request['method'] = self.method
+        t_url = xml.new_tag('url')
+        t_request.append(t_url)
+        t_url.append(self.url)
+        if self.parameters:
+            t_parameters = xml.new_tag('parameters')
+            t_request.append(t_parameters)
+            if isinstance(self.parameters, dict):
+                for key, val in self.parameters.items():
+                    t_parameter = xml.new_tag('parameter')
+                    t_parameters.append(t_parameter)
+                    t_name = xml.new_tag('name')
+                    t_parameter.append(t_name)
+                    t_name.append(key)
+                    t_value = xml.new_tag('value')
+                    t_parameter.append(t_value)
+                    t_value.append(str(val))
+            else:
+                t_parameters.append(self.parameters)
+        return t_request
+
+    @staticmethod
+    def from_xml(t_request):
+        method = t_request['method']
+        url = t_request.url.text
+        t_parameters = t_request.find('parameters')
+        if t_parameters:
+            t_parameter_s = t_parameters.find_all('parameter')
+            if t_parameter_s:
+                parameters = {}
+                for t_parameter in t_parameter_s:
+                    parameters[t_parameter.find('name').text] = t_parameter.value.text
+            else:
+                parameters = t_parameters.text
+        else:
+            parameters = None
+        return Request(method, url, parameters)
+
+
+class Response:
+
+    def __init__(self, content, status=HTTPStatus.OK):
+        if content is None:
+            self.content = ''
+        elif isinstance(content, bytes):
+            self.content = content.decode()
+        else:
+            self.content = str(content)
+        self.status = int(status)
+
+    def __eq__(self, other):
+        return self.status == other.status and self.content == other.content
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __hash__(self):
+        return hash((self.content, self.status))
+
+    def to_xml(self, xml):
+        t_response = xml.new_tag('response')
+        t_response['status'] = self.status
+        t_response.append(self.content)
+        return t_response
+
+    @staticmethod
+    def from_xml(t_response):
+        return Response(t_response.text, int(t_response['status']))
+
+
+class Pairs(dict):
+
+    def __init__(self):
+        super().__init__(self)
+        with open(join(TEST_DATA_DIR, 'common_pairs.xml'), 'rb') as infile:
+            t_pairs = new_xml(infile.read()).find('pairs')
+        t_pair_s = t_pairs.find_all('pair')
+        for t_pair in t_pair_s:
+            request = Request.from_xml(t_pair.request)
+            response = Response.from_xml(t_pair.response)
+            self[request] = response
+
+
+PAIRS = Pairs()
+
+
 def testreq(post, *args):
 
-    if post:
-        req, data = args
-        if isinstance(data, bytes):
-            data = {'bytes': data.decode()}
-    else:
-        url = args[0]
-        if '?' in url:
-            req, query = url.split('?', 1)
-        else:
-            req = url
-            query = ''
-        data = QueryDict(query).dict()
-    hsh = md5(req.encode())
-    for key in sorted(data):
-        hsh.update(key.encode())
-        hsh.update(data[key].encode())
-    filename = hsh.hexdigest() + '.dat'
-    try:
-        with open(join(TEST_DATA_DIR, 'common_{}'.format(filename)), 'rb') as infile:
-            return DummyResponse(infile.read().decode())
-    except:
-        return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
+    request = Request('POST' if post else 'GET', args[0], *args[1:])
+    if request in PAIRS:
+        response = PAIRS[request]
+        return DummyResponse(response.content, status=response.status)
+    return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
 
 
 def link_equal(link1, link2):
@@ -159,7 +258,7 @@ CHECKFILE = open(join(TEST_DIR, 'test.chk'), 'w' if WRITE_CHECKFILE else 'r')
 class CheckArray(dict):
 
     def __init__(self):
-
+        super().__init__(self)
         if not WRITE_CHECKFILE:
             for line in CHECKFILE:
                 fields = line.split()
@@ -206,7 +305,7 @@ def parse_comments(data):
 class ClassArray(dict):
 
     def __init__(self):
-
+        super().__init__(self)
         parser = make_parser()
         for app in APPS + ('acc',):
             try:

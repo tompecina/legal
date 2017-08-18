@@ -39,7 +39,7 @@ from django.apps import apps
 
 from legal.common.glob import YDCONVS, ODP, MDCONVS, LIM, INERR, LOCAL_SUBDOMAIN, LOCAL_URL, ASSET_EXP
 from legal.common.utils import (
-    getbutton, yfactor, mfactor, famt, xml_decorate, xml_espace, xml_unespace, LocalFloat, get_xml, new_xml, iso2date,
+    getbutton, yfactor, mfactor, famt, xml_decorate, xml_escape, xml_unescape, LocalFloat, get_xml, new_xml, iso2date,
     register_fonts, make_pdf, LOGGER, render)
 from legal.common import fields
 from legal.common.views import error
@@ -606,7 +606,7 @@ def to_xml(debt):
     xml.append(tdebt)
     for key in ('title', 'note', 'internal_note'):
         tag = xml.new_tag(key)
-        tag.append(xml_espace(debt.__getattribute__(key)))
+        tag.append(xml_escape(debt.__getattribute__(key)))
         tdebt.append(tag)
     tag = xml.new_tag('rounding')
     tag.append(str(debt.rounding))
@@ -617,7 +617,7 @@ def to_xml(debt):
         tdeb = xml.new_tag('debit')
         tdeb['model'] = model = debit.model
         tag = xml.new_tag('description')
-        tag.append(xml_espace(debit.description))
+        tag.append(xml_escape(debit.description))
         tdeb.append(tag)
         if model == 'fixed':
             tag = xml.new_tag('fixed_date')
@@ -674,7 +674,7 @@ def to_xml(debt):
     for credit in debt.credits:
         tcred = xml.new_tag('credit')
         tag = xml.new_tag('description')
-        tag.append(xml_espace(credit.description))
+        tag.append(xml_escape(credit.description))
         tcred.append(tag)
         tag = xml.new_tag('date')
         tag.append(credit.date.isoformat())
@@ -698,7 +698,7 @@ def to_xml(debt):
     for balance in debt.balances:
         tbal = xml.new_tag('balance')
         tag = xml.new_tag('description')
-        tag.append(xml_espace(balance.description))
+        tag.append(xml_escape(balance.description))
         tbal.append(tag)
         tag = xml.new_tag('date')
         tag.append(balance.date.isoformat())
@@ -746,15 +746,15 @@ def from_xml(dat):
 
     if tdebt['application'] == APP:
         debt = Debt()
-        debt.title = xml_unespace(tdebt.title.text.strip())
-        debt.note = xml_unespace(tdebt.note.text.strip())
-        debt.internal_note = xml_unespace(tdebt.internal_note.text.strip())
+        debt.title = xml_unescape(tdebt.title.text.strip())
+        debt.note = xml_unescape(tdebt.note.text.strip())
+        debt.internal_note = xml_unescape(tdebt.internal_note.text.strip())
         debt.rounding = int(tdebt.rounding.text.strip())
 
         for tdebs in tdebt.debits.findAll('debit'):
             debit = Debit()
             debt.debits.append(debit)
-            debit.description = xml_unespace(tdebs.description.text.strip())
+            debit.description = xml_unescape(tdebs.description.text.strip())
             debit.model = model = tdebs['model']
             if tdebs.fixed_amount:
                 debit.fixed_amount = float(tdebs.fixed_amount.text.strip())
@@ -784,7 +784,7 @@ def from_xml(dat):
         for tcreds in tdebt.credits.findAll('credit'):
             credit = Credit()
             debt.credits.append(credit)
-            credit.description = xml_unespace(tcreds.description.text.strip())
+            credit.description = xml_unescape(tcreds.description.text.strip())
             credit.date = iso2date(tcreds.date)
             credit.amount = float(tcreds.amount.text.strip())
             credit.currency = tcreds.currency.text.strip()
@@ -794,7 +794,7 @@ def from_xml(dat):
         for tbals in tdebt.balances.findAll('balance'):
             balance = Balance()
             debt.balances.append(balance)
-            balance.description = xml_unespace(tbals.description.text.strip())
+            balance.description = xml_unescape(tbals.description.text.strip())
             balance.date = iso2date(tbals.date)
 
         for tfxs in tdebt.fxrates.findAll('fxrate'):
@@ -811,9 +811,9 @@ def from_xml(dat):
 
     else:
         debt = Debt()
-        debt.title = xml_unespace(tdebt.title.text.strip())
-        debt.note = xml_unespace(tdebt.note.text.strip())
-        debt.internal_note = xml_unespace(tdebt.internal_note.text.strip())
+        debt.title = xml_unescape(tdebt.title.text.strip())
+        debt.note = xml_unescape(tdebt.note.text.strip())
+        debt.internal_note = xml_unescape(tdebt.internal_note.text.strip())
         debt.rounding = int(tdebt.rounding.text.strip())
         currency = tdebt.currency.text.strip()
         interest = tdebt.interest
@@ -830,7 +830,7 @@ def from_xml(dat):
                 principals.append(idx)
                 debt.debits.append(debit)
                 debit.model = 'fixed'
-                debit.description = xml_unespace(ttr.description.text.strip())
+                debit.description = xml_unescape(ttr.description.text.strip())
                 debit.fixed_amount = float(ttr.amount.text.strip())
                 debit.fixed_currency = currency
                 debit.fixed_date = iso2date(ttr.date)
@@ -864,7 +864,7 @@ def from_xml(dat):
             if tt_type == 'credit':
                 credit = Credit()
                 debt.credits.append(credit)
-                credit.description = xml_unespace(ttr.description.text.strip())
+                credit.description = xml_unescape(ttr.description.text.strip())
                 credit.amount = float(ttr.amount.text.strip())
                 credit.currency = currency
                 credit.date = iso2date(ttr.date)
@@ -872,7 +872,7 @@ def from_xml(dat):
             elif tt_type == 'balance':
                 balance = Balance()
                 debt.balances.append(balance)
-                balance.description = xml_unespace(ttr.description.text.strip())
+                balance.description = xml_unescape(ttr.description.text.strip())
                 balance.date = iso2date(ttr.date)
     return debt, None
 

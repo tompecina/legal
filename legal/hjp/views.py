@@ -39,7 +39,7 @@ from django.apps import apps
 
 from legal.common.glob import YDCONVS, MDCONVS, LIM, INERR, LOCAL_SUBDOMAIN, LOCAL_URL, ASSET_EXP
 from legal.common.utils import (
-    getbutton, yfactor, mfactor, ODP, famt, dispcurr, xml_decorate, xml_espace, xml_unespace, normfl, LocalFloat,
+    getbutton, yfactor, mfactor, ODP, famt, dispcurr, xml_decorate, xml_escape, xml_unescape, normfl, LocalFloat,
     get_xml, new_xml, iso2date, register_fonts, make_pdf, LOGGER, render)
 from legal.common.views import error
 from legal.cache.utils import getasset, setasset
@@ -441,7 +441,7 @@ def to_xml(debt):
     xml.append(tdebt)
     for key in ('title', 'note', 'internal_note'):
         tag = xml.new_tag(key)
-        tag.append(xml_espace(debt.__getattribute__(key)))
+        tag.append(xml_escape(debt.__getattribute__(key)))
         tdebt.append(tag)
     tag = xml_decorate(xml.new_tag('currency'), dec)
     tag.append(debt.currency)
@@ -478,7 +478,7 @@ def to_xml(debt):
     for trn in debt.transactions:
         ttrn = xml.new_tag(trn.transaction_type)
         tag = xml.new_tag('description')
-        tag.append(xml_espace(trn.description))
+        tag.append(xml_escape(trn.description))
         ttrn.append(tag)
         tag = xml.new_tag('date')
         tag.append(trn.date.isoformat())
@@ -504,9 +504,9 @@ def from_xml(dat):
     tdebt = string.debt
     assert tdebt and tdebt['application'] == APP
     debt = Debt()
-    debt.title = xml_unespace(tdebt.title.text.strip())
-    debt.note = xml_unespace(tdebt.note.text.strip())
-    debt.internal_note = xml_unespace(tdebt.internal_note.text.strip())
+    debt.title = xml_unescape(tdebt.title.text.strip())
+    debt.note = xml_unescape(tdebt.note.text.strip())
+    debt.internal_note = xml_unescape(tdebt.internal_note.text.strip())
     debt.rounding = int(tdebt.rounding.text.strip())
     debt.currency = tdebt.currency.text.strip()
     interest = Interest()
@@ -528,7 +528,7 @@ def from_xml(dat):
             continue
         transaction = Transaction()
         debt.transactions.append(transaction)
-        transaction.description = xml_unespace(trn.description.text.strip())
+        transaction.description = xml_unescape(trn.description.text.strip())
         transaction.transaction_type = str(trn.name)
         transaction.date = iso2date(trn.date)
         if transaction.transaction_type != 'balance':
