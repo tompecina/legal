@@ -7,8 +7,6 @@ files='legal collect fonts activate manage.py requirements.txt'
 exc='.* *.pyc *~ *.po secrets.py static/ migrations/ __pycache__/ #*'
 basedir='/var/www/django/legal'
 
-export RSYNC_RSH='ssh -o "StrictHostKeyChecking no"'
-
 ./make-static
 
 excludes=''
@@ -16,12 +14,12 @@ for e in $exc; do
     excludes="--exclude $e $excludes"
 done
 
-rsync $opts $excludes $files $user@$remote:$basedir/
+rsync $opts $excludes $files $user@$remote:$basedir/ || exit 1
 
 if [ -e secrets.py ]; then
-    rsync $opts secrets.py $user@$remote:$basedir/legal/
+    rsync $opts secrets.py $user@$remote:$basedir/legal/ || exit 1
 fi
 
-ssh -o "StrictHostKeyChecking no" $user@$remote 'source activate && pip install -q -r requirements.txt'
+ssh $user@$remote 'source activate && pip install -q -r requirements.txt' || exit 1
 
-ssh -o "StrictHostKeyChecking no" $user@$remote 'touch legal/wsgi.py'
+ssh $user@$remote 'touch legal/wsgi.py' || exit 1
