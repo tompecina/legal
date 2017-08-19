@@ -7,7 +7,6 @@
 *.po
 /collect/
 /venv-*
-migrations/
 __pycache__/
 /secrets.py
 /htmlcov/

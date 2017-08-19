@@ -5,5 +5,5 @@ par=''
 path='./collect'
 
 for f in $path/*.js; do
-    uglifyjs $par $f -o $f || exit
+    uglifyjs $par $f -o $f || exit 1
 done
