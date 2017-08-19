@@ -6,12 +6,20 @@ from distutils.core import setup
 
 
 APPS = [
-    'common', 'sop', 'lht', 'cin', 'dvt', 'cnb', 'knr', 'hjp', 'hsp', 'szr', 'sur', 'psj', 'udn', 'sir', 'dir',
-    'pir', 'kos', 'cache']
+    'common', 'sop', 'lht', 'cin', 'dvt', 'cnb', 'knr', 'hjp', 'hsp', 'szr', 'sur', 'psj',
+    'udn', 'sir', 'dir', 'pir', 'kos', 'cache']
 
 FULL_APPS = ['legal.{}'.format(p) for p in APPS]
 
-package_data = {f: ['templates/*.html', 'static/*.scss', 'static/*.js', 'static/*.dtd', 'static/*.xsd'] for f in FULL_APPS}
+package_data = {
+    f: [
+        'templates/*.html',
+        'static/*.scss',
+        'static/*.js',
+        'static/*.dtd',
+        'static/*.xsd',
+        'migrations/*.py',
+    ] for f in FULL_APPS}
 
 setup(
     name='legal',
