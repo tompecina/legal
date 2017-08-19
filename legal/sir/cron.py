@@ -387,6 +387,7 @@ def cron_refresh_links():
     matrix = [0] * 5
     for vec in batch:
         matrix[refresh_link(vec)] += 1
+        num += 1
 
     LOGGER.debug('Refreshed {:d} links(s), results: {}'.format(num, matrix))
 
