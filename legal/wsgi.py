@@ -3,7 +3,7 @@ import sys
 
 sys.path.append('/var/www/django/legal')
 
-__file__ = "/var/www/django/legal/venv-legal/bin/activate"
+__file__ = "/var/www/django/legal/.venv-legal/bin/activate"
 
 old_os_path = os.environ['PATH']
 os.environ['PATH'] = os.path.dirname(os.path.abspath(__file__)) + os.pathsep + old_os_path
