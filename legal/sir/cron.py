@@ -434,6 +434,7 @@ def sir_notice(uid):
     if res:
         text = 'Došlo ke změně v těchto insolvenčních řízeních, která sledujete:\n\n'
         for ins in res:
+            refresh_link(ins.vec)
             text += (
                 ' - {0}sp. zn. {1} {2.senat:d} INS {2.bc:d}/{2.rocnik:d}\n'
                 .format('{}, '.format(ins.desc) if ins.desc else '', L2S[ins.vec.idOsobyPuvodce], ins.vec))
