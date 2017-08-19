@@ -16,7 +16,7 @@
 {% endif %}
 <tr>
 <th class="{{ title_error }}"><label for="id_title">Popis</label><span>:</span></th>
-<td class="nowrap"><input type="text" name="title" value="{{ title }}" size="50" maxlength="255" id="id_title" class="{{ title_error }}"><span>(např. označení soudu a sp. zn.)</span></td>
+<td><input type="text" name="title" value="{{ title }}" size="50" maxlength="255" id="id_title" class="{{ title_error }}"><span>(např. označení soudu a sp. zn.)</span></td>
 </tr>
 <tr>
 <th class="{{ calculation_note_error }}"><label for="id_calculation_note">Poznámka</label><span>:</span></th>
@@ -27,7 +27,7 @@
 <td><textarea name="internal_note" rows="8" cols="80" id="id_internal_note" class="{{ internal_note_error }}">{{ internal_note }}</textarea></td>
 </tr>
 <tr>
-<th class="{{ vat_rate_error }}"><label for="id_vat_rate" class="nowrap">Sazba DPH</label><span>:</span></th>
+<th class="{{ vat_rate_error }}"><label for="id_vat_rate">Sazba DPH</label><span>:</span></th>
 <td><input type="text" name="vat_rate" value="{% if not vat_rate_error %}{{ vat_rate|floatformat:'2' }}{% else %}{{ vat_rate }}{% endif %}" size="5" maxlength="5" id="id_vat_rate" class="{{ vat_rate_error }}"> %</td>
 </tr>
 <tr>

@@ -19,7 +19,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-// css_classes: dc dr
+// css_classes: dc dr debit credit balance
 
 
 @import "include";
@@ -167,5 +167,41 @@ table.nttbl {
     margin: $vh auto $vl;
     tbody tr td fieldset p {
 	margin: $vm $hl;
+    }
+}
+
+table.fxrate tbody {
+    tr td {
+	text-align: center;
+	& > span {
+	    margin: {
+		left: 0;
+		right: 0;
+	    }
+	    &:nth-child(2) {
+		margin: {
+		    right: $hs;
+		    left: $hs;
+		}
+	    }
+	}
+	& > span > span, & > span > input#id_date_from {
+	    margin: {
+		left: 0;
+		right: 0;
+	    }
+	}
+	& > span > span:last-child {
+	    margin-left: $hs;
+	}
+    }
+    tr:first-child td {
+	text-align: left;
+    }
+    tr:last-child td {
+	text-align: left;
+	&:last-child {
+	    text-align: right;
+	}
     }
 }

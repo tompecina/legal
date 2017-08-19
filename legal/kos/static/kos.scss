@@ -44,15 +44,15 @@ table.form {
 }
 
 td.msg div {
-    &.msg-header {
+    &.header {
 	font-size: $large;
 	font-weight: bold;
-	margin-bottom: $vl;
+	margin-bottom: $vm;
     }
-    &.msg-gap {
+    &.gap {
 	margin-top: $vl;
     }
-    &.msg-total {
+    &.total {
 	font-size: $larger;
 	font-weight: bold;
 	margin-top: $vt;

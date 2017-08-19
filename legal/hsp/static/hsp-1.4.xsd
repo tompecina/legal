@@ -150,7 +150,7 @@
   <xs:complexType name="currency">
     <xs:simpleContent>
       <xs:extension base="currency_code">
-	<xs:attribute name="standard" use="required" type="xs:token" fixed="ISO 4217"/> 
+	<xs:attribute name="standard" use="required" type="xs:token" fixed="ISO 4217"/>
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>

@@ -397,8 +397,11 @@ span {
     &.currwidget, &.dw-today {
 	white-space: nowrap;
     }
-    &.currwidget select:first-child, &.dw-today input:first-child {
+    &.currwidget select:first-child {
 	margin-right: $hs;
+    }
+    &.dw-today input:first-child {
+	margin-right: 0;
     }
 }
 

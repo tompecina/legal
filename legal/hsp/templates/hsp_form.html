@@ -2,7 +2,7 @@
 
 {% block page_contents %}
 <form method="post" enctype="multipart/form-data">
-<table class="form">
+<table class="form {% block table_class %}{% endblock %}">
 <tbody>
 {% block form_contents %}{% endblock %}
 {% include 'submit.html' %}

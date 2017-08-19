@@ -1,5 +1,7 @@
 {% extends 'knr_list.html' %}
 
+{% block table_class %}car{% endblock %}
+
 {% block table_header %}
 <th>Zkratka</th>
 <th>Název</th>
@@ -12,8 +14,8 @@
 {% block table_row %}
 <td>{{ row.abbr }}</td>
 <td>{{ row.name }}</td>
-<td class="center">{{ row.fuel }}</td>
-<td class="center">{{ row.cons1 }} / {{ row.cons2 }} / {{ row.cons3 }}</td>
+<td>{{ row.fuel }}</td>
+<td>{{ row.cons1 }} / {{ row.cons2 }} / {{ row.cons3 }}</td>
 <td class="act">
 <a href="{% url 'knr:carform' row.id %}">upravit</a>
 <a href="{% url 'knr:cardel' row.id %}">smazat</a></td>

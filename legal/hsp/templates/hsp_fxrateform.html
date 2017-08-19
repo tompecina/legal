@@ -1,5 +1,7 @@
 {% extends 'hsp_form.html' %}
 
+{% block table_class %}fxrate{% endblock %}
+
 {% block form_contents %}
 <tr id="id_fxrateform">
 <td></td>
@@ -13,15 +15,33 @@
 {% endif %}
 <tr>
 <th>Měny:</th>
-<td colspan="2" class="center"><span class="{{ form.currency_from.css_classes }}">{{ form.currency_from }}</span> → <span class="{{ form.currency_to.css_classes }}">{{ form.currency_to }}</span></td>
+<td colspan="2">
+<span class="{{ form.currency_from.css_classes }}">{{ form.currency_from }}</span>
+<span>→</span>
+<span class="{{ form.currency_to.css_classes }}">{{ form.currency_to }}</span>
+</td>
 </tr>
 <tr>
 <th>Kurs:</th>
-<td colspan="2" class="center"><span class="{{ form.rate_from.css_classes }}">{{ form.rate_from }}</span> <span class="curr_from">{{ form.currency_from.value }}</span> = <span class="{{ form.rate_to.css_classes }}">{{ form.rate_to }}</span> <span class="curr_to">{{ form.currency_to.value }}</span></td>
+<td colspan="2">
+<span>
+<span class="{{ form.rate_from.css_classes }}">{{ form.rate_from }}</span>
+<span class="curr_from">{{ form.currency_from.value }}</span>
+</span>
+<span>=</span>
+<span>
+<span class="{{ form.rate_to.css_classes }}">{{ form.rate_to }}</span>
+<span class="curr_to">{{ form.currency_to.value }}</span>
+</span>
+</td>
 </tr>
 <tr>
 <th>Období platnosti:</th>
-<td colspan="2" class="center"><span class="{{ form.date_from.css_classes }}">{{ form.date_from }}</span> – <span class="{{ form.date_to.css_classes }}">{{ form.date_to }}</span></td>
+<td colspan="2" class="center">
+<span class="{{ form.date_from.css_classes }}">{{ form.date_from }}</span>
+<span>–</span>
+<span class="{{ form.date_to.css_classes }}">{{ form.date_to }}</span>
+</td>
 </tr>
 {% endblock %}
 

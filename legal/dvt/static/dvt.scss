@@ -37,12 +37,12 @@ table.form tbody tr:nth-child(3) td {
 }
 
 td.msg div {
-    &.msg-res {
+    &.res {
 	font-size: $larger;
 	font-weight: bold;
 	margin-bottom: $vs;
     }
-    &.msg-normal {
+    &.normal {
 	margin-bottom: $vt;
     }
 }

@@ -15,7 +15,7 @@
 <tbody>
 {% for row in rows %}
 <tr>
-<td class="nowrap">
+<td>
 <a href="{% url 'pir:htmllist' %}?number={{ row.number }}&amp;year={{ row.year }}">INS {{ row.number }}/{{ row.year }}</a></td>
 <td>{{ row.desc }}</td>
 <td class="center">{% if row.detailed %}ano{% else %}ne{% endif %}</td>

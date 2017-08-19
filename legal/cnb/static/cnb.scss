@@ -31,22 +31,22 @@ fieldset {
 }
 
 td.msg div {
-    &.msg-res0, &.msg-res1, &.msg-res2 {
+    &.res0, &.res1, &.res2 {
 	font-size: $larger;
 	font-weight: bold;
     }
-    &.msg-res1 {
+    &.res1 {
         margin-bottom: $vt;
     }
-    &.msg-res2 {
+    &.res2 {
 	margin-bottom: $vm;
     }
-    &.msg-note {
+    &.note {
 	font-size: $smaller;
     }
 }
 
-table.centered div:first-of-type {
+fieldset div:first-of-type {
     padding-top: $vm;
     span:nth-of-type(3) {
 	margin-left: $hm;

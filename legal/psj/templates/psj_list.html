@@ -4,7 +4,7 @@
 <h1 class="list">{{ page_title }}</h1>
 {% if rows %}
 <div class="subtitle">Počet výsledků: {{ total }}</div>
-<table class="list">
+<table id="list" class="list">
 <thead>
 <tr>
 <th>
@@ -28,7 +28,7 @@
 {% for row in rows %}
 <tr>
 <td><div>{{ row.courtroom.court.name }}</div><div>{{ row.courtroom.desc }}</div></td>
-<td class="nowrap">
+<td>
 <div>{{ row.time|date:'d.m.Y H:i' }}</div>
 <div>{% if row.senate %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}</div>
 </td>
@@ -38,7 +38,7 @@
 <div>{{ party.name }}</div>
 {% endfor %}
 </td>
-<td class="center">
+<td>
 {% if row.closed %}
 <div>neveřejné</div>
 {% endif %}

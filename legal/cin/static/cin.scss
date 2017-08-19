@@ -23,22 +23,22 @@
 
 
 td.msg div {
-    &.msg-header {
+    &.header {
 	margin-bottom: $vs;
 	font-weight: bold;
     }
-    &.msg-ymd {
+    &.ymd {
 	margin-bottom: $vm;
     }
-    &.msg-y {
+    &.year {
 	margin-left: $hl;
 	text-align: left;
     }
-    &.msg-m1, &.msg-m2 {
+    &.month1, &.month2 {
 	margin-left: $hl;
 	text-align: left;
     }
-    &.msg-m1 {
+    &.month1 {
 	margin-top: $vm;
     }
 }

@@ -62,7 +62,7 @@ def mainpage(request):
             if beg_date >= end_date:
                 messages.append(('Počátek musí předcházet konci', None))
             else:
-                messages.append(('{} → {}'.format(fdt(beg_date), fdt(end_date)), 'msg-header'))
+                messages.append(('{} → {}'.format(fdt(beg_date), fdt(end_date)), 'header'))
 
                 messages.append((grammar((end_date - beg_date).days, GR_DAY), None))
 
@@ -93,22 +93,22 @@ def mainpage(request):
                     nday += 1
                 messages.append(
                     ('{} {} {}'.format(grammar(nyear, GR_YEAR), grammar(nmonth, GR_MONTH), grammar(nday, GR_DAY)),
-                     'msg-ymd'))
+                     'ymd'))
 
                 for dconv in YDCONVS:
                     messages.append(
                         ('{:.6f} let ({})'.format(LocalFloat(yfactor(beg_date, end_date, dconv)), dconv),
-                         'msg-y'))
+                         'year'))
 
                 for dconv in MDCONVS:
                     if dconv == MDCONVS[0]:
                         messages.append(
                             ('{:.6f} měsíců ({})'.format(LocalFloat(mfactor(beg_date, end_date, dconv)), dconv),
-                             'msg-m1'))
+                             'month1'))
                     else:
                         messages.append(
                             ('{:.6f} měsíců ({})'.format(LocalFloat(mfactor(beg_date, end_date, dconv)), dconv),
-                             'msg-m2'))
+                             'month2'))
 
         else:
             LOGGER.debug('Invalid form', request)

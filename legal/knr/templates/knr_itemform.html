@@ -32,7 +32,7 @@
 <td rowspan="7" class="box">
 <fieldset>
 <legend>Vypočítat sazbu</legend>
-<div>
+<div class="nowrap">
 <label for="id_basis" class="{{ basis_error }}">TH</label>
 <span>:</span>
 <input type="text" name="basis" value="{% if basis_error %}{{ basis|stringformat:'d' }}{% else %}{{ basis }}{% endif %}" size="9" maxlength="12" id="id_basis" class="{{ basis_error }}">
@@ -86,7 +86,7 @@
 <td rowspan="7" class="box">
 <fieldset>
 <legend>Vypočítat</legend>
-<div>
+<div class="nowrap">
 <label for="id_basis" class="{{ basis_error }}">Základ</label>
 <span>:</span>
 <input type="text" name="basis" value="{% if basis_error %}{{ basis|stringformat:'d' }}{% else %}{{ basis }}{% endif %}" size="9" maxlength="12" id="id_basis" class="{{ basis_error }}">

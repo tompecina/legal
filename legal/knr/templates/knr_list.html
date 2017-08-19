@@ -3,7 +3,7 @@
 {% block page_contents %}
 <h1>{{ page_title }}</h1>
 {% if rows %}
-<table class="list">
+<table class="list {% block table_class %}{% endblock %}">
 <thead>
 <tr>
 {% block table_header %}

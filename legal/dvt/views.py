@@ -69,21 +69,21 @@ def mainpage(request):
                     beg_date,
                     years, months,
                     days)),
-                 'msg-res'))
+                 'res'))
             messages.append(
                 ('Třetina trestu: {}'.format(calc(
                     beg_date,
                     years // 3,
                     ((years % 3) * 4) + (months // 3),
                     ((months % 3) * 10) + (days // 3))),
-                 'msg-normal'))
+                 'normal'))
             messages.append(
                 ('Polovina trestu: {}'.format(calc(
                     beg_date,
                     years // 2,
                     ((years % 2) * 6) + (months // 2),
                     ((months % 2) * 15) + (days // 2))),
-                 'msg-normal'))
+                 'normal'))
             messages.append(
                 ('Dvě třetiny trestu: {}'.format(calc(
                     beg_date,

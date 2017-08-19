@@ -22,6 +22,10 @@
 @import "include";
 
 
+table#list tbody tr td:nth-child(2) {
+    white-space: nowrap;
+}
+
 select#id_agenda {
     width: 100%;
 }

@@ -32,12 +32,12 @@ fieldset {
     }
 }
 
-td div {
-    &.msg-amount {
+td.msg div {
+    &.amount {
 	font-size: $larger;
 	font-weight: bold;
     }
-    &.msg-note {
+    &.note {
 	font-size: $small;
 	padding-top: $vs;
     }

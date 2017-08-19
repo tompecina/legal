@@ -63,11 +63,11 @@ def mainpage(request):
                 deps2 = cld['deps2'] + 1
                 fee = cld['fee2']
                 exp = cld['exp2']
-                messages.append(('Kalkulace pro společný návrh manželů', 'msg-header'))
+                messages.append(('Kalkulace pro společný návrh manželů', 'header'))
             else:
                 fee = cld['fee']
                 exp = cld['exp']
-                messages.append(('Kalkulace pro samostatného dlužníka', 'msg-header'))
+                messages.append(('Kalkulace pro samostatného dlužníka', 'header'))
             lim = subs + apt
             prot = lim * 2 / 3
             messages.append(('Nezabavitelná částka: {} Kč'.format(famt(round(prot))), None))
@@ -97,7 +97,7 @@ def mainpage(request):
             else:
                 totnetincome = netincome
                 messages.append(('Celková základní částka: {} Kč'.format(famt(round(basis1))), None))
-            messages.append(('Výše měsíční splátky: {} Kč'.format(famt(round(rep))), 'msg-gap'))
+            messages.append(('Výše měsíční splátky: {} Kč'.format(famt(round(rep))), 'gap'))
             messages.append(('Zůstatek ze mzdy: {} Kč'.format(famt(round(totnetincome - rep))), None))
             tru = fee + exp
             if vat:
@@ -107,8 +107,8 @@ def mainpage(request):
             messages.append(('Měsíční splátka věřitelům: {} Kč'.format(famt(round(rep))), None))
             tot = 5 * 12 * rep
             messages.append(('Celková výše splátek věřitelům za 5 let: {} Kč'.format(famt(round(tot))), None))
-            messages.append(('Pohledávky uspokojené do výše 30 %:', 'msg-gap'))
-            messages.append(('{} Kč'.format(famt(round(tot / .3))), 'msg-total'))
+            messages.append(('Pohledávky uspokojené do výše 30 %:', 'gap'))
+            messages.append(('{} Kč'.format(famt(round(tot / .3))), 'total'))
         else:
             LOGGER.debug('Invalid form', request)
             messages = [(INERR_SHORT, None)]

@@ -144,10 +144,10 @@ def mainpage(request):
                 if per.res != per.bus:
                     messages.append(('{} není pracovní den'.format(fdt(per.res)), None))
 
-                messages.append(('{} {}'.format(WD_NAMES[per.bus.weekday()], fdt(per.bus)), 'msg-res'))
+                messages.append(('{} {}'.format(WD_NAMES[per.bus.weekday()], fdt(per.bus)), 'res'))
 
                 if per.unc:
-                    messages.append(('(evidence pracovních dnů v tomto období není úplná)', 'msg-note'))
+                    messages.append(('(evidence pracovních dnů v tomto období není úplná)', 'note'))
 
         else:
             LOGGER.debug('Invalid form', request)

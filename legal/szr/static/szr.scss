@@ -22,8 +22,18 @@
 @import "include";
 
 
-table#list thead tr th:nth-child(2) {
-    text-align: left;
+table#list {
+    thead tr th:nth-child(2) {
+	text-align: left;
+    }
+    tbody tr td {
+	&:nth-child(2) {
+	    white-space: nowrap;
+	}
+	&:nth-child(4) {
+	    text-align: center;
+	}
+    }
 }
 
 select#id_court {

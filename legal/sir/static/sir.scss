@@ -22,6 +22,14 @@
 @import "include";
 
 
+table#list tbody tr td {
+    &:first-child {
+	white-space: nowrap;
+    }
+    &:nth-child(3) {
+	text-align: center;
+    }
+}
 table#id_courts thead tr th:first-child {
     text-align: left;
 }

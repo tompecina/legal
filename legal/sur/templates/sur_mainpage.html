@@ -15,7 +15,7 @@
 {% for row in rows %}
 <tr>
 <td>{{ row.party }}</td>
-<td class="nowrap">{{ row.party_opt_text }}</td>
+<td>{{ row.party_opt_text }}</td>
 <td class="act">
 <a href="{% url 'sur:partyform' row.id %}">upravit</a>
 <a href="{% url 'sur:partydel' row.id %}">smazat</a>

@@ -32,7 +32,7 @@ $(function() {
 		     '.' + t.getFullYear());
 	} else {
 	    class_enable($('#id_fx_date_span'));
-	}			 
+	}
 	return true;
     }
 

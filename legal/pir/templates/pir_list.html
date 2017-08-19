@@ -4,7 +4,7 @@
 <h1 class="list">{{ page_title }}</h1>
 {% if rows %}
 <div class="subtitle">Počet výsledků: {{ total }}</div>
-<table class="list">
+<table id="list" class="list">
 <thead>
 <tr>
 <th>
@@ -29,7 +29,7 @@
 <div>
 {{ row.court }}
 </div>
-<div class="nowrap">{{ row.court_short }} {% if row.senat %}{{ row.senat }} {% endif %}INS {{ row.bc }}/{{ row.rocnik }}</div>
+<div>{{ row.court_short }} {% if row.senat %}{{ row.senat }} {% endif %}INS {{ row.bc }}/{{ row.rocnik }}</div>
 <div>{{ row.state }}</div>
 </td>
 <td>

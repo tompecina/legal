@@ -82,26 +82,26 @@ def mainpage(request):
                     elif button == 'show_fx':
                         messages.append(
                             ('{:d} {} = {:.3f} CZK'.format(qty, curr, LocalFloat(rate)),
-                             'msg-res1'))
+                             'res1'))
                         messages.append(
                             ('(Kurs vyhlášený ke dni: {})'.format(fdt(dreq)),
-                             'msg-note'))
+                             'note'))
                     else:
                         basis = cld['basis']
                         if button == 'conv_from':
                             messages.append(
                                 ('{} {} = {} CZK'.format(famt(basis), curr, famt(basis * rate / qty)),
-                                 'msg-res2'))
+                                 'res2'))
                         else:
                             messages.append(
                                 ('{} CZK = {} {}'.format(famt(basis), famt(basis * qty / rate), curr),
-                                 'msg-res2'))
+                                 'res2'))
                         messages.append(
                             ('{:d} {} = {:.3f} CZK'.format(qty, curr, LocalFloat(rate)),
                              None))
                         messages.append(
                             ('(Kurs vyhlášený ke dni: {})'.format(fdt(dreq)),
-                             'msg-note'))
+                             'note'))
                 else:
                     mpi_date = cld['mpi_date']
                     rate, msg = get_mpi_rate(button, mpi_date)
@@ -113,7 +113,7 @@ def mainpage(request):
                              None))
                         messages.append(
                             ('{:.2f} %'.format(LocalFloat(rate)),
-                             'msg-res0'))
+                             'res0'))
             else:
                 LOGGER.debug('Invalid form', request)
                 messages = [(INERR_SHORT, None)]

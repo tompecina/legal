@@ -4,7 +4,7 @@
 <h1 class="list">{{ page_title }}</h1>
 {% if rows %}
 <div class="subtitle">Počet výsledků: {{ total }}</div>
-<table class="list">
+<table id="list" class="list">
 <thead>
 <tr>
 <th>Datum</th>
@@ -16,16 +16,16 @@
 </thead>
 <tbody>
 {% for row in rows %}
-<tr class="{% cycle 'odd' 'even' %}">
+<tr>
 <td>{{ row.date|date:'d.m.Y' }}</td>
-<td class="nowrap">{% if row.senate %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}-{{ row.page }}</td>
+<td>{% if row.senate %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}-{{ row.page }}</td>
 <td>{{ row.agenda }}</td>
 <td>
 {% for party in row.parties.all %}
 <div>{{ party.name }}</div>
 {% endfor %}
 </td>
-<td class="center nowrap">
+<td class="act">
 <a href="/repo/udn/{{ row.filename }}" target="_blank">[Z]</a>
 {% if row.anonfilename %}
 <a href="/repo/udn/{{ row.anonfilename }}" target="_blank">[A]</a>

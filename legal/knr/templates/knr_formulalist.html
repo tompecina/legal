@@ -1,5 +1,7 @@
 {% extends 'knr_list.html' %}
 
+{% block table_class %}formula{% endblock %}
+
 {% block table_header %}
 <th>Zkratka</th>
 <th>Název</th>
@@ -17,9 +19,9 @@
 {% block table_row %}
 <td>{{ row.abbr }}</td>
 <td>{{ row.name }}</td>
-<td class="center">{{ row.flat }}</td>
+<td>{{ row.flat }}</td>
 {% for rate in row.rates %}
-<td class="center">{{ rate|default:'–' }}</td>
+<td>{{ rate|default:'–' }}</td>
 {% endfor %}
 <td class="act">
 {% if row.user %}

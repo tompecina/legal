@@ -43,11 +43,11 @@ fieldset {
 }
 
 td.msg div {
-    &.msg-res {
+    &.res {
 	font-size: $large;
 	font-weight: bold;
     }
-    &.msg-note {
+    &.note {
 	font-size: $small;
     }
 }

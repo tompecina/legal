@@ -17,7 +17,7 @@
 {% for row in rows %}
 <tr>
 <td>{{ row.court }}</td>
-<td class="nowrap">
+<td>
 {% if row.court_id == 'NSS' %}
 {% if row.auxid %}
 <a href="http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&amp;kau_id={{ row.auxid }}" target="_blank">
@@ -30,7 +30,7 @@
 {% endif %}
 </td>
 <td>{{ row.desc }}</td>
-<td class="center{% if row.notify %} highlight{% endif %}">{{ row.changed|date:'d.m.Y'|default_if_none:'' }}</td>
+<td{% if row.notify %} class="highlight"{% endif %}>{{ row.changed|date:'d.m.Y'|default_if_none:'' }}</td>
 <td class="act">
 <a href="{% url 'szr:procform' row.id %}">upravit</a>
 <a href="{% url 'szr:procdel' row.id %}">smazat</a>
