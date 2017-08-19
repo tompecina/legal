@@ -11,8 +11,6 @@ env:
 
 matrix:
   include:
-    - python: "3.5"
-      env: "DJANGO_VERSION=stable CHECK_HTML=1"
     - python: "3.6"
       env: "DJANGO_VERSION=stable CHECK_HTML=1 DEPLOY=1"
     - python: "3.6"
