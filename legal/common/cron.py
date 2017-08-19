@@ -25,11 +25,12 @@ from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 
 from legal.szr.cron import szr_notice, cron_courts as szr_courts, cron_update as szr_update
-from legal.psj.cron import cron_courtrooms as psj_courtrooms, cron_schedule as psj_schedule, cron_update as psj_update
+from legal.psj.cron import (
+    cron_courtrooms as psj_courtrooms, cron_schedule as psj_schedule, cron_update as psj_update)
 from legal.settings import TEST
 from legal.udn.cron import cron_update as udn_update, cron_find as udn_find
 from legal.sur.cron import sur_notice
-from legal.sir.cron import sir_notice, cron_update as sir_update
+from legal.sir.cron import sir_notice, cron_update as sir_update, cron_refresh_links as sir_refresh_links
 from legal.dir.cron import dir_notice
 from legal.common.glob import LOCAL_SUBDOMAIN, LOCAL_URL
 from legal.common.utils import send_mail, LOGGER
@@ -97,6 +98,9 @@ SCHED = (
      'when': lambda t: t.hour in (4, 10, 16, 22) and t.minute == 5,
      'lock': 'sir',
      'blocking': False,
+    },
+    {'name': 'sir_refresh_links',
+     'when': lambda t: True,
     },
 )
 

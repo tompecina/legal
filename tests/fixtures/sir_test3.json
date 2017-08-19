@@ -1,0 +1,178 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$NgPs7J5tOUtD$5kUebN1O9+krlAxuIa6mNq3QYspsREzBekzQcf1IhBY=",
+        "last_login": "2016-07-07T15:42:24.712",
+        "is_superuser": true,
+        "username": "tompecina",
+        "first_name": "Tom\u00e1\u0161",
+        "last_name": "Pecina",
+        "email": "tomas@pecina.cz",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2012-04-07T03:02:21",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "sir.druhadresy",
+    "pk": 1,
+    "fields": {
+        "desc": "S\u00cdDLO ORG."
+    }
+},
+{
+    "model": "sir.adresa",
+    "pk": 1,
+    "fields": {
+        "druhAdresy": 1,
+        "mesto": "Plze\u0148",
+        "ulice": "Z\u00e1b\u011blsk\u00e1",
+        "cisloPopisne": "19",
+        "okres": null,
+        "zeme": null,
+        "psc": "31200",
+        "telefon": null,
+        "fax": null,
+        "textAdresy": null,
+        "timestamp_add": "2016-10-04T14:34:27.227",
+        "timestamp_update": "2016-10-04T14:34:27.227"
+    }
+},
+{
+    "model": "sir.druhrolevrizeni",
+    "pk": 1,
+    "fields": {
+        "desc": "DLU\u017dN\u00cdK"
+    }
+},
+{
+    "model": "sir.osoba",
+    "pk": 1,
+    "fields": {
+        "idOsobyPuvodce": "KSSEMOS",
+        "idOsoby": "ROMSK\u00c9 IN70238090  1",
+        "nazevOsoby": "Romsk\u00e9 informa\u010dn\u00ed centrum",
+        "nazevOsobyObchodni": null,
+        "jmeno": null,
+        "titulPred": null,
+        "titulZa": null,
+        "ic": "70238090",
+        "dic": null,
+        "datumNarozeni": null,
+        "rc": null,
+        "timestamp_add": "2016-10-04T14:34:27.609",
+        "timestamp_update": "2016-10-04T14:34:27.609",
+        "adresy": [
+            1
+        ]
+    }
+},
+{
+    "model": "sir.role",
+    "pk": 1,
+    "fields": {
+        "osoba": 1,
+        "druhRoleVRizeni": 1,
+        "timestamp_add": "2016-10-29T18:03:50.671",
+        "timestamp_update": "2016-11-14T13:48:00.007"
+    }
+},
+{
+    "model": "sir.druhstavrizeni",
+    "pk": 1,
+    "fields": {
+        "desc": "\u00daPADEK"
+    }
+},
+{
+    "model": "sir.vec",
+    "pk": 1,
+    "fields": {
+        "idOsobyPuvodce": "KSSEMOS",
+        "senat": 8,
+        "bc": 1,
+        "rocnik": 2015,
+        "druhStavRizeni": 1,
+        "firstAction": "2008-01-02",
+        "lastAction": "2013-09-25",
+        "datumVyskrtnuti": null,
+        "link": "https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=7ba95b84-15ae-4a8e-8339-1918eac00c88",
+        "timestamp_add": "2016-10-08T20:26:06.863",
+        "timestamp_update": "2016-10-08T20:26:06.863",
+        "roles": [
+            1
+        ]
+    }
+},
+{
+    "model": "sir.vec",
+    "pk": 2,
+    "fields": {
+        "idOsobyPuvodce": "KSSEMOS",
+        "senat": 8,
+        "bc": 2,
+        "rocnik": 2015,
+        "druhStavRizeni": 1,
+        "firstAction": "2008-01-02",
+        "lastAction": "2013-09-25",
+        "datumVyskrtnuti": null,
+        "link": "https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=7ba95b84-15ae-4a8e-8339-1918eac00c89",
+        "timestamp_add": "2016-10-08T20:26:07.863",
+        "timestamp_update": "2016-10-08T20:26:07.863",
+        "roles": [
+            1
+        ]
+    }
+},
+{
+    "model": "sir.counter",
+    "pk": "DL",
+    "fields": {
+        "number": 27660755
+    }
+},
+{
+    "model": "sir.transaction",
+    "pk": 27660656,
+    "fields": {
+        "datumZalozeniUdalosti": "2016-11-18T21:40:33",
+        "datumZverejneniUdalosti": "2016-11-18T21:40:33",
+        "dokumentUrl": "https://isir.justice.cz:8443/isir_public_ws/doc/Document?idDokument=27939949",
+        "spisovaZnacka": "INS 20806/2015",
+        "typUdalosti": "63",
+        "popisUdalosti": "P\u0159ihl\u00e1\u0161ka pohled\u00e1vky",
+        "oddil": "P12",
+        "cisloVOddilu": 1,
+        "poznamkaText": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><ns2:udalost xmlns:ns2=\"http://www.cca.cz/isir/poznamka\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" verzeXsd=\"1_10\" xsi:schemaLocation=\"https://isir.justice.cz:8443/isir_public_ws/xsd/poznamka_1_10.xsd\"><idOsobyPuvodce>MSPHAAB</idOsobyPuvodce><vec><druhStavRizeni>\u00daPADEK</druhStavRizeni></vec><priznakAnVedlejsiUdalost>F</priznakAnVedlejsiUdalost><priznakAnVedlejsiDokument>T</priznakAnVedlejsiDokument><priznakPlatnyVeritel>F</priznakPlatnyVeritel><priznakMylnyZapisVeritelPohled>F</priznakMylnyZapisVeritelPohled></ns2:udalost>",
+        "error": false,
+        "timestamp_add": "2016-11-20T15:01:03.766"
+    }
+},
+{
+    "model": "sir.insolvency",
+    "pk": 1,
+    "fields": {
+        "uid": 1,
+        "number": 14515,
+        "year": 2016,
+        "desc": "Test",
+        "detailed": true,
+        "timestamp_add": "2016-10-25T21:25:45.907",
+        "timestamp_update": "2016-10-25T21:25:45.907"
+    }
+},
+{
+    "model": "sir.tracked",
+    "pk": 1,
+    "fields": {
+        "uid": 1,
+        "desc": "Test",
+        "vec": 1,
+        "timestamp_add": "2016-10-25T21:25:45.907"
+    }
+}
+]

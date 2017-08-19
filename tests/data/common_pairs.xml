@@ -63298,4 +63298,20 @@ Sys.Application.add_init(function() {
 
 </response>
   </pair>
+  <pair description="test_cron_refresh_links">
+    <request method="POST">
+      <url>https://isir.justice.cz:8443/isir_cuzk_ws/IsirWsCuzkService</url>
+      <parameters>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://isirws.cca.cz/types/"&gt;&lt;soapenv:Header&gt;&lt;/soapenv:Header&gt;&lt;soapenv:Body&gt;&lt;typ:getIsirWsCuzkDataRequest&gt;&lt;bcVec&gt;1&lt;/bcVec&gt;&lt;rocnik&gt;2015&lt;/rocnik&gt;&lt;/typ:getIsirWsCuzkDataRequest&gt;&lt;/soapenv:Body&gt;&lt;/soapenv:Envelope&gt;</parameters>
+    </request>
+    <response status="200">&lt;?xml version='1.0' encoding='UTF-8'?&gt;&lt;S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"&gt;&lt;S:Body&gt;&lt;ns2:getIsirWsCuzkDataResponse xmlns:ns2="http://isirws.cca.cz/types/"&gt;&lt;data&gt;&lt;ic&gt;74550381&lt;/ic&gt;&lt;rc&gt;755819/0112&lt;/rc&gt;&lt;cisloSenatu&gt;36&lt;/cisloSenatu&gt;&lt;druhVec&gt;INS&lt;/druhVec&gt;&lt;bcVec&gt;1&lt;/bcVec&gt;&lt;rocnik&gt;2015&lt;/rocnik&gt;&lt;nazevOrganizace&gt;Krajsk&#xFD; soud v Praze&lt;/nazevOrganizace&gt;&lt;datumNarozeni&gt;1975-08-19Z&lt;/datumNarozeni&gt;&lt;jmeno&gt;And&#x11B;la&lt;/jmeno&gt;&lt;nazevOsoby&gt;Hanzl&#xED;kov&#xE1;&lt;/nazevOsoby&gt;&lt;druhAdresy&gt;TRVAL&#xC1;&lt;/druhAdresy&gt;&lt;mesto&gt;okr. Kladno&lt;/mesto&gt;&lt;ulice&gt;&#x10C;s. arm&#xE1;dy&lt;/ulice&gt;&lt;cisloPopisne&gt;3208&lt;/cisloPopisne&gt;&lt;psc&gt;273 22&lt;/psc&gt;&lt;druhStavKonkursu&gt;KONKURS&lt;/druhStavKonkursu&gt;&lt;urlDetailRizeni&gt;https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=de4aeeca-801c-4c52-9305-bc7746f532c5&lt;/urlDetailRizeni&gt;&lt;dalsiDluznikVRizeni&gt;F&lt;/dalsiDluznikVRizeni&gt;&lt;/data&gt;&lt;stav&gt;&lt;pocetVysledku&gt;1&lt;/pocetVysledku&gt;&lt;relevanceVysledku&gt;3&lt;/relevanceVysledku&gt;&lt;casSynchronizace&gt;2016-11-22T11:29:57.000Z&lt;/casSynchronizace&gt;&lt;/stav&gt;&lt;/ns2:getIsirWsCuzkDataResponse&gt;&lt;/S:Body&gt;&lt;/S:Envelope&gt;
+</response>
+  </pair>
+  <pair description="test_cron_refresh_links">
+    <request method="POST">
+      <url>https://isir.justice.cz:8443/isir_cuzk_ws/IsirWsCuzkService</url>
+      <parameters>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://isirws.cca.cz/types/"&gt;&lt;soapenv:Header&gt;&lt;/soapenv:Header&gt;&lt;soapenv:Body&gt;&lt;typ:getIsirWsCuzkDataRequest&gt;&lt;bcVec&gt;2&lt;/bcVec&gt;&lt;rocnik&gt;2015&lt;/rocnik&gt;&lt;/typ:getIsirWsCuzkDataRequest&gt;&lt;/soapenv:Body&gt;&lt;/soapenv:Envelope&gt;</parameters>
+    </request>
+    <response status="200">&lt;?xml version='1.0' encoding='UTF-8'?&gt;&lt;S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"&gt;&lt;S:Body&gt;&lt;ns2:getIsirWsCuzkDataResponse xmlns:ns2="http://isirws.cca.cz/types/"&gt;&lt;data&gt;&lt;ic&gt;74550381&lt;/ic&gt;&lt;rc&gt;755819/0112&lt;/rc&gt;&lt;cisloSenatu&gt;36&lt;/cisloSenatu&gt;&lt;druhVec&gt;INS&lt;/druhVec&gt;&lt;bcVec&gt;2&lt;/bcVec&gt;&lt;rocnik&gt;2015&lt;/rocnik&gt;&lt;nazevOrganizace&gt;Krajsk&#xFD; soud v Praze&lt;/nazevOrganizace&gt;&lt;datumNarozeni&gt;1975-08-19Z&lt;/datumNarozeni&gt;&lt;jmeno&gt;And&#x11B;la&lt;/jmeno&gt;&lt;nazevOsoby&gt;Hanzl&#xED;kov&#xE1;&lt;/nazevOsoby&gt;&lt;druhAdresy&gt;TRVAL&#xC1;&lt;/druhAdresy&gt;&lt;mesto&gt;okr. Kladno&lt;/mesto&gt;&lt;ulice&gt;&#x10C;s. arm&#xE1;dy&lt;/ulice&gt;&lt;cisloPopisne&gt;3208&lt;/cisloPopisne&gt;&lt;psc&gt;273 22&lt;/psc&gt;&lt;druhStavKonkursu&gt;KONKURS&lt;/druhStavKonkursu&gt;&lt;urlDetailRizeni&gt;https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=de4aeeca-801c-4c52-9305-bc7746f532c6&lt;/urlDetailRizeni&gt;&lt;dalsiDluznikVRizeni&gt;F&lt;/dalsiDluznikVRizeni&gt;&lt;/data&gt;&lt;stav&gt;&lt;pocetVysledku&gt;1&lt;/pocetVysledku&gt;&lt;relevanceVysledku&gt;3&lt;/relevanceVysledku&gt;&lt;casSynchronizace&gt;2016-11-22T11:29:57.000Z&lt;/casSynchronizace&gt;&lt;/stav&gt;&lt;/ns2:getIsirWsCuzkDataResponse&gt;&lt;/S:Body&gt;&lt;/S:Envelope&gt;
+</response>
+  </pair>
 </pairs>

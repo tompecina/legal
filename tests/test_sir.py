@@ -59,7 +59,55 @@ class TestCron1(SimpleTestCase):
             datetime(2016, 1, 17))
 
 
+def populate():
+
+    setdl(472015)
+    cron.cron_gettr()
+    setdl(5772013)
+    cron.cron_gettr()
+    setdl(160462011)
+    cron.cron_gettr()
+    setdl(191242016)
+    cron.cron_gettr()
+    cron.cron_proctr()
+
+
 class TestCron2(TransactionTestCase):
+
+    def test_refresh_link(self):
+
+        populate()
+        print(models.Vec.objects.all())
+        self.assertEqual(cron.refresh_link(models.Vec.objects.get(bc=16046)), 3)
+        self.assertEqual(cron.refresh_link(models.Vec.objects.get(bc=16046)), 4)
+        self.assertEqual(cron.refresh_link(models.Vec.objects.get(bc=577)), 1)
+
+
+class TestCron3(TestCase):
+
+    fixtures = ('sir_test3.json',)
+
+    def test_cron_refresh_links(self):
+
+        cron.REFRESH_BATCH = 1
+        cron.cron_refresh_links()
+        self.assertTrue(models.Vec.objects.get(pk=1).refreshed)
+        self.assertEqual(
+            models.Vec.objects.get(pk=1).link,
+            'https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=de4aeeca-801c-4c52-9305-bc7746f532c5')
+        self.assertFalse(models.Vec.objects.get(pk=2).refreshed)
+        self.assertEqual(
+            models.Vec.objects.get(pk=2).link,
+            "https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=7ba95b84-15ae-4a8e-8339-1918eac00c89")
+        cron.cron_refresh_links()
+        self.assertTrue(models.Vec.objects.get(pk=2).refreshed)
+        self.assertEqual(
+            models.Vec.objects.get(pk=2).link,
+            'https://isir.justice.cz/isir/ueu/evidence_upadcu_detail.do?id=de4aeeca-801c-4c52-9305-bc7746f532c6')
+        self.assertTrue(models.Vec.objects.get(pk=2).refreshed)
+
+
+class TestCron4(TransactionTestCase):
 
     def test_update(self):
 
@@ -107,20 +155,7 @@ class TestCron2(TransactionTestCase):
         self.assertEqual(models.Transaction.objects.count(), 1)
 
 
-def populate():
-
-    setdl(472015)
-    cron.cron_gettr()
-    setdl(5772013)
-    cron.cron_gettr()
-    setdl(160462011)
-    cron.cron_gettr()
-    setdl(191242016)
-    cron.cron_gettr()
-    cron.cron_proctr()
-
-
-class TestCron3(TestCase):
+class TestCron5(TestCase):
 
     fixtures = ('sir_test1.json',)
 

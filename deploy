@@ -23,3 +23,5 @@ fi
 ssh $user@$remote 'source activate && pip install -q -r requirements.txt' || exit 1
 
 ssh $user@$remote 'touch legal/wsgi.py' || exit 1
+
+echo 'Success'

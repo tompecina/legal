@@ -311,46 +311,93 @@ def cron_deltr():
     LOGGER.debug('Transactions deleted')
 
 
+def get_ws2(vec):
+
+    soup = BeautifulSoup('', 'lxml')
+    soup.is_xml = True
+
+    envelope = soup.handle_starttag(
+        'Envelope', None,
+        'soapenv', {
+            'xmlns:soapenv': 'http://schemas.xmlsoap.org/soap/envelope/',
+            'xmlns:typ': 'http://isirws.cca.cz/types/'})
+    header = soup.new_tag('Header', None, 'soapenv')
+    envelope.append(header)
+    body = soup.new_tag('Body', None, 'soapenv')
+    envelope.append(body)
+    req = soup.new_tag('getIsirWsCuzkDataRequest', None, 'typ')
+    body.append(req)
+    bcVec = soup.new_tag('bcVec', None, None)
+    bcVec.append(str(vec.bc))
+    req.append(bcVec)
+    rocnik = soup.new_tag('rocnik', None, None)
+    rocnik.append(str(vec.rocnik))
+    req.append(rocnik)
+
+    url = 'https://isir.justice.cz:8443/isir_cuzk_ws/IsirWsCuzkService'
+
+    headers = {
+        'content-type': 'text/xml; charset=utf-8',
+        'SOAPAction': '"http://isirws.cca.cz/types/"',
+    }
+
+    res = post(url, soup.renderContents(), headers=headers)
+
+    xml = res.content
+
+    subsoup = BeautifulSoup(xml, 'xml')
+    subsoup.is_xml = True
+
+    return subsoup
+
+
+def refresh_link(vec):
+
+    try:
+        subsoup = get_ws2(vec)
+        Vec.objects.filter(id=vec.id).update(refreshed=datetime.now())
+
+        if not subsoup.pocetVysledku:
+            return 1
+
+        link = subsoup.urlDetailRizeni.text
+        if not link:
+            return 2
+
+        if vec.link != link:
+            Vec.objects.filter(id=vec.id).update(link=link)
+            return 3
+
+        return 4
+
+    except:
+        return 0
+
+
+REFRESH_BATCH = 10
+
+
+def cron_refresh_links():
+
+    batch = (
+        Vec.objects.filter(datumVyskrtnuti__isnull=True, link__isnull=False)
+        .order_by('refreshed', 'timestamp_add')[:REFRESH_BATCH])
+
+    num = 0
+    matrix = [0] * 5
+    for vec in batch:
+        matrix[refresh_link(vec)] += 1
+
+    LOGGER.debug('Refreshed {:d} links(s), results: {}'.format(num, matrix))
+
+
 def cron_getws2():
 
     idx = Counter.objects.get(id='PR').number
 
     for vec in Vec.objects.filter(id__gt=idx, link__isnull=True).order_by('id'):
-        soup = BeautifulSoup('', 'lxml')
-        soup.is_xml = True
 
-        envelope = soup.handle_starttag(
-            'Envelope', None,
-            'soapenv', {
-                'xmlns:soapenv': 'http://schemas.xmlsoap.org/soap/envelope/',
-                'xmlns:typ': 'http://isirws.cca.cz/types/'})
-        header = soup.new_tag('Header', None, 'soapenv')
-        envelope.append(header)
-        body = soup.new_tag('Body', None, 'soapenv')
-        envelope.append(body)
-        req = soup.new_tag('getIsirWsCuzkDataRequest', None, 'typ')
-        body.append(req)
-        bcVec = soup.new_tag('bcVec', None, None)
-        bcVec.append(str(vec.bc))
-        req.append(bcVec)
-        rocnik = soup.new_tag('rocnik', None, None)
-        rocnik.append(str(vec.rocnik))
-        req.append(rocnik)
-
-
-        url = 'https://isir.justice.cz:8443/isir_cuzk_ws/IsirWsCuzkService'
-
-        headers = {
-            'content-type': 'text/xml; charset=utf-8',
-            'SOAPAction': '"http://isirws.cca.cz/types/"',
-        }
-
-        res = post(url, soup.renderContents(), headers=headers)
-
-        xml = res.content
-
-        subsoup = BeautifulSoup(xml, 'xml')
-        subsoup.is_xml = True
+        subsoup = get_ws2(vec)
 
         if (subsoup.pocetVysledku and subsoup.cisloSenatu and subsoup.urlDetailRizeni
             and (subsoup.nazevOrganizace.string.strip()[:PREF] == L2N[vec.idOsobyPuvodce][:PREF])):

@@ -238,6 +238,10 @@ class Vec(models.Model):
     roles = models.ManyToManyField(
         Role)
 
+    refreshed = models.DateTimeField(
+        null=True,
+        db_index=True)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)
