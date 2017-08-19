@@ -39,6 +39,7 @@ before_install:
   - "python build/build.py update dldeps build jar"
   - "validator=$(pwd)"
   - "popd"
+  - "popd"
   - "mkdir -p aux"
   - "ln -s $validator/build/dist/vnu.jar aux"
   - |
