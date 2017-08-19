@@ -1,5 +1,5 @@
 //
-// dir/static/dir.scss
+// common/static/_debt.scss
 //
 // Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 //
@@ -19,9 +19,40 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+
 @import "include";
 
 
-select#id_court, select#id_desc {
-    width: 100%;
+table.gen {
+    margin: $vm $hl;
+}
+
+table.btnbar {
+    margin: $vh auto;
+    tbody tr td {
+	padding: $vn $hl;
+    }
+}
+
+table.list {
+    margin: $vh auto 0;
+    tbody tr td {
+	padding: ($vs+$vn) ($hm+$hs);
+	&:first-child {
+	    padding-left: ($hl+$hs);
+	}
+	&.cr, &.dr {
+	    text-align: right;
+	}
+	&.taberr {
+	    border-top: $bs solid $medium-blue;
+	    text-align: center;
+	    font-style: italic;
+	    background: {
+		color: $white;
+		image: url("/static/cb.svg");
+		repeat: repeat;
+	    }
+	}
+    }
 }

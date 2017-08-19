@@ -79,23 +79,23 @@ fieldset.vattbl {
 table.bgrid {
     width: 66%;
     margin: $vh auto 0;
-    tbody {
+    tbody tr {
 	th, td {
 	    padding: ($vm+$vs) $hm;
 	}
-	tr.ga {
+	&.ga {
 	    th, td {
 		padding-bottom: $vg;
 	    }
 	}
-	tr.load {
+	&.load {
 	    th, td {
 		padding-bottom: 0;
 	    }
-	}
-	tr.load + tr {
-	    th, td {
-		padding-top: 0;
+	    & + tr {
+		th, td {
+		    padding-top: 0;
+		}
 	    }
 	}
     }
@@ -106,31 +106,29 @@ table.list {
     thead tr th:first-child {
 	text-align: left;
     }
-    tbody {
-	tr {
-	    td {
-		&.up-arrow, &.down-arrow {
-		    padding-left: $hs;
-		}
-		&.up-arrow {
-		    padding-right: $hs;
-		}
+    tbody tr {
+	td {
+	    &.up-arrow, &.down-arrow {
+		padding-left: $hs;
+	    }
+	    &.up-arrow {
+		padding-right: $hs;
 	    }
 	}
-	tr.preset + tr:not(.preset) {
+	&.preset + tr:not(.preset) {
 	    border-top: $vm solid $medium-blue;
 	}
     }
 }
 
-table.car tbody tr {
-    td:nth-child(3), td:nth-child(4) {
+table.car tbody tr td {
+    &:nth-child(3), &:nth-child(4) {
 	text-align: center;
     }
 }
 
-table.formula tbody tr {
-    td:nth-child(3), td:nth-child(4), td:nth-child(5), td:nth-child(6), td:nth-child(7) {
+table.formula tbody tr td {
+    &:nth-child(3), &:nth-child(4), &:nth-child(5), &:nth-child(6), &:nth-child(7) {
 	text-align: center;
     }
 }

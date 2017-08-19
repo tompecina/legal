@@ -44,6 +44,10 @@ h1 {
     }
 }
 
+p {
+    line-height: 130%;
+}
+
 table {
     border-collapse: collapse;
     & > thead > tr > th {
@@ -108,7 +112,8 @@ fieldset {
     }
 }
 
-input[type="text"], input[type="email"], input[type="password"], textarea, input[type="submit"], input[type="reset"], select {
+input[type="text"], input[type="email"], input[type="password"], textarea, input[type="submit"],
+input[type="reset"], select {
     font-size: $reduced;
 }
 
@@ -417,6 +422,13 @@ p.confirm {
     }
 }
 
+p.options {
+    margin-bottom: 0;
+    &.options + ul {
+	margin-top: $vs;
+    }
+}
+
 div.warning {
     padding: $vm $hh;
     margin-bottom: $vl;
@@ -440,7 +452,8 @@ div.warning {
     color: $red;
 }
 
-.err input[type="text"], .err input[type="email"], .err input[type="password"], .err textarea, input[type="text"].err, input[type="email"].err, input[type="password"].err {
+.err input[type="text"], .err input[type="email"], .err input[type="password"], .err textarea,
+input[type="text"].err, input[type="email"].err, input[type="password"].err {
     background: $pink;
 }
 

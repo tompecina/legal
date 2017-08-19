@@ -19,12 +19,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-@import "include";
+@import "debt";
 
-
-table.gen {
-    margin: $vm $hl;
-}
 
 fieldset.intbl {
     margin: $vh 0;
@@ -32,14 +28,12 @@ fieldset.intbl {
     table {
 	margin: $vm auto;
 	width: 100%;
-	tbody {
-	    tr {
-		th, td {
-		    text-align: left;
-		    padding: $vs 0 $hm;
-		}
+	tbody tr {
+	    th, td {
+		text-align: left;
+		padding: $vs 0 $hm;
 	    }
-	    tr.disabled th {
+	    &.disabled th {
 		label, span {
 		    color: $very-dark-blue;
 		    font-weight: normal;
@@ -50,50 +44,29 @@ fieldset.intbl {
 }
 
 table.list {
-    margin: $vh auto 0;
-    thead {
-	tr:first-child th {
+    thead tr {
+	&:first-child th {
 	    padding-bottom: 0;
 	}
-	tr th:last-child {
+	th:last-child {
 	    padding-right: ($hl+$hs);
 	}
     }
-    tbody tr {
-        td {
-	    padding: ($vs+$vn) ($hm+$hs);
-	}
-	td:first-child {
-	    padding-left: ($hl+$hs);
-	}
-	td + td {
+    tbody tr td {
+	& + td {
 	    border-left: $bs solid $medium-blue;
 	}
-	td + td.crs, td + td.drs {
+	& + td.crs, & + td.drs {
 	    border-left: none;
 	}
-	td.cr, td.dr, td.crs, td.drs {
+	&.crs, &.drs {
 	    text-align: right;
 	}
-	td.dat {
+	&.dr, &.drs {
+	    color: $red;
+	}
+	&.dat {
 	    text-align: center;
 	}
-	td.taberr {
-	    border-top: $bs solid $medium-blue;
-	    text-align: center;
-	    font-style: italic;
-	    background: {
-		color: $white;
-		image: url("/static/cb.svg");
-		repeat: repeat;
-	    }
-	}
-    }
-}
-
-table.btnbar {
-    margin: $vh auto;
-    tbody tr td {
-	padding: $vn $hl;
     }
 }

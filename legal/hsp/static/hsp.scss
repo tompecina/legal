@@ -22,12 +22,8 @@
 // css_classes: dc dr debit credit balance
 
 
-@import "include";
+@import "debt";
 
-
-table.gen {
-    margin: $vm $hl;
-}
 
 fieldset {
     margin: {
@@ -43,11 +39,11 @@ fieldset {
 		    border-bottom: $bs solid $border-blue;
 		}
 		th {
+		    padding-left: $hl;
 		    text-align: center;
 		    font-size: $huge;
-		    padding-left: $hl;
 		}
-		td div:first-child {
+		td div:first-child, td.cc {
 		    font-weight: bold;
 		}
 		td.mc {
@@ -55,7 +51,11 @@ fieldset {
 		}
 		td.cc {
 		    white-space: nowrap;
-		    font-weight: bold;
+		}
+		&:first-child {
+		    th, td {
+			padding-top: $vm;
+		    }
 		}
 	    }
 	    tfoot tr td {
@@ -66,76 +66,51 @@ fieldset {
 }
 
 table.list {
-    margin: $vh auto 0;
-    thead {
-	tr.deb th {
+    thead tr {
+	&.deb th {
 	    padding: {
 		top: $vn;
 		bottom: $vn;
 	    }
 	}
-	tr.curr th {
-	    font-weight: normal;
+	&.curr th {
 	    padding-top: $vn;
+	    font-weight: normal;
 	}
-	tr th.sum {
+	th.sum {
 	    font-weight: bold;
 	}
     }
-    tbody tr {
-	td {
-	    padding: ($vs+$vn) ($hm+$hs);
-	    span.cr {
+    tbody tr td {
+	span {
+	    &.cr {
 		color: $red;
 	    }
-	    span.sps {
+	    &.sps {
 		padding-left: $hm;
 		margin-right: $hs;
 	    }
 	}
-	td:first-child {
-	    padding-left: ($hl+$hs);
-	}
-	td.dr {
+	&.dr {
 	    color: $red;
 	}
-	td.cr, td.dr {
-	    text-align: right;
-	}
-	td.dat, td.dt, td.cus {
+	&.dat, &.dt, &.cus {
 	    text-align: center;
 	}
-	td.am, td.ams {
+	&.am, &.ams {
 	    text-align: right;
 	    white-space: nowrap;
 	}
-	td.ams, td.cs, td.cus {
+	&.ams, &.cs, &.cus {
 	    border-left: $bs solid $medium-blue;
 	}
-	td.taberr {
-	    border-top: $bs solid $medium-blue;
-	    text-align: center;
-	    font-style: italic;
-	    background: {
-		color: $white;
-		image: url("/static/cb.svg");
-		repeat: repeat;
-	    }
-	    span.err {
-		color: inherit;
-		font-weight: bold;
-	    }
+	&.taberr span.err {
+	    color: inherit;
+	    font-weight: bold;
 	}
     }
     tfoot span:first-child {
 	font-weight: bold;
-    }
-}
-
-table.btnbar {
-    margin: $vh auto;
-    tbody tr td {
-	padding: $vn $hl;
     }
 }
 
@@ -148,7 +123,7 @@ table.intbl tbody tr {
 	margin-left: 0;
     }
     td hr {
-	    margin: 0;
+	margin: 0;
     }
     td.hr {
 	padding: $vm 0 $hm;
@@ -170,8 +145,8 @@ table.nttbl {
     }
 }
 
-table.fxrate tbody {
-    tr td {
+table.fxrate tbody tr {
+    td {
 	text-align: center;
 	& > span {
 	    margin: {
@@ -180,8 +155,8 @@ table.fxrate tbody {
 	    }
 	    &:nth-child(2) {
 		margin: {
-		    right: $hs;
 		    left: $hs;
+		    right: $hs;
 		}
 	    }
 	}
@@ -195,10 +170,10 @@ table.fxrate tbody {
 	    margin-left: $hs;
 	}
     }
-    tr:first-child td {
+    &:first-child td {
 	text-align: left;
     }
-    tr:last-child td {
+    &:last-child td {
 	text-align: left;
 	&:last-child {
 	    text-align: right;

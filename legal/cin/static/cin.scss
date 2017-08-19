@@ -30,12 +30,8 @@ td.msg div {
     &.ymd {
 	margin-bottom: $vm;
     }
-    &.year {
-	margin-left: $hl;
-	text-align: left;
-    }
-    &.month1, &.month2 {
-	margin-left: $hl;
+    &.year, &.month1, &.month2 {
+	margin-left: ($hh+$hl);
 	text-align: left;
     }
     &.month1 {
