@@ -77,7 +77,6 @@ class TestCron2(TransactionTestCase):
     def test_refresh_link(self):
 
         populate()
-        print(models.Vec.objects.all())
         self.assertEqual(cron.refresh_link(models.Vec.objects.get(bc=16046)), 3)
         self.assertEqual(cron.refresh_link(models.Vec.objects.get(bc=16046)), 4)
         self.assertEqual(cron.refresh_link(models.Vec.objects.get(bc=577)), 1)
