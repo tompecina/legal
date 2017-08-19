@@ -101,8 +101,6 @@ SCHED = (
     },
     {'name': 'sir_refresh_links',
      'when': lambda t: True,
-     'lock': 'sir_ws2',
-     'blocking': False,
     },
 )
 
