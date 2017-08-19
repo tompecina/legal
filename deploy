@@ -4,7 +4,7 @@ remote='legal.pecina.cz'
 user="legal"
 opts='-vrlpthHzx --delete'
 files='legal collect fonts activate manage.py requirements.txt'
-exc='.* *.pyc *~ *.po secrets.py static/ migrations/ __pycache__/ #*'
+exc='.* *.pyc *~ *.po secrets.py static/ __pycache__/ #*'
 basedir='/var/www/django/legal'
 
 ./make-static

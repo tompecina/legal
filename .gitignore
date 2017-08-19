@@ -6,7 +6,6 @@
 *.pyc
 *.po
 /collect/
-/venv-*
 __pycache__/
 /secrets.py
 /htmlcov/
