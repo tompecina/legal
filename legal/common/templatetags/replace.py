@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# common/templatetags/jquery.py
+# common/templatetags/replace.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
