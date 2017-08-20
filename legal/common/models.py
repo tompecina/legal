@@ -93,13 +93,16 @@ class Pending(models.Model):
 class Cache(models.Model):
 
     url = models.URLField(
-        db_index=True)
+        unique=True)
 
     text = models.TextField()
 
     expire = models.DateTimeField(
         null=True,
         db_index=True)
+
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True)
 
     def __str__(self):
         return self.url
@@ -118,6 +121,12 @@ class Asset(models.Model):
     expire = models.DateTimeField(
         null=True,
         db_index=True)
+
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True)
+
+    timestamp_update = models.DateTimeField(
+        auto_now=True)
 
     class Meta:
         unique_together = ('sessionid', 'assetid')

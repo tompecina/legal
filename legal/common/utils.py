@@ -1046,25 +1046,28 @@ def getcache(url, lifespan):
     return txt, None
 
 
-def getasset(request, asset):
+def getasset(request, asset_id):
     Asset.objects.filter(expire__lt=datetime.now()).delete()
     sid = request.COOKIES.get('sessionid')
     if not sid:
+        LOGGER.debug("Requested asset '{}' and SID='{}' not found".format(asset_id, sid))
         return None
-    asset = Asset.objects.filter(sessionid=sid, assetid=asset)
-    return b64decode(asset[0].data) if asset else None
+    asset = Asset.objects.filter(sessionid=sid, assetid=asset_id)
+    data = b64decode(asset[0].data) if asset else None
+    LOGGER.debug(
+        "Asset '{}' for session '{}' retrieved, length: {:d}".format(asset_id, sid, len(data or '')))
+    return data
 
 
 @atomic
-def setasset(request, asset, data, lifespan):
+def setasset(request, asset_id, data, lifespan):
     sid = request.COOKIES.get('sessionid')
     if not sid:
+        LOGGER.debug("Asset '{}' requested for empty session".format(asset_id))
         return False
-    Asset.objects.filter(sessionid=sid, assetid=asset).delete()
-    Asset(
-        sessionid=sid,
-        assetid=asset,
-        data=b64encode(data).decode(),
-        expire=datetime.now() + lifespan if lifespan else None,
-    ).save()
+    Asset.objects.update_or_create(sessionid=sid, assetid=asset_id, defaults={
+        'data': b64encode(data).decode(),
+        'expire': datetime.now() + lifespan,
+    })
+    LOGGER.debug("Asset '{}' for session '{}' stored, length: {:d}".format(asset_id, sid, len(data)))
     return True
