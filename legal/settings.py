@@ -81,7 +81,7 @@ STATICFILES_FINDERS = (
 
 APPS = (
     'common', 'sop', 'lht', 'cin', 'dvt', 'cnb', 'knr', 'hjp', 'hsp', 'szr', 'sur', 'psj', 'udn', 'sir', 'dir',
-    'pir', 'kos', 'cache',
+    'pir', 'kos',
 )
 
 INSTALLED_APPS = [
