@@ -75,10 +75,10 @@ $(function() {
     }
 
     function itemform_off10_flag_onclick() {
-	o1 = $('#id_off10_flag');
-	o3 = $('#id_off30_flag');
-	o3l5 = $('#id_off30limit5000_flag');
-	o2l5 = $('#id_off20limit5000_flag');
+	var o1 = $('#id_off10_flag');
+	var o3 = $('#id_off30_flag');
+	var o3l5 = $('#id_off30limit5000_flag');
+	var o2l5 = $('#id_off20limit5000_flag');
 	if (o1.c()) {
 	    o3.c(false);
 	    o3l5.c(false);
@@ -88,10 +88,10 @@ $(function() {
     }
 
     function itemform_off30_flag_onclick() {
-	o1 = $('#id_off10_flag');
-	o3 = $('#id_off30_flag');
-	o3l5 = $('#id_off30limit5000_flag');
-	o2l5 = $('#id_off20limit5000_flag');
+	var o1 = $('#id_off10_flag');
+	var o3 = $('#id_off30_flag');
+	var o3l5 = $('#id_off30limit5000_flag');
+	var o2l5 = $('#id_off20limit5000_flag');
 	if (o3.c()) {
 	    o1.c(false);
 	    o3l5.c(false);
@@ -101,10 +101,10 @@ $(function() {
     }
 
     function itemform_off30limit5000_flag_onclick() {
-	o1 = $('#id_off10_flag');
-	o3 = $('#id_off30_flag');
-	o3l5 = $('#id_off30limit5000_flag');
-	o2l5 = $('#id_off20limit5000_flag');
+	var o1 = $('#id_off10_flag');
+	var o3 = $('#id_off30_flag');
+	var o3l5 = $('#id_off30limit5000_flag');
+	var o2l5 = $('#id_off20limit5000_flag');
 	if (o3l5.c()) {
 	    o1.c(false);
 	    o3.c(false);
@@ -114,10 +114,10 @@ $(function() {
     }
 
     function itemform_off20limit5000_flag_onclick() {
-	o1 = $('#id_off10_flag');
-	o3 = $('#id_off30_flag');
-	o3l5 = $('#id_off30limit5000_flag');
-	o2l5 = $('#id_off20limit5000_flag');
+	var o1 = $('#id_off10_flag');
+	var o3 = $('#id_off30_flag');
+	var o3l5 = $('#id_off30limit5000_flag');
+	var o2l5 = $('#id_off20limit5000_flag');
 	if (o2l5.c()) {
 	    o1.c(false);
 	    o3.c(false);
@@ -127,8 +127,8 @@ $(function() {
     }
 
     function itemform_halved_flag_onclick() {
-	h = $('#id_halved_flag');
-	ha = $('#id_halved_appeal_flag');
+	var h = $('#id_halved_flag');
+	var ha = $('#id_halved_appeal_flag');
 	if (h.c()) {
 	    ha.c(false);
 	}
@@ -136,8 +136,8 @@ $(function() {
     }
 
     function itemform_halved_appeal_flag_onclick() {
-	h = $('#id_halved_flag');
-	ha = $('#id_halved_appeal_flag');
+	var h = $('#id_halved_flag');
+	var ha = $('#id_halved_appeal_flag');
 	if (ha.c()) {
 	    h.c(false);
 	}
@@ -145,8 +145,8 @@ $(function() {
     }
 
     function itemform_multiple_flag_onclick() {
-	m = $('#id_multiple_flag');
-	m5 = $('#id_multiple50_flag');
+	var m = $('#id_multiple_flag');
+	var m5 = $('#id_multiple50_flag');
 	if (m.c()) {
 	    m5.c(false);
 	}
@@ -154,8 +154,8 @@ $(function() {
     }
 
     function itemform_multiple50_flag_onclick() {
-	m = $('#id_multiple_flag');
-	m5 = $('#id_multiple50_flag');
+	var m = $('#id_multiple_flag');
+	var m5 = $('#id_multiple50_flag');
 	if (m5.c()) {
 	    m.c(false);
 	}

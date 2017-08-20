@@ -141,12 +141,7 @@ $(function() {
 	var ci = $s.index($t);
 	var nv = $t.val();
 	var pv = $t.data('pv');
-	var cd;
-	if ($s.filter('[value=' + nv + ']').get(0) == this) {
-	    cd = 1;
-	} else {
-	    cd = -1;
-	}
+	var cd = ($s.filter('[value=' + nv + ']').get(0) == this) ? 1 : -1;
 	for (;;) {
 	    $t.data('pv', $t.val());
 	    if (pv == nv) {
