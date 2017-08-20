@@ -41,7 +41,7 @@ from tests.utils import DummyRequest, setdl, setpr, TEST_OBJ, check_html
 
 class TestCron(TestCase):
 
-    fixtures = ('common_test.json',)
+    fixtures = ('common_test1.json',)
 
     def test_szr_notice(self):
 
@@ -388,6 +388,21 @@ class TestModels(TestCase):
             value=15,
             valid=date(2016, 5, 18))
         self.assertEqual(str(pwd), 'Test, 2016-05-18')
+
+        self.assertEqual(
+            str(models.Cache(
+                url='test_url',
+                text='test',
+                expire=datetime.now())),
+            'test_url')
+
+        self.assertEqual(
+            str(models.Asset(
+                sessionid='test_sessionid',
+                assetid='test_assetid',
+                data='test',
+                expire=datetime.now())),
+            'test_sessionid')
 
 
 def proc_link(link):
@@ -1937,6 +1952,61 @@ class TestUtils2(TestCase):
         models.Preset.objects.filter(name='Test', valid=today).update(value=17)
         self.assertEqual(utils.getpreset('Test'), 17)
         self.assertEqual(utils.getpreset('Test', as_func=True)(), 17)
+
+
+
+class TestUtils3(TestCase):
+
+    fixtures = ('common_test2.json',)
+
+    def test_getcache(self):
+
+        res = utils.getcache('test', timedelta(1))
+        self.assertEqual(res, ('ok', None))
+
+        res = utils.getcache('xxx', timedelta(1))
+        self.assertEqual(res, (None, 'Chyba při komunikaci se serverem'))
+
+    def test_asset(self):
+
+        self.assertIsNone(utils.getasset(
+            DummyRequest(None),
+            None))
+
+        self.assertIsNone(utils.getasset(
+            DummyRequest('test_session'),
+            'test_asset1'))
+
+        self.assertTrue(utils.setasset(
+            DummyRequest('test_session'),
+            'test_asset1',
+            b'test_data',
+            timedelta(1)))
+
+        self.assertEqual(
+            utils.getasset(
+                DummyRequest('test_session'), 'test_asset1'),
+            b'test_data')
+
+        self.assertFalse(
+            utils.setasset(
+                DummyRequest(None),
+                'test_asset',
+                b'test_data',
+                timedelta(1)))
+
+        self.assertTrue(
+            utils.setasset(
+                DummyRequest('test_session'),
+                'test_asset2',
+                b'test_data',
+                timedelta(-1)))
+
+        self.assertIsNone(
+            utils.getasset(
+                DummyRequest('test_session'),
+                'test_asset2'))
+
 
 class TestViews(TestCase):
 

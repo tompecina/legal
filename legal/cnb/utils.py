@@ -22,8 +22,7 @@
 
 from datetime import date, datetime, timedelta
 
-from legal.common.utils import new_xml, LOGGER
-from legal.cache.utils import getcache
+from legal.common.utils import new_xml, LOGGER, getcache
 from legal.cnb.models import FXrate, MPIrate, MPIstat
 
 

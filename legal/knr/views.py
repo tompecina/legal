@@ -42,9 +42,9 @@ from django.db.utils import IntegrityError
 
 from legal.common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
 from legal.common.utils import (
-    getbutton, unrequire, famt, c2p, get_xml, new_xml, xmlbool, register_fonts, make_pdf, lim, LOGGER, render)
+    getbutton, unrequire, famt, c2p, get_xml, new_xml, xmlbool, register_fonts, make_pdf, lim, LOGGER, render,
+    getasset, setasset)
 from legal.common.views import error, unauth
-from legal.cache.utils import getasset, setasset
 from legal.knr.glob import FUELS
 from legal.knr.utils import getvat, findloc, finddist, convi, convf
 from legal.knr.forms import (

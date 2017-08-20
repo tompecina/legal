@@ -32,7 +32,7 @@ class HjpConfig(AppConfig):
     @staticmethod
     def stat():
         from legal.common.utils import LOGGER
-        from legal.cache.models import Asset
+        from legal.common.models import Asset
         LOGGER.debug('Partial statistics generated')
         return (
             (

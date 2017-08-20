@@ -88,3 +88,39 @@ class Pending(models.Model):
 
     def __str__(self):
         return '{}, {}'.format(self.name, str(self.timestamp_add))
+
+
+class Cache(models.Model):
+
+    url = models.URLField(
+        db_index=True)
+
+    text = models.TextField()
+
+    expire = models.DateTimeField(
+        null=True,
+        db_index=True)
+
+    def __str__(self):
+        return self.url
+
+
+class Asset(models.Model):
+
+    sessionid = models.CharField(
+        max_length=32)
+
+    assetid = models.CharField(
+        max_length=150)
+
+    data = models.TextField()
+
+    expire = models.DateTimeField(
+        null=True,
+        db_index=True)
+
+    class Meta:
+        unique_together = ('sessionid', 'assetid')
+
+    def __str__(self):
+        return self.sessionid

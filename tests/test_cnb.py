@@ -26,7 +26,7 @@ from datetime import date, timedelta
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 
-from legal.cache.models import Cache
+from legal.common.models import Cache
 from legal.cnb import models, utils
 
 from tests.utils import check_html

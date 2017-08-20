@@ -40,10 +40,9 @@ from django.apps import apps
 from legal.common.glob import YDCONVS, ODP, MDCONVS, LIM, INERR, LOCAL_SUBDOMAIN, LOCAL_URL, ASSET_EXP
 from legal.common.utils import (
     getbutton, yfactor, mfactor, famt, xml_decorate, xml_escape, xml_unescape, LocalFloat, get_xml, new_xml, iso2date,
-    register_fonts, make_pdf, LOGGER, render)
+    register_fonts, make_pdf, LOGGER, render, getasset, setasset)
 from legal.common import fields
 from legal.common.views import error
-from legal.cache.utils import getasset, setasset
 from legal.cnb.utils import get_mpi_rate, get_fx_rate
 from legal.hsp.forms import MainForm, DebitForm, CreditForm, BalanceForm, FXform
 

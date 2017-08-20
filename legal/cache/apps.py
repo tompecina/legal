@@ -28,17 +28,3 @@ class CacheConfig(AppConfig):
     name = 'legal.cache'
     verbose_name = 'Společná cache'
     version = None
-
-    @staticmethod
-    def stat():
-        from legal.common.utils import LOGGER
-        from legal.cache.models import Cache, Asset
-        LOGGER.debug('Partial statistics generated')
-        return (
-            (
-                'Počet položek v tabulce Cache',
-                Cache.objects.count()),
-            (
-                'Počet položek v tabulce Asset',
-                Asset.objects.count()),
-        )

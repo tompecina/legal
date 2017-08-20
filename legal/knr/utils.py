@@ -26,8 +26,7 @@ from urllib.parse import quote, unquote
 
 from django.template import Context, Template
 
-from legal.common.utils import getpreset, famt
-from legal.cache.utils import getcache
+from legal.common.utils import getpreset, famt, getcache
 
 
 def getvat():

@@ -1,6 +1,6 @@
 [
 {
-    "model": "cache.cache",
+    "model": "common.cache",
     "pk": 1,
     "fields": {
         "url": "test",

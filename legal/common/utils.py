@@ -23,12 +23,13 @@
 from logging import getLogger
 from inspect import stack
 import time
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from calendar import monthrange, isleap
 from math import inf
 from os import environ
 from os.path import join
 from re import compile
+from base64 import b64encode, b64decode
 from xml.sax.saxutils import escape, unescape
 
 from bs4 import BeautifulSoup
@@ -43,10 +44,11 @@ from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.lib.pagesizes import A4
 from django.core import mail
 from django.shortcuts import render as orig_render
+from django.db.transaction import atomic
 
 from legal.settings import FONT_DIR, TEST
 from legal.common.glob import LIM, ODP, YDCONVS, MDCONVS, REGISTERS, LOCAL_SUBDOMAIN, LOCAL_EMAIL
-from legal.common.models import Preset
+from legal.common.models import Preset, Cache, Asset
 
 
 class Logger:
@@ -1022,3 +1024,45 @@ def getpreset(key, as_func=False):
             return 0
 
     return _getpreset if as_func else _getpreset()
+
+
+def getcache(url, lifespan):
+    Cache.objects.filter(expire__lt=datetime.now()).delete()
+    cache = Cache.objects.filter(url=url)
+    if cache:
+        return cache[0].text, None
+    res = get(url)
+    if not res.ok:
+        LOGGER.warning('Failed to access URL: "{}"'.format(url))
+        return None, 'Chyba při komunikaci se serverem'
+    txt = res.text
+    Cache(
+        url=url,
+        text=txt,
+        expire=datetime.now() + lifespan if lifespan else None,
+    ).save()
+    return txt, None
+
+
+def getasset(request, asset):
+    Asset.objects.filter(expire__lt=datetime.now()).delete()
+    sid = request.COOKIES.get('sessionid')
+    if not sid:
+        return None
+    asset = Asset.objects.filter(sessionid=sid, assetid=asset)
+    return b64decode(asset[0].data) if asset else None
+
+
+@atomic
+def setasset(request, asset, data, lifespan):
+    sid = request.COOKIES.get('sessionid')
+    if not sid:
+        return False
+    Asset.objects.filter(sessionid=sid, assetid=asset).delete()
+    Asset(
+        sessionid=sid,
+        assetid=asset,
+        data=b64encode(data).decode(),
+        expire=datetime.now() + lifespan if lifespan else None,
+    ).save()
+    return True

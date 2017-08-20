@@ -35,7 +35,7 @@ class CommonConfig(AppConfig):
     def stat():
         from django.contrib.auth.models import User
         from legal.common.utils import LOGGER
-        from legal.common.models import PwResetLink, Preset
+        from legal.common.models import PwResetLink, Preset, Cache, Asset
         now = datetime.now()
         LOGGER.debug('Partial statistics generated')
         return (
@@ -57,6 +57,12 @@ class CommonConfig(AppConfig):
             (
                 'Počet záznamů v tabulce Preset',
                 Preset.objects.count()),
+            (
+                'Počet položek v tabulce Cache',
+                Cache.objects.count()),
+            (
+                'Počet položek v tabulce Asset',
+                Asset.objects.count()),
         )
 
     @staticmethod
