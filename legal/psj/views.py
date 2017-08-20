@@ -34,8 +34,6 @@ from django.http import QueryDict, Http404
 
 from legal.common.glob import REGISTERS, INERR, TEXT_OPTS_KEYS, ODP, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF
 from legal.common.utils import Pager, new_xml, xml_decorate, composeref, xmlbool, LOGGER, render
-from legal.szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT
-from legal.szr.models import Court
 from legal.psj.models import Hearing
 from legal.psj.forms import MainForm
 
@@ -57,7 +55,6 @@ def mainpage(request):
     err_message = ''
     page_title = apps.get_app_config(APP).verbose_name
 
-    courts = Court.objects.exclude(id=SUPREME_COURT).exclude(id=SUPREME_ADMINISTRATIVE_COURT).order_by('name')
     if request.method == 'GET':
         form = MainForm()
         return render(
@@ -66,7 +63,6 @@ def mainpage(request):
             {'app': APP,
              'page_title': page_title,
              'err_message': err_message,
-             'courts': courts,
              'form': form})
     else:
         form = MainForm(request.POST)
@@ -92,7 +88,6 @@ def mainpage(request):
                 {'app': APP,
                  'page_title': page_title,
                  'err_message': err_message,
-                 'courts': courts,
                  'form': form})
 
 

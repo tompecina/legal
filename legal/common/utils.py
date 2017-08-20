@@ -808,7 +808,18 @@ def sleep(*args, **kwargs):  # pragma: no cover
 
 DUMP_PATH = environ.get('DUMP_PATH')
 
-output_counter = 0
+
+class OutputCounter:
+
+    def __init__(self):
+        self.counter = 0
+
+    def increment(self):
+        self.counter += 1
+        return self.counter
+
+
+OUTPUT_COUNTER = OutputCounter()
 
 
 def render(
@@ -836,9 +847,7 @@ def render(
         content = response.content
 
         if DUMP_PATH:  # pragma: no cover
-            global output_counter
-            filename = '{:05d}-{}'.format(output_counter, template_name)
-            output_counter += 1
+            filename = '{:05d}-{}'.format(OUTPUT_COUNTER.increment(), template_name)
             with open(join(DUMP_PATH, filename), 'wb') as outfile:
                 outfile.write(content)
 

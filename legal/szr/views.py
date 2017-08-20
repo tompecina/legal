@@ -98,7 +98,6 @@ def procform(request, idx=0):
     uname = request.user.username
     page_title = 'Úprava řízení' if idx else 'Nové řízení'
     button = getbutton(request)
-    crts = Court.objects.order_by('name')
     if request.method == 'GET':
         form = ProcForm(initial=model_to_dict(get_object_or_404(Proceedings, pk=idx, uid=uid))) if idx else ProcForm()
     elif button == 'back':
@@ -143,8 +142,7 @@ def procform(request, idx=0):
         {'app': APP,
          'form': form,
          'page_title': page_title,
-         'err_message': err_message,
-         'courts': crts})
+         'err_message': err_message})
 
 
 @require_http_methods(('GET', 'POST'))

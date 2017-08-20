@@ -20,8 +20,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.core.validators import RegexValidator
-
 from legal.common.glob import CURRENCY_RE
 from legal.common import forms, fields, widgets
 

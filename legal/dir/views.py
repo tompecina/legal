@@ -21,7 +21,6 @@
 #
 
 from datetime import date
-from locale import strxfrm
 from csv import reader as csvreader, writer as csvwriter
 from io import StringIO
 from re import compile
@@ -35,11 +34,11 @@ from django.apps import apps
 from django.http import QueryDict
 from django.urls import reverse
 
-from legal.common.glob import INERR, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA, TEXT_OPTS_AI, IC_RE_STR, RC_FULL_RE_STR
+from legal.common.glob import (
+    INERR, TEXT_OPTS_KEYS, TEXT_OPTS_ABBR, TEXT_OPTS_CA, TEXT_OPTS_AI, IC_RE_STR, RC_FULL_RE_STR)
 from legal.common.utils import getbutton, Pager, LOGGER, render
 from legal.szr.forms import EmailForm
-from legal.sir.glob import L2N, L2S
-from legal.sir.models import Vec
+from legal.sir.glob import L2S
 from legal.dir.glob import MAX_LENGTH
 from legal.dir.forms import DebtorForm
 from legal.dir.models import Debtor
@@ -124,9 +123,6 @@ def debtorform(request, idx=0):
     page_title = 'Úprava dlužníka' if idx else 'Nový dlužník'
 
     button = getbutton(request)
-    courts = sorted([{'id': x, 'name': L2N[x]} for x in
-        Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()],
-        key=lambda x: strxfrm(x['name']))
     if request.method == 'GET':
         if idx:
             debtor = model_to_dict(get_object_or_404(Debtor, pk=idx, uid=uid))
@@ -169,7 +165,6 @@ def debtorform(request, idx=0):
         {'app': APP,
          'form': form,
          'page_title': page_title,
-         'courts': courts,
          'err_message': err_message})
 
 

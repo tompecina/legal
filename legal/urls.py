@@ -25,8 +25,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib import admin
 
 from legal.settings import APPS
-from legal.common.views import (
-    home, robots, pwchange, logout, userinfo, useradd, lostpw, resetpw, about, stat, genrender)
+from legal.common.views import home, robots, pwchange, userinfo, useradd, lostpw, resetpw, about, stat, genrender
 
 
 admin.autodiscover()

@@ -17,12 +17,7 @@
 <tr>
 <th>{{ form.court.label_tag }}</th>
 <td colspan="2">
-<select name="court" id="id_court">
-<option value="">(všechny)</option>
-{% for court in courts %}
-<option value="{{ court.id }}">{{ court.name }}</option>
-{% endfor %}
-</select>
+{{ form.court }}
 </td>
 </tr>
 <tr>

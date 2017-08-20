@@ -39,6 +39,7 @@ class DebtorForm(forms.Form):
         widget=widgets.Sew())
 
     court = fields.CharField(
+        widget=widgets.CourtWidget(ins_courts=True),
         max_length=255,
         required=False,
         label='Insolvenční soud',

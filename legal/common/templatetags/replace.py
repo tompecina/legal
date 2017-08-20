@@ -24,8 +24,6 @@ from re import sub
 
 from django.template import Library
 
-from legal.settings import JQUERY_VERSION, JQUERY_UI_VERSION
-
 
 register = Library()
 
@@ -33,6 +31,6 @@ register = Library()
 @register.filter
 def replace(string, args):
 
-    dummy, search, replace  = args.split(args[0])
+    dummy, srch, repl = args.split(args[0])
 
-    return sub(search, replace, string)
+    return sub(srch, repl, string)

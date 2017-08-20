@@ -20,8 +20,15 @@
 # along with this program.  if not, see <http://www.gnu.org/licenses/>.
 #
 
+from locale import strxfrm
+
 from django import forms
+from django.template.loader import get_template
 from django.utils.safestring import mark_safe
+
+from legal.szr.models import Court
+from legal.sir.glob import L2N
+from legal.sir.models import Vec
 
 
 class Aw(forms.TextInput):
@@ -225,6 +232,47 @@ class Dw(forms.DateInput):
         res = super().render(name, *args, **kwargs)
         if self._today:
             return mark_safe(
-                '<span class="dw-today">{0}<input type="submit" name="submit_set_{1}" value="Dnes" class="today" id="id_set_{1}"></span>'
-                .format(res, name))
+                '<span class="dw-today">{0}<input type="submit" name="submit_set_{1}" value="Dnes" class="today" '
+                'id="id_set_{1}"></span>'.format(res, name))
         return res
+
+
+class CourtWidget(forms.TextInput):
+
+    def __init__(self, supreme_court=False, supreme_administrative_court=False, ins_courts=False, **kwargs):
+        self.supreme_court = supreme_court
+        self.supreme_administrative_court = supreme_administrative_court
+        self.ins_courts = ins_courts
+        super().__init__(**kwargs)
+
+    def render(self, name, value, *args, **kwargs):
+        context = {'ins_courts': self.ins_courts, 'value': value}
+        if self.ins_courts:
+            context['courts'] = sorted(
+                [{'id': x, 'name': L2N[x]} for x in Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()],
+                key=lambda x: strxfrm(x['name']))
+        else:
+            sel = ['VSPHAAB', 'VSSEMOL']
+            if self.supreme_court:
+                sel.append('NSJIMBM')
+            if self.supreme_administrative_court:
+                sel.append('NSS')
+            high_courts = Court.objects.filter(id__in=sel).order_by('name')
+            high_label = (
+                'Nejvyšší a vrchní soudy'
+                if self.supreme_administrative_court or self.supreme_administrative_court
+                else 'Vrchní soudy')
+            high_group = {'label': high_label, 'courts': high_courts}
+            context['optgroups'] = [high_group]
+            reg_courts = (
+                Court.objects.filter(id__startswith='KS').union(Court.objects.filter(id='MSPHAAB')).order_by('name'))
+            reg_group = {'label': 'Krajské soudy', 'courts': reg_courts}
+            context['optgroups'].append(reg_group)
+            for reg_court in reg_courts:
+                county_courts = sorted(
+                    list(Court.objects.filter(reports=reg_court).order_by('name').values('id', 'name')),
+                    key=lambda x: strxfrm('Z' if x['name'].endswith('10') else x['name']))
+                county_group = {'label': reg_court.name, 'courts': county_courts}
+                context['optgroups'].append(county_group)
+
+        return mark_safe(get_template('select_court.html').render(context))

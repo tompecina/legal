@@ -46,7 +46,7 @@ def courtval(court):
 class ProcForm(forms.Form):
 
     court = fields.CharField(
-        widget=widgets.Abbrw(),
+        widget=widgets.CourtWidget(supreme_court=True, supreme_administrative_court=True),
         max_length=30,
         label='Soud',
         initial=SUPREME_COURT,

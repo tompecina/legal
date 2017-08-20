@@ -37,10 +37,10 @@ class MainForm(forms.Form):
         required=False)
 
     court = fields.CharField(
+        widget=widgets.CourtWidget(),
         max_length=255,
         required=False,
-        label='Soud',
-        initial='0')
+        label='Soud')
 
     senate = fields.IntegerField(
         widget=widgets.Saw(),

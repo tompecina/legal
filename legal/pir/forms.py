@@ -34,6 +34,7 @@ CURRYEAR = date.today().year
 class MainForm(forms.Form):
 
     court = fields.CharField(
+        widget=widgets.CourtWidget(ins_courts=True),
         max_length=255,
         required=False,
         label='Insolvenční soud',

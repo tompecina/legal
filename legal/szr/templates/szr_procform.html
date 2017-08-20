@@ -16,13 +16,7 @@
 {% endif %}
 <tr>
 <th>{{ form.court.label_tag }}</th>
-<td colspan="2">
-<select name="court" id="id_court">
-{% for court in courts %}
-<option value="{{ court.id }}"{% if form.court.value == court.id %} selected{% endif %}>{{ court.name }}</option>
-{% endfor %}
-</select>
-</td>
+<td colspan="2">{{ form.court }}</td>
 </tr>
 <tr>
 <th{% if form.senate.errors or form.register.errors or form.number.errors or form.year.errors %} class="err"{% endif %}>Spisová značka:</th>
