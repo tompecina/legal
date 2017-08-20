@@ -18,7 +18,7 @@
 <td>
 <a href="{% url 'pir:htmllist' %}?number={{ row.number }}&amp;year={{ row.year }}">INS {{ row.number }}/{{ row.year }}</a></td>
 <td>{{ row.desc }}</td>
-<td class="center">{% if row.detailed %}ano{% else %}ne{% endif %}</td>
+<td>{% if row.detailed %}ano{% else %}ne{% endif %}</td>
 <td class="act">
 <a href="{% url 'sir:insform' row.id %}">upravit</a>
 <a href="{% url 'sir:insdel' row.id %}">smazat</a>
