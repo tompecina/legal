@@ -1030,6 +1030,7 @@ def getcache(url, lifespan):
     Cache.objects.filter(expire__lt=datetime.now()).delete()
     cache = Cache.objects.filter(url=url)
     if cache:
+        LOGGER.debug("URL '{}' retrieved from cache".format(url))
         return cache[0].text, None
     res = get(url)
     if not res.ok:
@@ -1041,6 +1042,7 @@ def getcache(url, lifespan):
         text=txt,
         expire=datetime.now() + lifespan if lifespan else None,
     ).save()
+    LOGGER.debug("URL '{}' saved in cache".format(url))
     return txt, None
 
 
