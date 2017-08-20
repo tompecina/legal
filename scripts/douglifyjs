@@ -1,7 +1,6 @@
 #!/bin/bash
 
 par=''
-
 path='./collect'
 
 for f in $path/*.js; do

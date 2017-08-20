@@ -6,22 +6,23 @@ opts='-vrlpthHzx --delete'
 files='legal collect fonts activate manage.py requirements.txt'
 exc='.* *.pyc *~ *.po secrets.py static/ __pycache__/ #*'
 basedir='/var/www/django/legal'
+scriptpath='./scripts'
 
-./make-static
+"$scriptpath"/make-static
 
 excludes=''
 for e in $exc; do
     excludes="--exclude $e $excludes"
 done
 
-rsync $opts $excludes $files $user@$remote:$basedir/ || exit 1
+rsync $opts $excludes $files $user@$remote:$basedir/ || exit
 
 if [ -e secrets.py ]; then
-    rsync $opts secrets.py $user@$remote:$basedir/legal/ || exit 1
+    rsync $opts secrets.py $user@$remote:$basedir/legal/ || exit
 fi
 
-ssh $user@$remote 'source activate && pip install -q -r requirements.txt' || exit 1
+ssh $user@$remote 'source activate && pip install -q -r requirements.txt' || exit
 
-ssh $user@$remote 'touch legal/wsgi.py' || exit 1
+ssh $user@$remote 'touch legal/wsgi.py' || exit
 
 echo 'Success'

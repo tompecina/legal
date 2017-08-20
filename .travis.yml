@@ -51,10 +51,10 @@ before_install:
     fi
 
 install:
-  - "./make-static"
+  - "scripts/make-static"
 
 script:
-  - "./full-test"
+  - "scripts/full-test"
 
 after_success:
-  - "if [ -n \"$DEPLOY\" ]; then ./deploy; fi"
+  - "if [ -n \"$DEPLOY\" ]; then scripts/deploy; fi"
