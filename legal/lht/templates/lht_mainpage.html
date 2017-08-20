@@ -20,14 +20,14 @@
 {% endif %}
 {% endfor %}
 <div>
-<label for="preset_none"><input type="radio" name="preset" value="none" id="preset_none"{% if form.preset.value == "none" %} checked="checked"{% endif %}> jiná:</label>
+<label for="preset_none"><input type="radio" name="preset" value="none" id="preset_none"{% if form.preset.value == "none" %} checked{% endif %}> jiná:</label>
 <span class="{{ form.dur.css_classes }}">{{ form.dur }}</span>
 <select name="unit" id="id_unit">
-<option value="d" id="id_d"{% if form.unit.value == "d" %} selected="selected"{% endif %}>dnů</option>
-<option value="w" id="id_w"{% if form.unit.value == "w" %} selected="selected"{% endif %}>týdnů</option>
-<option value="m" id="id_m"{% if form.unit.value == "m" %} selected="selected"{% endif %}>měsíců</option>
-<option value="y" id="id_y"{% if form.unit.value == "y" %} selected="selected"{% endif %}>let</option>
-<option value="b" id="id_b"{% if form.unit.value == "b" %} selected="selected"{% endif %}>pracovních dnů</option>
+<option value="d" id="id_d"{% if form.unit.value == "d" %} selected{% endif %}>dnů</option>
+<option value="w" id="id_w"{% if form.unit.value == "w" %} selected{% endif %}>týdnů</option>
+<option value="m" id="id_m"{% if form.unit.value == "m" %} selected{% endif %}>měsíců</option>
+<option value="y" id="id_y"{% if form.unit.value == "y" %} selected{% endif %}>let</option>
+<option value="b" id="id_b"{% if form.unit.value == "b" %} selected{% endif %}>pracovních dnů</option>
 </select>
 </div>
 <div>(lze zadat i zápornou délku)</div>

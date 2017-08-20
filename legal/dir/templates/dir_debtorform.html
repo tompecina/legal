@@ -24,7 +24,7 @@
 <select name="court" id="id_court">
 <option value="">(všechny)</option>
 {% for court in courts %}
-<option value="{{ court.id }}"{% if form.court.value == court.id %} selected="selected"{% endif %}>{{ court.name }}</option>
+<option value="{{ court.id }}"{% if form.court.value == court.id %} selected{% endif %}>{{ court.name }}</option>
 {% endfor %}
 </select>
 </td>

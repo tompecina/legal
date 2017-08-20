@@ -37,8 +37,8 @@
 <td>
 {{ rt }}
 <select name="rounding" id="id_rounding">
-<option value="0" {% if form.rounding.value == '0' %} selected="selected"{% endif %}>na jednotky</option>
-<option value="2" {% if form.rounding.value == '2' %} selected="selected"{% endif %}>na 2 desetinná místa</option>
+<option value="0" {% if form.rounding.value == '0' %} selected{% endif %}>na jednotky</option>
+<option value="2" {% if form.rounding.value == '2' %} selected{% endif %}>na 2 desetinná místa</option>
 </select>
 </td>
 </tr>
@@ -63,7 +63,7 @@
 {{ form.ydconv.label_tag }}
 <select name="ydconv" id="id_ydconv">
 {% for dconv in ydconvs %}
-<option value="{{ dconv }}"{% if form.ydconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
+<option value="{{ dconv }}"{% if form.ydconv.value == dconv %} selected{% endif %}>{{ dconv }}</option>
 {% endfor %}
 </select>
 </td>
@@ -75,7 +75,7 @@
 {{ form.mdconv.label_tag }}
 <select name="mdconv" id="id_mdconv">
 {% for dconv in mdconvs %}
-<option value="{{ dconv }}"{% if form.mdconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
+<option value="{{ dconv }}"{% if form.mdconv.value == dconv %} selected{% endif %}>{{ dconv }}</option>
 {% endfor %}
 </select>
 </td>

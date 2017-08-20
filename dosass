@@ -7,4 +7,4 @@ par='--update --style=compressed -I legal/common/static'
 for b in $apps; do
     sass $par legal/$b/static/$b.scss:legal/$b/static/$b.css || exit
 done
-sass $par legal/common/static/acc.scss:legal/common/static/acc.css
+sass $par legal/common/static/acc.scss:legal/common/static/acc.css || exit

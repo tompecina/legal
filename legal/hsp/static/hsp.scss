@@ -89,6 +89,10 @@ table.list {
 	    &.sps {
 		padding-left: $hm;
 		margin-right: 0;
+		span.dr, span.cr {
+		    margin-left: 0;
+		    margin-right: 0;
+		}
 	    }
 	}
 	&.dr {

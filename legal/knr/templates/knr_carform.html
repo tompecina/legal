@@ -24,7 +24,7 @@
 <td colspan="2">
 <select name="fuel" id="id_fuel">
 {% for fuel in fuels %}
-<option value="{{ fuel }}"{% if form.fuel.value == fuel %} selected="selected"{% endif %}>
+<option value="{{ fuel }}"{% if form.fuel.value == fuel %} selected{% endif %}>
 {{ fuel }}
 </option>
 {% endfor %}

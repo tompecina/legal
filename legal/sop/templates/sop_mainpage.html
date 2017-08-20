@@ -20,10 +20,10 @@
 <th>{{ form.model.label_tag }}</th>
 <td>
 <select name="model" id="id_model">
-<option value="1"{% if form.model.value == '1' %} selected="selected"{% endif %}>Do 31.08.2011</option>
-<option value="2"{% if form.model.value == '2' %} selected="selected"{% endif %}>Od 01.09.2011 do 31.12.2012</option>
-<option value="3"{% if form.model.value == '3' %} selected="selected"{% endif %}>Od 01.01.2013 do 31.12.2013</option>
-<option value="4"{% if form.model.value == '4' %} selected="selected"{% endif %}>Od 01.01.2014</option>
+<option value="1"{% if form.model.value == '1' %} selected{% endif %}>Do 31.08.2011</option>
+<option value="2"{% if form.model.value == '2' %} selected{% endif %}>Od 01.09.2011 do 31.12.2012</option>
+<option value="3"{% if form.model.value == '3' %} selected{% endif %}>Od 01.01.2013 do 31.12.2013</option>
+<option value="4"{% if form.model.value == '4' %} selected{% endif %}>Od 01.01.2014</option>
 </select>
 </td>
 </tr>

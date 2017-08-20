@@ -45,7 +45,7 @@ h1 {
 }
 
 p {
-    line-height: 130%;
+    line-height: $huge;
 }
 
 table {
@@ -136,7 +136,7 @@ input {
 	padding-left: 0;
     }
     &[type="radio"] {
-	margin: $vs ($ht+$hn) 0 $hs;
+	margin: $vs $hm 0 $hs;
     }
     &[type="checkbox"] {
 	vertical-align: middle;
@@ -426,6 +426,12 @@ p.options {
     margin-bottom: 0;
     &.options + ul {
 	margin-top: $vs;
+	li {
+	    margin: {
+		top: 0;
+		bottom: $vs;
+	    }
+	}
     }
 }
 
@@ -476,7 +482,7 @@ td.inlop {
     white-space: nowrap;
     input[type="radio"] {
 	margin: {
-	    right: $hn;
+	    right: ($hs+$ht);
 	    left: $hn;
 	}
     }

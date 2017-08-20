@@ -68,7 +68,7 @@ class TestForms(SimpleTestCase):
             'description': 'Popis',
             'major_number': '1',
             'rate': '1500',
-            'minor_number': '2',
+            'minor_number': '1',
             'multiple_number': '1',
             'numerator': '2',
             'denominator': '3'}
@@ -115,6 +115,36 @@ class TestForms(SimpleTestCase):
 
         dst = copy(src)
         dst['off10_flag'] = dst['off30_flag'] = 'on'
+        form = forms.ServiceForm(dst)
+        self.assertFalse(form.is_valid())
+
+        dst = copy(src)
+        dst['minor_number'] = '0'
+        form = forms.ServiceForm(dst)
+        self.assertTrue(form.is_valid())
+
+        dst = copy(src)
+        dst['major_number'] = '0'
+        form = forms.ServiceForm(dst)
+        self.assertTrue(form.is_valid())
+
+        dst = copy(src)
+        dst['major_number'] = dst['minor_number'] = '0'
+        form = forms.ServiceForm(dst)
+        self.assertFalse(form.is_valid())
+
+        dst = copy(src)
+        dst['major_number'] = ''
+        form = forms.ServiceForm(dst)
+        self.assertFalse(form.is_valid())
+
+        dst = copy(src)
+        dst['minor_number'] = ''
+        form = forms.ServiceForm(dst)
+        self.assertFalse(form.is_valid())
+
+        dst = copy(src)
+        dst['major_number'] = dst['minor_number'] = ''
         form = forms.ServiceForm(dst)
         self.assertFalse(form.is_valid())
 

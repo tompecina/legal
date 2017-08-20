@@ -54,25 +54,25 @@
 <tr>
 <th class="{{ off30limit5000_flag_error }}"><label for="id_off30limit5000_flag">Snížení o 30 % (nejvýš 5 000 Kč)</label><span>:</span></th>
 <td class="nowrap">
-<input type="checkbox" name="off30limit5000_flag" id="id_off30limit5000_flag" class="{{ off30limit5000_flag_error }}"{% if off30limit5000_flag %} checked="checked"{% endif %}>
+<input type="checkbox" name="off30limit5000_flag" id="id_off30limit5000_flag" class="{{ off30limit5000_flag_error }}"{% if off30limit5000_flag %} checked{% endif %}>
 <span>(§ 12a)</span>
 </td>
 </tr>
 <tr>
 <th class="{{ off20limit5000_flag_error }}"><label for="id_off20limit5000_flag">Snížení o 20 % (nejvýš 5 000 Kč)</label><span>:</span></th>
-<td class="nowrap"><input type="checkbox" name="off20limit5000_flag" id="id_off20limit5000_flag" class="{{ off20limit5000_flag_error }}"{% if off20limit5000_flag %} checked="checked"{% endif %}><span>(§ 12a)</span></td>
+<td class="nowrap"><input type="checkbox" name="off20limit5000_flag" id="id_off20limit5000_flag" class="{{ off20limit5000_flag_error }}"{% if off20limit5000_flag %} checked{% endif %}><span>(§ 12a)</span></td>
 </tr>
 <tr>
 <th class="{{ off30_flag_error }}"><label for="id_off30_flag">Snížení o 30 %</label><span>:</span></th>
 <td class="nowrap">
-<input type="checkbox" name="off30_flag" id="id_off30_flag" class="{{ off30_flag_error }}"{% if off30_flag %} checked="checked"{% endif %}>
+<input type="checkbox" name="off30_flag" id="id_off30_flag" class="{{ off30_flag_error }}"{% if off30_flag %} checked{% endif %}>
 <span>(§ 12b, 12c)</span>
 </td>
 </tr>
 <tr>
 <th class="{{ off10_flag_error }}"><label for="id_off10_flag">Snížení o 10 %</label><span>:</span></th>
 <td class="nowrap">
-<input type="checkbox" name="off10_flag" id="id_off10_flag" class="{{ off10_flag_error }}"{% if off10_flag %} checked="checked"{% endif %}>
+<input type="checkbox" name="off10_flag" id="id_off10_flag" class="{{ off10_flag_error }}"{% if off10_flag %} checked{% endif %}>
 <span>(§ 15a)</span>
 </td>
 </tr>
@@ -101,39 +101,42 @@
 <tr>
 <th><label for="id_collection_flag">Výkon rozhodnutí</label><span>:</span></th>
 <td class="nowrap">
-<input type="checkbox" name="collection_flag" id="id_collection_flag"{% if collection_flag %} checked="checked"{% endif %}>
+<input type="checkbox" name="collection_flag" id="id_collection_flag"{% if collection_flag %} checked{% endif %}>
 <span>(§ 12/1/a/1)</span>
 </td>
 </tr>
 <tr>
 <th class="{{ halved_flag_error }}"><label for="id_halved_flag">Odmítnuto/zastaveno</label><span>:</span></th>
 <td class="nowrap">
-<input type="checkbox" name="halved_flag" id="id_halved_flag" class="{{ halved_flag_error }}"{% if halved_flag %} checked="checked"{% endif %}>
+<input type="checkbox" name="halved_flag" id="id_halved_flag" class="{{ halved_flag_error }}"{% if halved_flag %} checked{% endif %}>
 <span>(§ 13/1)</span>
 </td>
 </tr>
 <tr>
 <th class="{{ halved_appeal_flag_error }}"><label for="id_halved_appeal_flag"><i>Ditto</i> v odvolání/dovolání</label><span>:</span></th>
 <td class="nowrap">
-<input type="checkbox" name="halved_appeal_flag" id="id_halved_appeal_flag" class="{{ halved_appeal_flag_error }}"{% if halved_appeal_flag %} checked="checked"{% endif %}>
+<input type="checkbox" name="halved_appeal_flag" id="id_halved_appeal_flag" class="{{ halved_appeal_flag_error }}"{% if halved_appeal_flag %} checked{% endif %}>
 <span>(§ 14/1)</span>
 </td>
 </tr>
 <tr>
 <th><label for="id_single_flag">Pouze jeden úkon</label><span>:</span></th>
-<td class="nowrap"><input type="checkbox" name="single_flag" id="id_single_flag"{% if single_flag %} checked="checked"{% endif %}> (§ 18/1)</td>
+<td class="nowrap">
+<input type="checkbox" name="single_flag" id="id_single_flag"{% if single_flag %} checked{% endif %}>
+<span>(§ 18/1)</span>
+</td>
 </tr>
 <tr>
-<th class="{{ multiple_flag_error }}">Více zastupovaných účastníků:</th>
+<th class="{{ multiple_flag_error }}">Dva zastupovaní účastníci:</th>
 <td class="nowrap">
-<input type="checkbox" name="multiple_flag" id="id_multiple_flag"{% if multiple_flag %} checked="checked"{% endif %}>
+<input type="checkbox" name="multiple_flag" id="id_multiple_flag"{% if multiple_flag %} checked{% endif %}>
 <span>+30 % (§ 19a)</span>
 </td>
 </tr>
 <tr>
-<th class="{{ multiple_flag_error }}"></th>
+<th class="{{ multiple_flag_error }}">Více zastupovaných účastníků:</th>
 <td class="nowrap">
-<input type="checkbox" name="multiple50_flag" id="id_multiple50_flag"{% if multiple50_flag %} checked="checked"{% endif %}>
+<input type="checkbox" name="multiple50_flag" id="id_multiple50_flag"{% if multiple50_flag %} checked{% endif %}>
 <span>+50 % (§ 19a)</span>
 </td>
 </tr>
@@ -179,7 +182,7 @@
 <th><label for="id_from_sel">Z</label><span>:</span></th>
 <td colspan="2" class="nowrap">
 <select name="from_sel" id="id_from_sel"{% if not from_sels %} disabled="disabled"{% endif %}>
-<option value="" selected="selected">Vyberte nebo zadejte:</option>
+<option value="" selected>Vyberte nebo zadejte:</option>
 <option value="">{{ sep }}</option>
 {% for p in from_sels %}
 <option value="{{ p.idx }}">{{ p.text }}</option>
@@ -213,7 +216,7 @@
 <th><label for="id_to_sel">Do</label><span>:</span></th>
 <td colspan="2" class="nowrap">
 <select name="to_sel" id="id_to_sel"{% if not to_sels %} disabled="disabled"{% endif %}>
-<option value="" selected="selected">Vyberte nebo zadejte:</option>
+<option value="" selected>Vyberte nebo zadejte:</option>
 <option value="">{{ sep }}</option>
 {% for p in to_sels %}
 <option value="{{ p.idx }}">{{ p.text }}</option>
@@ -277,7 +280,7 @@
 <th><label for="id_car_sel">Vozidlo</label><span>:</span></th>
 <td colspan="2" class="nowrap">
 <select name="car_sel" id="id_car_sel"{% if not car_sels %} disabled="disabled"{% endif %}>
-<option value="" selected="selected">Vyberte nebo zadejte:</option>
+<option value="" selected>Vyberte nebo zadejte:</option>
 <option value="">{{ sep }}</option>
 {% for p in car_sels %}
 <option value="{{ p.idx }}">{{ p.text }}</option>
@@ -292,7 +295,7 @@
 </tr>
 <tr>
 <th class="{{ fuel_name_error }}"><label for="id_fuel_name">Palivo</label><span>:</span></th>
-<td colspan="2"><select name="fuel_name" id="id_fuel_name">{% for f in fuel_names %}<option value="{{ f }}"{% if f == fuel_name %} selected="selected"{% endif %}>{{ f }}</option>{% endfor %}</select></td>
+<td colspan="2"><select name="fuel_name" id="id_fuel_name">{% for f in fuel_names %}<option value="{{ f }}"{% if f == fuel_name %} selected{% endif %}>{{ f }}</option>{% endfor %}</select></td>
 </tr>
 <tr>
 <th class="{{ cons_error }}"><label for="id_cons1">Spotřeba</label><span>:</span></th>
@@ -312,7 +315,7 @@
 <th><label for="id_formula_sel">Předpis</label><span>:</span></th>
 <td colspan="2" class="nowrap">
 <select name="formula_sel" id="id_formula_sel"{% if not formula_sels %} disabled="disabled"{% endif %}>
-<option value="" selected="selected">Vyberte nebo zadejte:</option>
+<option value="" selected>Vyberte nebo zadejte:</option>
 <option value="">{{ sep }}</option>
 {% for p in formula_sels %}
 <option value="{{ p.idx }}">{{ p.text }}</option>
@@ -345,7 +348,7 @@
 {% endif %}
 <tr>
 <th><label for="id_vat">DPH</label><span>:</span></th>
-<td colspan="2"><input type="checkbox" name="vat" id="id_vat"{% if vat %} checked="checked"{% endif %}></td>
+<td colspan="2"><input type="checkbox" name="vat" id="id_vat"{% if vat %} checked{% endif %}></td>
 </tr>
 <tr>
 <th class="{{ fraction_error }}">Zlomek:</th>

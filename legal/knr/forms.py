@@ -260,6 +260,18 @@ class ServiceForm(forms.Form):
             raise forms.ValidationError("Incompatible flags")
         return off20limit5000_flag
 
+    def clean(self):
+        cleaned_data = super().clean()
+        major_number = cleaned_data.get('major_number', 0)
+        minor_number = cleaned_data.get('minor_number', 0)
+        if not (major_number or minor_number): 
+            msg = 'Invalid data'
+            self._errors['major_number'] = self.error_class([msg])
+            self._errors['minor_number'] = self.error_class([msg])
+            cleaned_data.pop('major_number', None)
+            cleaned_data.pop('minor_number', None)
+        return cleaned_data
+
 
 class ServiceSubform(forms.Form):
 

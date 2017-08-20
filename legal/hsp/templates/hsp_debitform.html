@@ -38,7 +38,7 @@
 <span>{{ form.ydconv.label_tag }}</span>
 <select name="ydconv" id="id_ydconv">
 {% for dconv in ydconvs %}
-<option value="{{ dconv }}"{% if form.ydconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
+<option value="{{ dconv }}"{% if form.ydconv.value == dconv %} selected{% endif %}>{{ dconv }}</option>
 {% endfor %}
 </select>
 </td>
@@ -50,7 +50,7 @@
 <span>{{ form.mdconv.label_tag }}</span>
 <select name="mdconv" id="id_mdconv">
 {% for dconv in mdconvs %}
-<option value="{{ dconv }}"{% if form.mdconv.value == dconv %} selected="selected"{% endif %}>{{ dconv }}</option>
+<option value="{{ dconv }}"{% if form.mdconv.value == dconv %} selected{% endif %}>{{ dconv }}</option>
 {% endfor %}
 </select>
 </td>
@@ -83,7 +83,7 @@
 <span>{{ form.principal_debit.label_tag }}</span>
 <select name="principal_debit" id="id_principal_debit">
 {% for row in rows %}
-<option value="{{ row.value }}"{% if row.sel %} selected="selected"{% endif %} id="id_principal_debit_{{ row.value }}">{{ row.text }}</option>
+<option value="{{ row.value }}"{% if row.sel %} selected{% endif %} id="id_principal_debit_{{ row.value }}">{{ row.text }}</option>
 {% endfor %}
 </select>
 <span class="{{ form.principal_amount.css_classes }}">{{ form.principal_amount }}</span>

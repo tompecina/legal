@@ -34,7 +34,7 @@
 <div>
 <select name="r{{ row.n }}" id="id_r{{ row.n }}">
 {% for col in row.cols %}
-<option value="{{ col.n }}"{% if row.sel == col.n %} selected="selected"{% endif %}>{{ col.id }} – {{ col.desc|default:'(bez názvu)' }}</option>
+<option value="{{ col.n }}"{% if row.sel == col.n %} selected{% endif %}>{{ col.id }} – {{ col.desc|default:'(bez názvu)' }}</option>
 {% endfor %}
 </select>
 </div>

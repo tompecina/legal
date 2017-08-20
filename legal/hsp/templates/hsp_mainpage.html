@@ -33,8 +33,8 @@
 <td>
 {{ rt }}
 <select name="rounding" id="id_rounding">
-<option value="0"{% if form.rounding.value == '0' %} selected="selected"{% endif %}>na jednotky</option>
-<option value="2"{% if form.rounding.value == '2' %} selected="selected"{% endif %}>na 2 desetinná místa</option>
+<option value="0"{% if form.rounding.value == '0' %} selected{% endif %}>na jednotky</option>
+<option value="2"{% if form.rounding.value == '2' %} selected{% endif %}>na 2 desetinná místa</option>
 </select>
 </td>
 </tr>
@@ -195,7 +195,7 @@
 <td class="cs">
 <div>{{ row.description|default:'&nbsp;' }}</div>
 {% if row.sps_text %}
-<div><span class="sps">(přeplatek:</span>{{ row.sps_text|safe }})</div>
+<div><span class="sps">(přeplatek: {{ row.sps_text|safe }})</span></div>
 {% endif %}
 </td>
 <td class="ams">{{ row.amount|safe }}</td>
