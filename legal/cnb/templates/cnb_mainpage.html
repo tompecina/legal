@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block page_contents %}
 
-<form method="post" enctype="multipart/form-data">
+{% include 'form.html' %}
 
   <h1>{{ page_title }}</h1>
 
@@ -60,7 +60,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	    <div><input type="submit" name="submit_DISC" value="Diskontní sazba"></div>
 	    <div><input type="submit" name="submit_LOMB" value="Lombardní sazba"></div>
 	    <div><input type="submit" name="submit_REPO" value="2T repo sazba"></div>
-	    {% csrf_token %}
 	  </fieldset>
 	</td>
       </tr>

@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block page_contents %}
 
-<form method="post" enctype="multipart/form-data">
+{% include 'form.html' %}
 
   <table class="form">
 
@@ -188,8 +188,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   </table>
 
   <input type="hidden" name="type" id="id_type" value="mainpage"><input type="hidden" name="type" id="id_items" value="{{ num_items }}">
-
-  {% csrf_token %}
 
 </form>
 

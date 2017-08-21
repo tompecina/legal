@@ -53,9 +53,6 @@ def mainpage(request):
     err_message = ''
     page_title = apps.get_app_config(APP).verbose_name
 
-    courts = sorted(
-        [{'id': x, 'name': L2N[x]} for x in Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()],
-        key=lambda x: strxfrm(x['name']))
     if request.method == 'GET':
         form = MainForm()
         return render(
@@ -64,7 +61,6 @@ def mainpage(request):
             {'app': APP,
              'page_title': page_title,
              'err_message': err_message,
-             'courts': courts,
              'form': form})
     form = MainForm(request.POST)
     if form.is_valid():
@@ -94,7 +90,6 @@ def mainpage(request):
         {'app': APP,
          'page_title': page_title,
          'err_message': err_message,
-         'courts': courts,
          'form': form})
 
 

@@ -1,6 +1,6 @@
 {% comment %}
 
-common/templates/confirm.html
+common/templates/form.html
 
 Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 
@@ -22,13 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
 
-{% include 'form.html' %}
+<form method="post" enctype="multipart/form-data"{% if form_url %} action="{% url form_url %}"{% endif %}{% if form_id %} id="{{ form_id }}"{% endif %}>
 
-  {% block yes %}{% endblock %}
-
-  <p class="confirm">
-    <input type="submit" name="submit_yes" value="Ano">
-    <input type="submit" name="submit_no" value="Ne">
-  </p>
-
-</form>
+  {% csrf_token %}

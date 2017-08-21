@@ -40,8 +40,7 @@ before_install:
   - "validator=$(pwd)"
   - "popd"
   - "popd"
-  - "mkdir -p aux"
-  - "ln -s $validator/build/dist/vnu.jar aux"
+  - "ln -s $validator/build/dist/vnu.jar lib"
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
         pip install git+https://github.com/django/django.git

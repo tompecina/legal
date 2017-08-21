@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <td colspan="6" class="nowrap">
 
-  <form action="{% url 'knr:itemform' %}" method="post" enctype="multipart/form-data">
+  {% include 'form.html' with form_url='knr:itemform' %}
 
     <div>
       <input type="submit" name="submit_new" value="Přidat položku:" id="id_apply">
@@ -46,7 +46,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	{% endfor %}
       </select>
       <input type="hidden" name="type" id="id_type" value="itemlist">
-      {% csrf_token %}
     </div>
 
   </form>
@@ -72,7 +71,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <p>(nejsou zadány žádné položky)</p>
 
-<form action="{% url 'knr:itemform' %}" method="post" enctype="multipart/form-data">
+{% include 'form.html' with form_url='knr:itemform' %}
 
   <p class="center nowrap">
     <input type="submit" name="submit_new" value="Přidat položku:" id="id_apply">
@@ -84,8 +83,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   </p>
 
   <input type="hidden" name="type" id="id_type" value="itemlist">
-
-  {% csrf_token %}
 
 </form>
 

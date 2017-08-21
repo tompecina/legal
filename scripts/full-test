@@ -5,4 +5,4 @@ path='tests/temp'
 rm -f "$path"/*.html
 DUMP_PATH="$path" ./manage.py test tests --failfast || exit
 ./manage.py test tests --reverse --failfast || exit
-java -jar ./aux/vnu.jar --no-langdetect tests/temp/*.html || exit
+java -jar lib/vnu.jar --no-langdetect tests/temp/*.html || exit

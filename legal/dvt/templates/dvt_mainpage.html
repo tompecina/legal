@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block page_contents %}
 
-<form method="post" enctype="multipart/form-data" id="id_maintform">
+{% include 'form.html' with form_id='id_mainform' %}
 
   <table class="form">
 
@@ -55,7 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       </tr>
 
       <tr>
-	<td colspan="2" class="center"><input type="submit" name="submit" value="Vypočítat">{% csrf_token %}</td>
+	<td colspan="2" class="center"><input type="submit" name="submit" value="Vypočítat"></td>
       </tr>
 
       {% if messages %}

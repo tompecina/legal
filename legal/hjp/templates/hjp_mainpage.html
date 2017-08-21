@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block page_contents %}
 
-<form method="post" enctype="multipart/form-data" id="id_mainform">
+{% include 'form.html' with form_id='id_mainform' %}
 
   <h1>{{ page_title }}</h1>
 
@@ -276,8 +276,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   </table>
 
   {{ form.next }}
-
-  {% csrf_token %}
 
 </form>
 

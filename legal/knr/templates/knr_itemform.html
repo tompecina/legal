@@ -56,7 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <span>:</span>
   </th>
   <td colspan="2" class="nowrap">
-    <input type="text" name="amount" value="{% if amount_error%}{{ amount|stringformat:'d' }}{% else %}{{ amount }}{% endif %}" size="9" maxlength="12" id="id_amount" class="{{ amount_error }}">
+    <input type="text" name="amount" value="{% if amount_error %}{{ amount|stringformat:'d' }}{% else %}{{ amount }}{% endif %}" size="9" maxlength="12" id="id_amount" class="{{ amount_error }}">
     <span>Kč</span>
   </td>
 </tr>
