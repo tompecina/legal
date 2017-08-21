@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# pir/tests.py
+# tests/test_pir.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -22,16 +22,25 @@
 
 from http import HTTPStatus
 from datetime import date
+from os.path import join
 
 from bs4 import BeautifulSoup
+from django.apps import apps
 from django.test import SimpleTestCase, TransactionTestCase
 
+from legal.settings import BASE_DIR
 from legal.sir.cron import cron_getws2
 from legal.sir.models import Osoba, DruhRoleVRizeni, Vec
 from legal.pir import forms, views
 
-from tests.utils import strip_xml, link_equal, setpr, getpr, check_html
+from tests.utils import strip_xml, validate_xml, link_equal, setpr, getpr, check_html
 from tests.test_sir import populate
+
+
+APP = __file__.rpartition('_')[2].partition('.')[0]
+APPVERSION = apps.get_app_config(APP).version
+with open(join(BASE_DIR, 'legal', APP, 'static', '{}-{}.xsd'.format(APP, APPVERSION)), 'rb') as xsdfile:
+    XSD = xsdfile.read()
 
 
 class TestForms(SimpleTestCase):
@@ -774,6 +783,7 @@ cy></insolvencies>
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/xml; charset=utf-8')
+        self.assertTrue(validate_xml(res.content, XSD))
 
         res = self.client.get('/pir/xmllist/?senate=-1')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -835,14 +845,17 @@ cy></insolvencies>
         res = self.client.get('/pir/xmllist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertXMLEqual(strip_xml(res.content), strip_xml(res0.encode('utf-8')))
+        self.assertTrue(validate_xml(res.content, XSD))
 
         res = self.client.get('/pir/xmllist/?name=Bártová&name_opt=iexact&role_debtor=on')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertXMLEqual(strip_xml(res.content), strip_xml(res1.encode('utf-8')))
+        self.assertTrue(validate_xml(res.content, XSD))
 
         res = self.client.get('/pir/xmllist/?creditors=on')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertXMLEqual(strip_xml(res.content), strip_xml(res2.encode('utf-8')))
+        self.assertTrue(validate_xml(res.content, XSD))
 
         exlim = views.EXLIM
         views.EXLIM = 0

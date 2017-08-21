@@ -27,13 +27,20 @@ from os.path import join
 from os import unlink
 
 from bs4 import BeautifulSoup
+from django.apps import apps
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 
-from legal.settings import TEST_TEMP_DIR
+from legal.settings import TEST_TEMP_DIR, BASE_DIR
 from legal.common.glob import LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL
 from legal.udn import cron, forms, glob, models, views
 
-from tests.utils import strip_xml, link_equal, check_html
+from tests.utils import strip_xml, validate_xml, link_equal, check_html
+
+
+APP = __file__.rpartition('_')[2].partition('.')[0]
+APPVERSION = apps.get_app_config(APP).version
+with open(join(BASE_DIR, 'legal', APP, 'static', '{}-{}.xsd'.format(APP, APPVERSION)), 'rb') as xsdfile:
+    XSD = xsdfile.read()
 
 
 class TestCron(TestCase):
@@ -309,6 +316,7 @@ aj</party></parties><files><file type="abridged">{2}udn/0158_8As__1500033S.pdf</
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/xml; charset=utf-8')
+        self.assertTrue(validate_xml(res.content, XSD))
 
         res = self.client.get('/udn/xmllist/?senate=-1')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -358,12 +366,14 @@ aj</party></parties><files><file type="abridged">{2}udn/0158_8As__1500033S.pdf</
         res = self.client.get('/udn/xmllist/?register=Ads')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertXMLEqual(strip_xml(res.content), strip_xml(res0.encode('utf-8')))
+        self.assertTrue(validate_xml(res.content, XSD))
 
         res = self.client.get(
             '/udn/xmllist/?date_from=2015-01-01&date_to=2199-07-01&'
             'register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertXMLEqual(strip_xml(res.content), strip_xml(res1.encode('utf-8')))
+        self.assertTrue(validate_xml(res.content, XSD))
 
         models.Decision.objects.update(
             anonfilename='0067_5As__1500054_20151119130217_prevedeno.pdf')
@@ -374,6 +384,7 @@ aj</party></parties><files><file type="abridged">{2}udn/0158_8As__1500033S.pdf</
         self.assertXMLEqual(
             strip_xml(res.content),
             strip_xml(res2.encode('utf-8')))
+        self.assertTrue(validate_xml(res.content, XSD))
 
         exlim = views.EXLIM
         views.EXLIM = 0

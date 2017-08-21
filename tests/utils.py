@@ -26,10 +26,12 @@ from os.path import join
 from re import compile
 from hashlib import md5
 from inspect import stack
+from io import BytesIO
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag, NavigableString
 from tinycss import make_parser
+from lxml.etree import parse, XMLSchema
 from django.http import QueryDict
 
 from legal.settings import TEST_DIR, TEST_DATA_DIR, STATIC_URL, APPS, BASE_DIR
@@ -84,6 +86,13 @@ def strip_xml(string):
     except:
         return ''
 
+
+def validate_xml(xml, xsd):
+
+    xmlschema_doc = parse(BytesIO(xsd))
+    xmlschema = XMLSchema(xmlschema_doc)
+    doc = parse(BytesIO(xml))
+    return xmlschema.validate(doc)
 
 class Request:
 

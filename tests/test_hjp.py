@@ -26,18 +26,22 @@ from io import BytesIO
 from os.path import join
 
 from bs4 import BeautifulSoup
+from django.apps import apps
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 
-from legal.settings import TEST_DATA_DIR
+from legal.settings import TEST_DATA_DIR, BASE_DIR
 from legal.common.utils import p2c
 from legal.hjp import forms, views
 
 from tests.glob import TEST_STRING
-from tests.utils import DummyRequest, strip_xml, check_html
+from tests.utils import DummyRequest, strip_xml, validate_xml, check_html
 
 
-APP = __package__.rpartition('.')[2]
+APP = __file__.rpartition('_')[2].partition('.')[0]
+APPVERSION = apps.get_app_config(APP).version
+with open(join(BASE_DIR, 'legal', APP, 'static', '{}-{}.xsd'.format(APP, APPVERSION)), 'rb') as xsdfile:
+    XSD = xsdfile.read()
 
 
 class TestForms(SimpleTestCase):
@@ -158,6 +162,7 @@ class TestViews1(SimpleTestCase):
             self.assertIsNone(res[1])
             self.assertIs(type(res[0]), views.Debt)
             err = views.to_xml(res[0])
+            self.assertTrue(validate_xml(err, XSD))
             self.assertXMLEqual(strip_xml(dat), strip_xml(err), msg=str(idx))
             idx += 1
         self.assertEqual(views.from_xml(b'XXX'), (None, 'Chybný formát souboru'))
@@ -300,6 +305,8 @@ class TestViews2(TestCase):
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], suf[2])
+            if suf[0] == 'xml':
+                self.assertTrue(validate_xml(res.content, XSD))
 
             con = BytesIO(res.content)
             con.seek(0)

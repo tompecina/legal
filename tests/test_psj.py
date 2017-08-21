@@ -23,14 +23,22 @@
 from http import HTTPStatus
 from datetime import date, datetime
 from locale import strxfrm
+from os.path import join
 
 from bs4 import BeautifulSoup
+from django.apps import apps
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 
+from legal.settings import BASE_DIR
 from legal.szr.models import Court
 from legal.psj import cron, forms, models, views
 
-from tests.utils import strip_xml, link_equal, check_html
+from tests.utils import strip_xml, validate_xml, link_equal, check_html
+
+APP = __file__.rpartition('_')[2].partition('.')[0]
+APPVERSION = apps.get_app_config(APP).version
+with open(join(BASE_DIR, 'legal', APP, 'static', '{}-{}.xsd'.format(APP, APPVERSION)), 'rb') as xsdfile:
+    XSD = xsdfile.read()
 
 
 class TestCron(TestCase):
@@ -517,6 +525,7 @@ earings>
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/xml; charset=utf-8')
+        self.assertTrue(validate_xml(res.content, XSD))
 
         res = self.client.get('/psj/xmllist/?senate=-1')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -565,12 +574,13 @@ earings>
 
         res = self.client.get('/psj/xmllist/?register=C')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-
         self.assertXMLEqual(strip_xml(res.content), strip_xml(res0.encode('utf-8')))
-        res = self.client.get('/psj/xmllist/?party=oi&party_opt=icontains')
+        self.assertTrue(validate_xml(res.content, XSD))
 
+        res = self.client.get('/psj/xmllist/?party=oi&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertXMLEqual(strip_xml(res.content), strip_xml(res1.encode('utf-8')))
+        self.assertTrue(validate_xml(res.content, XSD))
 
         exlim = views.EXLIM
         views.EXLIM = 0

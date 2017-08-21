@@ -27,7 +27,7 @@ class HspConfig(AppConfig):
 
     name = 'legal.hsp'
     verbose_name = 'Historie složené pohledávky'
-    version = '1.6'
+    version = '1.7'
 
     @staticmethod
     def stat():

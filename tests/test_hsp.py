@@ -26,17 +26,21 @@ from io import BytesIO
 from os.path import join
 
 from bs4 import BeautifulSoup
+from django.apps import apps
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 
-from legal.settings import TEST_DATA_DIR
+from legal.settings import TEST_DATA_DIR, BASE_DIR
 from legal.hsp import forms, views
 
 from tests.glob import TEST_STRING
-from tests.utils import DummyRequest, strip_xml, check_html
+from tests.utils import DummyRequest, strip_xml, validate_xml, check_html
 
 
-APP = __package__.rpartition('.')[2]
+APP = __file__.rpartition('_')[2].partition('.')[0]
+APPVERSION = apps.get_app_config(APP).version
+with open(join(BASE_DIR, 'legal', APP, 'static', '{}-{}.xsd'.format(APP, APPVERSION)), 'rb') as xsdfile:
+    XSD = xsdfile.read()
 
 
 class TestForms(SimpleTestCase):
@@ -228,6 +232,7 @@ class TestViews1(SimpleTestCase):
             self.assertIsNone(debt[1])
             self.assertIs(type(debt[0]), views.Debt)
             xml = views.to_xml(debt[0])
+            self.assertTrue(validate_xml(xml, XSD))
             self.assertXMLEqual(strip_xml(dat), strip_xml(xml), msg=str(idx))
             idx += 1
 
@@ -340,6 +345,9 @@ class TestViews2(TestCase):
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertIn('content-type', res)
             self.assertEqual(res['content-type'], suf[2])
+            if suf[0] == 'xml':
+                self.assertTrue(validate_xml(res.content, XSD))
+
             con = BytesIO(res.content)
             con.seek(0)
 
