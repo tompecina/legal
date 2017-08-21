@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <head>
     <title>{% block pagetitle %}{{ page_title }}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="referrer" content="origin-when-crossorigin">
     <meta name="author" content="Tomáš Pecina">
@@ -48,7 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <script type="text/javascript" src="{% static '' %}{% datepicker_js %}"></script>
     <script type="text/javascript" src="{% static 'common.js' %}{% ts_common_js %}"></script>
     <script type="text/javascript" src="{% static '' %}{% if app %}{{ app }}.js{% ts_app_js %}{% else %}acc.js{% ts_acc_js %}{% endif %}"></script>
-    <script type="text/javascript" src="{% static 'google.js' %}"></script>
+    <script type="text/javascript" src="{% static 'google-analytics.js' %}"></script>
   </head>
 
   <body>

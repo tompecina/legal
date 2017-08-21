@@ -5,4 +5,4 @@ scriptpath='./scripts'
 "$scriptpath"/dosass || exit
 ./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map' || exit
 "$scriptpath"/douglifyjs || exit
-cp jquery/*.{js,css} collect || exit
+cp lib/*.{js,css} collect || exit

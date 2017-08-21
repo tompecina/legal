@@ -5,9 +5,9 @@
 /aux/
 *.pyc
 *.po
-/collect/
 __pycache__/
 /secrets.py
+/collect/
 /htmlcov/
 *.css
 *.map
