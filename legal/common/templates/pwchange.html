@@ -1,36 +1,73 @@
 {% extends 'main.html' %}
 
+{% comment %}
+
+common/templates/pwchange.html
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
 {% block page_contents %}
+
 <form method="post" enctype="multipart/form-data">
-<table class="form">
-<tbody>
-<tr>
-<td></td>
-<td colspan="2"><h1>{{ page_title }}</h1></td>
-</tr>
-{% if error_message %}
-<tr>
-<td colspan="3">{% include 'formwarning.html' %}</td>
-</tr>
-{% endif %}
-<tr class="ga">
-<th><label for="id_oldpassword">Staré heslo</label>:</th>
-<td colspan="2"><input type="password" name="oldpassword" value="{{ oldpassword }}" id="id_oldpassword"></td>
-</tr>
-<tr>
-<th><label for="id_newpassword1">Nové heslo</label>:</th>
-<td colspan="2"><input type="password" name="newpassword1" value="{{ newpassword1 }}" id="id_newpassword1"></td>
-</tr>
-<tr>
-<th><label for="id_newpassword2">Nové heslo znovu</label>:</th>
-<td colspan="2"><input type="password" name="newpassword2" value="{{ newpassword2 }}" id="id_newpassword2"></td>
-</tr>
-<tr>
-<td></td>
-<td><input type="submit" name="submit" value="Změnit"></td>
-<td class="right"><input type="submit" name="back" value="Zpět">{% csrf_token %}</td>
-</tr>
-</tbody>
-</table>
+
+  <table class="form">
+
+    <tbody>
+
+      <tr>
+	<td></td>
+	<td colspan="2"><h1>{{ page_title }}</h1></td>
+      </tr>
+
+      {% if error_message %}
+      <tr>
+	<td colspan="3">{% include 'formwarning.html' %}</td>
+      </tr>
+      {% endif %}
+
+      <tr class="ga">
+	<th><label for="id_oldpassword">Staré heslo</label>:</th>
+	<td colspan="2"><input type="password" name="oldpassword" value="{{ oldpassword }}" id="id_oldpassword"></td>
+      </tr>
+
+      <tr>
+	<th><label for="id_newpassword1">Nové heslo</label>:</th>
+	<td colspan="2"><input type="password" name="newpassword1" value="{{ newpassword1 }}" id="id_newpassword1"></td>
+      </tr>
+
+      <tr>
+	<th><label for="id_newpassword2">Nové heslo znovu</label>:</th>
+	<td colspan="2"><input type="password" name="newpassword2" value="{{ newpassword2 }}" id="id_newpassword2"></td>
+      </tr>
+
+      <tr>
+	<td></td>
+	<td><input type="submit" name="submit" value="Změnit"></td>
+	<td class="right"><input type="submit" name="back" value="Zpět">{% csrf_token %}</td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
 </form>
+
 {% endblock %}

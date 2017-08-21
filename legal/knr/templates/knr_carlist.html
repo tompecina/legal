@@ -1,5 +1,29 @@
 {% extends 'knr_list.html' %}
 
+{% comment %}
+
+knr/templates/knr_carlist.html
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
 {% block table_class %}car{% endblock %}
 
 {% block table_header %}
@@ -7,9 +31,13 @@
 <th>Název</th>
 <th>Palivo</th>
 <th>Spotřeba</th>
-<th>Akce</th>{% endblock %}
+<th>Akce</th>
+{% endblock %}
 
-{% block table_footer %}<td colspan="5"><a href="{% url 'knr:carform' %}">Přidat vozidlo</a></td>{% endblock %}
+
+{% block table_footer %}
+<td colspan="5"><a href="{% url 'knr:carform' %}">Přidat vozidlo</a></td>
+{% endblock %}
 
 {% block table_row %}
 <td>{{ row.abbr }}</td>
@@ -17,9 +45,11 @@
 <td>{{ row.fuel }}</td>
 <td>{{ row.cons1 }} / {{ row.cons2 }} / {{ row.cons3 }}</td>
 <td class="act">
-<a href="{% url 'knr:carform' row.id %}">upravit</a>
-<a href="{% url 'knr:cardel' row.id %}">smazat</a></td>
+  <a href="{% url 'knr:carform' row.id %}">upravit</a>
+  <a href="{% url 'knr:cardel' row.id %}">smazat</a>
+</td>
 {% endblock %}
+
 
 {% block empty %}
 <p>(nejsou zadána žádná vozidla)</p>

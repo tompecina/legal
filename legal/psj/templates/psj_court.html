@@ -1,12 +1,15 @@
-{% spaceless %}
+{% load compact %}{% compact %}
+
 <select id="courtroom">
-{% for courtroom in courtrooms %}
-<option value="{{ courtroom.courtroom_id }}">{{ courtroom.courtroom__desc }}</option>
-{% endfor %}
+  {% for courtroom in courtrooms %}
+  <option value="{{ courtroom.courtroom_id }}">{{ courtroom.courtroom__desc }}</option>
+  {% endfor %}
 </select>
+
 <select id="judge">
-{% for judge in judges %}
-<option value="{{ judge.judge_id }}">{{ judge.judge__name }}</option>
-{% endfor %}
+  {% for judge in judges %}
+  <option value="{{ judge.judge_id }}">{{ judge.judge__name }}</option>
+  {% endfor %}
 </select>
-{% endspaceless %}
+
+{% endcompact %}

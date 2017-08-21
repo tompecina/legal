@@ -1,55 +1,92 @@
 {% extends 'main.html' %}
 
+{% comment %}
+
+lht/templates/lht_mainpage.html
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
 {% block page_contents %}
+
 <form method="post" enctype="multipart/form-data">
-<table class="centered">
-<tbody>
-<tr>
-<td><h1>{{ page_title }}</h1></td>
-</tr>
-<tr class="{{ form.beg_date.css_classes }}">
-<td>{{ form.beg_date.label_tag }}{{ form.beg_date }}</td>
-</tr>
-<tr>
-<td>
-<fieldset>
-<legend>{{ form.preset.label }}</legend>
-{% for p in form.preset %}
-{% if not forloop.last %}
-<div>{{ p }}</div>
-{% endif %}
-{% endfor %}
-<div>
-<label for="preset_none"><input type="radio" name="preset" value="none" id="preset_none"{% if form.preset.value == "none" %} checked{% endif %}> jiná:</label>
-<span class="{{ form.dur.css_classes }}">{{ form.dur }}</span>
-<select name="unit" id="id_unit">
-<option value="d" id="id_d"{% if form.unit.value == "d" %} selected{% endif %}>dnů</option>
-<option value="w" id="id_w"{% if form.unit.value == "w" %} selected{% endif %}>týdnů</option>
-<option value="m" id="id_m"{% if form.unit.value == "m" %} selected{% endif %}>měsíců</option>
-<option value="y" id="id_y"{% if form.unit.value == "y" %} selected{% endif %}>let</option>
-<option value="b" id="id_b"{% if form.unit.value == "b" %} selected{% endif %}>pracovních dnů</option>
-</select>
-</div>
-<div>(lze zadat i zápornou délku)</div>
-</fieldset>
-</td>
-</tr>
-<tr>
-<td class="center">{% include 'calc_button.html' %}</td>
-</tr>
-{% if messages %}
-<tr>
-<td class="msg">
-<hr>
-{% for message in messages %}
-<div{% if message.1 %} class="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
-{% endfor %}
-<hr>
-</td>
-</tr>
-{% endif %}
-</tbody>
-</table>
-{% csrf_token %}
+
+  <table class="centered">
+
+    <tbody>
+
+      <tr>
+	<td><h1>{{ page_title }}</h1></td>
+      </tr>
+
+      <tr class="{{ form.beg_date.css_classes }}">
+	<td>{{ form.beg_date.label_tag }}{{ form.beg_date }}</td>
+      </tr>
+
+      <tr>
+	<td>
+	  <fieldset>
+	    <legend>{{ form.preset.label }}</legend>
+	    {% for p in form.preset %}
+	    {% if not forloop.last %}
+	    <div>{{ p }}</div>
+	    {% endif %}
+	    {% endfor %}
+	    <div>
+	      <label for="preset_none"><input type="radio" name="preset" value="none" id="preset_none"{% if form.preset.value == "none" %} checked{% endif %}> jiná:</label>
+	      <span class="{{ form.dur.css_classes }}">{{ form.dur }}</span>
+	      <select name="unit" id="id_unit">
+		<option value="d" id="id_d"{% if form.unit.value == "d" %} selected{% endif %}>dnů</option>
+		<option value="w" id="id_w"{% if form.unit.value == "w" %} selected{% endif %}>týdnů</option>
+		<option value="m" id="id_m"{% if form.unit.value == "m" %} selected{% endif %}>měsíců</option>
+		<option value="y" id="id_y"{% if form.unit.value == "y" %} selected{% endif %}>let</option>
+		<option value="b" id="id_b"{% if form.unit.value == "b" %} selected{% endif %}>pracovních dnů</option>
+	      </select>
+	    </div>
+	    <div>(lze zadat i zápornou délku)</div>
+	  </fieldset>
+	</td>
+      </tr>
+
+      <tr>
+	<td class="center">{% include 'calc_button.html' %}</td>
+      </tr>
+
+      {% if messages %}
+      <tr>
+	<td class="msg">
+	  <hr>
+	  {% for message in messages %}
+	  <div{% if message.1 %} class="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
+	  {% endfor %}
+	  <hr>
+	</td>
+      </tr>
+      {% endif %}
+
+    </tbody>
+
+  </table>
+
+  {% csrf_token %}
+
 </form>
+
 {% endblock %}

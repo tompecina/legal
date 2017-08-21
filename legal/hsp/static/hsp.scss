@@ -30,38 +30,37 @@ fieldset {
 	top: 0;
 	bottom: ($vl+$vm);
     }
-    &.btbl {
-	table {
+}
+
+table.centered tbody tr td fieldset:not(:first-child) table {
+    width: 100%;
+    tbody tr {
+	th, td {
+	    padding: $vl $hm;
+	    border-bottom: $bs solid $border-blue;
+	}
+	th {
+	    padding-left: $hl;
+	    text-align: center;
+	    font-size: $huge;
+	}
+	td div:first-child, td.cc {
+	    font-weight: bold;
+	}
+	td.mc {
 	    width: 100%;
-	    tbody tr {
-		th, td {
-		    padding: $vl $hm;
-		    border-bottom: $bs solid $border-blue;
-		}
-		th {
-		    padding-left: $hl;
-		    text-align: center;
-		    font-size: $huge;
-		}
-		td div:first-child, td.cc {
-		    font-weight: bold;
-		}
-		td.mc {
-		    width: 100%;
-		}
-		td.cc {
-		    white-space: nowrap;
-		}
-		&:first-child {
-		    th, td {
-			padding-top: $vm;
-		    }
-		}
-	    }
-	    tfoot tr td {
-		height: ($vh+$vl);
+	}
+	td.cc {
+	    white-space: nowrap;
+	}
+	&:first-child {
+	    th, td {
+		padding-top: $vm;
 	    }
 	}
+    }
+    tfoot tr td {
+	height: ($vh+$vl);
     }
 }
 

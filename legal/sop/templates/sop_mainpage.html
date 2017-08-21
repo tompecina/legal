@@ -1,60 +1,102 @@
 {% extends 'main.html' %}
 
+{% comment %}
+
+sop/templates/sop_mainpage.html
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
 {% block page_contents %}
+
 <form method="post" enctype="multipart/form-data">
-<table class="form">
-<tbody>
-<tr>
-<td></td>
-<td><h1>{{ page_title }}</h1></td>
-</tr>
-<tr class="{{ form.basis.css_classes }}">
-<th>{{ form.basis.label_tag }}</th>
-<td>{{ form.basis }}</td>
-</tr>
-<tr>
-<th class="{{ form.curr.css_classes }}">{{ form.curr.label_tag }}</th>
-<td>{{ form.curr }}<span class="{{ form.fx_date.css_classes }}" id="id_fx_date_span">{{ form.fx_date.label_tag }}{{ form.fx_date }}</span></td>
-</tr>
-<tr>
-<th>{{ form.model.label_tag }}</th>
-<td>
-<select name="model" id="id_model">
-<option value="1"{% if form.model.value == '1' %} selected{% endif %}>Do 31.08.2011</option>
-<option value="2"{% if form.model.value == '2' %} selected{% endif %}>Od 01.09.2011 do 31.12.2012</option>
-<option value="3"{% if form.model.value == '3' %} selected{% endif %}>Od 01.01.2013 do 31.12.2013</option>
-<option value="4"{% if form.model.value == '4' %} selected{% endif %}>Od 01.01.2014</option>
-</select>
-</td>
-</tr>
-<tr>
-<td></td>
-<td>
-<fieldset>
-<legend>{{ form.opt.label }}</legend>
-{% for p in form.opt %}
-<div>{{ p }}</div>
-{% endfor %}
-</fieldset>
-</td>
-</tr>
-<tr>
-<td></td>
-<td class="center">{% include 'calc_button.html' %}</td>
-</tr>
-{% if messages %}
-<tr>
-<td colspan="2" class="msg">
-<hr>
-{% for message in messages %}
-<div{% if message.1 %} class="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
-{% endfor %}
-<hr>
-</td>
-</tr>
-{% endif %}
-</tbody>
-</table>
-{% csrf_token %}
+
+  <table class="form">
+
+    <tbody>
+
+      <tr>
+	<td></td>
+	<td><h1>{{ page_title }}</h1></td>
+      </tr>
+
+      <tr class="{{ form.basis.css_classes }}">
+	<th>{{ form.basis.label_tag }}</th>
+	<td>{{ form.basis }}</td>
+      </tr>
+
+      <tr>
+	<th class="{{ form.curr.css_classes }}">{{ form.curr.label_tag }}</th>
+	<td>
+	  {{ form.curr }}
+	  <span class="{{ form.fx_date.css_classes }}" id="id_fx_date_span">{{ form.fx_date.label_tag }}{{ form.fx_date }}</span>
+	</td>
+      </tr>
+
+      <tr>
+	<th>{{ form.model.label_tag }}</th>
+	<td>
+	  <select name="model" id="id_model">
+	    <option value="1"{% if form.model.value == '1' %} selected{% endif %}>Do 31.08.2011</option>
+	    <option value="2"{% if form.model.value == '2' %} selected{% endif %}>Od 01.09.2011 do 31.12.2012</option>
+	    <option value="3"{% if form.model.value == '3' %} selected{% endif %}>Od 01.01.2013 do 31.12.2013</option>
+	    <option value="4"{% if form.model.value == '4' %} selected{% endif %}>Od 01.01.2014</option>
+	  </select>
+	</td>
+      </tr>
+
+      <tr>
+	<td></td>
+	<td>
+	  <fieldset>
+	    <legend>{{ form.opt.label }}</legend>
+	    {% for p in form.opt %}
+	    <div>{{ p }}</div>
+	    {% endfor %}
+	  </fieldset>
+	</td>
+      </tr>
+
+      <tr>
+	<td></td>
+	<td class="center">{% include 'calc_button.html' %}</td>
+      </tr>
+
+      {% if messages %}
+      <tr>
+	<td colspan="2" class="msg">
+	  <hr>
+	  {% for message in messages %}
+	  <div{% if message.1 %} class="{{ message.1|safe }}"{% endif %}>{{ message.0|safe }}</div>
+	  {% endfor %}
+	  <hr>
+	</td>
+      </tr>
+      {% endif %}
+
+    </tbody>
+
+  </table>
+
+  {% csrf_token %}
+
 </form>
+
 {% endblock %}

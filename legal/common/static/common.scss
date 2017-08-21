@@ -567,9 +567,7 @@ div.ui-datepicker a.ui-datepicker-next span:hover {
     background-position: initial;
     left: 20px;
 }
-div.ui-datepicker th,
-div.ui-datepicker td span,
-div.ui-datepicker td a {
+div.ui-datepicker th, div.ui-datepicker td span, div.ui-datepicker td a {
     padding: 3px 5px;
     text-align: right;
 }
@@ -605,9 +603,7 @@ table.ui-datepicker-calendar a.ui-state-default {
 td.ui-datepicker-today a {
     background-color: $medium-blue;
 }
-.ui-priority-secondary,
-.ui-widget-content .ui-priority-secondary,
-.ui-widget-header .ui-priority-secondary,
+.ui-priority-secondary, .ui-widget-content .ui-priority-secondary, .ui-widget-header .ui-priority-secondary,
 td.ui-datepicker-other-month a.ui-priority-secondary {
     opacity: 1;
     filter: Alpha(Opacity=100);

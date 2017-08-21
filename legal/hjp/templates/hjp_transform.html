@@ -1,42 +1,74 @@
 {% extends 'hjp_form.html' %}
 
+{% comment %}
+
+hjp/templates/hjp_transform.html
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
 {% block form_contents %}
+
 <tr id="id_transform">
-<td></td>
-<td colspan="2"><h1>{{ page_title }}</h1></td>
+  <td></td>
+  <td colspan="2"><h1>{{ page_title }}</h1></td>
 </tr>
+
 {% if err_message %}
 <tr>
-<td></td>
-<td colspan="2">{% include 'formwarning.html' %}</td>
+  <td></td>
+  <td colspan="2">{% include 'formwarning.html' %}</td>
 </tr>
 {% endif %}
+
 <tr class="{{ form.date.css_classes }}">
-<th>{{ form.date.label_tag }}</th>
-<td colspan="2">{{ form.date }}</td>
+  <th>{{ form.date.label_tag }}</th>
+  <td colspan="2">{{ form.date }}</td>
 </tr>
+
 <tr class="{{ form.description.css_classes }}">
-<th>{{ form.description.label_tag }}</th>
-<td colspan="2">{{ form.description }}</td>
+  <th>{{ form.description.label_tag }}</th>
+  <td colspan="2">{{ form.description }}</td>
 </tr>
+
 <tr>
-<th>{{ form.transaction_type.label }}:</th>
-<td colspan="2" class="inlop">
-{% for p in form.transaction_type %}
-{{ p }}
-{% endfor %}
-</td>
+  <th>{{ form.transaction_type.label }}:</th>
+  <td colspan="2" class="inlop">
+    {% for p in form.transaction_type %}
+    {{ p }}
+    {% endfor %}
+  </td>
 </tr>
+
 <tr id="id_amt" class="{{ form.amount.css_classes }}">
-<th>{{ form.amount.label_tag }}</th>
-<td colspan="2">{{ form.amount }}<span>{{ currency }}</span></td>
+  <th>{{ form.amount.label_tag }}</th>
+  <td colspan="2">{{ form.amount }}<span>{{ currency }}</span></td>
 </tr>
+
 <tr id="id_rep">
-<th>{{ form.repayment_preference.label }}:</th>
-<td colspan="2" class="inlop">
-{% for p in form.repayment_preference %}
-{{ p }}
-{% endfor %}
-</td>
+  <th>{{ form.repayment_preference.label }}:</th>
+  <td colspan="2" class="inlop">
+    {% for p in form.repayment_preference %}
+    {{ p }}
+    {% endfor %}
+  </td>
 </tr>
+
 {% endblock %}

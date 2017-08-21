@@ -2,24 +2,25 @@
 #
 # common/widgets.py
 #
-# copyright (c) 2011-17 tomáš pecina <tomas@pecina.cz>
+# Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
-# this file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+# This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
 #
-# this application is free software: you can redistribute it and/or
-# modify it under the terms of the gnu general public license as
-# published by the free software foundation, either version 3 of the
-# license, or (at your option) any later version.
+# This application is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
 #
-# this application is distributed in the hope that it will be useful,
-# but without any warranty; without even the implied warranty of
-# merchantability or fitness for a particular purpose.  see the
-# gnu general public license for more details.
+# This application is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# you should have received a copy of the gnu general public license
-# along with this program.  if not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from re import compile, sub
 from locale import strxfrm
 
 from django import forms
@@ -193,9 +194,12 @@ class Emw(forms.TextInput):
         super().__init__(**kwargs)
 
 
+COMP_RE = compile(r'>\s+(\S*)\s+<')
+
+
 class Rs(forms.RadioSelect):
 
-    pass
+    option_template_name = 'radio.html'
 
 
 class CurrencyWidget(forms.widgets.MultiWidget):
@@ -246,6 +250,7 @@ class CourtWidget(forms.TextInput):
         super().__init__(**kwargs)
 
     def render(self, name, value, *args, **kwargs):
+        res = super().render(name, value, *args, **kwargs)
         context = {'ins_courts': self.ins_courts, 'value': value}
         if self.ins_courts:
             context['courts'] = sorted(

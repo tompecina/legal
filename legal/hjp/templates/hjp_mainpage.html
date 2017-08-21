@@ -1,190 +1,284 @@
 {% extends 'main.html' %}
 
+{% comment %}
+
+hjp/templates/hjp_mainpage.html
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
 {% block page_contents %}
+
 <form method="post" enctype="multipart/form-data" id="id_mainform">
-<h1>{{ page_title }}</h1>
-<table class="centered">
-<tbody>
-{% if err_message %}
-<tr>
-<td>{% include 'formwarning.html' %}</td>
-</tr>
-{% endif %}
-<tr>
-<td>
-<fieldset>
-<legend>Údaje o pohledávce</legend>
-<table class="gen">
-<tbody>
-<tr>
-<th class="{{ form.title.css_classes }}">{{ form.title.label_tag }}</th>
-<td>{{ form.title }}</td>
-</tr>
-<tr>
-<th class="{{ form.note.css_classes }}">{{ form.note.label_tag }}</th>
-<td>{{ form.note }}</td>
-</tr>
-<tr>
-<th class="{{ form.internal_note.css_classes }}">{{ form.internal_note.label_tag }}</th>
-<td>{{ form.internal_note }}</td>
-</tr>
-<tr>
-<th class="{{ form.currency.css_classes }}">{{ form.currency.label_tag }}</th>
-<td>{{ form.currency }}</td>
-</tr>
-<tr>
-<th>{{ form.rounding.label_tag }}</th>
-<td>
-{{ rt }}
-<select name="rounding" id="id_rounding">
-<option value="0" {% if form.rounding.value == '0' %} selected{% endif %}>na jednotky</option>
-<option value="2" {% if form.rounding.value == '2' %} selected{% endif %}>na 2 desetinná místa</option>
-</select>
-</td>
-</tr>
-</tbody>
-</table>
-</fieldset>
-<fieldset class="intbl">
-<legend>{{ form.model.label }}</legend>
-<table>
-<tbody>
-<tr>
-<th colspan="3" class="immune">{{ form.model.0 }}</th>
-</tr>
-<tr id="id_fa">
-<th class="immune"><span class="{{ form.fixed_amount.css_classes }}">{{ form.model.1 }}:</span></th>
-<td colspan="2" class="{{ form.fixed_amount.css_classes }}">{{ form.fixed_amount }}<span class="curr">{{ currency }}</span></td>
-</tr>
-<tr id="id_pa">
-<th class="immune"><span class="{{ form.pa_rate.css_classes }}">{{ form.model.2 }}:</span></th>
-<td class="{{ form.pa_rate.css_classes }}">{{ form.pa_rate }}<span>% <i>p. a.</i></span></td>
-<td>
-{{ form.ydconv.label_tag }}
-<select name="ydconv" id="id_ydconv">
-{% for dconv in ydconvs %}
-<option value="{{ dconv }}"{% if form.ydconv.value == dconv %} selected{% endif %}>{{ dconv }}</option>
-{% endfor %}
-</select>
-</td>
-</tr>
-<tr id="id_pm">
-<th class="immune"><span class="{{ form.pm_rate.css_classes }}">{{ form.model.3 }}:</span></th>
-<td class="{{ form.pm_rate.css_classes }}">{{ form.pm_rate }}<span>% <i>p. m.</i></span></td>
-<td>
-{{ form.mdconv.label_tag }}
-<select name="mdconv" id="id_mdconv">
-{% for dconv in mdconvs %}
-<option value="{{ dconv }}"{% if form.mdconv.value == dconv %} selected{% endif %}>{{ dconv }}</option>
-{% endfor %}
-</select>
-</td>
-</tr>
-<tr id="id_pd">
-<th class="immune"><span class="{{ form.pd_rate.css_classes }}">{{ form.model.4 }}:</span></th>
-<td colspan="2" class="{{ form.pd_rate.css_classes }}">{{ form.pd_rate }}<span>‰ <i>p. d.</i></span></td>
-</tr>
-<tr>
-<th colspan="3" class="immune">{{ form.model.5 }}</th>
-</tr>
-<tr>
-<th colspan="3" class="immune">{{ form.model.6 }}</th>
-</tr>
-<tr>
-<th colspan="3" class="immune">{{ form.model.7 }}</th>
-</tr>
-<tr>
-<th colspan="3" class="immune">{{ form.model.8 }}</th>
-</tr>
-<tr>
-<th colspan="3" class="immune">{{ form.model.9 }}</th>
-</tr>
-<tr>
-<th colspan="3" class="immune">{{ form.model.10 }}</th>
-</tr>
-</table>
-</fieldset>
-</td>
-</tr>
-</tbody>
-</table>
-<table id="id_calc" class="list">
-<thead>
-<tr>
-<th rowspan="2">Datum</th>
-<th rowspan="2">Popis</th>
-<th rowspan="2">Přednost</th>
-<th rowspan="2">Pohyb</th>
-<th colspan="2">Předchozí zůstatek</th>
-<th colspan="2">Započteno</th>
-<th colspan="3">Nový zůstatek</th>
-<th rowspan="2">Akce</th>
-</tr>
-<tr>
-<th>Jistina</th>
-<th>Úrok</th>
-<th>Jistina</th>
-<th>Úrok</th>
-<th>Jistina</th>
-<th>Úrok</th>
-<th>Celkem</th>
-</tr>
-</thead>
-<tbody>
-{% for row in rows %}
-<tr>
-<td class="trdt">{{ row.date|date:'d.m.Y' }}</td>
-<td>{{ row.description }}</td>
-<td class="dat">{{ row.rep }}</td>
-{{ row.change|safe }}
-{% if row.err %}
-{% if row.msg %}
-<td colspan="7" rowspan="{{ forloop.revcounter }}" class="taberr">{{ row.msg }}</td>
-{% endif %}
-{% else %}
-{{ row.pre_principal|safe }}
-{{ row.pre_interest|safe }}
-{{ row.change_principal|safe }}
-{{ row.change_interest|safe }}
-{{ row.post_principal|safe }}
-{{ row.post_interest|safe }}
-{{ row.post_total|safe }}
-{% endif %}
-<td class="act">
-<a href="{% url 'hjp:transform' row.id %}">upravit</a>
-<a href="{% url 'hjp:transdel' row.id %}">smazat</a>
-</td>
-</tr>
-{% empty %}
-<tr>
-<td colspan="12" class="taberr">(žádné transakce)</td>
-</tr>
-{% endfor %}
-</tbody>
-{% if not suppress_table_footer %}
-<tfoot>
-<tr>
-<td colspan="12"><a href="{% url 'hjp:transform' %}">Přidat transakci</a></td>
-</tr>
-</tfoot>
-{% endif %}
-</table>
-<table class="btnbar">
-<tbody>
-<tr>
-<td><input type="submit" name="submit_update" value="Aktualisovat"></td>
-<td><input type="submit" name="submit_empty" value="Vyprázdnit" id="id_reset"></td>
-<td><input type="submit" name="submit_load" value="Načíst" id="id_load_button"></td>
-<td><input type="submit" name="submit_xml" value="Uložit"></td>
-<td><input type="submit" name="submit_csv" value="Export do CSV"{% if rows_err %} disabled="disabled"{% endif %}></td>
-<td><input type="submit" name="submit_pdf" value="Export do PDF"></td>
-</tr>
-<tr>
-<td colspan="2"></td><td colspan="4"><input type="file" name="load" accept="application/pdf,text/xml" id="id_load"></td>
-</tr>
-</tbody>
-</table>
-{{ form.next }}
-{% csrf_token %}
+
+  <h1>{{ page_title }}</h1>
+
+  <table class="centered">
+
+    <tbody>
+
+      {% if err_message %}
+      <tr>
+	<td>{% include 'formwarning.html' %}</td>
+      </tr>
+      {% endif %}
+
+      <tr>
+
+	<td>
+
+	  <fieldset>
+
+	    <legend>Údaje o pohledávce</legend>
+
+	    <table class="gen">
+
+	      <tbody>
+
+		<tr>
+		  <th class="{{ form.title.css_classes }}">{{ form.title.label_tag }}</th>
+		  <td>{{ form.title }}</td>
+		</tr>
+
+		<tr>
+		  <th class="{{ form.note.css_classes }}">{{ form.note.label_tag }}</th>
+		  <td>{{ form.note }}</td>
+		</tr>
+
+		<tr>
+		  <th class="{{ form.internal_note.css_classes }}">{{ form.internal_note.label_tag }}</th>
+		  <td>{{ form.internal_note }}</td>
+		</tr>
+
+		<tr>
+		  <th class="{{ form.currency.css_classes }}">{{ form.currency.label_tag }}</th>
+		  <td>{{ form.currency }}</td>
+		</tr>
+
+		<tr>
+		  <th>{{ form.rounding.label_tag }}</th>
+		  <td>
+		    {{ rt }}
+		    <select name="rounding" id="id_rounding">
+		      <option value="0" {% if form.rounding.value == '0' %} selected{% endif %}>na jednotky</option>
+		      <option value="2" {% if form.rounding.value == '2' %} selected{% endif %}>na 2 desetinná místa</option>
+		    </select>
+		  </td>
+		</tr>
+
+	      </tbody>
+
+	    </table>
+
+	  </fieldset>
+
+	  <fieldset class="intbl">
+
+	    <legend>{{ form.model.label }}</legend>
+
+	    <table>
+
+	      <tbody>
+
+		<tr>
+		  <th colspan="3" class="immune">{{ form.model.0 }}</th>
+		</tr>
+
+		<tr id="id_fa">
+		  <th class="immune"><span class="{{ form.fixed_amount.css_classes }}">{{ form.model.1 }}:</span></th>
+		  <td colspan="2" class="{{ form.fixed_amount.css_classes }}">{{ form.fixed_amount }}<span class="curr">{{ currency }}</span></td>
+		</tr>
+
+		<tr id="id_pa">
+		  <th class="immune"><span class="{{ form.pa_rate.css_classes }}">{{ form.model.2 }}:</span></th>
+		  <td class="{{ form.pa_rate.css_classes }}">{{ form.pa_rate }}<span>% <i>p. a.</i></span></td>
+		  <td>
+		    {{ form.ydconv.label_tag }}
+		    <select name="ydconv" id="id_ydconv">
+		      {% for dconv in ydconvs %}
+		      <option value="{{ dconv }}"{% if form.ydconv.value == dconv %} selected{% endif %}>{{ dconv }}</option>
+		      {% endfor %}
+		    </select>
+		  </td>
+		</tr>
+
+		<tr id="id_pm">
+		  <th class="immune"><span class="{{ form.pm_rate.css_classes }}">{{ form.model.3 }}:</span></th>
+		  <td class="{{ form.pm_rate.css_classes }}">{{ form.pm_rate }}<span>% <i>p. m.</i></span></td>
+		  <td>
+		    {{ form.mdconv.label_tag }}
+		    <select name="mdconv" id="id_mdconv">
+		      {% for dconv in mdconvs %}
+		      <option value="{{ dconv }}"{% if form.mdconv.value == dconv %} selected{% endif %}>{{ dconv }}</option>
+		      {% endfor %}
+		    </select>
+		  </td>
+		</tr>
+
+		<tr id="id_pd">
+		  <th class="immune"><span class="{{ form.pd_rate.css_classes }}">{{ form.model.4 }}:</span></th>
+		  <td colspan="2" class="{{ form.pd_rate.css_classes }}">{{ form.pd_rate }}<span>‰ <i>p. d.</i></span></td>
+		</tr>
+
+		<tr>
+		  <th colspan="3" class="immune">{{ form.model.5 }}</th>
+		</tr>
+
+		<tr>
+		  <th colspan="3" class="immune">{{ form.model.6 }}</th>
+		</tr>
+
+		<tr>
+		  <th colspan="3" class="immune">{{ form.model.7 }}</th>
+		</tr>
+
+		<tr>
+		  <th colspan="3" class="immune">{{ form.model.8 }}</th>
+		</tr>
+
+		<tr>
+		  <th colspan="3" class="immune">{{ form.model.9 }}</th>
+		</tr>
+
+		<tr>
+		  <th colspan="3" class="immune">{{ form.model.10 }}</th>
+		</tr>
+
+	      </tbody>
+
+	    </table>
+
+	  </fieldset>
+
+	</td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  <table id="id_calc" class="list">
+
+    <thead>
+
+      <tr>
+	<th rowspan="2">Datum</th>
+	<th rowspan="2">Popis</th>
+	<th rowspan="2">Přednost</th>
+	<th rowspan="2">Pohyb</th>
+	<th colspan="2">Předchozí zůstatek</th>
+	<th colspan="2">Započteno</th>
+	<th colspan="3">Nový zůstatek</th>
+	<th rowspan="2">Akce</th>
+      </tr>
+
+      <tr>
+	<th>Jistina</th>
+	<th>Úrok</th>
+	<th>Jistina</th>
+	<th>Úrok</th>
+	<th>Jistina</th>
+	<th>Úrok</th>
+	<th>Celkem</th>
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      {% for row in rows %}
+
+      <tr>
+	<td class="trdt">{{ row.date|date:'d.m.Y' }}</td>
+	<td>{{ row.description }}</td>
+	<td class="dat">{{ row.rep }}</td>
+	{{ row.change|safe }}
+	{% if row.err %}
+	{% if row.msg %}
+	<td colspan="7" rowspan="{{ forloop.revcounter }}" class="taberr">{{ row.msg }}</td>
+	{% endif %}
+	{% else %}
+	{{ row.pre_principal|safe }}
+	{{ row.pre_interest|safe }}
+	{{ row.change_principal|safe }}
+	{{ row.change_interest|safe }}
+	{{ row.post_principal|safe }}
+	{{ row.post_interest|safe }}
+	{{ row.post_total|safe }}
+	{% endif %}
+	<td class="act">
+	  <a href="{% url 'hjp:transform' row.id %}">upravit</a>
+	  <a href="{% url 'hjp:transdel' row.id %}">smazat</a>
+	</td>
+      </tr>
+
+      {% empty %}
+
+      <tr>
+	<td colspan="12" class="taberr">(žádné transakce)</td>
+      </tr>
+
+      {% endfor %}
+
+    </tbody>
+
+    {% if not suppress_table_footer %}
+
+    <tfoot>
+
+      <tr>
+	<td colspan="12"><a href="{% url 'hjp:transform' %}">Přidat transakci</a></td>
+      </tr>
+
+    </tfoot>
+
+    {% endif %}
+
+  </table>
+
+  <table class="btnbar">
+
+    <tbody>
+
+      <tr>
+	<td><input type="submit" name="submit_update" value="Aktualisovat"></td>
+	<td><input type="submit" name="submit_empty" value="Vyprázdnit" id="id_reset"></td>
+	<td><input type="submit" name="submit_load" value="Načíst" id="id_load_button"></td>
+	<td><input type="submit" name="submit_xml" value="Uložit"></td>
+	<td><input type="submit" name="submit_csv" value="Export do CSV"{% if rows_err %} disabled="disabled"{% endif %}></td>
+	<td><input type="submit" name="submit_pdf" value="Export do PDF"></td>
+      </tr>
+
+      <tr>
+	<td colspan="2"></td><td colspan="4"><input type="file" name="load" accept="application/pdf,text/xml" id="id_load"></td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  {{ form.next }}
+
+  {% csrf_token %}
+
 </form>
+
 {% endblock %}

@@ -1,35 +1,72 @@
 {% extends 'main.html' %}
 
+{% comment %}
+
+dir/templates/dir_debtorbatchform.html
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
 {% block page_contents %}
+
 <form method="post" enctype="multipart/form-data" id="id_debtorbatchform">
-<h1>{{ page_title }}</h1>
-<table class="centered">
-<tbody>
-{% if err_message %}
-<tr>
-<td>{% include 'formwarning.html' %}</td>
-</tr>
-{% endif %}
-<tr>
-<td>
-<p>Zvolte soubor CSV pro načtení dlužníků.</p>
-<p>Soubor musí být v kodu UTF-8 a jeho formát musí přesně odpovídat následujícímu popisu.</p>
-<p>V prvním poli na každém řádku je uveden řetězec, který se použije pro Popis dlužníka.<br>Dále následují vyhledávací parametry. Ty se zadávají ve formátu pole=hodnota; pole<br>může nabývat hodnotu <q>soud</q>, <q>název</q>, <q>jméno</q>, <q>IČO</q>, <q>DIČ</q>, <q>RČ</q>, <q>datumNarození</q>,<br><q>rokNarozeníOd</q> nebo <q>rokNarozeníDo</q>. Vyhledávací parametry, které se nepoužijí, není<br>třeba zadávat.</p>
-<p>Insolvenční soud se zadává zkratkou podle <a href="{% url 'sir:courts' %}">seznamu</a>. Datum narození se zadává ve formátu<br>DD.MM.RRRR. Jakou hodnotu bude mít importovaný řetězec pro název, jméno a obec v poli<br>Posice, můžete ovlivnit formátovacím příznakem, který uvedete na konci řetězce za dvojtečkou.</p>
-<p class="options">Možnosti jsou:</p>
-<ul>
-<li>řetězec:* – kdekoliv (implicitní hodnota)</li>
-<li>řetězec:&lt; – na začátku</li>
-<li>řetězec:&gt; – na konci</li>
-<li>řetězec:= – přesně</li>
-</ul>
-<p>Soubor CSV v požadovaném formátu, který můžete ručně editovat, získáte funkcí Export.</p>
-</td>
-</tr>
-{% include 'batch_buttons.html' %}
-</tbody>
-</table>
-{% csrf_token %}
+
+  <h1>{{ page_title }}</h1>
+
+  <table class="centered">
+
+    <tbody>
+
+      {% if err_message %}
+      <tr>
+	<td>{% include 'formwarning.html' %}</td>
+      </tr>
+      {% endif %}
+
+      <tr>
+	<td>
+	  <p>Zvolte soubor CSV pro načtení dlužníků.</p>
+	  <p>Soubor musí být v kodu UTF-8 a jeho formát musí přesně odpovídat následujícímu popisu.</p>
+	  <p>V prvním poli na každém řádku je uveden řetězec, který se použije pro Popis dlužníka.<br>Dále následují vyhledávací parametry. Ty se zadávají ve formátu pole=hodnota; pole<br>může nabývat hodnotu <q>soud</q>, <q>název</q>, <q>jméno</q>, <q>IČO</q>, <q>DIČ</q>, <q>RČ</q>, <q>datumNarození</q>,<br><q>rokNarozeníOd</q> nebo <q>rokNarozeníDo</q>. Vyhledávací parametry, které se nepoužijí, není<br>třeba zadávat.</p>
+	  <p>Insolvenční soud se zadává zkratkou podle <a href="{% url 'sir:courts' %}">seznamu</a>. Datum narození se zadává ve formátu<br>DD.MM.RRRR. Jakou hodnotu bude mít importovaný řetězec pro název, jméno a obec v poli<br>Posice, můžete ovlivnit formátovacím příznakem, který uvedete na konci řetězce za dvojtečkou.</p>
+	  <p class="options">Možnosti jsou:</p>
+	  <ul>
+	    <li>řetězec:* – kdekoliv (implicitní hodnota)</li>
+	    <li>řetězec:&lt; – na začátku</li>
+	    <li>řetězec:&gt; – na konci</li>
+	    <li>řetězec:= – přesně</li>
+	  </ul>
+	  <p>Soubor CSV v požadovaném formátu, který můžete ručně editovat, získáte funkcí Export.</p>
+	</td>
+      </tr>
+
+      {% include 'batch_buttons.html' %}
+
+    </tbody>
+
+  </table>
+
+  {% csrf_token %}
+
 </form>
+
 <p><a href="{% url 'dir:mainpage' %}">Zpět na seznam sledovaných dlužníků</a></p>
+
 {% endblock %}

@@ -1,22 +1,58 @@
 {% extends 'main.html' %}
 
+{% comment %}
+
+dir/templates/dir_debtorbatchresult.html
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
 {% block page_contents %}
+
 <h1>{{ page_title }}</h1>
+
 <p>Počet načtených dlužníků: {{ count }}</p>
+
 {% if errors %}
+
 <table class="centered">
-<tbody>
-<tr>
-<td>
-<p>Při importu došlo k chybám:</p>
-<ul>
-{% for error in errors %}<li>Řádek {{ error.0 }}: {{ error.1|safe }}</li>
-{% endfor %}
-</ul>
-</td>
-</tr>
-</tbody>
+
+  <tbody>
+
+    <tr>
+      <td>
+	<p>Při importu došlo k chybám:</p>
+	<ul>
+	  {% for error in errors %}
+	  <li>Řádek {{ error.0 }}: {{ error.1|safe }}</li>
+	  {% endfor %}
+	</ul>
+      </td>
+    </tr>
+
+  </tbody>
+
 </table>
+
 {% endif %}
+
 <p><a href="{% url 'dir:mainpage' %}">Zpět na seznam sledovaných dlužníků</a></p>
+
 {% endblock %}

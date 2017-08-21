@@ -1,50 +1,96 @@
 {% extends 'main.html' %}
 
+{% comment %}
+
+dir/templates/dir_mainpage.html
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
 {% block page_contents %}
+
 <h1>{{ page_title }}</h1>
+
 {% if rows %}
+
 <table id="list" class="list">
-<thead>
-<tr>
-<th>Popis</th>
-<th>Akce</th>
-</tr>
-</thead>
-<tbody>
-{% for row in rows %}
-<tr>
-<td>{{ row.desc }}</td>
-<td class="act">
-<a href="{% url 'dir:debtorform' row.id %}">upravit</a>
-<a href="{% url 'dir:debtordel' row.id %}">smazat</a>
-<a href="{% url 'pir:htmllist' %}?{{ row.search }}">vyhledat</a>
-</td>
-</tr>
-{% endfor %}
-</tbody>
-{% if not suppress_table_footer %}
-<tfoot>
-<tr>
-<td><a href="{% url 'dir:debtorform' %}">Přidat dlužníka</a></td>
-<td class="pager">{% include 'pager.html' %}</td>
-</tr>
-</tfoot>
-{% endif %}
+
+  <thead>
+
+    <tr>
+      <th>Popis</th>
+      <th>Akce</th>
+    </tr>
+
+  </thead>
+
+  <tbody>
+
+    {% for row in rows %}
+    <tr>
+      <td>{{ row.desc }}</td>
+      <td class="act">
+	<a href="{% url 'dir:debtorform' row.id %}">upravit</a>
+	<a href="{% url 'dir:debtordel' row.id %}">smazat</a>
+	<a href="{% url 'pir:htmllist' %}?{{ row.search }}">vyhledat</a>
+      </td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+
+  {% if not suppress_table_footer %}
+
+  <tfoot>
+
+    <tr>
+      <td><a href="{% url 'dir:debtorform' %}">Přidat dlužníka</a></td>
+      <td class="pager">{% include 'pager.html' %}</td>
+    </tr>
+
+  </tfoot>
+
+  {% endif %}
+
 </table>
+
 <p>
-<a href="{% url 'dir:debtorbatchform' %}">Import</a>
-<span>/</span>
-<a href="{% url 'dir:debtorexport' %}">Export</a>
-<span>/</span>
-<a href="{% url 'dir:debtordelall' %}">Smazat vše</a>
+  <a href="{% url 'dir:debtorbatchform' %}">Import</a>
+  <span>/</span>
+  <a href="{% url 'dir:debtorexport' %}">Export</a>
+  <span>/</span>
+  <a href="{% url 'dir:debtordelall' %}">Smazat vše</a>
 </p>
+
 {% else %}
+
 <p>(nesledujete žádné dlužníky)</p>
+
 <p>
-<a href="{% url 'dir:debtorform' %}">Přidat dlužníka</a>
-<span>/</span>
-<a href="{% url 'dir:debtorbatchform' %}">Import</a>
+  <a href="{% url 'dir:debtorform' %}">Přidat dlužníka</a>
+  <span>/</span>
+  <a href="{% url 'dir:debtorbatchform' %}">Import</a>
 </p>
+
 {% endif %}
+
 {% include 'email_form.html' %}
+
 {% endblock %}

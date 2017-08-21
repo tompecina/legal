@@ -1,36 +1,66 @@
 {% extends 'main.html' %}
 
+{% comment %}
+
+common/templates/about.html
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
 {% block page_contents %}
+
 <h1>{{ page_title }}</h1>
+
 <table class="about">
-<thead>
-<tr>
-<th colspan="3">Verse</th>
-</tr>
-</thead>
-<tbody>
-{% for app in apps %}<tr>
-<td>{{ app.id|upper }}</td>
-<td>{{ app.name }}</td>
-<td>{{ app.version }}</td>
-</tr>
-{% endfor %}
-</tbody>
+  <thead>
+    <tr>
+      <th colspan="3">Verse</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for app in apps %}
+    <tr>
+      <td>{{ app.id|upper }}</td>
+      <td>{{ app.name }}</td>
+      <td>{{ app.version }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
+
 <table class="about">
-<thead>
-<tr>
-<th colspan="2">Prostředí</th>
-</tr>
-</thead>
-<tbody>
-{% for env in env %}
-<tr>
-<td>{{ env.name }}</td>
-<td>{{ env.version }}</td>
-</tr>
-{% endfor %}
-</tbody>
+  <thead>
+    <tr>
+      <th colspan="2">Prostředí</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for env in env %}
+    <tr>
+      <td>{{ env.name }}</td>
+      <td>{{ env.version }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
+
 {% include 'back_home.html' %}
+
 {% endblock %}
