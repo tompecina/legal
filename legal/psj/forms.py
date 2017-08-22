@@ -29,11 +29,11 @@ from legal.common import forms, fields, widgets
 class MainForm(forms.Form):
 
     date_from = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False)
 
     date_to = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False)
 
     court = fields.CharField(
@@ -43,26 +43,26 @@ class MainForm(forms.Form):
         label='Soud')
 
     senate = fields.IntegerField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         min_value=0,
         initial='',
         required=False)
 
     register = fields.CharField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         max_length=30,
         validators=(RegexValidator(regex=REGISTER_RE_STR),),
         initial='',
         required=False)
 
     number = fields.IntegerField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         min_value=1,
         initial='',
         required=False)
 
     year = fields.IntegerField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         min_value=1,
         initial='',
         required=False)
@@ -80,18 +80,18 @@ class MainForm(forms.Form):
         initial='')
 
     party = fields.CharField(
-        widget=widgets.Sew(),
+        widget=widgets.XXLWidget(),
         required=False,
         max_length=255,
         label='Účastník řízení')
 
     party_opt = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=TEXT_OPTS,
         initial='icontains')
 
     format = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=FORMAT_OPTS,
         label='Výstupní formát',
         initial='html')

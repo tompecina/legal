@@ -38,32 +38,32 @@ REP_OPTS = (
 class TransForm(forms.Form):
 
     description = fields.CharField(
-        widget=widgets.Genw(),
+        widget=widgets.XXXLWidget(),
         max_length=255,
         required=False,
         label='Popis')
 
     transaction_type = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=TR_OPTS,
         label='Typ',
         initial='balance')
 
     date = fields.DateField(
-        widget=widgets.Dw(today=True),
+        widget=widgets.DateWidget(today=True),
         label='Datum')
 
     amount = fields.DecimalField(
-        widget=widgets.Aw(),
+        widget=widgets.MWidget(),
         max_digits=15,
         decimal_places=2,
-        min_value=0.0,
+        min_value=.0,
         required=False,
         label='Částka',
         localize=True)
 
     repayment_preference = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=REP_OPTS,
         required=False,
         label='Přednost',
@@ -94,18 +94,18 @@ INT_OPTS = (
 class MainForm(forms.Form):
 
     title = fields.CharField(
-        widget=widgets.Genw(),
+        widget=widgets.XXXLWidget(),
         max_length=255,
         required=False,
         label='Popis')
 
     note = fields.CharField(
-        widget=widgets.Taw(),
+        widget=widgets.TextAreaWidget(),
         required=False,
         label='Poznámka')
 
     internal_note = fields.CharField(
-        widget=widgets.Taw(),
+        widget=widgets.TextAreaWidget(),
         required=False,
         label='Interní poznámka')
 
@@ -117,12 +117,12 @@ class MainForm(forms.Form):
         label='Zaokrouhlení')
 
     model = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=INT_OPTS,
         label='Úročení')
 
     fixed_amount = fields.DecimalField(
-        widget=widgets.Aw(),
+        widget=widgets.MWidget(),
         max_digits=15,
         decimal_places=2,
         min_value=0.0,
@@ -130,7 +130,7 @@ class MainForm(forms.Form):
         localize=True)
 
     pa_rate = fields.DecimalField(
-        widget=widgets.Ratew(),
+        widget=widgets.MWidget(),
         max_digits=12,
         decimal_places=6,
         required=False,
@@ -141,7 +141,7 @@ class MainForm(forms.Form):
         required=False)
 
     pm_rate = fields.DecimalField(
-        widget=widgets.Ratew(),
+        widget=widgets.MWidget(),
         max_digits=12,
         decimal_places=6,
         required=False,
@@ -152,14 +152,14 @@ class MainForm(forms.Form):
         required=False)
 
     pd_rate = fields.DecimalField(
-        widget=widgets.Ratew(),
+        widget=widgets.MWidget(),
         max_digits=12,
         decimal_places=6,
         required=False,
         localize=True)
 
     next = fields.CharField(
-        widget=widgets.Hw(),
+        widget=widgets.HiddenWidget(),
         required=False)
 
     def clean_note(self):

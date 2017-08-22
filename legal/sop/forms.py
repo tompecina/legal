@@ -40,7 +40,7 @@ OPTS = (
 class MainForm(forms.Form):
 
     basis = fields.AmountField(
-        widget=widgets.Aw(),
+        widget=widgets.MWidget(),
         min_value=1,
         label='Základ',
         localize=True)
@@ -52,14 +52,14 @@ class MainForm(forms.Form):
         initial='CZK')
 
     oth = fields.CharField(
-        widget=widgets.Currw(),
+        widget=widgets.CurrencyWidget(),
         min_length=3,
         max_length=3,
         required=False)
 
     today = date.today()
     fx_date = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False,
         label='ke dni',
         initial=date(today.year, today.month, 1))
@@ -69,7 +69,7 @@ class MainForm(forms.Form):
         initial='4')
 
     opt = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=OPTS,
         label='Zvláštní případy',
         initial='none')

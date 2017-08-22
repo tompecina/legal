@@ -26,23 +26,23 @@ from legal.common import forms, fields, widgets
 class MainForm(forms.Form):
 
     beg_date = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         label='Nástup trestu')
 
     years = fields.IntegerField(
-        widget=widgets.Shw(),
+        widget=widgets.XXXSWidget(),
         required=False,
         min_value=0,
         label='let')
 
     months = fields.IntegerField(
-        widget=widgets.Shw(),
+        widget=widgets.XXXSWidget(),
         required=False,
         min_value=0,
         label='měsíců')
 
     days = fields.IntegerField(
-        widget=widgets.Shw(),
+        widget=widgets.XXXSWidget(),
         required=False,
         min_value=0,
         label='dnů')

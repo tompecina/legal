@@ -29,29 +29,29 @@ from legal.knr.utils import getvat
 class PlaceForm(forms.Form):
 
     abbr = fields.CharField(
-        widget=widgets.Abbrw(),
+        widget=widgets.SWidget(),
         max_length=150,
         label='Zkratka')
 
     name = fields.CharField(
-        widget=widgets.Genw(),
+        widget=widgets.XXXLWidget(),
         max_length=255,
         label='Název')
 
     addr = fields.CharField(
-        widget=widgets.Genw(),
+        widget=widgets.XXXLWidget(),
         max_length=255,
         label='Adresa')
 
     lat = fields.FloatField(
-        widget=widgets.Gpsw(),
+        widget=widgets.SWidget(),
         min_value=-90,
         max_value=90,
         label='Zeměpisná šířka',
         localize=True)
 
     lon = fields.FloatField(
-        widget=widgets.Gpsw(),
+        widget=widgets.SWidget(),
         min_value=-180,
         max_value=180,
         label='Zeměpisná délka',
@@ -61,24 +61,24 @@ class PlaceForm(forms.Form):
 class CarForm(forms.Form):
 
     abbr = fields.CharField(
-        widget=widgets.Abbrw(),
+        widget=widgets.SWidget(),
         max_length=150,
         label='Zkratka')
 
     name = fields.CharField(
-        widget=widgets.Genw(),
+        widget=widgets.XXXLWidget(),
         max_length=255,
         label='Název')
 
     fuel = fields.CharField(
-        widget=widgets.Abbrw(),
+        widget=widgets.SWidget(),
         max_length=150,
         label='Palivo',
         initial='BA95')
 
     for idx in range(1, 4):
         locals()['cons{:d}'.format(idx)] = fields.DecimalField(
-            widget=widgets.Consw(),
+            widget=widgets.XXXSWidget(),
             max_digits=3,
             decimal_places=1,
             min_value=0,
@@ -89,17 +89,17 @@ class CarForm(forms.Form):
 class FormulaForm(forms.Form):
 
     abbr = fields.CharField(
-        widget=widgets.Abbrw(),
+        widget=widgets.SWidget(),
         max_length=150,
         label='Zkratka')
 
     name = fields.CharField(
-        widget=widgets.Genw(),
+        widget=widgets.XXXLWidget(),
         max_length=255,
         label='Název')
 
     flat = fields.DecimalField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         max_digits=5,
         decimal_places=2,
         min_value=0,
@@ -108,7 +108,7 @@ class FormulaForm(forms.Form):
 
     for fuel in FUELS:
         locals()['rate_' + fuel] = fields.DecimalField(
-            widget=widgets.Saw(),
+            widget=widgets.XSWidget(),
             max_digits=5,
             decimal_places=2,
             min_value=0,
@@ -146,7 +146,7 @@ class CalcForm(forms.Form):
 class GeneralForm(forms.Form):
 
     idx = fields.IntegerField(
-        widget=widgets.Hw())
+        widget=widgets.HiddenWidget())
 
     description = fields.CharField(
         max_length=255)
@@ -160,11 +160,11 @@ class GeneralForm(forms.Form):
 
     numerator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     denominator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     item_note = fields.CharField(
         required=False)
@@ -173,7 +173,7 @@ class GeneralForm(forms.Form):
 class ServiceForm(forms.Form):
 
     idx = fields.IntegerField(
-        widget=widgets.Hw())
+        widget=widgets.HiddenWidget())
 
     description = fields.CharField(
         max_length=255)
@@ -183,11 +183,11 @@ class ServiceForm(forms.Form):
 
     numerator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     denominator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     item_note = fields.CharField(
         required=False)
@@ -276,7 +276,7 @@ class ServiceForm(forms.Form):
 class ServiceSubform(forms.Form):
 
     idx = fields.IntegerField(
-        widget=widgets.Hw())
+        widget=widgets.HiddenWidget())
 
     description = fields.CharField(
         required=False)
@@ -286,11 +286,11 @@ class ServiceSubform(forms.Form):
 
     numerator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     denominator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     item_note = fields.CharField(
         required=False)
@@ -327,7 +327,7 @@ class ServiceSubform(forms.Form):
 class FlatForm(forms.Form):
 
     idx = fields.IntegerField(
-        widget=widgets.Hw())
+        widget=widgets.HiddenWidget())
 
     description = fields.CharField(
         max_length=255)
@@ -337,11 +337,11 @@ class FlatForm(forms.Form):
 
     numerator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     denominator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     item_note = fields.CharField(
         required=False)
@@ -403,7 +403,7 @@ class FlatForm(forms.Form):
 class FlatSubform(forms.Form):
 
     idx = fields.IntegerField(
-        widget=widgets.Hw())
+        widget=widgets.HiddenWidget())
 
     description = fields.CharField(
         required=False)
@@ -413,11 +413,11 @@ class FlatSubform(forms.Form):
 
     numerator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     denominator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     item_note = fields.CharField(
         required=False)
@@ -451,7 +451,7 @@ class FlatSubform(forms.Form):
 class AdministrativeForm(forms.Form):
 
     idx = fields.IntegerField(
-        widget=widgets.Hw())
+        widget=widgets.HiddenWidget())
 
     description = fields.CharField(
         max_length=255)
@@ -461,11 +461,11 @@ class AdministrativeForm(forms.Form):
 
     numerator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     denominator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     item_note = fields.CharField(
         required=False)
@@ -481,7 +481,7 @@ class AdministrativeForm(forms.Form):
 class AdministrativeSubform(forms.Form):
 
     idx = fields.IntegerField(
-        widget=widgets.Hw())
+        widget=widgets.HiddenWidget())
 
     description = fields.CharField(
         required=False)
@@ -491,11 +491,11 @@ class AdministrativeSubform(forms.Form):
 
     numerator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     denominator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     item_note = fields.CharField(
         required=False)
@@ -510,7 +510,7 @@ class AdministrativeSubform(forms.Form):
 class TimeForm(forms.Form):
 
     idx = fields.IntegerField(
-        widget=widgets.Hw())
+        widget=widgets.HiddenWidget())
 
     description = fields.CharField(
         max_length=255)
@@ -520,11 +520,11 @@ class TimeForm(forms.Form):
 
     numerator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     denominator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     item_note = fields.CharField(
         required=False)
@@ -540,7 +540,7 @@ class TimeForm(forms.Form):
 class TimeSubform(forms.Form):
 
     idx = fields.IntegerField(
-        widget=widgets.Hw())
+        widget=widgets.HiddenWidget())
 
     description = fields.CharField(
         required=False)
@@ -550,11 +550,11 @@ class TimeSubform(forms.Form):
 
     numerator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     denominator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     item_note = fields.CharField(
         required=False)
@@ -569,7 +569,7 @@ class TimeSubform(forms.Form):
 class TravelForm(forms.Form):
 
     idx = fields.IntegerField(
-        widget=widgets.Hw())
+        widget=widgets.HiddenWidget())
 
     description = fields.CharField(
         max_length=255)
@@ -667,11 +667,11 @@ class TravelForm(forms.Form):
 
     numerator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     denominator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     item_note = fields.CharField(
         required=False)
@@ -680,7 +680,7 @@ class TravelForm(forms.Form):
 class TravelSubform(forms.Form):
 
     idx = fields.IntegerField(
-        widget=widgets.Hw())
+        widget=widgets.HiddenWidget())
 
     description = fields.CharField(
         required=False)
@@ -750,11 +750,11 @@ class TravelSubform(forms.Form):
 
     numerator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     denominator = fields.IntegerField(
         min_value=1,
-        widget=widgets.Shw())
+        widget=widgets.XXXSWidget())
 
     item_note = fields.CharField(
         required=False)

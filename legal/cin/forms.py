@@ -26,13 +26,13 @@ from legal.common import forms, fields, widgets
 class MainForm(forms.Form):
 
     beg_date = fields.DateField(
-        widget=widgets.Dw(today=True),
+        widget=widgets.DateWidget(today=True),
         label='Počátek',
         help_text='(nezapočítává se)',
     )
 
     end_date = fields.DateField(
-        widget=widgets.Dw(today=True),
+        widget=widgets.DateWidget(today=True),
         label='Konec',
         help_text='(započítává se)',
     )

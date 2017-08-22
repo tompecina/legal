@@ -48,7 +48,7 @@ PRESETS = (
 class MainForm(forms.Form):
 
     beg_date = fields.DateField(
-        widget=widgets.Dw(today=True),
+        widget=widgets.DateWidget(today=True),
         label='Počátek',
         validators=(
             MinValueValidator(MIN_DATE),
@@ -56,7 +56,7 @@ class MainForm(forms.Form):
         initial=date.today)
 
     dur = fields.IntegerField(
-        widget=widgets.Shw(),
+        widget=widgets.XXXSWidget(),
         validators=(
             MinValueValidator(MIN_DUR),
             MaxValueValidator(MAX_DUR)),
@@ -66,7 +66,7 @@ class MainForm(forms.Form):
         required=False)
 
     preset = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=PRESETS,
         label='Délka',
         initial='none')

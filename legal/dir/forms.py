@@ -36,7 +36,7 @@ class DebtorForm(forms.Form):
     desc = fields.CharField(
         max_length=255,
         label='Popis',
-        widget=widgets.Sew())
+        widget=widgets.XXLWidget())
 
     court = fields.CharField(
         widget=widgets.CourtWidget(ins_courts=True),
@@ -46,63 +46,63 @@ class DebtorForm(forms.Form):
         initial='')
 
     name = fields.CharField(
-        widget=widgets.Sew(),
+        widget=widgets.XXLWidget(),
         max_length=MAX_LENGTH,
         required=False,
         label='Příjmení/název')
 
     name_opt = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=TEXT_OPTS,
         label='Posice',
         initial='icontains')
 
     first_name = fields.CharField(
-        widget=widgets.Sew(),
+        widget=widgets.XXLWidget(),
         max_length=MAX_LENGTH,
         required=False,
         label='Jméno')
 
     first_name_opt = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=TEXT_OPTS,
         label='Posice',
         initial='icontains')
 
     genid = fields.CharField(
-        widget=widgets.Ssew(),
+        widget=widgets.LWidget(),
         required=False,
         max_length=9,
         validators=(RegexValidator(regex=IC_RE_STR),),
         label='IČO')
 
     taxid = fields.CharField(
-        widget=widgets.Ssew(),
+        widget=widgets.LWidget(),
         required=False,
         max_length=14,
         label='DIČ')
 
     birthid = fields.CharField(
-        widget=widgets.Ssew(),
+        widget=widgets.LWidget(),
         required=False,
         max_length=11,
         validators=(RegexValidator(regex=RC_FULL_RE_STR),),
         label='Rodné číslo')
 
     date_birth = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False,
         label='Datum narození')
 
     year_birth_from = fields.IntegerField(
-        widget=widgets.Yw(),
+        widget=widgets.XXXSWidget(),
         min_value=1900,
         max_value=curr_year,
         initial='',
         required=False)
 
     year_birth_to = fields.IntegerField(
-        widget=widgets.Yw(),
+        widget=widgets.XXXSWidget(),
         min_value=1900,
         max_value=curr_year,
         initial='',

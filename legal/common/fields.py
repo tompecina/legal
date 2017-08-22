@@ -146,7 +146,7 @@ class CurrencyField(forms.MultiValueField):
     def __init__(self, czk=True, *args, **kwargs):
         kwargs['required'] = False
         super().__init__(
-            widget=widgets.CurrencyWidget(czk=czk),
+            widget=widgets.SelectCurrencyWidget(czk=czk),
             fields=(
                 forms.CharField(),
                 forms.CharField(min_length=3, max_length=3)),

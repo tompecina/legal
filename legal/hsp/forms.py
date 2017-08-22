@@ -27,18 +27,18 @@ from legal.common import forms, fields, widgets
 class MainForm(forms.Form):
 
     title = fields.CharField(
-        widget=widgets.Genw(),
+        widget=widgets.XXXLWidget(),
         max_length=255,
         required=False,
         label='Popis')
 
     note = fields.CharField(
-        widget=widgets.Taw(),
+        widget=widgets.TextAreaWidget(),
         required=False,
         label='Poznámka')
 
     internal_note = fields.CharField(
-        widget=widgets.Taw(),
+        widget=widgets.TextAreaWidget(),
         required=False,
         label='Interní poznámka')
 
@@ -46,7 +46,7 @@ class MainForm(forms.Form):
         label='Zaokrouhlení')
 
     next = fields.CharField(
-        widget=widgets.Hw(),
+        widget=widgets.HiddenWidget(),
         required=False)
 
     def clean_note(self):
@@ -73,13 +73,13 @@ DEB_OPTS = (
 class DebitForm(forms.Form):
 
     description = fields.CharField(
-        widget=widgets.Sdw(),
+        widget=widgets.XXLWidget(),
         max_length=50,
         required=False,
         label='Popis')
 
     fixed_amount = fields.AmountField(
-        widget=widgets.Aw(),
+        widget=widgets.MWidget(),
         min_value=.01,
         required=False,
         localize=True)
@@ -89,7 +89,7 @@ class DebitForm(forms.Form):
         initial='CZK')
 
     fixed_date = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False,
         label='Splatnost')
 
@@ -98,7 +98,7 @@ class DebitForm(forms.Form):
         label='Z')
 
     principal_amount = fields.AmountField(
-        widget=widgets.Aw(),
+        widget=widgets.MWidget(),
         min_value=.01,
         required=False,
         label='Částka',
@@ -109,22 +109,22 @@ class DebitForm(forms.Form):
         initial='CZK')
 
     date_from = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False,
         label='Od')
 
     date_to = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False,
         label='Do')
 
     model = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=DEB_OPTS,
         initial='fixed')
 
     pa_rate = fields.FloatField(
-        widget=widgets.Ratew(),
+        widget=widgets.MWidget(),
         min_value=0.0,
         required=False,
         localize=True)
@@ -134,7 +134,7 @@ class DebitForm(forms.Form):
         required=False)
 
     pm_rate = fields.FloatField(
-        widget=widgets.Ratew(),
+        widget=widgets.MWidget(),
         min_value=0.0,
         required=False,
         localize=True)
@@ -144,13 +144,13 @@ class DebitForm(forms.Form):
         required=False)
 
     pd_rate = fields.FloatField(
-        widget=widgets.Ratew(),
+        widget=widgets.MWidget(),
         min_value=0.0,
         required=False,
         localize=True)
 
     lock_fixed = fields.BooleanField(
-        widget=widgets.Hw(),
+        widget=widgets.HiddenWidget(),
         required=False)
 
     def clean_fixed_amount(self):
@@ -223,17 +223,17 @@ class DebitForm(forms.Form):
 class CreditForm(forms.Form):
 
     description = fields.CharField(
-        widget=widgets.Sdw(),
+        widget=widgets.XXLWidget(),
         max_length=50,
         required=False,
         label='Popis')
 
     date = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         label='Datum')
 
     amount = fields.AmountField(
-        widget=widgets.Aw(),
+        widget=widgets.MWidget(),
         min_value=.01,
         label='Částka',
         localize=True)
@@ -246,48 +246,48 @@ class CreditForm(forms.Form):
 class BalanceForm(forms.Form):
 
     description = fields.CharField(
-        widget=widgets.Sdw(),
+        widget=widgets.XXLWidget(),
         max_length=50,
         required=False,
         label='Popis')
 
     date = fields.DateField(
-        widget=widgets.Dw(today=True),
+        widget=widgets.DateWidget(today=True),
         label='Datum')
 
 
 class FXform(forms.Form):
 
     currency_from = fields.CharField(
-        widget=widgets.Currw(),
+        widget=widgets.CurrencyWidget(),
         min_length=3,
         max_length=3)
     del currency_from.widget.attrs['minlength']
 
     currency_to = fields.CharField(
-        widget=widgets.Currw(),
+        widget=widgets.CurrencyWidget(),
         min_length=3,
         max_length=3)
     del currency_to.widget.attrs['minlength']
 
     rate_from = fields.FloatField(
-        widget=widgets.Fxw(),
+        widget=widgets.XXSWidget(),
         min_value=.001,
         localize=True,
         initial=1)
 
     rate_to = fields.FloatField(
-        widget=widgets.Fxw(),
+        widget=widgets.XXSWidget(),
         min_value=.001,
         localize=True,
         initial=1)
 
     date_from = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False)
 
     date_to = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False)
 
     def clean_currency_from(self):

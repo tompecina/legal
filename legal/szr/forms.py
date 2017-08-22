@@ -32,7 +32,7 @@ from legal.szr.models import Court
 class EmailForm(forms.Form):
 
     email = fields.EmailField(
-        widget=widgets.Emw(),
+        widget=widgets.XLWidget(),
         max_length=60,
         label='E-mail')
 
@@ -53,29 +53,29 @@ class ProcForm(forms.Form):
         validators=(courtval,))
 
     senate = fields.IntegerField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         min_value=0,
         initial='',
         required=False)
 
     register = fields.CharField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         max_length=30,
         initial='',
         validators=(RegexValidator(regex=REGISTER_RE_STR),))
 
     number = fields.IntegerField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         min_value=1,
         initial='')
 
     year = fields.IntegerField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         min_value=1990,
         initial='')
 
     desc = fields.CharField(
-        widget=widgets.Genw(),
+        widget=widgets.XXXLWidget(),
         max_length=255,
         label='Popis',
         required=False)

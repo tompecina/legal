@@ -32,88 +32,62 @@ from legal.sir.glob import L2N
 from legal.sir.models import Vec
 
 
-class Aw(forms.TextInput):
+class TextWidget(forms.TextInput):
+
+    template_name = 'text.html'
 
     def __init__(self, **kwargs):
-        attrs = {'size': '15', 'maxlength': '25'}
+        attrs = {'size': self.size}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
         super().__init__(**kwargs)
 
 
-class Saw(forms.TextInput):
+class XXXSWidget(TextWidget):
 
-    def __init__(self, **kwargs):
-        attrs = {'size': '8', 'maxlength': '8'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
+    size = 4
+    
+class XXSWidget(TextWidget):
 
-
-class Sew(forms.TextInput):
-
-    def __init__(self, **kwargs):
-        attrs = {'size': '50'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
+    size = 6
 
 
-class Msew(forms.TextInput):
+class XSWidget(TextWidget):
 
-    def __init__(self, **kwargs):
-        attrs = {'size': '35'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
+    size = 8
 
 
-class Ssew(forms.TextInput):
+class SWidget(TextWidget):
 
-    def __init__(self, **kwargs):
-        attrs = {'size': '20'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
+    size = 12
 
 
-class Abbrw(forms.TextInput):
+class MWidget(TextWidget):
 
-    def __init__(self, **kwargs):
-        attrs = {'size': '12'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
+    size = 15
 
 
-class Genw(forms.TextInput):
+class LWidget(TextWidget):
 
-    def __init__(self, **kwargs):
-        attrs = {'size': '60'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
+    size = 20
 
 
-class Gpsw(forms.TextInput):
+class XLWidget(TextWidget):
 
-    def __init__(self, **kwargs):
-        attrs = {'size': '12', 'maxlength': '20'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
+    size = 35
 
 
-class Consw(forms.TextInput):
+class XXLWidget(TextWidget):
 
-    def __init__(self, **kwargs):
-        attrs = {'size': '4', 'maxlength': '4'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
+    size = 50
 
 
-class Taw(forms.Textarea):
+class XXXLWidget(TextWidget):
+
+    size = 60
+
+
+class TextAreaWidget(forms.Textarea):
 
     def __init__(self, **kwargs):
         attrs = {'rows': '8', 'cols': '80'}
@@ -126,7 +100,7 @@ class Taw(forms.Textarea):
             super().render(*args, **kwargs).replace('>\n', '>', 1))
 
 
-class Currw(forms.TextInput):
+class CurrencyWidget(forms.TextInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '3', 'maxlength': '3', 'class': 'toupper'}
@@ -135,74 +109,20 @@ class Currw(forms.TextInput):
         super().__init__(**kwargs)
 
 
-class Ratew(forms.TextInput):
-
-    def __init__(self, **kwargs):
-        attrs = {'size': '15', 'maxlength': '25'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
-
-
-class Fxw(forms.TextInput):
-
-    def __init__(self, **kwargs):
-        attrs = {'size': '6', 'maxlength': '10'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
-
-
-class Sdw(forms.TextInput):
-
-    def __init__(self, **kwargs):
-        attrs = {'size': '50', 'maxlength': '50'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
-
-
-class Shw(forms.TextInput):
-
-    def __init__(self, **kwargs):
-        attrs = {'size': '4', 'maxlength': '4'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
-
-
-class Yw(forms.TextInput):
-
-    def __init__(self, **kwargs):
-        attrs = {'size': '4'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
-
-
-class Hw(forms.HiddenInput):
+class HiddenWidget(forms.HiddenInput):
 
     pass
-
-
-class Emw(forms.TextInput):
-
-    def __init__(self, **kwargs):
-        attrs = {'size': '40'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
 
 
 COMP_RE = compile(r'>\s+(\S*)\s+<')
 
 
-class Rs(forms.RadioSelect):
+class RadioWidget(forms.RadioSelect):
 
     option_template_name = 'radio.html'
 
 
-class CurrencyWidget(forms.widgets.MultiWidget):
+class SelectCurrencyWidget(forms.widgets.MultiWidget):
 
     template_name = 'currencywidget.html'
 
@@ -214,7 +134,7 @@ class CurrencyWidget(forms.widgets.MultiWidget):
             (forms.Select(
                 choices=[(x, x) for x in self._currlist] + [('OTH', 'Jiná:')],
                 attrs={'class': 'currsel'}),
-             Currw()),
+             CurrencyWidget()),
             attrs)
 
     def decompress(self, value):
@@ -223,7 +143,7 @@ class CurrencyWidget(forms.widgets.MultiWidget):
         return ('OTH', value)
 
 
-class Dw(forms.DateInput):
+class DateWidget(forms.DateInput):
 
     def __init__(self, **kwargs):
         attrs = {'size': '10', 'maxlength': '12'}
@@ -235,9 +155,9 @@ class Dw(forms.DateInput):
     def render(self, name, *args, **kwargs):
         res = super().render(name, *args, **kwargs)
         if self._today:
-            return mark_safe(
-                '<span class="dw-today">{0}<input type="submit" name="submit_set_{1}" value="Dnes" class="today" '
-                'id="id_set_{1}"></span>'.format(res, name))
+            return mark_safe('''\
+<span class="dw-today">{0}<input type="submit" name="submit_set_{1}" value="Dnes" class="today" id="id_set_{1}">\
+</span>'''.format(res, name))
         return res
 
 

@@ -26,17 +26,17 @@ from legal.common import forms, fields, widgets
 class InsForm(forms.Form):
 
     number = fields.IntegerField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         min_value=1,
         initial='')
 
     year = fields.IntegerField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         min_value=2008,
         initial='')
 
     desc = fields.CharField(
-        widget=widgets.Genw(),
+        widget=widgets.XXXLWidget(),
         max_length=255,
         label='Popis')
 

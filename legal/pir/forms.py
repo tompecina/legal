@@ -41,106 +41,106 @@ class MainForm(forms.Form):
         initial='')
 
     senate = fields.IntegerField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         min_value=0,
         initial='',
         required=False)
 
     number = fields.IntegerField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         min_value=1,
         initial='',
         required=False)
 
     year = fields.IntegerField(
-        widget=widgets.Saw(),
+        widget=widgets.XSWidget(),
         min_value=2008,
         initial='',
         required=False)
 
     date_first_from = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False)
 
     date_first_to = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False)
 
     date_last_from = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False)
 
     date_last_to = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False)
 
     name = fields.CharField(
-        widget=widgets.Msew(),
+        widget=widgets.XLWidget(),
         required=False,
         max_length=255,
         label='Příjmení/název')
 
     name_opt = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=TEXT_OPTS,
         initial='istartswith')
 
     first_name = fields.CharField(
-        widget=widgets.Msew(),
+        widget=widgets.XLWidget(),
         required=False,
         max_length=255,
         label='Jméno')
 
     first_name_opt = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=TEXT_OPTS,
         initial='istartswith')
 
     city = fields.CharField(
-        widget=widgets.Msew(),
+        widget=widgets.XLWidget(),
         required=False,
         max_length=255,
         label='Obec')
 
     city_opt = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=TEXT_OPTS,
         initial='istartswith')
 
     genid = fields.CharField(
-        widget=widgets.Ssew(),
+        widget=widgets.LWidget(),
         required=False,
         max_length=9,
         validators=(RegexValidator(regex=IC_RE_STR),),
         label='IČO')
 
     taxid = fields.CharField(
-        widget=widgets.Ssew(),
+        widget=widgets.LWidget(),
         required=False,
         max_length=14,
         label='DIČ')
 
     birthid = fields.CharField(
-        widget=widgets.Ssew(),
+        widget=widgets.LWidget(),
         required=False,
         max_length=11,
         validators=(RegexValidator(regex=RC_FULL_RE_STR),),
         label='Rodné číslo')
 
     date_birth = fields.DateField(
-        widget=widgets.Dw(),
+        widget=widgets.DateWidget(),
         required=False,
         label='Datum narození')
 
     year_birth_from = fields.IntegerField(
-        widget=widgets.Yw(),
+        widget=widgets.XXXSWidget(),
         min_value=1900,
         max_value=CURRYEAR,
         initial='',
         required=False)
 
     year_birth_to = fields.IntegerField(
-        widget=widgets.Yw(),
+        widget=widgets.XXXSWidget(),
         min_value=1900,
         max_value=CURRYEAR,
         initial='',
@@ -168,7 +168,7 @@ class MainForm(forms.Form):
         label='včetně seznamu věřitelů')
 
     format = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=FORMAT_OPTS,
         label='Výstupní formát',
         initial='html')

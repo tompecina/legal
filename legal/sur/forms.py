@@ -31,7 +31,7 @@ from legal.sur.glob import MIN_LENGTH, MAX_LENGTH
 class PartyForm(forms.Form):
 
     party = fields.CharField(
-        widget=widgets.Sew(attrs={
+        widget=widgets.XXLWidget(attrs={
             'data-minLen': MIN_LENGTH,
             'data-minLenText': grammar(MIN_LENGTH, GR_CHAR)}),
         max_length=MAX_LENGTH,
@@ -39,7 +39,7 @@ class PartyForm(forms.Form):
         validators=(MinLengthValidator(MIN_LENGTH),))
 
     party_opt = fields.ChoiceField(
-        widget=widgets.Rs(),
+        widget=widgets.RadioWidget(),
         choices=TEXT_OPTS,
         label='Posice',
         initial='icontains')
