@@ -34,9 +34,10 @@ register = Library()
 COMP_RE1 = compile(r'>\s+([^<]*)<')
 COMP_RE2 = compile(r'>(\S*)\s+<')
 COMP_RE3 = compile(r'>\s+<')
-COMP_RE4 = compile(r'\s*(\S+)="\s*(\S+)\s*"')
-COMP_RE5 = compile(r'\s*class=""')
-COMP_RE6 = compile(r' +')
+COMP_RE4 = compile(r'\s+(\S+)="\s*(\S+)\s*"')
+COMP_RE5 = compile(r'\s+class=""')
+COMP_RE6 = compile(r'\s+(\S+)=""')
+COMP_RE7 = compile(r' +')
 
 
 @keep_lazy_text
@@ -46,8 +47,9 @@ def compactify_html(value):
     res = sub(COMP_RE2, r'>\1 <', res)
     res = sub(COMP_RE3, r'><', res)
     res = sub(COMP_RE4, r' \1="\2"', res)
-    res = sub(COMP_RE5, r'', res)
-    res = sub(COMP_RE6, r' ', res)
+    res = sub(COMP_RE5, r' ', res)
+    res = sub(COMP_RE6, r' \1', res)
+    res = sub(COMP_RE7, r' ', res)
     return res
 
 
