@@ -29,7 +29,7 @@ from bs4 import BeautifulSoup
 from django.apps import apps
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 
-from legal.settings import BASE_DIR
+from legal.settings import BASE_DIR, FULL_CONTENT_TYPE
 from legal.szr.models import Court
 from legal.psj import cron, forms, models, views
 
@@ -201,8 +201,8 @@ class TestViews2(TransactionTestCase):
         res = self.client.get('/psj/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'psj_mainpage.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'psj_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -215,7 +215,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Hledat'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -226,7 +226,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Hledat'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.redirect_chain[0][1], HTTPStatus.FOUND)
         check_html(self, res.content)
         self.assertTrue(link_equal(res.redirect_chain[0][0], '/psj/list/?party=Ing&party_opt=icontains&start=0'))
@@ -238,7 +238,7 @@ class TestViews2(TransactionTestCase):
              'format': 'html',
              'submit': 'Hledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_mainpage.html')
+        self.assertTemplateUsed(res, 'psj_mainpage.xhtml')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -251,7 +251,7 @@ class TestViews2(TransactionTestCase):
              'format': 'html',
              'submit': 'Hledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_mainpage.html')
+        self.assertTemplateUsed(res, 'psj_mainpage.xhtml')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -274,8 +274,8 @@ class TestViews3(TransactionTestCase):
         res = self.client.get('/psj/list/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?senate=-1')
@@ -328,103 +328,103 @@ class TestViews3(TransactionTestCase):
 
         res = self.client.get('/psj/list/?date_from=2015-01-01&date_to=2199-07-01&register=C&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 2)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 2)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?register=T')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 0)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?date_from=2016-12-01')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 2)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?date_from=2016-12-02')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 0)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?date_to=2016-12-01')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 2)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?date_to=2016-11-30')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 0)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?court=OSPHA02')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 2)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?court=OSPHA03')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 0)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?courtroom={:d}'.format(models.Courtroom.objects.first().id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 2)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?courtroom=9999')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 0)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?judge={:d}'.format(models.Hearing.objects.first().judge_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 2)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?judge=9999')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 0)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?party=moroz&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 1)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?party=mgr&party_opt=istartswith')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 1)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?party=zová&party_opt=iendswith')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 1)
         check_html(self, res.content)
 
         res = self.client.get('/psj/list/?party=mgr.+helena+morozová&party_opt=iexact')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 1)
         check_html(self, res.content)
 
@@ -436,7 +436,7 @@ class TestViews3(TransactionTestCase):
 
         res = self.client.get('/psj/list/?senate=26')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -447,7 +447,7 @@ class TestViews3(TransactionTestCase):
 
         res = self.client.get('/psj/list/?senate=26&start=50')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -460,7 +460,7 @@ class TestViews3(TransactionTestCase):
 
         res = self.client.get('/psj/list/?senate=26&start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -473,7 +473,7 @@ class TestViews3(TransactionTestCase):
 
         res = self.client.get('/psj/list/?senate=26&start=200')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'psj_list.html')
+        self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(len(res.context['rows']), 39)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -586,7 +586,7 @@ earings>
         views.EXLIM = 0
         res = self.client.get('/psj/xmllist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'exlim.html')
+        self.assertTemplateUsed(res, 'exlim.xhtml')
         check_html(self, res.content)
         views.EXLIM = exlim
 
@@ -677,7 +677,7 @@ Obvodní soud Praha 2,č. 101/přízemí - přístavba,01.12.2016,12:00,26 C 94/
         views.EXLIM = 0
         res = self.client.get('/psj/csvlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'exlim.html')
+        self.assertTemplateUsed(res, 'exlim.xhtml')
         check_html(self, res.content)
         views.EXLIM = exlim
 
@@ -754,7 +754,7 @@ sterstvo spravedlnosti", "Alois Hl\u00e1sensk\u00fd"], "ref": {"year": 2015, "re
         views.EXLIM = 0
         res = self.client.get('/psj/jsonlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'exlim.html')
+        self.assertTemplateUsed(res, 'exlim.xhtml')
         check_html(self, res.content)
         views.EXLIM = exlim
 
@@ -774,7 +774,7 @@ sterstvo spravedlnosti", "Alois Hl\u00e1sensk\u00fd"], "ref": {"year": 2015, "re
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], 'text/plain; charset=utf-8')
-        self.assertTemplateUsed(res, 'psj_court.html')
+        self.assertTemplateUsed(res, 'psj_court.xhtml')
         croom = models.Courtroom.objects.get(desc__contains='101/').id
         judge = models.Judge.objects.get(name__contains='Hen').id
         self.assertHTMLEqual(res.content.decode('utf_8'), res0.format(croom, judge))

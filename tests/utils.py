@@ -40,6 +40,10 @@ from legal.common.models import Lock, Pending
 from legal.sir.models import Counter
 
 
+with open(join(BASE_DIR, 'lib', 'xhtml5.xsd'), 'rb') as xsdfile:
+    XSD = xsdfile.read()
+
+
 class DummyRequest:
 
     def __init__(self, session_id):
@@ -87,12 +91,25 @@ def strip_xml(string):
         return ''
 
 
+class Schema:
+
+    def __init__(self, xsd):
+        xmlschema_doc = parse(BytesIO(xsd))
+        self.schema = XMLSchema(xmlschema_doc)
+
+
+SCHEMAS = {}
+
+
 def validate_xml(xml, xsd):
 
-    xmlschema_doc = parse(BytesIO(xsd))
-    xmlschema = XMLSchema(xmlschema_doc)
+    key = hash(xsd)
+    if key not in SCHEMAS:
+        SCHEMAS[key] = Schema(xsd)
+    xmlschema = SCHEMAS[key].schema
     doc = parse(BytesIO(xml))
     return xmlschema.validate(doc)
+
 
 class Request:
 
@@ -209,13 +226,19 @@ class Pairs(dict):
 PAIRS = Pairs()
 
 
-def testreq(post, *args):
+def test_req(post, *args):
 
     request = Request('POST' if post else 'GET', args[0], *args[1:])
     if request in PAIRS:
         response = PAIRS[request]
         return DummyResponse(response.content, status=response.status)
     return DummyResponse(None, status=HTTPStatus.NOT_FOUND)
+
+
+def test_content(content):
+
+    if not validate_xml(content, XSD):
+        raise AssertionError('XML does not validate')
 
 
 def link_equal(link1, link2):

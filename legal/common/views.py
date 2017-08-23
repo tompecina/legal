@@ -60,7 +60,7 @@ def unauth(request):
     var = {'page_title': 'Neoprávněný přístup'}
     return render(
         request,
-        'unauth.html',
+        'unauth.xhtml',
         var,
         status=HTTPStatus.UNAUTHORIZED)
 
@@ -72,7 +72,7 @@ def error(request):
     var = {'page_title': 'Interní chyba aplikace'}
     return render(
         request,
-        'error.html',
+        'error.xhtml',
         var,
         status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
@@ -118,7 +118,7 @@ def pwchange(request):
             user.save()
             LOGGER.info('User "{}" ({:d}) changed password'.format(username, uid), request)
             return redirect('/accounts/pwchanged/')
-    return render(request, 'pwchange.html', var)
+    return render(request, 'pwchange.xhtml', var)
 
 
 @require_http_methods(('GET', 'POST'))
@@ -162,7 +162,7 @@ Server {1} ({2})
             err_message = 'Prosím, opravte označená pole ve formuláři'
     return render(
         request,
-        'lostpw.html',
+        'lostpw.xhtml',
         {'form': form,
          'page_title': page_title,
          'err_message': err_message,
@@ -190,7 +190,7 @@ def resetpw(request, link):
     LOGGER.info('Password for user "{}" ({:d}) reset'.format(user.username, user.id), request)
     return render(
         request,
-        'pwreset.html',
+        'pwreset.xhtml',
         {'page_title': 'Heslo bylo obnoveno',
          'newpassword': newpassword,
         })
@@ -217,7 +217,7 @@ def home(request):
     LOGGER.debug('Home page accessed', request)
     return render(
         request,
-        'home.html',
+        'home.xhtml',
         {'page_title': 'Právnické výpočty',
          'apps': getappinfo(),
          'suppress_home': True})
@@ -238,7 +238,7 @@ def about(request):
 
     return render(
         request,
-        'about.html',
+        'about.xhtml',
         {'page_title': 'O aplikaci',
          'apps': getappinfo(),
          'env': env})
@@ -265,7 +265,7 @@ def stat(request):
     LOGGER.debug('Statistics page accessed', request)
     return render(
         request,
-        'stat.html',
+        'stat.xhtml',
         {'page_title': 'Statistické údaje',
          'apps': getappstat(),
         })
@@ -289,7 +289,7 @@ def userinfo(request):
     LOGGER.debug('User information page accessed', request)
     return render(
         request,
-        'user.html',
+        'user.xhtml',
         {'page_title': 'Informace o uživateli',
          'userinfo': getuserinfo(request.user),
         })
@@ -327,7 +327,7 @@ def useradd(request):
                 LOGGER.debug('Duplicate user name', request)
     return render(
         request,
-        'useradd.html',
+        'useradd.xhtml',
         {'form': form,
          'page_title': 'Registrace nového uživatele',
          'err_message': err_message,

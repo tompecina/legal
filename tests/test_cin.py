@@ -27,6 +27,8 @@ from bs4 import BeautifulSoup
 
 from django.test import SimpleTestCase
 
+from legal.settings import FULL_CONTENT_TYPE
+
 from tests.utils import check_html
 
 
@@ -164,8 +166,8 @@ class TestViews(SimpleTestCase):
         res = self.client.get('/cin/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'cin_mainpage.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'cin_mainpage.xhtml')
         check_html(self, res.content)
 
         today = date.today()
@@ -181,7 +183,7 @@ class TestViews(SimpleTestCase):
                 {'beg_date': test[0],
                  'end_date': test[1]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'cin_mainpage.html')
+            self.assertTemplateUsed(res, 'cin_mainpage.xhtml')
             check_html(self, res.content, key=num)
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')

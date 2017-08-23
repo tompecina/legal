@@ -1,0 +1,117 @@
+{% extends 'main.xhtml' %}
+
+{% comment %}
+
+psj/templates/psj_mainpage.xhtml
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
+{% block page_contents %}
+
+{% include 'form.xhtml' %}
+
+  <table class="form">
+
+    <tbody>
+
+      <tr>
+	<td></td>
+	<td colspan="2"><h1>{{ page_title }}</h1></td>
+      </tr>
+
+      {% if err_message %}
+      <tr>
+	<td></td>
+	<td colspan="2">{% include 'formwarning.xhtml' %}</td>
+      </tr>
+      {% endif %}
+
+      <tr>
+	<th{% if form.date_from.errors or form.date_to.errors %} class="err"{% endif %}>Datum:</th>
+	<td colspan="2" class="nowrap">
+	  <span class="{{ form.date_from.css_classes }}" id="id_date_from_span">{{ form.date_from }}</span>
+	  <span>–</span>
+	  <span class="{{ form.date_to.css_classes }}" id="id_date_to_span">{{ form.date_to }}</span>
+	</td>
+      </tr>
+
+      <tr>
+	<th>{{ form.court.label_tag }}</th>
+	<td colspan="2">{{ form.court }}</td>
+      </tr>
+
+      <tr>
+	<th{% if form.senate.errors or form.register.errors or form.number.errors or form.year.errors or form.page.errors %} class="err"{% endif %}>Spisová značka:</th>
+	<td colspan="2" class="nowrap">
+	  <input id="id_senate" size="4" type="text" name="senate" maxlength="8" value="{{ form.senate.value }}" class="{{ form.senate.css_classes }}"/>
+	  <input id="id_register" size="4" type="text" name="register" maxlength="8" value="{{ form.register.value }}" class="{{ form.register.css_classes }}"/>
+	  <input id="id_number" size="4" type="text" name="number" maxlength="8" value="{{ form.number.value }}" class="{{ form.number.css_classes }}"/>
+	  <span>/</span>
+	  <input id="id_year" size="4" type="text" name="year" maxlength="4" value="{{ form.year.value }}" class="{{ form.year.css_classes }}"/>
+	</td>
+      </tr>
+
+      <tr>
+	<th>{{ form.courtroom.label_tag }}</th>
+	<td colspan="2">
+	  <select name="courtroom" id="id_courtroom">
+	    <option value="">(všechny)</option>
+	  </select>
+	</td>
+      </tr>
+
+      <tr>
+	<th>{{ form.judge.label_tag }}</th>
+	<td colspan="2">
+	  <select name="judge" id="id_judge">
+	    <option value="">(všichni)</option>
+	  </select>
+	</td>
+      </tr>
+
+      <tr>
+	<th>{{ form.party.label_tag }}</th>
+	<td colspan="2" class="inlop">
+	  <span>{{ form.party }}</span>
+	  {% for p in form.party_opt %}
+	  {{ p }}
+	  {% endfor %}
+	</td>
+      </tr>
+
+      <tr>
+	<th>{{ form.format.label_tag }}</th>
+	<td colspan="2" class="inlop">
+	  {% for p in form.format %}
+	  {{ p }}
+	  {% endfor %}
+	</td>
+      </tr>
+
+      {% include 'search.xhtml' %}
+
+    </tbody>
+
+  </table>
+
+</form>
+
+{% endblock %}

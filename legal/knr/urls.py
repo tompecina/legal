@@ -37,7 +37,7 @@ urlpatterns = [
     url(r'^placedeleted/$',
         genrender,
         kwargs={
-            'template': 'knr_placedeleted.html',
+            'template': 'knr_placedeleted.xhtml',
             'page_title': 'Smazání místa'},
         name='placedeleted'),
     url(r'^carform/(\d+)/$', carform, name='carform'),
@@ -47,7 +47,7 @@ urlpatterns = [
     url(r'^cardeleted/$',
         genrender,
         kwargs={
-            'template': 'knr_cardeleted.html',
+            'template': 'knr_cardeleted.xhtml',
             'page_title': 'Smazání vozidla'},
         name='cardeleted'),
     url(r'^formulaform/(\d+)/$', formulaform, name='formulaform'),
@@ -57,7 +57,7 @@ urlpatterns = [
     url(r'^formuladeleted/$',
         genrender,
         kwargs={
-            'template': 'knr_formuladeleted.html',
+            'template': 'knr_formuladeleted.xhtml',
             'page_title': 'Smazání předpisu'},
         name='formuladeleted'),
     url(r'^itemlist/$', itemlist, name='itemlist'),
@@ -69,7 +69,7 @@ urlpatterns = [
     url(r'^itemdeleted/$',
         genrender,
         kwargs={
-            'template': 'knr_itemdeleted.html',
+            'template': 'knr_itemdeleted.xhtml',
             'page_title': 'Smazání položky'},
         name='itemdeleted'),
     url(r'^presets/$', presets, name='presets'),

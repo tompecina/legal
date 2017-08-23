@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^transdeleted/$',
         genrender,
         kwargs={
-            'template': 'hjp_transdeleted.html',
+            'template': 'hjp_transdeleted.xhtml',
             'page_title': 'Smazání transakce'},
         name='transdeleted'),
 ]

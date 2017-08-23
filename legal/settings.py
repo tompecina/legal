@@ -72,7 +72,7 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 SECRET_KEY = SECKEY
 
-STATICFILES_DIRS = ('lib',)
+STATICFILES_DIRS = ('external',)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -277,6 +277,10 @@ DATE_INPUT_FORMATS = ('%d.%m.%Y',)
 
 JQUERY_VERSION = '3.2.1'
 JQUERY_UI_VERSION = '1.12.1'
+
+DEFAULT_CONTENT_TYPE = 'application/xhtml+xml'
+DEFAULT_CHARSET = 'utf-8'
+FULL_CONTENT_TYPE = '{}; charset={}'.format(DEFAULT_CONTENT_TYPE, DEFAULT_CHARSET)
 
 LOCALE_PATHS = ()
 if not TEST:

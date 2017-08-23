@@ -115,7 +115,7 @@ def mainpage(request):
 
     return render(
         request,
-        'kos_mainpage.html',
+        'kos_mainpage.xhtml',
         {'app': APP,
          'page_title': 'Kalkulace splátek při oddlužení',
          'messages': messages,

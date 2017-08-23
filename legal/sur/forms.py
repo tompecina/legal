@@ -24,17 +24,15 @@ from django.core.validators import MinLengthValidator
 
 from legal.common import forms, fields, widgets
 from legal.common.glob import TEXT_OPTS, GR_CHAR
-from legal.common.utils import grammar
 from legal.sur.glob import MIN_LENGTH, MAX_LENGTH
 
 
 class PartyForm(forms.Form):
 
     party = fields.CharField(
-        widget=widgets.XXLWidget(attrs={
-            'data-minLen': MIN_LENGTH,
-            'data-minLenText': grammar(MIN_LENGTH, GR_CHAR)}),
+        widget=widgets.XXLWidget(),
         max_length=MAX_LENGTH,
+        min_length=MIN_LENGTH,
         label='Vyhledávací řetězec',
         validators=(MinLengthValidator(MIN_LENGTH),))
 

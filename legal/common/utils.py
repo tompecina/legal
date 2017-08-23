@@ -34,7 +34,6 @@ from xml.sax.saxutils import escape, unescape
 
 from bs4 import BeautifulSoup
 from pdfrw import PdfReader, PdfName
-from tidylib import tidy_document
 import requests
 import reportlab.rl_config
 from reportlab.pdfgen.canvas import Canvas
@@ -775,8 +774,8 @@ def get(*args, **kwargs):  # pragma: no cover
     """
 
     if TEST:
-        from tests.utils import testreq
-        return testreq(False, *args)
+        from tests.utils import test_req
+        return test_req(False, *args)
     else:
         if 'timeout' not in kwargs:
             kwargs['timeout'] = TIMEOUT
@@ -789,8 +788,8 @@ def post(*args, **kwargs):  # pragma: no cover
     """
 
     if TEST:
-        from tests.utils import testreq
-        return testreq(True, *args)
+        from tests.utils import test_req
+        return test_req(True, *args)
     else:
         if 'timeout' not in kwargs:
             kwargs['timeout'] = TIMEOUT
@@ -844,6 +843,8 @@ def render(
         **kwargs)
 
     if TEST and not content_type:
+        from tests.utils import test_content
+
         content = response.content
 
         if DUMP_PATH:  # pragma: no cover
@@ -851,9 +852,7 @@ def render(
             with open(join(DUMP_PATH, filename), 'wb') as outfile:
                 outfile.write(content)
 
-        err = tidy_document(content.decode())[1]
-        if err:
-            raise AssertionError('Template: {} Errors: {}'.format(template_name, err))
+        test_content(response.content)
 
     return response
 

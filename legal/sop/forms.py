@@ -51,12 +51,6 @@ class MainForm(forms.Form):
         czk=True,
         initial='CZK')
 
-    oth = fields.CharField(
-        widget=widgets.CurrencyWidget(),
-        min_length=3,
-        max_length=3,
-        required=False)
-
     today = date.today()
     fx_date = fields.DateField(
         widget=widgets.DateWidget(),

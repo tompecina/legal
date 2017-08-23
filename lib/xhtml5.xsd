@@ -1,0 +1,2041 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- =====================================================================
+     Restriction of xhtml5.xsd: 
+     * Elements script and template are allowed only in html/head.
+     * Elements have no "onXXX" event handler content attributes.
+
+     Author: Hussein Shafie
+
+     Copyright (c) 2017 XMLmind Software. All rights reserved.
+
+     This file is part of the XMLmind XML Editor project.
+     For conditions of distribution and use, see the accompanying
+     legal.txt file.
+     ===================================================================== -->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	   xmlns="http://www.w3.org/1999/xhtml" 
+	   xmlns:html="http://www.w3.org/1999/xhtml" 
+	   xmlns:svg="http://www.w3.org/2000/svg"
+           xmlns:xlink="http://www.w3.org/1999/xlink" 
+	   xmlns:mml="http://www.w3.org/1998/Math/MathML" 
+	   targetNamespace="http://www.w3.org/1999/xhtml"
+	   elementFormDefault="qualified">
+
+  <xs:import namespace="http://www.w3.org/2000/svg"
+             schemaLocation="lib/svg.xsd"/>
+
+  <xs:import namespace="http://www.w3.org/1998/Math/MathML"
+             schemaLocation="lib/math.xsd"/>
+
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+             schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+
+<!--
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+             schemaLocation="../../../common/xsd/xml.xsd"/>
+-->
+
+  <!-- The root element ================================================== -->
+
+  <xs:element name="html">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="head"/>
+	<xs:element ref="body"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="globalAttributes"/>
+      <xs:attribute name="manifest" type="nonEmptyURI"/>
+    </xs:complexType>
+
+    <xs:unique name="uniqueId">
+      <xs:selector xpath=".//html:*"/>
+      <xs:field xpath="@id"/>
+    </xs:unique>
+
+    <xs:unique name="datalistId">
+      <xs:selector xpath=".//html:datalist"/>
+      <xs:field xpath="@id"/>
+    </xs:unique>
+
+    <xs:unique name="formId">
+      <xs:selector xpath=".//html:form"/>
+      <xs:field xpath="@id"/>
+    </xs:unique>
+
+    <xs:unique name="formName">
+      <xs:selector xpath=".//html:form"/>
+      <xs:field xpath="@name"/>
+    </xs:unique>
+
+    <xs:keyref name="objectForm" refer="formId">
+      <xs:selector xpath=".//html:object"/>
+      <xs:field xpath="@form"/>
+    </xs:keyref>
+
+    <xs:keyref name="labelForm" refer="formId">
+      <xs:selector xpath=".//html:label"/>
+      <xs:field xpath="@form"/>
+    </xs:keyref>
+
+    <xs:unique name="labelableId">
+      <xs:selector xpath=".//html:button|.//html:input|.//html:keygen|
+                          .//html:meter|.//html:output|.//html:progress|
+                          .//html:select|.//html:textarea"/>
+      <xs:field xpath="@id"/>
+    </xs:unique>
+
+    <xs:keyref name="labelFor" refer="labelableId">
+      <xs:selector xpath=".//html:label"/>
+      <xs:field xpath="@for"/>
+    </xs:keyref>
+
+    <xs:keyref name="inputList" refer="datalistId">
+      <xs:selector xpath=".//html:input"/>
+      <xs:field xpath="@list"/>
+    </xs:keyref>
+     
+    <xs:keyref name="inputForm" refer="formId">
+      <xs:selector xpath=".//html:input"/>
+      <xs:field xpath="@form"/>
+    </xs:keyref>
+
+    <xs:keyref name="buttonForm" refer="formId">
+      <xs:selector xpath=".//html:button"/>
+      <xs:field xpath="@form"/>
+    </xs:keyref>
+
+    <xs:keyref name="selectForm" refer="formId">
+      <xs:selector xpath=".//html:select"/>
+      <xs:field xpath="@form"/>
+    </xs:keyref>
+
+    <xs:keyref name="textareaForm" refer="formId">
+      <xs:selector xpath=".//html:textarea"/>
+      <xs:field xpath="@form"/>
+    </xs:keyref>
+
+    <xs:keyref name="keygenForm" refer="formId">
+      <xs:selector xpath=".//html:keygen"/>
+      <xs:field xpath="@form"/>
+    </xs:keyref>
+
+    <xs:keyref name="outputForm" refer="formId">
+      <xs:selector xpath=".//html:output"/>
+      <xs:field xpath="@form"/>
+    </xs:keyref>
+
+    <!-- No way to check html:output/@for as WXS has no xs:keyref*s*. -->
+
+    <xs:keyref name="fieldsetForm" refer="formId">
+      <xs:selector xpath=".//html:fieldset"/>
+      <xs:field xpath="@form"/>
+    </xs:keyref>
+  </xs:element>
+
+  <xs:simpleType name="nonEmptyURI">
+    <xs:restriction base="xs:anyURI">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Global Attributes ================================================= -->
+  <!-- ARIA role and aria-* attributes not supported. -->
+
+  <xs:attributeGroup name="commonGlobalAttributes">
+    <xs:attributeGroup ref="coreAttributes"/>
+    <xs:attributeGroup ref="commonEventHandlerAttributes"/>
+    <xs:attributeGroup ref="xmlAttributes"/>
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="globalAttributes">
+    <xs:attributeGroup ref="commonGlobalAttributes"/>
+    <xs:anyAttribute namespace="data-" processContents="skip">
+      <!-- Proprietary annotation allowing to support 
+           data-* attributes in XXE. -->
+      <xs:annotation>
+        <xs:appinfo
+          xxe:NameWildcard="com.xmlmind.xmleditext.xhtml.XHTML5DataNameWildcard"
+          xmlns:xxe="http://www.xmlmind.com/xmleditor/namespace/extension"/>
+      </xs:annotation>
+    </xs:anyAttribute>
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="coreAttributes">
+    <xs:attributeGroup ref="coreAttributesNoDir"/>
+    <xs:attribute name="dir" type="dir"/>
+  </xs:attributeGroup>
+
+  <xs:simpleType name="dir">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="ltr"/>
+      <xs:enumeration value="rtl"/>
+      <xs:enumeration value="auto"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:attributeGroup name="coreAttributesNoDir">
+    <xs:attribute name="accesskey" type="accesskey"/>
+    <xs:attribute name="class" type="tokens"/>
+    <xs:attribute name="contenteditable" type="implicitBoolean"/>
+    <xs:attribute name="hidden" type="hidden"/>
+    <xs:attribute name="id" type="id"/>
+    <xs:attribute name="lang" type="languageTag"/>
+    <xs:attribute name="spellcheck" type="implicitBoolean"/>
+    <xs:attribute name="style" type="string"/>
+    <xs:attribute name="tabindex" type="integer"/>
+    <xs:attribute name="title" type="string"/>
+    <xs:attribute name="translate" type="implicitYesNo"/>
+  </xs:attributeGroup>
+
+  <xs:simpleType name="accesskey">
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:pattern value="\S"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+
+  <xs:simpleType name="implicitBoolean">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="true"/>
+      <xs:enumeration value="false"/>
+      <xs:enumeration value=""/> <!-- Means: true. -->
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="hidden">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="hidden"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="token">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="\S+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="id">
+    <xs:annotation>
+      <!-- Proprietary annotation allowing to support XInclude in XHTML5
+           documents despite the fact that the "id" attribute is not an
+           xsd:ID. -->
+      <xs:appinfo xxe:DataType="com.xmlmind.xmleditext.xhtml.XHTML5IDType"
+        xmlns:xxe="http://www.xmlmind.com/xmleditor/namespace/extension"/>
+    </xs:annotation>
+    <xs:restriction base="token"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="languageTag">
+    <xs:union>
+      <xs:simpleType>
+	<xs:restriction base="token"/> <!-- BCP 47 language tag. -->
+      </xs:simpleType>
+
+      <xs:simpleType>
+	<xs:restriction base="emptyString"/> <!-- Unknown language. -->
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+
+  <xs:simpleType name="emptyString">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="0"/>
+      <xs:maxLength value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="string">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="integer">
+    <xs:restriction base="xs:integer"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="idref">
+    <xs:restriction base="token"/>
+  </xs:simpleType>
+    
+  <xs:simpleType name="boolean">
+    <xs:restriction base="xs:boolean"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="implicitYesNo">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="yes"/>
+      <xs:enumeration value="no"/>
+      <xs:enumeration value=""/> <!-- Means: yes. -->
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:attributeGroup name="commonEventHandlerAttributes">
+    <!-- See xhtml5.xsd. -->
+  </xs:attributeGroup>
+
+  <xs:simpleType name="functionBody">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:attributeGroup name="xmlAttributes">
+    <xs:attribute ref="xml:lang"/>
+    <xs:attribute ref="xml:space"/>
+    <xs:attribute ref="xml:base"/>
+  </xs:attributeGroup>
+
+  <!-- Document metadata ================================================= -->
+
+  <xs:element name="head">
+    <xs:complexType>
+     <xs:sequence>
+       <xs:group ref="otherMetadata" minOccurs="0" maxOccurs="unbounded"/>
+       <xs:element ref="title"/>
+       <xs:group ref="otherMetadata" minOccurs="0" maxOccurs="unbounded"/>
+     </xs:sequence>
+     <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="title">
+    <xs:complexType mixed="true">
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:group name="otherMetadata">
+    <xs:choice>
+      <xs:element ref="base"/> <!-- At most one base. -->
+      <xs:element ref="link"/>
+      <xs:element ref="meta"/>
+      <xs:element ref="script"/>
+      <xs:element ref="style"/>
+      <xs:element ref="template"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:element name="base">
+    <xs:complexType>
+      <!-- Must have either an href attribute, a target attribute, or both. -->
+      <xs:attribute name="href" type="nonEmptyURI"/>
+      <xs:attribute name="target" type="browsingContextNameOrKeyword"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="browsingContextNameOrKeyword">
+    <xs:union>
+      <xs:simpleType>
+	<xs:restriction base="xs:NMTOKEN">
+	  <xs:enumeration value="_blank"/>
+	  <xs:enumeration value="_self"/>
+	  <xs:enumeration value="_parent"/>
+	  <xs:enumeration value="_top"/>
+	</xs:restriction>
+      </xs:simpleType>
+
+      <xs:simpleType>
+	<xs:restriction base="browsingContextName"/>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+
+  <xs:simpleType name="browsingContextName">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[^_].*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="link">
+    <xs:complexType>
+      <!-- No href and no or empty rel means: no link. -->
+      <xs:attribute name="href" type="nonEmptyURI"/>
+      <xs:attribute name="crossorigin" type="crossOrigin"/>
+      <xs:attribute name="rel" type="tokens"/>
+      <xs:attribute name="media" type="mediaQueryList" default="all"/>
+      <xs:attribute name="hreflang" type="languageTag"/>
+      <xs:attribute name="type" type="mimeType"/>
+      <xs:attribute name="sizes" type="sizes"/> <!-- When rel="icon". -->
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="crossOrigin">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="anonymous"/>
+      <xs:enumeration value="use-credentials"/>
+      <xs:enumeration value=""/> <!-- Means: anonymous. -->
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tokens">
+    <xs:list itemType="token"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="mediaQueryList">
+    <xs:restriction base="nonEmptyNormalizedString"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="nonEmptyNormalizedString"> 
+    <xs:restriction base="xs:token">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="mimeType"> 
+    <!-- A MIME type may have a parameter. 
+         Example: "application/dita+xml; format=dita" -->
+    <xs:restriction base="nonEmptyNormalizedString"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="sizes">
+    <!-- Example: sizes="32x32 48x48". -->
+    <xs:restriction base="tokens"/>
+  </xs:simpleType>
+
+  <xs:element name="meta">
+    <xs:complexType>
+      <!-- One of: charset, name+content, http-equiv+content. 
+           If http-equiv="content-type", 
+           then content starts with "text/html;". -->
+      <xs:attribute name="http-equiv" type="httpEquiv"/>
+      <xs:attribute name="name" type="string"/>
+      <xs:attribute name="content" type="string"/>
+      <xs:attribute name="charset" type="charset"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="httpEquiv">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="content-language"/>
+      <xs:enumeration value="content-type"/>
+      <xs:enumeration value="default-style"/>
+      <xs:enumeration value="refresh"/>
+      <xs:enumeration value="set-cookie"/>
+
+      <xs:enumeration value="Content-Language"/>
+      <xs:enumeration value="Content-Type"/>
+      <xs:enumeration value="Default-Style"/>
+      <xs:enumeration value="Refresh"/>
+      <xs:enumeration value="Set-Cookie"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="charset">
+    <xs:restriction base="token"/>
+  </xs:simpleType>
+
+  <xs:element name="style">
+    <xs:complexType mixed="true">
+      <xs:attribute name="type" type="mimeType" default="text/css"/>      
+      <xs:attribute name="media" type="mediaQueryList" default="all"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Sections ========================================================== -->
+
+  <xs:element name="body">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="flowContentElement">
+          <xs:attributeGroup ref="bodyEventHandlerAttributes"/>
+	</xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:attributeGroup name="bodyEventHandlerAttributes">
+    <!-- See xhtml5.xsd. -->
+  </xs:attributeGroup>
+
+  <xs:complexType name="flowContentElement" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="flowContent"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="globalAttributes"/>
+  </xs:complexType>
+
+  <!-- LIMITATION: allows main descendant. -->
+  <xs:element name="article" type="flowContentElement"/>
+
+  <xs:element name="section" type="flowContentElement"/>
+
+  <!-- LIMITATION: allows main descendant. -->
+  <xs:element name="nav" type="flowContentElement"/>
+
+  <!-- LIMITATION: allows main descendant. -->
+  <xs:element name="aside" type="flowContentElement"/>
+
+  <xs:element name="h1" type="phrasingContentElement"/>
+
+  <xs:complexType name="phrasingContentElement" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="phrasingContent"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="globalAttributes"/>
+  </xs:complexType>
+
+  <xs:element name="h2" type="phrasingContentElement"/>
+
+  <xs:element name="h3" type="phrasingContentElement"/>
+
+  <xs:element name="h4" type="phrasingContentElement"/>
+
+  <xs:element name="h5" type="phrasingContentElement"/>
+
+  <xs:element name="h6" type="phrasingContentElement"/>
+
+  <!-- LIMITATION: allows header, footer, main descendants. -->
+  <xs:element name="header" type="flowContentElement"/>
+
+  <!-- LIMITATION: allows header, footer, main descendants. -->
+  <xs:element name="footer" type="flowContentElement"/>
+
+  <!-- LIMITATION: allows address descendants. -->
+  <xs:element name="address" type="simpleFlowContentElement"/>
+
+  <xs:complexType name="simpleFlowContentElement" mixed="true">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="simpleFlowContent"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="globalAttributes"/>
+  </xs:complexType>
+
+  <!-- Grouping content ================================================== -->
+
+  <xs:element name="p" type="phrasingContentElement"/> 
+
+  <xs:element name="hr">
+    <xs:complexType>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="pre" type="phrasingContentElement"/>
+
+  <xs:element name="blockquote">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="flowContentElement">
+	  <xs:attribute name="cite" type="uri"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="uri">
+    <xs:restriction base="xs:anyURI"/>
+  </xs:simpleType>
+
+  <xs:element name="ol">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="olLi"/>
+      </xs:sequence>
+      <xs:attribute name="reversed" type="reversed"/>
+      <xs:attribute name="start" type="integer"/>
+      <xs:attribute name="type" type="olType" default="1"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:group name="olLi">
+    <xs:choice>
+      <xs:element name="li">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="li">
+              <xs:attribute name="value" type="integer"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:group>
+
+  <xs:simpleType name="olType">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="a"/>
+      <xs:enumeration value="A"/>
+      <xs:enumeration value="i"/>
+      <xs:enumeration value="I"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="reversed">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="reversed"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="ul">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="li"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:group name="li">
+    <xs:choice>
+      <xs:element name="li" type="li"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:complexType name="li">
+    <xs:complexContent>
+      <xs:extension base="flowContentElement"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="dl">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="dtDl"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:group name="dtDl">
+    <xs:choice>
+      <xs:group ref="dtDlGroup"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:group name="dtDlGroup">
+    <xs:sequence>
+      <xs:element ref="dt" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element ref="dd" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:element name="dt" type="simpleFlowContentElement"/>
+ 
+  <xs:element name="dd" type="flowContentElement"/>
+
+  <xs:element name="figure"> 
+    <xs:complexType mixed="true">
+      <!-- LIMITATION: allows to have text other than whitespace
+           before leading figcaption or trailing figcaption. -->
+      <!-- SCHEMA VALIDATION ERROR:
+           figcaption violates "Unique Particle Attribution". 
+           (May be removed by replacing second ref="flowContent" minOccurs="0"
+            by ref="flowContent".) -->
+      <xs:choice>
+        <xs:sequence>
+          <xs:element ref="figcaption"/>
+          <xs:group ref="flowContent" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:sequence>
+          <xs:group ref="flowContent" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element ref="figcaption" minOccurs="0"/>
+        </xs:sequence>
+      </xs:choice>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="figcaption" type="flowContentElement"/>
+
+  <xs:element name="div" type="flowContentElement"/>
+
+  <xs:element name="main" type="flowContentElement"/>
+
+  <!-- Text-level semantics ============================================== -->
+
+  <!-- NO TOPLEVEL ELEMENT DECLARATION: a -->
+  <!-- LIMITATION: allows interactive content descendants. -->
+
+  <xs:complexType name="aFlow">
+    <xs:complexContent>
+      <xs:extension base="flowContentElement">
+        <xs:attributeGroup ref="aAttributes"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="aPhrasing">
+    <xs:complexContent>
+      <xs:extension base="phrasingContentElement">
+        <xs:attributeGroup ref="aAttributes"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:attributeGroup name="aAttributes">
+    <xs:attribute name="href" type="uri"/>
+    <xs:attribute name="target" type="browsingContextNameOrKeyword"/>
+    <xs:attribute name="download" type="string"/>
+    <xs:attribute name="rel" type="tokens"/>
+    <xs:attribute name="hreflang" type="languageTag"/>
+    <xs:attribute name="type" type="mimeType"/>
+  </xs:attributeGroup>
+
+  <xs:element name="em" type="phrasingContentElement"/>
+
+  <xs:element name="strong" type="phrasingContentElement"/>
+
+  <xs:element name="small" type="phrasingContentElement"/>
+
+  <xs:element name="s" type="phrasingContentElement"/>
+
+  <xs:element name="cite" type="phrasingContentElement"/>
+
+  <xs:element name="q">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="phrasingContentElement">
+	  <xs:attribute name="cite" type="uri"/>
+	</xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="dfn" type="phrasingContentElement"/>
+
+  <xs:element name="abbr" type="phrasingContentElement"/>
+
+  <xs:element name="data">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="phrasingContentElement">
+	  <xs:attribute name="value" type="string" use="required"/>
+	</xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- LIMITATION: must be plain text when datetime is absent. -->
+  <xs:element name="time">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="phrasingContentElement">
+	  <xs:attribute name="datetime" type="dateTime"/>
+	</xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="dateTime">
+    <xs:restriction base="nonEmptyNormalizedString"/>
+  </xs:simpleType>
+
+  <xs:element name="code" type="phrasingContentElement"/>
+
+  <xs:element name="var" type="phrasingContentElement"/>
+
+  <xs:element name="samp" type="phrasingContentElement"/>
+
+  <xs:element name="kbd" type="phrasingContentElement"/>
+
+  <xs:element name="sub" type="phrasingContentElement"/>
+
+  <xs:element name="sup" type="phrasingContentElement"/>
+
+  <xs:element name="i" type="phrasingContentElement"/>
+
+  <xs:element name="b" type="phrasingContentElement"/>
+
+  <xs:element name="u" type="phrasingContentElement"/>
+
+  <xs:element name="mark" type="phrasingContentElement"/>
+
+  <!-- ================================================
+       Does not validate much and is hard to use in XXE
+       ================================================
+       LIMITATION: allows to insert text other than whitespace 
+                   between rp and rt/rtc.
+       LIMITATION: does not ensure that there is a base, 
+                   whether explicit or implied.
+       SCHEMA VALIDATION ERROR: rp violates "Unique Particle Attribution".
+       ================================================
+
+  <xs:element name="ruby">
+    <xs:complexType mixed="true">
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:group ref="phrasingContent"/>
+          <xs:element ref="rb"/>
+        </xs:choice>
+
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+          <xs:element ref="rp" minOccurs="0"/>
+          <xs:choice>
+            <xs:element ref="rt"/>
+            <xs:element ref="rtc"/>
+          </xs:choice>
+          <xs:element ref="rp" minOccurs="0"/>
+        </xs:sequence>
+      </xs:sequence>
+
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+ -->
+
+  <!-- ==================================================
+       Validates almost nothing but is nice to use in XXE
+       ================================================== -->
+
+  <xs:element name="ruby">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="phrasingContent"/>
+        <xs:element ref="rb"/>
+        <xs:element ref="rp" />
+        <xs:element ref="rt"/>
+        <xs:element ref="rtc"/>
+      </xs:choice>
+
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="rb" type="phrasingContentElement"/>
+
+  <xs:element name="rt" type="phrasingContentElement"/>
+
+  <xs:element name="rtc">
+    <xs:complexType mixed="true">
+      <!-- LIMITATION: allows to insert text other than whitespace 
+           between rt. -->
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="phrasingContent"/>
+        <xs:element ref="rt"/>
+      </xs:choice>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="rp" type="phrasingContentElement"/>
+
+  <xs:element name="bdi">
+    <xs:complexType mixed="true">
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+	<xs:group ref="phrasingContent"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="coreAttributesNoDir"/>
+      <xs:attributeGroup ref="commonEventHandlerAttributes"/>
+      <xs:attributeGroup ref="xmlAttributes"/>
+      <xs:attribute name="dir" type="dir" default="auto"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="bdo">
+    <xs:complexType mixed="true">
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+	<xs:group ref="phrasingContent"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="coreAttributesNoDir"/>
+      <xs:attributeGroup ref="commonEventHandlerAttributes"/>
+      <xs:attributeGroup ref="xmlAttributes"/>
+      <xs:attribute name="dir" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="ltr"/>
+            <xs:enumeration value="rtl"/> <!-- No auto. -->
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="span" type="phrasingContentElement"/>
+
+  <xs:element name="br">
+    <xs:complexType>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="wbr">
+    <xs:complexType>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Edits ============================================================= -->
+
+  <!-- NO TOPLEVEL ELEMENT DECLARATION: ins -->
+
+  <xs:complexType name="insFlow">
+    <xs:complexContent>
+      <xs:extension base="flowContentElement">
+	<xs:attribute name="cite" type="uri"/>
+	<xs:attribute name="datetime" type="dateOptionalTime"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="dateOptionalTime">
+    <xs:union>
+      <xs:simpleType>
+	<xs:restriction base="xs:date"/>
+      </xs:simpleType>
+       <xs:simpleType>
+	<xs:restriction base="xs:dateTime"/>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+
+  <xs:complexType name="insPhrasing">
+    <xs:complexContent>
+      <xs:extension base="phrasingContentElement">
+	<xs:attribute name="cite" type="uri"/>
+	<xs:attribute name="datetime" type="dateOptionalTime"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- NO TOPLEVEL ELEMENT DECLARATION: del -->
+
+  <xs:complexType name="delFlow">
+    <xs:complexContent>
+      <xs:extension base="flowContentElement">
+	<xs:attribute name="cite" type="uri"/>
+	<xs:attribute name="datetime" type="dateOptionalTime"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="delPhrasing">
+    <xs:complexContent>
+      <xs:extension base="phrasingContentElement">
+	<xs:attribute name="cite" type="uri"/>
+	<xs:attribute name="datetime" type="dateOptionalTime"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Embedded content ================================================== -->
+
+  <xs:element name="img">
+    <xs:complexType> 
+      <!-- LIMITATION: usemap pointing to a map not checked 
+           (because of the hash-name reference). -->
+      <!-- LIMITATION: ismap is allowed even when the img 
+           has no <a href=""> ancestor. -->
+      <xs:attribute name="alt" type="nonEmptyString"/>
+      <xs:attribute name="src" type="nonEmptyURI" use="required"/>
+      <xs:attribute name="crossorigin" type="crossOrigin"/>
+      <xs:attribute name="usemap" type="hashNameRef"/>
+      <xs:attribute name="ismap" type="ismap"/>
+      <xs:attribute name="width" type="nonNegativeInteger"/>
+      <xs:attribute name="height" type="nonNegativeInteger"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="nonEmptyString"> 
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="hashNameRef">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="#\S+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ismap">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="ismap"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="nonNegativeInteger">
+    <xs:restriction base="xs:nonNegativeInteger"/>
+  </xs:simpleType>
+
+  <xs:element name="iframe">
+    <xs:complexType>
+      <!-- Must be empty in XML documents. -->
+      <xs:attribute name="src" type="nonEmptyURI"/>
+      <xs:attribute name="srcdoc" type="string"/>
+      <xs:attribute name="name" type="browsingContextName"/>
+      <xs:attribute name="sandbox" type="sandbox"/>
+      <xs:attribute name="width" type="nonNegativeInteger"/>
+      <xs:attribute name="height" type="nonNegativeInteger"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="sandbox">
+    <xs:list>
+      <!-- LIMITATION: a token may be present several times in the list. -->
+      <xs:simpleType>
+        <xs:restriction base="xs:NMTOKEN">
+          <xs:enumeration value="allow-forms"/>
+          <xs:enumeration value="allow-pointer-lock"/>
+          <xs:enumeration value="allow-popups"/>
+          <xs:enumeration value="allow-same-origin"/>
+          <xs:enumeration value="allow-scripts"/>
+          <xs:enumeration value="allow-top-navigation"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+
+  <xs:element name="embed">
+    <xs:complexType>
+      <xs:attribute name="src" type="nonEmptyURI"/>
+      <xs:attribute name="type" type="mimeType"/>
+      <xs:attribute name="width" type="nonNegativeInteger"/>
+      <xs:attribute name="height" type="nonNegativeInteger"/>
+      <xs:attributeGroup ref="commonGlobalAttributes"/>
+      <xs:anyAttribute namespace="##local" processContents="skip"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- NO TOPLEVEL ELEMENT DECLARATION: object -->
+  <!-- LIMITATION: allows to have text other than whitespace
+       between param elements. -->
+
+  <xs:complexType name="objectFlow" mixed="true">
+    <xs:sequence>
+      <xs:element ref="param" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:group ref="flowContent" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="objectAttributes"/>
+    <xs:attributeGroup ref="globalAttributes"/>
+  </xs:complexType>
+
+  <xs:complexType name="objectPhrasing" mixed="true">
+    <xs:sequence>
+      <xs:element ref="param" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:group ref="phrasingContent" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="objectAttributes"/>
+    <xs:attributeGroup ref="globalAttributes"/>
+  </xs:complexType>
+
+  <xs:attributeGroup name="objectAttributes">
+    <xs:attribute name="data" type="nonEmptyURI"/>
+    <xs:attribute name="type" type="mimeType"/>
+    <xs:attribute name="typemustmatch" type="typemustmatch"/>
+    <xs:attribute name="name" type="browsingContextName"/>
+    <xs:attribute name="usemap" type="hashNameRef"/>
+    <xs:attribute name="form" type="idref"/>
+    <xs:attribute name="width" type="nonNegativeInteger"/>
+    <xs:attribute name="height" type="nonNegativeInteger"/>
+  </xs:attributeGroup>
+
+  <xs:simpleType name="typemustmatch">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="typemustmatch"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="param">
+    <xs:complexType>
+      <xs:attribute name="name" type="string" use="required"/>
+      <xs:attribute name="value" type="string" use="required"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- NO TOPLEVEL ELEMENT DECLARATION: video -->
+  <!-- LIMITATION: allows to have text other than whitespace
+       between source and track elements. -->
+  <!-- LIMITATION: allow both src attribute and source elements. -->
+  <!-- LIMITATION: allows to have audio and video descendants. -->
+      
+  <xs:complexType name="videoFlow" mixed="true">
+    <xs:sequence>
+      <xs:element ref="source" minOccurs="0" maxOccurs="unbounded"/>      
+      <xs:element ref="track" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:group ref="flowContent" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attributeGroup ref="videoAttributes"/>
+    <xs:attributeGroup ref="globalAttributes"/>
+  </xs:complexType>
+
+  <xs:complexType name="videoPhrasing" mixed="true">
+    <xs:sequence>
+      <xs:element ref="source" minOccurs="0" maxOccurs="unbounded"/> 
+      <xs:element ref="track" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:group ref="phrasingContent" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="videoAttributes"/>
+    <xs:attributeGroup ref="globalAttributes"/>
+  </xs:complexType>
+
+  <xs:attributeGroup name="videoAttributes">
+    <xs:attribute name="src" type="nonEmptyURI"/>
+    <xs:attribute name="crossorigin" type="crossOrigin"/>
+    <xs:attribute name="poster" type="nonEmptyURI"/>
+    <xs:attribute name="preload" type="preload"/>
+    <xs:attribute name="autoplay" type="autoplay"/>
+    <xs:attribute name="mediagroup" type="string"/>
+    <xs:attribute name="loop" type="loop"/>
+    <xs:attribute name="muted" type="muted"/>
+    <xs:attribute name="controls" type="controls"/>
+    <xs:attribute name="width" type="nonNegativeInteger"/>
+    <xs:attribute name="height" type="nonNegativeInteger"/>
+  </xs:attributeGroup>
+
+  <xs:simpleType name="preload">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="metadata"/>
+      <xs:enumeration value="auto"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="autoplay">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="autoplay"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="loop">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="loop"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="muted">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="muted"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="controls">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="controls"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- NO TOPLEVEL ELEMENT DECLARATION: audio -->
+  <!-- LIMITATION: allows to have text other than whitespace
+       between source and track elements. -->
+  <!-- LIMITATION: allow both src attribute and source elements. -->
+
+  <xs:complexType name="audioFlow" mixed="true">
+    <xs:sequence>
+      <xs:element ref="source" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="track" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:group ref="flowContent" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="audioAttributes"/>
+    <xs:attributeGroup ref="globalAttributes"/>
+  </xs:complexType>
+
+  <xs:complexType name="audioPhrasing" mixed="true">
+    <xs:sequence>
+      <xs:element ref="source" minOccurs="0" maxOccurs="unbounded"/>    
+      <xs:element ref="track" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:group ref="phrasingContent" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="audioAttributes"/>
+    <xs:attributeGroup ref="globalAttributes"/>
+  </xs:complexType>
+
+  <xs:attributeGroup name="audioAttributes">
+    <xs:attribute name="src" type="nonEmptyURI"/>
+    <xs:attribute name="crossorigin" type="crossOrigin"/>
+    <xs:attribute name="preload" type="preload"/>
+    <xs:attribute name="autoplay" type="autoplay"/>
+    <xs:attribute name="mediagroup" type="string"/>
+    <xs:attribute name="loop" type="loop"/>
+    <xs:attribute name="muted" type="muted"/>
+    <xs:attribute name="controls" type="controls"/>
+  </xs:attributeGroup>
+
+  <xs:element name="source">
+    <xs:complexType>
+      <xs:attribute name="src" type="nonEmptyURI" use="required"/>
+      <xs:attribute name="type" type="mimeType"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="track">
+    <xs:complexType>
+      <xs:attribute name="kind" type="trackKind" default="subtitles"/>
+      <xs:attribute name="src" type="nonEmptyURI" use="required"/>
+      <xs:attribute name="srclang" type="languageTag"/>
+      <xs:attribute name="label" type="nonEmptyString"/>
+      <xs:attribute name="default" type="default"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="trackKind">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="subtitles"/>
+      <xs:enumeration value="captions"/>
+      <xs:enumeration value="descriptions"/>
+      <xs:enumeration value="chapters"/>
+      <xs:enumeration value="metadata"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="default">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="default"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- NO TOPLEVEL ELEMENT DECLARATION: map -->
+
+  <xs:complexType name="mapFlow">
+    <xs:complexContent>
+      <xs:extension base="flowContentElement">
+	<xs:attribute name="name" type="name" use="required"/>
+      </xs:extension>
+    </xs:complexContent>  
+  </xs:complexType>
+
+  <xs:complexType name="mapPhrasing">
+    <xs:complexContent>
+      <xs:extension base="phrasingContentElement">
+	<xs:attribute name="name" type="name" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>  
+
+  <xs:simpleType name="name">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="\S+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="area">
+    <xs:complexType>
+      <!-- LIMITATION: it is possible to specify attribute href 
+           without specifying attribute alt. -->
+      <!-- LIMITATION: attribute coords should be required 
+           when attribute shape is not "default" (whole image). -->
+      <!-- LIMITATION: the number and sign of coords (e.g. 4 for "rect")
+           are not enforced. -->
+      <xs:attribute name="alt" type="normalizedString"/> <!-- May be empty -->
+      <xs:attribute name="coords" type="coords"/>
+      <xs:attribute name="download" type="string"/>
+      <xs:attribute name="href" type="uri"/>
+      <xs:attribute name="hreflang" type="languageTag"/>
+      <xs:attribute name="rel" type="tokens"/>
+      <xs:attribute name="shape" type="shape" default="rect"/>
+      <xs:attribute name="target" type="browsingContextNameOrKeyword"/>
+      <xs:attribute name="type" type="mimeType"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="normalizedString"> 
+    <xs:restriction base="xs:token"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="coords">
+    <!-- LIMITATION: allows whitespace between numbers. -->
+    <xs:restriction base="xs:token">
+      <xs:pattern value="\s*(-?\d+)(\s*,\s*(-?\d+)){2,}\s*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="shape">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="circle"/>
+      <xs:enumeration value="circ"/> <!-- Non-conforming -->
+      <xs:enumeration value="default"/>
+      <xs:enumeration value="poly"/>
+      <xs:enumeration value="polygon"/> <!-- Non-conforming -->
+      <xs:enumeration value="rect"/>
+      <xs:enumeration value="rectangle"/> <!-- Non-conforming -->
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Tabular data ====================================================== -->
+
+  <xs:element name="table">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="caption" minOccurs="0"/>
+        <xs:group ref="colgroup" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:group ref="thead" minOccurs="0"/>
+
+        <xs:choice>
+          <xs:sequence>
+            <xs:group ref="tfoot"/>
+            <xs:choice>
+              <xs:group ref="tbody" minOccurs="0" maxOccurs="unbounded"/>
+              <xs:group ref="tr" maxOccurs="unbounded"/>
+            </xs:choice>
+          </xs:sequence>
+
+          <xs:sequence>
+            <xs:choice>
+              <xs:group ref="tbody" maxOccurs="unbounded"/>    
+              <xs:group ref="tr" maxOccurs="unbounded"/>
+            </xs:choice>
+            <xs:group ref="tfoot" minOccurs="0"/>
+          </xs:sequence>
+        </xs:choice>
+      </xs:sequence>
+
+      <xs:attribute name="border" type="border"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:group name="caption">
+    <xs:sequence>
+      <xs:element ref="caption"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:group name="colgroup">
+    <xs:sequence>
+      <xs:element ref="colgroup"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:group name="thead">
+    <xs:sequence>
+      <xs:element ref="thead"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:group name="tfoot">
+    <xs:sequence>
+      <xs:element ref="tfoot"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:group name="tbody">
+    <xs:sequence>
+      <xs:element ref="tbody"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:group name="tr">
+    <xs:sequence>
+      <xs:element ref="tr"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:simpleType name="border">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="1"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- LIMITATION: may have table descendants. -->
+  <xs:element name="caption" type="flowContentElement"/>
+
+  <xs:element name="colgroup">
+    <!-- LIMITATION: the content model is actually: col* OR @span? -->
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="col"/>
+      </xs:sequence>
+      <xs:attribute name="span" type="positiveInteger"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:group name="col">
+    <xs:choice>
+      <xs:element ref="col"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:simpleType name="positiveInteger">
+    <xs:restriction base="xs:positiveInteger"/>
+  </xs:simpleType>
+
+  <xs:element name="col">
+    <xs:complexType>
+      <xs:attribute name="span" type="positiveInteger"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="tbody" type="tbody"/>
+
+  <xs:complexType name="tbody">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="bodyTr"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="globalAttributes"/>
+  </xs:complexType>
+
+  <xs:group name="bodyTr">
+    <xs:choice>
+      <xs:element ref="tr"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:element name="thead" type="tbody"/>
+
+  <xs:element name="tfoot" type="tbody"/>
+
+  <xs:element name="tr">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="td"/>
+      </xs:sequence>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:group name="td">
+    <xs:choice>
+      <xs:element ref="td"/>
+      <xs:element ref="th"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:element name="td">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="flowContentElement">
+          <xs:attributeGroup ref="tdAttributes"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:attributeGroup name="tdAttributes">
+    <xs:attribute name="colspan" type="positiveInteger"/>
+    <!-- 0 means: span remaining rows in the row group. --> 
+    <xs:attribute name="rowspan" type="nonNegativeInteger"/>
+    <xs:attribute name="headers" type="idrefs"/>
+  </xs:attributeGroup>
+
+  <xs:simpleType name="idrefs">
+    <xs:restriction base="idrefList">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="idrefList">
+    <xs:list itemType="idref"/>
+  </xs:simpleType>
+
+  <xs:element name="th">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="simpleFlowContentElement">
+	  <xs:attribute name="scope" type="scope"/>
+	  <xs:attribute name="abbr" type="string"/>
+          <xs:attributeGroup ref="tdAttributes"/>
+	</xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="scope">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="row"/>
+      <xs:enumeration value="col"/>
+      <xs:enumeration value="rowgroup"/>
+      <xs:enumeration value="colgroup"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Forms ============================================================= -->
+
+  <xs:element name="form">
+    <xs:complexType>
+      <!-- LIMITATION: may contain nested forms. -->
+     <xs:complexContent>
+        <xs:extension base="flowContentElement">
+	  <xs:attribute name="accept-charset" type="charsets"/>
+	  <xs:attribute name="action" type="nonEmptyURI"/>
+	  <xs:attribute name="autocomplete" type="autocomplete" default="on"/>
+	  <xs:attribute name="enctype" type="enctype"/>
+	  <xs:attribute name="method" type="method" default="get"/>
+	  <xs:attribute name="name" type="nonEmptyString"/>
+	  <xs:attribute name="novalidate" type="novalidate"/>
+	  <xs:attribute name="target" type="browsingContextNameOrKeyword"/>
+	</xs:extension>
+     </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="charsets">
+    <xs:list itemType="charset"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="autocomplete">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="on"/>
+      <xs:enumeration value="off"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="enctype">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="application/x-www-form-urlencoded"/>
+      <xs:enumeration value="multipart/form-data"/>
+      <xs:enumeration value="text/plain"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="method">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="get"/>
+      <xs:enumeration value="post"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="novalidate">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="novalidate"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="label">
+    <xs:complexType>
+      <!-- LIMITATION: restrictions related to labeled control 
+           are not enforced. -->
+      <!-- LIMITATION: may have a label descendant. -->
+      <xs:complexContent>
+        <xs:extension base="phrasingContentElement">
+	  <xs:attribute name="for" type="idref"/>
+	  <xs:attribute name="form" type="idref"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="input">
+    <xs:complexType>
+      <!-- LIMITATION: the allowed attributes and the data types of the
+           attributes do not depend on the type attribute. -->
+      <xs:attribute name="accept" type="mimeTypeList"/>
+      <xs:attribute name="alt" type="nonEmptyString"/>
+      <xs:attribute name="autocomplete" type="autocomplete"/>
+      <xs:attribute name="autofocus" type="autofocus"/>
+      <xs:attribute name="checked" type="checked"/>
+      <xs:attribute name="dirname" type="nonEmptyString"/>
+      <xs:attribute name="disabled" type="disabled"/>
+      <xs:attribute name="form" type="idref"/>
+      <xs:attribute name="formaction" type="nonEmptyURI"/>
+      <xs:attribute name="formenctype" type="enctype"/>
+      <xs:attribute name="formmethod" type="method"/>
+      <xs:attribute name="formnovalidate" type="novalidate"/>
+      <xs:attribute name="formtarget" type="browsingContextNameOrKeyword"/>
+      <xs:attribute name="height" type="nonNegativeInteger"/>
+      <xs:attribute name="list" type="idref"/>
+      <xs:attribute name="max" type="string"/>
+      <xs:attribute name="maxlength" type="nonNegativeInteger"/>
+      <xs:attribute name="min" type="string"/>
+      <xs:attribute name="minlength" type="nonNegativeInteger"/>
+      <xs:attribute name="multiple" type="multiple"/>
+      <xs:attribute name="name" type="nonEmptyString"/>
+      <xs:attribute name="pattern" type="pattern"/>
+      <xs:attribute name="placeholder" type="string"/>
+      <xs:attribute name="readonly" type="readonly"/>
+      <xs:attribute name="required" type="required"/>
+      <xs:attribute name="size" type="positiveInteger"/>
+      <xs:attribute name="src" type="nonEmptyURI"/>
+      <xs:attribute name="step" type="floatOrAny"/>
+      <xs:attribute name="type" type="inputType" default="text"/>
+      <xs:attribute name="value" type="string"/>
+      <xs:attribute name="width" type="nonNegativeInteger"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="mimeTypeList">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="\s*(([a-zA-Z-]+/(([\w\.+-]+)|\*))|(\.\w+))(\s*,\s*(([a-zA-Z-]+/(([\w\.+-]+)|\*))|(\.\w+)))*\s*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="autofocus">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="autofocus"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="checked">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="checked"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="disabled">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="disabled"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="multiple">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="multiple"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="pattern">
+    <!-- A JavaScript regexp. -->
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="readonly">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="readonly"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="required">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="required"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="floatOrAny">
+    <xs:union>
+      <xs:simpleType>
+	<xs:restriction base="xs:NMTOKEN">
+	  <xs:enumeration value="any"/>
+	</xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+	<xs:restriction base="positiveFloat"/>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+
+  <xs:simpleType name="float">
+    <xs:restriction base="xs:double"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="positiveFloat">
+    <xs:restriction base="float">
+      <xs:minExclusive value="0"/> 
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="inputType">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="hidden"/>
+      <xs:enumeration value="text"/>
+      <xs:enumeration value="search"/>
+      <xs:enumeration value="tel"/>
+      <xs:enumeration value="url"/>
+      <xs:enumeration value="email"/>
+      <xs:enumeration value="password"/>
+      <xs:enumeration value="date"/>
+      <xs:enumeration value="time"/>
+      <xs:enumeration value="number"/>
+      <xs:enumeration value="range"/>
+      <xs:enumeration value="color"/>
+      <xs:enumeration value="checkbox"/>
+      <xs:enumeration value="radio"/>
+      <xs:enumeration value="file"/>
+      <xs:enumeration value="submit"/>
+      <xs:enumeration value="image"/>
+      <xs:enumeration value="reset"/>
+      <xs:enumeration value="button"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="button">
+    <xs:complexType>
+      <!-- LIMITATION: the allowed attributes do not depend on the type
+           attribute. -->
+      <!-- LIMITATION: may have interactive content descendants 
+           (e.g. audio). -->
+      <xs:complexContent>
+        <xs:extension base="phrasingContentElement">
+	  <xs:attribute name="autofocus" type="autofocus"/>
+	  <xs:attribute name="disabled" type="disabled"/>
+	  <xs:attribute name="form" type="idref"/>
+	  <xs:attribute name="formaction" type="nonEmptyURI"/>
+	  <xs:attribute name="formenctype" type="enctype"/>
+	  <xs:attribute name="formmethod" type="method"/>
+	  <xs:attribute name="formnovalidate" type="novalidate"/>
+	  <xs:attribute name="formtarget" type="browsingContextNameOrKeyword"/>
+	  <xs:attribute name="name" type="nonEmptyString"/>
+	  <xs:attribute name="type" type="buttonType" default="submit"/>
+	  <xs:attribute name="value" type="string"/>
+	</xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="buttonType">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="submit"/>
+      <xs:enumeration value="reset"/>
+      <xs:enumeration value="button"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="select">
+    <xs:complexType>
+      <xs:group ref="option" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:attribute name="autofocus" type="autofocus"/>
+      <xs:attribute name="disabled" type="disabled"/>
+      <xs:attribute name="form" type="idref"/>
+      <xs:attribute name="multiple" type="multiple"/>
+      <xs:attribute name="name" type="nonEmptyString"/>
+      <xs:attribute name="required" type="required"/>
+      <xs:attribute name="size" type="positiveInteger"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:group name="option">
+    <xs:choice>
+      <xs:element ref="option"/>
+      <xs:element ref="optgroup"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:element name="datalist">
+    <xs:complexType mixed="true">
+      <!-- LIMITATION: it's possible to mix option child elements 
+           and phrasing content. -->
+      <xs:choice>
+        <xs:element ref="option" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:group ref="phrasingContent" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:choice>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="optgroup">
+    <xs:complexType>
+      <xs:group ref="optgroupOption" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:attribute name="disabled" type="disabled"/>
+      <xs:attribute name="label" type="string" use="required"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:group name="optgroupOption">
+    <xs:choice>
+      <xs:element ref="option"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:element name="option">
+    <xs:complexType mixed="true">
+      <!-- LIMITATION: may have both a value and text contents. -->
+      <xs:attribute name="disabled" type="disabled"/>
+      <xs:attribute name="label" type="nonEmptyString"/>
+      <xs:attribute name="selected" type="selected"/>
+      <xs:attribute name="value" type="string"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="selected">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="selected"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="textarea">
+    <xs:complexType mixed="true">
+      <!-- LIMITATION: having attribute wrap=hard does not make attribute cols
+           required. -->
+      <xs:attribute name="autocomplete" type="autocomplete"/>
+      <xs:attribute name="autofocus" type="autofocus"/>
+      <xs:attribute name="cols" type="positiveInteger" default="20"/>
+      <xs:attribute name="dirname" type="nonEmptyString"/>
+      <xs:attribute name="disabled" type="disabled"/>
+      <xs:attribute name="form" type="idref"/>
+      <xs:attribute name="maxlength" type="nonNegativeInteger"/>
+      <xs:attribute name="minlength" type="nonNegativeInteger"/>
+      <xs:attribute name="name" type="nonEmptyString"/>
+      <xs:attribute name="placeholder" type="string"/>
+      <xs:attribute name="readonly" type="readonly"/>
+      <xs:attribute name="required" type="required"/>
+      <xs:attribute name="rows" type="positiveInteger" default="2"/>
+      <xs:attribute name="wrap" type="wrap" default="soft"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="wrap">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="hard"/>
+      <xs:enumeration value="soft"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="keygen">
+    <xs:complexType>
+      <xs:attribute name="autofocus" type="autofocus"/>
+      <xs:attribute name="challenge" type="string"/>
+      <xs:attribute name="disabled" type="disabled"/>
+      <xs:attribute name="form" type="idref"/>
+      <!-- The enumerated values depend on the user agent.
+           Examples: rsa, dsa, ec. -->
+      <xs:attribute name="keytype" type="token"/>
+      <xs:attribute name="name" type="nonEmptyString"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="output">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="phrasingContentElement">
+	  <xs:attribute name="form" type="idref"/>
+	  <xs:attribute name="for" type="idrefs"/>
+	  <xs:attribute name="name" type="nonEmptyString"/>
+	</xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="progress">
+    <xs:complexType>
+      <!-- LIMITATION: may contain a nested progress element. -->
+      <!-- LIMITATION: value and max may be inconsistent. -->
+      <xs:complexContent>
+        <xs:extension base="phrasingContentElement">
+          <!-- Absent value means: indeterminate progress bar. -->
+          <xs:attribute name="value" type="nonNegativeFloat"/>
+          <xs:attribute name="max" type="positiveFloat" default="1"/>
+	</xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="nonNegativeFloat">
+    <xs:restriction base="float">
+      <xs:minInclusive value="0"/> 
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="meter">
+    <xs:complexType>
+      <!-- LIMITATION: may contain a nested meter element. -->
+      <!-- LIMITATION: value, min, max, etc, may be inconsistent. -->
+      <xs:complexContent>
+        <xs:extension base="phrasingContentElement">
+	  <xs:attribute name="value" type="float" use="required"/>
+	  <xs:attribute name="min" type="float" default="0"/>
+	  <xs:attribute name="max" type="float" default="1"/>
+	  <xs:attribute name="low" type="float"/>
+	  <xs:attribute name="high" type="float"/>
+	  <xs:attribute name="optimum" type="float"/>
+	</xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="fieldset">
+    <!-- LIMITATION: allows to have text other than whitespace 
+         before legend. -->
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element ref="legend" minOccurs="0"/>
+        <xs:group ref="flowContent" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="disabled" type="disabled"/>
+      <xs:attribute name="form" type="idref"/>
+      <xs:attribute name="name" type="nonEmptyString"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="legend" type="phrasingContentElement"/>
+
+  <!-- Scripting ========================================================= -->
+
+  <xs:element name="script">
+    <xs:complexType mixed="true">
+      <xs:attribute name="src" type="nonEmptyURI"/>
+      <xs:attribute name="type" type="mimeType" default="text/javascript"/>
+      <xs:attribute name="charset" type="charset"/>
+      <xs:attribute name="async" type="async"/>
+      <xs:attribute name="defer" type="defer"/>
+      <xs:attribute name="crossorigin" type="crossOrigin"/>
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="async">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="async"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="defer">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="defer"/>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- The noscript element must not be used in XHTML5 documents. -->
+
+  <xs:element name="template">
+    <xs:complexType mixed="true">
+      <!-- LIMITATION: reasonable simplification of the actual
+           content model. -->
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##targetNamespace" processContents="strict"/>
+      </xs:sequence>
+
+      <xs:attributeGroup ref="globalAttributes"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- NO TOPLEVEL ELEMENT DECLARATION: canvas -->
+
+  <xs:complexType name="canvasFlow">
+    <xs:complexContent>
+      <xs:extension base="flowContentElement">
+	<xs:attribute name="width" type="nonNegativeInteger"/>
+	<xs:attribute name="height" type="nonNegativeInteger"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="canvasPhrasing">
+    <xs:complexContent>
+      <xs:extension base="phrasingContentElement">
+	<xs:attribute name="width" type="nonNegativeInteger"/>
+	<xs:attribute name="height" type="nonNegativeInteger"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Common content models ============================================= -->
+
+  <xs:group name="flowContent">
+    <xs:choice>
+      <xs:group ref="simpleFlowContent"/>
+      <xs:element ref="article"/>
+      <xs:element ref="aside"/>
+      <xs:element ref="footer"/>
+      <xs:element ref="h1"/>
+      <xs:element ref="h2"/>
+      <xs:element ref="h3"/>
+      <xs:element ref="h4"/>
+      <xs:element ref="h5"/>
+      <xs:element ref="h6"/>
+      <xs:element ref="header"/>
+      <xs:element ref="nav"/>
+      <xs:element ref="main"/>
+      <xs:element ref="section"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:group name="simpleFlowContent">
+    <xs:choice>
+      <xs:group ref="commonPhrasingElements"/>
+      <xs:element name="a" type="aFlow"/>
+      <xs:element ref="address"/>
+      <xs:element name="audio" type="audioFlow"/>
+      <xs:element ref="blockquote"/>
+      <xs:element name="canvas" type="canvasFlow"/>
+      <xs:element name="del" type="delFlow"/>
+      <xs:element ref="div"/>
+      <xs:element ref="dl"/>
+      <xs:element ref="fieldset"/>
+      <xs:element ref="figure"/>
+      <xs:element ref="form"/>
+      <xs:element ref="hr"/>
+      <xs:element name="ins" type="insFlow"/>
+      <xs:element name="map" type="mapFlow"/>
+      <xs:element name="object" type="objectFlow"/>
+      <xs:element ref="ol"/>
+      <xs:element ref="p"/>
+      <xs:element ref="pre"/>
+      <xs:element ref="table"/>
+      <xs:element ref="ul"/>
+      <xs:element name="video" type="videoFlow"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:group name="commonPhrasingElements">
+    <xs:choice>
+      <xs:element ref="abbr"/>
+      <xs:element ref="area"/>
+      <xs:element ref="b"/>
+      <xs:element ref="bdi"/>
+      <xs:element ref="bdo"/>
+      <xs:element ref="br"/>
+      <xs:element ref="button"/>
+      <xs:element ref="cite"/>
+      <xs:element ref="code"/>
+      <xs:element ref="data"/>
+      <xs:element ref="datalist"/>
+      <xs:element ref="dfn"/>
+      <xs:element ref="em"/>
+      <xs:element ref="embed"/>
+      <xs:element ref="i"/>
+      <xs:element ref="iframe"/>
+      <xs:element ref="img"/>
+      <xs:element ref="input"/>
+      <xs:element ref="kbd"/>
+      <xs:element ref="keygen"/>
+      <xs:element ref="label"/>
+      <xs:element ref="mark"/>
+      <xs:element ref="mml:math"/>
+      <xs:element ref="meter"/>
+      <xs:element ref="output"/>
+      <xs:element ref="progress"/>
+      <xs:element ref="q"/>
+      <xs:element ref="ruby"/>
+      <xs:element ref="s"/>
+      <xs:element ref="samp"/>
+      <xs:element ref="select"/>
+      <xs:element ref="small"/>
+      <xs:element ref="span"/>
+      <xs:element ref="strong"/>
+      <xs:element ref="sub"/>
+      <xs:element ref="sup"/>
+      <xs:element ref="svg:svg"/>
+      <xs:element ref="textarea"/>
+      <xs:element ref="time"/>
+      <xs:element ref="u"/>
+      <xs:element ref="var"/>
+      <xs:element ref="wbr"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:group name="phrasingContent">
+    <xs:choice>
+      <xs:group ref="commonPhrasingElements"/> 
+      <xs:element name="a" type="aPhrasing"/>
+      <xs:element name="audio" type="audioPhrasing"/>
+      <xs:element name="canvas" type="canvasPhrasing"/>
+      <xs:element name="del" type="delPhrasing"/>
+      <xs:element name="ins" type="insPhrasing"/>
+      <xs:element name="map" type="mapPhrasing"/>
+      <xs:element name="object" type="objectPhrasing"/>
+      <xs:element name="video" type="videoPhrasing"/>
+    </xs:choice>
+  </xs:group>
+
+</xs:schema>

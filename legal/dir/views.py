@@ -98,7 +98,7 @@ def mainpage(request):
         row['search'] = query.urlencode()
     return render(
         request,
-        'dir_mainpage.html',
+        'dir_mainpage.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -161,7 +161,7 @@ def debtorform(request, idx=0):
             err_message = INERR
     return render(
         request,
-        'dir_debtorform.html',
+        'dir_debtorform.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -182,7 +182,7 @@ def debtordel(request, idx=0):
     if request.method == 'GET':
         return render(
             request,
-            'dir_debtordel.html',
+            'dir_debtordel.xhtml',
             {'app': APP,
              'page_title': 'Smazání dlužníka',
              'desc': debtor.desc})
@@ -204,7 +204,7 @@ def debtordelall(request):
     if request.method == 'GET':
         return render(
             request,
-            'dir_debtordelall.html',
+            'dir_debtordelall.xhtml',
             {'app': APP,
              'page_title': 'Smazání všech dlužníků'})
     else:
@@ -357,7 +357,7 @@ def debtorbatchform(request):
                     LOGGER.info('User "{}" ({:d}) imported {:d} debtor(s)'.format(uname, uid, count), request)
                     return render(
                         request,
-                        'dir_debtorbatchresult.html',
+                        'dir_debtorbatchresult.xhtml',
                         {'app': APP,
                          'page_title': 'Import dlužníků ze souboru',
                          'count': count,
@@ -372,7 +372,7 @@ def debtorbatchform(request):
 
     return render(
         request,
-        'dir_debtorbatchform.html',
+        'dir_debtorbatchform.xhtml',
         {'app': APP,
          'page_title': 'Import dlužníků ze souboru',
          'err_message': err_message})

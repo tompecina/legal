@@ -1,0 +1,113 @@
+{% extends 'main.xhtml' %}
+
+{% comment %}
+
+dir/templates/dir_debtorform.xhtml
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
+{% block page_contents %}
+
+{% include 'form.xhtml' with form_id='id_debtorform' %}
+
+  <table class="form">
+
+    <tbody>
+
+      <tr>
+	<td></td>
+	<td colspan="2"><h1>{{ page_title }}</h1></td>
+      </tr>
+
+      {% if err_message %}
+      <tr>
+	<td></td>
+	<td colspan="2">{% include 'formwarning.xhtml' %}</td>
+      </tr>
+      {% endif %}
+
+      <tr class="ga {{ form.desc.css_classes }}">
+	<th>{{ form.desc.label_tag }}</th>
+	<td colspan="2" class="nowrap">{{ form.desc }}</td>
+      </tr>
+
+      <tr>
+	<th>{{ form.court.label_tag }}</th>
+	<td colspan="2">{{ form.court }}</td>
+      </tr>
+
+      <tr class="{{ form.name.css_classes }}">
+	<th>{{ form.name.label_tag }}</th>
+	<td colspan="2" class="inlop">
+	  {{ form.name }}
+	  {% for p in form.name_opt %}
+	  {{ p }}
+	  {% endfor %}
+	</td>
+      </tr>
+
+      <tr class="{{ form.first_name.css_classes }}">
+	<th>{{ form.first_name.label_tag }}</th>
+	<td colspan="2" class="inlop">
+	  {{ form.first_name }}
+	  {% for p in form.first_name_opt %}
+	  {{ p }}
+	  {% endfor %}
+	</td>
+      </tr>
+      <tr class="{{ form.genid.css_classes }}">
+	<th>{{ form.genid.label_tag }}</th>
+	<td colspan="2">{{ form.genid }}</td>
+      </tr>
+
+      <tr class="{{ form.taxid.css_classes }}">
+	<th>{{ form.taxid.label_tag }}</th>
+	<td colspan="2">{{ form.taxid }}</td>
+      </tr>
+
+      <tr class="{{ form.birthid.css_classes }}">
+	<th>{{ form.birthid.label_tag }}</th>
+	<td colspan="2">{{ form.birthid }}<span>(včetně lomítka)</span></td>
+      </tr>
+
+      <tr class="{{ form.date_birth.css_classes }}">
+	<th>{{ form.date_birth.label_tag }}</th>
+	<td colspan="2">{{ form.date_birth }}</td>
+      </tr>
+
+      <tr>
+	<th{% if form.year_birth_from.errors or form.year_birth_to.errors %} class="err"{% endif %}>Rok narození:</th>
+	<td colspan="2" class="nowrap">
+	  <span class="{{ form.year_birth_from.css_classes }}" id="id_year_birth_from_span">{{ form.year_birth_from }}</span>
+	  <span>–</span>
+	  <span class="{{ form.year_birth_to.css_classes }}" id="id_year_birth_to_span">{{ form.year_birth_to }}</span>
+	</td>
+      </tr>
+
+      {% include 'submit.xhtml' %}
+
+    </tbody>
+
+  </table>
+
+</form>
+
+{% endblock %}

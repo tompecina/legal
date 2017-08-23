@@ -57,7 +57,7 @@ def mainpage(request):
         form = MainForm()
         return render(
             request,
-            'pir_mainpage.html',
+            'pir_mainpage.xhtml',
             {'app': APP,
              'page_title': page_title,
              'err_message': err_message,
@@ -86,7 +86,7 @@ def mainpage(request):
     err_message = INERR
     return render(
         request,
-        'pir_mainpage.html',
+        'pir_mainpage.xhtml',
         {'app': APP,
          'page_title': page_title,
          'err_message': err_message,
@@ -159,9 +159,9 @@ def o2s(osoba, detailed=False):
     res = ', '.join(filter(bool, (res, osoba.titulZa, osoba.nazevOsobyObchodni)))
     if detailed:
         if osoba.datumNarozeni:
-            res += ', nar.&nbsp;{:%d.%m.%Y}'.format(osoba.datumNarozeni)
+            res += ', nar.&#160;{:%d.%m.%Y}'.format(osoba.datumNarozeni)
         elif osoba.ic:
-            res += ', IČO:&nbsp;{}'.format(osoba.ic)
+            res += ', IČO:&#160;{}'.format(osoba.ic)
     return res
 
 
@@ -211,7 +211,7 @@ def htmllist(request):
                 row.creditors.append({'text': o2s(osoba), 'id': osoba.id})
     return render(
         request,
-        'pir_list.html',
+        'pir_list.xhtml',
         {'app': APP,
          'page_title': 'Výsledky vyhledávání',
          'rows': rows,
@@ -318,7 +318,7 @@ def xmllist(request):
     if total > EXLIM:
         return render(
             request,
-            'exlim.html',
+            'exlim.xhtml',
             {'app': APP,
              'page_title': EXLIM_TITLE,
              'limit': EXLIM,
@@ -396,7 +396,7 @@ def csvlist(request):
     if total > EXLIM:
         return render(
             request,
-            'exlim.html',
+            'exlim.xhtml',
             {'app': APP,
              'page_title': EXLIM_TITLE,
              'limit': EXLIM,
@@ -488,7 +488,7 @@ def jsonlist(request):
     if total > EXLIM:
         return render(
             request,
-            'exlim.html',
+            'exlim.xhtml',
             {'app': APP,
              'page_title': EXLIM_TITLE,
              'limit': EXLIM,
@@ -533,7 +533,7 @@ def party(request, idx=0):
         num += 1
     return render(
         request,
-        'pir_party.html',
+        'pir_party.xhtml',
         {'app': APP,
          'page_title': 'Informace o osobě',
          'subtitle': o2s(osoba),

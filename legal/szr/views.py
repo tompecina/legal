@@ -78,7 +78,7 @@ def mainpage(request):
     rows = proc[start:start + BATCH]
     return render(
         request,
-        'szr_mainpage.html',
+        'szr_mainpage.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -138,7 +138,7 @@ def procform(request, idx=0):
             err_message = INERR
     return render(
         request,
-        'szr_procform.html',
+        'szr_procform.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -159,7 +159,7 @@ def procdel(request, idx=0):
     if request.method == 'GET':
         return render(
             request,
-            'szr_procdel.html',
+            'szr_procdel.xhtml',
             {'app': APP,
              'page_title': 'Smazání řízení',
              'desc': proc.desc})
@@ -183,7 +183,7 @@ def procdelall(request):
     if request.method == 'GET':
         return render(
             request,
-            'szr_procdelall.html',
+            'szr_procdelall.xhtml',
             {'app': APP,
              'page_title': 'Smazání všech řízení'})
     else:
@@ -281,7 +281,7 @@ def procbatchform(request):
                     LOGGER.info('User "{}" ({:d}) imported {:d} proceedings'.format(uname, uid, count), request)
                     return render(
                         request,
-                        'szr_procbatchresult.html',
+                        'szr_procbatchresult.xhtml',
                         {'app': APP,
                          'page_title': 'Import řízení ze souboru',
                          'count': count,
@@ -293,7 +293,7 @@ def procbatchform(request):
 
     return render(
         request,
-        'szr_procbatchform.html',
+        'szr_procbatchform.xhtml',
         {'app': APP,
          'page_title': 'Import řízení ze souboru',
          'err_message': err_message})
@@ -331,7 +331,7 @@ def courts(request):
     LOGGER.debug('List of courts accessed', request)
     return render(
         request,
-        'szr_courts.html',
+        'szr_courts.xhtml',
         {'app': APP,
          'page_title': 'Přehled soudů',
          'rows': Court.objects.order_by('name').values('id', 'name')})

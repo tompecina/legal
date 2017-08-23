@@ -1,0 +1,68 @@
+{% extends 'main.xhtml' %}
+
+{% comment %}
+
+sur/templates/sur_partybatchform.xhtml
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
+{% block page_contents %}
+
+{% include 'form.xhtml' with form_id='id_partybatchform' %}
+
+  <h1>{{ page_title }}</h1>
+
+  <table class="centered">
+
+    <tbody>
+
+      {% if err_message %}
+      <tr>
+	<td>{% include 'formwarning.xhtml' %}</td>
+      </tr>
+      {% endif %}
+
+      <tr>
+	<td>
+	  <p>Zvolte soubor CSV pro načtení účastníků.</p>
+	  <p>Soubor musí být v kodu UTF-8 a musí na každém řádku obsahovat jeden vyhledávací řetězec.<br/>Přípustná délka řetězce je {{ min_length }} až {{ max_length }} znaků. Řetězce, které nevyhovují délkou, budou při importu<br/>ignorovány. Jakou hodnotu bude mít importovaný řetězec v poli Posice, můžete ovlivnit<br/>formátovacím příznakem, který uvedete na konci řetězce za dvojtečkou.</p>
+	  <p class="options">Možnosti jsou:</p>
+	  <ul>
+	    <li>řetězec:* – kdekoliv (implicitní hodnota)</li>
+	    <li>řetězec:&lt; – na začátku</li>
+	    <li>řetězec:&gt; – na konci</li>
+	    <li>řetězec:= – přesně</li>
+	  </ul>
+	  <p>Soubor CSV v požadovaném formátu, který můžete ručně editovat, získáte funkcí Export.</p>
+	</td>
+      </tr>
+
+      {% include 'batch_buttons.xhtml' %}
+
+    </tbody>
+
+  </table>
+
+</form>
+
+<p><a href="{% url 'sur:mainpage' %}">Zpět na seznam sledovaných účastníků</a></p>
+
+{% endblock %}

@@ -556,7 +556,7 @@ def mainpage(request):
         return '<td class="dr{}">{}</td>'.format(suf, famt(-amt))
 
     def lfamt(amt):
-        return '{}&nbsp;{}'.format(
+        return '{} {}'.format(
             famt(round(amt, debt.rounding) if debt.rounding
             else int(round(amt))).replace('-', '−'), dispcurr(debt.currency))
 
@@ -1128,7 +1128,7 @@ def mainpage(request):
 
     return render(
         request,
-        'hjp_mainpage.html',
+        'hjp_mainpage.xhtml',
         {'app': APP,
          'page_title': 'Historie jednoduché peněžité pohledávky',
          'form': form,
@@ -1207,7 +1207,7 @@ def transform(request, idx=0):
 
     return render(
         request,
-        'hjp_transform.html',
+        'hjp_transform.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -1232,7 +1232,7 @@ def transdel(request, idx=0):
     if request.method == 'GET':
         return render(
             request,
-            'hjp_transdel.html',
+            'hjp_transdel.xhtml',
             {'app': APP,
              'page_title': 'Smazání transakce',
              'date': debt.transactions[idx].date})

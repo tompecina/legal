@@ -25,6 +25,7 @@ from http import HTTPStatus
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 
+from legal.settings import FULL_CONTENT_TYPE
 from legal.sop import forms
 
 from tests.utils import check_html
@@ -262,8 +263,8 @@ class TestViews(TestCase):
         res = self.client.get('/sop/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'sop_mainpage.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'sop_mainpage.xhtml')
         check_html(self, res.content)
 
         num = 1
@@ -277,7 +278,7 @@ class TestViews(TestCase):
                  'model': test[4],
                  'opt': test[5]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'sop_mainpage.html')
+            self.assertTemplateUsed(res, 'sop_mainpage.xhtml')
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertGreater(len(msg), 1)
@@ -297,7 +298,7 @@ class TestViews(TestCase):
                  'model': test[4],
                  'opt': test[5]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'sop_mainpage.html')
+            self.assertTemplateUsed(res, 'sop_mainpage.xhtml')
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertEqual(len(msg), 1)

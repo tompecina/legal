@@ -29,7 +29,7 @@ from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from legal.settings import TEST_DATA_DIR
+from legal.settings import TEST_DATA_DIR, FULL_CONTENT_TYPE
 from legal.common.glob import LOCAL_DOMAIN
 from legal.szr import cron, forms, models
 
@@ -188,15 +188,15 @@ class TestViews1(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/szr/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/szr/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -205,7 +205,7 @@ class TestViews1(TransactionTestCase):
              'submit': 'Změnit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -255,7 +255,7 @@ class TestViews1(TransactionTestCase):
 
         res = self.client.get('/szr/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -267,7 +267,7 @@ class TestViews1(TransactionTestCase):
 
         res = self.client.get('/szr/?start=50')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -281,7 +281,7 @@ class TestViews1(TransactionTestCase):
 
         res = self.client.get('/szr/?start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -295,7 +295,7 @@ class TestViews1(TransactionTestCase):
 
         res = self.client.get('/szr/?start=200')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 45)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -307,7 +307,7 @@ class TestViews1(TransactionTestCase):
 
         res = self.client.get('/szr/?start=500')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 1)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -338,15 +338,15 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/szr/procform/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.client.force_login(User.objects.get(pk=1))
 
         res = self.client.get('/szr/procform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
@@ -362,7 +362,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -376,7 +376,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -391,7 +391,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -406,7 +406,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -420,7 +420,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -435,7 +435,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -449,7 +449,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -464,7 +464,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -479,7 +479,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -493,7 +493,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -508,7 +508,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -523,7 +523,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         self.assertContains(res, 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -532,7 +532,7 @@ class TestViews2(TransactionTestCase):
             {'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -546,7 +546,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -559,7 +559,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -572,7 +572,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         check_html(self, res.content)
 
         proc_id = models.Proceedings.objects.create(
@@ -587,8 +587,8 @@ class TestViews2(TransactionTestCase):
         res = self.client.get('/szr/procform/{:d}/'.format(proc_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'szr_procform.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'szr_procform.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
@@ -606,7 +606,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         proc = models.Proceedings.objects.get(pk=proc_id)
         self.assertEqual(proc.senate, 52)
         self.assertEqual(proc.register, 'C')
@@ -626,7 +626,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         proc = models.Proceedings.objects.get(pk=proc_id)
         self.assertEqual(proc.senate, 52)
         self.assertEqual(proc.register, 'C')
@@ -665,13 +665,13 @@ class TestViews3(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/szr/procdel/{:d}/'.format(proc_id), follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/szr/procdel/{:d}/'.format(proc_id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procdel.html')
+        self.assertTemplateUsed(res, 'szr_procdel.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -679,7 +679,7 @@ class TestViews3(TransactionTestCase):
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -687,7 +687,7 @@ class TestViews3(TransactionTestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procdeleted.html')
+        self.assertTemplateUsed(res, 'szr_procdeleted.xhtml')
         self.assertFalse(models.Proceedings.objects.filter(pk=proc_id).exists())
         check_html(self, res.content)
 
@@ -735,13 +735,13 @@ class TestViews4(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/szr/procdelall/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/szr/procdelall/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procdelall.html')
+        self.assertTemplateUsed(res, 'szr_procdelall.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -749,7 +749,7 @@ class TestViews4(TransactionTestCase):
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -757,7 +757,7 @@ class TestViews4(TransactionTestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         self.assertEqual(models.Proceedings.objects.filter(uid=self.user).count(), 2)
         check_html(self, res.content)
 
@@ -767,7 +767,7 @@ class TestViews4(TransactionTestCase):
              'conf': 'ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         self.assertEqual(models.Proceedings.objects.filter(uid=self.user).count(), 2)
         check_html(self, res.content)
 
@@ -777,7 +777,7 @@ class TestViews4(TransactionTestCase):
              'conf': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_mainpage.html')
+        self.assertTemplateUsed(res, 'szr_mainpage.xhtml')
         self.assertFalse(models.Proceedings.objects.filter(uid=self.user).exists())
         check_html(self, res.content)
 
@@ -829,20 +829,20 @@ class TestViews5(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/szr/procbatchform/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/szr/procbatchform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procbatchform.html')
+        self.assertTemplateUsed(res, 'szr_procbatchform.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
             '/szr/procbatchform/',
             {'submit_load': 'Načíst'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procbatchform.html')
+        self.assertTemplateUsed(res, 'szr_procbatchform.xhtml')
         self.assertContains(res, 'Nejprve zvolte soubor k načtení')
         check_html(self, res.content)
 
@@ -853,7 +853,7 @@ class TestViews5(TransactionTestCase):
                  'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'szr_procbatchresult.html')
+        self.assertTemplateUsed(res, 'szr_procbatchresult.xhtml')
         self.assertEqual(models.Proceedings.objects.count(), 13)
         self.assertEqual(res.context['count'], 4)
         self.assertEqual(
@@ -922,7 +922,7 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/szr/procexport/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
@@ -954,8 +954,8 @@ class TestViews7(TransactionTestCase):
         res = self.client.get('/szr/courts/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'szr_courts.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'szr_courts.xhtml')
         self.assertEqual(
             tuple(res.context['rows']),
             ({'id': 'MSPHAAB', 'name': 'Městský soud Praha'},

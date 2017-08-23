@@ -34,7 +34,7 @@ from legal.sir.models import Vec
 
 class TextWidget(forms.TextInput):
 
-    template_name = 'text.html'
+    template_name = 'text.xhtml'
 
     def __init__(self, **kwargs):
         attrs = {'size': self.size}
@@ -119,19 +119,30 @@ COMP_RE = compile(r'>\s+(\S*)\s+<')
 
 class RadioWidget(forms.RadioSelect):
 
-    option_template_name = 'radio.html'
+    option_template_name = 'radio.xhtml'
+
+
+class CheckboxWidget(forms.CheckboxInput):
+
+    template_name = 'checkbox.xhtml'
+
+
+class SelectWidget(forms.Select):
+
+    template_name = 'select.xhtml'
+    option_template_name = 'select_option.xhtml'
 
 
 class SelectCurrencyWidget(forms.widgets.MultiWidget):
 
-    template_name = 'currencywidget.html'
+    template_name = 'currencywidget.xhtml'
 
     std_curr = ('EUR', 'CHF', 'GBP', 'JPY', 'RUB', 'USD')
 
     def __init__(self, czk=True, attrs=None):
         self._currlist = (('CZK',) if czk else ()) + self.std_curr
         super().__init__(
-            (forms.Select(
+            (SelectWidget(
                 choices=[(x, x) for x in self._currlist] + [('OTH', 'Jiná:')],
                 attrs={'class': 'currsel'}),
              CurrencyWidget()),
@@ -156,7 +167,7 @@ class DateWidget(forms.DateInput):
         res = super().render(name, *args, **kwargs)
         if self._today:
             return mark_safe('''\
-<span class="dw-today">{0}<input type="submit" name="submit_set_{1}" value="Dnes" class="today" id="id_set_{1}">\
+<span class="dw-today">{0}<input type="submit" name="submit_set_{1}" value="Dnes" class="today" id="id_set_{1}"/>\
 </span>'''.format(res, name))
         return res
 
@@ -200,4 +211,4 @@ class CourtWidget(forms.TextInput):
                 county_group = {'label': reg_court.name, 'courts': county_courts}
                 context['optgroups'].append(county_group)
 
-        return mark_safe(get_template('select_court.html').render(context))
+        return mark_safe(get_template('select_court.xhtml').render(context))

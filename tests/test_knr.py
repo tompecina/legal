@@ -30,7 +30,7 @@ from django.apps import apps
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from django.contrib.auth.models import User
 
-from legal.settings import TEST_DATA_DIR, BASE_DIR
+from legal.settings import TEST_DATA_DIR, BASE_DIR, FULL_CONTENT_TYPE
 from legal.common.utils import new_xml, p2c, xmlbool
 from legal.knr import forms, models, views, utils
 
@@ -476,15 +476,15 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/knr/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/knr/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'knr_mainpage.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'knr_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -492,7 +492,7 @@ class TestViews2(TransactionTestCase):
             {'vat_rate': '21,00',
              'submit_update': 'Aktualisovat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_mainpage.html')
+        self.assertTemplateUsed(res, 'knr_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -501,7 +501,7 @@ class TestViews2(TransactionTestCase):
              'submit_edit': 'Upravit položky'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -509,7 +509,7 @@ class TestViews2(TransactionTestCase):
             {'submit_empty': 'Vyprázdnit kalkulaci'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_mainpage.html')
+        self.assertTemplateUsed(res, 'knr_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -520,7 +520,7 @@ class TestViews2(TransactionTestCase):
              'submit_empty': 'Vyprázdnit kalkulaci'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_mainpage.html')
+        self.assertTemplateUsed(res, 'knr_mainpage.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('#id_title')
@@ -547,7 +547,7 @@ class TestViews2(TransactionTestCase):
                      'load': infile},
                     follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'knr_mainpage.html')
+            self.assertTemplateUsed(res, 'knr_mainpage.xhtml')
             check_html(self, res.content, key=suf[0])
             soup = BeautifulSoup(res.content, 'html.parser')
             title = soup.select('#id_title')
@@ -586,7 +586,7 @@ class TestViews2(TransactionTestCase):
                 follow=True)
             con.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'knr_mainpage.html')
+            self.assertTemplateUsed(res, 'knr_mainpage.xhtml')
             soup = BeautifulSoup(res.content, 'html.parser')
             title = soup.select('#id_title')
             self.assertEqual(len(title), 1)
@@ -612,7 +612,7 @@ class TestViews2(TransactionTestCase):
                  'submit_{}'.format(key): 'Upravit {}'.format(val[0])},
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'knr_{}list.html'.format(key))
+            self.assertTemplateUsed(res, 'knr_{}list.xhtml'.format(key))
             check_html(self, res.content, key=key)
 
         res = self.client.post(
@@ -622,7 +622,7 @@ class TestViews2(TransactionTestCase):
              'load': None},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_mainpage.html')
+        self.assertTemplateUsed(res, 'knr_mainpage.xhtml')
         self.assertEqual(res.context['err_message'], 'Nejprve zvolte soubor k načtení')
         check_html(self, res.content)
 
@@ -633,7 +633,7 @@ class TestViews2(TransactionTestCase):
                  'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_mainpage.html')
+        self.assertTemplateUsed(res, 'knr_mainpage.xhtml')
         self.assertEqual(res.context['err_message'], 'Chybný formát souboru')
         check_html(self, res.content)
 
@@ -653,7 +653,7 @@ class TestViews2(TransactionTestCase):
                 follow=True)
             infile.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'knr_mainpage.html')
+            self.assertTemplateUsed(res, 'knr_mainpage.xhtml')
             check_html(self, res.content, key=idx)
             soup = BeautifulSoup(res.content, 'html.parser')
 
@@ -675,7 +675,7 @@ class TestViews2(TransactionTestCase):
              'submit_update': 'Aktualisovat'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_mainpage.html')
+        self.assertTemplateUsed(res, 'knr_mainpage.xhtml')
         self.assertEqual(res.context['errors'], True)
         check_html(self, res.content)
 
@@ -688,15 +688,15 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/knr/itemlist/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/knr/itemlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         par = soup.select('h1 + p')
@@ -712,8 +712,8 @@ class TestViews2(TransactionTestCase):
                  'submit_new': 'Přidat položku:'})
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTrue(res.has_header('content-type'))
-            self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-            self.assertTemplateUsed(res, 'knr_itemform.html')
+            self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+            self.assertTemplateUsed(res, 'knr_itemform.xhtml')
             check_html(self, res.content, key=val)
 
         res = self.client.post(
@@ -721,7 +721,7 @@ class TestViews2(TransactionTestCase):
             {'submit_new': 'Přidat položku:'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
     def test_list(self):
@@ -743,15 +743,15 @@ class TestViews2(TransactionTestCase):
             self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
             res = self.client.get('/knr/{}list/'.format(key), follow=True)
-            self.assertTemplateUsed(res, 'login.html')
+            self.assertTemplateUsed(res, 'login.xhtml')
 
             self.assertTrue(self.client.login(username='user', password='none'))
 
             res = self.client.get('/knr/{}list/'.format(key))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTrue(res.has_header('content-type'))
-            self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-            self.assertTemplateUsed(res, 'knr_{}list.html'.format(key))
+            self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+            self.assertTemplateUsed(res, 'knr_{}list.xhtml'.format(key))
             check_html(self, res.content, key=key)
             soup = BeautifulSoup(res.content, 'html.parser')
             par = soup.select('h1 + p')
@@ -775,15 +775,15 @@ class TestViews2(TransactionTestCase):
             self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
             res = self.client.get('/knr/{}form/'.format(key), follow=True)
-            self.assertTemplateUsed(res, 'login.html')
+            self.assertTemplateUsed(res, 'login.xhtml')
 
             self.assertTrue(self.client.login(username='user', password='none'))
 
             res = self.client.get('/knr/{}form/'.format(key))
             self.assertEqual(res.status_code, HTTPStatus.OK)
             self.assertTrue(res.has_header('content-type'))
-            self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-            self.assertTemplateUsed(res, 'knr_{}form.html'.format(key))
+            self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+            self.assertTemplateUsed(res, 'knr_{}form.xhtml'.format(key))
             check_html(self, res.content, key=key)
             soup = BeautifulSoup(res.content, 'html.parser')
             par = soup.select('h1')
@@ -801,15 +801,15 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/knr/placeform/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/knr/placeform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'knr_placeform.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'knr_placeform.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
@@ -829,7 +829,7 @@ class TestViews2(TransactionTestCase):
             {'addr': 'Melantrichova 504/7, Praha 1',
              'submit_search': 'Vyhledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_placeform.html')
+        self.assertTemplateUsed(res, 'knr_placeform.xhtml')
         self.assertEqual(res.context['err_message'], 'Hledání neúspěšné, prosím, upřesněte adresu')
         check_html(self, res.content)
 
@@ -843,7 +843,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_placelist.html')
+        self.assertTemplateUsed(res, 'knr_placelist.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         idx = soup.select('table.list a')[1]['href'].split('/')[-2]
@@ -858,7 +858,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_placelist.html')
+        self.assertTemplateUsed(res, 'knr_placelist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -871,7 +871,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_placeform.html')
+        self.assertTemplateUsed(res, 'knr_placeform.xhtml')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -880,7 +880,7 @@ class TestViews2(TransactionTestCase):
             {'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_placelist.html')
+        self.assertTemplateUsed(res, 'knr_placelist.xhtml')
         check_html(self, res.content)
 
         res = self.client.get('/knr/placeform/100/')
@@ -889,8 +889,8 @@ class TestViews2(TransactionTestCase):
         res = self.client.get('/knr/placeform/{}/'.format(idx))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'knr_placeform.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'knr_placeform.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -903,7 +903,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_placelist.html')
+        self.assertTemplateUsed(res, 'knr_placelist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -918,7 +918,7 @@ class TestViews2(TransactionTestCase):
 
         res = self.client.get('/knr/placedel/{}/'.format(idx))
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_placedel.html')
+        self.assertTemplateUsed(res, 'knr_placedel.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -926,7 +926,7 @@ class TestViews2(TransactionTestCase):
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_placelist.html')
+        self.assertTemplateUsed(res, 'knr_placelist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -934,7 +934,7 @@ class TestViews2(TransactionTestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_placedeleted.html')
+        self.assertTemplateUsed(res, 'knr_placedeleted.xhtml')
         check_html(self, res.content)
 
         res = self.client.post('/knr/placedel/{}/'.format(idx), follow=True)
@@ -949,15 +949,15 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/knr/carform/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/knr/carform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'knr_carform.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'knr_carform.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
@@ -975,7 +975,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_carlist.html')
+        self.assertTemplateUsed(res, 'knr_carlist.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         idx = soup.select('table.list a')[1]['href'].split('/')[-2]
@@ -991,7 +991,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_carlist.html')
+        self.assertTemplateUsed(res, 'knr_carlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1005,7 +1005,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_carform.html')
+        self.assertTemplateUsed(res, 'knr_carform.xhtml')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -1014,7 +1014,7 @@ class TestViews2(TransactionTestCase):
             {'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_carlist.html')
+        self.assertTemplateUsed(res, 'knr_carlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.get('/knr/carform/100/')
@@ -1023,8 +1023,8 @@ class TestViews2(TransactionTestCase):
         res = self.client.get('/knr/carform/{}/'.format(idx))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'knr_carform.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'knr_carform.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1038,7 +1038,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_carlist.html')
+        self.assertTemplateUsed(res, 'knr_carlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1054,7 +1054,7 @@ class TestViews2(TransactionTestCase):
 
         res = self.client.get('/knr/cardel/{}/'.format(idx))
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_cardel.html')
+        self.assertTemplateUsed(res, 'knr_cardel.xhtml')
         check_html(self, res.content)
         check_html(self, res.content)
 
@@ -1063,7 +1063,7 @@ class TestViews2(TransactionTestCase):
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_carlist.html')
+        self.assertTemplateUsed(res, 'knr_carlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1071,7 +1071,7 @@ class TestViews2(TransactionTestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_cardeleted.html')
+        self.assertTemplateUsed(res, 'knr_cardeleted.xhtml')
         check_html(self, res.content)
 
         res = self.client.post('/knr/cardel/{}/'.format(idx))
@@ -1086,15 +1086,15 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/knr/formulaform/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/knr/formulaform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'knr_formulaform.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'knr_formulaform.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
@@ -1110,7 +1110,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_formulalist.html')
+        self.assertTemplateUsed(res, 'knr_formulalist.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         idx = soup.select('table.list a')[1]['href'].split('/')[-2]
@@ -1124,7 +1124,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_formulalist.html')
+        self.assertTemplateUsed(res, 'knr_formulalist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1136,7 +1136,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_formulaform.html')
+        self.assertTemplateUsed(res, 'knr_formulaform.xhtml')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -1145,7 +1145,7 @@ class TestViews2(TransactionTestCase):
             {'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_formulalist.html')
+        self.assertTemplateUsed(res, 'knr_formulalist.xhtml')
         check_html(self, res.content)
 
         res = self.client.get('/knr/formulaform/100/')
@@ -1154,8 +1154,8 @@ class TestViews2(TransactionTestCase):
         res = self.client.get('/knr/formulaform/{}/'.format(idx))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'knr_formulaform.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'knr_formulaform.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1167,7 +1167,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_formulalist.html')
+        self.assertTemplateUsed(res, 'knr_formulalist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1181,7 +1181,7 @@ class TestViews2(TransactionTestCase):
 
         res = self.client.get('/knr/formuladel/{}/'.format(idx))
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_formuladel.html')
+        self.assertTemplateUsed(res, 'knr_formuladel.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1189,7 +1189,7 @@ class TestViews2(TransactionTestCase):
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_formulalist.html')
+        self.assertTemplateUsed(res, 'knr_formulalist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1197,7 +1197,7 @@ class TestViews2(TransactionTestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_formuladeleted.html')
+        self.assertTemplateUsed(res, 'knr_formuladeleted.xhtml')
         check_html(self, res.content)
 
         res = self.client.post('/knr/formuladel/{}/'.format(idx))
@@ -1213,13 +1213,13 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/knr/itemform/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/knr/itemform/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1229,8 +1229,8 @@ class TestViews2(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertEqual(res.context['page_title'], 'Nová položka')
         check_html(self, res.content)
 
@@ -1249,7 +1249,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1267,7 +1267,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1285,7 +1285,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1303,7 +1303,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1315,7 +1315,7 @@ class TestViews2(TransactionTestCase):
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertEqual(res.context['errors'], True)
         check_html(self, res.content)
 
@@ -1353,7 +1353,7 @@ class TestViews2(TransactionTestCase):
                      'submit_calc{:d}'.format(idx): 'on'},
                     follow=True)
                 self.assertEqual(res.status_code, HTTPStatus.OK)
-                self.assertTemplateUsed(res, 'knr_itemform.html')
+                self.assertTemplateUsed(res, 'knr_itemform.xhtml')
                 self.assertFalse(res.context['errors'])
                 self.assertEqual(res.context['rate'], out)
                 check_html(self, res.content, key='{:d}-{:d}'.format(idx, num))
@@ -1369,7 +1369,7 @@ class TestViews2(TransactionTestCase):
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertFalse(res.context['errors'])
         self.assertEqual(res.context['page_title'], 'Úprava položky')
         check_html(self, res.content)
@@ -1388,7 +1388,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertEqual(res.context['errors'], True)
         check_html(self, res.content)
 
@@ -1404,7 +1404,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1419,7 +1419,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1434,7 +1434,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1449,7 +1449,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1464,7 +1464,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1479,7 +1479,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1491,7 +1491,7 @@ class TestViews2(TransactionTestCase):
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertEqual(res.context['errors'], True)
         check_html(self, res.content)
 
@@ -1539,7 +1539,7 @@ class TestViews2(TransactionTestCase):
                      'submit_calc{:d}'.format(idx): 'on'},
                     follow=True)
                 self.assertEqual(res.status_code, HTTPStatus.OK)
-                self.assertTemplateUsed(res, 'knr_itemform.html')
+                self.assertTemplateUsed(res, 'knr_itemform.xhtml')
                 self.assertFalse(res.context['errors'])
                 self.assertEqual(res.context['rate'], out)
                 check_html(self, res.content, key='{:d}-{:d}'.format(idx, num))
@@ -1555,7 +1555,7 @@ class TestViews2(TransactionTestCase):
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertFalse(res.context['errors'])
         self.assertEqual(res.context['page_title'], 'Úprava položky')
         check_html(self, res.content)
@@ -1571,7 +1571,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertEqual(res.context['errors'], True)
         check_html(self, res.content)
 
@@ -1587,7 +1587,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1602,7 +1602,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         cases = (75, 300)
@@ -1617,7 +1617,7 @@ class TestViews2(TransactionTestCase):
                  'submit_calc{:d}'.format(idx): 'on'},
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'knr_itemform.html')
+            self.assertTemplateUsed(res, 'knr_itemform.xhtml')
             self.assertFalse(res.context['errors'])
             self.assertEqual(res.context['rate'], out)
             check_html(self, res.content, key=idx)
@@ -1631,7 +1631,7 @@ class TestViews2(TransactionTestCase):
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertFalse(res.context['errors'])
         self.assertEqual(res.context['page_title'], 'Úprava položky')
         check_html(self, res.content)
@@ -1647,7 +1647,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertEqual(res.context['errors'], True)
         check_html(self, res.content)
 
@@ -1663,7 +1663,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1678,7 +1678,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         cases = (50, 100)
@@ -1693,7 +1693,7 @@ class TestViews2(TransactionTestCase):
                  'submit_calc{:d}'.format(idx): 'on'},
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'knr_itemform.html')
+            self.assertTemplateUsed(res, 'knr_itemform.xhtml')
             self.assertFalse(res.context['errors'])
             self.assertEqual(res.context['time_rate'], out)
             check_html(self, res.content, key=idx)
@@ -1707,7 +1707,7 @@ class TestViews2(TransactionTestCase):
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertFalse(res.context['errors'])
         self.assertEqual(res.context['page_title'], 'Úprava položky')
         check_html(self, res.content)
@@ -1723,7 +1723,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertEqual(res.context['errors'], True)
         check_html(self, res.content)
 
@@ -1757,7 +1757,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1790,7 +1790,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -1823,7 +1823,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         for key in ('from', 'to'):
@@ -1864,7 +1864,7 @@ class TestViews2(TransactionTestCase):
                  'denominator': '3',
                  'submit_{}_search'.format(key): 'Vyhledat'})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'knr_itemform.html')
+            self.assertTemplateUsed(res, 'knr_itemform.xhtml')
             self.assertEqual(res.context['err_message'], 'Hledání neúspěšné, prosím, upřesněte adresu.')
             check_html(self, res.content, key=key)
 
@@ -1937,7 +1937,7 @@ class TestViews2(TransactionTestCase):
                  'submit_calc{:d}'.format(idx): 'on'},
                 follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'knr_itemform.html')
+            self.assertTemplateUsed(res, 'knr_itemform.xhtml')
             self.assertFalse(res.context['errors'])
             self.assertEqual(res.context['time_rate'], out)
             check_html(self, res.content, key=idx)
@@ -1951,7 +1951,7 @@ class TestViews2(TransactionTestCase):
              'submit_calc1': 'Do 31.08.2006'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertFalse(res.context['errors'])
         self.assertEqual(res.context['page_title'], 'Úprava položky')
         check_html(self, res.content)
@@ -1965,7 +1965,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertEqual(res.context['errors'], True)
         check_html(self, res.content)
 
@@ -1977,7 +1977,7 @@ class TestViews2(TransactionTestCase):
              'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.get('/knr/itemform/100/')
@@ -1986,8 +1986,8 @@ class TestViews2(TransactionTestCase):
         res = self.client.get('/knr/itemform/14/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -2011,7 +2011,7 @@ class TestViews2(TransactionTestCase):
              'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -2033,7 +2033,7 @@ class TestViews2(TransactionTestCase):
              'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -2049,7 +2049,7 @@ class TestViews2(TransactionTestCase):
              'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -2112,7 +2112,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -2124,7 +2124,7 @@ class TestViews2(TransactionTestCase):
              'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertEqual(res.context['errors'], True)
         self.assertEqual(res.context['page_title'], 'Nová položka')
         check_html(self, res.content)
@@ -2138,7 +2138,7 @@ class TestViews2(TransactionTestCase):
              'denominator': '3',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertEqual(res.context['errors'], True)
         self.assertEqual(res.context['page_title'], 'Úprava položky')
         check_html(self, res.content)
@@ -2163,7 +2163,7 @@ class TestViews2(TransactionTestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -2187,7 +2187,7 @@ class TestViews2(TransactionTestCase):
              'denominator': '3',
              'submit_calc1': 'Do 31.08.2006'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertEqual(res.context['errors'], True)
         self.assertEqual(res.context['page_title'], 'Úprava položky')
         check_html(self, res.content)
@@ -2198,14 +2198,14 @@ class TestViews2(TransactionTestCase):
              'idx': '1',
              'submit': 'Uložit'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemform.html')
+        self.assertTemplateUsed(res, 'knr_itemform.xhtml')
         self.assertEqual(res.context['errors'], True)
         self.assertEqual(res.context['page_title'], 'Úprava položky')
         check_html(self, res.content)
 
         res = self.client.get('/knr/itemdel/2/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemdel.html')
+        self.assertTemplateUsed(res, 'knr_itemdel.xhtml')
         check_html(self, res.content)
         check_html(self, res.content)
 
@@ -2216,7 +2216,7 @@ class TestViews2(TransactionTestCase):
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -2224,7 +2224,7 @@ class TestViews2(TransactionTestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemdeleted.html')
+        self.assertTemplateUsed(res, 'knr_itemdeleted.xhtml')
         check_html(self, res.content)
 
         res = self.client.post('/knr/itemdel/{:d}/'.format(last))
@@ -2234,14 +2234,14 @@ class TestViews2(TransactionTestCase):
         bef = [res.context['rows'][i]['description'] for i in (0, 1)]
         res = self.client.get('/knr/itemdown/1/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
         aft = [res.context['rows'][i]['description'] for i in (0, 1)]
         self.assertNotEqual(bef, aft)
 
         res = self.client.get('/knr/itemdown/1/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_itemlist.html')
+        self.assertTemplateUsed(res, 'knr_itemlist.xhtml')
         check_html(self, res.content)
         aft = [res.context['rows'][i]['description'] for i in (0, 1)]
         self.assertEqual(bef, aft)
@@ -2258,7 +2258,7 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/knr/presets/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
@@ -2269,7 +2269,7 @@ class TestViews2(TransactionTestCase):
 
         res = self.client.get('/knr/presets/', follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'knr_mainpage.html')
+        self.assertTemplateUsed(res, 'knr_mainpage.xhtml')
         check_html(self, res.content)
 
     def test_calc(self):
@@ -2299,7 +2299,7 @@ class TestViews2(TransactionTestCase):
                      'load': infile},
                     follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'knr_mainpage.html')
+            self.assertTemplateUsed(res, 'knr_mainpage.xhtml')
             check_html(self, res.content, key=test[0])
             soup = BeautifulSoup(res.content, 'html.parser')
             ttd = soup.select('.vattbl td')

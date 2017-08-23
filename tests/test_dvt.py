@@ -25,6 +25,7 @@ from http import HTTPStatus
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase
 
+from legal.settings import FULL_CONTENT_TYPE
 from legal.dvt import forms
 
 from tests.utils import check_html
@@ -92,8 +93,8 @@ class TestViews(SimpleTestCase):
         res = self.client.get('/dvt/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'dvt_mainpage.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'dvt_mainpage.xhtml')
         check_html(self, res.content)
 
         num = 1
@@ -105,7 +106,7 @@ class TestViews(SimpleTestCase):
                  'months': test[2],
                  'days': test[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'dvt_mainpage.html')
+            self.assertTemplateUsed(res, 'dvt_mainpage.xhtml')
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertEqual(len(msg), 4)
@@ -125,7 +126,7 @@ class TestViews(SimpleTestCase):
                  'months': test[2],
                  'days': test[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'dvt_mainpage.html')
+            self.assertTemplateUsed(res, 'dvt_mainpage.xhtml')
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertEqual(msg[0].text, 'Chybné zadání')

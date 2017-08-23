@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^procdeleted/$',
         genrender,
         kwargs={
-            'template': 'szr_procdeleted.html',
+            'template': 'szr_procdeleted.xhtml',
             'page_title': 'Smazání řízení'},
         name='procdeleted'),
     url(r'^procdelall/$', procdelall, name='procdelall'),

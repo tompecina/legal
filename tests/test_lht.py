@@ -26,6 +26,7 @@ from datetime import date
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase
 
+from legal.settings import FULL_CONTENT_TYPE
 from legal.lht import forms, views
 
 from tests.utils import check_html
@@ -259,8 +260,8 @@ class TestViews(SimpleTestCase):
         res = self.client.get('/lht/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'lht_mainpage.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'lht_mainpage.xhtml')
         check_html(self, res.content)
 
         num = 1
@@ -272,7 +273,7 @@ class TestViews(SimpleTestCase):
                  'dur': test[2],
                  'unit': test[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'lht_mainpage.html')
+            self.assertTemplateUsed(res, 'lht_mainpage.xhtml')
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             length = len(msg)
@@ -292,7 +293,7 @@ class TestViews(SimpleTestCase):
                  'dur': test[2],
                  'unit': test[3]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'lht_mainpage.html')
+            self.assertTemplateUsed(res, 'lht_mainpage.xhtml')
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')
             self.assertTrue(msg[0].text)

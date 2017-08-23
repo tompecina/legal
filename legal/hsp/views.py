@@ -562,7 +562,7 @@ def calc(debt, pram=lambda x: x):
 
             lst = []
             for spa in row['sps']:
-                lst.append('{}&nbsp;{}'.format(
+                lst.append('{} {}'.format(
                     pram(spa['total']),
                     spa['curr'] if res.multicurrency or spa['curr'] != 'CZK' else 'Kč'))
             row['sps_text'] = ', '.join(lst)
@@ -888,7 +888,7 @@ def mainpage(request):
     def ftbl(amt):
         amt = round(amt, debt.rounding) if debt.rounding else int(round(amt))
         if abs(amt) < LIM:
-            return '<span class="dr">&nbsp;</span>'
+            return '<span class="dr">&#160;</span>'
         elif amt > 0:
             return '<span class="dr">{}</span>'.format(famt(amt))
         return '<span class="cr">{}</span>'.format(famt(-amt))
@@ -899,8 +899,8 @@ def mainpage(request):
         temp = famt(round(amt, debt.rounding)
             if debt.rounding else int(round(amt))).replace('-', '−')
         if res.multicurrency or curr != 'CZK':
-            return '{}&nbsp;{}'.format(temp, curr)
-        return '{}&nbsp;Kč'.format(temp)
+            return '{} {}'.format(temp, curr)
+        return '{} Kč'.format(temp)
 
     err_message = ''
 
@@ -1243,7 +1243,7 @@ def mainpage(request):
                                 txt += ' ze závazku {}'.format(n2l(debit.principal_debit - 1))
                             else:
                                 txt += (
-                                    ' z&nbsp;částky {}'.format(lfamt(debit.principal_amount, debit.principal_currency)))
+                                    ' z částky {}'.format(lfamt(debit.principal_amount, debit.principal_currency)))
                             if debit.date_from:
                                 txt += ' od {:%d.%m.%Y}'.format(debit.date_from)
                             elif debit.principal_debit:
@@ -1492,7 +1492,7 @@ def mainpage(request):
             if debit.principal_debit:
                 txt += ' ze závazku {}'.format(n2l(debit.principal_debit - 1))
             else:
-                txt += ' z&nbsp;částky {}'.format(
+                txt += ' z částky {}'.format(
                     lfamt(debit.principal_amount, debit.principal_currency))
             if debit.date_from:
                 txt += ' od {:%d.%m.%Y}'.format(debit.date_from)
@@ -1525,7 +1525,7 @@ def mainpage(request):
 
     return render(
         request,
-        'hsp_mainpage.html',
+        'hsp_mainpage.xhtml',
         {'app': APP,
          'page_title': 'Historie složené peněžité pohledávky',
          'form': form,
@@ -1660,7 +1660,7 @@ def debitform(request, idx=0):
 
     return render(
         request,
-        'hsp_debitform.html',
+        'hsp_debitform.xhtml',
         {'app': APP,
          'form': form,
          'rows': rows,
@@ -1685,7 +1685,7 @@ def debitdel(request, idx=0):
     if request.method == 'GET':
         return render(
             request,
-            'hsp_debitdel.html',
+            'hsp_debitdel.xhtml',
             {'app': APP,
              'page_title': 'Smazání závazku'})
     else:
@@ -1808,7 +1808,7 @@ def creditform(request, idx=0):
 
     return render(
         request,
-        'hsp_creditform.html',
+        'hsp_creditform.xhtml',
         {'app': APP,
          'form': form,
          'rows': rows,
@@ -1834,7 +1834,7 @@ def creditdel(request, idx=0):
     if request.method == 'GET':
         return render(
             request,
-            'hsp_creditdel.html',
+            'hsp_creditdel.xhtml',
             {'app': APP,
              'page_title': 'Smazání splátky',
              'date': debt.credits[idx].date})
@@ -1902,7 +1902,7 @@ def balanceform(request, idx=0):
 
     return render(
         request,
-        'hsp_balanceform.html',
+        'hsp_balanceform.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -1926,7 +1926,7 @@ def balancedel(request, idx=0):
     if request.method == 'GET':
         return render(
             request,
-            'hsp_balancedel.html',
+            'hsp_balancedel.xhtml',
             {'app': APP,
              'page_title': 'Smazání kontrolního bodu',
              'date': debt.balances[idx].date})
@@ -1999,7 +1999,7 @@ def fxrateform(request, idx=0):
 
     return render(
         request,
-        'hsp_fxrateform.html',
+        'hsp_fxrateform.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -2024,7 +2024,7 @@ def fxratedel(request, idx=0):
     if request.method == 'GET':
         return render(
             request,
-            'hsp_fxratedel.html',
+            'hsp_fxratedel.xhtml',
             {'app': APP,
              'page_title':
              'Smazání kursu',

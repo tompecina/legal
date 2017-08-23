@@ -30,7 +30,7 @@ from bs4 import BeautifulSoup
 from django.apps import apps
 from django.test import SimpleTestCase, TransactionTestCase, TestCase
 
-from legal.settings import TEST_TEMP_DIR, BASE_DIR
+from legal.settings import TEST_TEMP_DIR, BASE_DIR, FULL_CONTENT_TYPE
 from legal.common.glob import LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL
 from legal.udn import cron, forms, glob, models, views
 
@@ -224,8 +224,8 @@ class TestViews1(TransactionTestCase):
         res = self.client.get('/udn/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'udn_mainpage.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'udn_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -239,7 +239,7 @@ class TestViews1(TransactionTestCase):
              'submit': 'Hledat'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -250,7 +250,7 @@ class TestViews1(TransactionTestCase):
              'submit': 'Hledat'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         self.assertEqual(res.redirect_chain[0][1], HTTPStatus.FOUND)
         check_html(self, res.content)
         self.assertTrue(link_equal(res.redirect_chain[0][0], '/udn/list/?party=Ing&party_opt=icontains&start=0'))
@@ -262,7 +262,7 @@ class TestViews1(TransactionTestCase):
              'format': 'html',
              'submit': 'Hledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_mainpage.html')
+        self.assertTemplateUsed(res, 'udn_mainpage.xhtml')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -276,7 +276,7 @@ class TestViews1(TransactionTestCase):
              'format': 'html',
              'submit': 'Hledat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_mainpage.html')
+        self.assertTemplateUsed(res, 'udn_mainpage.xhtml')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -390,7 +390,7 @@ aj</party></parties><files><file type="abridged">{2}udn/0158_8As__1500033S.pdf</
         views.EXLIM = 0
         res = self.client.get('/udn/xmllist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'exlim.html')
+        self.assertTemplateUsed(res, 'exlim.xhtml')
         check_html(self, res.content)
         views.EXLIM = exlim
 
@@ -486,7 +486,7 @@ aj</party></parties><files><file type="abridged">{2}udn/0158_8As__1500033S.pdf</
         views.EXLIM = 0
         res = self.client.get('/udn/csvlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'exlim.html')
+        self.assertTemplateUsed(res, 'exlim.xhtml')
         check_html(self, res.content)
         views.EXLIM = exlim
 
@@ -583,7 +583,7 @@ e": "Nejvy\u0161\u0161\u00ed spr\u00e1vn\u00ed soud", "id": "NSS"}}, "ref": {{"s
         views.EXLIM = 0
         res = self.client.get('/udn/jsonlist/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'exlim.html')
+        self.assertTemplateUsed(res, 'exlim.xhtml')
         check_html(self, res.content)
         views.EXLIM = exlim
 
@@ -603,8 +603,8 @@ class TestViews2(TransactionTestCase):
         res = self.client.get('/udn/list/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         check_html(self, res.content)
 
         res = self.client.get('/udn/list/?senate=-1')
@@ -658,43 +658,43 @@ class TestViews2(TransactionTestCase):
         res = self.client.get(
             '/udn/list/?date_from=2015-01-01&date_to=2199-07-01&register=As&agenda=1&party_opt=icontains')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         self.assertEqual(res.context['total'], 1)
         check_html(self, res.content)
 
         res = self.client.get('/udn/list/?start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         self.assertEqual(res.context['total'], 1)
         check_html(self, res.content)
 
         res = self.client.get('/udn/list/?register=Ads')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         self.assertEqual(res.context['total'], 0)
         check_html(self, res.content)
 
         res = self.client.get('/udn/list/?date_from=2199-07-01')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         self.assertEqual(res.context['total'], 1)
         check_html(self, res.content)
 
         res = self.client.get('/udn/list/?date_from=2199-07-02')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         self.assertEqual(res.context['total'], 0)
         check_html(self, res.content)
 
         res = self.client.get('/udn/list/?date_to=2199-07-01')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         self.assertEqual(res.context['total'], 1)
         check_html(self, res.content)
 
         res = self.client.get('/udn/list/?date_to=2199-06-30')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         self.assertEqual(res.context['total'], 0)
         check_html(self, res.content)
 
@@ -706,7 +706,7 @@ class TestViews2(TransactionTestCase):
 
         res = self.client.get('/udn/list/?senate=8')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -717,7 +717,7 @@ class TestViews2(TransactionTestCase):
 
         res = self.client.get('/udn/list/?senate=8&start=50')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -730,7 +730,7 @@ class TestViews2(TransactionTestCase):
 
         res = self.client.get('/udn/list/?senate=8&start=100')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
@@ -743,7 +743,7 @@ class TestViews2(TransactionTestCase):
 
         res = self.client.get('/udn/list/?senate=8&start=200')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'udn_list.html')
+        self.assertTemplateUsed(res, 'udn_list.xhtml')
         self.assertEqual(len(res.context['rows']), 38)
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')

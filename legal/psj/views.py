@@ -59,7 +59,7 @@ def mainpage(request):
         form = MainForm()
         return render(
             request,
-            'psj_mainpage.html',
+            'psj_mainpage.xhtml',
             {'app': APP,
              'page_title': page_title,
              'err_message': err_message,
@@ -84,7 +84,7 @@ def mainpage(request):
             err_message = INERR
             return render(
                 request,
-                'psj_mainpage.html',
+                'psj_mainpage.xhtml',
                 {'app': APP,
                  'page_title': page_title,
                  'err_message': err_message,
@@ -141,7 +141,7 @@ def htmllist(request):
         start = total - 1
     return render(
         request,
-        'psj_list.html',
+        'psj_list.xhtml',
         {'app': APP,
          'page_title': 'Výsledky vyhledávání',
          'rows': res[start:start + BATCH],
@@ -164,7 +164,7 @@ def xmllist(request):
     if total > EXLIM:
         return render(
             request,
-            'exlim.html',
+            'exlim.xhtml',
             {'app': APP,
              'page_title': EXLIM_TITLE,
              'limit': EXLIM,
@@ -250,7 +250,7 @@ def csvlist(request):
     if total > EXLIM:
         return render(
             request,
-            'exlim.html',
+            'exlim.xhtml',
             {'app': APP,
              'page_title': EXLIM_TITLE,
              'limit': EXLIM,
@@ -303,7 +303,7 @@ def jsonlist(request):
     if total > EXLIM:
         return render(
             request,
-            'exlim.html',
+            'exlim.xhtml',
             {'app': APP,
              'page_title': EXLIM_TITLE,
              'limit': EXLIM,
@@ -356,7 +356,7 @@ def courtinfo(request, court):
     judges.sort(key=stripjudge)
     return render(
         request,
-        'psj_court.html',
+        'psj_court.xhtml',
         {'courtrooms': courtrooms,
          'judges': judges},
         content_type='text/plain; charset=utf-8')

@@ -36,7 +36,7 @@ urlpatterns = (
     url(r'^debtordeleted/$',
         genrender,
         kwargs={
-            'template': 'dir_debtordeleted.html',
+            'template': 'dir_debtordeleted.xhtml',
             'page_title': 'Smazání dlužníka'},
         name='debtordeleted'),
     url(r'^debtordelall/$', debtordelall, name='debtordelall'),

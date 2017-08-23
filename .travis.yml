@@ -11,6 +11,8 @@ env:
 
 matrix:
   include:
+    - python: "3.5"
+      env: "DJANGO_VERSION=stable CHECK_HTML=1"
     - python: "3.6"
       env: "DJANGO_VERSION=stable CHECK_HTML=1 DEPLOY=1"
     - python: "3.6"
@@ -22,15 +24,6 @@ before_install:
   - "echo 'StrictHostKeyChecking no' >> ~/.ssh/config"
   - "cp .travis_id_rsa ~/.ssh/id_rsa"
   - "chmod 600 ~/.ssh/id_rsa"
-  - "pushd ~/builds"
-  - "mkdir -p lib"
-  - "export LD_LIBRARY_PATH=$(pwd)/lib"
-  - "git clone --depth=1 https://github.com/htacg/tidy-html5.git htacg/tidy-html5"
-  - "pushd htacg/tidy-html5/build/cmake"
-  - "cmake ../.. -DCMAKE_BUILD_TYPE=Release"
-  - "make"
-  - "ln -s $(pwd)/libtidy.so.5.5.31 $LD_LIBRARY_PATH/libtidy-0.99.so.0"
-  - "popd"
   - "gem install sass"
   - "npm install uglify-js"
   - "export PATH=$(pwd)/node_modules/.bin:\"$PATH\""
@@ -38,7 +31,6 @@ before_install:
   - "pushd validator"
   - "python build/build.py update dldeps build jar"
   - "validator=$(pwd)"
-  - "popd"
   - "popd"
   - "ln -s $validator/build/dist/vnu.jar lib"
   - |

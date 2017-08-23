@@ -1,0 +1,135 @@
+{% extends 'main.xhtml' %}
+
+{% comment %}
+
+psj/templates/psj_list.xhtml
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
+{% block page_contents %}
+
+<h1 class="list">{{ page_title }}</h1>
+
+{% if rows %}
+
+<div class="subtitle">Počet výsledků: {{ total }}</div>
+
+<table id="list" class="list">
+
+  <thead>
+
+    <tr>
+
+      <th>
+	<div>Soud</div>
+	<div>Jednací síň</div>
+      </th>
+
+      <th>
+	<div>Datum a čas</div>
+	<div>Spisová značka</div>
+      </th>
+
+      <th>
+	<div>Řešitel</div>
+	<div>Druh jednání</div>
+      </th>
+
+      <th>Účastníci řízení</th>
+
+      <th>Poznámky</th>
+
+      <th>infoSoud</th>
+
+    </tr>
+
+  </thead>
+
+  <tbody>
+
+    {% for row in rows %}
+
+    <tr>
+
+      <td>
+	<div>{{ row.courtroom.court.name }}</div>
+	<div>{{ row.courtroom.desc }}</div>
+      </td>
+
+      <td>
+	<div>{{ row.time|date:'d.m.Y H:i' }}</div>
+	<div>{% if row.senate %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}</div>
+      </td>
+
+      <td>
+	<div>{{ row.judge }}</div>
+	<div>{{ row.form }}</div>
+      </td>
+
+      <td>
+	{% for party in row.parties.all %}
+	<div>{{ party.name }}</div>
+	{% endfor %}
+      </td>
+
+      <td>
+	{% if row.closed %}
+	<div>neveřejné</div>
+	{% endif %}
+	{% if row.cancelled %}
+	<div>zrušeno</div>
+	{% endif %}
+      </td>
+
+      <td class="act">
+	{% if row.time|date:'U' >= today|date:'U' %}<a href="http://infosoud.justice.cz/InfoSoud/public/searchJednani.do?type=spzn&amp;typSoudu=os&amp;krajOrg={% if row.courtroom.court.reports %}{{ row.courtroom.court.reports_id }}{% else %}{{ row.courtroom.court_id }}{% endif %}&amp;org={{ row.courtroom.court_id }}&amp;cisloSenatu={{ row.senate }}&amp;druhVec={{ row.register|upper|urlencode }}&amp;bcVec={{ row.number }}&amp;rocnik={{ row.year }}&amp;spamQuestion=23" target="_blank">[J]</a>
+	{% endif %}<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.courtroom.court_id }}&amp;krajOrg={% if row.courtroom.court.reports %}{{ row.courtroom.court.reports_id }}{% else %}{{ row.courtroom.court_id }}{% endif %}&amp;cisloSenatu={{ row.senate }}&amp;druhVec={{ row.register|urlencode }}&amp;bcVec={{ row.number }}&amp;rocnik={{ row.year }}&amp;typSoudu={% if row.court_id == 'NSJIMBM' %}ns{% else %}os{% endif %}&amp;autoFill=true&amp;type=spzn" target="_blank">[Ř]</a>
+      </td>
+
+    </tr>
+
+    {% endfor %}
+
+  </tbody>
+
+  {% if not suppress_table_footer %}
+
+  <tfoot>
+
+    <tr>
+      <td colspan="6" class="pager">{% include 'pager.xhtml' %}</td>
+    </tr>
+
+  </tfoot>
+
+  {% endif %}
+
+</table>
+
+{% else %}
+
+<p>(žádné výsledky)</p>
+
+{% endif %}
+
+<p><a href="{% url 'psj:mainpage' %}">Zpět na vyhledávací formulář</a></p>
+
+{% endblock %}

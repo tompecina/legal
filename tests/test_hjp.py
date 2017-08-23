@@ -30,7 +30,7 @@ from django.apps import apps
 from django.test import SimpleTestCase, TestCase
 from django.contrib.auth.models import User
 
-from legal.settings import TEST_DATA_DIR, BASE_DIR
+from legal.settings import TEST_DATA_DIR, BASE_DIR, FULL_CONTENT_TYPE
 from legal.common.utils import p2c
 from legal.hjp import forms, views
 
@@ -195,15 +195,15 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/hjp/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
         res = self.client.get('/hjp/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -212,7 +212,7 @@ class TestViews2(TestCase):
              'model': 'none',
              'submit_update': 'Aktualisovat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -222,7 +222,7 @@ class TestViews2(TestCase):
              'fixed_amount': 'XXX',
              'submit_update': 'Aktualisovat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
@@ -233,7 +233,7 @@ class TestViews2(TestCase):
              'submit_empty': 'Vyprázdnit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -246,7 +246,7 @@ class TestViews2(TestCase):
              'submit_empty': 'Vyprázdnit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('#id_title')
@@ -273,7 +273,7 @@ class TestViews2(TestCase):
                      'load': infile},
                     follow=True)
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'hjp_mainpage.html')
+            self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
             check_html(self, res.content, key=suf[0])
             soup = BeautifulSoup(res.content, 'html.parser')
             title = soup.select('#id_title')
@@ -318,7 +318,7 @@ class TestViews2(TestCase):
                 follow=True)
             con.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'hjp_mainpage.html')
+            self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
             check_html(self, res.content)
             soup = BeautifulSoup(res.content, 'html.parser')
             title = soup.select('#id_title')
@@ -350,7 +350,7 @@ class TestViews2(TestCase):
                  'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -382,7 +382,7 @@ class TestViews2(TestCase):
                  'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         button = soup.select('input[name=submit_csv]')
@@ -413,7 +413,7 @@ class TestViews2(TestCase):
              'load': None},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         self.assertEqual(res.context['err_message'], 'Nejprve zvolte soubor k načtení')
         check_html(self, res.content)
 
@@ -427,7 +427,7 @@ class TestViews2(TestCase):
                  'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         self.assertEqual(res.context['err_message'], 'Chyba při načtení souboru')
         check_html(self, res.content)
 
@@ -441,7 +441,7 @@ class TestViews2(TestCase):
                  'load': infile},
                 follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         self.assertEqual(res.context['err_message'], 'Chyba při načtení souboru')
         check_html(self, res.content)
 
@@ -470,7 +470,7 @@ class TestViews2(TestCase):
                 follow=True)
             infile.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'hjp_mainpage.html')
+            self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
             dct = {'submit_pdf': 'Export do PDF'}
             form = res.context['form']
             for key in form.fields:
@@ -495,7 +495,7 @@ class TestViews2(TestCase):
                 follow=True)
             con.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'hjp_mainpage.html')
+            self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
             idx += 1
 
     def test_trans(self):
@@ -507,7 +507,7 @@ class TestViews2(TestCase):
         self.assertEqual(res.status_code, HTTPStatus.FOUND)
 
         res = self.client.get('/hjp/transform/', follow=True)
-        self.assertTemplateUsed(res, 'login.html')
+        self.assertTemplateUsed(res, 'login.xhtml')
 
         self.assertTrue(self.client.login(username='user', password='none'))
 
@@ -522,8 +522,8 @@ class TestViews2(TestCase):
         res = self.client.get('/hjp/transform/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'hjp_transform.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'hjp_transform.xhtml')
         check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         title = soup.select('h1')
@@ -538,7 +538,7 @@ class TestViews2(TestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -550,7 +550,7 @@ class TestViews2(TestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -560,7 +560,7 @@ class TestViews2(TestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -568,7 +568,7 @@ class TestViews2(TestCase):
             {'submit_back': 'Zpět bez uložení'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.get('/hjp/transform/100/')
@@ -577,8 +577,8 @@ class TestViews2(TestCase):
         res = self.client.get('/hjp/transform/2/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'hjp_transform.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'hjp_transform.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -588,7 +588,7 @@ class TestViews2(TestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -606,13 +606,13 @@ class TestViews2(TestCase):
              'submit': 'Uložit'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_transform.html')
+        self.assertTemplateUsed(res, 'hjp_transform.xhtml')
         self.assertEqual(res.context['err_message'], 'Chybné zadání, prosím, opravte údaje')
         check_html(self, res.content)
 
         res = self.client.get('/hjp/transdel/3/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_transdel.html')
+        self.assertTemplateUsed(res, 'hjp_transdel.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -620,7 +620,7 @@ class TestViews2(TestCase):
             {'submit_no': 'Ne'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_mainpage.html')
+        self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post(
@@ -628,7 +628,7 @@ class TestViews2(TestCase):
             {'submit_yes': 'Ano'},
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'hjp_transdeleted.html')
+        self.assertTemplateUsed(res, 'hjp_transdeleted.xhtml')
         check_html(self, res.content)
 
         res = self.client.get('/hjp/transdel/3/')
@@ -1125,7 +1125,7 @@ class TestViews2(TestCase):
                 follow=True)
             infile.close()
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'hjp_mainpage.html')
+            self.assertTemplateUsed(res, 'hjp_mainpage.xhtml')
             dct = {
                 'title': TEST_STRING,
                 'note': 'nn',

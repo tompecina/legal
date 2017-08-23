@@ -1,0 +1,93 @@
+{% comment %}
+
+common/templates/pager.xhtml
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
+<span>
+
+  {% if pager.total > 1 %}
+
+  {% if pager.linkbb %}
+  <span>
+    <a href="{{ pager.linkbb }}">
+  {% else %}
+  <span class="disabled">
+  {% endif %}
+    <svg width="20" height="10" viewBox="0 0 20 10" xmlns="http://www.w3.org/2000/svg">
+      <title>&lt;&lt;</title>
+      <path d="M 0,5 10,0 10,5 20,0 20,10 10,5 10,10 Z"/>
+    </svg>
+  {% if pager.linkbb %}
+    </a>
+  {% endif %}
+  </span>
+
+  {% if pager.linkb %}
+  <span>
+    <a href="{{ pager.linkb }}">
+  {% else %}
+  <span class="disabled">
+  {% endif %}
+    <svg width="10" height="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+      <title>&lt;</title>
+      <path d="M 0,5 10,0 10,10 Z"/>
+    </svg>
+  {% if pager.linkbb %}
+    </a>
+  {% endif %}
+  </span>
+
+  <span class="num{% if pager.total == 1 %} disabled{% endif %}">{{ pager.curr }}/{{ pager.total }}</span>
+
+  {% if pager.linkf %}
+  <span>
+    <a href="{{ pager.linkf }}">
+  {% else %}
+  <span class="disabled">
+  {% endif %}
+    <svg width="10" height="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+      <title>&gt;</title>
+      <path d="M 0,0 10,5 0,10 Z"/>
+    </svg>
+  {% if pager.linkf %}
+    </a>
+  {% endif %}
+  </span>
+
+  {% if pager.linkff %}
+    <span>
+      <a href="{{ pager.linkff }}">
+  {% else %}
+  <span class="disabled">
+  {% endif %}
+    <svg width="20" height="10" viewBox="0 0 20 10" xmlns="http://www.w3.org/2000/svg">
+      <title>&gt;&gt;</title>
+      <path d="M 0,0 10,5 10,0 20,5 10,10 10,5 0,10 Z"/>
+    </svg>
+  {% if pager.linkff %}
+    </a>
+  {% endif %}
+  </span>
+
+  {% endif %}
+
+</span>

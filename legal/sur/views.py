@@ -85,7 +85,7 @@ def mainpage(request):
         row['search'] = query.urlencode()
     return render(
         request,
-        'sur_mainpage.html',
+        'sur_mainpage.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -137,7 +137,7 @@ def partyform(request, idx=0):
             err_message = INERR
     return render(
         request,
-        'sur_partyform.html',
+        'sur_partyform.xhtml',
         {'app': APP,
          'form': form,
          'min_chars': grammar(MIN_LENGTH, GR_CHAR),
@@ -159,7 +159,7 @@ def partydel(request, idx=0):
     if request.method == 'GET':
         return render(
             request,
-            'sur_partydel.html',
+            'sur_partydel.xhtml',
             {'app': APP,
              'page_title': 'Smazání účastníka',
              'desc': party.party})
@@ -181,7 +181,7 @@ def partydelall(request):
     if request.method == 'GET':
         return render(
             request,
-            'sur_partydelall.html',
+            'sur_partydelall.xhtml',
             {'app': APP,
              'page_title': 'Smazání všech účastníků'})
     else:
@@ -244,7 +244,7 @@ def partybatchform(request):
                     LOGGER.info('User "{}" ({:d}) imported {} party/ies'.format(uname, uid, count), request)
                     return render(
                         request,
-                        'sur_partybatchresult.html',
+                        'sur_partybatchresult.xhtml',
                         {'app': APP,
                          'page_title': 'Import účastníků řízení ze souboru',
                          'count': count,
@@ -259,7 +259,7 @@ def partybatchform(request):
 
     return render(
         request,
-        'sur_partybatchform.html',
+        'sur_partybatchform.xhtml',
         {'app': APP,
          'page_title': 'Import účastníků řízení ze souboru',
          'err_message': err_message,

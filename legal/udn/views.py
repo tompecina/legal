@@ -62,7 +62,7 @@ def mainpage(request):
         form = MainForm()
         return render(
             request,
-            'udn_mainpage.html',
+            'udn_mainpage.xhtml',
             {'app': APP,
              'page_title': page_title,
              'err_message': err_message,
@@ -86,7 +86,7 @@ def mainpage(request):
             LOGGER.debug('Invalid form', request)
             return render(
                 request,
-                'udn_mainpage.html',
+                'udn_mainpage.xhtml',
                 {'app': APP,
                  'page_title': page_title,
                  'err_message': err_message,
@@ -143,7 +143,7 @@ def htmllist(request):
         start = total - 1
     return render(
         request,
-        'udn_list.html',
+        'udn_list.xhtml',
         {'app': APP,
          'page_title': 'Výsledky vyhledávání',
          'rows': dec[start:(start + BATCH)],
@@ -165,7 +165,7 @@ def xmllist(request):
     if total > EXLIM:
         return render(
             request,
-            'exlim.html',
+            'exlim.xhtml',
             {'app': APP,
              'page_title': EXLIM_TITLE,
              'limit': EXLIM,
@@ -252,7 +252,7 @@ def csvlist(request):
     if total > EXLIM:
         return render(
             request,
-            'exlim.html',
+            'exlim.xhtml',
             {'app': APP,
              'page_title': EXLIM_TITLE,
              'limit': EXLIM,
@@ -299,7 +299,7 @@ def jsonlist(request):
     if total > EXLIM:
         return render(
             request,
-            'exlim.html',
+            'exlim.xhtml',
             {'app': APP,
              'page_title': EXLIM_TITLE,
              'limit': EXLIM,

@@ -26,6 +26,7 @@ from datetime import date, timedelta
 from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 
+from legal.settings import FULL_CONTENT_TYPE
 from legal.common.models import Cache
 from legal.cnb import models, utils
 
@@ -272,8 +273,8 @@ class TestViews(TestCase):
         res = self.client.get('/cnb/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'cnb_mainpage.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'cnb_mainpage.xhtml')
         check_html(self, res.content)
 
         today = date.today()
@@ -294,7 +295,7 @@ class TestViews(TestCase):
                  'mpi_date': test[4],
                  button_names[test[5]]: button_values[test[5]]})
             self.assertEqual(res.status_code, HTTPStatus.OK)
-            self.assertTemplateUsed(res, 'cnb_mainpage.html')
+            self.assertTemplateUsed(res, 'cnb_mainpage.xhtml')
             check_html(self, res.content, key=num)
             soup = BeautifulSoup(res.content, 'html.parser')
             msg = soup.find('td', 'msg').select('div')

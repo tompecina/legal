@@ -2,13 +2,12 @@
 !.gitignore
 *~
 \#*
-/aux/
+/aux
 *.pyc
 *.po
 __pycache__/
 /secrets.py
-/collect/
-/htmlcov/
+/htmlcov
 *.css
 *.map
 *.log

@@ -828,7 +828,7 @@ def mainpage(request):
             if not infile:
                 var['errors'] = True
                 var['err_message'] = 'Nejprve zvolte soubor k načtení'
-                return render(request, 'knr_mainpage.html', var)
+                return render(request, 'knr_mainpage.xhtml', var)
             try:
                 dat = infile.read()
                 infile.close()
@@ -838,7 +838,7 @@ def mainpage(request):
             if msg:
                 var['errors'] = True
                 var['err_message'] = msg
-                return render(request, 'knr_mainpage.html', var)
+                return render(request, 'knr_mainpage.xhtml', var)
             if not setcalc(request, calc):  # pragma: no cover
                 return error(request)
             return redirect('knr:mainpage')
@@ -1169,7 +1169,7 @@ def mainpage(request):
     var['total'] = int(var['total_net'] + var['total_ex'] + var['total_vat'])
     for key in ('total_net', 'total_ex', 'total_vat', 'total'):
         var[key] = famt(var[key])
-    return render(request, 'knr_mainpage.html', var)
+    return render(request, 'knr_mainpage.xhtml', var)
 
 
 @require_http_methods(('GET', 'POST'))
@@ -1218,7 +1218,7 @@ def placeform(request, idx=0):
             err_message = INERR
     return render(
         request,
-        'knr_placeform.html',
+        'knr_placeform.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -1238,7 +1238,7 @@ def placelist(request):
             row.disabled = True
     return render(
         request,
-        'knr_placelist.html',
+        'knr_placelist.xhtml',
         {'app': APP,
          'page_title': 'Přehled míst',
          'rows': rows})
@@ -1257,7 +1257,7 @@ def placedel(request, idx=0):
     if request.method == 'GET':
         return render(
             request,
-            'knr_placedel.html',
+            'knr_placedel.xhtml',
             {'app': APP,
              'page_title': 'Smazání místa',
              'name': get_object_or_404(Place, pk=idx, uid=uid).name})
@@ -1306,7 +1306,7 @@ def carform(request, idx=0):
             err_message = INERR
     return render(
         request,
-        'knr_carform.html',
+        'knr_carform.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -1322,7 +1322,7 @@ def carlist(request):
     rows = Car.objects.filter(uid=request.user.id).order_by('abbr', 'name')
     return render(
         request,
-        'knr_carlist.html',
+        'knr_carlist.xhtml',
         {'app': APP,
          'page_title': 'Přehled vozidel',
          'rows': rows})
@@ -1338,7 +1338,7 @@ def cardel(request, idx=0):
     if request.method == 'GET':
         return render(
             request,
-            'knr_cardel.html',
+            'knr_cardel.xhtml',
             {'app': APP,
              'page_title':
              'Smazání vozidla',
@@ -1411,7 +1411,7 @@ def formulaform(request, idx=0):
         rates.append(form['rate_{}'.format(fuel)])
     return render(
         request,
-        'knr_formulaform.html',
+        'knr_formulaform.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -1437,7 +1437,7 @@ def formulalist(request):
             row.disabled = True
     return render(
         request,
-        'knr_formulalist.html',
+        'knr_formulalist.xhtml',
         {'app': APP,
          'page_title': 'Přehled předpisů',
          'fuels': FUELS,
@@ -1458,7 +1458,7 @@ def formuladel(request, idx=0):
     if request.method == 'GET':
         return render(
             request,
-            'knr_formuladel.html',
+            'knr_formuladel.xhtml',
             {'app': APP,
              'page_title': 'Smazání předpisu',
              'name': get_object_or_404(Formula, pk=idx, uid=uid).name})
@@ -1902,7 +1902,7 @@ def itemform(request, idx=0):
                     d2d(SUBFORM_FIELDS[typ], form.data, var)
                     for key in SUBFORM_FIELDS[typ]:
                         var['{}_error'.format(key)] = 'err' if form[key].errors else ''
-    return render(request, 'knr_itemform.html', var)
+    return render(request, 'knr_itemform.xhtml', var)
 
 
 @require_http_methods(('GET', 'POST'))
@@ -1935,7 +1935,7 @@ def itemlist(request):
         prn = num if presel[TYPE] else ''
         var['presel'].append({'idx': prn, 'text': presel[TEXT]})
         num += 1
-    return render(request, 'knr_itemlist.html', var)
+    return render(request, 'knr_itemlist.xhtml', var)
 
 
 @require_http_methods(('GET', 'POST'))
@@ -1956,7 +1956,7 @@ def itemdel(request, idx=0):
     if request.method == 'GET':
         var['idx'] = idx
         var['desc'] = calc.items[idx].description
-        return render(request, 'knr_itemdel.html', var)
+        return render(request, 'knr_itemdel.xhtml', var)
     else:
         button = getbutton(request)
         if button == 'yes':

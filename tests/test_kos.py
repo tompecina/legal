@@ -24,6 +24,7 @@ from http import HTTPStatus
 
 from django.test import SimpleTestCase, TestCase
 
+from legal.settings import FULL_CONTENT_TYPE
 from legal.kos import forms
 
 from tests.utils import check_html
@@ -582,13 +583,13 @@ class TestViews(TestCase):
         res = self.client.get('/kos/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTrue(res.has_header('content-type'))
-        self.assertEqual(res['content-type'], 'text/html; charset=utf-8')
-        self.assertTemplateUsed(res, 'kos_mainpage.html')
+        self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
+        self.assertTemplateUsed(res, 'kos_mainpage.xhtml')
         check_html(self, res.content)
 
         res = self.client.post('/kos/', {'submit_single': 'Vypočítat'})
         self.assertEqual(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, 'kos_mainpage.html')
+        self.assertTemplateUsed(res, 'kos_mainpage.xhtml')
         self.assertEqual(res.context['messages'], [('Chybné zadání', None)])
         check_html(self, res.content)
 

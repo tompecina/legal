@@ -78,7 +78,7 @@ def mainpage(request):
     rows = res[start:start + BATCH]
     return render(
         request,
-        'sir_mainpage.html',
+        'sir_mainpage.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -126,7 +126,7 @@ def insform(request, idx=0):
             err_message = INERR
     return render(
         request,
-        'sir_insform.html',
+        'sir_insform.xhtml',
         {'app': APP,
          'form': form,
          'page_title': page_title,
@@ -147,7 +147,7 @@ def insdel(request, idx=0):
     if request.method == 'GET':
         return render(
             request,
-            'sir_insdel.html',
+            'sir_insdel.xhtml',
             {'app': APP,
              'page_title': 'Smazání řízení',
              'desc': ins.desc})
@@ -171,7 +171,7 @@ def insdelall(request):
     if request.method == 'GET':
         return render(
             request,
-            'sir_insdelall.html',
+            'sir_insdelall.xhtml',
             {'app': APP,
              'page_title': 'Smazání všech řízení'})
     else:
@@ -254,7 +254,7 @@ def insbatchform(request):
                     LOGGER.info('User "{}" ({:d}) imported {:d} proceedings'.format(uname, uid, count), request)
                     return render(
                         request,
-                        'sir_insbatchresult.html',
+                        'sir_insbatchresult.xhtml',
                         {'app': APP,
                          'page_title': 'Import řízení ze souboru',
                          'count': count,
@@ -266,7 +266,7 @@ def insbatchform(request):
 
     return render(
         request,
-        'sir_insbatchform.html',
+        'sir_insbatchform.xhtml',
         {'app': APP,
          'page_title': 'Import řízení ze souboru',
          'err_message': err_message})
@@ -303,7 +303,7 @@ def courts(request):
         for x in Vec.objects.values_list('idOsobyPuvodce', flat=True).distinct()], key=lambda x: strxfrm(x['name']))
     return render(
         request,
-        'sir_courts.html',
+        'sir_courts.xhtml',
         {'app': APP,
          'page_title': 'Přehled insolvenčních soudů',
          'rows': rows})

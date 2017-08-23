@@ -38,17 +38,17 @@ urlpatterns = [
     url(r'^accounts/pwchanged/$',
         genrender,
         kwargs={
-            'template': 'pwchanged.html',
+            'template': 'pwchanged.xhtml',
             'page_title': 'Změna hesla'},
         name='pwchanged'),
     url(r'^accounts/login/$',
         LoginView.as_view(
-            template_name='login.html',
+            template_name='login.xhtml',
             extra_context={'page_title': 'Přihlášení', 'suppress_login': True}),
         name='login'),
     url(r'^accounts/logout/$',
         LogoutView.as_view(
-            template_name='logout.html',
+            template_name='logout.xhtml',
             extra_context={'page_title': 'Odhlášení'}),
         name='logout'),
     url(r'^accounts/user/$', userinfo, name='user'),
@@ -56,7 +56,7 @@ urlpatterns = [
     url(r'^accounts/useradded/$',
         genrender,
         kwargs={
-            'template': 'useradded.html',
+            'template': 'useradded.xhtml',
             'page_title': 'Registrace nového uživatele'},
         name='useradded'),
     url(r'^accounts/lostpw/$', lostpw, name='lostpw'),
@@ -64,7 +64,7 @@ urlpatterns = [
     url(r'^accounts/pwlinksent/$',
         genrender,
         kwargs={
-            'template': 'pwlinksent.html',
+            'template': 'pwlinksent.xhtml',
             'page_title': 'Obnovení hesla'},
         name='pwlinksent'),
     url(r'^about/$', about, name='about'),

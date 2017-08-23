@@ -41,10 +41,10 @@ STYPES = (str,)
 
 class BooleanField(forms.BooleanField):
 
-    pass
+    widget = widgets.CheckboxWidget
 
 
-class InlineBooleanField(forms.BooleanField):
+class InlineBooleanField(BooleanField):
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('label_suffix', '')
@@ -58,7 +58,7 @@ class CharField(forms.CharField):
 
 class ChoiceField(forms.ChoiceField):
 
-    pass
+    widget = widgets.SelectWidget
 
 
 class EmailField(forms.EmailField):

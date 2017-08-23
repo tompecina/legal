@@ -35,7 +35,7 @@ urlpatterns = [
     url(r'^debitdeleted/$',
         genrender,
         kwargs={
-            'template': 'hsp_debitdeleted.html',
+            'template': 'hsp_debitdeleted.xhtml',
             'page_title': 'Smazání závazku'},
         name='debitdeleted'),
     url(r'^creditform/(\d+)/$', creditform, name='creditform'),
@@ -44,7 +44,7 @@ urlpatterns = [
     url(r'^creditdeleted/$',
         genrender,
         kwargs={
-            'template': 'hsp_creditdeleted.html',
+            'template': 'hsp_creditdeleted.xhtml',
             'page_title': 'Smazání splátky'},
         name='creditdeleted'),
     url(r'^balanceform/(\d+)/$', balanceform, name='balanceform'),
@@ -53,7 +53,7 @@ urlpatterns = [
     url(r'^balancedeleted/$',
         genrender,
         kwargs={
-            'template': 'hsp_balancedeleted.html',
+            'template': 'hsp_balancedeleted.xhtml',
             'page_title': 'Smazání kontrolního bodu'},
         name='balancedeleted'),
     url(r'^fxrateform/(\d+)/$', fxrateform, name='fxrateform'),
@@ -62,7 +62,7 @@ urlpatterns = [
     url(r'^fxratedeleted/$',
         genrender,
         kwargs={
-            'template': 'hsp_fxratedeleted.html',
+            'template': 'hsp_fxratedeleted.xhtml',
             'page_title': 'Smazání kursu'},
         name='fxratedeleted'),
 ]

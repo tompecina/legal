@@ -1,0 +1,104 @@
+{% extends 'main.xhtml' %}
+
+{% comment %}
+
+udn/templates/udn_list.xhtml
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
+{% block page_contents %}
+
+<h1 class="list">{{ page_title }}</h1>
+
+{% if rows %}
+
+<div class="subtitle">Počet výsledků: {{ total }}</div>
+
+<table id="list" class="list">
+
+  <thead>
+
+    <tr>
+      <th>Datum</th>
+      <th>Jednací číslo</th>
+      <th>Oblast</th>
+      <th>Účastníci řízení</th>
+      <th>Rozhodnutí</th>
+    </tr>
+
+  </thead>
+
+  <tbody>
+
+    {% for row in rows %}
+
+    <tr>
+
+      <td>{{ row.date|date:'d.m.Y' }}</td>
+
+      <td>{% if row.senate %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}-{{ row.page }}</td>
+
+      <td>{{ row.agenda }}</td>
+
+      <td>
+	{% for party in row.parties.all %}
+	<div>{{ party.name }}</div>
+	{% endfor %}
+      </td>
+
+      <td class="act">
+	<a href="/repo/udn/{{ row.filename }}" target="_blank">[Z]</a>
+	{% if row.anonfilename %}
+	<a href="/repo/udn/{{ row.anonfilename }}" target="_blank">[A]</a>
+	{% endif %}
+
+      </td>
+
+    </tr>
+
+    {% endfor %}
+
+  </tbody>
+
+  {% if not suppress_table_footer %}
+
+  <tfoot>
+
+    <tr>
+      <td colspan="5" class="pager">
+	{% include 'pager.xhtml' %}</td>
+    </tr>
+
+  </tfoot>
+
+  {% endif %}
+
+</table>
+
+{% else %}
+
+<p>(žádné výsledky)</p>
+
+{% endif %}
+
+<p><a href="{% url 'udn:mainpage' %}">Zpět na vyhledávací formulář</a></p>
+
+{% endblock %}

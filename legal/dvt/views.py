@@ -99,7 +99,7 @@ def mainpage(request):
 
     return render(
         request,
-        'dvt_mainpage.html',
+        'dvt_mainpage.xhtml',
         {'app': APP,
          'form': form,
          'messages': messages,

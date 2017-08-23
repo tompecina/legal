@@ -120,7 +120,7 @@ def mainpage(request):
 
     return render(
         request,
-        'cnb_mainpage.html',
+        'cnb_mainpage.xhtml',
         {'app': APP,
          'form': form,
          'messages': messages,

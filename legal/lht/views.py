@@ -154,7 +154,7 @@ def mainpage(request):
             messages = [(INERR_SHORT, None)]
 
     return render(request,
-                  'lht_mainpage.html',
+                  'lht_mainpage.xhtml',
                   {'app': APP,
                    'page_title': 'Konec lhůty',
                    'messages': messages,
