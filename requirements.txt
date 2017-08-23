@@ -20,7 +20,6 @@ pylint==1.7.2
 pylint-django==0.7.2
 pylint-plugin-utils==0.2.6
 pyparsing==2.2.0
-pytidylib==0.3.2
 pytz==2017.2
 reportlab==3.4.0
 requests==2.18.4

@@ -24,4 +24,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <form method="post" enctype="multipart/form-data"{% if form_url %} action="{% url form_url %}"{% endif %}{% if form_id %} id="{{ form_id }}"{% endif %}>
 	    
-  <input type="hidden" name="csrfmiddlewaretoken" value="{{ request.META.CSRF_COOKIE }}"/>
+  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
