@@ -37,7 +37,7 @@ COMP_RE3 = compile(r'>\s+<')
 COMP_RE4 = compile(r'\s+(\S+="[^"]*")')
 COMP_RE5 = compile(r'(\S)\s+(/?)>')
 COMP_RE6 = compile(r'\s+(\S+)="\s*(\S+)\s*"')
-COMP_RE7 = compile(r'\s+(\S+)=""')
+COMP_RE7 = compile(r'\s+class="\s*"')
 COMP_RE8 = compile(r'  +')
 
 
