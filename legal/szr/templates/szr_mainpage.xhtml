@@ -53,13 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <td>
 	{% if row.court_id == 'NSS' %}
 	{% if row.auxid %}
-	<a href="http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&amp;kau_id={{ row.auxid }}" target="_blank">
-	  {% endif %}
-	  {% else %}
-	  <a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.court_id }}&amp;krajOrg={% if row.court.reports %}{{ row.court.reports_id }}{% else %}{{ row.court_id }}{% endif %}&amp;cisloSenatu={{ row.senate }}&amp;druhVec={{ row.register|urlencode }}&amp;bcVec={{ row.number }}&amp;rocnik={{ row.year }}&amp;typSoudu={% if row.court_id == 'NSJIMBM' %}ns{% else %}os{% endif %}&amp;autoFill=true&amp;type=spzn" target="_blank">
-	    {% endif %}
-	    {% if row.senate > 0 %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}{% if row.court_id != 'NSS' or row.auxid %}
-	  </a>
+	<a href="http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&amp;kau_id={{ row.auxid }}" target="_blank">{% endif %}{% else %}<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.court_id }}&amp;krajOrg={% if row.court.reports %}{{ row.court.reports_id }}{% else %}{{ row.court_id }}{% endif %}&amp;cisloSenatu={{ row.senate }}&amp;druhVec={{ row.register|urlencode }}&amp;bcVec={{ row.number }}&amp;rocnik={{ row.year }}&amp;typSoudu={% if row.court_id == 'NSJIMBM' %}ns{% else %}os{% endif %}&amp;autoFill=true&amp;type=spzn" target="_blank">{% endif %}{% if row.senate > 0 %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}{% if row.court_id != 'NSS' or row.auxid %}</a>
 	  {% endif %}
       </td>
 
