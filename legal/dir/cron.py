@@ -42,6 +42,7 @@ def dir_notice(uid):
         Discovered.objects.filter(uid=uid, vec__link__isnull=False).delete()
         LOGGER.info(
             'Non-empty notice prepared for user "{}" ({:d})'.format(User.objects.get(pk=uid).username, uid))
+    Debtor.objects.filter(uid=uid).update(notify=False)
     return text
 
 
@@ -64,6 +65,8 @@ def dir_check(osoba, vec):
                     uid_id=debtor.uid_id,
                     desc=debtor.desc,
                     vec=vec)[1]:
+                if debtor.uid.email:
+                    debtor.notify = True
                 LOGGER.info(
                     'New debtor "{}" detected for user "{}" ({:d})'.format(
                         debtor.desc,

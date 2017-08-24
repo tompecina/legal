@@ -334,6 +334,9 @@ class Insolvency(models.Model):
     detailed = models.BooleanField(
         default=False)
 
+    notify = models.BooleanField(
+        default=False)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)

@@ -46,7 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     {% for row in rows %}
     <tr>
-      <td>{{ row.party }}</td>
+      <td{% if row.notify %} class="highlight"{% endif %}>{{ row.party }}</td>
       <td>{{ row.party_opt_text }}</td>
       <td class="act">
 	<a href="{% url 'sur:partyform' row.id %}">upravit</a>

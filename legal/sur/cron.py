@@ -37,6 +37,7 @@ def sur_notice(uid):
             text += '   {}\n\n'.format(item.url)
         Found.objects.filter(uid=uid).delete()
         LOGGER.info('Non-empty notice prepared for user "{}" ({:d})'.format(User.objects.get(pk=uid).username, uid))
+    Party.objects.filter(uid=uid).update(notify=False)
     return text
 
 
@@ -53,6 +54,8 @@ def sur_check(name, court, senate, register, number, year, url):
                     number=number,
                     year=year,
                     url=url)[1]:
+                if party.uid.email:
+                    party.notify = True
                 LOGGER.info(
                     'New party "{}" detected for user "{}" ({:d})'
                     .format(name, User.objects.get(pk=party.uid_id).username, party.uid_id))

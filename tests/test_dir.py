@@ -560,6 +560,7 @@ class TestViews3(TransactionTestCase):
         res = self.client.post('/dir/debtordel/{:d}/'.format(debtor_id))
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
 
+
 class TestViews4(TransactionTestCase):
 
     def setUp(self):
@@ -783,3 +784,21 @@ rokNarozeníOd=1965,rokNarozeníDo=1966
 Test 2,název=Název:>,jméno=Jméno:=
 Test 3
 '''.replace('\n', '\r\n'))
+
+
+class TestViews7(TransactionTestCase):
+
+    fixtures = ('dir_test.json',)
+
+    def test_highlight(self):
+
+        self.client.force_login(User.objects.get(pk=1))
+        models.Debtor.objects.filter(desc='Test 14').update(notify=True)
+        res = self.client.get('/dir/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'dir_mainpage.xhtml')
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        highlight = soup.find_all('td', 'highlight')
+        self.assertEqual(len(highlight), 1)
+        self.assertEqual(highlight[0].text, 'Test 14')

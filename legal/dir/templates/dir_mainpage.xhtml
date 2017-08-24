@@ -45,7 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     {% for row in rows %}
     <tr>
-      <td>{{ row.desc }}</td>
+      <td{% if row.notify %} class="highlight"{% endif %}>{{ row.desc }}</td>
       <td class="act">
 	<a href="{% url 'dir:debtorform' row.id %}">upravit</a>
 	<a href="{% url 'dir:debtordel' row.id %}">smazat</a>

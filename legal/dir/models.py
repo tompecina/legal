@@ -96,6 +96,9 @@ class Debtor(models.Model):
             MaxValueValidator(curr_year)
         ))
 
+    notify = models.BooleanField(
+        default=False)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)

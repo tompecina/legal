@@ -47,6 +47,9 @@ class Party(models.Model):
             MinValueValidator(0),
             MaxValueValidator(len(TEXT_OPTS) - 1)))
 
+    notify = models.BooleanField(
+        default=False)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)

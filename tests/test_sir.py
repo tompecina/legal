@@ -784,3 +784,21 @@ class TestViews3(TransactionTestCase):
         self.assertTemplateUsed(res, 'sir_courts.xhtml')
         self.assertEqual(res.context['rows'], [{'name': 'Krajský soud v Ostravě', 'short': 'KSOS'}])
         check_html(self, res.content)
+
+
+class TestViews4(TransactionTestCase):
+
+    fixtures = ('sir_test1.json',)
+
+    def test_highlight(self):
+
+        self.client.force_login(User.objects.get(pk=1))
+        models.Insolvency.objects.filter(number=577, year=2013).update(notify=True)
+        res = self.client.get('/sir/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'sir_mainpage.xhtml')
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        highlight = soup.find_all('td', 'highlight')
+        self.assertEqual(len(highlight), 1)
+        self.assertEqual(highlight[0].text, 'Test 577/2013')

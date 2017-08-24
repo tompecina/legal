@@ -161,6 +161,8 @@ def cron_proctr():
                                     uid_id=ins.uid_id,
                                     desc=ins.desc,
                                     vec=vec)[1]:
+                                if ins.uid.email:
+                                    ins.notify = True
                                 LOGGER.info(
                                     'Change detected in proceedings "{}" ({}) for user "{}" ({:d})'
                                     .format(
@@ -442,4 +444,5 @@ def sir_notice(uid):
             text += '   {}\n\n'.format(ins.vec.link)
         Tracked.objects.filter(uid=uid, vec__link__isnull=False).delete()
         LOGGER.info('Non-empty notice prepared for user "{}" ({:d})'.format(User.objects.get(pk=uid).username, uid))
+    Insolvency.objects.filter(uid=uid).update(notify=False)
     return text

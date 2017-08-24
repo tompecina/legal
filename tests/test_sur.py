@@ -688,3 +688,41 @@ Test 2:<
 Test 3:>
 Test 4:=
 '''.replace('\n', '\r\n'))
+
+
+class TestViews7(TransactionTestCase):
+
+    fixtures = ('sur_test.json',)
+
+    def test_highlight(self):
+
+        models.Party.objects.create(
+            uid_id=1,
+            party='Test 1',
+            party_opt=0)
+
+        models.Party.objects.create(
+            uid_id=1,
+            party='Test 2',
+            party_opt=1)
+
+        models.Party.objects.create(
+            uid_id=1,
+            party='Test 3',
+            party_opt=2)
+
+        models.Party.objects.create(
+            uid_id=1,
+            party='Test 4',
+            party_opt=3)
+
+        self.client.force_login(User.objects.get(pk=1))
+        models.Party.objects.filter(party='Test 3').update(notify=True)
+        res = self.client.get('/sur/')
+        self.assertEqual(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
+        check_html(self, res.content)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        highlight = soup.find_all('td', 'highlight')
+        self.assertEqual(len(highlight), 1)
+        self.assertEqual(highlight[0].text, 'Test 3')
