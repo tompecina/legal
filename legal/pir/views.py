@@ -27,6 +27,7 @@ from json import dump
 
 from django.shortcuts import get_object_or_404, redirect, HttpResponse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.gzip import gzip_page
 from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
@@ -304,6 +305,7 @@ def xml_addparties(osoby, xml, tag, tagname):
         subtag.append(tag_addresses)
 
 
+@gzip_page
 @require_http_methods(('GET',))
 def xmllist(request):
 
@@ -382,6 +384,7 @@ def xmllist(request):
     return response
 
 
+@gzip_page
 @require_http_methods(('GET',))
 def csvlist(request):
 
@@ -474,6 +477,7 @@ def json_addparties(osoby):
     return res
 
 
+@gzip_page
 @require_http_methods(('GET',))
 def jsonlist(request):
 

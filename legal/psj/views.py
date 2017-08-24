@@ -28,6 +28,7 @@ from locale import strxfrm
 
 from django.shortcuts import redirect, HttpResponse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.gzip import gzip_page
 from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
@@ -150,6 +151,7 @@ def htmllist(request):
          'total': total})
 
 
+@gzip_page
 @require_http_methods(('GET',))
 def xmllist(request):
 
@@ -236,6 +238,7 @@ def xmllist(request):
     return response
 
 
+@gzip_page
 @require_http_methods(('GET',))
 def csvlist(request):
 
@@ -289,6 +292,7 @@ def csvlist(request):
     return response
 
 
+@gzip_page
 @require_http_methods(('GET',))
 def jsonlist(request):
 
