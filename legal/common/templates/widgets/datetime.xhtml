@@ -1,6 +1,6 @@
 {% comment %}
 
-common/templates/currency_widget.xhtml
+common/templates/widgets/datetime.xhtml
 
 Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 
@@ -22,10 +22,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
 
-<span class="currwidget">
-
-  {% for widget in widget.subwidgets %}
-  {% include widget.template_name %}
-  {% endfor %}
-
-</span>
+{% include 'widgets/input.xhtml' %}

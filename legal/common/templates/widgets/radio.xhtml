@@ -1,6 +1,6 @@
 {% comment %}
 
-common/templates/attrs.xhtml
+common/templates/widgets/radio.xhtml
 
 Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 
@@ -22,4 +22,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
 
-{% for name, value in widget.attrs.items %}{% if value is not False %} {{ name }}="{% if value is True %}{{ name }}{% else %}{{ value|stringformat:'s' }}{% endif %}"{% endif %}{% endfor %}
+{% include 'widgets/multiple_input.xhtml' %}

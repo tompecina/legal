@@ -34,7 +34,7 @@ from legal.sir.models import Vec
 
 class TextWidget(forms.TextInput):
 
-    template_name = 'text.xhtml'
+    template_name = 'widgets/text.xhtml'
 
     def __init__(self, **kwargs):
         attrs = {'size': self.size}
@@ -90,7 +90,7 @@ class XXXLWidget(TextWidget):
 
 class TextAreaWidget(forms.Textarea):
 
-    template_name = 'textarea.xhtml'
+    template_name = 'widgets/textarea.xhtml'
 
     def __init__(self, **kwargs):
         attrs = {'rows': '8', 'cols': '80'}
@@ -101,7 +101,7 @@ class TextAreaWidget(forms.Textarea):
 
 class CurrencyWidget(forms.TextInput):
 
-    template_name = 'text.xhtml'
+    template_name = 'widgets/text.xhtml'
 
     def __init__(self, **kwargs):
         attrs = {'size': '3', 'maxlength': '3', 'class': 'toupper'}
@@ -112,7 +112,7 @@ class CurrencyWidget(forms.TextInput):
 
 class HiddenWidget(forms.HiddenInput):
 
-    template_name = 'hidden.xhtml'
+    template_name = 'widgets/hidden.xhtml'
 
 
 COMP_RE = compile(r'>\s+(\S*)\s+<')
@@ -120,23 +120,24 @@ COMP_RE = compile(r'>\s+(\S*)\s+<')
 
 class RadioWidget(forms.RadioSelect):
 
-    option_template_name = 'radio.xhtml'
+    template_name = 'widgets/radio.xhtml'
+    option_template_name = 'widgets/radio_option.xhtml'
 
 
 class CheckboxWidget(forms.CheckboxInput):
 
-    template_name = 'checkbox.xhtml'
+    template_name = 'widgets/checkbox.xhtml'
 
 
 class SelectWidget(forms.Select):
 
-    template_name = 'select.xhtml'
-    option_template_name = 'select_option.xhtml'
+    template_name = 'widgets/select.xhtml'
+    option_template_name = 'widgets/select_option.xhtml'
 
 
 class SelectCurrencyWidget(forms.widgets.MultiWidget):
 
-    template_name = 'currencywidget.xhtml'
+    template_name = 'widgets/currency.xhtml'
 
     std_curr = ('EUR', 'CHF', 'GBP', 'JPY', 'RUB', 'USD')
 
@@ -157,7 +158,7 @@ class SelectCurrencyWidget(forms.widgets.MultiWidget):
 
 class DateWidget(forms.DateInput):
 
-    template_name = 'date.xhtml'
+    template_name = 'widgets/date.xhtml'
 
     def __init__(self, **kwargs):
         attrs = {'size': '10', 'maxlength': '12'}
@@ -214,4 +215,4 @@ class CourtWidget(XXSWidget):
                 county_group = {'label': reg_court.name, 'courts': county_courts}
                 context['optgroups'].append(county_group)
 
-        return mark_safe(get_template('select_court.xhtml').render(context))
+        return mark_safe(get_template('widgets/select_court.xhtml').render(context))

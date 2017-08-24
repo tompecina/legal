@@ -1,6 +1,6 @@
 {% comment %}
 
-common/templates/select_option.xhtml
+common/templates/widgets/email.xhtml
 
 Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 
@@ -22,4 +22,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
 
-<option value="{{ widget.value|stringformat:'s' }}"{% include "attrs.xhtml" %}>{{ widget.label }}</option>
+{% include 'widgets/input.xhtml' %}

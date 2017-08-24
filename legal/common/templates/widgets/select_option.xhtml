@@ -1,6 +1,6 @@
 {% comment %}
 
-common/templates/checkbox.xhtml
+common/templates/widgets/select_option.xhtml
 
 Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 
@@ -22,4 +22,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
 
-<input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{% endif %}{% include 'attrs.xhtml' %}/>
+<option value="{{ widget.value|stringformat:'s' }}"{% include 'widgets/attrs.xhtml' %}>{{ widget.label }}</option>
