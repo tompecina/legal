@@ -25,6 +25,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 
 from legal.common.glob import MIN_PWLEN
+from legal.common import widgets
 
 
 class ValidationError(forms.ValidationError):
@@ -41,22 +42,28 @@ class Form(forms.Form):
 class UserAddForm(UserChangeForm, UserCreationForm, Form):
 
     captcha = forms.CharField(
+        widget = widgets.LWidget(),
         label='Kontrolní otázka',
         help_text='Jak se jmenuje hlavní město České republiky?')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['first_name'].required = True
-        self.fields['first_name'].label = 'Jméno'
-        self.fields['last_name'].required = True
-        self.fields['last_name'].label = 'Příjmení'
         self.fields['username'].label = 'Uživatelské jméno'
         self.fields['username'].help_text = '(pouze písmena, číslice a znaky @/./+/-/_)'
+        self.fields['first_name'].required = True
+        self.fields['first_name'].label = 'Jméno'
+        self.fields['first_name'].widget = widgets.LWidget()
+        self.fields['last_name'].required = True
+        self.fields['last_name'].label = 'Příjmení'
+        self.fields['last_name'].widget = widgets.LWidget()
         self.fields['password1'].label = 'Heslo'
+        self.fields['password1'].widget = widgets.LWidget()
         self.fields['password2'].label = 'Potvrzení hesla'
         self.fields['password2'].help_text = '(zadejte heslo znovu, pro kontrolu)'
+        self.fields['password2'].widget = widgets.LWidget()
         self.fields['email'].label = 'E-mail'
         self.fields['email'].help_text = '(nepovinný)'
+        self.fields['email'].widget = widgets.LWidget()
         del self.fields['password']
         del self.fields['is_staff']
         del self.fields['is_active']
@@ -88,5 +95,6 @@ class UserAddForm(UserChangeForm, UserCreationForm, Form):
 class LostPwForm(Form):
 
     username = forms.CharField(
+        widget = widgets.MWidget(),
         max_length=150,
         label='Uživatelské jméno')

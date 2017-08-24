@@ -34,9 +34,9 @@ class DebtorForm(forms.Form):
     curr_year = date.today().year
 
     desc = fields.CharField(
+        widget=widgets.XXLWidget(),
         max_length=255,
-        label='Popis',
-        widget=widgets.XXLWidget())
+        label='Popis')
 
     court = fields.CharField(
         widget=widgets.CourtWidget(ins_courts=True),

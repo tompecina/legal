@@ -148,8 +148,8 @@ class CurrencyField(forms.MultiValueField):
         super().__init__(
             widget=widgets.SelectCurrencyWidget(czk=czk),
             fields=(
-                forms.CharField(),
-                forms.CharField(min_length=3, max_length=3)),
+                CharField(),
+                CharField(min_length=3, max_length=3)),
             *args,
             **kwargs)
 

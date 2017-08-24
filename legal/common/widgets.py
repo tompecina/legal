@@ -46,6 +46,7 @@ class TextWidget(forms.TextInput):
 class XXXSWidget(TextWidget):
 
     size = 4
+
     
 class XXSWidget(TextWidget):
 
@@ -89,18 +90,18 @@ class XXXLWidget(TextWidget):
 
 class TextAreaWidget(forms.Textarea):
 
+    template_name = 'textarea.xhtml'
+
     def __init__(self, **kwargs):
         attrs = {'rows': '8', 'cols': '80'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
         super().__init__(**kwargs)
 
-    def render(self, *args, **kwargs):
-        return mark_safe(
-            super().render(*args, **kwargs).replace('>\n', '>', 1))
-
 
 class CurrencyWidget(forms.TextInput):
+
+    template_name = 'text.xhtml'
 
     def __init__(self, **kwargs):
         attrs = {'size': '3', 'maxlength': '3', 'class': 'toupper'}
@@ -111,7 +112,7 @@ class CurrencyWidget(forms.TextInput):
 
 class HiddenWidget(forms.HiddenInput):
 
-    pass
+    template_name = 'hidden.xhtml'
 
 
 COMP_RE = compile(r'>\s+(\S*)\s+<')
@@ -156,6 +157,8 @@ class SelectCurrencyWidget(forms.widgets.MultiWidget):
 
 class DateWidget(forms.DateInput):
 
+    template_name = 'date.xhtml'
+
     def __init__(self, **kwargs):
         attrs = {'size': '10', 'maxlength': '12'}
         attrs.update(kwargs.get('attrs', {}))
@@ -172,7 +175,7 @@ class DateWidget(forms.DateInput):
         return res
 
 
-class CourtWidget(forms.TextInput):
+class CourtWidget(XXSWidget):
 
     def __init__(self, supreme_court=False, supreme_administrative_court=False, ins_courts=False, **kwargs):
         self.supreme_court = supreme_court
