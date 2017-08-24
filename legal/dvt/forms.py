@@ -20,29 +20,33 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from legal.common import forms, fields, widgets
+from django.core.exceptions import ValidationError
+
+from legal.common.forms import Form
+from legal.common.fields import DateField, IntegerField
+from legal.common.widgets import TextWidget, DateWidget
 
 
-class MainForm(forms.Form):
+class MainForm(Form):
 
-    beg_date = fields.DateField(
-        widget=widgets.DateWidget(),
+    beg_date = DateField(
+        widget=DateWidget(),
         label='Nástup trestu')
 
-    years = fields.IntegerField(
-        widget=widgets.XXXSWidget(),
+    years = IntegerField(
+        widget=TextWidget(4),
         required=False,
         min_value=0,
         label='let')
 
-    months = fields.IntegerField(
-        widget=widgets.XXXSWidget(),
+    months = IntegerField(
+        widget=TextWidget(4),
         required=False,
         min_value=0,
         label='měsíců')
 
-    days = fields.IntegerField(
-        widget=widgets.XXXSWidget(),
+    days = IntegerField(
+        widget=TextWidget(4),
         required=False,
         min_value=0,
         label='dnů')
@@ -50,17 +54,17 @@ class MainForm(forms.Form):
     def clean_years(self):
         data = self.cleaned_data['years']
         if not (data or self.data['months'] or self.data['days']):
-            raise forms.ValidationError('Missing duration')
+            raise ValidationError('Missing duration')
         return data
 
     def clean_months(self):
         data = self.cleaned_data['months']
         if not (data or self.data['years'] or self.data['days']):
-            raise forms.ValidationError('Missing duration')
+            raise ValidationError('Missing duration')
         return data
 
     def clean_days(self):
         data = self.cleaned_data['days']
         if not (data or self.data['years'] or self.data['months']):
-            raise forms.ValidationError('Missing duration')
+            raise ValidationError('Missing duration')
         return data

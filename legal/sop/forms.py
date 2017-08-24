@@ -22,7 +22,11 @@
 
 from datetime import date
 
-from legal.common import forms, fields, widgets
+from django.core.exceptions import ValidationError
+
+from legal.common.forms import Form
+from legal.common.fields import CharField, AmountField, CurrencyField, DateField, ChoiceField
+from legal.common.widgets import TextWidget, DateWidget, RadioWidget
 
 
 OPTS = (
@@ -37,33 +41,33 @@ OPTS = (
 )
 
 
-class MainForm(forms.Form):
+class MainForm(Form):
 
-    basis = fields.AmountField(
-        widget=widgets.MWidget(),
+    basis = AmountField(
+        widget=TextWidget(15),
         min_value=1,
         label='Základ',
         localize=True)
     basis.rounding = 2
 
-    curr = fields.CurrencyField(
+    curr = CurrencyField(
         label='Měna',
         czk=True,
         initial='CZK')
 
     today = date.today()
-    fx_date = fields.DateField(
-        widget=widgets.DateWidget(),
+    fx_date = DateField(
+        widget=DateWidget(),
         required=False,
         label='ke dni',
         initial=date(today.year, today.month, 1))
 
-    model = fields.CharField(
+    model = CharField(
         label='Úprava',
         initial='4')
 
-    opt = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    opt = ChoiceField(
+        widget=RadioWidget(),
         choices=OPTS,
         label='Zvláštní případy',
         initial='none')
@@ -71,5 +75,5 @@ class MainForm(forms.Form):
     def clean_fx_date(self):
         data = self.cleaned_data['fx_date']
         if self.data['curr_0'] != 'CZK' and not data:
-            raise forms.ValidationError('Date is required')
+            raise ValidationError('Date is required')
         return data

@@ -20,27 +20,29 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from legal.common import forms, fields, widgets
+from legal.common.forms import Form
+from legal.common.fields import CharField, IntegerField, BooleanField
+from legal.common.widgets import TextWidget
 
 
-class InsForm(forms.Form):
+class InsForm(Form):
 
-    number = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    number = IntegerField(
+        widget=TextWidget(8),
         min_value=1,
         initial='')
 
-    year = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    year = IntegerField(
+        widget=TextWidget(8),
         min_value=2008,
         initial='')
 
-    desc = fields.CharField(
-        widget=widgets.XXXLWidget(),
+    desc = CharField(
+        widget=TextWidget(60),
         max_length=255,
         label='Popis')
 
-    detailed = fields.BooleanField(
+    detailed = BooleanField(
         initial=True,
         label='Všechny události',
         required=False)

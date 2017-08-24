@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# knr/forms.py
+# knr/py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -20,65 +20,69 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from django.core.exceptions import ValidationError
+
 from legal.common.utils import more
-from legal.common import forms, fields, widgets
+from legal.common.forms import Form
+from legal.common.fields import CharField, AmountField, IntegerField, FloatField, DecimalField, BooleanField
+from legal.common.widgets import TextWidget, HiddenWidget
 from legal.knr.glob import FUELS
 from legal.knr.utils import getvat
 
 
-class PlaceForm(forms.Form):
+class PlaceForm(Form):
 
-    abbr = fields.CharField(
-        widget=widgets.SWidget(),
+    abbr = CharField(
+        widget=TextWidget(12),
         max_length=150,
         label='Zkratka')
 
-    name = fields.CharField(
-        widget=widgets.XXXLWidget(),
+    name = CharField(
+        widget=TextWidget(60),
         max_length=255,
         label='Název')
 
-    addr = fields.CharField(
-        widget=widgets.XXXLWidget(),
+    addr = CharField(
+        widget=TextWidget(60),
         max_length=255,
         label='Adresa')
 
-    lat = fields.FloatField(
-        widget=widgets.SWidget(),
+    lat = FloatField(
+        widget=TextWidget(12),
         min_value=-90,
         max_value=90,
         label='Zeměpisná šířka',
         localize=True)
 
-    lon = fields.FloatField(
-        widget=widgets.SWidget(),
+    lon = FloatField(
+        widget=TextWidget(12),
         min_value=-180,
         max_value=180,
         label='Zeměpisná délka',
         localize=True)
 
 
-class CarForm(forms.Form):
+class CarForm(Form):
 
-    abbr = fields.CharField(
-        widget=widgets.SWidget(),
+    abbr = CharField(
+        widget=TextWidget(12),
         max_length=150,
         label='Zkratka')
 
-    name = fields.CharField(
-        widget=widgets.XXXLWidget(),
+    name = CharField(
+        widget=TextWidget(60),
         max_length=255,
         label='Název')
 
-    fuel = fields.CharField(
-        widget=widgets.SWidget(),
+    fuel = CharField(
+        widget=TextWidget(12),
         max_length=150,
         label='Palivo',
         initial='BA95')
 
     for idx in range(1, 4):
-        locals()['cons{:d}'.format(idx)] = fields.DecimalField(
-            widget=widgets.XXXSWidget(),
+        locals()['cons{:d}'.format(idx)] = DecimalField(
+            widget=TextWidget(4),
             max_digits=3,
             decimal_places=1,
             min_value=0,
@@ -86,20 +90,20 @@ class CarForm(forms.Form):
             localize=True)
 
 
-class FormulaForm(forms.Form):
+class FormulaForm(Form):
 
-    abbr = fields.CharField(
-        widget=widgets.SWidget(),
+    abbr = CharField(
+        widget=TextWidget(12),
         max_length=150,
         label='Zkratka')
 
-    name = fields.CharField(
-        widget=widgets.XXXLWidget(),
+    name = CharField(
+        widget=TextWidget(60),
         max_length=255,
         label='Název')
 
-    flat = fields.DecimalField(
-        widget=widgets.XSWidget(),
+    flat = DecimalField(
+        widget=TextWidget(8),
         max_digits=5,
         decimal_places=2,
         min_value=0,
@@ -107,8 +111,8 @@ class FormulaForm(forms.Form):
         localize=True)
 
     for fuel in FUELS:
-        locals()['rate_' + fuel] = fields.DecimalField(
-            widget=widgets.XSWidget(),
+        locals()['rate_' + fuel] = DecimalField(
+            widget=TextWidget(8),
             max_digits=5,
             decimal_places=2,
             min_value=0,
@@ -117,19 +121,19 @@ class FormulaForm(forms.Form):
             localize=True)
 
 
-class CalcForm(forms.Form):
+class CalcForm(Form):
 
-    title = fields.CharField(
+    title = CharField(
         max_length=255,
         required=False)
 
-    calculation_note = fields.CharField(
+    calculation_note = CharField(
         required=False)
 
-    internal_note = fields.CharField(
+    internal_note = CharField(
         required=False)
 
-    vat_rate = fields.DecimalField(
+    vat_rate = DecimalField(
         max_digits=4,
         decimal_places=2,
         min_value=0,
@@ -143,81 +147,81 @@ class CalcForm(forms.Form):
         return self.cleaned_data['internal_note'].replace('\r', '')
 
 
-class GeneralForm(forms.Form):
+class GeneralForm(Form):
 
-    idx = fields.IntegerField(
-        widget=widgets.HiddenWidget())
+    idx = IntegerField(
+        widget=HiddenWidget())
 
-    description = fields.CharField(
+    description = CharField(
         max_length=255)
 
-    amount = fields.AmountField(
+    amount = AmountField(
         min_value=0,
         localize=True)
 
-    vat = fields.BooleanField(
+    vat = BooleanField(
         required=False)
 
-    numerator = fields.IntegerField(
+    numerator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    denominator = fields.IntegerField(
+    denominator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    item_note = fields.CharField(
+    item_note = CharField(
         required=False)
 
 
-class ServiceForm(forms.Form):
+class ServiceForm(Form):
 
-    idx = fields.IntegerField(
-        widget=widgets.HiddenWidget())
+    idx = IntegerField(
+        widget=HiddenWidget())
 
-    description = fields.CharField(
+    description = CharField(
         max_length=255)
 
-    vat = fields.BooleanField(
+    vat = BooleanField(
         required=False)
 
-    numerator = fields.IntegerField(
+    numerator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    denominator = fields.IntegerField(
+    denominator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    item_note = fields.CharField(
+    item_note = CharField(
         required=False)
 
-    major_number = fields.IntegerField(
+    major_number = IntegerField(
         min_value=0)
 
-    rate = fields.AmountField(
+    rate = AmountField(
         min_value=0,
         localize=True)
 
-    minor_number = fields.IntegerField(
+    minor_number = IntegerField(
         min_value=0)
 
-    multiple_number = fields.IntegerField(
+    multiple_number = IntegerField(
         min_value=1)
 
-    off10_flag = fields.BooleanField(
+    off10_flag = BooleanField(
         required=False)
 
-    off30_flag = fields.BooleanField(
+    off30_flag = BooleanField(
         required=False)
 
-    off30limit5000_flag = fields.BooleanField(
+    off30limit5000_flag = BooleanField(
         required=False)
 
-    off20limit5000_flag = fields.BooleanField(
+    off20limit5000_flag = BooleanField(
         required=False)
 
-    basis = fields.CharField(
+    basis = CharField(
         required=False)
 
     def clean_off10_flag(self):
@@ -227,7 +231,7 @@ class ServiceForm(forms.Form):
         off20limit5000_flag = 'off20limit5000_flag' in self.data
         if more(off10_flag, off30_flag, off30limit5000_flag,
             off20limit5000_flag):
-            raise forms.ValidationError("Incompatible flags")
+            raise ValidationError("Incompatible flags")
         return off10_flag
 
     def clean_off30_flag(self):
@@ -237,7 +241,7 @@ class ServiceForm(forms.Form):
         off20limit5000_flag = 'off20limit5000_flag' in self.data
         if more(off10_flag, off30_flag, off30limit5000_flag,
             off20limit5000_flag):
-            raise forms.ValidationError("Incompatible flags")
+            raise ValidationError("Incompatible flags")
         return off30_flag
 
     def clean_off30limit5000_flag(self):
@@ -247,7 +251,7 @@ class ServiceForm(forms.Form):
         off20limit5000_flag = 'off20limit5000_flag' in self.data
         if more(off10_flag, off30_flag, off30limit5000_flag,
             off20limit5000_flag):
-            raise forms.ValidationError("Incompatible flags")
+            raise ValidationError("Incompatible flags")
         return off30limit5000_flag
 
     def clean_off20limit5000_flag(self):
@@ -257,7 +261,7 @@ class ServiceForm(forms.Form):
         off20limit5000_flag = 'off20limit5000_flag' in self.data
         if more(off10_flag, off30_flag, off30limit5000_flag,
             off20limit5000_flag):
-            raise forms.ValidationError("Incompatible flags")
+            raise ValidationError("Incompatible flags")
         return off20limit5000_flag
 
     def clean(self):
@@ -273,488 +277,488 @@ class ServiceForm(forms.Form):
         return cleaned_data
 
 
-class ServiceSubform(forms.Form):
+class ServiceSubform(Form):
 
-    idx = fields.IntegerField(
-        widget=widgets.HiddenWidget())
+    idx = IntegerField(
+        widget=HiddenWidget())
 
-    description = fields.CharField(
+    description = CharField(
         required=False)
 
-    vat = fields.BooleanField(
+    vat = BooleanField(
         required=False)
 
-    numerator = fields.IntegerField(
+    numerator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    denominator = fields.IntegerField(
+    denominator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    item_note = fields.CharField(
+    item_note = CharField(
         required=False)
 
-    major_number = fields.CharField(
+    major_number = CharField(
         required=False)
 
-    rate = fields.CharField(
+    rate = CharField(
         required=False)
 
-    multiple_number = fields.CharField(
+    multiple_number = CharField(
         required=False)
 
-    minor_number = fields.CharField(
+    minor_number = CharField(
         required=False)
 
-    off10_flag = fields.BooleanField(
+    off10_flag = BooleanField(
         required=False)
 
-    off30_flag = fields.BooleanField(
+    off30_flag = BooleanField(
         required=False)
 
-    off30limit5000_flag = fields.BooleanField(
+    off30limit5000_flag = BooleanField(
         required=False)
 
-    off20limit5000_flag = fields.BooleanField(
+    off20limit5000_flag = BooleanField(
         required=False)
 
-    basis = fields.AmountField(
+    basis = AmountField(
         min_value=0,
         localize=True)
 
 
-class FlatForm(forms.Form):
+class FlatForm(Form):
 
-    idx = fields.IntegerField(
-        widget=widgets.HiddenWidget())
+    idx = IntegerField(
+        widget=HiddenWidget())
 
-    description = fields.CharField(
+    description = CharField(
         max_length=255)
 
-    vat = fields.BooleanField(
+    vat = BooleanField(
         required=False)
 
-    numerator = fields.IntegerField(
+    numerator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    denominator = fields.IntegerField(
+    denominator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    item_note = fields.CharField(
+    item_note = CharField(
         required=False)
 
-    rate = fields.AmountField(
+    rate = AmountField(
         min_value=0,
         localize=True)
 
-    collection_flag = fields.BooleanField(
+    collection_flag = BooleanField(
         required=False)
 
-    multiple_flag = fields.BooleanField(
+    multiple_flag = BooleanField(
         required=False)
 
-    multiple50_flag = fields.BooleanField(
+    multiple50_flag = BooleanField(
         required=False)
 
-    single_flag = fields.BooleanField(
+    single_flag = BooleanField(
         required=False)
 
-    halved_flag = fields.BooleanField(
+    halved_flag = BooleanField(
         required=False)
 
-    halved_appeal_flag = fields.BooleanField(
+    halved_appeal_flag = BooleanField(
         required=False)
 
-    basis = fields.CharField(
+    basis = CharField(
         required=False)
 
     def clean_halved_flag(self):
         halved_flag = 'halved_flag' in self.data
         halved_appeal_flag = 'halved_appeal_flag' in self.data
         if halved_flag and halved_appeal_flag:
-            raise forms.ValidationError("Incompatible flags")
+            raise ValidationError("Incompatible flags")
         return halved_flag
 
     def clean_halved_appeal_flag(self):
         halved_flag = 'halved_flag' in self.data
         halved_appeal_flag = 'halved_appeal_flag' in self.data
         if halved_flag and halved_appeal_flag:
-            raise forms.ValidationError("Incompatible flags")
+            raise ValidationError("Incompatible flags")
         return halved_appeal_flag
 
     def clean_multiple_flag(self):
         multiple_flag = 'multiple_flag' in self.data
         multiple50_flag = 'multiple50_flag' in self.data
         if multiple_flag and multiple50_flag:
-            raise forms.ValidationError("Incompatible flags")
+            raise ValidationError("Incompatible flags")
         return multiple_flag
 
     def clean_multiple50_flag(self):
         multiple_flag = 'multiple_flag' in self.data
         multiple50_flag = 'multiple50_flag' in self.data
         if multiple_flag and multiple50_flag:
-            raise forms.ValidationError("Incompatible flags")
+            raise ValidationError("Incompatible flags")
         return multiple50_flag
 
 
-class FlatSubform(forms.Form):
+class FlatSubform(Form):
 
-    idx = fields.IntegerField(
-        widget=widgets.HiddenWidget())
+    idx = IntegerField(
+        widget=HiddenWidget())
 
-    description = fields.CharField(
+    description = CharField(
         required=False)
 
-    vat = fields.BooleanField(
+    vat = BooleanField(
         required=False)
 
-    numerator = fields.IntegerField(
+    numerator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    denominator = fields.IntegerField(
+    denominator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    item_note = fields.CharField(
+    item_note = CharField(
         required=False)
 
-    rate = fields.CharField(
+    rate = CharField(
         required=False)
 
-    collection_flag = fields.BooleanField(
+    collection_flag = BooleanField(
         required=False)
 
-    multiple_flag = fields.BooleanField(
+    multiple_flag = BooleanField(
         required=False)
 
-    multiple50_flag = fields.BooleanField(
+    multiple50_flag = BooleanField(
         required=False)
 
-    single_flag = fields.BooleanField(
+    single_flag = BooleanField(
         required=False)
 
-    halved_flag = fields.BooleanField(
+    halved_flag = BooleanField(
         required=False)
 
-    halved_appeal_flag = fields.BooleanField(
+    halved_appeal_flag = BooleanField(
         required=False)
 
-    basis = fields.AmountField(
+    basis = AmountField(
         min_value=0,
         localize=True)
 
 
-class AdministrativeForm(forms.Form):
+class AdministrativeForm(Form):
 
-    idx = fields.IntegerField(
-        widget=widgets.HiddenWidget())
+    idx = IntegerField(
+        widget=HiddenWidget())
 
-    description = fields.CharField(
+    description = CharField(
         max_length=255)
 
-    vat = fields.BooleanField(
+    vat = BooleanField(
         required=False)
 
-    numerator = fields.IntegerField(
+    numerator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    denominator = fields.IntegerField(
+    denominator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    item_note = fields.CharField(
+    item_note = CharField(
         required=False)
 
-    number = fields.IntegerField(
+    number = IntegerField(
         min_value=0)
 
-    rate = fields.AmountField(
+    rate = AmountField(
         min_value=0,
         localize=True)
 
 
-class AdministrativeSubform(forms.Form):
+class AdministrativeSubform(Form):
 
-    idx = fields.IntegerField(
-        widget=widgets.HiddenWidget())
+    idx = IntegerField(
+        widget=HiddenWidget())
 
-    description = fields.CharField(
+    description = CharField(
         required=False)
 
-    vat = fields.BooleanField(
+    vat = BooleanField(
         required=False)
 
-    numerator = fields.IntegerField(
+    numerator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    denominator = fields.IntegerField(
+    denominator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    item_note = fields.CharField(
+    item_note = CharField(
         required=False)
 
-    number = fields.CharField(
+    number = CharField(
         required=False)
 
-    rate = fields.CharField(
+    rate = CharField(
         required=False)
 
 
-class TimeForm(forms.Form):
+class TimeForm(Form):
 
-    idx = fields.IntegerField(
-        widget=widgets.HiddenWidget())
+    idx = IntegerField(
+        widget=HiddenWidget())
 
-    description = fields.CharField(
+    description = CharField(
         max_length=255)
 
-    vat = fields.BooleanField(
+    vat = BooleanField(
         required=False)
 
-    numerator = fields.IntegerField(
+    numerator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    denominator = fields.IntegerField(
+    denominator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    item_note = fields.CharField(
+    item_note = CharField(
         required=False)
 
-    time_number = fields.IntegerField(
+    time_number = IntegerField(
         min_value=0)
 
-    time_rate = fields.AmountField(
+    time_rate = AmountField(
         min_value=0,
         localize=True)
 
 
-class TimeSubform(forms.Form):
+class TimeSubform(Form):
 
-    idx = fields.IntegerField(
-        widget=widgets.HiddenWidget())
+    idx = IntegerField(
+        widget=HiddenWidget())
 
-    description = fields.CharField(
+    description = CharField(
         required=False)
 
-    vat = fields.BooleanField(
+    vat = BooleanField(
         required=False)
 
-    numerator = fields.IntegerField(
+    numerator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    denominator = fields.IntegerField(
+    denominator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    item_note = fields.CharField(
+    item_note = CharField(
         required=False)
 
-    time_number = fields.CharField(
+    time_number = CharField(
         required=False)
 
-    time_rate = fields.CharField(
+    time_rate = CharField(
         required=False)
 
 
-class TravelForm(forms.Form):
+class TravelForm(Form):
 
-    idx = fields.IntegerField(
-        widget=widgets.HiddenWidget())
+    idx = IntegerField(
+        widget=HiddenWidget())
 
-    description = fields.CharField(
+    description = CharField(
         max_length=255)
 
-    from_name = fields.CharField(
+    from_name = CharField(
         max_length=255)
 
-    from_address = fields.CharField(
+    from_address = CharField(
         max_length=255)
 
-    from_lat = fields.FloatField(
+    from_lat = FloatField(
         min_value=-90,
         max_value=90,
         required=False,
         localize=True)
 
-    from_lon = fields.FloatField(
+    from_lon = FloatField(
         min_value=-180,
         max_value=180,
         required=False,
         localize=True)
 
-    to_name = fields.CharField(
+    to_name = CharField(
         max_length=255)
 
-    to_address = fields.CharField(
+    to_address = CharField(
         max_length=255)
 
-    to_lat = fields.FloatField(
+    to_lat = FloatField(
         min_value=-90,
         max_value=90,
         required=False,
         localize=True)
 
-    to_lon = fields.FloatField(
+    to_lon = FloatField(
         min_value=-180,
         max_value=180,
         required=False,
         localize=True)
 
-    trip_distance = fields.IntegerField(
+    trip_distance = IntegerField(
         min_value=0)
 
-    time_number = fields.IntegerField(
+    time_number = IntegerField(
         min_value=0)
 
-    time_rate = fields.AmountField(
+    time_rate = AmountField(
         min_value=0,
         localize=True)
 
-    trip_number = fields.IntegerField(
+    trip_number = IntegerField(
         min_value=0)
 
-    car_name = fields.CharField(
+    car_name = CharField(
         max_length=255)
 
-    fuel_name = fields.CharField(
+    fuel_name = CharField(
         max_length=150)
 
-    cons1 = fields.DecimalField(
+    cons1 = DecimalField(
         max_digits=3,
         decimal_places=1,
         min_value=0,
         localize=True)
 
-    cons2 = fields.DecimalField(
+    cons2 = DecimalField(
         max_digits=3,
         decimal_places=1,
         min_value=0,
         localize=True)
 
-    cons3 = fields.DecimalField(
+    cons3 = DecimalField(
         max_digits=3,
         decimal_places=1,
         min_value=0,
         localize=True)
 
-    formula_name = fields.CharField(
+    formula_name = CharField(
         max_length=255)
 
-    flat_rate = fields.DecimalField(
+    flat_rate = DecimalField(
         max_digits=5,
         decimal_places=2,
         min_value=0,
         localize=True)
 
-    fuel_price = fields.DecimalField(
+    fuel_price = DecimalField(
         max_digits=5,
         decimal_places=2,
         min_value=0,
         localize=True)
 
-    vat = fields.BooleanField(
+    vat = BooleanField(
         required=False)
 
-    numerator = fields.IntegerField(
+    numerator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    denominator = fields.IntegerField(
+    denominator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    item_note = fields.CharField(
+    item_note = CharField(
         required=False)
 
 
-class TravelSubform(forms.Form):
+class TravelSubform(Form):
 
-    idx = fields.IntegerField(
-        widget=widgets.HiddenWidget())
+    idx = IntegerField(
+        widget=HiddenWidget())
 
-    description = fields.CharField(
+    description = CharField(
         required=False)
 
-    from_name = fields.CharField(
+    from_name = CharField(
         required=False)
 
-    from_address = fields.CharField(
+    from_address = CharField(
         required=False)
 
-    from_lat = fields.CharField(
+    from_lat = CharField(
         required=False)
 
-    from_lon = fields.CharField(
+    from_lon = CharField(
         required=False)
 
-    to_name = fields.CharField(
+    to_name = CharField(
         required=False)
 
-    to_address = fields.CharField(
+    to_address = CharField(
         required=False)
 
-    to_lat = fields.CharField(
+    to_lat = CharField(
         required=False)
 
-    to_lon = fields.CharField(
+    to_lon = CharField(
         required=False)
 
-    trip_distance = fields.CharField(
+    trip_distance = CharField(
         required=False)
 
-    time_number = fields.CharField(
+    time_number = CharField(
         required=False)
 
-    time_rate = fields.CharField(
+    time_rate = CharField(
         required=False)
 
-    trip_number = fields.CharField(
+    trip_number = CharField(
         required=False)
 
-    car_name = fields.CharField(
+    car_name = CharField(
         required=False)
 
-    fuel_name = fields.CharField(
+    fuel_name = CharField(
         required=False)
 
-    cons1 = fields.CharField(
+    cons1 = CharField(
         required=False)
 
-    cons2 = fields.CharField(
+    cons2 = CharField(
         required=False)
 
-    cons3 = fields.CharField(
+    cons3 = CharField(
         required=False)
 
-    formula_name = fields.CharField(
+    formula_name = CharField(
         required=False)
 
-    flat_rate = fields.CharField(
+    flat_rate = CharField(
         required=False)
 
-    fuel_price = fields.CharField(
+    fuel_price = CharField(
         required=False)
 
-    vat = fields.BooleanField(
+    vat = BooleanField(
         required=False)
 
-    numerator = fields.IntegerField(
+    numerator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    denominator = fields.IntegerField(
+    denominator = IntegerField(
         min_value=1,
-        widget=widgets.XXXSWidget())
+        widget=TextWidget(4))
 
-    item_note = fields.CharField(
+    item_note = CharField(
         required=False)

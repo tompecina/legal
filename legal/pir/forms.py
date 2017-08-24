@@ -25,150 +25,152 @@ from datetime import date
 from django.core.validators import RegexValidator
 
 from legal.common.glob import TEXT_OPTS, FORMAT_OPTS, IC_RE_STR, RC_FULL_RE_STR
-from legal.common import forms, fields, widgets
+from legal.common.forms import Form
+from legal.common.fields import CharField, DateField, IntegerField, ChoiceField, InlineBooleanField
+from legal.common.widgets import TextWidget, DateWidget, RadioWidget, CourtWidget
 
 
 CURRYEAR = date.today().year
 
 
-class MainForm(forms.Form):
+class MainForm(Form):
 
-    court = fields.CharField(
-        widget=widgets.CourtWidget(ins_courts=True),
+    court = CharField(
+        widget=CourtWidget(ins_courts=True),
         max_length=255,
         required=False,
         label='Insolvenční soud',
         initial='')
 
-    senate = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    senate = IntegerField(
+        widget=TextWidget(8),
         min_value=0,
         initial='',
         required=False)
 
-    number = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    number = IntegerField(
+        widget=TextWidget(8),
         min_value=1,
         initial='',
         required=False)
 
-    year = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    year = IntegerField(
+        widget=TextWidget(8),
         min_value=2008,
         initial='',
         required=False)
 
-    date_first_from = fields.DateField(
-        widget=widgets.DateWidget(),
+    date_first_from = DateField(
+        widget=DateWidget(),
         required=False)
 
-    date_first_to = fields.DateField(
-        widget=widgets.DateWidget(),
+    date_first_to = DateField(
+        widget=DateWidget(),
         required=False)
 
-    date_last_from = fields.DateField(
-        widget=widgets.DateWidget(),
+    date_last_from = DateField(
+        widget=DateWidget(),
         required=False)
 
-    date_last_to = fields.DateField(
-        widget=widgets.DateWidget(),
+    date_last_to = DateField(
+        widget=DateWidget(),
         required=False)
 
-    name = fields.CharField(
-        widget=widgets.XLWidget(),
+    name = CharField(
+        widget=TextWidget(35),
         required=False,
         max_length=255,
         label='Příjmení/název')
 
-    name_opt = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    name_opt = ChoiceField(
+        widget=RadioWidget(),
         choices=TEXT_OPTS,
         initial='istartswith')
 
-    first_name = fields.CharField(
-        widget=widgets.XLWidget(),
+    first_name = CharField(
+        widget=TextWidget(35),
         required=False,
         max_length=255,
         label='Jméno')
 
-    first_name_opt = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    first_name_opt = ChoiceField(
+        widget=RadioWidget(),
         choices=TEXT_OPTS,
         initial='istartswith')
 
-    city = fields.CharField(
-        widget=widgets.XLWidget(),
+    city = CharField(
+        widget=TextWidget(35),
         required=False,
         max_length=255,
         label='Obec')
 
-    city_opt = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    city_opt = ChoiceField(
+        widget=RadioWidget(),
         choices=TEXT_OPTS,
         initial='istartswith')
 
-    genid = fields.CharField(
-        widget=widgets.LWidget(),
+    genid = CharField(
+        widget=TextWidget(20),
         required=False,
         max_length=9,
         validators=(RegexValidator(regex=IC_RE_STR),),
         label='IČO')
 
-    taxid = fields.CharField(
-        widget=widgets.LWidget(),
+    taxid = CharField(
+        widget=TextWidget(20),
         required=False,
         max_length=14,
         label='DIČ')
 
-    birthid = fields.CharField(
-        widget=widgets.LWidget(),
+    birthid = CharField(
+        widget=TextWidget(20),
         required=False,
         max_length=11,
         validators=(RegexValidator(regex=RC_FULL_RE_STR),),
         label='Rodné číslo')
 
-    date_birth = fields.DateField(
-        widget=widgets.DateWidget(),
+    date_birth = DateField(
+        widget=DateWidget(),
         required=False,
         label='Datum narození')
 
-    year_birth_from = fields.IntegerField(
-        widget=widgets.XXXSWidget(),
+    year_birth_from = IntegerField(
+        widget=TextWidget(4),
         min_value=1900,
         max_value=CURRYEAR,
         initial='',
         required=False)
 
-    year_birth_to = fields.IntegerField(
-        widget=widgets.XXXSWidget(),
+    year_birth_to = IntegerField(
+        widget=TextWidget(4),
         min_value=1900,
         max_value=CURRYEAR,
         initial='',
         required=False)
 
-    role_debtor = fields.InlineBooleanField(
+    role_debtor = InlineBooleanField(
         initial=True,
         required=False,
         label='dlužník')
 
-    role_trustee = fields.InlineBooleanField(
+    role_trustee = InlineBooleanField(
         required=False,
         label='správce')
 
-    role_creditor = fields.InlineBooleanField(
+    role_creditor = InlineBooleanField(
         required=False,
         label='věřitel')
 
-    deleted = fields.InlineBooleanField(
+    deleted = InlineBooleanField(
         required=False,
         label='včetně vyškrtnutých')
 
-    creditors = fields.InlineBooleanField(
+    creditors = InlineBooleanField(
         required=False,
         label='včetně seznamu věřitelů')
 
-    format = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    format = ChoiceField(
+        widget=RadioWidget(),
         choices=FORMAT_OPTS,
         label='Výstupní formát',
         initial='html')

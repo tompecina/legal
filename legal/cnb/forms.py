@@ -22,28 +22,30 @@
 
 from datetime import date
 
-from legal.common import forms, fields, widgets
+from legal.common.forms import Form
+from legal.common.fields import CurrencyField, DateField, AmountField
+from legal.common.widgets import TextWidget, DateWidget
 
 
-class MainForm(forms.Form):
+class MainForm(Form):
 
-    curr = fields.CurrencyField(
+    curr = CurrencyField(
         czk=False,
         label='Měna',
         initial='EUR')
 
-    fx_date = fields.DateField(
-        widget=widgets.DateWidget(today=True),
+    fx_date = DateField(
+        widget=DateWidget(today=True),
         label='ke dni',
         initial=date.today)
 
-    basis = fields.AmountField(
-        widget=widgets.MWidget(),
+    basis = AmountField(
+        widget=TextWidget(15),
         min_value=.01,
         label='Základ',
         localize=True)
 
-    mpi_date = fields.DateField(
-        widget=widgets.DateWidget(today=True),
+    mpi_date = DateField(
+        widget=DateWidget(today=True),
         label='Ke dni',
         initial=date.today)

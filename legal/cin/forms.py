@@ -20,19 +20,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from legal.common import forms, fields, widgets
+from legal.common.forms import Form
+from legal.common.fields import DateField
+from legal.common.widgets import DateWidget
 
 
-class MainForm(forms.Form):
+class MainForm(Form):
 
-    beg_date = fields.DateField(
-        widget=widgets.DateWidget(today=True),
+    beg_date = DateField(
+        widget=DateWidget(today=True),
         label='Počátek',
         help_text='(nezapočítává se)',
     )
 
-    end_date = fields.DateField(
-        widget=widgets.DateWidget(today=True),
+    end_date = DateField(
+        widget=DateWidget(today=True),
         label='Konec',
         help_text='(započítává se)',
     )

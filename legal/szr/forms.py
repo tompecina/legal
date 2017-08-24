@@ -24,15 +24,17 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 
 from legal.common.glob import REGISTER_RE_STR
-from legal.common import forms, fields, widgets
+from legal.common.forms import Form
+from legal.common.fields import CharField, EmailField, IntegerField
+from legal.common.widgets import TextWidget, CourtWidget
 from legal.szr.glob import SUPREME_COURT
 from legal.szr.models import Court
 
 
-class EmailForm(forms.Form):
+class EmailForm(Form):
 
-    email = fields.EmailField(
-        widget=widgets.XLWidget(),
+    email = EmailField(
+        widget=TextWidget(35),
         max_length=60,
         label='E-mail')
 
@@ -43,39 +45,39 @@ def courtval(court):
         raise ValidationError('Court does not exist')
 
 
-class ProcForm(forms.Form):
+class ProcForm(Form):
 
-    court = fields.CharField(
-        widget=widgets.CourtWidget(supreme_court=True, supreme_administrative_court=True),
+    court = CharField(
+        widget=CourtWidget(supreme_court=True, supreme_administrative_court=True),
         max_length=30,
         label='Soud',
         initial=SUPREME_COURT,
         validators=(courtval,))
 
-    senate = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    senate = IntegerField(
+        widget=TextWidget(8),
         min_value=0,
         initial='',
         required=False)
 
-    register = fields.CharField(
-        widget=widgets.XSWidget(),
+    register = CharField(
+        widget=TextWidget(8),
         max_length=30,
         initial='',
         validators=(RegexValidator(regex=REGISTER_RE_STR),))
 
-    number = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    number = IntegerField(
+        widget=TextWidget(8),
         min_value=1,
         initial='')
 
-    year = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    year = IntegerField(
+        widget=TextWidget(8),
         min_value=1990,
         initial='')
 
-    desc = fields.CharField(
-        widget=widgets.XXXLWidget(),
+    desc = CharField(
+        widget=TextWidget(60),
         max_length=255,
         label='Popis',
         required=False)

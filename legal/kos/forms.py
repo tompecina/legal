@@ -21,100 +21,102 @@
 #
 
 from legal.common.utils import getpreset
-from legal.common import forms, fields, widgets
+from legal.common.forms import Form
+from legal.common.fields import AmountField, IntegerField, DecimalField, BooleanField
+from legal.common.widgets import TextWidget
 
 
-class MainForm(forms.Form):
+class MainForm(Form):
 
-    netincome = fields.AmountField(
-        widget=widgets.XSWidget(),
+    netincome = AmountField(
+        widget=TextWidget(8),
         min_value=0,
         label='Čistá mzda',
         localize=True)
     netincome.rounding = 0
 
-    netincome2 = fields.AmountField(
-        widget=widgets.XSWidget(),
+    netincome2 = AmountField(
+        widget=TextWidget(8),
         min_value=0,
         localize=True,
         initial=0)
     netincome2.rounding = 0
 
-    partner = fields.BooleanField(
+    partner = BooleanField(
         required=False,
         label='Manžel/manželka',
         initial=False)
 
-    partner2 = fields.BooleanField(
+    partner2 = BooleanField(
         required=True,
         initial=True,
         disabled=True)
 
-    deps = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    deps = IntegerField(
+        widget=TextWidget(8),
         min_value=0,
         label='Počet dalších vyživovaných osob',
         initial=0)
 
-    deps2 = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    deps2 = IntegerField(
+        widget=TextWidget(8),
         min_value=0,
         initial=0)
 
-    subs = fields.AmountField(
-        widget=widgets.XSWidget(),
+    subs = AmountField(
+        widget=TextWidget(8),
         min_value=0,
         label='Zákonné životní minimum',
         localize=True,
         initial=getpreset('SUBS', as_func=True))
     subs.rounding = 0
 
-    apt = fields.AmountField(
-        widget=widgets.XSWidget(),
+    apt = AmountField(
+        widget=TextWidget(8),
         min_value=0,
         label='Normativní náklady na bydlení',
         localize=True,
         initial=getpreset('APT', as_func=True))
     apt.rounding = 0
 
-    fee = fields.AmountField(
-        widget=widgets.XSWidget(),
+    fee = AmountField(
+        widget=TextWidget(8),
         min_value=0,
         label='Měsíční odměna správce',
         localize=True,
         initial=getpreset('FEE', as_func=True))
     fee.rounding = 0
 
-    fee2 = fields.AmountField(
-        widget=widgets.XSWidget(),
+    fee2 = AmountField(
+        widget=TextWidget(8),
         min_value=0,
         localize=True,
         initial=getpreset('FEE2', as_func=True))
     fee2.rounding = 0
 
-    exp = fields.AmountField(
-        widget=widgets.XSWidget(),
+    exp = AmountField(
+        widget=TextWidget(8),
         min_value=0,
         label='Měsíční hotové výdaje správce',
         localize=True,
         initial=getpreset('EXP', as_func=True))
     exp.rounding = 0
 
-    exp2 = fields.AmountField(
-        widget=widgets.XSWidget(),
+    exp2 = AmountField(
+        widget=TextWidget(8),
         min_value=0,
         label='Měsíční hotové výdaje správce',
         localize=True,
         initial=getpreset('EXP2', as_func=True))
     exp2.rounding = 0
 
-    vat = fields.BooleanField(
+    vat = BooleanField(
         required=False,
         label='Správce je plátcem DPH',
         initial=True)
 
-    vatrate = fields.DecimalField(
-        widget=widgets.XSWidget(),
+    vatrate = DecimalField(
+        widget=TextWidget(8),
         max_digits=4,
         decimal_places=2,
         min_value=0,

@@ -25,84 +25,86 @@ from datetime import date
 from django.core.validators import RegexValidator
 
 from legal.common.glob import TEXT_OPTS, IC_RE_STR, RC_FULL_RE_STR
-from legal.common import forms, fields, widgets
+from legal.common.forms import Form
+from legal.common.fields import CharField, ChoiceField, DateField, IntegerField
+from legal.common.widgets import TextWidget, DateWidget, RadioWidget, CourtWidget
 from legal.dir.glob import MAX_LENGTH
 
 
-class DebtorForm(forms.Form):
+class DebtorForm(Form):
 
     curr_year = date.today().year
 
-    desc = fields.CharField(
-        widget=widgets.XXLWidget(),
+    desc = CharField(
+        widget=TextWidget(50),
         max_length=255,
         label='Popis')
 
-    court = fields.CharField(
-        widget=widgets.CourtWidget(ins_courts=True),
+    court = CharField(
+        widget=CourtWidget(ins_courts=True),
         max_length=255,
         required=False,
         label='Insolvenční soud',
         initial='')
 
-    name = fields.CharField(
-        widget=widgets.XXLWidget(),
+    name = CharField(
+        widget=TextWidget(50),
         max_length=MAX_LENGTH,
         required=False,
         label='Příjmení/název')
 
-    name_opt = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    name_opt = ChoiceField(
+        widget=RadioWidget(),
         choices=TEXT_OPTS,
         label='Posice',
         initial='icontains')
 
-    first_name = fields.CharField(
-        widget=widgets.XXLWidget(),
+    first_name = CharField(
+        widget=TextWidget(50),
         max_length=MAX_LENGTH,
         required=False,
         label='Jméno')
 
-    first_name_opt = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    first_name_opt = ChoiceField(
+        widget=RadioWidget(),
         choices=TEXT_OPTS,
         label='Posice',
         initial='icontains')
 
-    genid = fields.CharField(
-        widget=widgets.LWidget(),
+    genid = CharField(
+        widget=TextWidget(20),
         required=False,
         max_length=9,
         validators=(RegexValidator(regex=IC_RE_STR),),
         label='IČO')
 
-    taxid = fields.CharField(
-        widget=widgets.LWidget(),
+    taxid = CharField(
+        widget=TextWidget(20),
         required=False,
         max_length=14,
         label='DIČ')
 
-    birthid = fields.CharField(
-        widget=widgets.LWidget(),
+    birthid = CharField(
+        widget=TextWidget(20),
         required=False,
         max_length=11,
         validators=(RegexValidator(regex=RC_FULL_RE_STR),),
         label='Rodné číslo')
 
-    date_birth = fields.DateField(
-        widget=widgets.DateWidget(),
+    date_birth = DateField(
+        widget=DateWidget(),
         required=False,
         label='Datum narození')
 
-    year_birth_from = fields.IntegerField(
-        widget=widgets.XXXSWidget(),
+    year_birth_from = IntegerField(
+        widget=TextWidget(4),
         min_value=1900,
         max_value=curr_year,
         initial='',
         required=False)
 
-    year_birth_to = fields.IntegerField(
-        widget=widgets.XXXSWidget(),
+    year_birth_to = IntegerField(
+        widget=TextWidget(4),
         min_value=1900,
         max_value=curr_year,
         initial='',

@@ -20,7 +20,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from legal.common import forms, fields, widgets
+from django.core.exceptions import ValidationError
+
+from legal.common.forms import Form
+from legal.common.fields import CharField, ChoiceField, DateField, DecimalField, CurrencyField
+from legal.common.widgets import TextWidget, DateWidget, RadioWidget, TextAreaWidget, HiddenWidget
 
 
 TR_OPTS = (
@@ -35,26 +39,26 @@ REP_OPTS = (
 )
 
 
-class TransForm(forms.Form):
+class TransForm(Form):
 
-    description = fields.CharField(
-        widget=widgets.XXXLWidget(),
+    description = CharField(
+        widget=TextWidget(60),
         max_length=255,
         required=False,
         label='Popis')
 
-    transaction_type = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    transaction_type = ChoiceField(
+        widget=RadioWidget(),
         choices=TR_OPTS,
         label='Typ',
         initial='balance')
 
-    date = fields.DateField(
-        widget=widgets.DateWidget(today=True),
+    date = DateField(
+        widget=DateWidget(today=True),
         label='Datum')
 
-    amount = fields.DecimalField(
-        widget=widgets.MWidget(),
+    amount = DecimalField(
+        widget=TextWidget(15),
         max_digits=15,
         decimal_places=2,
         min_value=.0,
@@ -62,8 +66,8 @@ class TransForm(forms.Form):
         label='Částka',
         localize=True)
 
-    repayment_preference = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    repayment_preference = ChoiceField(
+        widget=RadioWidget(),
         choices=REP_OPTS,
         required=False,
         label='Přednost',
@@ -72,7 +76,7 @@ class TransForm(forms.Form):
     def clean_amount(self):
         data = self.cleaned_data['amount']
         if self.data['transaction_type'] != 'balance' and not data:
-            raise forms.ValidationError('Amount is required')
+            raise ValidationError('Amount is required')
         return data
 
 
@@ -91,75 +95,75 @@ INT_OPTS = (
 )
 
 
-class MainForm(forms.Form):
+class MainForm(Form):
 
-    title = fields.CharField(
-        widget=widgets.XXXLWidget(),
+    title = CharField(
+        widget=TextWidget(60),
         max_length=255,
         required=False,
         label='Popis')
 
-    note = fields.CharField(
-        widget=widgets.TextAreaWidget(),
+    note = CharField(
+        widget=TextAreaWidget(),
         required=False,
         label='Poznámka')
 
-    internal_note = fields.CharField(
-        widget=widgets.TextAreaWidget(),
+    internal_note = CharField(
+        widget=TextAreaWidget(),
         required=False,
         label='Interní poznámka')
 
-    currency = fields.CurrencyField(
+    currency = CurrencyField(
         label='Měna',
         initial='CZK')
 
-    rounding = fields.CharField(
+    rounding = CharField(
         label='Zaokrouhlení')
 
-    model = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    model = ChoiceField(
+        widget=RadioWidget(),
         choices=INT_OPTS,
         label='Úročení')
 
-    fixed_amount = fields.DecimalField(
-        widget=widgets.MWidget(),
+    fixed_amount = DecimalField(
+        widget=TextWidget(15),
         max_digits=15,
         decimal_places=2,
         min_value=0.0,
         required=False,
         localize=True)
 
-    pa_rate = fields.DecimalField(
-        widget=widgets.MWidget(),
+    pa_rate = DecimalField(
+        widget=TextWidget(15),
         max_digits=12,
         decimal_places=6,
         required=False,
         localize=True)
 
-    ydconv = fields.CharField(
+    ydconv = CharField(
         label='Konvence',
         required=False)
 
-    pm_rate = fields.DecimalField(
-        widget=widgets.MWidget(),
+    pm_rate = DecimalField(
+        widget=TextWidget(15),
         max_digits=12,
         decimal_places=6,
         required=False,
         localize=True)
 
-    mdconv = fields.CharField(
+    mdconv = CharField(
         label='Konvence',
         required=False)
 
-    pd_rate = fields.DecimalField(
-        widget=widgets.MWidget(),
+    pd_rate = DecimalField(
+        widget=TextWidget(15),
         max_digits=12,
         decimal_places=6,
         required=False,
         localize=True)
 
-    next = fields.CharField(
-        widget=widgets.HiddenWidget(),
+    next = CharField(
+        widget=HiddenWidget(),
         required=False)
 
     def clean_note(self):
@@ -171,23 +175,23 @@ class MainForm(forms.Form):
     def clean_fixed_amount(self):
         data = self.cleaned_data['fixed_amount']
         if self.data['model'] == 'fixed' and not data:
-            raise forms.ValidationError('Amount is required')
+            raise ValidationError('Amount is required')
         return data
 
     def clean_pa_rate(self):
         data = self.cleaned_data['pa_rate']
         if self.data['model'] == 'per_annum' and not data:
-            raise forms.ValidationError('Interest rate is required')
+            raise ValidationError('Interest rate is required')
         return data
 
     def clean_pm_rate(self):
         data = self.cleaned_data['pm_rate']
         if self.data['model'] == 'per_mensem' and not data:
-            raise forms.ValidationError('Interest rate is required')
+            raise ValidationError('Interest rate is required')
         return data
 
     def clean_pd_rate(self):
         data = self.cleaned_data['pd_rate']
         if self.data['model'] == 'per_diem' and not data:
-            raise forms.ValidationError('Interest rate is required')
+            raise ValidationError('Interest rate is required')
         return data

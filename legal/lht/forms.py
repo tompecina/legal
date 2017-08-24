@@ -23,8 +23,11 @@
 from datetime import date
 
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
 
-from legal.common import forms, fields, widgets
+from legal.common.forms import Form
+from legal.common.fields import CharField, DateField, IntegerField, ChoiceField
+from legal.common.widgets import TextWidget, DateWidget, RadioWidget
 from legal.lht.glob import MIN_DATE, MAX_DATE, MIN_DUR, MAX_DUR
 
 
@@ -45,28 +48,28 @@ PRESETS = (
 )
 
 
-class MainForm(forms.Form):
+class MainForm(Form):
 
-    beg_date = fields.DateField(
-        widget=widgets.DateWidget(today=True),
+    beg_date = DateField(
+        widget=DateWidget(today=True),
         label='Počátek',
         validators=(
             MinValueValidator(MIN_DATE),
             MaxValueValidator(MAX_DATE)),
         initial=date.today)
 
-    dur = fields.IntegerField(
-        widget=widgets.XXXSWidget(),
+    dur = IntegerField(
+        widget=TextWidget(4),
         validators=(
             MinValueValidator(MIN_DUR),
             MaxValueValidator(MAX_DUR)),
         required=False)
 
-    unit = fields.CharField(
+    unit = CharField(
         required=False)
 
-    preset = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    preset = ChoiceField(
+        widget=RadioWidget(),
         choices=PRESETS,
         label='Délka',
         initial='none')
@@ -74,5 +77,5 @@ class MainForm(forms.Form):
     def clean_dur(self):
         data = self.cleaned_data['dur']
         if 'submit_set_beg_date' not in self.data and self.data['preset'] == 'none' and data is None:
-            raise forms.ValidationError('Duration may not be empty')
+            raise ValidationError('Duration may not be empty')
         return data

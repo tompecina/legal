@@ -20,33 +20,38 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from django.core.exceptions import ValidationError
+
 from legal.common.glob import CURRENCY_RE
-from legal.common import forms, fields, widgets
+from legal.common.forms import Form
+from legal.common.fields import (
+    CharField, DateField, AmountField, IntegerField, FloatField, CurrencyField, ChoiceField, BooleanField)
+from legal.common.widgets import TextWidget, DateWidget, RadioWidget, TextAreaWidget, CurrencyWidget, HiddenWidget
 
 
-class MainForm(forms.Form):
+class MainForm(Form):
 
-    title = fields.CharField(
-        widget=widgets.XXXLWidget(),
+    title = CharField(
+        widget=TextWidget(60),
         max_length=255,
         required=False,
         label='Popis')
 
-    note = fields.CharField(
-        widget=widgets.TextAreaWidget(),
+    note = CharField(
+        widget=TextAreaWidget(),
         required=False,
         label='Poznámka')
 
-    internal_note = fields.CharField(
-        widget=widgets.TextAreaWidget(),
+    internal_note = CharField(
+        widget=TextAreaWidget(),
         required=False,
         label='Interní poznámka')
 
-    rounding = fields.CharField(
+    rounding = CharField(
         label='Zaokrouhlení')
 
-    next = fields.CharField(
-        widget=widgets.HiddenWidget(),
+    next = CharField(
+        widget=HiddenWidget(),
         required=False)
 
     def clean_note(self):
@@ -70,141 +75,141 @@ DEB_OPTS = (
 )
 
 
-class DebitForm(forms.Form):
+class DebitForm(Form):
 
-    description = fields.CharField(
-        widget=widgets.XXLWidget(),
+    description = CharField(
+        widget=TextWidget(50),
         max_length=50,
         required=False,
         label='Popis')
 
-    fixed_amount = fields.AmountField(
-        widget=widgets.MWidget(),
+    fixed_amount = AmountField(
+        widget=TextWidget(15),
         min_value=.01,
         required=False,
         localize=True)
 
-    fixed_currency = fields.CurrencyField(
+    fixed_currency = CurrencyField(
         label='v měně',
         initial='CZK')
 
-    fixed_date = fields.DateField(
-        widget=widgets.DateWidget(),
+    fixed_date = DateField(
+        widget=DateWidget(),
         required=False,
         label='Splatnost')
 
-    principal_debit = fields.IntegerField(
+    principal_debit = IntegerField(
         required=False,
         label='Z')
 
-    principal_amount = fields.AmountField(
-        widget=widgets.MWidget(),
+    principal_amount = AmountField(
+        widget=TextWidget(15),
         min_value=.01,
         required=False,
         label='Částka',
         localize=True)
 
-    principal_currency = fields.CurrencyField(
+    principal_currency = CurrencyField(
         label='v měně',
         initial='CZK')
 
-    date_from = fields.DateField(
-        widget=widgets.DateWidget(),
+    date_from = DateField(
+        widget=DateWidget(),
         required=False,
         label='Od')
 
-    date_to = fields.DateField(
-        widget=widgets.DateWidget(),
+    date_to = DateField(
+        widget=DateWidget(),
         required=False,
         label='Do')
 
-    model = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    model = ChoiceField(
+        widget=RadioWidget(),
         choices=DEB_OPTS,
         initial='fixed')
 
-    pa_rate = fields.FloatField(
-        widget=widgets.MWidget(),
+    pa_rate = FloatField(
+        widget=TextWidget(15),
         min_value=0.0,
         required=False,
         localize=True)
 
-    ydconv = fields.CharField(
+    ydconv = CharField(
         label='Konvence',
         required=False)
 
-    pm_rate = fields.FloatField(
-        widget=widgets.MWidget(),
+    pm_rate = FloatField(
+        widget=TextWidget(15),
         min_value=0.0,
         required=False,
         localize=True)
 
-    mdconv = fields.CharField(
+    mdconv = CharField(
         label='Konvence',
         required=False)
 
-    pd_rate = fields.FloatField(
-        widget=widgets.MWidget(),
+    pd_rate = FloatField(
+        widget=TextWidget(15),
         min_value=0.0,
         required=False,
         localize=True)
 
-    lock_fixed = fields.BooleanField(
-        widget=widgets.HiddenWidget(),
+    lock_fixed = BooleanField(
+        widget=HiddenWidget(),
         required=False)
 
     def clean_fixed_amount(self):
         data = self.cleaned_data['fixed_amount']
         if self.data['model'] == 'fixed' and not data:
-            raise forms.ValidationError('Amount is required')
+            raise ValidationError('Amount is required')
         return data
 
     def clean_fixed_currency(self):
         data = self.cleaned_data['fixed_currency']
         if self.data['model'] == 'fixed' and not data:
-            raise forms.ValidationError('Currency is required')
+            raise ValidationError('Currency is required')
         return data
 
     def clean_fixed_date(self):
         data = self.cleaned_data['fixed_date']
         if self.data['model'] == 'fixed' and not data:
-            raise forms.ValidationError('Date is required')
+            raise ValidationError('Date is required')
         return data
 
     def clean_principal_amount(self):
         data = self.cleaned_data['principal_amount']
         if self.data['model'] != 'fixed' and self.cleaned_data['principal_debit'] == 0 and not data:
-            raise forms.ValidationError('Principal amount is required')
+            raise ValidationError('Principal amount is required')
         return data
 
     def clean_principal_currency(self):
         data = self.cleaned_data['principal_currency']
         if self.data['model'] != 'fixed' and self.cleaned_data['principal_debit'] == 0 and not data:
-            raise forms.ValidationError('Principal currency is required')
+            raise ValidationError('Principal currency is required')
         return data
 
     def clean_date_from(self):
         data = self.cleaned_data['date_from']
         if self.data['model'] != 'fixed' and self.cleaned_data['principal_debit'] == 0 and not data:
-            raise forms.ValidationError('Starting date is required')
+            raise ValidationError('Starting date is required')
         return data
 
     def clean_pa_rate(self):
         data = self.cleaned_data['pa_rate']
         if self.data['model'] == 'per_annum' and not data:
-            raise forms.ValidationError('Interest rate is required')
+            raise ValidationError('Interest rate is required')
         return data
 
     def clean_pm_rate(self):
         data = self.cleaned_data['pm_rate']
         if self.data['model'] == 'per_mensem' and not data:
-            raise forms.ValidationError('Interest rate is required')
+            raise ValidationError('Interest rate is required')
         return data
 
     def clean_pd_rate(self):
         data = self.cleaned_data['pd_rate']
         if self.data['model'] == 'per_diem' and not data:
-            raise forms.ValidationError('Interest rate is required')
+            raise ValidationError('Interest rate is required')
         return data
 
     def clean(self):
@@ -220,90 +225,90 @@ class DebitForm(forms.Form):
         return cleaned_data
 
 
-class CreditForm(forms.Form):
+class CreditForm(Form):
 
-    description = fields.CharField(
-        widget=widgets.XXLWidget(),
+    description = CharField(
+        widget=TextWidget(50),
         max_length=50,
         required=False,
         label='Popis')
 
-    date = fields.DateField(
-        widget=widgets.DateWidget(),
+    date = DateField(
+        widget=DateWidget(),
         label='Datum')
 
-    amount = fields.AmountField(
-        widget=widgets.MWidget(),
+    amount = AmountField(
+        widget=TextWidget(15),
         min_value=.01,
         label='Částka',
         localize=True)
 
-    currency = fields.CurrencyField(
+    currency = CurrencyField(
         label='Měna',
         initial='CZK')
 
 
-class BalanceForm(forms.Form):
+class BalanceForm(Form):
 
-    description = fields.CharField(
-        widget=widgets.XXLWidget(),
+    description = CharField(
+        widget=TextWidget(50),
         max_length=50,
         required=False,
         label='Popis')
 
-    date = fields.DateField(
-        widget=widgets.DateWidget(today=True),
+    date = DateField(
+        widget=DateWidget(today=True),
         label='Datum')
 
 
-class FXform(forms.Form):
+class FXform(Form):
 
-    currency_from = fields.CharField(
-        widget=widgets.CurrencyWidget(),
+    currency_from = CharField(
+        widget=CurrencyWidget(),
         min_length=3,
         max_length=3)
     del currency_from.widget.attrs['minlength']
 
-    currency_to = fields.CharField(
-        widget=widgets.CurrencyWidget(),
+    currency_to = CharField(
+        widget=CurrencyWidget(),
         min_length=3,
         max_length=3)
     del currency_to.widget.attrs['minlength']
 
-    rate_from = fields.FloatField(
-        widget=widgets.XXSWidget(),
+    rate_from = FloatField(
+        widget=TextWidget(6),
         min_value=.001,
         localize=True,
         initial=1)
 
-    rate_to = fields.FloatField(
-        widget=widgets.XXSWidget(),
+    rate_to = FloatField(
+        widget=TextWidget(6),
         min_value=.001,
         localize=True,
         initial=1)
 
-    date_from = fields.DateField(
-        widget=widgets.DateWidget(),
+    date_from = DateField(
+        widget=DateWidget(),
         required=False)
 
-    date_to = fields.DateField(
-        widget=widgets.DateWidget(),
+    date_to = DateField(
+        widget=DateWidget(),
         required=False)
 
     def clean_currency_from(self):
         data = self.cleaned_data['currency_from'].upper()
         if not CURRENCY_RE.match(data):
-            raise forms.ValidationError('Invalid currency format')
+            raise ValidationError('Invalid currency format')
         if data == self.data['currency_to'].upper():
-            raise forms.ValidationError('Currencies must be different')
+            raise ValidationError('Currencies must be different')
         return data
 
     def clean_currency_to(self):
         data = self.cleaned_data['currency_to'].upper()
         if not CURRENCY_RE.match(data):
-            raise forms.ValidationError('Invalid currency format')
+            raise ValidationError('Invalid currency format')
         if data == self.data['currency_from'].upper():
-            raise forms.ValidationError('Currencies must be different')
+            raise ValidationError('Currencies must be different')
         return data
 
     def clean(self):

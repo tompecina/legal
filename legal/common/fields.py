@@ -25,9 +25,9 @@ from datetime import datetime, date
 
 from django import forms
 from django.core.validators import EMPTY_VALUES
+from django.core.exceptions import ValidationError
 
 from legal.common.utils import LocalFloat
-from legal.common.forms import ValidationError
 from legal.common import widgets
 
 

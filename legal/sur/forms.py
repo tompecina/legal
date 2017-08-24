@@ -22,22 +22,24 @@
 
 from django.core.validators import MinLengthValidator
 
-from legal.common import forms, fields, widgets
-from legal.common.glob import TEXT_OPTS, GR_CHAR
+from legal.common.forms import Form
+from legal.common.fields import CharField, ChoiceField
+from legal.common.widgets import TextWidget, RadioWidget
+from legal.common.glob import TEXT_OPTS
 from legal.sur.glob import MIN_LENGTH, MAX_LENGTH
 
 
-class PartyForm(forms.Form):
+class PartyForm(Form):
 
-    party = fields.CharField(
-        widget=widgets.XXLWidget(),
+    party = CharField(
+        widget=TextWidget(50),
         max_length=MAX_LENGTH,
         min_length=MIN_LENGTH,
         label='Vyhledávací řetězec',
         validators=(MinLengthValidator(MIN_LENGTH),))
 
-    party_opt = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    party_opt = ChoiceField(
+        widget=RadioWidget(),
         choices=TEXT_OPTS,
         label='Posice',
         initial='icontains')

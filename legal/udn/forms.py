@@ -23,69 +23,71 @@
 from django.core.validators import RegexValidator
 
 from legal.common.glob import REGISTER_RE_STR, TEXT_OPTS, FORMAT_OPTS
-from legal.common import forms, fields, widgets
+from legal.common.forms import Form
+from legal.common.fields import CharField, DateField, IntegerField, ChoiceField
+from legal.common.widgets import TextWidget, DateWidget, RadioWidget
 
 
-class MainForm(forms.Form):
+class MainForm(Form):
 
-    date_from = fields.DateField(
-        widget=widgets.DateWidget(),
+    date_from = DateField(
+        widget=DateWidget(),
         required=False)
 
-    date_to = fields.DateField(
-        widget=widgets.DateWidget(),
+    date_to = DateField(
+        widget=DateWidget(),
         required=False)
 
-    senate = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    senate = IntegerField(
+        widget=TextWidget(8),
         min_value=0,
         initial='',
         required=False)
 
-    register = fields.CharField(
-        widget=widgets.XSWidget(),
+    register = CharField(
+        widget=TextWidget(8),
         max_length=30,
         validators=(RegexValidator(regex=REGISTER_RE_STR),),
         initial='',
         required=False)
 
-    number = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    number = IntegerField(
+        widget=TextWidget(8),
         min_value=1,
         initial='',
         required=False)
 
-    year = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    year = IntegerField(
+        widget=TextWidget(8),
         min_value=1990,
         initial='',
         required=False)
 
-    page = fields.IntegerField(
-        widget=widgets.XSWidget(),
+    page = IntegerField(
+        widget=TextWidget(8),
         min_value=1,
         initial='',
         required=False)
 
-    agenda = fields.CharField(
+    agenda = CharField(
         max_length=255,
         required=False,
         label='Oblast',
         initial='')
 
-    party = fields.CharField(
-        widget=widgets.XXLWidget(),
+    party = CharField(
+        widget=TextWidget(50),
         required=False,
         max_length=255,
         label='Účastník řízení')
 
-    party_opt = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    party_opt = ChoiceField(
+        widget=RadioWidget(),
         choices=TEXT_OPTS,
         initial='icontains')
 
-    format = fields.ChoiceField(
-        widget=widgets.RadioWidget(),
+    format = ChoiceField(
+        widget=RadioWidget(),
         choices=FORMAT_OPTS,
         label='Výstupní formát',
         initial='html')

@@ -20,94 +20,37 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from re import compile, sub
 from locale import strxfrm
 
 from django import forms
 from django.template.loader import get_template
 from django.utils.safestring import mark_safe
 
-from legal.szr.models import Court
 from legal.sir.glob import L2N
 from legal.sir.models import Vec
+from legal.szr.models import Court
 
 
 class TextWidget(forms.TextInput):
 
     template_name = 'widgets/text.xhtml'
 
-    def __init__(self, **kwargs):
-        attrs = {'size': self.size}
+    def __init__(self, size, *args, **kwargs):
+        attrs = {'size': size}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
-
-
-class XXXSWidget(TextWidget):
-
-    size = 4
-
-    
-class XXSWidget(TextWidget):
-
-    size = 6
-
-
-class XSWidget(TextWidget):
-
-    size = 8
-
-
-class SWidget(TextWidget):
-
-    size = 12
-
-
-class MWidget(TextWidget):
-
-    size = 15
-
-
-class LWidget(TextWidget):
-
-    size = 20
-
-
-class XLWidget(TextWidget):
-
-    size = 35
-
-
-class XXLWidget(TextWidget):
-
-    size = 50
-
-
-class XXXLWidget(TextWidget):
-
-    size = 60
-
-
-class TextAreaWidget(forms.Textarea):
-
-    template_name = 'widgets/textarea.xhtml'
-
-    def __init__(self, **kwargs):
-        attrs = {'rows': '8', 'cols': '80'}
-        attrs.update(kwargs.get('attrs', {}))
-        kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class CurrencyWidget(forms.TextInput):
 
     template_name = 'widgets/text.xhtml'
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         attrs = {'size': '3', 'maxlength': '3', 'class': 'toupper'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
-        super().__init__(**kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class HiddenWidget(forms.HiddenInput):
@@ -115,7 +58,21 @@ class HiddenWidget(forms.HiddenInput):
     template_name = 'widgets/hidden.xhtml'
 
 
-COMP_RE = compile(r'>\s+(\S*)\s+<')
+class TextAreaWidget(forms.Textarea):
+
+    template_name = 'widgets/textarea.xhtml'
+
+    def __init__(self, *args, **kwargs):
+        attrs = {'rows': '8', 'cols': '80'}
+        attrs.update(kwargs.get('attrs', {}))
+        kwargs['attrs'] = attrs
+        super().__init__(*args, **kwargs)
+
+
+class SelectWidget(forms.Select):
+
+    template_name = 'widgets/select.xhtml'
+    option_template_name = 'widgets/select_option.xhtml'
 
 
 class RadioWidget(forms.RadioSelect):
@@ -127,12 +84,6 @@ class RadioWidget(forms.RadioSelect):
 class CheckboxWidget(forms.CheckboxInput):
 
     template_name = 'widgets/checkbox.xhtml'
-
-
-class SelectWidget(forms.Select):
-
-    template_name = 'widgets/select.xhtml'
-    option_template_name = 'widgets/select_option.xhtml'
 
 
 class SelectCurrencyWidget(forms.widgets.MultiWidget):
@@ -160,12 +111,12 @@ class DateWidget(forms.DateInput):
 
     template_name = 'widgets/date.xhtml'
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         attrs = {'size': '10', 'maxlength': '12'}
         attrs.update(kwargs.get('attrs', {}))
         kwargs['attrs'] = attrs
         self._today = kwargs.pop('today', False)
-        super().__init__(**kwargs)
+        super().__init__(*args, **kwargs)
 
     def render(self, name, *args, **kwargs):
         res = super().render(name, *args, **kwargs)
@@ -176,16 +127,15 @@ class DateWidget(forms.DateInput):
         return res
 
 
-class CourtWidget(XXSWidget):
+class CourtWidget(TextWidget):
 
-    def __init__(self, supreme_court=False, supreme_administrative_court=False, ins_courts=False, **kwargs):
+    def __init__(self, *args, supreme_court=False, supreme_administrative_court=False, ins_courts=False, **kwargs):
         self.supreme_court = supreme_court
         self.supreme_administrative_court = supreme_administrative_court
         self.ins_courts = ins_courts
-        super().__init__(**kwargs)
+        super().__init__(6, *args, **kwargs)
 
     def render(self, name, value, *args, **kwargs):
-        res = super().render(name, value, *args, **kwargs)
         context = {'ins_courts': self.ins_courts, 'value': value}
         if self.ins_courts:
             context['courts'] = sorted(
