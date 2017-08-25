@@ -129,6 +129,23 @@ function go_back() {
     window.history.back();
 }
 
+function pager_click() {
+    $('td.pager a.num').css('display', 'none');
+    $('td.pager span.num').css('display', 'inline');
+    return false;
+}
+
+function pager_submit(event) {
+    var form = $(this);
+    var page = parseInt(form.find('input[name=page]')[0]['value']);
+    var link = form.find('input[name=link]')[0]['value'];
+    var batch = parseInt(form.find('input[name=batch]')[0]['value']);
+    if (!isNaN(page) && page > 0) {
+	window.location.replace(link + (--page * batch));
+    }
+    return false;
+}
+
 $(function() {
     $('.currsel').change(currsel_change).change();
     $('.today').click(set_today);
@@ -140,6 +157,8 @@ $(function() {
 	prevText: 'předchozí',
 	nextText: 'následující'
     });
+    $('td.pager a.num').click(pager_click);
+    $('td.pager form').submit(pager_submit);
     $('input[type=text][name*=date]').datepicker();
     $('select').each(function() {
 	var select = $(this);

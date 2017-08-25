@@ -881,7 +881,8 @@ class Pager:
     def __init__(self, start, total, url, par, batch):
 
         def link(num):
-            par['start'] = num
+            if num is not None:
+                par['start'] = num
             return '{}?{}'.format(url, par.urlencode())
 
         self.curr = (start // batch) + 1
@@ -896,6 +897,11 @@ class Pager:
         if (start + batch) < total:
             self.linkf = link(start + batch)
             self.linkff = link(((total - 1) // batch) * batch)
+        self.batch = batch
+        par.pop('start', None)
+        self.link = '{}&start='.format(link(None))
+        if self.link.endswith('?&start='):
+            self.link = self.link.replace('&', '')
 
 
 def composeref(*args):

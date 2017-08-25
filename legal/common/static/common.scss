@@ -112,12 +112,12 @@ fieldset {
     }
 }
 
-input[type="text"], input[type="email"], input[type="password"], textarea, input[type="submit"],
-input[type="reset"], select {
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea,
+input[type="submit"], input[type="reset"], select {
     font-size: $reduced;
 }
 
-input[type="text"], input[type="email"], input[type="password"], textarea {
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea {
     padding: $vt $hs 0;
     border: {
 	style: inset;
@@ -216,6 +216,9 @@ table.topline {
 	    &:first-child {
 		text-align: left;
 	    }
+	    svg {
+		vertical-align: (-$vn);
+	    }
 	    &:last-child {
 		text-align: right;
 	    }
@@ -291,23 +294,39 @@ table.list {
     }
     tfoot tr td.pager {
 	text-align: right;
-	span {
+	form span {
 	    color: $dark-blue;
-	    span:first-child {
-		padding-right: ($hm+$hs);
+	    margin: {
+		left: 0;
+		right: 0;
 	    }
-	    span:last-child {
-		padding-left: ($hm+$hs);
-	    }
-	    span.num {
+	    a.num {
 		padding: {
 		    left: ($hm+$hs);
 		    right: ($hm+$hs);
 		}
 	    }
-	}
-	span.disabled svg {
-	    fill: $gray;
+	    span {
+		&:first-child {
+		    padding-right: ($hm+$hs);
+		}
+		&:last-child {
+		    padding-left: ($hm+$hs);
+		}
+		&.disabled svg {
+		    fill: $gray;
+		}
+		&.num {
+		    display: none;
+		    padding: {
+			left: $hl;
+			right: ($hl+$hm);
+		    }
+		    input[type="number"] {
+			width: $hg;
+		    }
+		}
+	    }
 	}
     }
     hr {

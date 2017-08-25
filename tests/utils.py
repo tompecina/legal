@@ -381,6 +381,7 @@ class ClassArray(dict):
 
 CHECK_ARRAY = CheckArray()
 CLASS_ARRAY = ClassArray()
+HASH_LEN = 8
 
 
 def check_html(runner, html, key=None, app=None, check_html=True, check_classes=True):
@@ -422,11 +423,11 @@ def check_html(runner, html, key=None, app=None, check_html=True, check_classes=
         elif isinstance(desc, NavigableString):
             store.append(str(desc))
     string = ' '.join(' '.join(store).split())
-    hsh = md5(string.encode()).hexdigest()
+    hsh = md5(string.encode()).hexdigest()[:HASH_LEN]
 
     if check_html:
         if WRITE_CHECKFILE:
             print(filepos, hsh, file=CHECKFILE)
         elif CHECK_HTML:
             runner.assertIn(filepos, CHECK_ARRAY, msg=filepos)
-            runner.assertEqual(CHECK_ARRAY[filepos], hsh, msg=filepos)
+            runner.assertEqual(CHECK_ARRAY[filepos][:HASH_LEN], hsh, msg=filepos)
