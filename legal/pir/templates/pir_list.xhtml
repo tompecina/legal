@@ -77,13 +77,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	{% for debtor in row.debtors %}
 	<div>
 	  {{ debtor.text|safe }}
-	  <a href="{% url 'pir:party' debtor.id %}">[O]</a></div>
+	  <a href="{% url 'pir:party' debtor.id %}?back={{ request.get_full_path|urlencode }}" title="Podrobné informace o osobě">[O]</a></div>
 	{% endfor %}
 	<hr/>
 	{% for trustee in row.trustees %}
 	<div>
 	  {{ trustee.text|safe }}
-	  <a href="{% url 'pir:party' trustee.id %}">[O]</a></div>
+	  <a href="{% url 'pir:party' trustee.id %}?back={{ request.get_full_path|urlencode }}" title="Podrobné informace o osobě">[O]</a></div>
 	{% endfor %}
       </td>
 
@@ -92,7 +92,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	{% for creditor in row.creditors %}
 	<div>
 	  {{ creditor.text|safe }}
-	  <a href="{% url 'pir:party' creditor.id %}">[O]</a>
+	  <a href="{% url 'pir:party' creditor.id %}?back={{ request.get_full_path|urlencode }}" title="Podrobné informace o osobě">[O]</a>
 	</div>
 	{% endfor %}
       </td>
@@ -100,10 +100,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
       <td class="act">
 	{% if row.link and not row.datumVyskrtnuti %}
-	<a href="{{ row.link }}" target="_blank">[I]</a>
+	<a href="{{ row.link }}" target="_blank" title="Informace o řízení v ISIRu">[I]</a>
 	{% endif %}
 	{% if row.senat %}
-	<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.court_reg }}&amp;krajOrg={{ row.court_reg }}&amp;cisloSenatu={{ row.senat }}&amp;druhVec=INS&amp;bcVec={{ row.bc }}&amp;rocnik={{ row.rocnik }}&amp;typSoudu=os&amp;autoFill=true&amp;type=spzn" target="_blank">[Ř]</a>
+	<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.court_reg }}&amp;krajOrg={{ row.court_reg }}&amp;cisloSenatu={{ row.senat }}&amp;druhVec=INS&amp;bcVec={{ row.bc }}&amp;rocnik={{ row.rocnik }}&amp;typSoudu=os&amp;autoFill=true&amp;type=spzn" target="_blank" title="Informace o řízení v infoSoudu">[Ř]</a>
 	{% endif %}
       </td>
 

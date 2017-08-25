@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
   {% if pager.linkbb %}
   <span>
-    <a href="{{ pager.linkbb }}">
+    <a href="{{ pager.linkbb }}" title="Na první stranu">
   {% else %}
   <span class="disabled">
   {% endif %}
@@ -43,7 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
   {% if pager.linkb %}
   <span>
-    <a href="{{ pager.linkb }}">
+    <a href="{{ pager.linkb }}" title="Na předchozí stranu">
   {% else %}
   <span class="disabled">
   {% endif %}
@@ -56,11 +56,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   {% endif %}
   </span>
 
-  <span class="num{% if pager.total == 1 %} disabled{% endif %}">{{ pager.curr }}/{{ pager.total }}</span>
+  <span class="num">{{ pager.curr }}/{{ pager.total }}</span>
 
   {% if pager.linkf %}
   <span>
-    <a href="{{ pager.linkf }}">
+    <a href="{{ pager.linkf }}" title="Na další stranu">
   {% else %}
   <span class="disabled">
   {% endif %}
@@ -75,7 +75,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
   {% if pager.linkff %}
     <span>
-      <a href="{{ pager.linkff }}">
+      <a href="{{ pager.linkff }}" title="Na poslední stranu">
   {% else %}
   <span class="disabled">
   {% endif %}

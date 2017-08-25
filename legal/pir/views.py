@@ -21,7 +21,6 @@
 #
 
 from datetime import datetime
-from locale import strxfrm
 from csv import writer as csvwriter
 from json import dump
 

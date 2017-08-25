@@ -31,7 +31,7 @@ from legal.common.widgets import TextWidget, DateWidget, RadioWidget
 
 OPTS = (
     ('none', 'sine'),
-    ('epr', 'EPR'),
+    ('epr', 'elektronický platební rozkaz'),
     ('nmu', 'nemajetková újma'),
     ('vyz', 'výživné'),
     ('vyk', 'výkon rozhodnutí'),

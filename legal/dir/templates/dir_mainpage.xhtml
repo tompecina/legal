@@ -49,7 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <td class="act">
 	<a href="{% url 'dir:debtorform' row.id %}">upravit</a>
 	<a href="{% url 'dir:debtordel' row.id %}">smazat</a>
-	<a href="{% url 'pir:htmllist' %}?{{ row.search }}">vyhledat</a>
+	<a href="{% url 'pir:htmllist' %}?{{ row.search }}" title="Vyhledat dlužníka v insolvenčním rejstříku">vyhledat</a>
       </td>
     </tr>
     {% endfor %}

@@ -63,8 +63,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <a href="{% url 'knr:itemform' row.idx %}">upravit</a>
   <a href="{% url 'knr:itemdel' row.idx %}">smazat</a>
 </td>
-<td class="up-arrow">{% if row.up %}<a href="{% url 'knr:itemup' 'u' row.idx %}">↑</a>{% endif %}</td>
-<td class="down-arrow">{% if row.down %}<a href="{% url 'knr:itemdown' 'd' row.idx %}">↓</a>{% endif %}</td>
+<td class="up-arrow">{% if row.up %}<a href="{% url 'knr:itemup' 'u' row.idx %}" title="Posunout položku výš">↑</a>{% endif %}</td>
+<td class="down-arrow">{% if row.down %}<a href="{% url 'knr:itemdown' 'd' row.idx %}" title="Posunout položku níž">↓</a>{% endif %}</td>
 {% endblock %}
 
 

@@ -188,6 +188,10 @@ a svg:hover {
 
 // specific rules
 
+a.back_link {
+    cursor: pointer;
+}
+
 tr.ga {
     th, td {
 	padding-bottom: $vl;
@@ -372,6 +376,9 @@ table.detail {
     }
     & + & {
 	margin-top: ($vh+$vl);
+    }
+    & + p {
+	margin-top: $vh;
     }
 }
 

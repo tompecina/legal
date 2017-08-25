@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
       <td>
       {% if user.is_authenticated %}
-	<a href="{% url 'user' %}">
+	<a href="{% url 'user' %}" title="Informace o uživateli">
       {% endif %}
         <span>Uživatel:</span>
 	<span>{% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% else %}(nepřihlášen){% endif %}</span>
@@ -43,10 +43,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
       {% if not suppress_home %}
       <td>
-	<a href="{% url 'home' %}">
-	  <svg width="8" height="10" viewBox="0 0 8 10" xmlns="http://www.w3.org/2000/svg">
+	<a href="{% url 'home' %}" title="Na hlavní stranu">
+	  <svg width="10" height="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
 	    <title>^</title>
-	    <path d="M 0,10 8,10 4,0 Z"/>
+	    <path d="M 0,0 0,10 10,10 10,0 Z"/>
 	  </svg>
 	</a>
       </td>

@@ -125,9 +125,14 @@ function currsel_change() {
     return true;
 }
 
+function go_back() {
+    window.history.back();
+}
+
 $(function() {
     $('.currsel').change(currsel_change).change();
     $('.today').click(set_today);
+    $('a.back_link').click(go_back);
     $.datepicker.setDefaults($.datepicker.regional['cs']);
     $.datepicker.setDefaults({
 	showOtherMonths: true,
