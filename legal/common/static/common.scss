@@ -129,6 +129,9 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
 input {
     margin: $vs 0 $vt;
     padding: $vn $ht;
+    &[type="number"] {
+	padding-right: 0;
+    }
     &[type="submit"], &[type="reset"] {
 	padding: $vt $hm 0;
     }
