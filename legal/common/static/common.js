@@ -129,9 +129,19 @@ function go_back() {
     window.history.back();
 }
 
+function pager_close(event) {
+    if ($('td.pager input').index(event.target) == -1) {
+	$('td.pager span.num').css('display', 'none');
+	$('td.pager a.num').css('display', 'inline');
+	$('body').off('click');
+    }
+    return true;
+}
+
 function pager_click() {
     $('td.pager a.num').css('display', 'none');
     $('td.pager span.num').css('display', 'inline');
+    $('body').click(pager_close);
     return false;
 }
 
