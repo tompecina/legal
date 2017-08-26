@@ -151,6 +151,7 @@ function pager_submit(event) {
     var link = form.find('input[name=link]')[0]['value'];
     var batch = parseInt(form.find('input[name=batch]')[0]['value']);
     if (!isNaN(page) && page > 0) {
+	$('body').off('click');
 	window.location.replace(link + (--page * batch));
     }
     return false;
