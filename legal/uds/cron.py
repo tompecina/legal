@@ -251,7 +251,7 @@ def cron_update(*args):
                                     text = process(
                                         pathname,
                                         method='tesseract',
-                                        language='eng' if TEST else 'ces',
+                                        language='ces',
                                     ).decode()
                             except:
                                 text = ''
