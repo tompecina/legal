@@ -9,6 +9,13 @@ env:
     - "TEST=1"
     - "DBUSER=root"
 
+addons:
+  apt:
+    packages:
+    - "swig"
+    - "libpulse-dev"
+    - "tesseract-ocr-all"
+
 matrix:
   include:
     - python: "3.5"

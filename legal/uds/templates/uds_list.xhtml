@@ -64,7 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
       <td{% if row.agenda|length > 50 %} title="{{ row.agenda }}"{% endif %}>{{ row.agenda|truncatechars:50|replace:'_\.\.\.$_…' }}</td>
 
-      <td{% if row.desc|length > 50 %} title="{{ row.desc }}"{% endif %}>{{ row.desc|truncatechars:50|replace:'_\.\.\.$_…' }}</td>
+      <td{% if row.desc|length > 80 %} title="{{ row.desc }}"{% endif %}>{{ row.desc|truncatechars:80|replace:'_\.\.\.$_…' }}</td>
 
       <td{% if row.ref|length > 20 %} title="{{ row.ref }}"{% endif %}>{{ row.ref|truncatechars:20|replace:'_\.\.\.$_…' }}</td>
 
