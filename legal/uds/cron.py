@@ -29,6 +29,7 @@ from bs4 import BeautifulSoup
 from textract import process
 
 from legal.settings import BASE_DIR, TEST, TEST_TEMP_DIR
+from legal.common.glob import ODP
 from legal.common.utils import get, sleep, LOGGER, between
 from legal.uds.glob import TYPES
 from legal.uds.models import Publisher, Agenda, Document, File
@@ -162,7 +163,7 @@ def cron_update(*args):
             string = arg.split('.')
             dates.append(datetime(*map(int, string[2::-1])))
     else:
-        dates = [today]
+        dates = [today + ODP]
     for dat in dates:
         flt = {'subsidiary_region': False, 'subsidiary_county': False}
         if not args:
@@ -248,11 +249,7 @@ def cron_update(*args):
                                 text = process(pathname).decode()
                                 ocr = len(text) < 5
                                 if ocr:
-                                    text = process(
-                                        pathname,
-                                        method='tesseract',
-                                        language='ces',
-                                    ).decode()
+                                    text = process(pathname, method='tesseract', language='ces').decode()
                             except:
                                 text = ''
                                 ocr = False
