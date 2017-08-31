@@ -248,7 +248,11 @@ def cron_update(*args):
                                 text = process(pathname).decode()
                                 ocr = len(text) < 5
                                 if ocr:
-                                    text = process(pathname, method='tesseract', language='ces').decode()
+                                    text = process(
+                                        pathname,
+                                        method='tesseract',
+                                        language='eng' if TEST else 'ces',
+                                    ).decode()
                             except:
                                 text = ''
                                 ocr = False
