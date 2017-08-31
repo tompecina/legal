@@ -15,6 +15,7 @@ addons:
     - "swig"
     - "libpulse-dev"
     - "tesseract-ocr"
+    - "poppler-utils"
 
 matrix:
   include:

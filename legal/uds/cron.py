@@ -254,8 +254,6 @@ def cron_update(*args):
                                         language='eng' if TEST else 'ces',
                                     ).decode()
                             except:
-                                import traceback
-                                traceback.print_exc()
                                 text = ''
                                 ocr = False
                             File.objects.get_or_create(
