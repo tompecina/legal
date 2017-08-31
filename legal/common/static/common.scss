@@ -188,8 +188,41 @@ a svg:hover {
     fill: $red;
 }
 
+ul {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+li {
+    padding-left: $hl;
+    text-indent: (-$hm);
+    &:before {
+	content: "–";
+	padding-right: $hm;
+    }
+}
+
 
 // specific rules
+
+tr.help {
+    display: none;
+}
+
+fieldset.help {
+    margin: {
+	top: $vs;
+	bottom: $vm;
+    }
+    padding: ($vs+$vt) $hl $vm;
+    legend {
+	font-style: italic;
+    }
+    div, ul, li {
+	margin: $vt 0;
+    }
+}
 
 a.back_link {
     cursor: pointer;

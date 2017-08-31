@@ -32,6 +32,7 @@ from legal.udn.cron import cron_update as udn_update, cron_find as udn_find
 from legal.sur.cron import sur_notice
 from legal.sir.cron import sir_notice, cron_update as sir_update, cron_refresh_links as sir_refresh_links
 from legal.dir.cron import dir_notice
+from legal.uds.cron import cron_publishers as uds_publishers, cron_update as uds_update
 from legal.common.glob import LOCAL_SUBDOMAIN, LOCAL_URL
 from legal.common.utils import send_mail, LOGGER
 from legal.common.models import Pending, Lock
@@ -96,9 +97,17 @@ SCHED = (
     {'name': 'szr_courts',
      'when': lambda t: t.weekday() == 0 and t.hour == 1 and t.minute == 5,
     },
+    {'name': 'uds_publishers',
+     'when': lambda t: t.weekday() == 0 and t.hour == 1 and t.minute == 15,
+    },
     {'name': 'sir_refresh_links',
      'when': lambda t: True,
      'lock': 'sir_ws2',
+     'blocking': False,
+    },
+    {'name': 'uds_update',
+     'when': lambda t: t.hour == 19 and t.minute == 15,
+     'lock': 'uds',
      'blocking': False,
     },
     {'name': 'sir_update',

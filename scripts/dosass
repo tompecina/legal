@@ -1,6 +1,6 @@
 #!/bin/bash
 
-apps='cin cnb common dvt hjp hsp knr lht psj sop szr sur udn sir dir pir kos'
+apps='cin cnb common dvt hjp hsp knr lht psj sop szr sur udn sir dir pir kos uds'
 
 par='--update --style=compressed -I legal/common/static'
 

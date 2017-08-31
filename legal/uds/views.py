@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# udn/views.py
+# uds/views.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from datetime import datetime
+from datetime import datetime, date
 from csv import writer as csvwriter
 from json import dump
 from os.path import join
@@ -32,11 +32,10 @@ from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
 
-from legal.common.glob import REGISTERS, INERR, TEXT_OPTS_KEYS, REPO_URL, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF
-from legal.common.utils import Pager, new_xml, xml_decorate, composeref, LOGGER, render
-from legal.szr.glob import SUPREME_ADMINISTRATIVE_COURT, SUPREME_ADMINISTRATIVE_COURT_NAME
-from legal.udn.forms import MainForm
-from legal.udn.models import Agenda, Decision
+from legal.common.glob import INERR, TEXT_OPTS_KEYS, REPO_URL, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF
+from legal.common.utils import Pager, new_xml, xml_decorate, LOGGER, render
+from legal.uds.forms import MainForm
+from legal.uds.models import Agenda, Document, File
 
 
 APP = __package__.rpartition('.')[2]
@@ -63,7 +62,7 @@ def mainpage(request):
         form = MainForm()
         return render(
             request,
-            'udn_mainpage.xhtml',
+            'uds_mainpage.xhtml',
             {'app': APP,
              'page_title': page_title,
              'err_message': err_message,
@@ -72,8 +71,8 @@ def mainpage(request):
     form = MainForm(request.POST)
     if form.is_valid():
         cld = form.cleaned_data
-        if not cld['party']:
-            del cld['party_opt']
+        if not cld['desc']:
+            del cld['desc_opt']
         query = QueryDict(mutable=True)
         for key in cld:
             if cld[key]:
@@ -85,7 +84,7 @@ def mainpage(request):
     LOGGER.debug('Invalid form', request)
     return render(
         request,
-        'udn_mainpage.xhtml',
+        'uds_mainpage.xhtml',
         {'app': APP,
          'page_title': page_title,
          'err_message': err_message,
@@ -96,6 +95,8 @@ def mainpage(request):
 def g2p(reqd):
 
     par = {}
+    if 'publisher' in reqd:
+        par['publisher_id'] = reqd['publisher']
 
     lims = {
         'senate': 0,
@@ -110,17 +111,18 @@ def g2p(reqd):
             assert npar >= lims[fld]
 
     if 'register' in reqd:
-        assert reqd['register'] in REGISTERS
-        par['register'] = reqd['register']
-    if 'date_from' in reqd:
-        par['date__gte'] = datetime.strptime(reqd['date_from'], DTF).date()
-    if 'date_to' in reqd:
-        par['date__lte'] = datetime.strptime(reqd['date_to'], DTF).date()
-    if 'party_opt' in reqd:
-        assert reqd['party_opt'] in TEXT_OPTS_KEYS
-    if 'party' in reqd:
-        assert 'party_opt' in reqd
-        par['parties__name__' + reqd['party_opt']] = reqd['party']
+        par['register__iexact'] = reqd['register']
+    if 'date_posted_from' in reqd:
+        par['posted__date__gte'] = datetime.strptime(reqd['date_posted_from'], DTF).date()
+    if 'date_posted_to' in reqd:
+        par['posted__date__lte'] = datetime.strptime(reqd['date_posted_to'], DTF).date()
+    if 'desc_opt' in reqd:
+        assert reqd['desc_opt'] in TEXT_OPTS_KEYS
+    if 'desc' in reqd:
+        assert 'desc_opt' in reqd
+        par['desc__' + reqd['desc_opt']] = reqd['desc']
+    if 'text' in reqd:
+        par['id__in'] = list(File.objects.search(reqd['text']).distinct().values_list('document_id', flat=True))
 
     return par
 
@@ -134,19 +136,25 @@ def htmllist(request):
         par = g2p(reqd)
         start = int(reqd['start']) if 'start' in reqd else 0
         assert start >= 0
-        dec = Decision.objects.filter(**par).order_by('-date', 'pk').distinct()
+        docs = Document.objects.filter(**par).order_by('-posted', 'docid').distinct()
     except:
         raise Http404
-    total = dec.count()
+    for doc in docs:
+        doc.files = File.objects.filter(document=doc).order_by('fileid').distinct()
+        idx = 1
+        for file in doc.files:
+            file.brk = not (idx % 5)
+            idx += 1
+    total = docs.count()
     if total and start >= total:
         start = total - 1
     return render(
         request,
-        'udn_list.xhtml',
+        'uds_list.xhtml',
         {'app': APP,
          'page_title': 'Výsledky vyhledávání',
-         'rows': dec[start:(start + BATCH)],
-         'pager': Pager(start, total, reverse('udn:htmllist'), reqd, BATCH),
+         'rows': docs[start:(start + BATCH)],
+         'pager': Pager(start, total, reverse('uds:htmllist'), reqd, BATCH),
          'total': total})
 
 
@@ -158,7 +166,7 @@ def xmllist(request):
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
-        res = Decision.objects.filter(**par).order_by('date', 'pk').distinct()
+        res = Document.objects.filter(**par).order_by('posted', 'docid').distinct()
     except:
         raise Http404
     total = res.count()
@@ -170,9 +178,9 @@ def xmllist(request):
              'page_title': EXLIM_TITLE,
              'limit': EXLIM,
              'total': total,
-             'back': reverse('udn:mainpage')})
-    dec = {
-        'decisions': {
+             'back': reverse('uds:mainpage')})
+    doc = {
+        'documents': {
             'xmlns': 'http://' + LOCAL_SUBDOMAIN,
             'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
             'xsi:schemaLocation': 'http://{} {}/static/{}-{}.xsd'.format(LOCAL_SUBDOMAIN, LOCAL_URL, APP, APPVERSION),
@@ -182,59 +190,44 @@ def xmllist(request):
         }
     }
     xml = new_xml('')
-    tag_decisions = xml_decorate(xml.new_tag('decisions'), dec)
-    xml.append(tag_decisions)
+    tag_documents = xml_decorate(xml.new_tag('documents'), doc)
+    xml.append(tag_documents)
     for item in res:
-        tag_decision = xml.new_tag('decision')
-        tag_decisions.append(tag_decision)
-        tag_court = xml.new_tag('court')
-        tag_decision.append(tag_court)
-        tag_court['id'] = SUPREME_ADMINISTRATIVE_COURT
-        tag_court.append(SUPREME_ADMINISTRATIVE_COURT_NAME)
-        tag_date = xml.new_tag('date')
-        tag_decision.append(tag_date)
-        tag_date.append(item.date.isoformat())
+        tag_document = xml.new_tag('document')
+        tag_documents.append(tag_document)
+        tag_document['id'] = item.docid
+        tag_publisher = xml.new_tag('publisher')
+        tag_document.append(tag_publisher)
+        tag_publisher['id'] = item.publisher.pubid
+        tag_publisher.append(item.publisher.name)
         tag_ref = xml.new_tag('ref')
-        tag_decision.append(tag_ref)
-        tag_senate = xml.new_tag('senate')
-        tag_senate.append(str(item.senate))
-        tag_ref.append(tag_senate)
-        tag_register = xml.new_tag('register')
-        tag_register.append(item.register)
-        tag_ref.append(tag_register)
-        tag_number = xml.new_tag('number')
-        tag_number.append(str(item.number))
-        tag_ref.append(tag_number)
-        tag_year = xml.new_tag('year')
-        tag_year.append(str(item.year))
-        tag_ref.append(tag_year)
-        tag_page = xml.new_tag('page')
-        tag_page.append(str(item.page))
-        tag_ref.append(tag_page)
+        tag_document.append(tag_ref)
+        tag_ref.append(item.ref)
+        tag_description = xml.new_tag('description')
+        tag_document.append(tag_description)
+        tag_description.append(item.desc)
         tag_agenda = xml.new_tag('agenda')
-        tag_decision.append(tag_agenda)
+        tag_document.append(tag_agenda)
         tag_agenda.append(item.agenda.desc)
-        tag_parties = xml.new_tag('parties')
-        tag_decision.append(tag_parties)
-        for party in item.parties.values():
-            tag_party = xml.new_tag('party')
-            tag_parties.append(tag_party)
-            tag_party.append(party['name'])
+        tag_posted = xml.new_tag('posted')
+        tag_document.append(tag_posted)
+        tag_posted.append(item.posted.isoformat())
         tag_files = xml.new_tag('files')
-        tag_decision.append(tag_files)
-        tag_file = xml.new_tag('file')
-        tag_files.append(tag_file)
-        tag_file['type'] = 'abridged'
-        tag_file.append(join(REPO_PREFIX, item.filename))
-        if item.anonfilename:
+        tag_document.append(tag_files)
+        for fil in File.objects.filter(document=item).order_by('fileid').distinct():
             tag_file = xml.new_tag('file')
             tag_files.append(tag_file)
-            tag_file['type'] = 'anonymized'
-            tag_file.append(join(REPO_PREFIX, item.anonfilename))
+            tag_file['id'] = fil.fileid
+            tag_name = xml.new_tag('name')
+            tag_file.append(tag_name)
+            tag_name.append(fil.name)
+            tag_url = xml.new_tag('url')
+            tag_file.append(tag_url)
+            tag_url.append(join(REPO_PREFIX, str(fil.fileid), fil.name))
     response = HttpResponse(
         str(xml).encode('utf-8') + b'\n',
         content_type='text/xml; charset=utf-8')
-    response['Content-Disposition'] = 'attachment; filename=Rozhodnuti.xml'
+    response['Content-Disposition'] = 'attachment; filename=Dokumenty.xml'
     return response
 
 
@@ -246,7 +239,7 @@ def csvlist(request):
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
-        res = Decision.objects.filter(**par).order_by('date', 'pk').distinct()
+        res = Document.objects.filter(**par).order_by('posted', 'docid').distinct()
     except:
         raise Http404
     total = res.count()
@@ -258,29 +251,28 @@ def csvlist(request):
              'page_title': EXLIM_TITLE,
              'limit': EXLIM,
              'total': total,
-             'back': reverse('udn:mainpage')})
+             'back': reverse('uds:mainpage')})
     response = HttpResponse(content_type='text/csv; charset=utf-8')
-    response['Content-Disposition'] = 'attachment; filename=Rozhodnuti.csv'
+    response['Content-Disposition'] = 'attachment; filename=Dokumenty.csv'
     writer = csvwriter(response)
     hdr = (
-        'Soud',
-        'Datum',
-        'Číslo jednací',
-        'Oblast',
-        'Účastníci řízení',
-        'Zkrácené znění',
-        'Anonymisované znění',
+        'Datum vyvěšení',
+        'Soud/státní zastupitelství',
+        'Popis dokumentu',
+        'Spisová značka/číslo jednací',
+        'Agenda',
+        'Soubory',
     )
     writer.writerow(hdr)
     for item in res:
+        files = File.objects.filter(document=item).order_by('fileid').distinct()
         dat = (
-            SUPREME_ADMINISTRATIVE_COURT_NAME,
-            '{:%d.%m.%Y}'.format(item.date),
-            composeref(item.senate, item.register, item.number, item.year, item.page),
+            '{:%d.%m.%Y %H:%M:%S}'.format(item.posted),
+            item.publisher.name,
+            item.desc,
+            item.ref,
             item.agenda.desc,
-            ';'.join([par['name'] for par in item.parties.values()]),
-            join(REPO_PREFIX, item.filename),
-            join(REPO_PREFIX, item.anonfilename) if item.anonfilename else '',
+            ';'.join([join(REPO_PREFIX, str(fil.fileid), fil.name) for fil in files]),
         )
         writer.writerow(dat)
     return response
@@ -294,7 +286,7 @@ def jsonlist(request):
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
-        res = Decision.objects.filter(**par).order_by('date', 'pk').distinct()
+        res = Document.objects.filter(**par).order_by('posted', 'docid').distinct()
     except:
         raise Http404
     total = res.count()
@@ -306,31 +298,23 @@ def jsonlist(request):
              'page_title': EXLIM_TITLE,
              'limit': EXLIM,
              'total': total,
-             'back': reverse('udn:mainpage')})
+             'back': reverse('uds:mainpage')})
     response = HttpResponse(content_type='application/json; charset=utf-8')
-    response['Content-Disposition'] = 'attachment; filename=Rozhodnuti.json'
+    response['Content-Disposition'] = 'attachment; filename=Dokumenty.json'
     lst = []
-    court = {
-        'id': SUPREME_ADMINISTRATIVE_COURT,
-        'name': SUPREME_ADMINISTRATIVE_COURT_NAME,
-    }
     for item in res:
-        files = {'abridged': join(REPO_PREFIX, item.filename)}
-        if item.anonfilename:
-            files['anonymized'] = join(REPO_PREFIX, item.anonfilename)
+        files = File.objects.filter(document=item).order_by('fileid').distinct()
         lst.append({
-            'court': court,
-            'date': item.date.isoformat(),
-            'ref': {
-                'senate': item.senate,
-                'register': item.register,
-                'number': item.number,
-                'year': item.year,
-                'page': item.page,
-            },
+            'posted': item.posted.isoformat(),
+            'publisher': item.publisher.name,
+            'desc': item.desc,
+            'ref': item.ref,
             'agenda': item.agenda.desc,
-            'parties': [p['name'] for p in item.parties.values()],
-            'files': files,
+            'files': [{
+                'id': f.fileid,
+                'name': f.name,
+                'url': join(REPO_PREFIX, str(f.fileid), f.name)}
+                      for f in files],
         })
     dump(lst, response)
     return response

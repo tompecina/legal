@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML Schema for UDS V1.0 <https://legal.pecina.cz/> -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://legal.pecina.cz" xmlns="http://legal.pecina.cz" elementFormDefault="qualified">
+  <xs:element name="documents">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="document" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="version" use="required" type="xs:NMTOKEN" fixed="1.0"/>
+      <xs:attribute name="application" use="required" type="xs:NCName" fixed="uds"/>
+      <xs:attribute name="created" use="required" type="xs:dateTime"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="document">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="publisher"/>
+	<xs:element name="ref" type="xs:token"/>
+	<xs:element name="description" type="xs:token"/>
+	<xs:element name="agenda" type="xs:token"/>
+	<xs:element name="posted" type="xs:dateTime"/>
+	<xs:element ref="files"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:positiveInteger"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="publisher">
+    <xs:complexType>
+      <xs:simpleContent>
+	<xs:extension base="xs:token">
+	  <xs:attribute name="id" use="required" type="xs:positiveInteger"/>
+	</xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="files">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="file" minOccurs="0" maxOccurs="unbounded">
+	  <xs:complexType>
+	    <xs:sequence>
+	      <xs:element name="name" type="xs:token"/>
+	      <xs:element name="url" type="xs:anyURI"/>
+	    </xs:sequence>
+	    <xs:attribute name="id" use="required" type="xs:positiveInteger"/>
+	  </xs:complexType>
+	</xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

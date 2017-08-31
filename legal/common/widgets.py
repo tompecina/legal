@@ -29,6 +29,7 @@ from django.utils.safestring import mark_safe
 from legal.sir.glob import L2N
 from legal.sir.models import Vec
 from legal.szr.models import Court
+from legal.uds.models import Publisher
 
 
 class TextWidget(forms.TextInput):
@@ -133,7 +134,7 @@ class CourtWidget(TextWidget):
         self.supreme_court = supreme_court
         self.supreme_administrative_court = supreme_administrative_court
         self.ins_courts = ins_courts
-        super().__init__(6, *args, **kwargs)
+        super().__init__(10, *args, **kwargs)
 
     def render(self, name, value, *args, **kwargs):
         context = {'ins_courts': self.ins_courts, 'value': value}
@@ -166,3 +167,47 @@ class CourtWidget(TextWidget):
                 context['optgroups'].append(county_group)
 
         return mark_safe(get_template('widgets/select_court.xhtml').render(context))
+
+
+class PublisherWidget(TextWidget):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(10, *args, **kwargs)
+
+    def render(self, name, value, *args, **kwargs):
+        high_courts = Publisher.objects.filter(type='SOUD', high=True).order_by('name')
+        high_courts_label = 'Nejvyšší a vrchní soudy'
+        high_courts_group = {'label': high_courts_label, 'publishers': high_courts}
+        context = {'optgroups': [high_courts_group]}
+        reg_courts = Publisher.objects.filter(type='SOUD', high=False, reports__isnull=True).order_by('name')
+        reg_courts_group = {'label': 'Krajské soudy', 'publishers': reg_courts}
+        context['optgroups'].append(reg_courts_group)
+        for reg_court in reg_courts:
+            county_courts = sorted(
+                list(Publisher.objects.filter(
+                    reports=reg_court,
+                    subsidiary_region=False,
+                    subsidiary_county=False,
+                ).order_by('name').values('id', 'name')),
+                key=lambda x: strxfrm('Z' if x['name'].endswith('10') else x['name']))
+            county_courts_group = {'label': reg_court.name, 'publishers': county_courts}
+            context['optgroups'].append(county_courts_group)
+        high_attorneys = Publisher.objects.filter(type='ZAST', high=True).order_by('name')
+        high_attorneys_label = 'Nejvyšší a vrchní státní zastupitelství'
+        high_attorneys_group = {'label': high_attorneys_label, 'publishers': high_attorneys}
+        context['optgroups'].append(high_attorneys_group)
+        reg_attorneys = Publisher.objects.filter(type='ZAST', high=False, reports__isnull=True).order_by('name')
+        reg_attorneys_group = {'label': 'Krajská státní zastupitelství', 'publishers': reg_attorneys}
+        context['optgroups'].append(reg_attorneys_group)
+        for reg_attorney in reg_attorneys:
+            county_attorneys = sorted(
+                list(Publisher.objects.filter(
+                    reports=reg_attorney,
+                    subsidiary_region=False,
+                    subsidiary_county=False,
+                ).order_by('name').values('id', 'name')),
+                key=lambda x: strxfrm('Z' if x['name'].endswith('10') else x['name']))
+            county_attorneys_group = {'label': reg_attorney.name, 'publishers': county_attorneys}
+            context['optgroups'].append(county_attorneys_group)
+
+        return mark_safe(get_template('widgets/select_publisher.xhtml').render(context))

@@ -80,8 +80,8 @@ STATICFILES_FINDERS = (
 )
 
 APPS = (
-    'common', 'sop', 'lht', 'cin', 'dvt', 'cnb', 'knr', 'hjp', 'hsp', 'szr', 'sur', 'psj', 'udn', 'sir', 'dir',
-    'pir', 'kos',
+    'common', 'sop', 'lht', 'cin', 'dvt', 'cnb', 'knr', 'hjp', 'hsp', 'szr', 'sur', 'psj', 'uds', 'udn', 'sir',
+    'dir', 'pir', 'kos',
 )
 
 INSTALLED_APPS = [
@@ -92,6 +92,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'legal.fulltext',
 ] + ['legal.{}.apps.{}Config'.format(x, x.capitalize()) for x in APPS]
 
 MIDDLEWARE = (

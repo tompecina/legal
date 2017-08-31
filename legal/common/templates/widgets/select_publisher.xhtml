@@ -1,0 +1,49 @@
+{% comment %}
+
+common/templates/select_publisher.xhtml
+
+Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
+<select name="publisher" id="id_publisher">
+
+  <option value="">(všechny)</option>
+
+  {% if ins_publishers %}
+
+  {% for publisher in publishers %}
+  <option value="{{ publisher.id }}"{% if value == publisher.id %} selected="selected"{% endif %}>{{ publisher.name }}</option>
+  {% endfor %}
+
+  {% else %}
+
+  {% for optgroup in optgroups %}
+  {% if optgroup.publishers %}
+  <optgroup label="{{ optgroup.label }}">
+    {% for publisher in optgroup.publishers %}
+    <option value="{{ publisher.id }}"{% if value == publisher.id %} selected="selected"{% endif %}>{{ publisher.name }}</option>
+    {% endfor %}
+  </optgroup>
+  {% endif %}
+  {% endfor %}
+
+  {% endif %}
+
+</select>

@@ -73,8 +73,7 @@ def mainpage(request):
         for key in cld:
             if cld[key]:
                 query[key] = cld[key]
-        for key in ('role_debtor', 'role_trustee', 'role_creditor',
-            'deleted', 'creditors'):
+        for key in ('role_debtor', 'role_trustee', 'role_creditor', 'deleted', 'creditors'):
             if cld[key]:
                 query[key] = 'on'
         query['start'] = 0

@@ -157,6 +157,18 @@ function pager_submit(event) {
     return false;
 }
 
+function help_show() {
+    $('tr.help').css('display', 'table-row');
+    $('a.help').text('skrýt').click(help_hide);
+    return false;
+}
+
+function help_hide() {
+    $('tr.help').css('display', 'none');
+    $('a.help').text('nápověda').click(help_show);
+    return false;
+}
+
 $(function() {
     $('.currsel').change(currsel_change).change();
     $('.today').click(set_today);
@@ -170,6 +182,7 @@ $(function() {
     });
     $('td.pager a.num').click(pager_click);
     $('td.pager form').submit(pager_submit);
+    $('a.help').click(help_show);
     $('input[type=text][name*=date]').datepicker();
     $('select').each(function() {
 	var select = $(this);

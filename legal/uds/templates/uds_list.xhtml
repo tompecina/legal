@@ -2,7 +2,7 @@
 
 {% comment %}
 
-udn/templates/udn_list.xhtml
+uds/templates/uds_list.xhtml
 
 Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 
@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% block page_contents %}
 
+{% load replace %}
+
 <h1 class="list">{{ page_title }}</h1>
 
 {% if rows %}
@@ -37,11 +39,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <thead>
 
     <tr>
-      <th>Datum</th>
-      <th>Jednací číslo</th>
-      <th>Oblast</th>
-      <th>Účastníci řízení</th>
-      <th>Rozhodnutí</th>
+      <th>Vyvěšeno</th>
+      <th>Soud/SZ</th>
+      <th>Agenda</th>
+      <th>Popis</th>
+      <th>Značka</th>
+      <th>Soubory</th>
+      <th>infoDeska</th>
     </tr>
 
   </thead>
@@ -52,23 +56,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <tr>
 
-      <td>{{ row.date|date:'d.m.Y' }}</td>
-
-      <td>{% if row.senate %}{{ row.senate }} {% endif %}{{ row.register }} {{ row.number }}/{{ row.year }}-{{ row.page }}</td>
-
-      <td>{{ row.agenda }}</td>
+      <td>{{ row.posted|date:'d.m.Y' }}<br/>{{ row.posted|time:'H:i:s' }}</td>
 
       <td>
-	{% for party in row.parties.all %}
-	<div>{{ party.name }}</div>
+	<div>{{ row.publisher.name }}</div>
+      </td>
+
+      <td{% if row.agenda|length > 50 %} title="{{ row.agenda }}"{% endif %}>{{ row.agenda|truncatechars:50|replace:'_\.\.\.$_…' }}</td>
+
+      <td{% if row.desc|length > 50 %} title="{{ row.desc }}"{% endif %}>{{ row.desc|truncatechars:50|replace:'_\.\.\.$_…' }}</td>
+
+      <td{% if row.ref|length > 20 %} title="{{ row.ref }}"{% endif %}>{{ row.ref|truncatechars:20|replace:'_\.\.\.$_…' }}</td>
+
+      <td class="act">
+	{% for file in row.files %}
+	<a href="/repo/uds/{{ file.fileid }}/{{ file.name|urlencode }}" target="_blank" title="{{ file.name }}">[{{ forloop.counter }}]</a>
+	{% if file.brk %}
+	<br/>
+	{% endif %}
 	{% endfor %}
       </td>
 
       <td class="act">
-	<a href="/repo/udn/{{ row.filename }}" target="_blank" title="Zkrácené rozhodnutí">[Z]</a>
-	{% if row.anonfilename %}
-	<a href="/repo/udn/{{ row.anonfilename }}" target="_blank" title="Anonymisované rozhodnutí">[A]</a>
-	{% endif %}
+	<a href="http://infodeska.justice.cz/vyveseni.aspx?verzeid={{ row.docid }}" target="_blank" title="Informace na infoDesce">[D]</a>
       </td>
 
     </tr>
@@ -82,7 +92,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <tfoot>
 
     <tr>
-      <td colspan="5" class="pager">
+      <td colspan="7" class="pager">
 	{% include 'pager.xhtml' %}
       </td>
     </tr>
@@ -99,6 +109,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% endif %}
 
-<p><a href="{% url 'udn:mainpage' %}">Zpět na vyhledávací formulář</a></p>
+<p><a href="{% url 'uds:mainpage' %}">Zpět na vyhledávací formulář</a></p>
 
 {% endblock %}
