@@ -326,7 +326,7 @@ class TestViews1(TestCase):
         check_html(self, res.content)
 
 
-class TestViews2(TestCase):
+class TestViews2(TransactionTestCase):
 
     def test_htmllist(self):
 
