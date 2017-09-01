@@ -27,12 +27,14 @@ from re import compile, split
 
 from bs4 import BeautifulSoup
 from textract import process
+from django.contrib.auth.models import User
 
 from legal.settings import BASE_DIR, TEST, TEST_TEMP_DIR
 from legal.common.glob import ODP
 from legal.common.utils import get, sleep, LOGGER, between
+from legal.sur.models import Party
 from legal.uds.glob import TYPES
-from legal.uds.models import Publisher, Agenda, Document, File
+from legal.uds.models import Publisher, Agenda, Document, File, Retrieved
 
 
 ROOT_URL = 'http://infodeska.justice.cz/'
@@ -260,9 +262,40 @@ def cron_update(*args):
                                 text=text,
                                 ocr=ocr,
                             )
+                            for party in Party.objects.all():
+                                string = party.party.lower()
+                                if string in desc.lower() or string in text.lower():
+                                    Retrieved.objects.update_or_create(
+                                        uid_id=party.uid_id,
+                                        party=party,
+                                        document=doc)
+                                    if party.uid.email:
+                                        Party.objects.filter(id=party.id).update(notify=True)
+                                    LOGGER.info(
+                                        'New party "{}" detected for user "{}" ({:d})'
+                                        .format(name, User.objects.get(pk=party.uid_id).username, party.uid_id))
                 LOGGER.debug('Updated "{}", {:%Y-%m-%d}'.format(publisher.name, dat))
                 if not args:
                     Publisher.objects.filter(id=publisher.id).update(updated=datetime.now())
             except:
                 LOGGER.info('Failed to update "{}", {:%Y-%m-%d}'.format(publisher.name, dat))
         LOGGER.debug('Updated all publishers, {:%Y-%m-%d}'.format(dat))
+
+
+def uds_notice(uid):
+
+    text = ''
+    docs = Retrieved.objects.filter(uid=uid).order_by('id').distinct()
+    if docs:
+        text = 'Na úředních deskách byly nově zaznamenány tyto osoby, které sledujete:\n\n'
+        for doc in docs:
+            lst = [doc.party.party, doc.document.publisher.name, doc.document.desc]
+            if doc.document.ref:
+                lst.append('sp. zn. {}'.format(doc.document.ref))
+            text += ' - {}\n'.format(', '.join(filter(bool,  lst)))
+            text += '   {}\n\n'.format(DETAIL_URL.format(doc.document.docid))
+        Retrieved.objects.filter(uid=uid).delete()
+        LOGGER.info(
+            'Non-empty notice prepared for user "{}" ({:d})'.format(User.objects.get(pk=uid).username, uid))
+    Party.objects.filter(uid=uid).update(notify=False)
+    return text

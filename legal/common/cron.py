@@ -32,7 +32,7 @@ from legal.udn.cron import cron_update as udn_update, cron_find as udn_find
 from legal.sur.cron import sur_notice
 from legal.sir.cron import sir_notice, cron_update as sir_update, cron_refresh_links as sir_refresh_links
 from legal.dir.cron import dir_notice
-from legal.uds.cron import cron_publishers as uds_publishers, cron_update as uds_update
+from legal.uds.cron import cron_publishers as uds_publishers, cron_update as uds_update, uds_notice
 from legal.common.glob import LOCAL_SUBDOMAIN, LOCAL_URL
 from legal.common.utils import send_mail, LOGGER
 from legal.common.models import Pending, Lock
@@ -42,7 +42,7 @@ def cron_notify():
 
     for user in User.objects.all():
         uid = user.id
-        text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) + dir_notice(uid)
+        text = szr_notice(uid) + sur_notice(uid) + sir_notice(uid) + dir_notice(uid) + uds_notice(uid)
         if text and user.email:
             text += 'Server {} ({})\n'.format(LOCAL_SUBDOMAIN, LOCAL_URL)
             send_mail(

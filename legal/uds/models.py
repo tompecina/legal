@@ -27,7 +27,7 @@ from django.contrib.auth.models import User
 from legal.common.glob import REGISTER_RE_STR
 from legal.common.utils import composeref
 from legal.fulltext.fulltext import SearchManager
-
+from legal.sur.models import Party
 
 class Publisher(models.Model):
 
@@ -161,3 +161,24 @@ class File(models.Model):
 
     def __str__(self):
         return '{}, {}, {}'.format(self.document.publisher.name, self.document.desc, self.name)
+
+
+class Retrieved(models.Model):
+
+    uid = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE)
+
+    party = models.ForeignKey(
+        Party,
+        on_delete=models.CASCADE)
+
+    document = models.ForeignKey(
+        Document,
+        on_delete=models.CASCADE)
+
+    timestamp_add = models.DateTimeField(
+        auto_now_add=True)
+
+    def __str__(self):
+        return self.party.party

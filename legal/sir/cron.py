@@ -162,7 +162,7 @@ def cron_proctr():
                                     desc=ins.desc,
                                     vec=vec)[1]:
                                 if ins.uid.email:
-                                    ins.notify = True
+                                    Insolvency.objects.filter(id=ins.id).update(notify=True)
                                 LOGGER.info(
                                     'Change detected in proceedings "{}" ({}) for user "{}" ({:d})'
                                     .format(

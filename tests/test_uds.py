@@ -32,6 +32,7 @@ from django.test import SimpleTestCase, TransactionTestCase, TestCase
 
 from legal.settings import TEST_TEMP_DIR, BASE_DIR, FULL_CONTENT_TYPE
 from legal.common.glob import LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL
+from legal.sur.models import Party
 from legal.uds import cron, forms, glob, models, views
 
 from tests.utils import strip_xml, validate_xml, link_equal, check_html
@@ -224,6 +225,27 @@ class TestCron3(TestCase):
         self.assertEqual(fil.text.strip(), 'test pdf')
 
 
+class TestCron4(TransactionTestCase):
+
+    fixtures = ('uds_test.json',)
+
+    def test_dir_notice(self):
+
+        Party(uid_id=1, party="test pdf", party_opt=0).save()
+        self.assertEqual(cron.uds_notice(1), '')
+        populate()
+        self.assertEqual(models.Retrieved.objects.count(), 1)
+        self.assertEqual(
+            cron.uds_notice(1),
+            '''Na úředních deskách byly nově zaznamenány tyto osoby, které sledujete:
+
+ - test pdf, Okresní soud Pelhřimov, Rozvrh práce, změna č. 1, sp. zn. 0 SPR 653/2009
+   http://infodeska.justice.cz/vyveseni.aspx?verzeid=82464
+
+''')
+        self.assertFalse(models.Retrieved.objects.exists())
+
+
 class TestForms(SimpleTestCase):
 
     def test_main_form(self):
@@ -252,6 +274,8 @@ class TestForms(SimpleTestCase):
 
 class TestModels(TestCase):
 
+    fixtures = ('uds_test.json',)
+
     def test_models(self):
 
         populate()
@@ -261,8 +285,11 @@ class TestModels(TestCase):
         self.assertEqual(
             str(models.File.objects.first()),
             'Okresní soud Pelhřimov, Rozvrh práce, změna č. 1, změna_č._1_RP_.pdf')
+        Party(uid_id=1, party="Test Party", party_opt=0).save()
+        models.Retrieved(uid_id=1, party=Party.objects.first(), document=models.Document.objects.first()).save()
+        self.assertEqual(str(models.Retrieved.objects.first()), 'Test Party')
 
-
+        
 class TestViews1(TestCase):
 
     def test_mainpage(self):

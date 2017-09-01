@@ -1,0 +1,20 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$NgPs7J5tOUtD$5kUebN1O9+krlAxuIa6mNq3QYspsREzBekzQcf1IhBY=",
+        "last_login": "2016-07-07T15:42:24.712",
+        "is_superuser": true,
+        "username": "tompecina",
+        "first_name": "Tom\u00e1\u0161",
+        "last_name": "Pecina",
+        "email": "tomas@pecina.cz",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2012-04-07T03:02:21",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

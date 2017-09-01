@@ -66,7 +66,7 @@ def dir_check(osoba, vec):
                     desc=debtor.desc,
                     vec=vec)[1]:
                 if debtor.uid.email:
-                    debtor.notify = True
+                    Debtor.objects.filter(id=debtor.id).update(notify=True)
                 LOGGER.info(
                     'New debtor "{}" detected for user "{}" ({:d})'.format(
                         debtor.desc,

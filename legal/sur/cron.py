@@ -55,7 +55,7 @@ def sur_check(name, court, senate, register, number, year, url):
                     year=year,
                     url=url)[1]:
                 if party.uid.email:
-                    party.notify = True
+                    Party.objects.filter(id=party.id).update(notify=True)
                 LOGGER.info(
                     'New party "{}" detected for user "{}" ({:d})'
                     .format(name, User.objects.get(pk=party.uid_id).username, party.uid_id))
