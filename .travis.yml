@@ -52,7 +52,7 @@ script:
   - scripts/full-test
 
 after_success:
-  - [ -z "$DEPLOY" ] && exit
+  - \[ -z "$DEPLOY" ] && exit
   - mkdir -p ~/.ssh
   - openssl aes-256-cbc -K $encrypted_447d660d3eed_key -iv $encrypted_447d660d3eed_iv -in .travis_id_rsa.enc -out ~/.ssh/id_rsa -d
   - chmod 600 ~/.ssh/id_rsa
