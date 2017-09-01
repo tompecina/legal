@@ -24,7 +24,7 @@ from http import HTTPStatus
 from datetime import date, datetime
 from re import compile
 from os.path import join
-from os import unlink
+from os import unlink, rmdir
 
 from bs4 import BeautifulSoup
 from django.apps import apps
@@ -33,7 +33,7 @@ from django.test import SimpleTestCase, TransactionTestCase, TestCase
 from legal.settings import TEST_TEMP_DIR, BASE_DIR, FULL_CONTENT_TYPE
 from legal.common.glob import LOCAL_SUBDOMAIN, LOCAL_URL, REPO_URL
 from legal.sur.models import Party
-from legal.uds import cron, forms, glob, models, views
+from legal.uds import cron, forms, models, views
 
 from tests.utils import strip_xml, validate_xml, link_equal, check_html
 
@@ -152,16 +152,30 @@ class TestCron2(SimpleTestCase):
 
 
 def populate():
+
     cron.cron_publishers()
     models.Publisher.objects.exclude(pubid=203040).delete()
     cron.cron_update('28.8.2017')
 
 
+def depopulate():
+
+    unlink(join(TEST_TEMP_DIR, '82788', 'změna_č._1_RP_.pdf'))
+    rmdir(join(TEST_TEMP_DIR, '82788'))
+
+
 class TestCron3(TestCase):
+
+    def setUp(self):
+        populate()
+
+    def tearDown(self):
+        depopulate()
+        unlink(join(TEST_TEMP_DIR, '82789', 'změna_č._1_RP_.pdf'))
+        rmdir(join(TEST_TEMP_DIR, '82789'))
 
     def test_update(self):
 
-        populate()
         self.assertEqual(models.Publisher.objects.count(), 1)
         self.assertEqual(models.Agenda.objects.count(), 1)
         self.assertEqual(models.Agenda.objects.first().desc, 'Správa soudu')
@@ -229,6 +243,9 @@ class TestCron4(TransactionTestCase):
 
     fixtures = ('uds_test.json',)
 
+    def tearDown(self):
+        depopulate()
+
     def test_dir_notice(self):
 
         Party(uid_id=1, party="test pdf", party_opt=0).save()
@@ -276,9 +293,14 @@ class TestModels(TestCase):
 
     fixtures = ('uds_test.json',)
 
+    def setUp(self):
+        populate()
+
+    def tearDown(self):
+        depopulate()
+
     def test_models(self):
 
-        populate()
         self.assertEqual(str(models.Publisher.objects.first()), 'Okresní soud Pelhřimov')
         self.assertEqual(str(models.Agenda.objects.first()), 'Správa soudu')
         self.assertEqual(str(models.Document.objects.first()), 'Okresní soud Pelhřimov, 0 SPR 653/2009')
@@ -355,9 +377,13 @@ class TestViews1(TestCase):
 
 class TestViews2(TransactionTestCase):
 
-    def test_htmllist(self):
-
+    def setUp(self):
         populate()
+
+    def tearDown(self):
+        depopulate()
+
+    def test_htmllist(self):
 
         res = self.client.get('/uds/list')
         self.assertEqual(res.status_code, HTTPStatus.MOVED_PERMANENTLY)
@@ -571,6 +597,9 @@ class TestViews3(TransactionTestCase):
 
     def setUp(self):
         populate()
+
+    def tearDown(self):
+        depopulate()
 
     def test_xmllist(self):
 

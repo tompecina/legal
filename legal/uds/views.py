@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from datetime import datetime, date
+from datetime import datetime
 from csv import writer as csvwriter
 from json import dump
 from os.path import join
@@ -143,7 +143,7 @@ def htmllist(request):
         doc.files = File.objects.filter(document=doc).order_by('fileid').distinct()
         idx = 1
         for file in doc.files:
-            file.brk = not (idx % 5)
+            file.brk = idx % 5 == 0
             idx += 1
     total = docs.count()
     if total and start >= total:

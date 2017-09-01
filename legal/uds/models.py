@@ -25,7 +25,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from legal.common.glob import REGISTER_RE_STR
-from legal.common.utils import composeref
 from legal.fulltext.fulltext import SearchManager
 from legal.sur.models import Party
 

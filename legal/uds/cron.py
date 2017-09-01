@@ -90,9 +90,9 @@ def cron_publishers():
                     subsidiary_region=subsidiary_region,
                     subsidiary_county=subsidiary_county,
                     reports=rep)
-        
+
     for typ in TYPES:
-        if True:
+        try:
             res = get(PUBLISHERS_URL.format(typ))
             soup = BeautifulSoup(res.text, 'html.parser')
             high = soup.find('div', 'bezlokality')
@@ -100,6 +100,8 @@ def cron_publishers():
             proc_publishers(high, typ, high=True)
             for reg in lower.find_all('dl'):
                 proc_publishers(reg, typ, high=False)
+        except:
+            pass
 
     LOGGER.info('Publishers imported')
 
@@ -274,7 +276,10 @@ def cron_update(*args):
                                             Party.objects.filter(id=party.id).update(notify=True)
                                         LOGGER.info(
                                             'New party "{}" detected for user "{}" ({:d})'
-                                            .format(name, User.objects.get(pk=party.uid_id).username, party.uid_id))
+                                            .format(
+                                                party.party,
+                                                User.objects.get(pk=party.uid_id).username,
+                                                party.uid_id))
                 LOGGER.debug('Updated "{}", {:%Y-%m-%d}'.format(publisher.name, dat))
                 if not args:
                     Publisher.objects.filter(id=publisher.id).update(updated=datetime.now())
@@ -293,7 +298,7 @@ def uds_notice(uid):
             lst = [doc.party.party, doc.document.publisher.name, doc.document.desc]
             if doc.document.ref:
                 lst.append('sp. zn. {}'.format(doc.document.ref))
-            text += ' - {}\n'.format(', '.join(filter(bool,  lst)))
+            text += ' - {}\n'.format(', '.join(filter(bool, lst)))
             text += '   {}\n\n'.format(DETAIL_URL.format(doc.document.docid))
         Retrieved.objects.filter(uid=uid).delete()
         LOGGER.info(

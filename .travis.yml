@@ -34,7 +34,7 @@ before_install:
   - git clone --depth=1 https://github.com/validator/validator.git
   - pushd validator
   - python build/build.py update dldeps build jar
-  - validator=$(pwd)
+  - validator="$(pwd)"
   - popd
   - ln -s $validator/build/dist/vnu.jar lib
   - |
