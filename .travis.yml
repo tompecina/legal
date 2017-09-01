@@ -1,62 +1,60 @@
 # .travis.yml
 
-language: "python"
+language: python
 
-sudo: "false"
+sudo: false
 
 env:
   global:
-    - "TEST=1"
-    - "DBUSER=root"
+    - TEST=1
+    - DBUSER=root
 
 addons:
   apt:
     packages:
-    - "swig"
-    - "libpulse-dev"
-    - "tesseract-ocr"
-    - "tesseract-ocr-ces"
-    - "poppler-utils"
+    - swig
+    - libpulse-dev
+    - tesseract-ocr
+    - tesseract-ocr-ces
+    - poppler-utils
 
 matrix:
   include:
-    - python: "3.5"
-      env: "DJANGO_VERSION=stable CHECK_HTML=1"
-    - python: "3.6"
-      env: "DJANGO_VERSION=stable CHECK_HTML=1 DEPLOY=1"
-    - python: "3.6"
-      env: "DJANGO_VERSION=nightly"
+    - python: 3.5
+      env: DJANGO_VERSION=stable CHECK_HTML=1
+    - python: 3.6
+      env: DJANGO_VERSION=stable CHECK_HTML=1 DEPLOY=1
+    - python: 3.6
+      env: DJANGO_VERSION=nightly
 
 before_install:
-  - "gem install sass"
-  - "npm install uglify-js"
-  - "export PATH=$(pwd)/node_modules/.bin:\"$PATH\""
-  - "git clone --depth=1 https://github.com/validator/validator.git"
-  - "pushd validator"
-  - "python build/build.py update dldeps build jar"
-  - "validator=$(pwd)"
-  - "popd"
-  - "ln -s $validator/build/dist/vnu.jar lib"
+  - gem install sass
+  - npm install uglify-js
+  - export PATH="$(pwd)/node_modules/.bin:$PATH"
+  - git clone --depth=1 https://github.com/validator/validator.git
+  - pushd validator
+  - python build/build.py update dldeps build jar
+  - validator=$(pwd)
+  - popd
+  - ln -s $validator/build/dist/vnu.jar lib
   - |
     if [ "$DJANGO_VERSION" == nightly ]; then
         pip install git+https://github.com/django/django.git
-        pip install -r <(cat requirements.txt | grep -v -e '^Django==')
+        pip install -r <(cat requirements.txt | grep -v -e "^Django==")
     else
         pip install -r requirements.txt
     fi
 
 install:
-  - "scripts/make-static"
+  - scripts/make-static
 
 script:
-  - "scripts/full-test"
+  - scripts/full-test
 
 after_success:
-  - |
-    if [ -n "$DEPLOY" ]; then
-        mkdir -p ~/.ssh
-        openssl aes-256-cbc -K $encrypted_447d660d3eed_key -iv $encrypted_447d660d3eed_iv -in .travis_id_rsa.enc -out ~/.ssh/id_rsa_rsa -d
-        chmod 600 ~/.ssh/id_rsa
-        echo "StrictHostKeyChecking no" >> ~/.ssh/config
-        scripts/deploy
-    fi
+  - [ -z "$DEPLOY" ] && exit
+  - mkdir -p ~/.ssh
+  - openssl aes-256-cbc -K $encrypted_447d660d3eed_key -iv $encrypted_447d660d3eed_iv -in .travis_id_rsa.enc -out ~/.ssh/id_rsa -d
+  - chmod 600 ~/.ssh/id_rsa
+  - echo "StrictHostKeyChecking no" >> ~/.ssh/config
+  - scripts/deploy
