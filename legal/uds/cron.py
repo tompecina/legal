@@ -262,18 +262,19 @@ def cron_update(*args):
                                 text=text,
                                 ocr=ocr,
                             )
-                            for party in Party.objects.all():
-                                string = party.party.lower()
-                                if string in desc.lower() or string in text.lower():
-                                    Retrieved.objects.update_or_create(
-                                        uid_id=party.uid_id,
-                                        party=party,
-                                        document=doc)
-                                    if party.uid.email:
-                                        Party.objects.filter(id=party.id).update(notify=True)
-                                    LOGGER.info(
-                                        'New party "{}" detected for user "{}" ({:d})'
-                                        .format(name, User.objects.get(pk=party.uid_id).username, party.uid_id))
+                            if not args or TEST:
+                                for party in Party.objects.all():
+                                    string = party.party.lower()
+                                    if string in desc.lower() or string in text.lower():
+                                        Retrieved.objects.update_or_create(
+                                            uid_id=party.uid_id,
+                                            party=party,
+                                            document=doc)
+                                        if party.uid.email:
+                                            Party.objects.filter(id=party.id).update(notify=True)
+                                        LOGGER.info(
+                                            'New party "{}" detected for user "{}" ({:d})'
+                                            .format(name, User.objects.get(pk=party.uid_id).username, party.uid_id))
                 LOGGER.debug('Updated "{}", {:%Y-%m-%d}'.format(publisher.name, dat))
                 if not args:
                     Publisher.objects.filter(id=publisher.id).update(updated=datetime.now())
