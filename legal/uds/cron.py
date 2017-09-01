@@ -260,9 +260,9 @@ def cron_update(*args):
                                 text=text,
                                 ocr=ocr,
                             )
-                LOGGER.debug('Updated "{}", {:%d.%m.%Y}'.format(publisher.name, dat))
+                LOGGER.debug('Updated "{}", {:%Y-%m-%d}'.format(publisher.name, dat))
                 if not args:
                     Publisher.objects.filter(id=publisher.id).update(updated=datetime.now())
             except:
-                LOGGER.info('Failed to update "{}", {:%d.%m.%Y}'.format(publisher.name, dat))
-        LOGGER.debug('Updated all publishers, {:%d.%m.%Y}'.format(dat))
+                LOGGER.info('Failed to update "{}", {:%Y-%m-%d}'.format(publisher.name, dat))
+        LOGGER.debug('Updated all publishers, {:%Y-%m-%d}'.format(dat))
