@@ -92,7 +92,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'legal.fulltext',
+    'django.contrib.postgres',
 ] + ['legal.{}.apps.{}Config'.format(x, x.capitalize()) for x in APPS]
 
 MIDDLEWARE = (
@@ -128,20 +128,17 @@ WSGI_APPLICATION = 'legal.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': DBNAME,
         'USER': DBUSER,
         'PASSWORD': DBPASSWD,
-        'HOST': '',
+        'HOST': 'localhost',
         'PORT': '',
         'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
         'TEST': {
-            'CHARSET': 'utf8',
-            'COLLATION': 'utf8_czech_ci',
         }
-    }
+    },
 }
 
 AUTH_PASSWORD_VALIDATORS = [

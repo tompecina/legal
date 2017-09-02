@@ -742,8 +742,8 @@ itor><name>OSPEN, s.r.o.</name><gen_id>25262823</gen_id><addresses></addresses><
 Uličná</name><first_name>Blanka</first_name><honorifics_prepended>Ing.</honorifics_prepended><birth_date>1968-01-18<\
 /birth_date><addresses></addresses></creditor><creditor><name>RWE Energie, a. s.</name><gen_id>49903209</gen_id><add\
 resses></addresses></creditor><creditor><name>Středočeské vodárny, a. s.</name><gen_id>26196620</gen_id><addresses><\
-/addresses></creditor><creditor><name>T-Mobile Czech Republic a. s.</name><gen_id>64949681</gen_id><addresses></addr\
-esses></creditor><creditor><name>Telefónica Czech Republic, a.s.</name><gen_id>60193336</gen_id><addresses></address\
+/addresses></creditor><creditor><name>Telefónica Czech Republic, a.s.</name><gen_id>60193336</gen_id><addresses></ad\
+dresses></creditor><creditor><name>T-Mobile Czech Republic a. s.</name><gen_id>64949681</gen_id><addresses></address\
 es></creditor><creditor><name>Zdravotní pojišťovna METAL - ALIANCE</name><gen_id>48703893</gen_id><addresses></addre\
 sses></creditor></creditors></insolvency><insolvency><court id="KSVYCHKP1">Krajský soud v Hradci Králové, pobočka v \
 Pardubicích</court><ref><court>KSPA</court><senate>56</senate><register>INS</register><number>47</number><year>2015<\
@@ -1004,8 +1004,8 @@ e": "M\u011bsto Slan\u00fd", "addresses": [], "gen_id": "00234877"}, {"name": "O
 _id": "25262823"}, {"name": "Pol\u00e1\u010dkov\u00e1 Uli\u010dn\u00e1", "first_name": "Blanka", "addresses": [], "b\
 irth_date": "1968-01-18", "honorifics_prepended": "Ing."}, {"name": "RWE Energie, a. s.", "addresses": [], "gen_id":\
  "49903209"}, {"name": "St\u0159edo\u010desk\u00e9 vod\u00e1rny, a. s.", "addresses": [], "gen_id": "26196620"}, {"n\
-ame": "T-Mobile Czech Republic a. s.", "addresses": [], "gen_id": "64949681"}, {"name": "Telef\u00f3nica Czech Repub\
-lic, a.s.", "addresses": [], "gen_id": "60193336"}, {"name": "Zdravotn\u00ed poji\u0161\u0165ovna METAL - ALIANCE", \
+ame": "Telef\u00f3nica Czech Republic, a.s.", "addresses": [], "gen_id": "60193336"}, {"name": "T-Mobile Czech Repub\
+lic a. s.", "addresses": [], "gen_id": "64949681"}, {"name": "Zdravotn\u00ed poji\u0161\u0165ovna METAL - ALIANCE", \
 "addresses": [], "gen_id": "48703893"}], "ref": {"senate": 36, "year": 2011, "court": "KSPH", "number": 16046, "regi\
 ster": "INS"}, "state": "", "debtors": [{"addresses": [{"city": "Kladno", "zip": "272 01", "street": "\u010cs. arm\
 \u00e1dy", "type": "trval\u00e1", "street_number": "3208"}, {"city": "okr. Kladno", "zip": "273 22", "street": "Kmet\

@@ -23,6 +23,7 @@
 from legal.common.glob import TEXT_OPTS, FORMAT_OPTS
 from legal.common.forms import Form
 from legal.common.fields import CharField, DateField, IntegerField, ChoiceField
+from legal.common.validators import TSQueryValidator
 from legal.common.widgets import TextWidget, DateWidget, RadioWidget, PublisherWidget
 
 
@@ -93,7 +94,8 @@ class MainForm(Form):
         widget=TextWidget(60),
         required=False,
         max_length=255,
-        label='V textu dokumentu')
+        label='V textu dokumentu',
+        validators=(TSQueryValidator(),))
 
     format = ChoiceField(
         widget=RadioWidget(),

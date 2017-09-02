@@ -33,7 +33,7 @@ from django.urls import reverse
 from django.http import QueryDict, Http404
 
 from legal.common.glob import INERR, TEXT_OPTS_KEYS, REPO_URL, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF
-from legal.common.utils import Pager, new_xml, xml_decorate, LOGGER, render
+from legal.common.utils import Pager, new_xml, xml_decorate, LOGGER, render, SearchVector, SearchQuery
 from legal.uds.forms import MainForm
 from legal.uds.models import Agenda, Document, File
 
@@ -122,7 +122,8 @@ def g2p(reqd):
         assert 'desc_opt' in reqd
         par['desc__' + reqd['desc_opt']] = reqd['desc']
     if 'text' in reqd:
-        par['id__in'] = list(File.objects.search(reqd['text']).distinct().values_list('document_id', flat=True))
+        query = SearchQuery(reqd['text'].replace('*', ':*').replace('"', "'"))
+        par['file__in'] = File.objects.annotate(search=SearchVector('text')).filter(search=query)
 
     return par
 
@@ -137,14 +138,14 @@ def htmllist(request):
         start = int(reqd['start']) if 'start' in reqd else 0
         assert start >= 0
         docs = Document.objects.filter(**par).order_by('-posted', 'docid').distinct()
+        for doc in docs:
+            doc.files = File.objects.filter(document=doc).order_by('fileid').distinct()
+            idx = 1
+            for file in doc.files:
+                file.brk = idx % 5 == 0
+                idx += 1
     except:
         raise Http404
-    for doc in docs:
-        doc.files = File.objects.filter(document=doc).order_by('fileid').distinct()
-        idx = 1
-        for file in doc.files:
-            file.brk = idx % 5 == 0
-            idx += 1
     total = docs.count()
     if total and start >= total:
         start = total - 1

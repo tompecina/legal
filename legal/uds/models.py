@@ -25,7 +25,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from legal.common.glob import REGISTER_RE_STR
-from legal.fulltext.fulltext import SearchManager
 from legal.sur.models import Party
 
 class Publisher(models.Model):
@@ -155,8 +154,6 @@ class File(models.Model):
 
     timestamp_add = models.DateTimeField(
         auto_now_add=True)
-
-    objects = SearchManager(['text'])
 
     def __str__(self):
         return '{}, {}, {}'.format(self.document.publisher.name, self.document.desc, self.name)

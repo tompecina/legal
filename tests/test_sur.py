@@ -71,12 +71,12 @@ class TestCron(TestCase):
     def test_sur_notice(self):
 
         cases = (
-            ('Jč', 0, 261, 166, 166, 166, 234),
-            ('jČ', 0, 261, 166, 166, 166, 234),
-            ('B', 1, 134, 158, 38, 108),
-            ('b', 1, 134, 158, 38, 108),
-            ('ová', 2, 261, 166, 166, 363, 485, 234, 38, 152, 233),
-            ('OVÁ', 2, 261, 166, 166, 363, 485, 234, 38, 152, 233),
+            ('Jč', 0, 166, 166, 166, 234, 261),
+            ('jČ', 0, 166, 166, 166, 234, 261),
+            ('B', 1, 38, 108, 134, 158),
+            ('b', 1, 38, 108, 134, 158),
+            ('ová', 2, 38, 152, 166, 166, 233, 234, 261, 363, 485),
+            ('OVÁ', 2, 38, 152, 166, 166, 233, 234, 261, 363, 485),
             ('Luděk Legner', 3, 234),
             ('LUDĚK legner', 3, 234),
             ('Mgr. Ivana Rychnovská', 3, 1784),
@@ -97,7 +97,7 @@ class TestCron(TestCase):
                 psj_update()
             Decision.objects.all().delete()
             udn_update()
-            self.assertEqual(tuple(models.Found.objects.values_list('number', flat=True)), test[2:])
+            self.assertEqual(tuple(models.Found.objects.order_by('number').values_list('number', flat=True)), test[2:])
 
         Hearing.objects.all().delete()
         models.Found.objects.all().delete()

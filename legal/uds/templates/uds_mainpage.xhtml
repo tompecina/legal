@@ -93,7 +93,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	</td>
       </tr>
 
-      <tr>
+      <tr class="{{ form.text.css_classes }}">
 	<th>{{ form.text.label_tag }}</th>
 	<td colspan="2">
 	  {{ form.text }}
@@ -105,12 +105,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<td></td>
 	<td colspan="2">
 	  <fieldset class="help">
-	    <div>Zadejte vyhledávací řetězec. Můžete použít speciální znaky pro fulltextové vyhledávání:</div>
+	    <div>Zadejte výraz pro vyhledání. Můžete použít speciální znaky:</div>
 	    <ul>
-	      <li><b>+slovo</b> se musí v textu vyskytovat</li>
-	      <li><b>-slovo</b> se nesmí v textu vyskytovat</li>
-	      <li><b>začátek*</b> hledat podle začátku slova</li>
-	      <li><b>&quot;frase&quot;</b> hledat přesnou frasi</li>
+	      <li><b>A &amp; B</b> najde dokumenty, ve kterých se vyskytuje <i>A</i> i <i>B</i></li>
+	      <li><b>A | B</b> najde dokumenty, ve kterých se vyskytuje <i>A</i> nebo <i>B</i></li>
+              <li>lze použít i závorky, např. <b>(A | B) &amp; (C | D)</b></li>
+	      <li><b>začátek*</b> najde dokumenty, ve kterých se vyskytuje začátek slova</li>
+	      <li><b>&quot;frase&quot;</b> najde dokumenty, ve kterých se vyskytuje přesná frase</li>
+	      <li><b>A &lt;-&gt; B</b> najde dokumenty, ve kterých je <i>A</i> následováno <i>B</i></li>
+	      <li><b>A &lt;<i>n</i>&gt; B</b> najde dokumenty, ve kterých <i>A n</i> slov za <i>B</i></li>
 	    </ul>
 	  </fieldset>
 	</td>

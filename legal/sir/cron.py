@@ -381,9 +381,10 @@ REFRESH_BATCH = 10
 
 def cron_refresh_links():
 
-    batch = (
-        Vec.objects.filter(datumVyskrtnuti__isnull=True, link__isnull=False)
-        .order_by('refreshed', 'timestamp_add')[:REFRESH_BATCH])
+    batch = Vec.objects.filter(datumVyskrtnuti__isnull=True, link__isnull=False, refreshed__isnull=True).order_by('id')
+    if not batch:
+        batch = Vec.objects.filter(datumVyskrtnuti__isnull=True, link__isnull=False).order_by('refreshed')
+    batch = batch[:REFRESH_BATCH]
 
     num = 0
     matrix = [0] * 5

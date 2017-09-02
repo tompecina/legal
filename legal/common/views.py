@@ -34,7 +34,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.apps import apps
 from django.db import connection
-from django import get_version
+from django.db.backends.postgresql_psycopg2.version import get_version as server_version
+from django import get_version as django_version
 
 from legal.settings import APPS
 from legal.common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
@@ -228,11 +229,12 @@ def about(request):
 
     LOGGER.debug('About page accessed', request)
 
+    sver = server_version(connection)
     env = (
         {'name': 'Python', 'version' : python_version()},
-        {'name': 'Django', 'version' : get_version()},
-        {'name': 'MySQL',
-         'version' : '{:d}.{:d}.{:d}'.format(*connection.mysql_version)},
+        {'name': 'Django', 'version' : django_version()},
+        {'name': 'PostgreSQL',
+         'version' : '{:d}.{:d}.{:d}'.format(sver // 10000, (sver // 100) % 100, sver % 100)},
         {'name': 'Platforma', 'version' : '{0}-{2}'.format(*uname())},
     )
 

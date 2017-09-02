@@ -44,6 +44,7 @@ from reportlab.lib.pagesizes import A4
 from django.core import mail
 from django.shortcuts import render as orig_render
 from django.db.transaction import atomic
+from django.contrib.postgres import search
 
 from legal.settings import FONT_DIR, TEST
 from legal.common.glob import LIM, ODP, YDCONVS, MDCONVS, REGISTERS, LOCAL_SUBDOMAIN, LOCAL_EMAIL
@@ -1085,3 +1086,23 @@ def setasset(request, asset_id, data, lifespan):
     })
     LOGGER.debug("Asset '{}' for session '{}' stored, length: {:d}".format(asset_id, sid, len(data)))
     return True
+
+
+class SearchVector(search.SearchVector):
+
+    pass
+
+
+class SearchQuery(search.SearchQuery):
+
+    def as_sql(self, compiler, connection):
+        params = [self.value]
+        if self.config:
+            config_sql, config_params = compiler.compile(self.config)
+            template = 'to_tsquery({}::regconfig, %s)'.format(config_sql)
+            params = config_params + [self.value]
+        else:
+            template = 'to_tsquery(%s)'
+        if self.invert:
+            template = '!!({})'.format(template)
+        return template, params
