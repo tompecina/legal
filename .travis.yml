@@ -4,15 +4,13 @@ language: python
 
 sudo: false
 
-addons:
-  postgresql: "9.6"
-
 env:
   global:
     - TEST=1
     - DBUSER=postgres
 
 addons:
+  postgresql: 9.6
   apt:
     packages:
     - swig
@@ -26,7 +24,7 @@ matrix:
     - python: 3.5
       env: DJANGO_VERSION=stable CHECK_HTML=1
     - python: 3.6
-      env: DJANGO_VERSION=stable CHECK_HTML=1 DEPLOY=
+      env: DJANGO_VERSION=stable CHECK_HTML=1 DEPLOY=1
     - python: 3.6
       env: DJANGO_VERSION=nightly
 
