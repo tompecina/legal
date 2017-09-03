@@ -106,7 +106,7 @@ SCHED = (
      'blocking': False,
     },
     {'name': 'uds_update',
-     'when': lambda t: t.hour == 19 and t.minute == 15,
+     'when': lambda t: t.weekday() < 5 and t.hour == 19 and t.minute == 15,
      'lock': 'uds',
      'blocking': False,
     },
