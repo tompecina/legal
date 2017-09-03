@@ -1255,67 +1255,56 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?senate=56')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?number=47')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?year=2015')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?date_first_from=2015-01-05')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 2)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?date_first_from=2015-01-06')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?date_first_to=2015-01-05')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 2)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?date_first_to=2015-01-04')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?date_last_from=2016-07-20')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 3)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?date_last_from=2016-07-21')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 2)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?date_last_to=2016-07-20')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?date_last_to=2016-07-19')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1327,7 +1316,6 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?name=Bártová&name_opt=iexact')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1339,7 +1327,6 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?first_name=Veronika&first_name_opt=iexact')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1351,7 +1338,6 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?city=Litomyšl&city_opt=iexact')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1363,7 +1349,6 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?genid=03814742')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1375,7 +1360,6 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?taxid=004-13584324')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1387,7 +1371,6 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?birthid=8060143487')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1399,7 +1382,6 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?date_birth=1980-10-14')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1411,7 +1393,6 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?year_birth_from=1980')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1423,7 +1404,6 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 3)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?year_birth_to=1980')
         self.assertEqual(res.status_code, HTTPStatus.OK)
@@ -1441,25 +1421,21 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 2)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?name=k&name_opt=icontains&role_debtor=on&role_trustee=on')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 3)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?name=k&name_opt=icontains&role_creditor=on')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 3)
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?deleted=on')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 4)
-        check_html(self, res.content)
 
         vec = Vec.objects.filter(link__isnull=False).first().__dict__
         del vec['id'], vec['_state']
@@ -1526,7 +1502,6 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(len(res.context['rows']), 16)
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('.list tfoot a')
         self.assertEqual(len(links), 3)
@@ -1538,7 +1513,6 @@ class TestViews6(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(len(res.context['rows']), 1)
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('.list tfoot a')
         self.assertEqual(len(links), 3)
