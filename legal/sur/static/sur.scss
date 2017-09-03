@@ -26,7 +26,12 @@ table#list {
     thead tr th:nth-child(2) {
 	text-align: left;
     }
-    tbody tr td:nth-child(2) {
-	white-space: nowrap;
+    tbody tr td {
+	&:nth-child(2) {
+	    white-space: nowrap;
+	}
+	&.act a:nth-child(2) {
+	    margin-right: $hm;
+	}
     }
 }
