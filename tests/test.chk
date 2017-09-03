@@ -272,11 +272,11 @@ test_sop.py:305-4 71add295
 test_sop.py:305-5 0ffc0caa
 test_sop.py:305-6 ce13dd78
 test_sop.py:305-7 2d1df922
-test_uds.py:327 c1cf8671
+test_uds.py:327 2bf43527
 test_uds.py:339 d1a2dda5
 test_uds.py:351 0058d8b5
-test_uds.py:363 856355da
-test_uds.py:375 b70e9e3b
+test_uds.py:363 ea2102bf
+test_uds.py:375 dce4f45a
 test_cin.py:171 12107f84
 test_cin.py:177-beg_date b8ac1f98
 test_cin.py:177-end_date 90483a94

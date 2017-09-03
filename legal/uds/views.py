@@ -122,7 +122,7 @@ def g2p(reqd):
         assert 'desc_opt' in reqd
         par['desc__' + reqd['desc_opt']] = reqd['desc']
     if 'text' in reqd:
-        query = SearchQuery(reqd['text'].replace('*', ':*').replace('"', "'"))
+        query = SearchQuery(reqd['text'].replace('*', ':*'))
         par['file__in'] = File.objects.annotate(search=SearchVector('text')).filter(search=query)
 
     return par
