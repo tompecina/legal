@@ -6,4 +6,5 @@ scriptpath='./scripts'
 ./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map' || exit
 "$scriptpath"/douglifyjs || exit
 cp external/* collect || exit
+mkdir -p collect/fonts
 cp fonts/* collect/fonts || exit
