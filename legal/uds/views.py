@@ -143,8 +143,8 @@ def htmllist(request):
     total = docs.count()
     if total and start >= total:
         start = total - 1
-    docs = docs[start:(start + BATCH)]
     try:
+        docs = docs[start:(start + BATCH)]
         for doc in docs:
             doc.files = File.objects.filter(document=doc).order_by('fileid').distinct()
             idx = 1
