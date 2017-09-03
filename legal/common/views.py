@@ -78,7 +78,7 @@ def error(request):
 
 
 @require_http_methods(('GET', 'POST'))
-def error400(request):
+def error400(request, *args, **kwargs):
 
     LOGGER.debug('Bad request error page (400) generated', request)
     return render(
@@ -89,7 +89,7 @@ def error400(request):
 
 
 @require_http_methods(('GET', 'POST'))
-def error403(request):
+def error403(request, *args, **kwargs):
 
     LOGGER.debug('Permission denied error page (403) generated', request)
     return render(
@@ -100,7 +100,7 @@ def error403(request):
 
 
 @require_http_methods(('GET', 'POST'))
-def error403_csrf(request):
+def error403_csrf(request, *args, **kwargs):
 
     LOGGER.debug('Permission denied due to CSRF violation error page (403_csrf) generated', request)
     return render(
@@ -111,7 +111,7 @@ def error403_csrf(request):
 
 
 @require_http_methods(('GET', 'POST'))
-def error404(request):
+def error404(request, *args, **kwargs):
 
     LOGGER.debug('Not found error page (404) generated', request)
     return render(
@@ -122,7 +122,7 @@ def error404(request):
 
 
 @require_http_methods(('GET', 'POST'))
-def error500(request):
+def error500(request, *args, **kwargs):
 
     LOGGER.debug('Internal server error page (500) generated', request)
     return render(
