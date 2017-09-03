@@ -205,7 +205,6 @@ class TestViews1(TransactionTestCase):
             desc='Test').save()
 
         res = self.client.get('/dir/')
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertEqual(len(soup.select('table#list tbody tr')), 1)
         for number in range(200, 437):
@@ -215,7 +214,6 @@ class TestViews1(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('.list tfoot a')
         self.assertEqual(len(links), 4)
@@ -228,7 +226,6 @@ class TestViews1(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('.list tfoot a')
         self.assertEqual(len(links), 6)
@@ -467,7 +464,6 @@ class TestViews2(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.xhtml')
-        check_html(self, res.content)
 
         debtor_id = models.Debtor.objects.create(
             uid=self.user,
@@ -505,7 +501,6 @@ class TestViews2(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.xhtml')
-        check_html(self, res.content)
 
         debtor = models.Debtor.objects.get(pk=debtor_id)
         self.assertEqual(debtor.desc, 'Test 8')
@@ -551,7 +546,6 @@ class TestViews3(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.xhtml')
-        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtordel/{:d}/'.format(debtor_id),
@@ -601,7 +595,6 @@ class TestViews4(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.xhtml')
-        check_html(self, res.content)
 
         res = self.client.post(
             '/dir/debtordelall/',
@@ -609,7 +602,6 @@ class TestViews4(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.xhtml')
-        check_html(self, res.content)
         self.assertEqual(models.Debtor.objects.count(), 2)
 
         res = self.client.post(
@@ -619,7 +611,6 @@ class TestViews4(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'dir_mainpage.xhtml')
-        check_html(self, res.content)
         self.assertEqual(models.Debtor.objects.count(), 2)
 
         res = self.client.post(

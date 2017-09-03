@@ -566,7 +566,6 @@ class TestViews3(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.redirect_chain[0][1], HTTPStatus.FOUND)
-        check_html(self, res.content)
         self.assertTrue(link_equal(res.redirect_chain[0][0], '/pir/list/?start=0'))
 
         res = self.client.post(
@@ -1157,7 +1156,6 @@ class TestViews5(TransactionTestCase):
         self.assertEqual(con['subtitle'], 'Anděla Hanzlíková')
         self.assertEqual(con['birthid'], '755819/0112')
         self.assertEqual(len(con['adresy']), 3)
-        check_html(self, res.content)
 
 
 class TestViews6(TransactionTestCase):
@@ -1180,7 +1178,6 @@ class TestViews6(TransactionTestCase):
         self.assertTrue(res.has_header('content-type'))
         self.assertEqual(res['content-type'], FULL_CONTENT_TYPE)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?senate=-1')
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
@@ -1247,14 +1244,12 @@ class TestViews6(TransactionTestCase):
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 3)
         self.assertFalse(res.context['creditors'])
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?creditors=on')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'pir_list.xhtml')
         self.assertEqual(res.context['total'], 3)
         self.assertTrue(res.context['creditors'])
-        check_html(self, res.content)
 
         res = self.client.get('/pir/list/?court=KSVYCHKP1')
         self.assertEqual(res.status_code, HTTPStatus.OK)

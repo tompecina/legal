@@ -384,7 +384,6 @@ class TestViews3(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'psj_list.xhtml')
         self.assertEqual(res.context['total'], 2)
-        check_html(self, res.content)
 
         res = self.client.get('/psj/list/?courtroom=9999')
         self.assertEqual(res.status_code, HTTPStatus.OK)

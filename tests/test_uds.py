@@ -488,19 +488,16 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'uds_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/uds/list/?publisher={:d}'.format(pub + 1))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'uds_list.xhtml')
         self.assertEqual(res.context['total'], 0)
-        check_html(self, res.content)
 
         res = self.client.get('/uds/list/?agenda={:d}'.format(models.Agenda.objects.first().id))
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'uds_list.xhtml')
         self.assertEqual(res.context['total'], 1)
-        check_html(self, res.content)
 
         res = self.client.get('/uds/list/?agenda=9999')
         self.assertEqual(res.status_code, HTTPStatus.OK)

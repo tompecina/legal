@@ -376,7 +376,6 @@ class TestViews1(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.xhtml')
-        check_html(self, res.content)
 
         ins_id = models.Insolvency.objects.create(
             uid=self.user,
@@ -405,7 +404,6 @@ class TestViews1(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.xhtml')
-        check_html(self, res.content)
 
         ins = models.Insolvency.objects.get(pk=ins_id)
         self.assertEqual(ins.number, 8)
@@ -443,7 +441,6 @@ class TestViews1(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.xhtml')
-        check_html(self, res.content)
 
         res = self.client.post(
             '/sir/insdel/{:d}/'.format(ins_id),
@@ -495,7 +492,6 @@ class TestViews1(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.xhtml')
-        check_html(self, res.content)
 
         res = self.client.post(
             '/sir/insdelall/',
@@ -503,7 +499,6 @@ class TestViews1(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.xhtml')
-        check_html(self, res.content)
         self.assertEqual(models.Insolvency.objects.count(), 2)
 
         res = self.client.post(
@@ -513,7 +508,6 @@ class TestViews1(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.xhtml')
-        check_html(self, res.content)
         self.assertEqual(models.Insolvency.objects.count(), 2)
 
         res = self.client.post(
@@ -707,7 +701,6 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('.list tfoot a')
         self.assertEqual(len(links), 4)
@@ -720,7 +713,6 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('.list tfoot a')
         self.assertEqual(len(links), 6)
@@ -735,7 +727,6 @@ class TestViews2(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sir_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('.list tfoot a')
         self.assertEqual(len(links), 6)

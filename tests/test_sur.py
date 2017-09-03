@@ -227,7 +227,6 @@ class TestViews1(TransactionTestCase):
         models.Party(uid=self.user, party_opt=0, party='Test').save()
 
         res = self.client.get('/sur/')
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         self.assertEqual(len(soup.select('table#list tbody tr')), 1)
         for number in range(200, 437):
@@ -237,7 +236,6 @@ class TestViews1(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('.list tfoot a')
         self.assertEqual(len(links), 4)
@@ -250,7 +248,6 @@ class TestViews1(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('.list tfoot a')
         self.assertEqual(len(links), 6)
@@ -265,7 +262,6 @@ class TestViews1(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 50)
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('.list tfoot a')
         self.assertEqual(len(links), 6)
@@ -280,7 +276,6 @@ class TestViews1(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 38)
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('.list tfoot a')
         self.assertEqual(len(links), 4)
@@ -293,7 +288,6 @@ class TestViews1(TransactionTestCase):
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
         self.assertEqual(len(res.context['rows']), 1)
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         links = soup.select('.list tfoot a')
         self.assertEqual(len(links), 4)
@@ -383,7 +377,6 @@ class TestViews2(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
-        check_html(self, res.content)
 
         party_id = models.Party.objects.create(
             uid=self.user,
@@ -411,7 +404,6 @@ class TestViews2(TransactionTestCase):
         self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
         party = models.Party.objects.get(pk=party_id)
         self.assertEqual(party.party, 'Test 8')
-        check_html(self, res.content)
 
 
 class TestViews3(TransactionTestCase):
@@ -455,7 +447,6 @@ class TestViews3(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
-        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/partydel/{:d}/'.format(party_id),
@@ -515,7 +506,6 @@ class TestViews4(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
-        check_html(self, res.content)
 
         res = self.client.post(
             '/sur/partydelall/',
@@ -523,7 +513,6 @@ class TestViews4(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
-        check_html(self, res.content)
         self.assertEqual(models.Party.objects.count(), 2)
 
         res = self.client.post(
@@ -533,7 +522,6 @@ class TestViews4(TransactionTestCase):
             follow=True)
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
-        check_html(self, res.content)
         self.assertEqual(models.Party.objects.count(), 2)
 
         res = self.client.post(
@@ -726,7 +714,6 @@ class TestViews7(TransactionTestCase):
         res = self.client.get('/sur/')
         self.assertEqual(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, 'sur_mainpage.xhtml')
-        check_html(self, res.content)
         soup = BeautifulSoup(res.content, 'html.parser')
         highlight = soup.find_all('td', 'highlight')
         self.assertEqual(len(highlight), 1)

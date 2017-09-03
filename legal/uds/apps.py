@@ -34,7 +34,7 @@ class UdsConfig(AppConfig):
     @staticmethod
     def stat():
         from legal.common.utils import LOGGER
-        from legal.uds.models import Publisher, Agenda, Document, File
+        from legal.uds.models import Publisher, Agenda, Document, File, Retrieved
         now = datetime.now()
         LOGGER.debug('Partial statistics generated')
         return (
@@ -89,4 +89,7 @@ class UdsConfig(AppConfig):
             (
                 'Počet souborů vystavených za poslední měsíc',
                 File.objects.filter(document__posted__gte=(now - timedelta(days=30))).count()),
+            (
+                'Počet osob pro příští notifikaci',
+                Retrieved.objects.count()),
         )

@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
-            ('CREATE INDEX uds_file_text_idx ON uds_file USING GIN (to_tsvector(\'simple\', text))',),
+            ("CREATE INDEX uds_file_text_idx ON uds_file USING GIN (to_tsvector('simple', COALESCE(text, '')))",),
             ('DROP INDEX uds_file_text_idx',)
         )
     ]

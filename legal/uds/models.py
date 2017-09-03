@@ -127,7 +127,8 @@ class Document(models.Model):
         db_index=True)
 
     timestamp_add = models.DateTimeField(
-        auto_now_add=True)
+        auto_now_add=True,
+        db_index=True)
 
     def __str__(self):
         return '{}, {}'.format(self.publisher.name, self.ref)
@@ -153,7 +154,8 @@ class File(models.Model):
         db_index=True)
 
     timestamp_add = models.DateTimeField(
-        auto_now_add=True)
+        auto_now_add=True,
+        db_index=True)
 
     def __str__(self):
         return '{}, {}, {}'.format(self.document.publisher.name, self.document.desc, self.name)

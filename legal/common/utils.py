@@ -1090,10 +1090,12 @@ def setasset(request, asset_id, data, lifespan):
 
 class SearchVector(search.SearchVector):
 
-    pass
+    config = 'simple'
 
 
 class SearchQuery(search.SearchQuery):
+
+    config = 'simple'
 
     def as_sql(self, compiler, connection):
         params = [self.value]
@@ -1102,7 +1104,7 @@ class SearchQuery(search.SearchQuery):
             template = 'to_tsquery({}::regconfig, %s)'.format(config_sql)
             params = config_params + [self.value]
         else:
-            template = 'to_tsquery(%s)'
+            template = "to_tsquery(%s)"
         if self.invert:
             template = '!!({})'.format(template)
         return template, params
