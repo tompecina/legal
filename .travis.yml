@@ -1,5 +1,7 @@
 # .travis.yml
 
+group: edge
+
 language: python
 
 sudo: false
