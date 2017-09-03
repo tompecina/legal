@@ -2113,6 +2113,49 @@ class TestViews(TestCase):
         self.assertContains(res, 'Interní chyba aplikace', status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
         check_html(self, res.content)
 
+    def test_error400(self):
+
+        req = DummyRequest(None)
+        req.method = 'GET'
+        res = views.error400(req)
+        self.assertContains(res, 'Chybný požadavek', status_code=HTTPStatus.BAD_REQUEST)
+        check_html(self, res.content)
+
+    def test_error403(self):
+
+        req = DummyRequest(None)
+        req.method = 'GET'
+        res = views.error403(req)
+        self.assertContains(res, 'Litujeme, ale k této stránce nemáte přístup', status_code=HTTPStatus.FORBIDDEN)
+        check_html(self, res.content)
+
+    def test_error403_csrf(self):
+
+        req = DummyRequest(None)
+        req.method = 'GET'
+        res = views.error403_csrf(req)
+        self.assertContains(
+            res,
+            'Litujeme, ale přístup byl zablokován systémem ochrany před Cross-Site Request Forgery (CSRF)',
+            status_code=HTTPStatus.FORBIDDEN)
+        check_html(self, res.content)
+
+    def test_error404(self):
+
+        req = DummyRequest(None)
+        req.method = 'GET'
+        res = views.error404(req)
+        self.assertContains(res, 'Stránka nenalezena', status_code=HTTPStatus.NOT_FOUND)
+        check_html(self, res.content)
+
+    def test_error500(self):
+
+        req = DummyRequest(None)
+        req.method = 'GET'
+        res = views.error500(req)
+        self.assertContains(res, 'Stránka není k disposici', status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
+        check_html(self, res.content)
+
     def test_logout(self):
 
         self.assertTrue(self.client.login(username='user', password='none'))

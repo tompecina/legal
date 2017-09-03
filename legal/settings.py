@@ -260,6 +260,8 @@ LOGGING = {
     },
 }
 
+CSRF_FAILURE_VIEW = 'legal.common.views.error403_csrf'
+
 if not (LOCAL or TEST):  # pragma: no cover
     SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 15768000

@@ -31,6 +31,12 @@ from legal.common.views import home, robots, pwchange, userinfo, useradd, lostpw
 admin.autodiscover()
 
 
+handler400 = 'legal.common.views.error400'
+handler403 = 'legal.common.views.error403'
+handler404 = 'legal.common.views.error404'
+handler500 = 'legal.common.views.error500'
+
+
 urlpatterns = [
     url(r'^$', home, name='home'),
     url(r'^robots\.txt$', robots),

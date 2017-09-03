@@ -78,6 +78,61 @@ def error(request):
 
 
 @require_http_methods(('GET', 'POST'))
+def error400(request):
+
+    LOGGER.debug('Bad request error page (400) generated', request)
+    return render(
+        request,
+        '400.xhtml',
+        {},
+        status=HTTPStatus.BAD_REQUEST)
+
+
+@require_http_methods(('GET', 'POST'))
+def error403(request):
+
+    LOGGER.debug('Permission denied error page (403) generated', request)
+    return render(
+        request,
+        '403.xhtml',
+        {},
+        status=HTTPStatus.FORBIDDEN)
+
+
+@require_http_methods(('GET', 'POST'))
+def error403_csrf(request):
+
+    LOGGER.debug('Permission denied due to CSRF violation error page (403_csrf) generated', request)
+    return render(
+        request,
+        '403_csrf.xhtml',
+        {},
+        status=HTTPStatus.FORBIDDEN)
+
+
+@require_http_methods(('GET', 'POST'))
+def error404(request):
+
+    LOGGER.debug('Not found error page (404) generated', request)
+    return render(
+        request,
+        '404.xhtml',
+        {},
+        status=HTTPStatus.NOT_FOUND)
+
+
+@require_http_methods(('GET', 'POST'))
+def error500(request):
+
+    LOGGER.debug('Internal server error page (500) generated', request)
+    return render(
+        request,
+        '500.xhtml',
+        {},
+        status=HTTPStatus.INTERNAL_SERVER_ERROR)
+
+
+@require_http_methods(('GET', 'POST'))
 def logout(request):
 
     LOGGER.debug('Logout page accessed using method {}'.format(request.method), request)
