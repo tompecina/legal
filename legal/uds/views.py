@@ -138,12 +138,9 @@ def htmllist(request):
         start = int(reqd['start']) if 'start' in reqd else 0
         assert start >= 0
         docs = Document.objects.filter(**par).order_by('-posted', 'docid').distinct()
-    except:
-        raise Http404
-    total = docs.count()
-    if total and start >= total:
-        start = total - 1
-    try:
+        total = docs.count()
+        if total and start >= total:
+            start = total - 1
         docs = docs[start:(start + BATCH)]
         for doc in docs:
             doc.files = File.objects.filter(document=doc).order_by('fileid').distinct()
