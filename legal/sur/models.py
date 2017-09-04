@@ -47,6 +47,15 @@ class Party(models.Model):
             MinValueValidator(0),
             MaxValueValidator(len(TEXT_OPTS) - 1)))
 
+    check_psj = models.BooleanField(
+        default=True)
+
+    check_uds = models.BooleanField(
+        default=True)
+
+    check_udn = models.BooleanField(
+        default=True)
+
     notify = models.BooleanField(
         default=False)
 

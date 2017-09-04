@@ -154,6 +154,7 @@ def cron_update():
                                 party = Party.objects.get_or_create(name=query.text.strip())[0]
                                 hearing[0].parties.add(party)
                                 sur_check(
+                                    {'check_psj': True},
                                     qts,
                                     task.court,
                                     senate,

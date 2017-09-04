@@ -266,7 +266,7 @@ def cron_update(*args):
                                 ocr=ocr,
                             )
                             if not args or TEST:
-                                for party in Party.objects.all():
+                                for party in Party.objects.filter(check_uds=True):
                                     with connection.cursor() as cursor:
                                         try:
                                             cursor.execute(

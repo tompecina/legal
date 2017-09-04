@@ -41,9 +41,9 @@ def sur_notice(uid):
     return text
 
 
-def sur_check(name, court, senate, register, number, year, url):
+def sur_check(par, name, court, senate, register, number, year, url):
 
-    for party in Party.objects.all():
+    for party in Party.objects.filter(**par):
         if text_opt(party.party, name, party.party_opt):
             if Found.objects.update_or_create(
                     uid_id=party.uid_id,

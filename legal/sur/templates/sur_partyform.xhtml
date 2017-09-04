@@ -61,6 +61,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	</td>
       </tr>
 
+      <tr>
+	<th>Sledovat:</th>
+	<td colspan="2" class="nowrap">
+	  {{ form.check_psj }}
+	  <span>{{ form.check_psj.label_tag }}</span>
+	  {{ form.check_uds }}
+	  <span>{{ form.check_uds.label_tag }}</span>
+	  {{ form.check_udn }}
+	  <span>{{ form.check_udn.label_tag }}</span>
+	</td>
+      </tr>
+
       {% include 'submit.xhtml' %}
 
     </tbody>

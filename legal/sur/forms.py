@@ -23,7 +23,7 @@
 from django.core.validators import MinLengthValidator
 
 from legal.common.forms import Form
-from legal.common.fields import CharField, ChoiceField
+from legal.common.fields import CharField, ChoiceField, InlineBooleanField
 from legal.common.widgets import TextWidget, RadioWidget
 from legal.common.glob import TEXT_OPTS
 from legal.sur.glob import MIN_LENGTH, MAX_LENGTH
@@ -43,3 +43,18 @@ class PartyForm(Form):
         choices=TEXT_OPTS,
         label='Posice',
         initial='icontains')
+
+    check_psj = InlineBooleanField(
+        initial=True,
+        required=False,
+        label='soudní jednání')
+
+    check_uds = InlineBooleanField(
+        initial=True,
+        required=False,
+        label='úřední desky')
+
+    check_udn = InlineBooleanField(
+        initial=True,
+        required=False,
+        label='úřední desku NSS')

@@ -108,6 +108,7 @@ def cron_update():
                             party = Party.objects.get_or_create(name=qstrip)[0]
                             dec.parties.add(party)
                             sur_check(
+                                {'check_udn': True},
                                 qstrip,
                                 nss,
                                 senate,
