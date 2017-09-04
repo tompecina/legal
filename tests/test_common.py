@@ -35,7 +35,7 @@ from django.http import QueryDict
 from legal.settings import FULL_CONTENT_TYPE
 from legal.szr.cron import cron_update
 from legal.szr.models import Proceedings
-from legal.common import cron, glob, fields, forms, models, utils, views
+from legal.common import cron, glob, fields, forms, models, utils, validators, views
 
 from tests.utils import DummyRequest, setdl, setpr, TEST_OBJ, check_html
 
@@ -2007,6 +2007,62 @@ class TestUtils3(TestCase):
             utils.getasset(
                 DummyRequest('test_session'),
                 'test_asset2'))
+
+
+class TestValidators(TestCase):
+
+    def test_tsquery_validator(self):
+
+        cases = (
+            '',
+            'Novák',
+            'Josef & Novák',
+            '(Josef & Novák)',
+            'Josef | Novák',
+            '(Josef | Novák)',
+            '(Josef | Novák) & (Petr | Svoboda)',
+            '!Novák',
+            'Josef & !Novák',
+            '(Josef & !Novák)',
+            'Josef | !Novák',
+            '(Josef | !Novák)',
+            '(Josef | !Novák) & !(Petr | !Svoboda)',
+            'Josef <-> Novák',
+            'Josef <5> Novák',
+            'Josef*',
+            'Josef* & Novák*',
+            'Josef* | Novák*',
+            '!Josef*',
+            'Josef* & !Novák*',
+            'Josef* | !Novák*',
+            '(Josef* | !Novák*) & (Petr* | !Svoboda*)',
+            'Josef* <-> Novák*',
+            'Josef* <5> Novák*',
+            )
+        err_cases = (
+            'Josef Novák',
+            'Josef && Novák',
+            '(Josef & Novák',
+            'Josef || Novák',
+            '(Josef | Novák',
+            '(Josef | Novák) & Petr | Svoboda)',
+            'Josef <->',
+            'Josef <5>',
+            '*Josef',
+            '*Josef & Novák*',
+            )
+        validator = validators.TSQueryValidator()
+        for case in cases:
+            try:
+                validator(case)
+            except:
+                self.fail(case)
+        for case in err_cases:
+            try:
+                validator(case)
+                self.fail(case)
+            except:
+                pass
 
 
 class TestViews(TestCase):
