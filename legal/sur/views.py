@@ -126,8 +126,8 @@ def partyform(request, idx=0):
             if idx:
                 res = get_object_or_404(Party, pk=idx, uid=uid)
                 cld['pk'] = idx
+                cld['notify'] = res.notify
                 cld['timestamp_add'] = res.timestamp_add
-                cld['timestamp_update'] = res.timestamp_update
             res = Party(uid_id=uid, **cld)
             res.party_opt = TEXT_OPTS_KEYS.index(cld['party_opt'])
             res.save()

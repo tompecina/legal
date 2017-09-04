@@ -142,8 +142,8 @@ def debtorform(request, idx=0):
             if idx:
                 debtor = get_object_or_404(Debtor, pk=idx, uid=uid)
                 cld['pk'] = idx
+                cld['notify'] = debtor.notify
                 cld['timestamp_add'] = debtor.timestamp_add
-                cld['timestamp_update'] = debtor.timestamp_update
             cld['birthid'] = cld['birthid'].replace('/', '')
             for key in cld:
                 if cld[key] == '':

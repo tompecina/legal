@@ -112,8 +112,8 @@ def insform(request, idx=0):
             if idx:
                 res = get_object_or_404(Insolvency, pk=idx, uid=uid)
                 cld['pk'] = idx
+                cld['notify'] = res.notify
                 cld['timestamp_add'] = res.timestamp_add
-                cld['timestamp_update'] = res.timestamp_update
             res = Insolvency(uid_id=uid, **cld)
             res.save()
             LOGGER.info(
