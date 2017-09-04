@@ -57,9 +57,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	  {% endif %}
       </td>
 
-      <td>{{ row.desc }}</td>
+      <td{% if row.notify %} class="highlight"{% endif %}>{{ row.desc }}</td>
 
-      <td{% if row.notify %} class="highlight"{% endif %}>{{ row.changed|date:'d.m.Y'|default_if_none:'' }}</td>
+      <td>{{ row.changed|date:'d.m.Y'|default_if_none:'' }}</td>
 
       <td class="act">
 	<a href="{% url 'szr:procform' row.id %}">upravit</a>
