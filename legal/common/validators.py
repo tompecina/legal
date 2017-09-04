@@ -33,6 +33,6 @@ class TSQueryValidator:
     def __call__(self, val):
         with connection.cursor() as cursor:
             try:
-                cursor.execute("SELECT ''@@to_tsquery('{}')".format(val.replace('*', ':*')))
+                cursor.execute("SELECT ''@@to_tsquery(%s)", (val.replace('*', ':*'),))
             except:
                 raise ValidationError(self.message, code=self.code)

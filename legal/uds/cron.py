@@ -28,6 +28,7 @@ from re import compile, split
 from bs4 import BeautifulSoup
 from textract import process
 from django.contrib.auth.models import User
+from django.db import connection
 
 from legal.settings import BASE_DIR, TEST, TEST_TEMP_DIR
 from legal.common.glob import ODP
@@ -266,8 +267,15 @@ def cron_update(*args):
                             )
                             if not args or TEST:
                                 for party in Party.objects.all():
-                                    string = party.party.lower()
-                                    if string in desc.lower() or string in text.lower():
+                                    with connection.cursor() as cursor:
+                                        try:
+                                            cursor.execute(
+                                                "SELECT to_tsvector('simple', concat_ws(' ', %s, %s))@@to_tsquery(%s)",
+                                                (desc, text, ' <-> '.join(party.party.split())))
+                                            res = cursor.fetchone()[0]
+                                        except:
+                                            res = False
+                                    if res:
                                         Retrieved.objects.update_or_create(
                                             uid_id=party.uid_id,
                                             party=party,
