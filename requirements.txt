@@ -6,7 +6,7 @@ bs4==0.0.1
 certifi==2017.7.27.1
 chardet==3.0.4
 coverage==4.4.1
-Django==1.11.4
+Django==1.11.5
 docx2txt==0.6
 EbookLib==0.16
 idna==2.6
@@ -35,4 +35,4 @@ tinycss==0.4
 urllib3==1.22
 wrapt==1.10.11
 xlrd==1.1.0
-XlsxWriter==0.9.8
+XlsxWriter==0.9.9

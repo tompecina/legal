@@ -112,7 +112,6 @@ def procform(request, idx=0):
                 proc = get_object_or_404(Proceedings, pk=idx, uid=uid)
                 cld['pk'] = idx
                 cld['timestamp_add'] = proc.timestamp_add
-                cld['timestamp_update'] = proc.timestamp_update
             cld['court_id'] = cld['court']
             del cld['court']
             onlydesc = (
