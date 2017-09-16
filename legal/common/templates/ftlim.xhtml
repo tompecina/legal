@@ -1,6 +1,8 @@
+{% extends 'main.xhtml' %}
+
 {% comment %}
 
-common/templates/widgets/radio_option.xhtml
+common/templates/ftlim.xhtml
 
 Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 
@@ -22,4 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
 
-{% include 'widgets/input.xhtml' %}<label{% if widget.attrs.id %} for="{{ widget.attrs.id }}"{% endif %}>{{ widget.label }}</label>
+{% block page_contents %}
+
+<h1>{{ page_title }}</h1>
+
+<p>U fulltextového vyhledávání lze detailně zobrazit pouze prvních {{ limit }} záznamů.<br/>Prosím, zužte kriteria pro výběr nebo vymažte vyhledávací řetězec.</p>
+
+<p><a href="{{ back }}">Zpět na formulář</a></p>
+
+{% endblock %}

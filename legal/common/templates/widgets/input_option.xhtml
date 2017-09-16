@@ -22,4 +22,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 
 
-{% if wrap_label %}<label{% if widget.attrs.id %} for="{{ widget.attrs.id }}"{% endif %}>{% endif %}{% include 'widgets/input.xhtml' %}{% if wrap_label %} {{ widget.label }}</label>{% endif %}
+{% if wrap_label %}<label{% if widget.attrs.id %} for="{{ widget.attrs.id }}"{% endif %}>{% endif %}{% include 'widgets/input.xhtml' %}{% if wrap_label %}{{ widget.label }}</label>{% endif %}

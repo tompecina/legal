@@ -1,0 +1,26 @@
+diff -ur .venv-legal-old/lib/python3.6/site-packages/django/template/defaulttags.py .venv-legal-new/lib/python3.6/site-packages/django/template/defaulttags.py
+--- .venv-legal-old/lib/python3.6/site-packages/django/template/defaulttags.py	2017-09-08 16:48:27.765419483 +0200
++++ .venv-legal-new/lib/python3.6/site-packages/django/template/defaulttags.py	2017-09-13 15:25:21.662968725 +0200
+@@ -57,7 +57,7 @@
+             if csrf_token == 'NOTPROVIDED':
+                 return format_html("")
+             else:
+-                return format_html("<input type='hidden' name='csrfmiddlewaretoken' value='{}' />", csrf_token)
++                return format_html('<input type="hidden" name="csrfmiddlewaretoken" value="{}"/>', csrf_token)
+         else:
+             # It's very probable that the token is missing because of
+             # misconfiguration, so we raise a warning
+Only in .venv-legal-new/lib/python3.6/site-packages/django/template: defaulttags.py~
+diff -ur .venv-legal-old/lib64/python3.6/site-packages/django/template/defaulttags.py .venv-legal-new/lib64/python3.6/site-packages/django/template/defaulttags.py
+--- .venv-legal-old/lib64/python3.6/site-packages/django/template/defaulttags.py	2017-09-08 16:48:27.765419483 +0200
++++ .venv-legal-new/lib64/python3.6/site-packages/django/template/defaulttags.py	2017-09-13 15:25:21.662968725 +0200
+@@ -57,7 +57,7 @@
+             if csrf_token == 'NOTPROVIDED':
+                 return format_html("")
+             else:
+-                return format_html("<input type='hidden' name='csrfmiddlewaretoken' value='{}' />", csrf_token)
++                return format_html('<input type="hidden" name="csrfmiddlewaretoken" value="{}"/>', csrf_token)
+         else:
+             # It's very probable that the token is missing because of
+             # misconfiguration, so we raise a warning
+Only in .venv-legal-new/lib64/python3.6/site-packages/django/template: defaulttags.py~

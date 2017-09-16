@@ -376,7 +376,7 @@ def refresh_link(vec):
         return 0
 
 
-REFRESH_BATCH = 10
+REFRESH_BATCH = 2
 
 
 def cron_refresh_links():

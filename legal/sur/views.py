@@ -84,7 +84,7 @@ def mainpage(request):
         query['party_opt'] = TEXT_OPTS_KEYS[row['party_opt']]
         row['search'] = query.urlencode()
         query = QueryDict(mutable=True)
-        query['text'] = ' <-> '.join(row['party'].split())
+        query['text'] = '"{}"'.format(row['party'])
         row['uds_search'] = query.urlencode()
     return render(
         request,

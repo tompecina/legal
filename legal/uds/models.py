@@ -20,12 +20,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from sphinxsearch.models import SphinxModel, SphinxField, SphinxIntegerField, SphinxDateTimeField
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.contrib.auth.models import User
 
-from legal.common.glob import REGISTER_RE_STR
 from legal.sur.models import Party
+
 
 class Publisher(models.Model):
 
@@ -102,22 +103,26 @@ class Document(models.Model):
 
     senate = models.IntegerField(
         null=True,
-        validators=(MinValueValidator(0),))
+        validators=(MinValueValidator(0),),
+        db_index=True)
 
     register = models.CharField(
         null=True,
         max_length=30,
-        validators=(RegexValidator(regex=REGISTER_RE_STR),))
+        db_index=True)
 
     number = models.PositiveIntegerField(
-        null=True)
+        null=True,
+        db_index=True)
 
     year = models.IntegerField(
         null=True,
-        validators=(MinValueValidator(1950),))
+        validators=(MinValueValidator(1950),),
+        db_index=True)
 
     page = models.PositiveIntegerField(
-        null=True)
+        null=True,
+        db_index=True)
 
     agenda = models.ForeignKey(
         Agenda,
@@ -132,6 +137,42 @@ class Document(models.Model):
 
     def __str__(self):
         return '{}, {}'.format(self.publisher.name, self.ref)
+
+
+class DocumentIndex(SphinxModel):
+
+    publisher = models.ForeignKey(
+        Publisher,
+        on_delete=models.CASCADE)
+
+    senate = SphinxIntegerField(
+        validators=(MinValueValidator(0),),
+        default=0)
+
+    register = models.CharField(
+        max_length=30,
+        default='')
+
+    number = SphinxIntegerField(
+        default=0)
+
+    year = SphinxIntegerField(
+        validators=(MinValueValidator(1970),),
+        default=0)
+
+    page = SphinxIntegerField(
+        default=0)
+
+    agenda = models.ForeignKey(
+        Agenda,
+        on_delete=models.CASCADE)
+
+    posted = SphinxDateTimeField()
+
+    text = SphinxField()
+
+    class Meta:
+        managed = False
 
 
 class File(models.Model):
@@ -180,3 +221,20 @@ class Retrieved(models.Model):
 
     def __str__(self):
         return self.party.party
+
+
+class TempDate(models.Model):
+
+    posted = models.DateTimeField(
+        db_index=True)
+
+
+class TempDocument(models.Model):
+
+    docid = models.IntegerField(
+        validators=(MinValueValidator(1),),
+        unique=True)
+
+    publisher = models.ForeignKey(
+        Publisher,
+        on_delete=models.CASCADE)

@@ -32,11 +32,12 @@ from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
 
-from legal.common.glob import INERR, TEXT_OPTS_KEYS, REPO_URL, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF
-from legal.common.utils import Pager, new_xml, xml_decorate, LOGGER, render, SearchVector, SearchQuery
-from legal.uds.forms import MainForm
-from legal.uds.models import Agenda, Document, File
+from legal.common.glob import (
+    INERR, TEXT_OPTS_KEYS, REPO_URL, EXLIM_TITLE, FTLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF, ODP)
+from legal.common.utils import Pager, new_xml, xml_decorate, LOGGER, render
 
+from legal.uds.forms import MainForm
+from legal.uds.models import Agenda, Document, DocumentIndex, File
 
 APP = __package__.rpartition('.')[2]
 
@@ -47,6 +48,8 @@ BATCH = 50
 REPO_PREFIX = join(REPO_URL, APP)
 
 EXLIM = 1000
+FTLIM = 1000
+assert FTLIM <= EXLIM
 
 
 @require_http_methods(('GET', 'POST'))
@@ -71,8 +74,6 @@ def mainpage(request):
     form = MainForm(request.POST)
     if form.is_valid():
         cld = form.cleaned_data
-        if not cld['desc']:
-            del cld['desc_opt']
         query = QueryDict(mutable=True)
         for key in cld:
             if cld[key]:
@@ -101,7 +102,7 @@ def g2p(reqd):
     lims = {
         'senate': 0,
         'number': 1,
-        'year': 1990,
+        'year': 1970,
         'page': 1,
         'agenda': 1,
     }
@@ -111,19 +112,13 @@ def g2p(reqd):
             assert npar >= lims[fld]
 
     if 'register' in reqd:
-        par['register__iexact'] = reqd['register']
+        par['register'] = reqd['register'].upper()
     if 'date_posted_from' in reqd:
-        par['posted__date__gte'] = datetime.strptime(reqd['date_posted_from'], DTF).date()
+        par['posted__gte'] = datetime.strptime(reqd['date_posted_from'], DTF).date()
     if 'date_posted_to' in reqd:
-        par['posted__date__lte'] = datetime.strptime(reqd['date_posted_to'], DTF).date()
-    if 'desc_opt' in reqd:
-        assert reqd['desc_opt'] in TEXT_OPTS_KEYS
-    if 'desc' in reqd:
-        assert 'desc_opt' in reqd
-        par['desc__' + reqd['desc_opt']] = reqd['desc']
+        par['posted__lt'] = datetime.strptime(reqd['date_posted_to'], DTF).date() + ODP
     if 'text' in reqd:
-        query = SearchQuery(reqd['text'].replace('*', ':*'))
-        par['file__in'] = File.objects.annotate(search=SearchVector('text')).filter(search=query)
+        par['text__search'] = reqd['text']
 
     return par
 
@@ -137,11 +132,27 @@ def htmllist(request):
         par = g2p(reqd)
         start = int(reqd['start']) if 'start' in reqd else 0
         assert start >= 0
-        docs = Document.objects.filter(**par).order_by('-posted', 'docid').distinct()
-        total = docs.count()
-        if total and start >= total:
-            start = total - 1
-        docs = docs[start:(start + BATCH)]
+        if 'text' in reqd:
+            docins = DocumentIndex.objects.using('sphinx').filter(**par).order_by('-posted', 'id')
+            total = docins.count()
+            if total and start >= total:
+                start = total - 1
+            if start >= FTLIM:
+                return render(
+                    request,
+                    'ftlim.xhtml',
+                    {'app': APP,
+                     'page_title': FTLIM_TITLE,
+                     'limit': FTLIM,
+                     'back': reverse('uds:mainpage')})
+            docins = list(docins[start:(start + BATCH)].values_list('id', flat=True))
+            docs = Document.objects.filter(id__in=docins).order_by('-posted', 'id').distinct()
+        else:
+            docs = Document.objects.filter(**par).order_by('-posted', 'id').distinct()
+            total = docs.count()
+            if total and start >= total:
+                start = total - 1
+            docs = docs[start:(start + BATCH)]
         for doc in docs:
             doc.files = File.objects.filter(document=doc).order_by('fileid').distinct()
             idx = 1
@@ -168,10 +179,10 @@ def xmllist(request):
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
-        res = Document.objects.filter(**par).order_by('posted', 'docid').distinct()
+        resins = DocumentIndex.objects.using('sphinx').filter(**par).order_by('posted', 'id')
     except:
         raise Http404
-    total = res.count()
+    total = resins.count()
     if total > EXLIM:
         return render(
             request,
@@ -181,6 +192,8 @@ def xmllist(request):
              'limit': EXLIM,
              'total': total,
              'back': reverse('uds:mainpage')})
+    resins = list(resins.values_list('id', flat=True))
+    res = Document.objects.filter(id__in=resins).order_by('posted', 'id').distinct()
     doc = {
         'documents': {
             'xmlns': 'http://' + LOCAL_SUBDOMAIN,
@@ -241,10 +254,10 @@ def csvlist(request):
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
-        res = Document.objects.filter(**par).order_by('posted', 'docid').distinct()
+        resins = DocumentIndex.objects.using('sphinx').filter(**par).order_by('posted', 'id')
     except:
         raise Http404
-    total = res.count()
+    total = resins.count()
     if total > EXLIM:
         return render(
             request,
@@ -254,6 +267,8 @@ def csvlist(request):
              'limit': EXLIM,
              'total': total,
              'back': reverse('uds:mainpage')})
+    resins = list(resins.values_list('id', flat=True))
+    res = Document.objects.filter(id__in=resins).order_by('posted', 'id').distinct()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename=Dokumenty.csv'
     writer = csvwriter(response)
@@ -288,10 +303,10 @@ def jsonlist(request):
     reqd = request.GET.copy()
     try:
         par = g2p(reqd)
-        res = Document.objects.filter(**par).order_by('posted', 'docid').distinct()
+        resins = DocumentIndex.objects.using('sphinx').filter(**par).order_by('posted', 'id')
     except:
         raise Http404
-    total = res.count()
+    total = resins.count()
     if total > EXLIM:
         return render(
             request,
@@ -301,6 +316,8 @@ def jsonlist(request):
              'limit': EXLIM,
              'total': total,
              'back': reverse('uds:mainpage')})
+    resins = list(resins.values_list('id', flat=True))
+    res = Document.objects.filter(id__in=resins).order_by('posted', 'id').distinct()
     response = HttpResponse(content_type='application/json; charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename=Dokumenty.json'
     lst = []

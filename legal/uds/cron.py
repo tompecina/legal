@@ -28,14 +28,13 @@ from re import compile, split
 from bs4 import BeautifulSoup
 from textract import process
 from django.contrib.auth.models import User
-from django.db import connection
 
 from legal.settings import BASE_DIR, TEST, TEST_TEMP_DIR
 from legal.common.glob import ODP
 from legal.common.utils import get, sleep, LOGGER, between
 from legal.sur.models import Party
 from legal.uds.glob import TYPES
-from legal.uds.models import Publisher, Agenda, Document, File, Retrieved
+from legal.uds.models import Publisher, Agenda, Document, DocumentIndex, File, Retrieved
 
 
 ROOT_URL = 'http://infodeska.justice.cz/'
@@ -159,6 +158,33 @@ def parse_ref(ref):
         return empty
 
 
+def update_index(doc):
+
+    if not DocumentIndex.objects.using('sphinx').filter(id=doc.id).exists():
+        text = [doc.desc]
+        for fil in File.objects.filter(document=doc).order_by('id'):
+            text.extend([fil.name, fil.text])
+        text = '\n\n'.join(text)
+        par = {
+            'id': doc.id,
+            'publisher': doc.publisher,
+            'agenda': doc.agenda,
+            'posted': doc.posted,
+            'text': text,
+        }
+        if doc.senate:
+            par['senate'] = doc.senate
+        if doc.register:
+            par['register'] = doc.register
+        if doc.number:
+            par['number'] = doc.number
+        if doc.year:
+            par['year'] = doc.year
+        if doc.page:
+            par['page'] = doc.page
+        DocumentIndex.objects.using('sphinx').create(**par)
+
+
 def cron_update(*args):
 
     today = date.today()
@@ -173,7 +199,7 @@ def cron_update(*args):
         flt = {'subsidiary_region': False, 'subsidiary_county': False}
         if not args:
             flt['updated__lt'] = datetime.now() - UPDATE_INTERVAL
-        for publisher in Publisher.objects.filter(**flt):
+        for publisher in Publisher.objects.filter(**flt).order_by('id'):
             try:
                 sleep(1)
                 res = get(LIST_URL.format(publisher.pubid, dat))
@@ -258,42 +284,45 @@ def cron_update(*args):
                             except:
                                 text = ''
                                 ocr = False
-                            File.objects.get_or_create(
+                            File.objects.update_or_create(
                                 fileid=fileid,
-                                document=doc,
-                                name=filename,
-                                text=text,
-                                ocr=ocr,
+                                defaults={
+                                    'document': doc,
+                                    'name': filename,
+                                    'text': text,
+                                    'ocr': ocr,
+                                }
                             )
-                            if not args or TEST:
-                                for party in Party.objects.filter(check_uds=True):
-                                    with connection.cursor() as cursor:
-                                        try:
-                                            cursor.execute(
-                                                "SELECT to_tsvector('simple', concat_ws(' ', %s, %s))@@to_tsquery(%s)",
-                                                (desc, text, ' <-> '.join(party.party.split())))
-                                            res = cursor.fetchone()[0]
-                                        except:
-                                            res = False
-                                    if res:
-                                        Retrieved.objects.update_or_create(
-                                            uid_id=party.uid_id,
-                                            party=party,
-                                            document=doc)
-                                        if party.uid.email:
-                                            Party.objects.filter(id=party.id).update(notify=True)
-                                        LOGGER.info(
-                                            'New party "{}" detected for user "{}" ({:d})'
-                                            .format(
-                                                party.party,
-                                                User.objects.get(pk=party.uid_id).username,
-                                                party.uid_id))
+                        update_index(doc)
+                        if not args or TEST:
+                            sleep(.2)
+                            for party in Party.objects.filter(check_uds=True):
+                                if DocumentIndex.objects.filter(id=doc.id, text__search='"{}"'.format(party.party)):
+                                    Retrieved.objects.update_or_create(
+                                        uid_id=party.uid_id,
+                                        party=party,
+                                        document=doc)
+                                    if party.uid.email:
+                                        Party.objects.filter(id=party.id).update(notify=True)
+                                    LOGGER.info(
+                                        'New party "{}" detected for user "{}" ({:d})'
+                                        .format(
+                                            party.party,
+                                            User.objects.get(pk=party.uid_id).username,
+                                            party.uid_id))
                 LOGGER.debug('Updated "{}", {:%Y-%m-%d}'.format(publisher.name, dat))
                 if not args:
                     Publisher.objects.filter(id=publisher.id).update(updated=datetime.now())
             except:
                 LOGGER.info('Failed to update "{}", {:%Y-%m-%d}'.format(publisher.name, dat))
         LOGGER.debug('Updated all publishers, {:%Y-%m-%d}'.format(dat))
+
+
+def cron_genindex():
+
+    for doc in Document.objects.all():
+        update_index(doc)
+    LOGGER.debug('Index regenerated')
 
 
 def uds_notice(uid):
@@ -313,3 +342,132 @@ def uds_notice(uid):
             'Non-empty notice prepared for user "{}" ({:d})'.format(User.objects.get(pk=uid).username, uid))
     Party.objects.filter(uid=uid).update(notify=False)
     return text
+
+
+def cron_gendates():
+
+    from legal.uds.models import TempDate
+    d = date(2017, 5, 22)
+    while d.year > 2007:
+        TempDate.objects.create(posted=d)
+        d -= timedelta(days=7)
+
+
+def cron_genarchive():
+
+    from legal.uds.models import TempDate, TempDocument
+    flt = {'subsidiary_region': False, 'subsidiary_county': False}
+    for dat in TempDate.objects.order_by('-posted'):
+        print(dat.posted.date())
+        for publisher in Publisher.objects.filter(**flt).order_by('id'):
+            num = 0
+            res = get(LIST_URL.format(publisher.pubid, dat.posted))
+            assert res.ok
+            soup = BeautifulSoup(res.text, 'html.parser')
+            for link in soup.select('a[href]'):
+                href = link.get('href')
+                if href and href.startswith('vyveseni.aspx?verzeid='):
+                    try:
+                        docid = int(href.partition('=')[2])
+                    except ValueError:
+                        continue
+                    if not Document.objects.filter(docid=docid).exists():
+                        if TempDocument.objects.update_or_create(docid=docid, defaults={'publisher': publisher})[1]:
+                            num += 1
+            print('  {}: {:d}'.format(publisher.name, num))
+        dat.delete()
+
+
+def cron_getdocs():
+
+    from legal.uds.models import TempDocument
+    num = 0
+    for tdoc in TempDocument.objects.order_by('id')[:1000]:
+        if Document.objects.filter(docid=tdoc.docid).exists():
+            continue
+        try:
+            sleep(.25)
+            subres = get(DETAIL_URL.format(tdoc.docid))
+            assert subres.ok
+            subsoup = BeautifulSoup(subres.text, 'html.parser')
+            rows = subsoup.find_all('tr')
+            desc = ref = senate = register = number = year = page = agenda = posted = None
+            files = []
+            for row in rows:
+                cells = row.find_all('td')
+                if not cells or len(cells) != 2:
+                    continue
+                left = cells[0].text.strip()
+                right = cells[1].text.strip()
+                if left == 'Popis':
+                    desc = right
+                elif left == 'Značka':
+                    ref = right
+                    senate, register, number, year, page = parse_ref(ref)
+                elif left == 'Vyvěšení':
+                    pdat, ptim = right.split()
+                    posted = datetime(*map(int, pdat.split('.')[2::-1]), *map(int, ptim.split(':')))
+                elif left == 'Agenda':
+                    agenda = Agenda.objects.get_or_create(desc=right)[0]
+                else:
+                    anchor = cells[0].find('a')
+                    if not(anchor and anchor.has_attr('href')
+                        and anchor['href'].startswith('soubor.aspx?souborid=')):
+                        continue
+                    fileid = int(anchor['href'].partition('=')[2])
+                    span = anchor.find('span', 'zkraceno')
+                    filename = span['title'].strip() if span else anchor.text.strip()
+                    if not filename:
+                        continue
+                    if filename.endswith(')'):
+                        filename = filename.rpartition(' (')[0]
+                    filename = filename.replace(' ', '_')
+                    if fileid not in [x[0] for x in files]:
+                        files.append((fileid, filename))
+            doc = Document.objects.get_or_create(
+                docid=tdoc.docid,
+                publisher=tdoc.publisher,
+                desc=desc,
+                ref=ref,
+                senate=senate,
+                register=register,
+                number=number,
+                year=year,
+                page=page,
+                agenda=agenda,
+                posted=posted,
+            )[0]
+            for fileid, filename in files:
+                infile = get(FILE_URL.format(fileid))
+                assert infile.ok
+                content = infile.content
+                dirname = join(REPO_PREF, str(fileid))
+                makedirs(dirname, exist_ok=True)
+                pathname = join(dirname, filename)
+                with open(pathname, 'wb') as outfile:
+                    outfile.write(content)
+                if File.objects.filter(fileid=fileid).exists():
+                    continue
+                try:
+                    text = process(pathname).decode()
+                    ocr = len(text) < 5
+                    if ocr:
+                        text = process(pathname, method='tesseract', language='ces').decode()
+                except:
+                    text = ''
+                    ocr = False
+                File.objects.update_or_create(
+                    fileid=fileid,
+                    defaults={
+                        'document': doc,
+                        'name': filename,
+                        'text': text,
+                        'ocr': ocr,
+                    }
+                )
+            update_index(doc)
+            tdoc.delete()
+            num += 1
+        except:
+            continue
+    LOGGER.debug('Processed {:d} archival documents'.format(num))

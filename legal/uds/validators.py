@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# common/validators.py
+# uds/validators.py
 #
 # Copyright (C) 2011-17 Tomáš Pecina <tomas@pecina.cz>
 #
@@ -22,17 +22,17 @@
 
 from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
-from django.db import connection
+
+from legal.uds.models import DocumentIndex
 
 
 @deconstructible
-class TSQueryValidator:
+class SphinxQueryValidator:
     message = 'Syntax error in query.'
     code = 'invalid'
 
     def __call__(self, val):
-        with connection.cursor() as cursor:
-            try:
-                cursor.execute("SELECT ''@@to_tsquery(%s)", (val.replace('*', ':*'),))
-            except:
-                raise ValidationError(self.message, code=self.code)
+        try:
+            DocumentIndex.objects.using('sphinx').filter(text__search=val).exists()
+        except:
+            raise ValidationError(self.message, code=self.code)

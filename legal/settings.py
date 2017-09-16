@@ -93,6 +93,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.postgres',
+    'sphinxsearch',
 ] + ['legal.{}.apps.{}Config'.format(x, x.capitalize()) for x in APPS]
 
 MIDDLEWARE = (
@@ -126,6 +127,8 @@ TEMPLATES = (
 
 WSGI_APPLICATION = 'legal.wsgi.application'
 
+SPHINX_DATABASE_NAME = 'sphinx'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -139,7 +142,19 @@ DATABASES = {
         'TEST': {
         }
     },
+    SPHINX_DATABASE_NAME:  {
+        'ENGINE': 'sphinxsearch.backend.sphinx',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '9307',
+    },
 }
+
+DATABASE_ROUTERS = (
+    'sphinxsearch.routers.SphinxRouter',
+)
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -284,4 +299,4 @@ FULL_CONTENT_TYPE = '{}; charset={}'.format(DEFAULT_CONTENT_TYPE, DEFAULT_CHARSE
 
 LOCALE_PATHS = ()
 if not TEST:
-    setlocale(LC_ALL, 'cs_CZ')
+    setlocale(LC_ALL, 'cs_CZ.UTF-8')

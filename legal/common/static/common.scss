@@ -173,6 +173,9 @@ form {
     input + input, label + select, a + a {
 	margin-left: ($hs+$ht);
     }
+    input[type="radio"] + label {
+	margin-left: $ht;
+    }
 }
 
 a + span, span + a {
@@ -543,14 +546,14 @@ td.inlop {
     input[type="radio"] {
 	margin: {
 	    right: ($hs+$ht);
-	    left: $hn;
+	    left: 0;
 	}
     }
-    label {
-	margin-left: $hl;
-	&:first-child {
-	    margin-left: 0;
-	}
+    label + input[type="radio"] {
+	margin-left: ($hl+$hs);
+    }
+    span + input[type="radio"] {
+	margin-left: $hm;
     }
 }
 

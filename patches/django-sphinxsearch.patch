@@ -1,0 +1,23 @@
+diff -ur .venv-legal-old/lib64/python3.6/site-packages/sphinxsearch/backend/sphinx/compiler.py .venv-legal-new/lib64/python3.6/site-packages/sphinxsearch/backend/sphinx/compiler.py
+--- .venv-legal-old/lib64/python3.6/site-packages/sphinxsearch/backend/sphinx/compiler.py	2017-04-07 11:00:51.000000000 +0200
++++ .venv-legal-new/lib64/python3.6/site-packages/sphinxsearch/backend/sphinx/compiler.py	2017-09-08 16:50:54.819129620 +0200
+@@ -62,7 +62,7 @@
+             return s
+         negative = s.startswith('-')
+         if not negative:
+-            return '"%s"' % s
++            return '%s' % s
+         s = s[1:]
+         if s.startswith('"'):
+             return '%s%s' % (prefix, s)
+diff -ur .venv-legal-old/lib64/python3.6/site-packages/sphinxsearch/utils.py .venv-legal-new/lib64/python3.6/site-packages/sphinxsearch/utils.py
+--- .venv-legal-old/lib64/python3.6/site-packages/sphinxsearch/utils.py	2017-04-07 11:00:51.000000000 +0200
++++ .venv-legal-new/lib64/python3.6/site-packages/sphinxsearch/utils.py	2017-09-08 16:55:30.384334414 +0200
+@@ -12,6 +12,5 @@
+     if not isinstance(value, six.string_types):
+         return value
+ 
+-    value = re.sub(r"([=<>()|!@~&/^$\-\'\"\\])", r'\\\\\\\1', value)
+-    value = re.sub(r'\b(SENTENCE|PARAGRAPH)\b', r'\\\\\\\1', value)
++    value = re.sub(r"([&\'\\])", r'\\\\\\\1', value)
+     return value

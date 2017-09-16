@@ -23,8 +23,8 @@
 from legal.common.glob import TEXT_OPTS, FORMAT_OPTS
 from legal.common.forms import Form
 from legal.common.fields import CharField, DateField, IntegerField, ChoiceField
-from legal.common.validators import TSQueryValidator
 from legal.common.widgets import TextWidget, DateWidget, RadioWidget, PublisherWidget
+from legal.uds.validators import SphinxQueryValidator
 
 
 class MainForm(Form):
@@ -79,23 +79,12 @@ class MainForm(Form):
         label='Agenda',
         initial='')
 
-    desc = CharField(
-        widget=TextWidget(35),
-        required=False,
-        max_length=255,
-        label='Popis')
-
-    desc_opt = ChoiceField(
-        widget=RadioWidget(),
-        choices=TEXT_OPTS,
-        initial='istartswith')
-
     text = CharField(
         widget=TextWidget(60),
         required=False,
         max_length=255,
-        label='V textu dokumentu',
-        validators=(TSQueryValidator(),))
+        label='V textu',
+        validators=(SphinxQueryValidator(),))
 
     format = ChoiceField(
         widget=RadioWidget(),

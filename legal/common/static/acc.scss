@@ -55,6 +55,9 @@ table.about {
     tbody {
 	tr td {
 	    padding: ($vs+$vt) $hl ($vs+$vt) $hm;
+	    p {
+		text-align: center;
+	    }
 	}
 	tr:nth-child(odd) td {
 	    background-color: $white;

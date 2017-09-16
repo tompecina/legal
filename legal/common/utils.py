@@ -28,7 +28,7 @@ from calendar import monthrange, isleap
 from math import inf
 from os import environ
 from os.path import join
-from re import compile
+from re import compile, sub
 from base64 import b64encode, b64decode
 from xml.sax.saxutils import escape, unescape
 
@@ -44,7 +44,6 @@ from reportlab.lib.pagesizes import A4
 from django.core import mail
 from django.shortcuts import render as orig_render
 from django.db.transaction import atomic
-from django.contrib.postgres import search
 
 from legal.settings import FONT_DIR, TEST
 from legal.common.glob import LIM, ODP, YDCONVS, MDCONVS, REGISTERS, LOCAL_SUBDOMAIN, LOCAL_EMAIL
@@ -1086,25 +1085,3 @@ def setasset(request, asset_id, data, lifespan):
     })
     LOGGER.debug("Asset '{}' for session '{}' stored, length: {:d}".format(asset_id, sid, len(data)))
     return True
-
-
-class SearchVector(search.SearchVector):
-
-    config = 'simple'
-
-
-class SearchQuery(search.SearchQuery):
-
-    config = 'simple'
-
-    def as_sql(self, compiler, connection):
-        params = [self.value]
-        if self.config:
-            config_sql, config_params = compiler.compile(self.config)
-            template = 'to_tsquery({}::regconfig, %s)'.format(config_sql)
-            params = config_params + [self.value]
-        else:
-            template = "to_tsquery(%s)"
-        if self.invert:
-            template = '!!({})'.format(template)
-        return template, params

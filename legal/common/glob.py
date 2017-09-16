@@ -104,6 +104,7 @@ LOCAL_URL = LOCAL_PREFIX + LOCAL_SUBDOMAIN
 REPO_URL = LOCAL_URL + '/repo/'
 
 EXLIM_TITLE = 'Příliš velký počet záznamů'
+FTLIM_TITLE = 'Příliš velký počet výsledků'
 
 GR_CHAR = ('znak', 'znaky', 'znaků')
 GR_DAY = ('den', 'dny', 'dnů')

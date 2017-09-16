@@ -83,16 +83,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	</td>
       </tr>
 
-      <tr>
-	<th>{{ form.desc.label_tag }}</th>
-	<td colspan="2" class="inlop">
-	  <span>{{ form.desc }}</span>
-	  {% for p in form.desc_opt %}
-	  {{ p }}
-	  {% endfor %}
-	</td>
-      </tr>
-
       <tr class="{{ form.text.css_classes }}">
 	<th>{{ form.text.label_tag }}</th>
 	<td colspan="2">
@@ -105,15 +95,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<td></td>
 	<td colspan="2">
 	  <fieldset class="help">
-	    <div>Zadejte výraz pro vyhledání. Můžete použít speciální znaky:</div>
+	    <div>Zadejte řetězec pro vyhledání (nerozlišuje se diakritika ani malá/velká písmena):</div>
 	    <ul>
-	      <li><b>A &amp; B</b> najde dokumenty, ve kterých se vyskytuje <i>A</i> i <i>B</i></li>
+	      <li><b>A</b> najde dokumenty, ve kterých se vyskytuje <i>A</i></li>
+	      <li><b>A B</b> najde dokumenty, ve kterých se vyskytuje <i>A</i> i <i>B</i></li>
 	      <li><b>A | B</b> najde dokumenty, ve kterých se vyskytuje <i>A</i> nebo <i>B</i></li>
-	      <li><b>!A</b> najde dokumenty, ve kterých se nevyskytuje <i>A</i></li>
-              <li>lze použít závorky, např. <b>(A | B) &amp; !(C | D)</b></li>
-	      <li><b>začátek*</b> najde dokumenty, ve kterých se vyskytuje začátek slova</li>
-	      <li><b>A &lt;-&gt; B</b> najde dokumenty, ve kterých je <i>A</i> bezprostředně následováno <i>B</i></li>
-	      <li><b>A &lt;<i>n</i>&gt; B</b> najde dokumenty, ve kterých je <i>B n</i> slov za <i>A</i></li>
+              <li>lze použít závorky, např. <b>A | (B C)</b></li>
+	      <li><b>&quot;A B&quot;</b> najde dokumenty, ve kterých se vyskytuje frase <i>A B</i></li>
+	      <li>Další možnosti vyhledávání jsou popsány <a href="http://sphinxsearch.com/docs/current.html#extended-syntax" target="_blank">zde</a>.</li>
 	    </ul>
 	  </fieldset>
 	</td>

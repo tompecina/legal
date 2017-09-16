@@ -32,7 +32,8 @@ from legal.udn.cron import cron_update as udn_update, cron_find as udn_find
 from legal.sur.cron import sur_notice
 from legal.sir.cron import sir_notice, cron_update as sir_update, cron_refresh_links as sir_refresh_links
 from legal.dir.cron import dir_notice
-from legal.uds.cron import cron_publishers as uds_publishers, cron_update as uds_update, uds_notice
+from legal.uds.cron import (
+    cron_publishers as uds_publishers, cron_update as uds_update, uds_notice, cron_getdocs as uds_getdocs)
 from legal.common.glob import LOCAL_SUBDOMAIN, LOCAL_URL
 from legal.common.utils import send_mail, LOGGER
 from legal.common.models import Pending, Lock
@@ -110,6 +111,11 @@ SCHED = (
      'lock': 'uds',
      'blocking': False,
     },
+    {'name': 'uds_getdocs',
+     'when': lambda t: t.weekday() > 4 or t.hour > 19 or t.hour < 8,
+     'lock': 'uds_archive',
+     'blocking': False,
+    },
     {'name': 'sir_update',
      'when': lambda t: t.hour in (4, 10, 16, 22) and t.minute == 5,
      'lock': 'sir',
@@ -117,7 +123,7 @@ SCHED = (
     },
 )
 
-EXPIRE = timedelta(minutes=30)
+EXPIRE = timedelta(hours=3)
 
 
 if TEST:
@@ -133,7 +139,10 @@ def cron_run():
 
     now = datetime.now()
 
-    Lock.objects.filter(timestamp_add__lt=(now - EXPIRE)).delete()
+    expired = Lock.objects.filter(timestamp_add__lt=(now - EXPIRE))
+    for lock in expired:
+        LOGGER.warning('Expired lock "{}" deleted'.format(lock.name))
+    expired.delete()
 
     for job in Pending.objects.order_by('timestamp_add'):
         if not Pending.objects.filter(pk=job.id).exists():

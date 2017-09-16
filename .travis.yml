@@ -47,6 +47,7 @@ before_install:
     else
         pip install -r requirements.txt
     fi
+  - scripts/apply-patches
 
 install:
   - scripts/make-static

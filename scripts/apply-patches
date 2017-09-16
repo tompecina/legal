@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for p in patches/*.patch; do
+    patch -N -r - -p3 -d .venv-legal/lib64/python3.* -i "../../../$p"
+done
+exit 0
