@@ -123,11 +123,14 @@ SCHED = (
     },
 )
 
-EXPIRE = timedelta(hours=3)
+EXPIRE = timedelta(hours=6)
 
 
 if TEST:
     from tests.utils import testfunc
+
+
+LOG_LOCKS = False
 
 
 def run(name, args):
@@ -162,6 +165,8 @@ def cron_run():
             if 'lock' in job:
                 lock = job['lock']
                 if Lock.objects.filter(name=lock).exists():
+                    if LOG_LOCKS:
+                        LOGGER.debug('Lock "{}" exists'.format(lock))
                     if job['blocking']:
                         Pending(
                             name=job['name'],
@@ -170,10 +175,18 @@ def cron_run():
                         ).save()
                         LOGGER.debug('Job {} with arguments "{}" scheduled'.format(job['name'], args))
                     continue
+                elif LOG_LOCKS:
+                    LOGGER.debug('Lock "{}" does not exist'.format(lock))
                 Lock.objects.get_or_create(name=lock)
+                if LOG_LOCKS:
+                    LOGGER.debug('Lock "{}" set'.format(lock))
             run(job['name'], args)
             if 'lock' in job:
-                Lock.objects.filter(name=lock).delete()
+                reslock = Lock.objects.filter(name=lock)
+                if reslock.exists():
+                    reslock.delete()
+                    if LOG_LOCKS:
+                        LOGGER.debug('Lock "{}" reset'.format(lock))
 
 
 def cron_unlock():
