@@ -290,7 +290,7 @@ def distr(debt, dat, credit, amt, disarr, res):
                     if credit.currency == 'CZK':
                         rcl = 1
                     else:
-                        rate, qty, dummy, msg = get_fx_rate(
+                        rate, qty, _, msg = get_fx_rate(
                             credit.currency,
                             dat,
                             log=res.fxinfo,
@@ -302,7 +302,7 @@ def distr(debt, dat, credit, amt, disarr, res):
                     if debit.currency == 'CZK':
                         rld = 1
                     else:
-                        rate, qty, dummy, msg = get_fx_rate(
+                        rate, qty, _, msg = get_fx_rate(
                             debit.currency,
                             dat,
                             log=res.fxinfo,

@@ -56,7 +56,7 @@ def mainpage(request):
             fx_info = ''
             if curr != 'CZK':
                 fx_date = cld['fx_date']
-                rate, qty, dummy, msg = get_fx_rate(curr, fx_date)
+                rate, qty, _, msg = get_fx_rate(curr, fx_date)
                 if msg:
                     messages = [(msg, None)]
                 else:

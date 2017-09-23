@@ -237,7 +237,7 @@ def resetpw(request, link):
     link = get_object_or_404(PwResetLink, link=link)
     user = link.user
     newpassword = ''
-    for dummy in range(PWLEN):
+    for _ in range(PWLEN):
         newpassword += choice(PWCHARS)
     user.set_password(newpassword)
     user.save()

@@ -80,7 +80,7 @@ class Period:
 
         elif unit == 'b':
             res = beg
-            for dummy in range(abs(dur)):
+            for _ in range(abs(dur)):
                 res += offset
                 while holiday(res):
                     res += offset
