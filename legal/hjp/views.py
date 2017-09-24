@@ -468,7 +468,7 @@ def to_xml(debt):
         tag = xml_decorate(xml.new_tag('pd_rate'), dec)
         tag.append('{:.6f}'.format(interest.rate))
         titr.append(tag)
-    if model in ('per_annum', 'per_mensem'):
+    if model in {'per_annum', 'per_mensem'}:
         tag = xml.new_tag('day_count_convention')
         tag.append(interest.day_count_convention)
         titr.append(tag)

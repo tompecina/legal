@@ -67,7 +67,7 @@ def cron_schedule(*args):
         else:
             dates.append(date.today() + timedelta(int(arg)))
     for court in Court.objects.all():
-        if court.id in (SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT):
+        if court.id in {SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT}:
             continue
         for dat in dates:
             Task.objects.get_or_create(court=court, date=dat)

@@ -67,7 +67,7 @@ class Period:
         elif unit == 'w':
             res = beg + timedelta(weeks=dur)
 
-        elif unit in ('m', 'y'):
+        elif unit in {'m', 'y'}:
             if unit == 'y':
                 dur *= 12
             month = beg.month + dur - 1

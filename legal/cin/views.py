@@ -51,7 +51,7 @@ def mainpage(request):
     else:
         form = MainForm(request.POST)
         button = getbutton(request)
-        if button in ('set_beg_date', 'set_end_date'):
+        if button in {'set_beg_date', 'set_end_date'}:
             unrequire(form, ('beg_date', 'end_date'))
             form.data = form.data.copy()
             form.data['{}_date'.format(button[4:7])] = today

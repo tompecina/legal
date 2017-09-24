@@ -740,7 +740,7 @@ def from_xml(dat):
     if not string:
         return None, 'Chybný formát souboru (1)'
     tdebt = string.debt
-    if not (tdebt and tdebt['application'] in [APP, 'hjp']):
+    if not (tdebt and tdebt['application'] in {APP, 'hjp'}):
         return None, 'Chybný formát souboru (2)'
 
     if tdebt['application'] == APP:
@@ -1231,7 +1231,7 @@ def mainpage(request):
                                     '{0.day_count_convention})'.format(debit))
                             elif model == 'per_diem':
                                 txt = 'denní úrok {:n} ‰ <i>p. d.</i>'.format(debit.rate)
-                            elif model in ('cust1', 'cust2', 'cust3', 'cust5'):
+                            elif model in {'cust1', 'cust2', 'cust3', 'cust5'}:
                                 txt = (
                                     'zákonný úrok z prodlení podle nařízení vlády č. 142/1994 Sb. ve znění účinném {}'
                                     .format(cust2eff[model]))
@@ -1337,7 +1337,7 @@ def mainpage(request):
                                 cleft[0].append(debit.id)
                                 cright[0].append((amount, debit.currency))
 
-                    if typ in (DR, CR):
+                    if typ in {DR, CR}:
                         for itm in row['pre']:
                             if abs(itm) > LIM:
                                 hdr[1] = 'Předchozí zůstatek'
@@ -1485,7 +1485,7 @@ def mainpage(request):
                 txt = 'měsíční úrok {:n} % <i>p. m.</i>'.format(debit.rate)
             elif model == 'per_diem':
                 txt = 'denní úrok {:n} ‰ <i>p. d.</i>'.format(debit.rate)
-            elif model in ['cust1', 'cust2', 'cust3', 'cust5', 'cust6']:
+            elif model in {'cust1', 'cust2', 'cust3', 'cust5', 'cust6'}:
                 txt = 'zákonný úrok z prodlení'
             else:
                 txt = 'zákonný poplatek z prodlení'

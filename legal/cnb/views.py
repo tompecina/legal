@@ -56,7 +56,7 @@ def mainpage(request):
     else:
         form = MainForm(request.POST)
         button = getbutton(request)
-        if button in ('set_fx_date', 'set_mpi_date'):
+        if button in {'set_fx_date', 'set_mpi_date'}:
             unrequire(form, ('fx_date', 'basis', 'mpi_date'))
             form.data = form.data.copy()
             if button == 'set_fx_date':
@@ -64,7 +64,7 @@ def mainpage(request):
             else:
                 form.data['mpi_date'] = today
         else:
-            fxr = button in ('show_fx', 'conv_from', 'conv_to')
+            fxr = button in {'show_fx', 'conv_from', 'conv_to'}
             if button == 'show_fx':
                 unrequire(form, ('basis', 'mpi_date'))
             elif fxr:
