@@ -427,7 +427,7 @@ def check_html(runner, html, key=None, app=None, check_html=True, check_classes=
 
     if check_html:
         if WRITE_CHECKFILE:
-            print(filepos, hsh, file=CHECKFILE)
+            CHECKFILE.write('{} {}\n'.format(filepos, hsh))
         elif CHECK_HTML:
             runner.assertIn(filepos, CHECK_ARRAY, msg=filepos)
             runner.assertEqual(CHECK_ARRAY[filepos][:HASH_LEN], hsh, msg=filepos)
