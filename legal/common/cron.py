@@ -35,7 +35,7 @@ from legal.dir.cron import dir_notice
 from legal.uds.cron import (
     cron_publishers as uds_publishers, cron_update as uds_update, uds_notice, cron_getdocs as uds_getdocs)
 from legal.common.glob import LOCAL_SUBDOMAIN, LOCAL_URL
-from legal.common.utils import send_mail, LOGGER
+from legal.common.utils import send_mail, LOGGER, holiday
 from legal.common.models import Pending, Lock
 
 
@@ -107,12 +107,12 @@ SCHED = (
      'blocking': False,
     },
     {'name': 'uds_update',
-     'when': lambda t: t.weekday() < 5 and t.hour == 19 and t.minute == 15,
+     'when': lambda t: not holiday(t.date()) and t.hour == 19 and t.minute == 15,
      'lock': 'uds',
      'blocking': False,
     },
     {'name': 'uds_getdocs',
-     'when': lambda t: t.weekday() > 4 or t.hour > 19 or t.hour < 8,
+     'when': lambda t: holiday(t.date()) or t.hour > 19 or t.hour < 8,
      'lock': 'uds_archive',
      'blocking': False,
     },
