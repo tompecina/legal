@@ -188,7 +188,7 @@ class AddFields(Filter):
                     else:
                         val = '"{}"'.format(record.params[key])
                     attrs += ', {}={}'.format(key, val)
-            attrs += ' [{}]'.format(record.request.META['REMOTE_ADDR'])
+            attrs += ' [{}], {}'.format(record.request.META['REMOTE_ADDR'], record.request.META['HTTP_USER_AGENT'])
         record.append = attrs
         return True
 
