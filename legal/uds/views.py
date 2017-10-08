@@ -132,12 +132,12 @@ def htmllist(request):
         par = g2p(reqd)
         start = int(reqd['start']) if 'start' in reqd else 0
         assert start >= 0
-        if 'text' in reqd:
-            docins = DocumentIndex.objects.using('sphinx').filter(**par).order_by('-posted', 'id')
-            total = docins.count()
-            if total and start >= total:
-                start = total - 1
-            if start >= FTLIM:
+        docins = DocumentIndex.objects.using('sphinx').filter(**par).order_by('-posted', 'id')
+        total = docins.count()
+        if total and start >= total:
+            start = total - 1
+        if start >= FTLIM:
+            if 'text' in reqd:
                 return render(
                     request,
                     'ftlim.xhtml',
@@ -145,14 +145,14 @@ def htmllist(request):
                      'page_title': FTLIM_TITLE,
                      'limit': FTLIM,
                      'back': reverse('uds:mainpage')})
-            docins = list(docins[start:(start + BATCH)].values_list('id', flat=True))
-            docs = Document.objects.filter(id__in=docins).order_by('-posted', 'id').distinct()
-        else:
             docs = Document.objects.filter(**par).order_by('-posted', 'id').distinct()
             total = docs.count()
             if total and start >= total:
                 start = total - 1
             docs = docs[start:(start + BATCH)]
+        else:
+            docins = list(docins[start:(start + BATCH)].values_list('id', flat=True))
+            docs = Document.objects.filter(id__in=docins).order_by('-posted', 'id').distinct()
         for doc in docs:
             doc.files = File.objects.filter(document=doc).order_by('fileid').distinct()
             idx = 1
