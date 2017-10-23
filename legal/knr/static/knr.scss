@@ -57,19 +57,21 @@ table.form {
 
 fieldset.vattbl {
     float: right;
-    table {
+    table tbody {
 	width: 100%;
+	tr {
+	    th, td {
+		padding: $vn $hs;
+		text-align: right;
+		white-space: nowrap;
+	    }
+	    th {
+		width: 100%;
+		padding-right: $hs;
+	    }
+	}
     }
-    th, td {
-	padding: $vn $hs;
-	text-align: right;
-	white-space: nowrap;
-    }
-    th {
-	width: 100%;
-	padding-right: $hs;
-    }
-    table tbody tr:last-child {
+    tr:last-child {
 	th, td {
 	    font-weight: bold;
 	}
