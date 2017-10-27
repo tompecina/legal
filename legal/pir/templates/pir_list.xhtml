@@ -100,10 +100,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
       <td class="act">
 	{% if row.link and not row.datumVyskrtnuti %}
-	<a href="{{ row.link }}" target="_blank" title="Informace o řízení v ISIRu">[I]</a>
+	<a href="{{ row.link }}" target="_blank" rel="noopener" title="Informace o řízení v ISIRu">[I]</a>
 	{% endif %}
 	{% if row.senat %}
-	<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.court_reg }}&amp;krajOrg={{ row.court_reg }}&amp;cisloSenatu={{ row.senat }}&amp;druhVec=INS&amp;bcVec={{ row.bc }}&amp;rocnik={{ row.rocnik }}&amp;typSoudu=os&amp;autoFill=true&amp;type=spzn" target="_blank" title="Informace o řízení v infoSoudu">[Ř]</a>
+	<a href="http://infosoud.justice.cz/InfoSoud/public/search.do?org={{ row.court_reg }}&amp;krajOrg={{ row.court_reg }}&amp;cisloSenatu={{ row.senat }}&amp;druhVec=INS&amp;bcVec={{ row.bc }}&amp;rocnik={{ row.rocnik }}&amp;typSoudu=os&amp;autoFill=true&amp;type=spzn" target="_blank" rel="noopener" title="Informace o řízení v infoSoudu">[Ř]</a>
 	{% endif %}
       </td>
 

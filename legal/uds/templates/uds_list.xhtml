@@ -70,7 +70,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
       <td class="act">
 	{% for file in row.files %}
-	<a href="/repo/uds/{{ file.fileid }}/{{ file.name|urlencode }}" target="_blank" title="{{ file.name }}">[{{ forloop.counter }}]</a>
+	<a href="/repo/uds/{{ file.fileid }}/{{ file.name|urlencode }}" target="_blank" rel="noopener" title="{{ file.name }}">[{{ forloop.counter }}]</a>
 	{% if file.brk %}
 	<br/>
 	{% endif %}
@@ -78,7 +78,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       </td>
 
       <td class="act">
-	<a href="http://infodeska.justice.cz/vyveseni.aspx?verzeid={{ row.docid }}" target="_blank" title="Informace na infoDesce">[D]</a>
+	<a href="http://infodeska.justice.cz/vyveseni.aspx?verzeid={{ row.docid }}" target="_blank" rel="noopener" title="Informace na infoDesce">[D]</a>
       </td>
 
     </tr>
