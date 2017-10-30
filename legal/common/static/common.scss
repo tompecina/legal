@@ -44,6 +44,15 @@ h1 {
     }
 }
 
+h2 {
+    text-align: center;
+    font-size: $large;
+    margin: {
+	top: ($vh+$vl);
+	bottom: $vl;
+    }
+}
+
 p {
     line-height: $huge;
 }

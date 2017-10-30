@@ -31,10 +31,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <tr>
       <td>
 	<h1>{{ page_title }}</h1>
-	{% for app in apps %}
+	{% for grp in grps %}
+	<h2>{{ grp.title }}</h2>
+	{% for app in grp.apps %}
 	<div><a href="{% url app.url %}">{{ app.name }}</a></div>
 	{% endfor %}
-	<hr/>
+	{% endfor %}
+	<h2>Pomocné funkce</h2>
 	<div><a href="{% url 'about' %}">O aplikaci</a></div>
 	<div><a href="{% url 'stat' %}">Statistické údaje</a></div>
       </td>

@@ -266,15 +266,37 @@ def getappinfo():
     return appinfo
 
 
+def convappinfo(lst):
+
+    nlst = []
+    for app in lst:
+        conf = apps.get_app_config(app)
+        nlst.append(
+            {
+                'name': conf.verbose_name,
+                'url': app + ':mainpage'})
+    return nlst
+
+
 @require_http_methods(('GET',))
 def home(request):
 
     LOGGER.debug('Home page accessed', request)
+    grps = [
+        {'title': 'Jednoduché výpočty',
+         'apps': convappinfo(['sop', 'lht', 'cin', 'dvt', 'cnb', 'kos'])},
+        {'title': 'Komplexní výpočty',
+         'apps': convappinfo(['knr', 'hjp', 'hsp'])},
+        {'title': 'Prohlížení databasí',
+         'apps': convappinfo(['psj', 'uds', 'udn', 'pir'])},
+        {'title': 'Sledování',
+         'apps': convappinfo(['szr', 'sur', 'sir', 'dir'])},
+    ]
     return render(
         request,
         'home.xhtml',
         {'page_title': 'Právnické výpočty',
-         'apps': getappinfo(),
+         'grps': grps,
          'suppress_home': True})
 
 
