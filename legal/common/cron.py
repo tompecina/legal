@@ -33,7 +33,7 @@ from legal.sur.cron import sur_notice
 from legal.sir.cron import sir_notice, cron_update as sir_update, cron_refresh_links as sir_refresh_links
 from legal.dir.cron import dir_notice
 from legal.uds.cron import (
-    cron_publishers as uds_publishers, cron_update as uds_update, uds_notice, cron_getdocs as uds_getdocs)
+    cron_publishers as uds_publishers, cron_update as uds_update, uds_notice)
 from legal.common.glob import LOCAL_SUBDOMAIN, LOCAL_URL
 from legal.common.utils import send_mail, LOGGER, holiday
 from legal.common.models import Pending, Lock
@@ -109,11 +109,6 @@ SCHED = (
     {'name': 'uds_update',
      'when': lambda t: not holiday(t.date()) and t.hour == 19 and t.minute == 15,
      'lock': 'uds',
-     'blocking': False,
-    },
-    {'name': 'uds_getdocs',
-     'when': lambda t: holiday(t.date()) or t.hour > 19 or t.hour < 8,
-     'lock': 'uds_archive',
      'blocking': False,
     },
     {'name': 'sir_update',

@@ -221,20 +221,3 @@ class Retrieved(models.Model):
 
     def __str__(self):
         return self.party.party
-
-
-class TempDate(models.Model):
-
-    posted = models.DateTimeField(
-        db_index=True)
-
-
-class TempDocument(models.Model):
-
-    docid = models.IntegerField(
-        validators=(MinValueValidator(1),),
-        unique=True)
-
-    publisher = models.ForeignKey(
-        Publisher,
-        on_delete=models.CASCADE)
