@@ -20,13 +20,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 
 from legal.common.utils import normalize, post, LOGGER
 from legal.dir.cron import dir_check
+from legal.dir.models import Discovered
 from legal.sir.glob import L2N, L2S, SELIST, BELIST
 from legal.sir.models import (
     DruhStavRizeni, Vec, DruhRoleVRizeni, Osoba, Role, DruhAdresy, Adresa, Counter, Transaction, Insolvency, Tracked)
@@ -418,6 +419,7 @@ def cron_getws2():
 def cron_delerr():
 
     Vec.objects.filter(druhStavRizeni=DruhStavRizeni.objects.get(desc='MYLNÝ ZÁP.')).delete()
+    Discovered.objects.filter(timestamp_add__lt=datetime.now() - timedelta(days=10)).delete()
     LOGGER.debug('Erroneous proceedings deleted')
 
 
