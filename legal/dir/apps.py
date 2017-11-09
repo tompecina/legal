@@ -52,7 +52,7 @@ class DirConfig(AppConfig):
                 Debtor.objects.filter(timestamp_add__gte=(now - timedelta(days=30))).count()),
             (
                 'Počet dlužníků pro příští notifikaci',
-                Discovered.objects.count()),
+                Discovered.objects.filter(vec__link__isnull=False).count()),
         )
 
     @staticmethod
