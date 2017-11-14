@@ -43,6 +43,11 @@ class TextWidget(forms.TextInput):
         super().__init__(*args, **kwargs)
 
 
+class PasswordWidget(TextWidget):
+
+    input_type = 'password'
+
+
 class CurrencyWidget(forms.TextInput):
 
     template_name = 'widgets/text.xhtml'

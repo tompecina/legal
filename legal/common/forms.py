@@ -27,7 +27,7 @@ from django.contrib.auth.models import User
 
 from legal.common.glob import MIN_PWLEN
 from legal.common.fields import CharField
-from legal.common.widgets import TextWidget
+from legal.common.widgets import TextWidget, PasswordWidget
 
 
 
@@ -56,10 +56,10 @@ class UserAddForm(UserChangeForm, UserCreationForm, Form):
         self.fields['last_name'].label = 'Příjmení'
         self.fields['last_name'].widget = TextWidget(20)
         self.fields['password1'].label = 'Heslo'
-        self.fields['password1'].widget = TextWidget(20)
+        self.fields['password1'].widget = PasswordWidget(20)
         self.fields['password2'].label = 'Potvrzení hesla'
         self.fields['password2'].help_text = '(zadejte heslo znovu, pro kontrolu)'
-        self.fields['password2'].widget = TextWidget(20)
+        self.fields['password2'].widget = PasswordWidget(20)
         self.fields['email'].label = 'E-mail'
         self.fields['email'].help_text = '(nepovinný)'
         self.fields['email'].widget = TextWidget(20)
