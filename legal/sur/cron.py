@@ -22,7 +22,7 @@
 
 from django.contrib.auth.models import User
 
-from legal.common.utils import text_opt, LOGGER
+from legal.common.utils import text_opt, composeref, LOGGER
 from legal.sur.models import Party, Found
 
 
@@ -33,7 +33,8 @@ def sur_notice(uid):
     if res:
         text = 'Byli nově zaznamenáni tito účastníci řízení, které sledujete:\n\n'
         for item in res:
-            text += ' - {0.name}, {0.court}, sp. zn. {0.senate:d} {0.register} {0.number:d}/{0.year:d}\n'.format(item)
+            text += ' - {0.name}, {0.court}, sp. zn. {1}\n'.format(
+                item, composeref(item.senate, item.register, item.number, item.year))
             text += '   {}\n\n'.format(item.url)
         Found.objects.filter(uid=uid).delete()
         LOGGER.info('Non-empty notice prepared for user "{}" ({:d})'.format(User.objects.get(pk=uid).username, uid))
