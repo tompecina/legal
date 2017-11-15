@@ -20,6 +20,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from datetime import datetime
+
 from django.db import models
 from django.core.validators import MinValueValidator, RegexValidator
 
@@ -91,7 +93,7 @@ class Decision(models.Model):
         validators=(RegexValidator(regex=FILENAME_RE_STR),))
 
     updated = models.DateTimeField(
-        null=True,
+        default=datetime.now,
         db_index=True)
 
     timestamp_add = models.DateTimeField(
