@@ -193,7 +193,8 @@ def szr_notice(uid):
         text = 'V těchto soudních řízeních, která sledujete, došlo ke změně:\n\n'
         for proc in res:
             desc = ' ({})'.format(proc.desc) if proc.desc else ''
-            text += ' - {0.court}, sp. zn. {0.senate:d} {0.register} {0.number:d}/{0.year:d}{1}\n'.format(proc, desc)
+            text += ' - {0.court}, sp. zn. {1}{2}\n'.format(
+                proc, composeref(proc.senate, proc.register, proc.number, proc.year), desc)
             if proc.court_id != SUPREME_ADMINISTRATIVE_COURT:
                 court_type = 'ns' if proc.court_id == SUPREME_COURT else 'os'
                 text += '   {}\n\n'.format(ROOT_URL + GET_PROC.format(
