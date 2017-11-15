@@ -28,7 +28,7 @@ from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 from django.db.models import Q
 
-from legal.common.utils import get, post, sleep, LOGGER, composeref
+from legal.common.utils import get, post, sleep, composeref, LOGGER
 from legal.szr.models import Court, Proceedings
 from legal.szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT
 
@@ -59,11 +59,7 @@ def addauxid(proc):
             form = soup.find('form')
             dct = {
                 i['name']: i['value'] for i in form.find_all('input') if i['type'] == 'hidden' and i.has_attr('value')}
-            if int(proc.senate):
-                ref = '{} '.format(proc.senate)
-            else:
-                ref = ''
-            ref += '{0.register} {0.number:d}/{0.year:d}'.format(proc)
+            ref = composeref(proc.senate, proc.register, proc.number, proc.year)
             dct['_ctl0:ContentPlaceMasterPage:_ctl0:txtSpisovaZnackaFull'] = ref
             res = post(NSS_URL, dct)
             soup = BeautifulSoup(res.text, 'html.parser')
