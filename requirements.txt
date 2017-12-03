@@ -1,14 +1,14 @@
 appdirs==1.4.3
-argcomplete==1.9.2
+argcomplete==1.9.3
 astroid==1.5.3
 beautifulsoup4==4.6.0
 bs4==0.0.1
 certifi==2017.11.5
 chardet==3.0.4
 coverage==4.4.2
-Django==1.11.7
+Django==2.0
 django-sphinxsearch==0.8.1
-docx2txt==0.6
+docx2txt==0.7
 EbookLib==0.16
 idna==2.6
 isort==4.2.15
