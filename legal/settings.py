@@ -131,7 +131,7 @@ SPHINX_DATABASE_NAME = 'sphinx'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': DBNAME,
         'USER': DBUSER,
         'PASSWORD': DBPASSWD,
