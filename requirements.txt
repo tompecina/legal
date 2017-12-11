@@ -31,7 +31,7 @@ pytz==2017.3
 reportlab==3.4.0
 requests==2.18.4
 six==1.11.0
-SpeechRecognition==3.7.1
+SpeechRecognition==3.8.1
 textract==1.6.1
 tinycss==0.4
 urllib3==1.22

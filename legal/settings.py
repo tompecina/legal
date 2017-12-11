@@ -142,7 +142,7 @@ DATABASES = {
         'TEST': {
         }
     },
-    SPHINX_DATABASE_NAME:  {
+    SPHINX_DATABASE_NAME: {
         'ENGINE': 'sphinxsearch.backend.sphinx',
         'NAME': '',
         'USER': '',

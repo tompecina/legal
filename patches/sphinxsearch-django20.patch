@@ -1,0 +1,40 @@
+diff -ur .venv-legal-old/lib64/python3.6/site-packages/sphinxsearch/backend/sphinx/compiler.py .venv-legal-new/lib64/python3.6/site-packages/sphinxsearch/backend/sphinx/compiler.py
+--- .venv-legal-old/lib64/python3.6/site-packages/sphinxsearch/backend/sphinx/compiler.py	2017-09-08 17:06:03.501868778 +0200
++++ .venv-legal-new/lib64/python3.6/site-packages/sphinxsearch/backend/sphinx/compiler.py	2017-12-11 06:21:30.287359469 +0100
+@@ -4,7 +4,7 @@
+ from django.core.exceptions import FieldError
+ from django.db import models
+ from django.db.models.expressions import Random
+-from django.db.models.lookups import Search, Exact
++from django.db.models.lookups import Exact
+ from django.db.models.sql import compiler, AND
+ from django.db.models.sql.constants import ORDER_DIR
+ from django.db.models.sql.query import get_order_dir
+@@ -21,13 +21,6 @@
+ 
+     def compile(self, node, select_format=False):
+         sql, params = super(SphinxQLCompiler, self).compile(node, select_format)
+-
+-        # substitute MATCH() arguments with sphinx-escaped params
+-        if isinstance(node, Search):
+-            search_text = sphinx_escape(params[0])
+-            sql = sql % search_text
+-            params = []
+-
+         return sql, params
+ 
+     def get_order_by(self):
+diff -ur .venv-legal-old/lib64/python3.6/site-packages/sphinxsearch/sql.py .venv-legal-new/lib64/python3.6/site-packages/sphinxsearch/sql.py
+--- .venv-legal-old/lib64/python3.6/site-packages/sphinxsearch/sql.py	2017-04-07 11:46:27.000000000 +0200
++++ .venv-legal-new/lib64/python3.6/site-packages/sphinxsearch/sql.py	2017-12-11 06:08:47.205057906 +0100
+@@ -95,8 +95,8 @@
+         kwargs.setdefault('where', SphinxWhereNode)
+         super(SphinxQuery, self).__init__(*args, **kwargs)
+ 
+-    def clone(self, klass=None, memo=None, **kwargs):
+-        query = super(SphinxQuery, self).clone(klass=klass, memo=memo, **kwargs)
++    def clone(self, **kwargs):
++        query = super(SphinxQuery, self).clone(**kwargs)
+         for attr_name in self._clonable:
+             value = getattr(self, attr_name, None)
+             if value:
