@@ -18,6 +18,7 @@ rsync $opts --exclude-from=- $files $user@$remote:$basedir/ <<EOF || exit
 *.po
 secrets.py
 static/
+/backup/
 /repo/
 __pycache__/
 '#*'
