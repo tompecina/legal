@@ -1051,7 +1051,8 @@ def mainpage(request):
                                     style6))
                             if item.numerator > 1 or item.denominator > 1:
                                 temp2.append(Paragraph(
-                                    '<b>Zlomek:</b> {0.numerator:d}/{0.denominator:d}'.format(item),
+                                    '<b>Celkem:</b> {0} Kč &nbsp; <b>Zlomek:</b> {1.numerator:d}/{1.denominator:d}'.format(
+                                        convi(item.amount * item.denominator / item.numerator), item),
                                     style6))
                             if item.item_note:
                                 for temp3 in filter(bool, item.item_note.strip().split('\n')):
