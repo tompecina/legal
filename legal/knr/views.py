@@ -75,6 +75,7 @@ TYPES = {
     'vat_rate': F2,
     'numerator': I,
     'denominator': I,
+    'total': F7,
     'type': S,
     'description': S,
     'amount': I,
@@ -1052,7 +1053,7 @@ def mainpage(request):
                             if item.numerator > 1 or item.denominator > 1:
                                 temp2.append(Paragraph(
                                     '<b>Celkem:</b> {0} Kč &nbsp; <b>Zlomek:</b> {1.numerator:d}/{1.denominator:d}'.format(
-                                        convi(item.amount * item.denominator / item.numerator), item),
+                                        convi(item.total * item.denominator / item.numerator), item),
                                     style6))
                             if item.item_note:
                                 for temp3 in filter(bool, item.item_note.strip().split('\n')):
@@ -1060,7 +1061,7 @@ def mainpage(request):
                             temp.append(temp2)
                             temp.append(Paragraph('{} Kč'.format(convi(item.amount)), style5))
                             doc2.append(temp)
-                        tbl2 = LongTable(doc2, colWidths=(16.15, 400.45, 66.7))
+                        tbl2 = LongTable(doc2, colWidths=(19.15, 397.45, 66.7))
                         tbl2.setStyle(
                             TableStyle((
                                 ('LINEABOVE', (0, 0), (-1, 0), .25, gray),
