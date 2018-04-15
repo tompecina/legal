@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML Schema for KNR V1.9 <https://legal.pecina.cz/> -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://legal.pecina.cz" xmlns="http://legal.pecina.cz" elementFormDefault="qualified">
+  <xs:element name="calculation">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="title" type="xs:token"/>
+	<xs:element name="calculation_note" type="xs:string"/>
+	<xs:element name="internal_note" type="xs:string"/>
+	<xs:element name="vat_rate">
+	  <xs:complexType>
+	    <xs:simpleContent>
+	      <xs:extension base="nonNegativeDecimal">
+		<xs:attribute name="unit" use="required" type="xs:NCName" fixed="percentage"/>
+	      </xs:extension>
+	    </xs:simpleContent>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element ref="items"/>
+      </xs:sequence>
+      <xs:attribute name="version" use="required" type="xs:NMTOKEN" fixed="1.9"/>
+      <xs:attribute name="application" use="required" type="xs:NCName" fixed="knr"/>
+      <xs:attribute name="created" use="required" type="xs:dateTime"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="nonNegativeDecimal">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="boolean">
+    <xs:restriction base="xs:NCName">
+      <xs:enumeration value="false"/>
+      <xs:enumeration value="true"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="amount">
+    <xs:simpleContent>
+      <xs:extension base="nonNegativeDecimal">
+	<xs:attribute name="currency" use="required" type="xs:NCName" fixed="CZK"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="geo">
+    <xs:simpleContent>
+      <xs:extension base="xs:decimal">
+	<xs:attribute name="unit" use="required" type="xs:NCName" fixed="deg"/>
+	<xs:attribute name="datum" use="required" type="xs:NCName" fixed="WGS84"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="lat">
+    <xs:simpleContent>
+      <xs:restriction base="geo">
+	<xs:minInclusive value="-90"/>
+	<xs:maxInclusive value="90"/>
+      </xs:restriction>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="lon">
+    <xs:simpleContent>
+      <xs:restriction base="geo">
+	<xs:minInclusive value="-180"/>
+	<xs:maxInclusive value="180"/>
+      </xs:restriction>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="cons">
+    <xs:simpleContent>
+      <xs:extension base="nonNegativeDecimal">
+	<xs:attribute name="unit" use="required" type="xs:token" fixed="l per 100 km"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:element name="items">
+    <xs:complexType>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+	<xs:choice>
+	  <xs:element ref="general"/>
+	  <xs:element ref="service"/>
+	  <xs:element ref="flat"/>
+	  <xs:element ref="administrative"/>
+	  <xs:element ref="time"/>
+	  <xs:element ref="travel"/>
+	</xs:choice>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="general">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="description"/>
+	<xs:element ref="amount"/>
+	<xs:element ref="vat"/>
+	<xs:element ref="numerator"/>
+	<xs:element ref="denominator"/>
+	<xs:element ref="total"/>
+	<xs:element ref="item_note"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="service">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="description"/>
+	<xs:element ref="amount"/>
+	<xs:element ref="vat"/>
+	<xs:element ref="numerator"/>
+	<xs:element ref="denominator"/>
+	<xs:element ref="total"/>
+	<xs:element ref="item_note"/>
+	<xs:element ref="major_number"/>
+	<xs:element ref="rate"/>
+	<xs:element ref="minor_number"/>
+	<xs:element ref="multiple_number"/>
+	<xs:element ref="off10_flag"/>
+	<xs:element ref="off30_flag"/>
+	<xs:element ref="off30limit5000_flag"/>
+	<xs:element ref="off20limit5000_flag"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="flat">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="description"/>
+	<xs:element ref="amount"/>
+	<xs:element ref="vat"/>
+	<xs:element ref="numerator"/>
+	<xs:element ref="denominator"/>
+	<xs:element ref="total"/>
+	<xs:element ref="rate"/>
+	<xs:element ref="multiple_flag"/>
+	<xs:element ref="multiple50_flag"/>
+	<xs:element ref="item_note"/>
+	<xs:element ref="single_flag"/>
+	<xs:element ref="halved_flag"/>
+	<xs:element ref="halved_appeal_flag"/>
+	<xs:element ref="collection_flag"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="administrative">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="description"/>
+	<xs:element ref="amount"/>
+	<xs:element ref="vat"/>
+	<xs:element ref="numerator"/>
+	<xs:element ref="denominator"/>
+	<xs:element ref="total"/>
+	<xs:element ref="item_note"/>
+	<xs:element ref="number"/>
+	<xs:element ref="rate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="time">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="description"/>
+	<xs:element ref="amount"/>
+	<xs:element ref="vat"/>
+	<xs:element ref="numerator"/>
+	<xs:element ref="denominator"/>
+	<xs:element ref="total"/>
+	<xs:element ref="item_note"/>
+	<xs:element ref="time_number"/>
+	<xs:element ref="time_rate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="travel">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="description"/>
+	<xs:element ref="amount"/>
+	<xs:element ref="vat"/>
+	<xs:element ref="numerator"/>
+	<xs:element ref="denominator"/>
+	<xs:element ref="total"/>
+	<xs:element ref="item_note"/>
+	<xs:element ref="from_name"/>
+	<xs:element ref="from_address"/>
+	<xs:element ref="from_lat"/>
+	<xs:element ref="from_lon"/>
+	<xs:element ref="to_name"/>
+	<xs:element ref="to_address"/>
+	<xs:element ref="to_lat"/>
+	<xs:element ref="to_lon"/>
+	<xs:element ref="trip_number"/>
+	<xs:element ref="trip_distance"/>
+	<xs:element ref="time_rate"/>
+	<xs:element ref="time_number"/>
+	<xs:element ref="car_name"/>
+	<xs:element ref="fuel_name"/>
+	<xs:element ref="cons1"/>
+	<xs:element ref="cons2"/>
+	<xs:element ref="cons3"/>
+	<xs:element ref="formula_name"/>
+	<xs:element ref="flat_rate"/>
+	<xs:element ref="fuel_price"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="description" type="xs:token"/>
+  <xs:element name="amount" type="amount"/>
+  <xs:element name="vat" type="boolean"/>
+  <xs:element name="numerator" type="xs:positiveInteger"/>
+  <xs:element name="denominator" type="xs:positiveInteger"/>
+  <xs:element name="total" type="amount"/>
+  <xs:element name="item_note" type="xs:string"/>
+  <xs:element name="major_number" type="xs:nonNegativeInteger"/>
+  <xs:element name="rate" type="amount"/>
+  <xs:element name="minor_number" type="xs:nonNegativeInteger"/>
+  <xs:element name="multiple_number" type="xs:nonNegativeInteger"/>
+  <xs:element name="off10_flag" type="boolean"/>
+  <xs:element name="off30_flag" type="boolean"/>
+  <xs:element name="off30limit5000_flag" type="boolean"/>
+  <xs:element name="off20limit5000_flag" type="boolean"/>
+  <xs:element name="multiple_flag" type="boolean"/>
+  <xs:element name="multiple50_flag" type="boolean"/>
+  <xs:element name="single_flag" type="boolean"/>
+  <xs:element name="halved_flag" type="boolean"/>
+  <xs:element name="halved_appeal_flag" type="boolean"/>
+  <xs:element name="collection_flag" type="boolean"/>
+  <xs:element name="number" type="xs:nonNegativeInteger"/>
+  <xs:element name="time_number">
+    <xs:complexType>
+      <xs:simpleContent>
+	<xs:extension base="xs:nonNegativeInteger">
+	  <xs:attribute name="unit" use="required" type="xs:NCName" fixed="half-hour"/>
+	</xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="time_rate">
+    <xs:complexType>
+      <xs:simpleContent>
+	<xs:extension base="amount">
+	  <xs:attribute name="unit" use="required" type="xs:token" fixed="per half-hour"/>
+	</xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="from_name" type="xs:token"/>
+  <xs:element name="from_address" type="xs:token"/>
+  <xs:element name="from_lat" type="lat"/>
+  <xs:element name="from_lon" type="lon"/>
+  <xs:element name="to_name" type="xs:token"/>
+  <xs:element name="to_address" type="xs:token"/>
+  <xs:element name="to_lat" type="lat"/>
+  <xs:element name="to_lon" type="lon"/>
+  <xs:element name="trip_number" type="xs:nonNegativeInteger"/>
+  <xs:element name="trip_distance">
+    <xs:complexType>
+      <xs:simpleContent>
+	<xs:extension base="nonNegativeDecimal">
+	  <xs:attribute name="unit" use="required" type="xs:NCName" fixed="km"/>
+	</xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="car_name" type="xs:token"/>
+  <xs:element name="fuel_name" type="xs:NCName"/>
+  <xs:element name="cons1" type="cons"/>
+  <xs:element name="cons2" type="cons"/>
+  <xs:element name="cons3" type="cons"/>
+  <xs:element name="formula_name" type="xs:token"/>
+  <xs:element name="flat_rate">
+    <xs:complexType>
+      <xs:simpleContent>
+	<xs:extension base="amount">
+	  <xs:attribute name="unit" use="required" type="xs:token" fixed="per km"/>
+	</xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fuel_price">
+    <xs:complexType>
+      <xs:simpleContent>
+	<xs:extension base="amount">
+	  <xs:attribute name="unit" use="required" type="xs:token" fixed="per l"/>
+	</xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

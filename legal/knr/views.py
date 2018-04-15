@@ -75,7 +75,7 @@ TYPES = {
     'vat_rate': F2,
     'numerator': I,
     'denominator': I,
-    'total': F7,
+    'total': I,
     'type': S,
     'description': S,
     'amount': I,
@@ -122,6 +122,7 @@ TYPES = {
 XML_DEC = {
     'vat_rate': {'unit': 'percentage'},
     'amount': {'currency': 'CZK'},
+    'total': {'currency': 'CZK'},
     'rate': {'currency': 'CZK'},
     'from_lat': {'unit': 'deg', 'datum': 'WGS84'},
     'from_lon': {'unit': 'deg', 'datum': 'WGS84'},
@@ -144,6 +145,7 @@ FORM_FIELDS = {
         'vat',
         'numerator',
         'denominator',
+        'total',
         'item_note',
     ),
     'service': (
@@ -152,6 +154,7 @@ FORM_FIELDS = {
         'vat',
         'numerator',
         'denominator',
+        'total',
         'item_note',
         'major_number',
         'rate',
@@ -168,6 +171,7 @@ FORM_FIELDS = {
         'vat',
         'numerator',
         'denominator',
+        'total',
         'rate',
         'multiple_flag',
         'multiple50_flag',
@@ -183,6 +187,7 @@ FORM_FIELDS = {
         'vat',
         'numerator',
         'denominator',
+        'total',
         'item_note',
         'number',
         'rate',
@@ -193,6 +198,7 @@ FORM_FIELDS = {
         'vat',
         'numerator',
         'denominator',
+        'total',
         'item_note',
         'time_number',
         'time_rate',
@@ -203,6 +209,7 @@ FORM_FIELDS = {
         'vat',
         'numerator',
         'denominator',
+        'total',
         'item_note',
         'from_name',
         'from_address',
@@ -234,6 +241,7 @@ SUBFORM_FIELDS = {
         'vat',
         'numerator',
         'denominator',
+        'total',
         'item_note',
     ),
     'service': (
@@ -241,6 +249,7 @@ SUBFORM_FIELDS = {
         'vat',
         'numerator',
         'denominator',
+        'total',
         'item_note',
         'major_number',
         'rate',
@@ -257,6 +266,7 @@ SUBFORM_FIELDS = {
         'vat',
         'numerator',
         'denominator',
+        'total',
         'rate',
         'multiple_flag',
         'multiple50_flag',
@@ -272,6 +282,7 @@ SUBFORM_FIELDS = {
         'vat',
         'numerator',
         'denominator',
+        'total',
         'item_note',
         'number',
         'rate',
@@ -281,6 +292,7 @@ SUBFORM_FIELDS = {
         'vat',
         'numerator',
         'denominator',
+        'total',
         'item_note',
         'time_number',
         'time_rate',
@@ -290,6 +302,7 @@ SUBFORM_FIELDS = {
         'vat',
         'numerator',
         'denominator',
+        'total',
         'item_note',
         'from_name',
         'from_address',
@@ -337,6 +350,7 @@ PRESELS = (
             'vat': False,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -347,6 +361,7 @@ PRESELS = (
             'vat': False,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -357,6 +372,7 @@ PRESELS = (
             'vat': False,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -370,6 +386,7 @@ PRESELS = (
             'vat': False,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -380,6 +397,7 @@ PRESELS = (
             'vat': False,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -401,7 +419,9 @@ PRESELS = (
             'off20limit5000_flag': False,
             'vat': False,
             'numerator': 1,
-            'denominator': 1},
+            'denominator': 1,
+            'total': 0,
+        }
     },
     {
         TEXT: 'Paušální odměna podle vyhlášky (neplátce DPH)',
@@ -413,7 +433,9 @@ PRESELS = (
             'multiple50_flag': False,
             'vat': False,
             'numerator': 1,
-            'denominator': 1},
+            'denominator': 1,
+            'total': 0,
+        }
     },
     {
         TEXT: 'Paušální odměna stanovená pevnou částkou (neplátce DPH)',
@@ -423,7 +445,9 @@ PRESELS = (
             'Paušální odměna za zastupování účastníka stanovená pevnou částkou',
             'vat': False,
             'numerator': 1,
-            'denominator': 1},
+            'denominator': 1,
+            'total': 0,
+        }
     },
     {
         TEXT: 'Použití motorového vozidla advokát (neplátce DPH)',
@@ -436,6 +460,7 @@ PRESELS = (
             'vat': False,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -446,7 +471,9 @@ PRESELS = (
             'time_rate': 100,
             'vat': False,
             'numerator': 1,
-            'denominator': 1},
+            'denominator': 1,
+            'total': 0,
+        }
     },
     {
         TEXT: 'Režijní paušál za úkony podle AdvT (neplátce DPH)',
@@ -458,6 +485,7 @@ PRESELS = (
             'vat': False,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -468,6 +496,7 @@ PRESELS = (
             'vat': False,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -490,6 +519,7 @@ PRESELS = (
             'vat': True,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -503,6 +533,7 @@ PRESELS = (
             'vat': True,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -513,7 +544,9 @@ PRESELS = (
             'Paušální odměna za zastupování účastníka stanovená pevnou částkou',
             'vat': True,
             'numerator': 1,
-            'denominator': 1},
+            'denominator': 1,
+            'total': 0,
+        },
     },
     {
         TEXT: 'Použití motorového vozidla advokát (plátce DPH)',
@@ -526,6 +559,7 @@ PRESELS = (
             'vat': True,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -537,6 +571,7 @@ PRESELS = (
             'vat': True,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -549,6 +584,7 @@ PRESELS = (
             'vat': True,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     },
     {
@@ -559,6 +595,7 @@ PRESELS = (
             'vat': True,
             'numerator': 1,
             'denominator': 1,
+            'total': 0,
         },
     }
 )
@@ -587,6 +624,7 @@ class Item:
         self.vat = False
         self.numerator = 1
         self.denominator = 1
+        self.total = .0
         self.item_note = ''
         self.major_number = 0
         self.rate = 0
@@ -748,6 +786,8 @@ def to_xml(calc):
     items = xml.new_tag('items')
     calculation.insert(len(calculation), items)
     for itm in calc.items:
+        if not hasattr(itm, 'total') or itm.total == 0:
+            itm.total = round(itm.amount * itm.denominator / itm.numerator)
         item = xml.new_tag(itm.type)
         items.insert(len(items), item)
         for key in FORM_FIELDS[itm.type]:
@@ -791,6 +831,8 @@ def from_xml(dat):
             item.type = str(itm['type'] if itm.has_attr('type') else itm.name)
         except:  # pragma: no cover
             return None, 'Chybný formát souboru'
+        if not hasattr(item, 'total') or item.total == 0:
+            item.total = round(item.amount * item.denominator / item.numerator)
         calc.items.append(item)
     return calc, None
 
@@ -1053,7 +1095,7 @@ def mainpage(request):
                             if item.numerator > 1 or item.denominator > 1:
                                 temp2.append(Paragraph(
                                     '<b>Celkem:</b> {0} Kč &nbsp; <b>Zlomek:</b> {1.numerator:d}/{1.denominator:d}'.format(
-                                        convi(item.total * item.denominator / item.numerator), item),
+                                        convi(item.total), item),
                                     style6))
                             if item.item_note:
                                 for temp3 in filter(bool, item.item_note.strip().split('\n')):
@@ -1642,6 +1684,7 @@ def itemform(request, idx=0):
                                     (cld['trip_distance'] * ((float((cld['cons1'] + cld['cons2'] + cld['cons3'])
                                     * cld['fuel_price']) / 300) + float(cld['flat_rate'])) + (cld['time_number']
                                     * cld['time_rate'])) * cld['trip_number']))
+                                cld['total'] = cld['amount']
                                 if cld['numerator'] > 1 or cld['denominator'] > 1:
                                     cld['amount'] = cld['amount'] * cld['numerator'] / cld['denominator']
                                 d2i(FORM_FIELDS[typ], cld, item)
@@ -1710,6 +1753,7 @@ def itemform(request, idx=0):
                             cld['amount'] = cld['number'] * cld['rate']
                         elif typ == 'time':
                             cld['amount'] = cld['time_number'] * cld['time_rate']
+                        cld['total'] = cld['amount']
                         if cld['numerator'] > 1 or cld['denominator'] > 1:
                             cld['amount'] = (cld['amount'] * cld['numerator']) / cld['denominator']
                         d2i(FORM_FIELDS[typ], cld, item)
