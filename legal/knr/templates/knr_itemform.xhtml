@@ -81,10 +81,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<span>Kč</span>
       </div>
       <div>
-	<input type="submit" name="submit_calc1" value="Do 31.08.2006"/>
+	<input type="submit" name="submit_calc_rate1" value="Do 31.08.2006"/>
       </div>
       <div>
-	<input type="submit" name="submit_calc2" value="Od 01.09.2006"/>
+	<input type="submit" name="submit_calc_rate2" value="Od 01.09.2006"/>
       </div>
     </fieldset>
   </td>
@@ -173,13 +173,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<span>Kč</span>
       </div>
       <div>
-	<input type="submit" name="submit_calc1" value="Do 31.08.2006"/>
+	<input type="submit" name="submit_calc_rate1" value="Do 31.08.2006"/>
       </div>
       <div>
-	<input type="submit" name="submit_calc2" value="01.09.2006 až 29.02.2012"/>
+	<input type="submit" name="submit_calc_rate2" value="01.09.2006 až 29.02.2012"/>
       </div>
       <div>
-	<input type="submit" name="submit_calc3" value="Od 01.03.2012"/>
+	<input type="submit" name="submit_calc_rate3" value="Od 01.03.2012"/>
       </div>
     </fieldset>
   </td>
@@ -246,7 +246,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% elif type == 'administrative' %}
 
 <tr>
-  <th class="{{ number_error }}">
+  <th rowspan="2" class="{{ number_error }}">
     <label for="id_number">Počet úkonů</label>
     <span>:</span>
   </th>
@@ -256,16 +256,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <input type="text" name="rate" value="{% if rate_error %}{{ rate|stringformat:'d' }}{% else %}{{ rate }}{% endif %}" size="9" maxlength="12" id="id_rate" class="{{ rate_error }}"/>
     <span>Kč</span>
   </td>
-  <td class="box">
+  <td rowspan="2" class="box">
     <fieldset>
       <legend>Sazba</legend>
       <div>
-	<input type="submit" name="submit_calc1" value="Do 31.08.2006"/>
+	<input type="submit" name="submit_calc_rate1" value="Do 31.08.2006"/>
       </div>
       <div>
-	<input type="submit" name="submit_calc2" value="Od 01.09.2006"/>
+	<input type="submit" name="submit_calc_rate2" value="Od 01.09.2006"/>
       </div>
     </fieldset>
+  </td>
+</tr>
+<tr>
+  <td class="autobutton">
+    <input type="submit" name="submit_calc_number" value="Doplnit automaticky"/>
   </td>
 </tr>
 
@@ -286,10 +291,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <fieldset>
       <legend>Sazba</legend>
       <div>
-	<input type="submit" name="submit_calc1" value="Do 31.08.2006"/>
+	<input type="submit" name="submit_calc_rate1" value="Do 31.08.2006"/>
       </div>
       <div>
-	<input type="submit" name="submit_calc2" value="Od 1. 9. 2006"/>
+	<input type="submit" name="submit_calc_rate2" value="Od 1. 9. 2006"/>
       </div>
     </fieldset>
   </td>
@@ -439,10 +444,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <fieldset>
       <legend>Sazba</legend>
       <div>
-	<input type="submit" name="submit_calc1" value="Do 31.08.2006"/>
+	<input type="submit" name="submit_calc_rate1" value="Do 31.08.2006"/>
       </div>
       <div>
-	<input type="submit" name="submit_calc2" value="Od 01.09.2006"/>
+	<input type="submit" name="submit_calc_rate2" value="Od 01.09.2006"/>
       </div>
     </fieldset>
   </td>

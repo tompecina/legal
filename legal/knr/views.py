@@ -1782,7 +1782,7 @@ def itemform(request, idx=0):
                     cld = form.cleaned_data
                     if typ == 'service':
                         bas = cld['basis']
-                        if button == 'calc1':
+                        if button == 'calc_rate1':
                             if bas <= 500:
                                 rat = 250
                             elif bas <= 1000:
@@ -1821,7 +1821,7 @@ def itemform(request, idx=0):
                             var['{}_error'.format(key)] = ''
                     elif typ == 'flat':
                         bas = cld['basis']
-                        if button == 'calc1':
+                        if button == 'calc_rate1':
                             if bas <= 500:
                                 rat = 1500
                             elif bas <= 1000:
@@ -1836,7 +1836,7 @@ def itemform(request, idx=0):
                                 rat = 34500 + .015 * (bas - 200000)
                             else:
                                 rat = 181500 + .00015 * (bas - 10000000)
-                        elif button == 'calc2':
+                        elif button == 'calc_rate2':
                             if bas <= 1000:
                                 rat = 4500
                             elif bas <= 5000:
@@ -1877,16 +1877,21 @@ def itemform(request, idx=0):
                         for key in SUBFORM_FIELDS[typ]:
                             var['{}_error'.format(key)] = ''
                     elif typ == 'administrative':
-                        rat = 75 if button == 'calc1' else 300
+                        rat = 75 if button == 'calc_rate1' else 300
                         idx = cld['idx']
                         var.update({'idx': idx, 'type': typ})
                         var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
                         d2d(SUBFORM_FIELDS[typ], cld, var)
+                        if button == 'calc_number':
+                            number = 0
+                            for itm in calc.items:
+                                number += getattr(itm, 'major_number', 0) + getattr(itm, 'minor_number', 0)
+                            var['number'] = number
                         var['rate'] = rat
                         for key in SUBFORM_FIELDS[typ]:
                             var['{}_error'.format(key)] = ''
                     elif typ == 'time':
-                        rat = 50 if button == 'calc1' else 100
+                        rat = 50 if button == 'calc_rate1' else 100
                         idx = cld['idx']
                         var.update({'idx': idx, 'type': typ})
                         var['page_title'] = 'Úprava položky' if idx else 'Nová položka'
@@ -1924,9 +1929,9 @@ def itemform(request, idx=0):
                             proc_dist(cld)
                         elif button == 'calc':
                             proc_dist(cld)
-                        elif button == 'calc1':
+                        elif button == 'calc_rate1':
                             cld['time_rate'] = 50
-                        elif button == 'calc2':
+                        elif button == 'calc_rate2':
                             cld['time_rate'] = 100
                         elif button == 'car_apply' and request.POST.get('car_sel'):
                             proc_car(int(request.POST.get('car_sel')), cld)
