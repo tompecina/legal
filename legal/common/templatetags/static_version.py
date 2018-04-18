@@ -69,3 +69,9 @@ def ts_acc_css():
 def ts_acc_js():
 
     return ver('acc.js')
+
+
+@register.simple_tag
+def ts_favicon():
+
+    return ver('favicon.ico')
