@@ -105,6 +105,7 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
+    'csp.middleware.CSPMiddleware',
 )
 
 ROOT_URLCONF = 'legal.urls'
@@ -283,6 +284,12 @@ if not (LOCAL or TEST):  # pragma: no cover
     SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 15768000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    CSP_DEFAULT_SRC = ("'self'",)
+    CSP_SCRIPT_SRC = ("'self'", 'www.google-analytics.com')
+    CSP_IMG_SRC = ("'self'", 'www.google-analytics.com')
+    CSP_FORM__ACTION = ("'self'",)
+    CSP_BLOCK_ALL_MIXED_CONTENT = True
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login/'
