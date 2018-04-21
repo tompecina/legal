@@ -38,6 +38,7 @@ body, .immune {
 h1 {
     text-align: center;
     font-size: $gigantic;
+    font-weight: bold;
     margin: {
 	top: $vg;
 	bottom: $vl;
@@ -47,6 +48,7 @@ h1 {
 h2 {
     text-align: center;
     font-size: $large;
+    font-weight: bold;
     margin: {
 	top: ($vh+$vl);
 	bottom: $vl;
@@ -563,6 +565,9 @@ td.inlop {
     }
     span + input[type="radio"] {
 	margin-left: $hl;
+    }
+    input[type="text"] + input[type="radio"] {
+	margin-left: $hm;
     }
 }
 
