@@ -29,6 +29,7 @@ body {
     background-color: $light-blue;
     font-size: $normal;
     font-family: Verdana, "DejaVu Sans", sans-serif;
+    line-height: $huge;
 }
 
 body, .immune {
@@ -56,7 +57,15 @@ h2 {
 }
 
 p {
+    margin: $vh 0;
+}
+
+p, div, th, td {
     line-height: $huge;
+}
+
+th, td {
+    vertical-align: middle;
 }
 
 table {
@@ -108,6 +117,7 @@ fieldset {
 	width: $bs;
 	color: $border-blue;
     }
+    margin: 0;
     padding: $vt $hm $vs;
     legend {
 	padding: 0 $hs;
