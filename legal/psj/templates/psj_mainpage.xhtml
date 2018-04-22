@@ -46,10 +46,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
       <tr>
 	<th{% if form.date_from.errors or form.date_to.errors %} class="err"{% endif %}>Datum:</th>
-	<td colspan="2" class="nowrap">
+	<td class="nowrap">
 	  <span class="{{ form.date_from.css_classes }}" id="id_date_from_span">{{ form.date_from }}</span>
 	  <span>–</span>
 	  <span class="{{ form.date_to.css_classes }}" id="id_date_to_span">{{ form.date_to }}</span>
+	</td>
+	<td class="help">
+	  <a href="#" class="help">nápověda</a>
+	</td>
+      </tr>
+
+      <tr class="help">
+	<td></td>
+	<td colspan="2">
+	  <fieldset class="help">
+	    <div>Seznam pro výběr jednací síně a řešitele se vyplní automaticky, zvolíte-li soud.</div>
+	  </fieldset>
 	</td>
       </tr>
 

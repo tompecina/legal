@@ -262,6 +262,10 @@ tr.help {
     display: none;
 }
 
+td.help {
+    text-align: right;
+}
+
 fieldset.help {
     margin: {
 	top: $vs;
