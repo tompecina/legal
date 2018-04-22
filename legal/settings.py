@@ -288,7 +288,7 @@ if not (LOCAL or TEST):  # pragma: no cover
     CSP_DEFAULT_SRC = ("'self'",)
     CSP_SCRIPT_SRC = ("'self'", 'www.google-analytics.com')
     CSP_IMG_SRC = ("'self'", 'www.google-analytics.com')
-    CSP_FORM__ACTION = ("'self'",)
+    CSP_FORM_ACTION = ("'self'",)
     CSP_BLOCK_ALL_MIXED_CONTENT = True
 
 LOGIN_REDIRECT_URL = '/'

@@ -21,6 +21,31 @@
 
 @import "include";
 
+// fonts
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-Italic.woff2') format('woff2');
+  font-weight: normal;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-BoldItalic.woff2') format('woff2');
+  font-weight: bold;
+  font-style: italic;
+}
 
 // general rules
 
@@ -28,7 +53,6 @@ body {
     margin: 0;
     background-color: $light-blue;
     font-size: $normal;
-    font-family: Verdana, "DejaVu Sans", sans-serif;
     line-height: $huge;
 }
 
@@ -36,9 +60,13 @@ body, .immune {
     color: $very-dark-blue;
 }
 
+body, input, select, textarea, div.ui-widget {
+    font-family: "Exo 2", Verdana, "DejaVu Sans", sans-serif;
+}
+
 h1 {
     text-align: center;
-    font-size: $gigantic;
+    font-size: $colossal;
     font-weight: bold;
     margin: {
 	top: $vg;
@@ -52,7 +80,7 @@ h2 {
     font-weight: bold;
     margin: {
 	top: ($vh+$vl);
-	bottom: $vl;
+	bottom: ($vm+$vs);
     }
 }
 
@@ -139,7 +167,7 @@ input[type="submit"], input[type="reset"], select {
 }
 
 input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea {
-    padding: $vt $hs 0;
+    padding: 0 $hs $vn;
     border: {
 	style: inset;
 	width: $bs;
@@ -154,7 +182,7 @@ input {
 	padding-right: 0;
     }
     &[type="submit"], &[type="reset"] {
-	padding: $vt $hm 0;
+	padding: 0 $hm $vt;
     }
     &[type="file"] {
 	padding-left: 0;
@@ -259,7 +287,7 @@ table.topline {
     width: 100%;
     tbody tr {
 	td {
-	    padding: $vt $hs $vs;
+	    padding: 0 $hs $vn;
 	    text-align: center;
 	    background-color: $medium-blue;
 	    font-size: $small;

@@ -31,10 +31,11 @@ table {
 table.home {
     h1 {
 	margin-bottom: $vh;
+	font-size: $enormous;
     }
     div {
 	text-align: center;
-	margin-bottom: $vm;
+	margin-bottom: $vs;
 	&:last-child {
 	    margin-bottom: $vh;
 	}
