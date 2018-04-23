@@ -305,9 +305,6 @@ table.topline {
 	    &:first-child {
 		text-align: left;
 	    }
-	    svg {
-		vertical-align: (-$vn);
-	    }
 	    &:last-child {
 		text-align: right;
 	    }
