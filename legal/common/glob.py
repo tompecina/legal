@@ -42,6 +42,8 @@ REGISTERS = (
 )
 REGISTER_RE_STR = '^({})$'.format('|'.join(REGISTERS))
 
+NULL_REGISTERS = ('EPR',)
+
 CURRENCY_RE_STR = r'^[A-Z]{3}$'
 CURRENCY_RE = compile(CURRENCY_RE_STR)
 

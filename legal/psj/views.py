@@ -33,7 +33,8 @@ from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
 
-from legal.common.glob import REGISTERS, INERR, TEXT_OPTS_KEYS, ODP, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF
+from legal.common.glob import (
+    REGISTERS, NULL_REGISTERS, INERR, TEXT_OPTS_KEYS, ODP, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF)
 from legal.common.utils import Pager, new_xml, xml_decorate, composeref, xmlbool, LOGGER, render
 from legal.psj.models import Hearing
 from legal.psj.forms import MainForm
@@ -148,7 +149,8 @@ def htmllist(request):
          'rows': res[start:start + BATCH],
          'pager': Pager(start, total, reverse('psj:htmllist'), reqd, BATCH),
          'today': date.today(),
-         'total': total})
+         'total': total,
+         'NULL_REGISTERS': NULL_REGISTERS})
 
 
 @gzip_page

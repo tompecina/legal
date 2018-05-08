@@ -31,7 +31,7 @@ from django.apps import apps
 from django.urls import reverse
 from django.http import QueryDict, Http404
 
-from legal.common.glob import INERR, TEXT_OPTS_KEYS, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF
+from legal.common.glob import NULL_REGISTERS, INERR, TEXT_OPTS_KEYS, EXLIM_TITLE, LOCAL_SUBDOMAIN, LOCAL_URL, DTF
 from legal.common.utils import Pager, new_xml, xml_decorate, LOGGER, render
 from legal.sir.glob import L2N, L2S, L2R, S2D, R2I, A2D
 from legal.sir.models import Vec, Osoba, DruhRoleVRizeni, Counter
@@ -216,7 +216,8 @@ def htmllist(request):
          'rows': rows,
          'creditors': creditors,
          'pager': Pager(start, total, reverse('pir:htmllist'), reqd, batch),
-         'total': total})
+         'total': total,
+         'NULL_REGISTERS': NULL_REGISTERS})
 
 
 def xml_addparties(osoby, xml, tag, tagname):

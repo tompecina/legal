@@ -32,7 +32,7 @@ from django.forms.models import model_to_dict
 from django.apps import apps
 from django.urls import reverse
 
-from legal.common.glob import REGISTERS, INERR
+from legal.common.glob import REGISTERS, NULL_REGISTERS, INERR
 from legal.common.utils import getbutton, Pager, composeref, decomposeref, LOGGER, render
 from legal.szr.forms import EmailForm, ProcForm
 from legal.szr.models import Court, Proceedings
@@ -85,7 +85,8 @@ def mainpage(request):
          'err_message': err_message,
          'rows': rows,
          'pager': Pager(start, total, reverse('szr:mainpage'), reqd, BATCH),
-         'total': total})
+         'total': total,
+         'NULL_REGISTERS': NULL_REGISTERS})
 
 
 @require_http_methods(('GET', 'POST'))
