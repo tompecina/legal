@@ -37,9 +37,9 @@ from django.db import connection
 from django import get_version as django_version
 
 from legal.settings import APPS
-from legal.common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL
+from legal.common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL, MIN_PWLEN
 from legal.common.utils import send_mail, LOGGER, render
-from legal.common.forms import UserAddForm, LostPwForm, MIN_PWLEN
+from legal.common.forms import UserAddForm, LostPwForm
 from legal.common.models import PwResetLink
 
 
