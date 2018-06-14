@@ -39,7 +39,7 @@ class MainForm(Form):
         required=False)
 
     court = CharField(
-        widget=CourtWidget(),
+        widget=CourtWidget(supreme_administrative_court=True),
         max_length=255,
         required=False,
         label='Soud')

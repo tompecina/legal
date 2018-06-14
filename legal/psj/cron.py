@@ -38,7 +38,6 @@ LIST_COURTROOMS = 'http://infosoud.justice.cz/InfoSoud/seznamJednacichSini?okres
 
 HEARING_URL = LOCAL_URL + '/psj/list/?court={}&senate={:d}&register={}&number={:d}&year={:d}&date_from={}&date_to={}'
 
-
 def cron_courtrooms():
 
     for court in Court.objects.exclude(id=SUPREME_ADMINISTRATIVE_COURT):
@@ -179,3 +178,70 @@ def cron_update():
         return
     LOGGER.debug(
         'Downloaded hearings for {0}, {1.year:d}-{1.month:02d}-{1.day:02d}'.format(task.court_id, task.date))
+
+
+LIST_COURTROOMS2 = 'http://www.nssoud.cz/main2col.aspx?cls=verejnejednanilist'
+
+def cron_update2():
+
+    nss = Court.objects.get(pk=SUPREME_ADMINISTRATIVE_COURT)
+    croom = Courtroom.objects.get_or_create(court=nss, desc='(neuvedeno)')[0]
+    form = Form.objects.get_or_create(name='Veřejné jednání')[0]
+    try:
+        res = get(LIST_COURTROOMS2)
+        soup = BeautifulSoup(res.text, 'html.parser')
+        for item in soup.select('table.item'):
+            try:
+                senate = register = number = year = judge = ttm = None
+                parties = []
+                for trow in item.select('tr'):
+                    ths = trow.th.text.strip()
+                    tds = trow.td.text.strip()
+                    if ths.startswith('Spisová značka:'):
+                        senate, register, number, year = decomposeref(tds)
+                    elif ths.startswith('Účastníci řízení:'):
+                        for query in trow.td:
+                            if 'strip' in dir(query):
+                                party = Party.objects.get_or_create(name=query.strip())[0]
+                                parties.append(party)
+                    elif ths.startswith('Předseda senátu:'):
+                        judge = Judge.objects.get_or_create(name=tds)[0]
+                    elif ths.startswith('Datum jednání:'):
+                        dtm = tds.split()
+                        dat = list(map(int, dtm[0].split('.')))
+                        tim = list(map(int, dtm[2].split(':')))
+                        ttm = datetime(dat[2], dat[1], dat[0], tim[0], tim[1])
+                hearing = Hearing.objects.update_or_create(
+                    courtroom=croom,
+                    time=ttm,
+                    senate=senate,
+                    register=register,
+                    number=number,
+                    year=year,
+                    form=form,
+                    judge=judge,
+                    closed=False,
+                    cancelled=False)
+                if hearing[1]:
+                    for party in parties:
+                        hearing[0].parties.add(party)
+                        sur_check(
+                            {'check_psj': True},
+                            party.name,
+                            nss,
+                            senate,
+                            register,
+                            number,
+                            year,
+                            HEARING_URL.format(
+                                nss.id,
+                                senate,
+                                quote(register),
+                                number,
+                                year,
+                                ttm.date(),
+                                ttm.date()))
+            except:  # pragma: no cover
+                pass
+    except:  # pragma: no cover
+        LOGGER.warning('Supreme Administrative Court update failed')

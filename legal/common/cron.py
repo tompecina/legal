@@ -26,7 +26,7 @@ from django.contrib.auth.models import User
 
 from legal.szr.cron import szr_notice, cron_courts as szr_courts, cron_update as szr_update
 from legal.psj.cron import (
-    cron_courtrooms as psj_courtrooms, cron_schedule as psj_schedule, cron_update as psj_update)
+    cron_courtrooms as psj_courtrooms, cron_schedule as psj_schedule, cron_update as psj_update, cron_update2 as psj_update2)
 from legal.settings import TEST
 from legal.udn.cron import cron_update as udn_update, cron_find as udn_find
 from legal.sur.cron import sur_notice
@@ -73,6 +73,11 @@ SCHED = (
     {'name': 'psj_update',
      'when': lambda t: (t.minute % 2) == 0,
      'lock': 'psj',
+     'blocking': False,
+    },
+    {'name': 'psj_update2',
+     'when': lambda t: (t.hour % 5) == 0 and t.minute == 40,
+     'lock': 'psj_update2',
      'blocking': False,
     },
     {'name': 'udn_update',
