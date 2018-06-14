@@ -245,3 +245,4 @@ def cron_update2():
                 pass
     except:  # pragma: no cover
         LOGGER.warning('Supreme Administrative Court update failed')
+    LOGGER.debug('Downloaded Supreme Administrative Court hearings')
