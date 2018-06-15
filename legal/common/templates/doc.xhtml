@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <h1 class="list">{{ page_title }}</h1>
 
-<div class="subtitle">/{{ docinfo.filename|truncatechars:100|replace:'_\.\.\.$_…' }}</div>
+<div class="subtitle" title="/{{ docinfo.filename }}">/{{ docinfo.filename|truncatechars:100|replace:'_\.\.\.$_…' }}</div>
 
 {% if docinfo.mimetype == 'application/pdf' %}
 
@@ -52,7 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <tr>
       <th>Název:</th>
-      <td>{{ docinfo.basename|truncatechars:100|replace:'_\.\.\.$_…' }}</td>
+      <td title="{{ docinfo.basename }}">{{ docinfo.basename|truncatechars:100|replace:'_\.\.\.$_…' }}</td>
     </tr>
 
     <tr>
@@ -67,12 +67,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <tr>
       <th>Původní URL:</th>
-      <td>{{ docinfo.url|default:'(není známo)'|truncatechars:100|replace:'_\.\.\.$_…' }}</td>
+      <td title="{{ docinfo.url }}">{{ docinfo.url|default:'(není známo)'|truncatechars:100|replace:'_\.\.\.$_…' }}</td>
     </tr>
 
     <tr>
       <th>URL archivované kopie:</th>
-      <td><a href="/{{ docinfo.filename }}" target="_blank" rel="noopener">https://legal.pecina.cz/{{ docinfo.filename|truncatechars:80|replace:'_\.\.\.$_…' }}</a></td>
+      <td><a href="/{{ docinfo.filename }}" target="_blank" rel="noopener" title="https://legal.pecina.cz/{{ docinfo.filename }}">https://legal.pecina.cz/{{ docinfo.filename|truncatechars:80|replace:'_\.\.\.$_…' }}</a></td>
     </tr>
 
   </tbody>
