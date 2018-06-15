@@ -1,0 +1,82 @@
+{% extends 'main.xhtml' %}
+
+{% comment %}
+
+common/templates/doc.xhtml
+
+Copyright (C) 2011-18 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
+{% load static %}
+{% load replace %}
+
+{% block page_contents %}
+
+<h1 class="list">{{ page_title }}</h1>
+
+<div class="subtitle">/{{ docinfo.filename|truncatechars:100|replace:'_\.\.\.$_…' }}</div>
+
+{% if docinfo.mimetype == 'application/pdf' %}
+
+<iframe class="preview" src="{% static '' %}/pdfjs/web/viewer.html?file=/{{ docinfo.filename }}">
+  (náhled nelze ve vašem prohlížeči zobrazit)
+</iframe>
+
+{% endif %}
+
+<table class="detail">
+
+  <tbody>
+
+    <tr>
+      <th>Cesta:</th>
+      <td>/{{ docinfo.path }}</td>
+    </tr>
+
+    <tr>
+      <th>Název:</th>
+      <td>{{ docinfo.basename|truncatechars:100|replace:'_\.\.\.$_…' }}</td>
+    </tr>
+
+    <tr>
+      <th>MIME-typ:</th>
+      <td>{{ docinfo.mimetype }}</td>
+    </tr>
+
+    <tr>
+      <th>Čas archivace:</th>
+      <td>{{ docinfo.mtime }}</td>
+    </tr>
+
+    <tr>
+      <th>Původní URL:</th>
+      <td>{{ docinfo.url|default:'(není známo)'|truncatechars:100|replace:'_\.\.\.$_…' }}</td>
+    </tr>
+
+    <tr>
+      <th>URL archivované kopie:</th>
+      <td><a href="/{{ docinfo.filename }}" target="_blank" rel="noopener">https://legal.pecina.cz/{{ docinfo.filename|truncatechars:80|replace:'_\.\.\.$_…' }}</a></td>
+    </tr>
+
+  </tbody>
+
+</table>
+
+{% endblock %}

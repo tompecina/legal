@@ -133,3 +133,20 @@ class Asset(models.Model):
 
     def __str__(self):
         return self.sessionid
+
+
+class Doc(models.Model):
+
+    app = models.CharField(
+        max_length=32)
+
+    filename = models.CharField(
+        max_length=255)
+
+    url = models.URLField()
+
+    class Meta:
+        unique_together = ('app', 'filename')
+
+    def __str__(self):
+        return '{}/{}'.format(self.app, self.filename)

@@ -25,7 +25,8 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib import admin
 
 from legal.settings import APPS
-from legal.common.views import home, robots, pwchange, userinfo, useradd, lostpw, resetpw, about, stat, genrender
+from legal.common.views import (
+    home, robots, pwchange, userinfo, useradd, lostpw, resetpw, about, stat, doc, genrender)
 
 
 admin.autodiscover()
@@ -75,5 +76,6 @@ urlpatterns = [
         name='pwlinksent'),
     url(r'^about/$', about, name='about'),
     url(r'^stat/$', stat, name='stat'),
+    url(r'^doc/(.+)$', doc, name='doc'),
     url(r'^admin/', include((admin.site.urls[0], 'admin')))
 ] + [url('^{}/'.format(a), include(('legal.{}.urls'.format(a), a), namespace=a)) for a in APPS]

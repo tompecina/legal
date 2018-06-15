@@ -47,7 +47,7 @@ from django.db.transaction import atomic
 
 from legal.settings import FONT_DIR, TEST
 from legal.common.glob import LIM, ODP, YDCONVS, MDCONVS, REGISTERS, LOCAL_SUBDOMAIN, LOCAL_EMAIL
-from legal.common.models import Preset, Cache, Asset
+from legal.common.models import Preset, Cache, Asset, Doc
 
 
 class Logger:
@@ -1085,3 +1085,15 @@ def setasset(request, asset_id, data, lifespan):
     })
     LOGGER.debug("Asset '{}' for session '{}' stored, length: {:d}".format(asset_id, sid, len(data)))
     return True
+
+
+def adddoc(app, filename, url):
+    Doc.objects.update_or_create(app=app, filename=filename, defaults={'url': url})
+
+
+def getdocurl(filename):
+    spl = filename.split('/', 2)
+    if spl[0] != 'repo':
+        return None
+    docs = Doc.objects.filter(app=spl[1], filename=spl[2])
+    return docs[0].url if docs.exists() else None

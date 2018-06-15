@@ -31,11 +31,13 @@ from django.contrib.auth.models import User
 
 from legal.settings import BASE_DIR, TEST, TEST_TEMP_DIR
 from legal.common.glob import ODP
-from legal.common.utils import get, sleep, LOGGER, between
+from legal.common.utils import get, sleep, LOGGER, between, adddoc
 from legal.sur.models import Party
 from legal.uds.glob import TYPES
 from legal.uds.models import Publisher, Agenda, Document, DocumentIndex, File, Retrieved
 
+
+APP = __package__.rpartition('.')[2]
 
 ROOT_URL = 'http://infodeska.justice.cz/'
 PUBLISHERS_URL = '{}subjekty.aspx?typ={{}}'.format(ROOT_URL)
@@ -274,6 +276,7 @@ def cron_update(*args):
                             pathname = join(dirname, filename)
                             with open(pathname, 'wb') as outfile:
                                 outfile.write(content)
+                                adddoc(APP, filename, FILE_URL.format(fileid))
                             if File.objects.filter(fileid=fileid).exists():
                                 continue
                             try:

@@ -20,8 +20,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from os.path import dirname, abspath, join
 from os import environ
+from os.path import dirname, abspath, join
 from sys import argv
 from locale import setlocale, LC_ALL
 from logging import Filter

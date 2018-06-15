@@ -25,8 +25,10 @@ from random import getrandbits, choice
 from datetime import datetime, timedelta
 from platform import python_version
 from os import uname
+from os.path import join, isfile, split, basename, getmtime
+from mimetypes import guess_type
 
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, Http404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.contrib import auth
@@ -36,9 +38,9 @@ from django.apps import apps
 from django.db import connection
 from django import get_version as django_version
 
-from legal.settings import APPS
+from legal.settings import APPS, BASE_DIR
 from legal.common.glob import INERR, LOCAL_SUBDOMAIN, LOCAL_URL, MIN_PWLEN
-from legal.common.utils import send_mail, LOGGER, render
+from legal.common.utils import send_mail, LOGGER, render, getdocurl
 from legal.common.forms import UserAddForm, LostPwForm
 from legal.common.models import PwResetLink
 
@@ -323,6 +325,35 @@ def about(request):
         {'page_title': 'O aplikaci',
          'apps': getappinfo(),
          'env': env})
+
+
+@require_http_methods(('GET',))
+def doc(request, filename):
+
+    LOGGER.debug('Document accessed: {}'.format(filename), request)
+
+    pathname = join(BASE_DIR, filename).encode('utf-8')
+    if not isfile(pathname):
+        raise Http404
+    
+    mimetype = guess_type(filename, strict=False)[0] or '(neznámý)'
+
+    mtime = datetime.fromtimestamp(getmtime(pathname)).strftime('%d.%m.%Y %H:%M:%S')
+
+    docinfo = {
+        'filename': filename,
+        'path': split(filename)[0],
+        'basename': basename(filename),
+        'mimetype': mimetype,
+        'mtime': mtime,
+        'url': getdocurl(filename),
+    }
+
+    return render(
+        request,
+        'doc.xhtml',
+        {'page_title': 'Archivovaný dokument',
+         'docinfo': docinfo})
 
 
 def getappstat():

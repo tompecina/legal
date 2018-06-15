@@ -1,6 +1,13 @@
 #!/bin/bash
 
-for p in patches/*.patch; do
+for p in patches/python-*.patch; do
     patch -N -r - -p3 -d .venv-legal/lib64/python3.* -i "../../../$p"
 done
+
+if [ -e external ]; then
+    for p in patches/external-*.patch; do
+	patch -N -r - -p1 -d external -i "../$p"
+    done
+fi
+
 exit 0

@@ -1,0 +1,17 @@
+diff -ur external-old/pdfjs/web/viewer.html external-new/pdfjs/web/viewer.html
+--- external-old/pdfjs/web/viewer.html	2018-06-14 18:37:14.816129116 +0200
++++ external-new/pdfjs/web/viewer.html	2018-06-15 02:24:41.433512610 +0200
+@@ -1,4 +1,4 @@
+-﻿<!DOCTYPE html>
++<!DOCTYPE html>
+ <!--
+ Copyright 2012 Mozilla Foundation
+ 
+@@ -30,6 +30,7 @@
+ 
+ 
+     <link rel="stylesheet" href="viewer.css">
++    <link rel="stylesheet" href="/static/pdfjs.css">
+ 
+ 
+ <!-- This snippet is used in production (included from viewer.html) -->

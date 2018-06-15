@@ -5,6 +5,6 @@ scriptpath='./scripts'
 "$scriptpath"/dosass || exit
 ./manage.py collectstatic --noinput --ignore='*.scss' --ignore='*.map' || exit
 "$scriptpath"/douglifyjs || exit
-cp external/* collect || exit
+cp -r external/* collect || exit
 mkdir -p collect/fonts
 cp fonts/* collect/fonts || exit

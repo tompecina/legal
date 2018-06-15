@@ -29,13 +29,15 @@ from bs4 import BeautifulSoup
 
 from legal.settings import BASE_DIR, TEST, TEST_TEMP_DIR
 from legal.common.glob import LOCAL_URL
-from legal.common.utils import get, post, composeref, decomposeref, LOGGER
+from legal.common.utils import get, post, composeref, decomposeref, LOGGER, adddoc
 from legal.szr.glob import SUPREME_ADMINISTRATIVE_COURT
 from legal.szr.models import Court
 from legal.sur.cron import sur_check
 from legal.udn.glob import FILENAME_RE_STR
 from legal.udn.models import Decision, Party, Agenda
 
+
+APP = __package__.rpartition('.')[2]
 
 ROOT_URL = 'http://www.nssoud.cz/'
 
@@ -90,6 +92,7 @@ def cron_update():
                                 'Failed to write abridged decision "{}"'
                                 .format(composeref(senate, register, number, year)))
                             continue
+                        adddoc(APP, filename, ROOT_URL + fileurl)
                     agenda = Agenda.objects.get_or_create(desc=ttr[2].td.text.strip())[0]
                     dat = date(*map(int, list(reversed(ttr[3].td.text.split('.')))))
                     dec = Decision(
@@ -168,6 +171,7 @@ def cron_find():
                         'Failed to write anonymized decision "{}"'
                         .format(composeref(dec.senate, dec.register, dec.number, dec.year)))
                     return
+                adddoc(APP, filename, ROOT_URL + fileurl)
             dec.anonfilename = filename
             dec.save()
             return
