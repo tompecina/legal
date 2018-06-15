@@ -276,7 +276,7 @@ def cron_update(*args):
                             pathname = join(dirname, filename)
                             with open(pathname, 'wb') as outfile:
                                 outfile.write(content)
-                                adddoc(APP, filename, FILE_URL.format(fileid))
+                                adddoc(APP, join(str(fileid), filename), FILE_URL.format(fileid))
                             if File.objects.filter(fileid=fileid).exists():
                                 continue
                             try:
