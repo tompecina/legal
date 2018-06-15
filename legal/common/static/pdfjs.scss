@@ -25,10 +25,18 @@ html body {
     background-color: #f8f8f8;
     div.pdfViewer div.page {
 	margin: {
-	    top: 15px;
-	    bottom: 15px;
+	    top: 10px;
+	    bottom: 10px;
 	}
 	border: unset;
 	box-shadow: 0 0 15px 5px #0000000c;
+    }
+    div.spread div.page,
+    div.pdfViewer.scrollHorizontal div.page,
+    div.pdfViewer.scrollWrapped div.page {
+	margin: {
+	    left: 7.5px;
+	    right: 7.5px;
+	}
     }
 }
