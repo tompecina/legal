@@ -689,9 +689,6 @@ var PDFViewerApplication = {
     if (document.fullscreenEnabled === false || document.mozFullScreenEnabled === false || document.webkitFullscreenEnabled === false || document.msFullscreenEnabled === false) {
       support = false;
     }
-    if (support && _app_options.AppOptions.get('disableFullscreen') === true) {
-      support = false;
-    }
     return (0, _pdfjsLib.shadow)(this, 'supportsFullscreen', support);
   },
   get supportsIntegratedFind() {
@@ -3489,10 +3486,6 @@ var defaultOptions = {
     value: '',
     kind: OptionKind.VIEWER
   },
-  disableFullscreen: {
-    value: _viewer_compatibility.viewerCompatibilityParams.disableFullscreen || false,
-    kind: OptionKind.VIEWER
-  },
   disableHistory: {
     value: false,
     kind: OptionKind.VIEWER
@@ -3682,13 +3675,7 @@ var compatibilityParams = Object.create(null);
 {
   var userAgent = typeof navigator !== 'undefined' && navigator.userAgent || '';
   var isAndroid = /Android/.test(userAgent);
-  var isIE = /Trident/.test(userAgent);
   var isIOS = /\b(iPad|iPhone|iPod)(?=;)/.test(userAgent);
-  (function checkFullscreenSupport() {
-    if (isIE && window.parent !== window) {
-      compatibilityParams.disableFullscreen = true;
-    }
-  })();
   (function checkCanvasSizeLimitation() {
     if (isIOS || isAndroid) {
       compatibilityParams.maxCanvasPixels = 5242880;
