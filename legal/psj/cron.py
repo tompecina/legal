@@ -30,6 +30,7 @@ from legal.common.glob import LOCAL_URL
 from legal.common.utils import get, decomposeref, normreg, sleep, LOGGER
 from legal.szr.models import Court
 from legal.szr.glob import SUPREME_COURT, SUPREME_ADMINISTRATIVE_COURT
+from legal.szr.cron import getauxid
 from legal.sur.cron import sur_check
 from legal.psj.models import Courtroom, Judge, Form, Hearing, Party, Task
 
@@ -191,6 +192,9 @@ def cron_update2():
         res = get(LIST_COURTROOMS2)
         soup = BeautifulSoup(res.text, 'html.parser')
         for item in soup.select('table.item'):
+            for hearing in Hearing.objects.filter(courtroom__court=nss, auxid=0):
+                hearing.auxid = getauxid(hearing.senate, hearing.register, hearing.number, hearing.year)
+                hearing.save()
             try:
                 senate = register = number = year = judge = ttm = None
                 parties = []
@@ -211,6 +215,7 @@ def cron_update2():
                         dat = list(map(int, dtm[0].split('.')))
                         tim = list(map(int, dtm[2].split(':')))
                         ttm = datetime(dat[2], dat[1], dat[0], tim[0], tim[1])
+                auxid = getauxid(senate, register, number, year)
                 hearing = Hearing.objects.update_or_create(
                     courtroom=croom,
                     time=ttm,
@@ -221,7 +226,8 @@ def cron_update2():
                     form=form,
                     judge=judge,
                     closed=False,
-                    cancelled=False)
+                    cancelled=False,
+                    auxid=auxid)
                 if hearing[1]:
                     for party in parties:
                         hearing[0].parties.add(party)

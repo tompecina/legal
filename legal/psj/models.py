@@ -125,6 +125,9 @@ class Hearing(models.Model):
     cancelled = models.BooleanField(
         default=False)
 
+    auxid = models.IntegerField(
+        default=0)
+
     timestamp_add = models.DateTimeField(
         auto_now_add=True,
         db_index=True)

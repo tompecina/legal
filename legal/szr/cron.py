@@ -50,25 +50,29 @@ NSS_GET_PROC = 'http://www.nssoud.cz/mainc.aspx?cls=InfoSoud&kau_id={:d}'
 UPDATE_DELAY = timedelta(hours=6)
 
 
+def getauxid(senate, register, number, year):
+
+    try:
+        res = get(NSS_URL)
+        soup = BeautifulSoup(res.text, 'html.parser')
+        form = soup.find('form')
+        dct = {i['name']: i['value'] for i in form.find_all('input') if i['type'] == 'hidden' and i.has_attr('value')}
+        ref = composeref(senate, register, number, year)
+        dct['_ctl0:ContentPlaceMasterPage:_ctl0:txtSpisovaZnackaFull'] = ref
+        res = post(NSS_URL, dct)
+        soup = BeautifulSoup(res.text, 'html.parser')
+        oncl = (
+            soup.select('table#_ctl0_ContentPlaceMasterPage__ctl0_grwA')[0]
+            .select('img[src="/Image/infosoud.gif"]')[0]['onclick'])
+        return int(oncl.split('=')[-1].split("'")[0])
+    except:
+        return 0
+
+
 def addauxid(proc):
 
     if proc.court_id == SUPREME_ADMINISTRATIVE_COURT and not proc.auxid:
-        try:
-            res = get(NSS_URL)
-            soup = BeautifulSoup(res.text, 'html.parser')
-            form = soup.find('form')
-            dct = {
-                i['name']: i['value'] for i in form.find_all('input') if i['type'] == 'hidden' and i.has_attr('value')}
-            ref = composeref(proc.senate, proc.register, proc.number, proc.year)
-            dct['_ctl0:ContentPlaceMasterPage:_ctl0:txtSpisovaZnackaFull'] = ref
-            res = post(NSS_URL, dct)
-            soup = BeautifulSoup(res.text, 'html.parser')
-            oncl = (
-                soup.select('table#_ctl0_ContentPlaceMasterPage__ctl0_grwA')[0]
-                .select('img[src="/Image/infosoud.gif"]')[0]['onclick'])
-            proc.auxid = int(oncl.split('=')[-1].split("'")[0])
-        except:
-            pass
+        proc.auxid = getauxid(proc.senate, proc.register, proc.number, proc.year)
 
 
 def isreg(court):
