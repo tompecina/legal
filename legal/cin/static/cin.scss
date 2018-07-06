@@ -25,7 +25,7 @@
 td.msg div {
     &.header {
 	margin-bottom: $vs;
-	font-weight: bold;
+	font-weight: $boldweight;
     }
     &.ymd {
 	margin-bottom: $vm;

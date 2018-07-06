@@ -89,7 +89,7 @@ table.stat {
 	    background-color: $medium-blue;
 	    text-align: center;
 	    font-size: $large;
-	    font-weight: bold;
+	    font-weight: $boldweight;
 	}
 	tr {
 	    th, td {
@@ -121,5 +121,5 @@ table.stat {
 }
 
 span.new-pwd {
-    font-weight: bold;
+    font-weight: $boldweight;
 }

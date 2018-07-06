@@ -76,7 +76,7 @@ fieldset.vattbl {
     }
     tr:last-child {
 	th, td {
-	    font-weight: bold;
+	    font-weight: $boldweight;
 	}
     }
 }

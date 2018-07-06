@@ -45,7 +45,7 @@ table.centered tbody tr td fieldset:not(:first-child) table {
 	    font-size: $huge;
 	}
 	td div:first-child, td.cc {
-	    font-weight: bold;
+	    font-weight: $boldweight;
 	}
 	td.mc {
 	    width: 100%;
@@ -74,10 +74,10 @@ table.list {
 	}
 	&.curr th {
 	    padding-top: $vn;
-	    font-weight: normal;
+	    font-weight: $normalweight;
 	}
 	th.sum {
-	    font-weight: bold;
+	    font-weight: $boldweight;
 	}
     }
     tbody tr td {
@@ -109,11 +109,11 @@ table.list {
 	}
 	&.taberr span.err {
 	    color: inherit;
-	    font-weight: bold;
+	    font-weight: $boldweight;
 	}
     }
     tfoot span:first-child {
-	font-weight: bold;
+	font-weight: $boldweight;
     }
 }
 

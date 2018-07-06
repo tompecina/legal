@@ -35,7 +35,7 @@ fieldset {
 td.msg div {
     &.amount {
 	font-size: $larger;
-	font-weight: bold;
+	font-weight: $boldweight;
     }
     &.note {
 	padding-top: $vs;

@@ -24,28 +24,113 @@
 // fonts
 @font-face {
   font-family: 'Exo 2';
+  src: url('/static/Exo2-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-ThinItalic.woff2') format('woff2');
+  font-weight: 100;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-ExtraLightItalic.woff2') format('woff2');
+  font-weight: 200;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-LightItalic.woff2') format('woff2');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Exo 2';
   src: url('/static/Exo2-Regular.woff2') format('woff2');
-  font-weight: normal;
+  font-weight: 400;
   font-style: normal;
 }
 @font-face {
   font-family: 'Exo 2';
   src: url('/static/Exo2-Italic.woff2') format('woff2');
-  font-weight: normal;
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-MediumItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-SemiBoldItalic.woff2') format('woff2');
+  font-weight: 600;
   font-style: italic;
 }
 @font-face {
   font-family: 'Exo 2';
   src: url('/static/Exo2-Bold.woff2') format('woff2');
-  font-weight: bold;
+  font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: 'Exo 2';
   src: url('/static/Exo2-BoldItalic.woff2') format('woff2');
-  font-weight: bold;
+  font-weight: 700;
   font-style: italic;
 }
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-ExtraBoldItalic.woff2') format('woff2');
+  font-weight: 800;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('/static/Exo2-BlackItalic.woff2') format('woff2');
+  font-weight: 900;
+  font-style: italic;
+}
+
 
 // general rules
 
@@ -67,7 +152,7 @@ body, input, select, textarea, div.ui-widget {
 h1 {
     text-align: center;
     font-size: $colossal;
-    font-weight: bold;
+    font-weight: $boldweight;
     margin: {
 	top: $vg;
 	bottom: $vl;
@@ -77,7 +162,7 @@ h1 {
 h2 {
     text-align: center;
     font-size: $large;
-    font-weight: bold;
+    font-weight: $boldweight;
     margin: {
 	top: ($vh+$vl);
 	bottom: ($vm+$vs);
@@ -100,12 +185,12 @@ table {
     border-collapse: collapse;
     & > thead > tr > th {
 	text-align: center;
-	font-weight: bold;
+	font-weight: $boldweight;
     }
     & > tbody, & > tfoot {
 	& > tr > th {
 	    text-align: right;
-	    font-weight: normal;
+	    font-weight: $normalweight;
 	    padding: $vt ($hs+$ht) $vt 0;
 	}
     }
@@ -437,14 +522,14 @@ table.detail {
 	}
 	background-color: $medium-blue;
 	font-size: $large;
-	font-weight: bold;
+	font-weight: $boldweight;
 	text-align: center;
 	font-size: $large;
     }
     tbody {
 	tr {
 	    th, td {
-		font-weight: normal;
+		font-weight: $normalweight;
 		background-color: $white;
 		padding: {
 		    top: 0;
@@ -763,5 +848,5 @@ table.ui-datepicker-calendar a.ui-state-hover {
     color: $white;
 }
 table.ui-datepicker-calendar td.ui-datepicker-week-end a.ui-state-default {
-    font-weight: bold;
+    font-weight: $boldweight;
 }

@@ -36,7 +36,7 @@ fieldset.intbl {
 	    &.disabled th {
 		label, span {
 		    color: $very-dark-blue;
-		    font-weight: normal;
+		    font-weight: $normalweight;
 		}
 	    }
 	}

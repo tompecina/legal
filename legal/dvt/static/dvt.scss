@@ -39,7 +39,7 @@ table.form tbody tr:nth-child(3) td {
 td.msg div {
     &.res {
 	font-size: $larger;
-	font-weight: bold;
+	font-weight: $boldweight;
 	margin-bottom: $vs;
     }
     &.normal {
