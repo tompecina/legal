@@ -52,6 +52,7 @@ table.about {
 	background-color: $medium-blue;
 	text-align: center;
 	font-size: $large;
+	font-weight: $mediumweight;
     }
     tbody {
 	tr td {
@@ -83,13 +84,13 @@ table.stat {
     tbody {
 	tr.header th {
 	    padding: {
-		top: $vs;
-		bottom: $vs;
+		top: ($vs+$vt);
+		bottom: ($vs+$vt);
 	    }
 	    background-color: $medium-blue;
 	    text-align: center;
 	    font-size: $large;
-	    font-weight: $boldweight;
+	    font-weight: $mediumweight;
 	}
 	tr {
 	    th, td {
@@ -121,5 +122,5 @@ table.stat {
 }
 
 span.new-pwd {
-    font-weight: $boldweight;
+    font-weight: $mediumweight;
 }

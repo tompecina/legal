@@ -47,7 +47,7 @@ td.msg div {
     &.header {
 	margin-bottom: $vm;
 	font-size: $large;
-	font-weight: $boldweight;
+	font-weight: $mediumweight;
     }
     &.gap {
 	margin-top: $vl;
@@ -55,6 +55,6 @@ td.msg div {
     &.total {
 	margin-top: $vt;
 	font-size: $larger;
-	font-weight: $boldweight;
+	font-weight: $mediumweight;
     }
 }

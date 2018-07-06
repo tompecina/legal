@@ -152,7 +152,7 @@ body, input, select, textarea, div.ui-widget {
 h1 {
     text-align: center;
     font-size: $colossal;
-    font-weight: $boldweight;
+    font-weight: $mediumweight;
     margin: {
 	top: $vg;
 	bottom: $vl;
@@ -162,7 +162,7 @@ h1 {
 h2 {
     text-align: center;
     font-size: $large;
-    font-weight: $boldweight;
+    font-weight: $mediumweight;
     margin: {
 	top: ($vh+$vl);
 	bottom: ($vm+$vs);
@@ -522,7 +522,7 @@ table.detail {
 	}
 	background-color: $medium-blue;
 	font-size: $large;
-	font-weight: $boldweight;
+	font-weight: $mediumweight;
 	text-align: center;
 	font-size: $large;
     }
