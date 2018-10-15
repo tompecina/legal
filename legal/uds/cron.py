@@ -39,7 +39,7 @@ from legal.uds.models import Publisher, Agenda, Document, DocumentIndex, File, R
 
 APP = __package__.rpartition('.')[2]
 
-ROOT_URL = 'http://infodeska.justice.cz/'
+ROOT_URL = 'https://infodeska.justice.cz/'
 PUBLISHERS_URL = '{}subjekty.aspx?typ={{}}'.format(ROOT_URL)
 LIST_URL = '{}historie.aspx?subjkod={{:d}}&datum={{:%d.%m.%Y}}'.format(ROOT_URL)
 DETAIL_URL = '{}vyveseni.aspx?verzeid={{:d}}'.format(ROOT_URL)

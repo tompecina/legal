@@ -34,6 +34,7 @@ from xml.sax.saxutils import escape, unescape
 
 from bs4 import BeautifulSoup
 from pdfrw import PdfReader, PdfName
+from urllib3 import disable_warnings
 import requests
 import reportlab.rl_config
 from reportlab.pdfgen.canvas import Canvas
@@ -779,7 +780,8 @@ def get(*args, **kwargs):  # pragma: no cover
     else:
         if 'timeout' not in kwargs:
             kwargs['timeout'] = TIMEOUT
-        return requests.get(*args, **kwargs)
+        disable_warnings()
+        return requests.get(*args, **kwargs, verify=False)
 
 
 def post(*args, **kwargs):  # pragma: no cover
