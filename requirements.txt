@@ -26,9 +26,9 @@ psycopg2-binary==2.7.5
 pylint==2.1.1
 pylint-django==2.0.2
 pylint-plugin-utils==0.4
-pyparsing==2.2.2
+pyparsing==2.3.0
 python-pptx==0.6.15
-pytz==2018.6
+pytz==2018.7
 reportlab==3.5.9
 requests==2.20.0
 six==1.11.0

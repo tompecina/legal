@@ -850,21 +850,3 @@ table.ui-datepicker-calendar a.ui-state-hover {
 table.ui-datepicker-calendar td.ui-datepicker-week-end a.ui-state-default {
     font-weight: $boldweight;
 }
-
-.topbanner {
-  margin: 30px 10% 25px;
-  padding: 5px 35px 0;
-  border: 2px solid $dark-blue;
-  h2 {
-    margin-top: 20px;
-    margin-bottom: 0;
-  }
-  p {
-    text-align: justify;
-  }
-  p.signed {
-    text-align: right;
-    margin-top: 0;
-    font-style: italic;
-  }
-}
