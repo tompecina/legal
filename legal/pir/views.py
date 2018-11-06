@@ -158,9 +158,9 @@ def o2s(osoba, detailed=False):
     res = ', '.join(filter(bool, (res, osoba.titulZa, osoba.nazevOsobyObchodni)))
     if detailed:
         if osoba.datumNarozeni:
-            res += ', nar.&#160;{:%d.%m.%Y}'.format(osoba.datumNarozeni)
+            res += ', nar.\u00a0{:%d.%m.%Y}'.format(osoba.datumNarozeni)
         elif osoba.ic:
-            res += ', IČO:&#160;{}'.format(osoba.ic)
+            res += ', IČO:\u00a0{}'.format(osoba.ic)
     return res
 
 

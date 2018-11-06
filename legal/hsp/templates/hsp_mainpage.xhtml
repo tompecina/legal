@@ -99,7 +99,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		  <th>{{ debit.id }}</th>
 		  <td class="mc">
 		    <div>{{ debit.description|default:'<i>(bez názvu)</i>' }}</div>
-		    <div>{{ debit.text|default:'&#160;'|safe }}</div>
+		    <div>{{ debit.text|default:' '|safe }}</div>
 		  </td>
 		  <td class="act">
 		    <a href="{% url 'hsp:debitform' forloop.counter %}">upravit</a>
@@ -139,7 +139,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		  <td class="dc">{{ credit.date|date:'d.m.Y' }}</td>
 		  <td class="mc">
 		    <div>{{ credit.description|default:'<i>(bez názvu)</i>' }}</div>
-		    <div>{{ credit.text|default:'&#160;'|safe }}</div>
+		    <div>{{ credit.text|default:' '|safe }}</div>
 		  </td>
 		  <td class="act">
 		    <a href="{% url 'hsp:creditform' credit.id %}">upravit</a>
@@ -300,7 +300,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
 	<td class="dt">{{ row.date|date:'d.m.Y' }}</td>
 	<td class="cs">
-	  <div>{{ row.description|default:'&#160;' }}</div>
+	  <div>{{ row.description|default:' ' }}</div>
 	  {% if row.sps_text %}
 	  <div><span class="sps">(přeplatek: {{ row.sps_text|safe }})</span></div>
 	  {% endif %}

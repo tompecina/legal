@@ -76,13 +76,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <td>
 	{% for debtor in row.debtors %}
 	<div>
-	  {{ debtor.text|safe }}
+	  {{ debtor.text }}
 	  <a href="{% url 'pir:party' debtor.id %}?back={{ request.get_full_path|urlencode }}" title="Podrobné informace o osobě">[O]</a></div>
 	{% endfor %}
 	<hr/>
 	{% for trustee in row.trustees %}
 	<div>
-	  {{ trustee.text|safe }}
+	  {{ trustee.text }}
 	  <a href="{% url 'pir:party' trustee.id %}?back={{ request.get_full_path|urlencode }}" title="Podrobné informace o osobě">[O]</a></div>
 	{% endfor %}
       </td>
@@ -91,7 +91,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <td>
 	{% for creditor in row.creditors %}
 	<div>
-	  {{ creditor.text|safe }}
+	  {{ creditor.text }}
 	  <a href="{% url 'pir:party' creditor.id %}?back={{ request.get_full_path|urlencode }}" title="Podrobné informace o osobě">[O]</a>
 	</div>
 	{% endfor %}
