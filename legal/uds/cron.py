@@ -221,6 +221,8 @@ def cron_update(*args):
                         assert subres.ok
                         subsoup = BeautifulSoup(subres.text, 'html.parser')
                         rows = subsoup.find_all('tr')
+                        if not rows:
+                            continue
                         desc = ref = senate = register = number = year = page = agenda = posted = None
                         files = []
                         for row in rows:
