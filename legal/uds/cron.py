@@ -41,8 +41,8 @@ APP = __package__.rpartition('.')[2]
 
 ROOT_URL = 'https://infodeska.justice.cz/'
 PUBLISHERS_URL = '{}subjekty.aspx?typ={{}}'.format(ROOT_URL)
-LIST_URL = '{}historie.aspx?subjkod={{:d}}&datum={{:%d.%m.%Y}}'.format(ROOT_URL)
-DETAIL_URL = '{}vyveseni.aspx?verzeid={{:d}}'.format(ROOT_URL)
+LIST_URL = '{}subjekt.aspx?subjkod={{:d}}'.format(ROOT_URL)
+DETAIL_URL = '{}vyveseni.aspx?vyveseniid={{:d}}'.format(ROOT_URL)
 FILE_URL = '{}soubor.aspx?souborid={{:d}}'.format(ROOT_URL)
 REPO_PREF = TEST_TEMP_DIR if TEST else join(BASE_DIR, 'repo', 'uds')
 
@@ -204,12 +204,12 @@ def cron_update(*args):
         for publisher in Publisher.objects.filter(**flt).order_by('id'):
             try:
                 sleep(1)
-                res = get(LIST_URL.format(publisher.pubid, dat))
+                res = get(LIST_URL.format(publisher.pubid))
                 assert res.ok
                 soup = BeautifulSoup(res.text, 'html.parser')
                 for link in soup.select('a[href]'):
                     href = link.get('href')
-                    if href and href.startswith('vyveseni.aspx?verzeid='):
+                    if href and href.startswith('vyveseni.aspx?vyveseniid='):
                         try:
                             docid = int(href.partition('=')[2])
                         except ValueError:
