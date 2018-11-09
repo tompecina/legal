@@ -30,7 +30,7 @@ pyparsing==2.3.0
 python-pptx==0.6.15
 pytz==2018.7
 reportlab==3.5.9
-requests==2.20.0
+requests==2.20.1
 six==1.11.0
 SpeechRecognition==3.8.1
 textract==1.6.1

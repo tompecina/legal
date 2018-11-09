@@ -207,55 +207,51 @@ def cron_update(*args):
                 res = get(LIST_URL.format(publisher.pubid))
                 assert res.ok
                 soup = BeautifulSoup(res.text, 'html.parser')
-                for link in soup.select('a[href]'):
-                    href = link.get('href')
+                rows = soup.find_all('tr')
+                if not rows:
+                    continue
+                for row in rows:
+                    cells = row.find_all('td')
+                    if len(cells) != 6:
+                        continue
+                    links = cells[0].select('a[href]')
+                    if not links:
+                        continue
+                    href = links[0].get('href')
                     if href and href.startswith('vyveseni.aspx?vyveseniid='):
                         try:
                             docid = int(href.partition('=')[2])
                         except ValueError:
                             continue
-                        if Document.objects.filter(docid=docid).exists():
-                            continue
-                        sleep(1)
-                        subres = get(DETAIL_URL.format(docid))
-                        assert subres.ok
-                        subsoup = BeautifulSoup(subres.text, 'html.parser')
-                        rows = subsoup.find_all('tr')
-                        if not rows:
-                            continue
+                    else:
+                        continue
+                    if Document.objects.filter(docid=docid).exists():
+                        continue
+                    try:
                         desc = ref = senate = register = number = year = page = agenda = posted = None
                         files = []
-                        for row in rows:
-                            cells = row.find_all('td')
-                            if not cells or len(cells) != 2:
+                        desc = cells[1].text.strip()
+                        ref = cells[2].text.strip()
+                        senate, register, number, year, page = parse_ref(ref)
+                        posted = datetime(*map(int, cells[0].text.strip().split('.')[2::-1]), 0, 0, 0)
+                        agenda = Agenda.objects.get_or_create(desc=cells[3].text.strip())[0]
+                        anchors = cells[4].find_all('a')
+                        if not anchors:
+                            continue
+                        for anchor in anchors:
+                            if not(anchor and anchor.has_attr('href')
+                                and anchor['href'].startswith('soubor.aspx?souborid=')):
                                 continue
-                            left = cells[0].text.strip()
-                            right = cells[1].text.strip()
-                            if left == 'Popis':
-                                desc = right
-                            elif left == 'Značka':
-                                ref = right
-                                senate, register, number, year, page = parse_ref(ref)
-                            elif left == 'Vyvěšení':
-                                pdat, ptim = right.split()
-                                posted = datetime(*map(int, pdat.split('.')[2::-1]), *map(int, ptim.split(':')))
-                            elif left == 'Agenda':
-                                agenda = Agenda.objects.get_or_create(desc=right)[0]
-                            else:
-                                anchor = cells[0].find('a')
-                                if not(anchor and anchor.has_attr('href')
-                                    and anchor['href'].startswith('soubor.aspx?souborid=')):
-                                    continue
-                                fileid = int(anchor['href'].partition('=')[2])
-                                span = anchor.find('span', 'zkraceno')
-                                filename = span['title'].strip() if span else anchor.text.strip()
-                                if not filename:
-                                    continue
-                                if filename.endswith(')'):
-                                    filename = filename.rpartition(' (')[0]
-                                filename = filename.replace(' ', '_')
-                                if fileid not in [x[0] for x in files]:
-                                    files.append((fileid, filename))
+                            fileid = int(anchor['href'].partition('=')[2])
+                            span = anchor.find('span', 'zkraceno')
+                            filename = span['title'].strip() if span else anchor.text.strip()
+                            if not filename:
+                                continue
+                            if filename.endswith(')'):
+                                filename = filename.rpartition(' (')[0]
+                            filename = filename.replace(' ', '_')
+                            if fileid not in [x[0] for x in files]:
+                                files.append((fileid, filename))
                         doc = Document.objects.get_or_create(
                             docid=docid,
                             publisher=publisher,
@@ -315,6 +311,8 @@ def cron_update(*args):
                                             party.party,
                                             User.objects.get(pk=party.uid_id).username,
                                             party.uid_id))
+                    except:
+                        continue
                 LOGGER.debug('Updated "{}", {:%Y-%m-%d}'.format(publisher.name, dat))
                 if not args:
                     Publisher.objects.filter(id=publisher.id).update(updated=datetime.now())

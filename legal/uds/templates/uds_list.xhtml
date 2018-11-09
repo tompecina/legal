@@ -56,7 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <tr>
 
-      <td>{{ row.posted|date:'d.m.Y' }}<br/>{{ row.posted|time:'H:i:s' }}</td>
+      <td>{{ row.posted|date:'d.m.Y' }}</td>
 
       <td>
 	<div>{{ row.publisher.name }}</div>
@@ -78,7 +78,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       </td>
 
       <td class="act">
-	<a href="https://infodeska.justice.cz/vyveseni.aspx?verzeid={{ row.docid }}" target="_blank" rel="noopener" title="Informace na infoDesce">[D]</a>
+	<a href="https://infodeska.justice.cz/vyveseni.aspx?vyveseniid={{ row.docid }}" target="_blank" rel="noopener" title="Informace na infoDesce">[D]</a>
       </td>
 
     </tr>
