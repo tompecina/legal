@@ -284,7 +284,7 @@ def csvlist(request):
     for item in res:
         files = File.objects.filter(document=item).order_by('fileid').distinct()
         dat = (
-            '{:%d.%m.%Y %H:%M:%S}'.format(item.posted),
+            '{:%d.%m.%Y}'.format(item.posted),
             item.publisher.name,
             item.desc,
             item.ref,

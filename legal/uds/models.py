@@ -128,7 +128,7 @@ class Document(models.Model):
         Agenda,
         on_delete=models.CASCADE)
 
-    posted = models.DateTimeField(
+    posted = models.DateField(
         db_index=True)
 
     timestamp_add = models.DateTimeField(

@@ -29,7 +29,7 @@ class UdsConfig(AppConfig):
 
     name = 'legal.uds'
     verbose_name = 'Archiv úřední desky soudů a SZ'
-    version = '1.0'
+    version = '1.1'
 
     @staticmethod
     def stat():

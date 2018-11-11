@@ -233,7 +233,7 @@ def cron_update(*args):
                         desc = cells[1].text.strip()
                         ref = cells[2].text.strip()
                         senate, register, number, year, page = parse_ref(ref)
-                        posted = datetime(*map(int, cells[0].text.strip().split('.')[2::-1]), 0, 0, 0)
+                        posted = date(*map(int, cells[0].text.strip().split('.')[2::-1]))
                         agenda = Agenda.objects.get_or_create(desc=cells[3].text.strip())[0]
                         anchors = cells[4].find_all('a')
                         if not anchors:
