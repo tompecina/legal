@@ -76,6 +76,13 @@ table.about {
     }
 }
 
+table.gdpr {
+  margin: 0 auto;
+  th, td {
+    padding-top: $vl;
+  }
+}
+
 table.stat {
     margin-top: $vh;
     thead tr th {

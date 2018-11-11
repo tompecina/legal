@@ -26,7 +26,7 @@ from django.contrib import admin
 
 from legal.settings import APPS
 from legal.common.views import (
-    home, robots, pwchange, userinfo, useradd, lostpw, resetpw, about, stat, doc, genrender)
+    home, robots, pwchange, userinfo, useradd, lostpw, resetpw, about, gdpr, stat, doc, genrender)
 
 
 admin.autodiscover()
@@ -75,6 +75,7 @@ urlpatterns = [
             'page_title': 'Obnovení hesla'},
         name='pwlinksent'),
     url(r'^about/$', about, name='about'),
+    url(r'^gdpr/$', gdpr, name='gdpr'),
     url(r'^stat/$', stat, name='stat'),
     url(r'^doc/(.+)$', doc, name='doc'),
     url(r'^admin/', include((admin.site.urls[0], 'admin')))

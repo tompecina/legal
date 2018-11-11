@@ -328,6 +328,17 @@ def about(request):
 
 
 @require_http_methods(('GET',))
+def gdpr(request):
+
+    LOGGER.debug('GDPR page accessed', request)
+
+    return render(
+        request,
+        'gdpr.xhtml',
+        {'page_title': 'Ochrana osobních údajů'})
+
+
+@require_http_methods(('GET',))
 def doc(request, filename):
 
     LOGGER.debug('Document accessed: {}'.format(filename), request)

@@ -1,0 +1,80 @@
+{% extends 'main.xhtml' %}
+
+{% comment %}
+
+common/templates/gdpr.xhtml
+
+Copyright (C) 2011-18 Tomáš Pecina <tomas@pecina.cz>
+
+This file is part of legal.pecina.cz, a web-based toolbox for lawyers.
+
+This application is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+{% endcomment %}
+
+
+{% block page_contents %}
+
+<h1>{{ page_title }}</h1>
+
+<table class="gdpr">
+  <thead>
+    <tr>
+      <th>
+	Povinně zveřejňované informace podle čl. 13 a 14 Obecného nařízení o ochraně osobních údajů (GDPR)
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+	Správcem osobních údajů je <strong>Tomáš Pecina</strong>, <a href="https://www.pecina.cz/" target="_blank" rel="noopener">www.pecina.cz</a>, Slezská 1668/56, CZ-12000 Praha 2, datová schránka: whehjsc, e-mail: <a href="mailto:tomas@pecina.cz">tomas@pecina.cz</a>, tel. +420-724029083.
+      </td>
+    </tr>
+    <tr>
+      <td>
+	Veškeré osobní údaje jsou přebírány z internetových stránek ministerstva spravedlnosti a Nejvyššího správního soudu, a to bez souhlasu subjektu údajů.
+      </td>
+    </tr>
+    <tr>
+      <td>
+	Osobní údaje jsou zpracovávány za účelem archivace a dalšího zpřístupnění, žádné jiné operace se s nimi neprovádějí. Právním důvodem zpracování je výkon ústavně garantované veřejné kontroly nad výkonem soudní moci a děje se tak na ochranu práv subjektu údajů a třetích osob.
+      </td>
+    </tr>
+    <tr>
+      <td>
+	Zpracovává se jméno a příjmení (přehled soudních jednání), případně též datum narození a adresa (insolvenční rejstřík a archiv úředních desek).
+      </td>
+    </tr>
+    <tr>
+      <td>
+	U registrovaných uživatelů se zpracovává jméno, příjmení a e-mailová adresa, kterou uživatel zadal. Pro účely ladění systému se rovněž v ladicím logu po omezenou dobu mohou uchovávat údaje o všech přístupech k těmto stránkám, včetně IP adresy. Tyto záznamy, jsou-li zapisovány, jsou periodicky vymazávány a dále se nearchivují ani jinak nezpracovávají.
+      </td>
+    </tr>
+    <tr>
+      <td>
+	Budeme vděčni, upozorníte-li nás na jakékoli nepřesnosti v přebíraných osobních údajích, které, pokud budeme schopni ověřit skutečný stav, bezodkladně opravíme. Rovněž můžete žádat, aby byly vaše osobní údaje odstraněny; této žádosti vyhovíme zpravidla jen v případě, že půjde o informace o již zahlazeném trestním odsouzení, u přestupků pak v případě, že od právní moci rozhodnutí uplynula doba nejméně pěti let. V takovém případě bude třeba, abyste způsobem nevyvolávajícím pochybnosti doložili, že jste skutečně subjektem údajů, o něž se jedná, a jde-li o trestní odsouzení, že bylo pravomocně zahlazeno.
+      </td>
+    </tr>
+    <tr>
+      <td>
+	Se stížnostmi a připomínkami se můžete obrátit správce osobních údajů, na <a href="https://www.uoou.cz/" target="_blank" rel="noopener">Úřad pro ochranu osobních údajů</a>, případně přímo na <a href="https://www.cd.cz/stanice/5475992/" target="_blank" rel="noopener">lampárnu v Kájově</a>; tam vás jistě rádi vyslechnou a s vaším problémem vám pomohou.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+{% include 'back_home.xhtml' %}
+
+{% endblock %}
