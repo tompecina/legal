@@ -77,9 +77,13 @@ table.about {
 }
 
 table.gdpr {
-  margin: $vh auto 0;
+  margin: ($vh+$vl) auto 0;
   th, td {
     padding-top: $vl;
+  }
+  th {
+    padding-bottom: $vl;
+    font-size: $larger;
   }
 }
 
