@@ -46,7 +46,7 @@ DETAIL_URL = '{}vyveseni.aspx?vyveseniid={{:d}}'.format(ROOT_URL)
 FILE_URL = '{}soubor.aspx?souborid={{:d}}'.format(ROOT_URL)
 REPO_PREF = TEST_TEMP_DIR if TEST else join(BASE_DIR, 'repo', 'uds')
 
-UPDATE_INTERVAL = timedelta(hours=12)
+UPDATE_INTERVAL = timedelta(hours=6)
 
 
 def cron_publishers():
@@ -217,23 +217,26 @@ def cron_update(*args):
                     links = cells[0].select('a[href]')
                     if not links:
                         continue
+                    desc = ref = senate = register = number = year = page = agenda = posted = None
+                    files = []
                     href = links[0].get('href')
                     if href and href.startswith('vyveseni.aspx?vyveseniid='):
                         try:
                             docid = int(href.partition('=')[2])
                         except ValueError:
                             continue
+                        try:
+                            posted = date(*map(int, cells[0].text.strip().split('.')[2::-1]))
+                        except:
+                            continue
                     else:
                         continue
-                    if Document.objects.filter(docid=docid).exists():
+                    if Document.objects.filter(publisher=publisher, posted=posted, docid=docid).exists():
                         continue
                     try:
-                        desc = ref = senate = register = number = year = page = agenda = posted = None
-                        files = []
                         desc = cells[1].text.strip()
                         ref = cells[2].text.strip()
                         senate, register, number, year, page = parse_ref(ref)
-                        posted = date(*map(int, cells[0].text.strip().split('.')[2::-1]))
                         agenda = Agenda.objects.get_or_create(desc=cells[3].text.strip())[0]
                         anchors = cells[4].find_all('a')
                         if not anchors:

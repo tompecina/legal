@@ -89,7 +89,7 @@ class Document(models.Model):
 
     docid = models.IntegerField(
         validators=(MinValueValidator(1),),
-        unique=True)
+        db_index=True)
 
     publisher = models.ForeignKey(
         Publisher,
