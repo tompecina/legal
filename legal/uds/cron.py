@@ -212,7 +212,7 @@ def cron_update(*args):
                     continue
                 for row in rows:
                     cells = row.find_all('td')
-                    if len(cells) != 6:
+                    if len(cells) not in [5, 6]:
                         continue
                     links = cells[0].select('a[href]')
                     if not links:
