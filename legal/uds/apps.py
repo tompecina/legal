@@ -70,7 +70,7 @@ class UdsConfig(AppConfig):
                 Document.objects.count()),
             (
                 'Počet dokumentů přidaných za posledních 24 hodin',
-                Document.objects.filter(timestamp_add=(now - timedelta(hours=24))).count()),
+                Document.objects.filter(timestamp_add__gte=(now - timedelta(hours=24))).count()),
             (
                 'Počet dokumentů přidaných za poslední týden',
                 Document.objects.filter(timestamp_add__gte=(now - timedelta(weeks=1))).count()),
