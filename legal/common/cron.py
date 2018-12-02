@@ -33,7 +33,7 @@ from legal.sur.cron import sur_notice
 from legal.sir.cron import sir_notice, cron_update as sir_update, cron_refresh_links as sir_refresh_links
 from legal.dir.cron import dir_notice
 from legal.uds.cron import (
-    cron_publishers as uds_publishers, cron_update as uds_update, uds_notice)
+    cron_publishers as uds_publishers, cron_update as uds_update, uds_notice, cron_remove_orphans as uds_remove_orphans)
 from legal.common.glob import LOCAL_SUBDOMAIN, LOCAL_URL
 from legal.common.utils import send_mail, LOGGER, holiday
 from legal.common.models import Pending, Lock
@@ -116,6 +116,11 @@ SCHED = (
      'lock': 'uds',
      'blocking': False,
     },
+    {'name': 'uds_remove_orphans',
+     'when': lambda t: t.weekday() == 6 and t.hour == 0 and t.minute == 5,
+     'lock': 'uds',
+     'blocking': False,
+    },
     {'name': 'sir_update',
      'when': lambda t: t.hour in {4, 10, 16, 22} and t.minute == 5,
      'lock': 'sir',
@@ -123,7 +128,7 @@ SCHED = (
     },
 )
 
-EXPIRE = timedelta(hours=6)
+EXPIRE = timedelta(hours=71)
 
 
 if TEST:

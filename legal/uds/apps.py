@@ -69,26 +69,26 @@ class UdsConfig(AppConfig):
                 'Počet dokumentů',
                 Document.objects.count()),
             (
-                'Počet dokumentů vyvěšených za posledních 24 hodin',
-                Document.objects.filter(posted__gte=(now - timedelta(hours=24))).count()),
+                'Počet dokumentů přidaných za posledních 24 hodin',
+                Document.objects.filter(timestamp_add=(now - timedelta(hours=24))).count()),
             (
-                'Počet dokumentů vyvěšených za poslední týden',
-                Document.objects.filter(posted__gte=(now - timedelta(weeks=1))).count()),
+                'Počet dokumentů přidaných za poslední týden',
+                Document.objects.filter(timestamp_add__gte=(now - timedelta(weeks=1))).count()),
             (
-                'Počet dokumentů vyvěšených za poslední měsíc',
-                Document.objects.filter(posted__gte=(now - timedelta(days=30))).count()),
+                'Počet dokumentů přidaných za poslední měsíc',
+                Document.objects.filter(timestamp_add__gte=(now - timedelta(days=30))).count()),
             (
                 'Počet souborů',
                 File.objects.count()),
             (
-                'Počet souborů vystavených za posledních 24 hodin',
-                File.objects.filter(document__posted__gte=(now - timedelta(hours=24))).count()),
+                'Počet souborů přidaných za posledních 24 hodin',
+                File.objects.filter(document__timestamp_add__gte=(now - timedelta(hours=24))).count()),
             (
-                'Počet souborů vystavených za poslední týden',
-                File.objects.filter(document__posted__gte=(now - timedelta(weeks=1))).count()),
+                'Počet souborů přidaných za poslední týden',
+                File.objects.filter(document__timestamp_add__gte=(now - timedelta(weeks=1))).count()),
             (
-                'Počet souborů vystavených za poslední měsíc',
-                File.objects.filter(document__posted__gte=(now - timedelta(days=30))).count()),
+                'Počet souborů přidaných za poslední měsíc',
+                File.objects.filter(document__timestamp_add__gte=(now - timedelta(days=30))).count()),
             (
                 'Počet osob pro příští notifikaci',
                 Retrieved.objects.count()),

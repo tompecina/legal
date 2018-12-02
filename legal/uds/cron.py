@@ -30,7 +30,7 @@ from textract import process
 from django.contrib.auth.models import User
 
 from legal.settings import BASE_DIR, TEST, TEST_TEMP_DIR
-from legal.common.glob import ODP
+from legal.common.glob import ODP, LOCAL_URL
 from legal.common.utils import get, sleep, LOGGER, between, adddoc
 from legal.sur.models import Party
 from legal.uds.glob import TYPES
@@ -44,6 +44,7 @@ PUBLISHERS_URL = '{}subjekty.aspx?typ={{}}'.format(ROOT_URL)
 LIST_URL = '{}subjekt.aspx?subjkod={{:d}}'.format(ROOT_URL)
 DETAIL_URL = '{}vyveseni.aspx?vyveseniid={{:d}}'.format(ROOT_URL)
 FILE_URL = '{}soubor.aspx?souborid={{:d}}'.format(ROOT_URL)
+DOCUMENT_URL = LOCAL_URL + '/uds/list?id={:d}'
 REPO_PREF = TEST_TEMP_DIR if TEST else join(BASE_DIR, 'repo', 'uds')
 
 UPDATE_INTERVAL = timedelta(hours=6)
@@ -162,29 +163,30 @@ def parse_ref(ref):
 
 def update_index(doc):
 
+    text = [doc.desc]
+    for fil in File.objects.filter(document=doc).order_by('id'):
+        text.extend([fil.name, fil.text])
+    text = '\n\n'.join(text)
+    par = {
+        'id': doc.id,
+        'publisher': doc.publisher,
+        'agenda': doc.agenda,
+        'posted': doc.posted,
+        'text': text,
+    }
+    if doc.senate:
+        par['senate'] = doc.senate
+    if doc.register:
+        par['register'] = doc.register
+    if doc.number:
+        par['number'] = doc.number
+    if doc.year:
+        par['year'] = doc.year
+    if doc.page:
+        par['page'] = doc.page
     if not DocumentIndex.objects.using('sphinx').filter(id=doc.id).exists():
-        text = [doc.desc]
-        for fil in File.objects.filter(document=doc).order_by('id'):
-            text.extend([fil.name, fil.text])
-        text = '\n\n'.join(text)
-        par = {
-            'id': doc.id,
-            'publisher': doc.publisher,
-            'agenda': doc.agenda,
-            'posted': doc.posted,
-            'text': text,
-        }
-        if doc.senate:
-            par['senate'] = doc.senate
-        if doc.register:
-            par['register'] = doc.register
-        if doc.number:
-            par['number'] = doc.number
-        if doc.year:
-            par['year'] = doc.year
-        if doc.page:
-            par['page'] = doc.page
-        DocumentIndex.objects.using('sphinx').create(**par)
+        DocumentIndex.objects.using('sphinx').filter(id=doc.id).delete()
+    DocumentIndex.objects.using('sphinx').create(**par)
 
 
 def cron_update(*args):
@@ -212,7 +214,7 @@ def cron_update(*args):
                     continue
                 for row in rows:
                     cells = row.find_all('td')
-                    if len(cells) not in [5, 6]:
+                    if len(cells) < 5:
                         continue
                     links = cells[0].select('a[href]')
                     if not links:
@@ -269,6 +271,9 @@ def cron_update(*args):
                             posted=posted,
                         )[0]
                         for fileid, filename in files:
+                            if File.objects.filter(fileid=fileid).exists():
+                                File.objects.filter(fileid=fileid).update(document=doc)
+                                continue
                             infile = get(FILE_URL.format(fileid))
                             assert infile.ok
                             content = infile.content
@@ -278,8 +283,6 @@ def cron_update(*args):
                             with open(pathname, 'wb') as outfile:
                                 outfile.write(content)
                                 adddoc(APP, join(str(fileid), filename), FILE_URL.format(fileid))
-                            if File.objects.filter(fileid=fileid).exists():
-                                continue
                             try:
                                 text = process(pathname).decode()
                                 ocr = len(text) < 5
@@ -331,6 +334,33 @@ def cron_genindex():
     LOGGER.debug('Index regenerated')
 
 
+def cron_fixindex():
+
+    num = 0
+    for doc in Document.objects.all():
+        if not DocumentIndex.objects.using('sphinx').filter(id=doc.id).exists():
+            num += 1
+            update_index(doc)
+    if num:
+        LOGGER.info('Index fixed, {:d} record(s) added'.format(num))
+    else:
+        LOGGER.debug('Index fixed, no records added')
+
+
+def cron_remove_orphans():
+
+    num = 0
+    for doc in Document.objects.all():
+        if not File.objects.filter(document=doc).exists():
+            num += 1
+            DocumentIndex.objects.using('sphinx').filter(id=doc.id).delete()
+            doc.delete()
+    if num:
+        LOGGER.info('Removed {:d} orphan(s)'.format(num))
+    else:
+        LOGGER.debug('No orphans removed')
+
+
 def uds_notice(uid):
 
     text = ''
@@ -342,7 +372,7 @@ def uds_notice(uid):
             if doc.document.ref:
                 lst.append('sp. zn. {}'.format(doc.document.ref))
             text += ' - {}\n'.format(', '.join(filter(bool, lst)))
-            text += '   {}\n\n'.format(DETAIL_URL.format(doc.document.docid))
+            text += '   {}\n\n'.format(DOCUMENT_URL.format(doc.document.id))
         Retrieved.objects.filter(uid=uid).delete()
         LOGGER.info(
             'Non-empty notice prepared for user "{}" ({:d})'.format(User.objects.get(pk=uid).username, uid))
