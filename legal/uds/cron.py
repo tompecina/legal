@@ -336,10 +336,9 @@ def cron_genindex():
 
 def cron_fixindex():
 
-    docins = list(DocumentIndex.objects.using('sphinx').all().values_list('id', flat=True))
     num = 0
     for doc in Document.objects.all():
-        if doc.id not in docins:
+        if not DocumentIndex.objects.using('sphinx').filter(id=doc.id).exists():
             num += 1
             update_index(doc)
     if num:
