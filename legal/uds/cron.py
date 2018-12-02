@@ -184,7 +184,7 @@ def update_index(doc):
         par['year'] = doc.year
     if doc.page:
         par['page'] = doc.page
-    if not DocumentIndex.objects.using('sphinx').filter(id=doc.id).exists():
+    if DocumentIndex.objects.using('sphinx').filter(id=doc.id).exists():
         DocumentIndex.objects.using('sphinx').filter(id=doc.id).delete()
     DocumentIndex.objects.using('sphinx').create(**par)
 
@@ -336,9 +336,10 @@ def cron_genindex():
 
 def cron_fixindex():
 
+    docins = list(DocumentIndex.objects.using('sphinx').all().values_list('id', flat=True))
     num = 0
     for doc in Document.objects.all():
-        if not DocumentIndex.objects.using('sphinx').filter(id=doc.id).exists():
+        if doc.id not in docins:
             num += 1
             update_index(doc)
     if num:
