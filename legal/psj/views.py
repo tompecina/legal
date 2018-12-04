@@ -135,7 +135,7 @@ def htmllist(request):
         par = g2p(reqd)
         start = int(reqd['start']) if 'start' in reqd else 0
         assert start >= 0
-        res = Hearing.objects.filter(**par).order_by('time', 'pk').distinct()
+        res = Hearing.objects.filter(**par).order_by('-time', 'pk').distinct()
     except:
         raise Http404
     total = res.count()
