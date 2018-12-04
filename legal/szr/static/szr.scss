@@ -23,7 +23,9 @@
 
 
 table#list {
-    thead tr th:nth-child(2) {
+    thead tr th:first-child,
+    thead tr th:nth-child(2),
+    thead tr th:nth-child(3) {
 	text-align: left;
     }
     tbody tr td {
