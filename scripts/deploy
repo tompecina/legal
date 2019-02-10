@@ -28,7 +28,7 @@ if [ -e secrets.py ]; then
     rsync $opts secrets.py $user@$remote:$basedir/legal/ || exit
 fi
 
-ssh $user@$remote 'source activate && pip install -q -r requirements.txt && scripts/apply-patches' || exit
+ssh $user@$remote 'source activate && pip install -U pip && pip install -r requirements.txt && scripts/apply-patches' || exit
 
 ssh $user@$remote 'touch legal/wsgi.py' || exit
 
