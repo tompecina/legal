@@ -62,13 +62,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 
 <tr>
-  <th{% if form.cons1.errors or form.cons2.errors or form.cons3.errors %} class="err"{% endif %}>Spotřeba:</th>
+  <th{% if form.cons.errors %} class="err"{% endif %}>Spotřeba:</th>
   <td colspan="2" class="nowrap">
-    <input id="id_cons1" size="4" type="text" name="cons1" maxlength="4" value="{{ form.cons1.value }}" class="{{ form.cons1.css_classes }}"/>
-    <span>/</span>
-    <input id="id_cons2" size="4" type="text" name="cons2" maxlength="4" value="{{ form.cons2.value }}" class="{{ form.cons2.css_classes }}"/>
-    <span>/</span>
-    <input id="id_cons3" size="4" type="text" name="cons3" maxlength="4" value="{{ form.cons3.value }}" class="{{ form.cons3.css_classes }}"/>
+    <input id="id_cons" size="4" type="text" name="cons" maxlength="4" value="{{ form.cons.value }}" class="{{ form.cons.css_classes }}"/>
     <span>l/100 km</span>
   </td>
 </tr>

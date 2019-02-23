@@ -27,7 +27,7 @@ class KnrConfig(AppConfig):
 
     name = 'legal.knr'
     verbose_name = 'Náklady řízení'
-    version = '1.9'
+    version = '1.10'
 
     @staticmethod
     def stat():

@@ -633,19 +633,7 @@ class TravelForm(Form):
     fuel_name = CharField(
         max_length=150)
 
-    cons1 = DecimalField(
-        max_digits=3,
-        decimal_places=1,
-        min_value=0,
-        localize=True)
-
-    cons2 = DecimalField(
-        max_digits=3,
-        decimal_places=1,
-        min_value=0,
-        localize=True)
-
-    cons3 = DecimalField(
+    cons = DecimalField(
         max_digits=3,
         decimal_places=1,
         min_value=0,
@@ -731,13 +719,7 @@ class TravelSubform(Form):
     fuel_name = CharField(
         required=False)
 
-    cons1 = CharField(
-        required=False)
-
-    cons2 = CharField(
-        required=False)
-
-    cons3 = CharField(
+    cons = CharField(
         required=False)
 
     formula_name = CharField(

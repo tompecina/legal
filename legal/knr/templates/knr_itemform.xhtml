@@ -523,15 +523,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <tr>
   <th class="{{ cons_error }}">
-    <label for="id_cons1">Spotřeba</label>
+    <label for="id_cons">Spotřeba</label>
     <span>:</span>
   </th>
   <td colspan="2" class="nowrap">
-    <input type="text" name="cons1" value="{% if cons1_error %}{{ cons1|floatformat:'1' }}{% else %}{{ cons1 }}{% endif %}" size="4" maxlength="4" id="id_cons1" class="{{ cons1_error }}"/>
-    <span>/</span>
-    <input type="text" name="cons2" value="{% if cons2_error %}{{ cons2|floatformat:'1' }}{% else %}{{ cons2 }}{% endif %}" size="4" maxlength="4" id="id_cons2" class="{{ cons2_error }}"/>
-    <span>/</span>
-    <input type="text" name="cons3" value="{% if cons3_error %}{{ cons3|floatformat:'1' }}{% else %}{{ cons3 }}{% endif %}" size="4" maxlength="4" id="id_cons3" class="{{ cons3_error }}"/>
+    <input type="text" name="cons" value="{% if cons_error %}{{ cons|floatformat:'1' }}{% else %}{{ cons }}{% endif %}" size="4" maxlength="4" id="id_cons" class="{{ cons_error }}"/>
     <span>l/100 km</span>
   </td>
 </tr>

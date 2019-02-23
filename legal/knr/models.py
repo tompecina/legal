@@ -69,17 +69,7 @@ class Car(models.Model):
     fuel = models.CharField(
         max_length=150)
 
-    cons1 = models.DecimalField(
-        max_digits=3,
-        decimal_places=1,
-        validators=(MinValueValidator(0),))
-
-    cons2 = models.DecimalField(
-        max_digits=3,
-        decimal_places=1,
-        validators=(MinValueValidator(0),))
-
-    cons3 = models.DecimalField(
+    cons = models.DecimalField(
         max_digits=3,
         decimal_places=1,
         validators=(MinValueValidator(0),))

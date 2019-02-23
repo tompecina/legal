@@ -57,8 +57,6 @@ APP = __package__.rpartition('.')[2]
 
 APPVERSION = apps.get_app_config(APP).version
 
-CTRIP = ('cons1', 'cons2', 'cons3')
-
 
 B = 'B'
 S = 'S'
@@ -111,6 +109,7 @@ TYPES = {
     'time_number': I,
     'car_name': S,
     'fuel_name': S,
+    'cons': F1,
     'cons1': F1,
     'cons2': F1,
     'cons3': F1,
@@ -131,6 +130,7 @@ XML_DEC = {
     'trip_distance': {'unit': 'km'},
     'time_rate': {'currency': 'CZK', 'unit': 'per half-hour'},
     'time_number': {'unit': 'half-hour'},
+    'cons': {'unit': 'l per 100 km'},
     'cons1': {'unit': 'l per 100 km'},
     'cons2': {'unit': 'l per 100 km'},
     'cons3': {'unit': 'l per 100 km'},
@@ -225,9 +225,7 @@ FORM_FIELDS = {
         'time_number',
         'car_name',
         'fuel_name',
-        'cons1',
-        'cons2',
-        'cons3',
+        'cons',
         'formula_name',
         'flat_rate',
         'fuel_price',
@@ -318,9 +316,7 @@ SUBFORM_FIELDS = {
         'time_number',
         'car_name',
         'fuel_name',
-        'cons1',
-        'cons2',
-        'cons3',
+        'cons',
         'formula_name',
         'flat_rate',
         'fuel_price',
@@ -655,6 +651,7 @@ class Item:
         self.time_number = 0
         self.car_name = ''
         self.fuel_name = ''
+        self.cons = .0
         self.cons1 = .0
         self.cons2 = .0
         self.cons3 = .0
@@ -833,7 +830,11 @@ def from_xml(dat):
             return None, 'Chybný formát souboru'
         if not hasattr(item, 'total') or item.total == 0:
             item.total = round(item.amount * item.denominator / item.numerator)
+        print(item, dir(item))
+        if item.cons == .0:
+            item.cons = item.cons3
         calc.items.append(item)
+        print(item.cons)
     return calc, None
 
 
@@ -1085,8 +1086,9 @@ def mainpage(request):
                                 temp2.append(Paragraph('<b>Vozidlo</b> {}'.format(escape(item.car_name)), style6))
                                 temp2.append(Paragraph(
                                     '<b>Palivo:</b> {} &nbsp; <b>Průměrná spotřeba:</b> {} l/100 km'
-                                    .format(item.fuel_name, convf(((item.cons1 + item.cons2 + item.cons3) / 3), 3)),
+                                    .format(item.fuel_name, convf(item.cons, 3)),
                                     style6))
+                                print(item.cons, type(item.cons))
                                 temp2.append(Paragraph('<b>Předpis:</b> {}'.format(escape(item.formula_name)), style6))
                                 temp2.append(Paragraph(
                                     '<b>Paušál:</b> {} Kč/km &nbsp; <b>Cena paliva:</b> {} Kč/l'
@@ -1571,9 +1573,7 @@ def itemform(request, idx=0):
         if res:
             cld['car_name'] = res[0].name
             cld['fuel_name'] = res[0].fuel
-            cld['cons1'] = float(res[0].cons1)
-            cld['cons2'] = float(res[0].cons2)
-            cld['cons3'] = float(res[0].cons3)
+            cld['cons'] = float(res[0].cons)
 
     def proc_formula(sel, cld):
         res = Formula.objects.filter(Q(pk=sel) & (Q(uid=None) | Q(uid=uid)))
@@ -1681,8 +1681,8 @@ def itemform(request, idx=0):
                                 cld = form.cleaned_data
                                 item = Item()
                                 cld['amount'] = int(round(
-                                    (cld['trip_distance'] * ((float((cld['cons1'] + cld['cons2'] + cld['cons3'])
-                                    * cld['fuel_price']) / 300) + float(cld['flat_rate'])) + (cld['time_number']
+                                    (cld['trip_distance'] * ((float((cld['cons'])
+                                    * cld['fuel_price']) / 100) + float(cld['flat_rate'])) + (cld['time_number']
                                     * cld['time_rate'])) * cld['trip_number']))
                                 cld['total'] = cld['amount']
                                 if cld['numerator'] > 1 or cld['denominator'] > 1:
@@ -1710,10 +1710,8 @@ def itemform(request, idx=0):
                                 for key in SUBFORM_FIELDS[typ]:
                                     var['{}_error'.format(key)] = 'err' if form[key].errors else ''
                                 var['cons_error'] = ''
-                                for key in CTRIP:
-                                    if form[key].errors:
-                                        var['cons_error'] = 'err'
-                                        break
+                                if form['cons'].errors:
+                                    var['cons_error'] = 'err'
                     else:
                         raise Http404
                 else:
