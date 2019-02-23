@@ -93,6 +93,7 @@ class Pending(models.Model):
 class Cache(models.Model):
 
     url = models.URLField(
+        max_length=255,
         unique=True)
 
     text = models.TextField()

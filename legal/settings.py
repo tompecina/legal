@@ -28,10 +28,11 @@ from logging import Filter
 
 
 try:
-    from legal.secrets import DBPASSWD, SECKEY
+    from legal.secrets import DBPASSWD, SECKEY, MAPKEY
 except ImportError:
     DBPASSWD = environ.get('DBPASSWD', '')
     SECKEY = environ.get('SECKEY', 'empty')
+    MAPKEY = environ.get('MAPKEY', '')
 
 TEST = 'TEST' in environ or (len(argv) > 1 and argv[1] == 'test')
 LOCAL = len(argv) > 1 and argv[1] == 'runserver'

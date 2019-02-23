@@ -26,6 +26,7 @@ from urllib.parse import quote, unquote
 
 from django.template import Context, Template
 
+from legal.settings import MAPKEY
 from legal.common.utils import getpreset, famt, getcache
 
 
@@ -39,7 +40,7 @@ def findloc(addr):
     if not addr:
         return None
     addr = quote(unquote(addr).encode('utf-8'))
-    url = 'https://maps.googleapis.com/maps/api/geocode/json?address={}&language=cs&sensor=false'.format(addr)
+    url = 'https://maps.googleapis.com/maps/api/geocode/json?address={}&language=cs&sensor=false&key={}'.format(addr, MAPKEY)
     res = getcache(url, timedelta(weeks=1))[0]
     if not res:
         return None
@@ -48,14 +49,14 @@ def findloc(addr):
         return None
     res = res['results'][0]
     loc = res['geometry']['location']
-    return res['formatted_address'], loc['lat'], loc['lng']
+    return res['formatted_address'], round(loc['lat'], 7), round(loc['lng'], 7)
 
 
 def finddist(from_lat, from_lon, to_lat, to_lon):
 
     url = (
         'https://maps.googleapis.com/maps/api/distancematrix/json?origins={:f},{:f}&destinations={:f},{:f}'
-        '&mode=driving&units=metric&language=cs&sensor=false'.format(from_lat, from_lon, to_lat, to_lon))
+        '&mode=driving&units=metric&language=cs&sensor=false&key={}'.format(from_lat, from_lon, to_lat, to_lon, MAPKEY))
     res = getcache(url, timedelta(weeks=1))[0]
     if not res:
         return None, None
