@@ -23,57 +23,62 @@
 
 
 table {
-    &.home, &.about, &.stat {
-	margin: 0 auto;
-    }
+  &.home, &.about, &.stat {
+    margin: 0 auto;
+  }
 }
 
 table.home {
-    h1 {
-	margin-bottom: $vh;
-	font-size: $enormous;
+  h1 {
+    margin-bottom: $vh;
+    font-size: $enormous;
+  }
+  div {
+    text-align: center;
+    margin-bottom: $vs;
+    &:last-child {
+      margin-bottom: $vh;
     }
-    div {
-	text-align: center;
-	margin-bottom: $vs;
-	&:last-child {
-	    margin-bottom: $vh;
-	}
-    }
-    hr {
-	margin: $vl (-$hm);
-    }
+  }
+  hr {
+    margin: $vl (-$hm);
+  }
 }
 
 table.about {
-    margin-top: $vh;
-    thead tr th {
-	padding: ($vs+$vt) $hl;
-	background-color: $medium-blue;
+  margin-top: $vh;
+  thead tr th {
+    padding: ($vs+$vt) $hl;
+    background-color: $medium-blue;
+    text-align: center;
+    font-size: $large;
+    font-weight: $mediumweight;
+  }
+  tbody {
+    tr {
+      td {
+	padding: ($vs+$vt) $hl ($vs+$vt) $hm;
+	p {
+	  text-align: center;
+	}
+      }
+      td:first-child {
+	padding-left: ($hl+$hs);
+      }
+      td:last-child {
 	text-align: center;
-	font-size: $large;
-	font-weight: $mediumweight;
+      }
     }
-    tbody {
-	tr td {
-	    padding: ($vs+$vt) $hl ($vs+$vt) $hm;
-	    p {
-		text-align: center;
-	    }
-	}
-	tr:nth-child(odd) td {
-	    background-color: $white;
-	}
-	tr:nth-child(even) td {
-	    background-color: $gray;
-	}
-	tr td:first-child {
-	    padding-left: ($hl+$hs);
-	}
+    tr:nth-child(odd) td {
+      background-color: $white;
     }
-    & + & {
-	margin-top: ($vh+$vl);
+    tr:nth-child(even) td {
+      background-color: $gray;
     }
+  }
+  & + & {
+    margin-top: ($vh+$vl);
+  }
 }
 
 table.gdpr {
@@ -88,50 +93,50 @@ table.gdpr {
 }
 
 table.stat {
-    margin-top: $vh;
-    thead tr th {
-	font-size: $large;
+  margin-top: $vh;
+  thead tr th {
+    font-size: $large;
+  }
+  tbody {
+    tr.header th {
+      padding: {
+	top: ($vs+$vt);
+	bottom: ($vs+$vt);
+      }
+      background-color: $medium-blue;
+      text-align: center;
+      font-size: $large;
+      font-weight: $mediumweight;
     }
-    tbody {
-	tr.header th {
-	    padding: {
-		top: ($vs+$vt);
-		bottom: ($vs+$vt);
-	    }
-	    background-color: $medium-blue;
-	    text-align: center;
-	    font-size: $large;
-	    font-weight: $mediumweight;
+    tr {
+      th, td {
+	background-color: $white;
+	padding: {
+	  top: 0;
+	  bottom: $vm;
 	}
-	tr {
-	    th, td {
-		background-color: $white;
-		padding: {
-		    top: 0;
-		    bottom: $vm;
-		}
-	    }
-	    th {
-		padding: {
-		    left: $hl;
-		    right: $ht;
-		}
-	    }
-	    td {
-		padding: {
-		    left: $hs;
-		    right: $hl;
-		}
-	    }
-	    &.header + tr, &:not(.header):first-child {
-		th, td {
-		    padding-top: $vm;
-		}
-	    }
+      }
+      th {
+	padding: {
+	  left: $hl;
+	  right: $ht;
 	}
+      }
+      td {
+	padding: {
+	  left: $hs;
+	  right: $hl;
+	}
+      }
+      &.header + tr, &:not(.header):first-child {
+	th, td {
+	  padding-top: $vm;
+	}
+      }
     }
+  }
 }
 
 span.new-pwd {
-    font-weight: $mediumweight;
+  font-weight: $mediumweight;
 }
