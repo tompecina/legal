@@ -166,7 +166,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 
 {% if request.GET.back %}
-<p><a href="{{ request.GET.back }}">Zpět na seznam řízení</a></p>
+<p><a href="{{ request.GET.back|urlencode }}">Zpět na seznam řízení</a></p>
 {% endif %}
 
 {% endblock %}
