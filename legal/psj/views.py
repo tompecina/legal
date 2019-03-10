@@ -150,7 +150,8 @@ def htmllist(request):
          'pager': Pager(start, total, reverse('psj:htmllist'), reqd, BATCH),
          'today': date.today(),
          'total': total,
-         'NULL_REGISTERS': NULL_REGISTERS})
+         'NULL_REGISTERS': NULL_REGISTERS,
+         'noindex': True})
 
 
 @gzip_page

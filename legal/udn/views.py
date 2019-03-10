@@ -147,7 +147,8 @@ def htmllist(request):
          'page_title': 'Výsledky vyhledávání',
          'rows': dec[start:(start + BATCH)],
          'pager': Pager(start, total, reverse('udn:htmllist'), reqd, BATCH),
-         'total': total})
+         'total': total,
+         'noindex': True})
 
 
 @gzip_page

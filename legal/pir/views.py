@@ -217,7 +217,8 @@ def htmllist(request):
          'creditors': creditors,
          'pager': Pager(start, total, reverse('pir:htmllist'), reqd, batch),
          'total': total,
-         'NULL_REGISTERS': NULL_REGISTERS})
+         'NULL_REGISTERS': NULL_REGISTERS,
+         'noindex': True})
 
 
 def xml_addparties(osoby, xml, tag, tagname):

@@ -42,6 +42,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <meta name="msapplication-TileColor" content="#ffffff"/>
     <meta name="msapplication-config" content="/static/browserconfig.xml{% ts_favicon %}"/>
     <meta name="theme-color" content="#ffffff"/>
+    {% if noindex %}
+      <meta name="robots" content="noindex"/>
+    {% endif %}
     <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png{% ts_favicon %}"/>
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png{% ts_favicon %}"/>
     <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png{% ts_favicon %}"/>

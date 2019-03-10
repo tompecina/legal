@@ -169,7 +169,8 @@ def htmllist(request):
          'page_title': 'Výsledky vyhledávání',
          'rows': docs,
          'pager': Pager(start, total, reverse('uds:htmllist'), reqd, BATCH),
-         'total': total})
+         'total': total,
+         'noindex': True})
 
 
 @gzip_page
