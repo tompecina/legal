@@ -1883,7 +1883,7 @@ def itemform(request, idx=0):
                         if button == 'calc_number':
                             number = 0
                             for itm in calc.items:
-                                number += getattr(itm, 'major_number', 0) + getattr(itm, 'minor_number', 0)
+                                number += (getattr(itm, 'major_number', 0) + getattr(itm, 'minor_number', 0)) * getattr(itm, 'multiple_number', 0)
                             var['number'] = number
                         var['rate'] = rat
                         for key in SUBFORM_FIELDS[typ]:
