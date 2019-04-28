@@ -1047,7 +1047,7 @@ def getcache(url, lifespan):
     cache = Cache.objects.filter(url=url)
     if cache:
         LOGGER.debug("URL '{}' retrieved from cache".format(url))
-        return cache[0].text, None
+        return cache[0].text.replace('\ufeff', ''), None
     res = get(url)
     if not res.ok:
         LOGGER.warning('Failed to access URL: "{}"'.format(url))
@@ -1059,7 +1059,7 @@ def getcache(url, lifespan):
         expire=datetime.now() + lifespan if lifespan else None,
     ).save()
     LOGGER.debug("URL '{}' saved in cache".format(url))
-    return txt, None
+    return txt.replace('\ufeff', ''), None
 
 
 def getasset(request, asset_id):
