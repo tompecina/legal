@@ -40,7 +40,7 @@ LOCAL = len(argv) > 1 and argv[1] == 'runserver'
 DEBUG = LOCAL
 DEBUG_LOG = True
 
-ALLOWED_HOSTS = ('*' if DEBUG else 'legal.pecina.cz',)
+ALLOWED_HOSTS = ('*' if DEBUG else 'pv.pecina.cz',)
 
 BASE_DIR = dirname(dirname(abspath(__file__)))
 LOG_DIR = join(BASE_DIR, 'log')
@@ -300,7 +300,7 @@ DATE_FORMAT = 'd.m.Y'
 SHORT_DATE_FORMAT = 'd.m.Y'
 DATE_INPUT_FORMATS = ('%d.%m.%Y',)
 
-JQUERY_VERSION = '3.3.1'
+JQUERY_VERSION = '3.4.1'
 JQUERY_UI_VERSION = '1.12.1'
 
 DEFAULT_CONTENT_TYPE = 'application/xhtml+xml'

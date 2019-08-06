@@ -1698,6 +1698,9 @@ def debitdel(request, idx=0):
                     del debt.debits[num]
             lst = [x for x in temp if x is not None]
             temp = [None if x is None else lst.index(x) for x in temp]
+            for debit in debt.debits:
+                if debit.principal_debit:
+                    debit.principal_debit = temp[debit.principal_debit - 1] + 1
             for credit in debt.credits:
                 lst = []
                 for num in credit.debits:
