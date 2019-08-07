@@ -26,6 +26,8 @@ from sys import argv
 from locale import setlocale, LC_ALL
 from logging import Filter
 
+from legal.common.glob import MIN_PWLEN
+
 
 try:
     from legal.secrets import DBPASSWD, SECKEY, MAPKEY
@@ -160,19 +162,10 @@ DATABASE_ROUTERS = (
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
-            'min_length': 4,
+            'min_length': MIN_PWLEN,
         }
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 

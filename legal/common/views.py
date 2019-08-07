@@ -427,6 +427,7 @@ def useradd(request):
         form = UserAddForm()
     else:
         form = UserAddForm(request.POST)
+        print(form)
         if form.is_valid():
             cld = form.cleaned_data
             user = User.objects.create_user(

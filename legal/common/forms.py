@@ -57,6 +57,7 @@ class UserAddForm(UserChangeForm, UserCreationForm, Form):
         self.fields['last_name'].widget = TextWidget(20)
         self.fields['password1'].label = 'Heslo'
         self.fields['password1'].widget = PasswordWidget(20)
+        self.fields['password1'].help_text = '(nejméně {:d} znaků)'.format(MIN_PWLEN)
         self.fields['password2'].label = 'Potvrzení hesla'
         self.fields['password2'].help_text = '(zadejte heslo znovu, pro kontrolu)'
         self.fields['password2'].widget = PasswordWidget(20)

@@ -66,7 +66,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
       <tr class="{{ form.password1.css_classes }}">
 	<th>{{ form.password1.label_tag }}</th>
-	<td>{{ form.password1 }}</td>
+	<td>{{ form.password1 }}<span>{{ form.password1.help_text }}</span></td>
       </tr>
 
       <tr class="ga {{ form.password2.css_classes }}">
