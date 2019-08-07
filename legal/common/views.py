@@ -427,7 +427,6 @@ def useradd(request):
         form = UserAddForm()
     else:
         form = UserAddForm(request.POST)
-        print(form)
         if form.is_valid():
             cld = form.cleaned_data
             user = User.objects.create_user(
@@ -449,6 +448,15 @@ def useradd(request):
             if 'Duplicate username' in form['username'].errors.as_text():
                 err_message = 'Toto uživatelské jméno se již používá'
                 LOGGER.debug('Duplicate user name', request)
+            elif 'Wrong answer' in form['captcha'].errors.as_text():
+                err_message = 'Chybná odpověď na kontrolní otázku'
+                LOGGER.debug('Wrong answer', request)
+            elif 'Different passwords' in form['password2'].errors.as_text():
+                err_message = 'Rozdílná hesla'
+                LOGGER.debug('Different passwords', request)
+            else:
+                err_message = 'Slabé heslo'
+                LOGGER.debug('Weak password', request)
     return render(
         request,
         'useradd.xhtml',

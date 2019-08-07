@@ -30,7 +30,6 @@ from legal.common.fields import CharField
 from legal.common.widgets import TextWidget, PasswordWidget
 
 
-
 class Form(forms.Form):
 
     error_css_class = 'err'
@@ -79,17 +78,20 @@ class UserAddForm(UserChangeForm, UserCreationForm, Form):
             raise ValidationError('Duplicate username')
         return username
 
-    def clean_password1(self):
-        password1 = self.cleaned_data['password1']
-        if len(password1) < MIN_PWLEN:
-            raise ValidationError('Password too short')
-        return password1
-
     def clean_captcha(self):
         captcha = self.cleaned_data['captcha']
         if captcha.lower() != 'praha':
             raise ValidationError('Wrong answer')
         return captcha
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if self.cleaned_data.get('password1', '') != self.cleaned_data.get('password2', ''):
+            msg = 'Different passwords'
+            self._errors['password1'] = self.error_class([msg])
+            self._errors['password2'] = self.error_class([msg])
+            raise ValidationError('Different passwords')
+        return cleaned_data
 
 
 class LostPwForm(Form):

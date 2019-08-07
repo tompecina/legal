@@ -46,7 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
       <tr class="{{ form.username.css_classes }}">
 	<th>{{ form.username.label_tag }}</th>
-	<td><input type="text" name="username" maxlength="150" autofocus="autofocus" id="id_username"/><span>{{ form.username.help_text }}</span></td>
+	<td><input type="text" name="username" value="{{ form.username.value }}" maxlength="150" autofocus="autofocus" id="id_username"/><span>{{ form.username.help_text }}</span></td>
       </tr>
 
       <tr class="{{ form.first_name.css_classes }}">
@@ -64,7 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<td>{{ form.email }}<span>{{ form.email.help_text }}</span></td>
       </tr>
 
-      <tr class="{{ form.password1.css_classes }}">
+      <tr class="{{ form.password2.css_classes }}">
 	<th>{{ form.password1.label_tag }}</th>
 	<td>{{ form.password1 }}<span>{{ form.password1.help_text }}</span></td>
       </tr>
