@@ -850,3 +850,22 @@ table.ui-datepicker-calendar a.ui-state-hover {
 table.ui-datepicker-calendar td.ui-datepicker-week-end a.ui-state-default {
     font-weight: $boldweight;
 }
+div.topbanner {
+  margin: {
+    top: $vh;
+    left: $hh;
+    right: $hh;
+  }
+  padding: {
+    left: $hg;
+    right: $hg;
+  }
+  border: {
+    style: solid;
+    width: $bd;
+    color: $border-blue;
+  }
+  p.signed {
+    font-style: italic;
+  }
+}
